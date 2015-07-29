@@ -1,0 +1,190 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    kpiDefinition: models.framework_models.kpi.KpiDefinition,
+    kpi: framework.services.kpi.Kpi,
+    valuesTable: framework.utils.Table[utils.table.KpiValueDefinitionListView],
+    rulesTable: framework.utils.Table[utils.table.KpiColorRuleListView]
+)
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("admin.kpi.title"),
+    Seq(
+        ("topmenubar.admin.kpimanager.menu.label", controllers.admin.routes.KpiManagerController.index().url),
+        ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
+        (kpi.getValueName(framework.services.kpi.Kpi.DataType.MAIN), null)
+    )
+) {
+    
+    @framework_views.parts.framework_code_editor_includes(routes.Assets.versioned("").url, framework.commons.IFrameworkConstants.Syntax.JAVASCRIPT)
+    
+    <div class="row">
+    
+        <div class="col-md-6">
+        
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.kpi.view.details.title")
+                    
+                    <div class="pull-right">
+                        <a href="@controllers.admin.routes.KpiManagerController.edit(kpiDefinition.id).url"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                        @if(!kpi.isStandard) {
+                            &nbsp;&nbsp;
+                            <a onclick="return maf_confirmDelete();" href="@controllers.admin.routes.KpiManagerController.delete(kpiDefinition.id)"><span class="glyphicons glyphicons-bin glyphicons-panel"></span></a>
+                            <script type="text/javascript">
+                                function maf_confirmDelete(){
+                                    return window.confirm("@parts.Msg("admin.kpi.delete.confirm.message")");
+                                }
+                            </script>
+                        }
+                    
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-4">
+                             <col class="col-md-8">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.kpi_definition.is_active.label")</th>
+                                <td>@display_boolean(kpiDefinition.isActive)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.kpi_definition.data_source.label")</th>
+                                <td>
+                                    @if(kpi.isExternal) {
+                                        @parts.Msg("object.kpi_definition.data_source.PLUGIN.label")
+                                    } else {
+                                        @parts.Msg("object.kpi_definition.data_source.BIZDOCK.label")
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.kpi_definition.has_trend.label")</th>
+                                <td>@display_boolean(kpi.hasTrend)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.kpi_definition.is_real_time.label")</th>
+                                <td>@display_boolean(kpi.isValueFromKpiData)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.kpi_definition.has_box_display.label")</th>
+                                <td>@display_boolean(kpi.hasBoxDisplay)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.kpi_definition.uid.label")</th>
+                                <td>@display_object(kpiDefinition.uid)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.kpi_definition.parameters.label")</th>
+                                <td>@display_object(kpiDefinition.parameters, true)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            @if(!kpi.isExternal) {
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @parts.Msg("admin.kpi.view.scheduler.title")
+                        
+                        <div class="pull-right">
+                            @if(kpi.hasScheduler) {
+                                <a href="@controllers.admin.routes.KpiManagerController.editScheduler(kpiDefinition.id).url"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                                @if(kpiDefinition.isActive) {
+                                    &nbsp;<a href="@controllers.admin.routes.KpiManagerController.triggerScheduler(kpiDefinition.id).url"><span class="glyphicons glyphicons-play-button glyphicons-panel"></span></a>
+                                }
+                                &nbsp;<a onclick="return maf_confirmDeleteScheduler();" href="@controllers.admin.routes.KpiManagerController.deleteScheduler(kpiDefinition.id).url"><span class="glyphicons glyphicons-bin glyphicons-panel"></span></a>
+                                <script type="text/javascript">
+                                    function maf_confirmDeleteScheduler(){
+                                        return window.confirm("@parts.Msg("admin.kpi.view.scheduler.delete.comfirm")");
+                                    }
+                                </script>
+                            } else {
+                                <a href="@controllers.admin.routes.KpiManagerController.editScheduler(kpiDefinition.id).url"><span class="glyphicons glyphicons-adjust-alt glyphicons-panel"></span></a>
+                            }
+                        </div>
+                    </div>
+            
+                    <div class="panel-body">
+                        @if(kpi.hasScheduler) {
+                            <table class="table table-condensed table-hover">
+                                <colgroup>
+                                     <col class="col-md-4">
+                                     <col class="col-md-8">
+                                </colgroup>
+                                <tbody>
+                                     <tr>
+                                         <th>@parts.Msg("object.kpi_definition.scheduler_start_time.label")</th>
+                                         <td>@kpiDefinition.schedulerStartTime</td>
+                                     </tr>
+                                     <tr>
+                                         <th>@parts.Msg("object.kpi_definition.scheduler_frequency.label")</th>
+                                         <td>@kpiDefinition.schedulerFrequency</td>
+                                     </tr>
+                                </tbody>
+                            </table>
+                        } else {
+                            @parts.Msg("admin.kpi.view.scheduler.no_scheduler")
+                        }
+                    </div>
+                </div>
+        
+            }
+        
+        </div>
+    
+        <div class="col-md-6">
+        
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.kpi.view.values.title")
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(valuesTable)
+                </div>
+            </div>
+        
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.kpi.view.rules.title")
+                    
+                    <div class="pull-right">
+                        <a href="@controllers.admin.routes.KpiManagerController.manageRule(kpiDefinition.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(rulesTable)
+                </div>
+            </div>
+        
+        </div>
+        
+    </div>
+
+}

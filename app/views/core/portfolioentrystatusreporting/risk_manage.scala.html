@@ -1,0 +1,126 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    portfolioEntryRiskForm: Form[utils.form.PortfolioEntryRiskFormData],
+    riskTypes: framework.utils.ISelectableValueHolderCollection[_],
+    isRisk: Boolean
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    if(isRisk) {
+        Seq(
+            (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+            ("core.portfolio_entry.sidebar.status_reporting.registers.label", controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url),
+            ("core.portfolio_entry_status_reporting.risk.manage.title", null)
+        )
+    } else {
+        Seq(
+            (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+            ("core.portfolio_entry.sidebar.status_reporting.registers.label", controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url),
+            ("core.portfolio_entry_status_reporting.issue.manage.title", null)
+        )
+    }
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.REPORTING, breadcrump){
+
+    <div class="maf-form">
+        @if(portfolioEntryRiskForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.PortfolioEntryStatusReportingController.processManageRisk()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                
+                @if(portfolioEntryRiskForm("riskId").value!=null){
+                    <input type="hidden" name="riskId" value="@portfolioEntryRiskForm("riskId").value"/>
+                }
+                
+                <input type="hidden" name="isRisk" value="@isRisk"/>
+                
+                @parts.checkbox(
+                    portfolioEntryRiskForm("isActive"), 
+                    parts.Msg.asString("object.portfolio_entry_risk.is_active.label"), 
+                    parts.Msg.asString("object.portfolio_entry_risk.is_active.help")
+                )
+                
+                @helper.inputText(portfolioEntryRiskForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.name.label"), 'autofocus -> "autofocus")
+                
+                @helper.textarea(portfolioEntryRiskForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.description.label"))
+                
+                @parts.dropdownlist(portfolioEntryRiskForm("riskType"), parts.Msg.asString("object.portfolio_entry_risk.type.label"), riskTypes, null, false)
+                
+                @if(isRisk) {
+                    @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.target_date.label"))
+                } else {
+                    @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.due_date.label"))
+                }
+                
+                @if(isRisk) {
+                
+                    @parts.checkbox(
+                        portfolioEntryRiskForm("isMitigated"), 
+                        parts.Msg.asString("object.portfolio_entry_risk.is_mitigated.label")
+                    )
+                
+                    @helper.textarea(portfolioEntryRiskForm("mitigationComment"), 'onKeyPress -> "maf_checkIsMitigated();", '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.mitigation_comment.label"))
+                
+                        
+                    <script type="text/javascript">
+                        function maf_checkIsMitigated(){
+                            $('#@portfolioEntryRiskForm("isMitigated").id').attr('checked', true);
+                        }
+                    </script>
+                }
+                
+                @if(!isRisk) {
+                    @parts.singlevalue_picker(
+                        portfolioEntryRiskForm("owner"), 
+                        parts.Msg.asString("object.portfolio_entry_risk.owner.label"),
+                        controllers.routes.PickerController.owner().url
+                    )
+                }
+                
+                @if(portfolioEntryRiskForm("riskId").value!=null) {
+                    @parts.extended_attributes_input(portfolioEntryRiskForm, classOf[models.pmo.PortfolioEntryRisk], Long.parseLong(portfolioEntryRiskForm("riskId").value))
+                } else {
+                    @parts.extended_attributes_input(portfolioEntryRiskForm, classOf[models.pmo.PortfolioEntryRisk], null)
+                }
+                
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                
+                
+            </fieldset>
+        }
+
+    </div> 
+
+}

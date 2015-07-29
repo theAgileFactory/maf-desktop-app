@@ -1,0 +1,65 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@()
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.smtp().url),
+        ("admin.configuration.smtp.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.smtp.title", controllers.admin.ConfigurationController.MenuItemType.SMTP, breadcrump){
+    
+    <a class="btn btn-default" href="@controllers.admin.routes.ConfigurationController.editSmtp().url">
+        <span class="glyphicons glyphicons-edit glyphicons-menu-small"></span>&nbsp; 
+         @parts.Msg("button.update")
+    </a>
+    <br/><br/>
+
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+            <colgroup>
+                <col class="col-md-3">
+                <col class="col-md-7">
+                <col class="col-md-2">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>@parts.Msg("object.preference.name.label")</th>
+                    <th>@parts.Msg("object.preference.description.label")</th>
+                    <th>@parts.Msg("object.preference.value.label")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.SMTP_HOST_PREFERENCE)
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.SMTP_PORT_PREFERENCE)
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.SMTP_SSL_PREFERENCE)
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.SMTP_TLS_PREFERENCE)
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.SMTP_USER_PREFERENCE)
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.SMTP_PASSWORD_PREFERENCE)
+            </tbody>
+        </table>
+    </div>
+}

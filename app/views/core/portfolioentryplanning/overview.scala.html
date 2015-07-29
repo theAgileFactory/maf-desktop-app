@@ -1,0 +1,101 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry, 
+    ganttSource: String,
+    overviewConfigurationForm: Form[controllers.core.PortfolioEntryPlanningController.OverviewConfiguration]
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.planning.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.PLANNING, breadcrump){
+
+    @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.overviewChangeConf(portfolioEntry.id), 'class -> "form-inline pull-right") {
+    
+        @checkbox_colored(
+            overviewConfigurationForm("phases"), 
+            parts.Msg.asString("core.portfolio_entry_planning.overview.phase.label"),
+            "success"
+        ) &nbsp;
+        @checkbox_colored(
+            overviewConfigurationForm("milestones"), 
+            parts.Msg.asString("core.portfolio_entry_planning.overview.milestone.label"),
+            "danger"
+        ) &nbsp;
+        @checkbox_colored(
+            overviewConfigurationForm("packages"), 
+            parts.Msg.asString("core.portfolio_entry_planning.overview.package.label"),
+            "warning"
+        ) &nbsp;
+        @checkbox_colored(
+            overviewConfigurationForm("releases"), 
+            parts.Msg.asString("core.portfolio_entry_planning.overview.release.label"),
+            "info"
+        ) &nbsp;
+        @checkbox_colored(
+            overviewConfigurationForm("iterations"), 
+            parts.Msg.asString("core.portfolio_entry_planning.overview.iteration.label"),
+            "primary"
+        ) &nbsp;
+        
+        <div class="form-group">
+            <input class="btn btn-default" type="submit" value="@parts.Msg("button.refresh")" />
+            <span class="help-block text-muted"></span>
+        </div>
+
+    }
+    
+    <br/>
+
+    @if(ganttSource != null && !ganttSource.trim.equals("[ ]")) {
+    
+        <div class="gantt" id="overview-gantt"></div>
+        
+        <script>
+            $(function() {
+                $("#overview-gantt").gantt({
+                    months: _jquery_gantt_transl.@(Http.Context.current().lang().code()).months,
+                    dow: _jquery_gantt_transl.@(Http.Context.current().lang().code()).dow,
+                    source: @Html(ganttSource),
+                    scale: "weeks",
+                    minScale: "days",
+                    maxScale: "months",
+                    itemsPerPage: 100000,
+                    navigate: "scroll",
+                    onItemClick: function(data) {
+                        window.location.href = data.url;
+                    }
+                });
+            });
+            
+        </script>
+    
+    } else {
+        @parts.Msg("core.portfolio_entry_planning.overview.no_planning")
+    }
+}

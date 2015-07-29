@@ -1,0 +1,155 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    basicBar: framework.highcharts.pattern.BasicBar,
+    totals: utils.finance.Totals
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.financial.label", controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.financial.status.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.FINANCIAL, breadcrump){
+
+    <span id="portfolio-entry-@(portfolioEntry.id)-financial-status"></span>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div id="basicBar"></div>
+        </div>
+
+        <div class="col-md-6">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th class="text-center">OPEX (@totals.getCurrency.code)</th>
+                        <th class="text-center">CAPEX (@totals.getCurrency.code)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>@parts.Msg("core.portfolio_entry_financial.view.status.table.budget.label")</strong></td>
+                        <td class="text-right" id="financial-budget-opex-total">@display_number(totals.getOpexBudget)</td>
+                        <td class="text-right" id="financial-budget-capex-total">@display_number(totals.getCapexBudget)</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <p><small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label")</small><br/>
+                            <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label")</small></p>
+                            <strong>@parts.Msg("core.portfolio_entry_financial.view.status.table.forecast.label")</strong>
+                        </td>
+                        <td class="text-right">
+                            <p><small><span id="financial-costtocomplete-opex-total">@display_number(totals.getOpexCostToComplete)</span></small><br/>
+                            <small><span id="financial-engaged-opex-total">@display_number(totals.getOpexEngaged)</span></small><br/></p>
+                            <span id="financial-forecast-opex-total">@display_number(totals.getForecast(true))</span>
+                        </td>
+                        <td class="text-right">
+                            <p><small><span id="financial-costtocomplete-capex-total">@display_number(totals.getCapexCostToComplete)</span></small><br/>
+                            <small><span id="financial-engaged-capex-total">@display_number(totals.getCapexEngaged)</span></small><br/></p>
+                            <span id="financial-forecast-capex-total">@display_number(totals.getForecast(false))</span>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>@parts.Msg("core.portfolio_entry_financial.view.status.table.deviation.label")</strong></td>
+                        <td class="text-right" id="financial-deviation-opex-total">@display_number(totals.getDeviation(true), null, true)</td>
+                        <td class="text-right" id="financial-deviation-capex-total">@display_number(totals.getDeviation(false), null, true)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>@parts.Msg("core.portfolio_entry_financial.view.status.table.status.label")</strong></td>
+                        <td class="text-right" id="financial-deviation-opex-rate">
+                            @if(totals.getDeviationRate(true) != null) {
+                                @display_percentage_text(totals.getDeviationRate(true), true)
+                            } else {
+                                @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
+                            }
+                        </td>
+                        <td class="text-right" id="financial-deviation-capex-rate">
+                            @if(totals.getDeviationRate(false) != null) {
+                                @display_percentage_text(totals.getDeviationRate(false), true)
+                            } else {
+                                @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+       </div>
+
+    </div>
+    
+    <script type="text/javascript">
+        $(function () {
+
+            $('#basicBar').highcharts({
+                credits: {
+                    enabled: false
+                },
+                colors: @Html(framework.highcharts.HighchartsUtils.getColorsAsJson),
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: @Html(basicBar.getCategoriesAsJson)
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '@dao.finance.CurrencyDAO.getCurrencyDefault().code'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        borderWidth: 0
+                    },
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                series: @Html(basicBar.getSeriesContainer.toJsonArray)
+            });
+
+        });
+    </script>
+
+}

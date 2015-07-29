@@ -1,0 +1,63 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(callbackUrl: String, hasError: Boolean, accountLocked: Boolean)
+
+@import framework_views.parts
+
+@templates.main_nosidebar(parts.Msg.asString("authentication.standalone.form.title"), false, false) { 
+}{
+
+    <div class="row ">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicons glyphicons-lock"></span> @parts.Msg("authentication.standalone.form.title")</h3>
+                </div>
+                <div class="panel-body">
+
+                    <form method="post" action="@callbackUrl">
+                        <fieldset>
+                            <div class="form-group">
+                                 <label for="uid">@parts.Msg("authentication.standalone.username.label")</label>
+                                <input name="uid" type="text" class="form-control" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                 <label for="password">@parts.Msg("authentication.standalone.password.label")</label>
+                                <input name="password" type="password" class="form-control" required>
+                            </div>
+                            @if(hasError){
+                            <div class="alert alert-danger" role="alert">
+                            @if(accountLocked){
+                                @parts.Msg("authentication.standalone.locked.account.message")
+                            }else{
+                                @parts.Msg("authentication.standalone.error.message")
+                            }
+                            </div>
+                            }
+                            <button class="btn btn-primary" type="submit">@parts.Msg("authentication.standalone.button.label")</button>
+                        </fieldset>
+                        <p style="padding-top: 1.5em">
+                        <a href="@controllers.sso.routes.StandaloneAuthenticationController.displayResetPasswordForm()">@parts.Msg("authentication.standalone.password.issue.message")</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,82 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    lifeCycleProcess: models.governance.LifeCycleProcess,
+    lifeCyclePhaseForm: Form[utils.form.LifeCyclePhaseFormData],
+    milestones: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.reference_data.governance.title", controllers.admin.routes.ConfigurationGovernanceController.list().url),
+        (lifeCycleProcess.getName, controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(lifeCycleProcess.id).url),
+        ("admin.configuration.reference_data.life_cycle_phase.manage.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.reference_data.governance.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+
+    <div class="maf-form">
+        @if(lifeCyclePhaseForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.admin.routes.ConfigurationGovernanceController.processManagePhase()) {
+            <fieldset>
+
+                <input type="hidden" name="lifeCycleProcessId" value="@lifeCycleProcess.id"/>
+    
+
+                @if(lifeCyclePhaseForm("id").value!=null) {
+                    <input type="hidden" name="id" value="@lifeCyclePhaseForm("id").value"/>
+                }
+                
+                @parts.checkbox(
+                    lifeCyclePhaseForm("isRoadmapPhase"), 
+                    parts.Msg.asString("object.life_cycle_phase.is_roadmap_phase.label"),
+                    ""
+                )
+                
+                @parts.multi_languages_input_text(lifeCyclePhaseForm("name"), parts.Msg.asString("object.life_cycle_phase.name.label"))
+
+                @parts.dropdownlist(lifeCyclePhaseForm("startMilestone"), parts.Msg.asString("object.life_cycle_phase.start_milestone.label"), milestones, null, false)
+                
+                @parts.dropdownlist(lifeCyclePhaseForm("endMilestone"), parts.Msg.asString("object.life_cycle_phase.end_milestone.label"), milestones, null, false)
+                
+                @helper.inputText(lifeCyclePhaseForm("gapDaysStart"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.life_cycle_phase.gap_days_start.label"))
+                
+                @helper.inputText(lifeCyclePhaseForm("gapDaysEnd"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.life_cycle_phase.gap_days_end.label"))
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(lifeCycleProcess.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+    
+}

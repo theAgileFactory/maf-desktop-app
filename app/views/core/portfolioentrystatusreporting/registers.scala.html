@@ -1,0 +1,126 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry, 
+    reportsTable: framework.utils.Table[utils.table.PortfolioEntryReportListView], 
+    reportsPagination: framework.utils.Pagination[models.pmo.PortfolioEntryReport], 
+    risksTable: framework.utils.Table[utils.table.PortfolioEntryRiskListView], 
+    risksPagination: framework.utils.Pagination[models.pmo.PortfolioEntryRisk], 
+    issuesTable: framework.utils.Table[utils.table.PortfolioEntryRiskListView], 
+    issuesPagination: framework.utils.Pagination[models.pmo.PortfolioEntryRisk], 
+    viewAllRisks: Boolean,
+    viewAllIssues: Boolean,
+    isActiveReport: Boolean
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.status_reporting.registers.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.REPORTING, breadcrump){
+
+    <h4>@parts.Msg("core.portfolio_entry_status_reporting.registers.report.title")</h4>
+
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            &nbsp;
+            <div class="pull-right">
+                @if(isActiveReport) {
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)"><span class="glyphicons glyphicons-download-alt glyphicons-panel"></span></a>
+                    &nbsp;
+                }
+                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                }
+            </div>
+        </div>
+
+        <div class="panel-body">
+            @parts.table.tableview_with_pagination_and_queryparams(reportsTable, reportsPagination, null, null, "id=" + portfolioEntry.id)
+        </div>
+    </div>
+    
+    <h4>@parts.Msg("core.portfolio_entry_status_reporting.registers.risks_and_issues.title")</h4>
+    
+    <div class="row">
+
+        <div class="col-md-6">
+    
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_status_reporting.registers.risks_and_issues.risks.title")
+                    
+                    <div class="pull-right">
+                        @if(!viewAllRisks) {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, true, viewAllIssues).url"><span class="glyphicons glyphicons-resize-full glyphicons-panel"></span></a>
+                        } else {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, false, viewAllIssues).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
+                        }
+                        &nbsp;
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview_with_pagination_and_queryparams(risksTable, risksPagination, null, null, "viewAllRisks=" + viewAllRisks + "&viewAllIssues=" + viewAllIssues + "&id=" + portfolioEntry.id)
+                </div>
+            </div>
+    
+        </div>
+    
+        <div class="col-md-6">
+    
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_status_reporting.registers.risks_and_issues.issues.title")
+                    
+                    <div class="pull-right">
+                        @if(!viewAllIssues) {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, true).url"><span class="glyphicons glyphicons-resize-full glyphicons-panel"></span></a>
+                        } else {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, false).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
+                        }
+                        &nbsp;
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, 0, false).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview_with_pagination_and_queryparams(issuesTable, issuesPagination, null, null, "viewAllRisks=" + viewAllRisks + "&viewAllIssues=" + viewAllIssues + "&id=" + portfolioEntry.id)
+                </div>
+            </div>
+    
+        </div>
+    
+    </div>
+}

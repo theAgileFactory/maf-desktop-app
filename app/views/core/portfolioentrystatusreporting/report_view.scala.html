@@ -1,0 +1,122 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    report: models.pmo.PortfolioEntryReport,
+    attachmentsTable: framework.utils.Table[utils.table.AttachmentListView]
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.status_reporting.registers.label", controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url),
+        (parts.Msg.asString("core.portfolio_entry_status_reporting.report.view.title", display_date(report.creationDate)), null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.REPORTING, breadcrump){
+
+    <div class="row">
+    
+        <div class="col-md-6">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_status_reporting.report.view.details.title")
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id, report.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            &nbsp;
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry_report.report_date.label")</th>
+                                <td>@display_date(report.creationDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry_report.author.label")</th>
+                                <td>@display_actor(report.author)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry_report.status.label")</th>
+                                <td>@display_portfolio_entry_report_status_type(report.portfolioEntryReportStatusType)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryReport], report.id)
+                    
+                </div>
+                
+            </div>
+        
+        </div>
+        
+        <div class="col-md-6">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("object.portfolio_entry_report.comments.label")
+                </div>
+                <div class="panel-body">
+                    @display_object(report.comments, true)
+                </div>
+                
+            </div>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry.view.attachments.title")
+                    
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.createReportAttachment(portfolioEntry.id, report.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(attachmentsTable)
+                </div>
+            </div>
+        
+        </div>
+    
+    </div>
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.back")</a>
+
+}

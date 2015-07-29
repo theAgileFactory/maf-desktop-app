@@ -1,0 +1,92 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(source: String)
+
+@import framework_views.parts
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.milestone.planning.title"),
+    Seq(
+        ("topmenubar.governance.milestone_planning.menu.label",null)
+    )
+) {
+    <blockquote>@parts.Msg("core.milestone.planning.header")</blockquote>
+    
+    <div class="panel panel-default" id="details">
+        <div class="panel-heading" style="height: 54px;" >
+            <span style="font-size: 16px;" id="calendar-title"></span>
+            <div class="btn-group pull-right form-inline">
+                <button type="button" class="btn btn-default" data-calendar-nav="prev">&laquo;</button>
+                <button type="button" class="btn btn-default" data-calendar-nav="today">@parts.Msg("core.milestone.planning.today")</button>
+                <button type="button" class="btn btn-default" data-calendar-nav="next">&raquo;</button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    
+    <div id="calendar-modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">X</button>
+                    <h3 class="modal-title"></h3>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    
+        var calendar = $('#calendar').calendar(options = {
+                events_source: @Html(source),
+                view: 'month',
+                tmpl_path: '@(routes.Assets.versioned("").url)framework/lib/bootstrap-calendar/tmpls/',
+                language: '@Http.Context.current().lang().code()',
+                first_day: 1,
+                modal: "#calendar-modal",
+                modal_type : "ajax",
+                modal_title : function (e) { return "<a href='" + e.goToUrl + "'>" + e.title + "</a>" },
+                onAfterViewLoad: function(view) {
+                    $('#calendar-title').text(this.getTitle());
+                },
+                views: {
+                    year:  {
+                        slide_events: 0,
+                        enable:       0
+                    },
+                    week:  {
+                        enable: 0
+                    },
+                    day:   {
+                        enable: 0
+                    }
+                }
+            });
+
+        $('.btn-group button[data-calendar-nav]').each(function() {
+            var $this = $(this);
+            $this.click(function() {
+                calendar.navigate($this.data('calendar-nav'));
+            });
+        });
+
+    </script>
+}

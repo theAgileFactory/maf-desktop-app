@@ -1,0 +1,112 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    lastPlanning: models.governance.LifeCycleInstancePlanning,
+    governanceListViewsAsMap: Map[Long, utils.table.GovernanceListView],
+    plannedDatesForm: Form[utils.form.PlannedDatesFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.governance.label", controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url),
+        ("core.portfolio_entry_governance.planning.edit.title", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.GOVERNANCE, breadcrump){
+
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_governance.planning.edit.title")
+        </div>
+
+        <div class="panel-body">
+        
+            <div class="maf-form">
+                @if(plannedDatesForm.hasErrors()){
+                    <div class="alert alert-danger">
+                        <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+                    </div>
+                }
+            
+                @helper.form(action = controllers.core.routes.PortfolioEntryGovernanceController.processEditPlanning()) {
+        
+                    <fieldset>
+        
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        <table class="table table-condensed table-hover">
+                            <colgroup>
+                                <col class="col-md-4">
+                                <col class="col-md-4">
+                                <col class="col-md-4">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>@parts.Msg("object.life_cycle_milestone_instance.milestone.label")</th>
+                                    <th>@parts.Msg("object.planned_life_cycle_milestone_instance.planned_date.label")</th>
+                                    <th>@parts.Msg("object.life_cycle_milestone_instance.status.label")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @repeat(plannedDatesForm("plannedDates")) { plannedDateField =>
+                        
+                                    @defining(governanceListViewsAsMap.get(Long.parseLong(plannedDateField("plannedDateId").value.get))) { governanceListView =>
+                                        <tr>
+                                            <td>
+                                                @display_milestone(governanceListView.milestone)
+                                            </td>
+                                            <td>
+                                                @if(governanceListView.planningId.equals(lastPlanning.id) && !governanceListView.isPending) {
+                                                    <input type="hidden" id="@plannedDateField("plannedDateId").id" name="@plannedDateField("plannedDateId").name" value="@plannedDateField("plannedDateId").value.get"/>
+                                                    @parts.dateinput(plannedDateField("plannedDate"), "")
+                                                } else {
+                                                    @display_date(governanceListView.lastPlannedDate)
+                                                }
+                                            </td>
+                                            <td>
+                                                @display_list_of_values(governanceListView.status)
+                                            </td>
+                                        </tr>
+        
+                                    }
+                                }
+                                
+                            </tbody>
+                        </table>
+        
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                    </fieldset>
+               }
+            </div> 
+
+        </div>
+    </div>
+
+}

@@ -1,0 +1,111 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    actor: models.pmo.Actor,
+    year: Integer,
+    capacityForm: Form[utils.form.ActorCapacityFormData],
+    canEdit: Boolean
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@actor_template(parts.Msg.asString("core.actor.sidebar.allocation.capacity"), actor, controllers.core.ActorController.MenuItemType.ALLOCATION){
+
+    <script>
+        hasBeenUpdated = false;
+    </script>
+    
+    @if(capacityForm.hasErrors()){
+        <div class="alert alert-danger">
+            <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+        </div>
+    }
+
+    <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center">
+        <div class="btn-group">
+            <a class="btn btn-default" role="button" onclick="return maf_leavePage();" href="@controllers.core.routes.ActorController.capacity(actor.id, year - 1)">&laquo;</a>
+            <a class="btn btn-default" role="button" id="timesheet-datepicker">@year</a>
+            <a class="btn btn-default" role="button" onclick="return maf_leavePage();" href="@controllers.core.routes.ActorController.capacity(actor.id, year + 1)">&raquo;</a>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+    </div>
+    
+    <br/>
+    
+    @helper.form(action = controllers.core.routes.ActorController.saveCapacity()) {
+    
+        <input type="hidden" name="id" value="@actor.id"/>
+        <input type="hidden" name="year" value="@year"/>
+    
+        <div class="row">
+            <div class="col-md-1 text-center">@parts.Msg("month.january")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.february")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.march")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.april")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.may")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.june")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.july")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.august")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.september")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.october")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.november")</div>
+            <div class="col-md-1 text-center">@parts.Msg("month.december")</div>
+            
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="januaryValue" class="form-control" type="text" autofocus="autofocus" value="@capacityForm("januaryValue").value" name="januaryValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="februaryValue" class="form-control" type="text" value="@capacityForm("februaryValue").value" name="februaryValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="marchValue" class="form-control" type="text" value="@capacityForm("marchValue").value" name="marchValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="aprilValue" class="form-control" type="text" value="@capacityForm("aprilValue").value" name="aprilValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="mayValue" class="form-control" type="text" value="@capacityForm("mayValue").value" name="mayValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="juneValue" class="form-control" type="text" value="@capacityForm("juneValue").value" name="juneValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="julyValue" class="form-control" type="text" value="@capacityForm("julyValue").value" name="julyValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="augustValue" class="form-control" type="text" value="@capacityForm("augustValue").value" name="augustValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="septemberValue" class="form-control" type="text" value="@capacityForm("septemberValue").value" name="septemberValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="octoberValue" class="form-control" type="text" value="@capacityForm("octoberValue").value" name="octoberValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="novemberValue" class="form-control" type="text" value="@capacityForm("novemberValue").value" name="novemberValue"></div>
+            <div class="col-md-1 text-center"><input @if(!canEdit) {disabled} id="decemberValue" class="form-control" type="text" value="@capacityForm("decemberValue").value" name="decemberValue"></div>
+        </div>
+        
+        @if(canEdit) {
+            <br/><input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+        }
+    
+    }
+    
+    <br/><small>@parts.Msg("core.actor.capacity.footer")</small>
+    
+    <script>
+        function maf_leavePage() {
+            if (hasBeenUpdated) {
+                return window.confirm("@parts.Msg("core.actor.capacity.has_been_updated.message")");
+            } else {
+                return true;
+            }
+        }
+        
+        $('input[type=text]').change(function() { hasBeenUpdated = true; });
+    </script>
+
+
+}

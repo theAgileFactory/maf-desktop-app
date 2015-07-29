@@ -1,0 +1,75 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    kpiDefinition: models.framework_models.kpi.KpiDefinition,
+    kpi: framework.services.kpi.Kpi,
+    kpiColorRuleForm: Form[utils.form.KpiColorRuleFormData],
+    cssColors: framework.utils.ISelectableValueHolderCollection[framework.utils.CssValueForValueHolder]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("admin.kpi.title"),
+    Seq(
+        ("topmenubar.admin.kpimanager.menu.label", controllers.admin.routes.KpiManagerController.index().url),
+        ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
+        (kpi.getValueName(framework.services.kpi.Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
+        ("admin.kpi.rule.manage.title", null)
+    )
+) {
+
+    @framework_views.parts.framework_code_editor_includes(routes.Assets.versioned("").url, framework.commons.IFrameworkConstants.Syntax.JAVASCRIPT)
+    
+    <div class="maf-form">
+        @if(kpiColorRuleForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+    
+        @helper.form(action = controllers.admin.routes.KpiManagerController.saveRule()) {
+            <fieldset>
+            
+                <input type="hidden" name="kpiDefinitionId" value="@kpiDefinition.id"/>
+            
+                @if(kpiColorRuleForm("kpiColorRuleId").value!=null) {
+                    <input type="hidden" name="kpiColorRuleId" value="@kpiColorRuleForm("kpiColorRuleId").value"/>
+                }
+                
+                @parts.radiobuttongroup(kpiColorRuleForm("cssColor"), parts.Msg.asString("object.kpi_color_rule.color.label"), cssColors)
+
+                @parts.multi_languages_input_text(kpiColorRuleForm("renderLabel"), parts.Msg.asString("object.kpi_color_rule.render_label.label"))
+
+                @parts.code_editor(
+                    kpiColorRuleForm("rule"), 
+                    parts.Msg.asString("object.kpi_color_rule.rule.label"), 
+                    framework.commons.IFrameworkConstants.Syntax.JAVASCRIPT
+                )
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url">@parts.Msg("button.cancel")</a>
+            </fieldset>
+       }
+    </div> 
+   
+}

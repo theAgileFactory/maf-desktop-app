@@ -1,0 +1,119 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    orgUnit: models.pmo.OrgUnit,
+    allocatedActorForm: Form[utils.form.PortfolioEntryResourcePlanAllocatedActorFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.planning.resources.label", controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id).url),
+        (parts.Msg.asString("core.portfolio_entry_planning.reallocate_org_unit.title", orgUnit.getName), null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.PLANNING, breadcrump){
+
+    <div class="maf-form">
+        @if(allocatedActorForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.processReallocateOrgUnit()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+
+                <input type="hidden" name="allocatedOrgUnitId" value="@allocatedActorForm("allocatedOrgUnitId").value"/>
+
+                @parts.checkbox(
+                    allocatedActorForm("isConfirmed"), 
+                    parts.Msg.asString("object.allocated_resource.is_confirmed.label")
+                )
+                
+                @parts.dropdownlist(
+                    allocatedActorForm("actor"), 
+                    parts.Msg.asString("object.allocated_resource.actor.label"), 
+                    dao.pmo.ActorDao.getActorActiveAsVHByOrgUnit(orgUnit.id),
+                    null,
+                    false
+                )
+                
+                @parts.dropdownlist(
+                    allocatedActorForm("stakeholderType"), 
+                    parts.Msg.asString("object.stakeholder.role.label"), 
+                    dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id), 
+                    null,
+                    false
+                )
+                
+                @helper.inputText(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
+                
+                @parts.singlevalue_picker(
+                    allocatedActorForm("portfolioEntryPlanningPackage"), 
+                    parts.Msg.asString("object.allocated_resource.package.label"),
+                    controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
+                    Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                )
+                
+                @parts.checkbox(
+                    allocatedActorForm("followPackageDates"), 
+                    parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
+                )
+
+                @parts.dateinput(allocatedActorForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
+                
+                @parts.dateinput(allocatedActorForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
+
+                @parts.extended_attributes_input(allocatedActorForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor], null)
+                
+                @allocated_resource_manage_js()
+                
+                <script>
+
+                $('#@allocatedActorForm("portfolioEntryPlanningPackage").id').change(function() { 
+                    maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
+                });
+                $('#@allocatedActorForm("followPackageDates").id').change(function() { 
+                    maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id') 
+                });
+
+                maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
+                
+                </script>
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+   
+}

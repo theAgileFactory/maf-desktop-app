@@ -1,0 +1,73 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    table: framework.utils.Table[utils.table.PortfolioEntryListView], 
+    pagination: framework.utils.Pagination[models.pmo.PortfolioEntry],
+    filterConfig: framework.utils.FilterConfig[utils.table.PortfolioEntryListView]
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+@import framework.utils.SideBar
+@import framework.utils.Menu.ClickableMenuItem
+
+@sidebarInstance=@{
+    val sidebarInstance=new SideBar()
+    sidebarInstance.addMenuItem(new ClickableMenuItem(
+        "core.roadmap.title",
+        controllers.core.routes.RoadmapController.index().url,
+        "glyphicons glyphicons-road",
+        true)
+    );
+    sidebarInstance.addMenuItem(new ClickableMenuItem(
+        "core.roadmap.planning.title",
+        controllers.core.routes.RoadmapController.viewPlanning().url,
+        "glyphicons glyphicons-calendar",
+        false)
+    );
+    sidebarInstance
+}
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.roadmap.menu.label", null)
+    )
+}
+
+@templates.main_bc_iconsbar(
+    parts.Msg.asString("core.roadmap.title"),
+    sidebarInstance,
+    breadcrump
+){
+}{
+    <span id="roadmap"></span>
+    
+    <div id="simulator-kpis"></div>
+
+    @parts.table.filtered_tableview(
+        table, 
+        pagination, 
+        filterConfig, 
+        controllers.core.routes.RoadmapController.indexFilter().url,
+        controllers.core.routes.RoadmapController.exportAsExcel().url
+    )
+
+}

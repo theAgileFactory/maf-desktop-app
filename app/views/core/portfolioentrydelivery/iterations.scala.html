@@ -1,0 +1,118 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry, 
+    table: framework.utils.Table[utils.table.IterationListView],
+    pagination: framework.utils.Pagination[models.delivery.Iteration],
+    filterConfig: framework.utils.FilterConfig[utils.table.IterationListView],
+    rangeLine: framework.highcharts.pattern.RangeLine
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.iterations.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+
+    <div class="panel panel-default" id="packages-table">
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_delivery.iterations.details.title")
+        </div>
+
+        <div class="panel-body">
+            @parts.table.filtered_tableview(
+                table, 
+                pagination, 
+                filterConfig, 
+                controllers.core.routes.PortfolioEntryDeliveryController.iterationsFilter(portfolioEntry.id).url,
+                null
+            )
+        </div>
+    </div>
+    
+    @if(rangeLine!=null) {
+    
+        <div class="panel panel-default" id="packages-table">
+            <div class="panel-heading">
+                @parts.Msg("core.portfolio_entry_delivery.iterations.burndown.title")
+                <div class="pull-right small">
+                    @parts.formats.display_date(new Date(), framework.utils.Utilities.getDefaultDatePattern() + " kk:mm") &nbsp;
+                    <a href="@controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id)"><span class="glyphicons glyphicons-refresh"></span></a>
+                </div>
+            </div>
+    
+            <div class="panel-body">
+                <div id="burndown-chart" style="width: 100%;"></div>
+
+                <script type="text/javascript">
+                
+                    $(function () {
+                        $('#burndown-chart').highcharts({
+                            credits: {
+                                enabled: false
+                            },
+                            colors: @Html(framework.highcharts.HighchartsUtils.getColorsAsJson),
+                            chart: {
+                                type: 'spline'
+                            },
+                            title: {
+                                text: ''
+                            },
+                            legend: {
+                                align: "right",
+                                verticalAlign: "middle",
+                                layout: "vertical"
+                            },
+                            xAxis: @Html(rangeLine.getXAxisOptionsAsJson),
+                            yAxis: {
+                                min: 0,
+                                title: {
+                                    text: '@parts.Msg("object.iteration.story_points.label")'
+                                },
+                                lineWidth: 1
+                            },
+                            tooltip: {
+                                crosshairs: true,
+                                shared: true
+                            },
+                            plotOptions: {
+                                series: {
+                                    pointPlacement: @Html(rangeLine.getPointPlacement),
+                                    connectNulls: true
+                                }
+                            },
+                            series: @Html(rangeLine.getSeriesContainer.toJsonArray)
+                        });
+                    });
+                
+                </script>
+            </div>
+        </div>
+
+    }
+
+}

@@ -1,0 +1,124 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    milestonesTable: framework.utils.Table[utils.table.GovernanceListView],
+    milestonesTrend: utils.MilestonesTrend
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, null)
+    )
+}
+
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntry])
+}
+
+@portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.OVERVIEW, breadcrump){
+
+    <span id="portfolio-entry-@(portfolioEntry.id)-details"></span>
+    
+    <div class="row">
+        @views.html.framework_views.parts.kpi.display_kpi_dashboard(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
+        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION) {
+            @views.html.framework_views.parts.kpi.display_kpi_box("KPI_DEVIATION_CAPEX", portfolioEntry.id)
+            @views.html.framework_views.parts.kpi.display_kpi_box("KPI_DEVIATION_OPEX", portfolioEntry.id)
+        }
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry.overview.milestones_trend.panel.title")
+        </div>
+
+        <div class="panel-body">
+
+            @Html(milestonesTrend.renderTable)
+            
+        </div>
+    </div>
+    
+    <div class="row">
+    
+        @if(portfolioEntry.lastPortfolioEntryReport != null) {
+            <div class="col-md-6">
+            
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @parts.Msg("core.portfolio_entry.overview.status.panel.title")
+                        
+                        <div class="pull-right">
+                            @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                                <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id, portfolioEntry.lastPortfolioEntryReport.id).url"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                                &nbsp;&nbsp;
+                            }
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url"><span class="glyphicons glyphicons-new-window glyphicons-panel"></span></a>
+                        </div>
+                    </div>
+            
+                    <div class="panel-body">
+                        <table class="table table-condensed table-hover">
+                            <colgroup>
+                                 <col class="col-md-3">
+                                 <col class="col-md-9">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>@parts.Msg("object.portfolio_entry_report.status.label")</th>
+                                    <td>@display_portfolio_entry_report_status_type(portfolioEntry.lastPortfolioEntryReport.portfolioEntryReportStatusType)</td>
+                                </tr>
+                                <tr>
+                                    <th>@parts.Msg("object.portfolio_entry_report.comments.label")</th>
+                                    <td>@display_object(portfolioEntry.lastPortfolioEntryReport.comments, true)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            
+            </div>
+        }
+        
+        <div class="col-md-6">
+        
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry.overview.milestones.panel.title")
+                    
+                    <div class="pull-right">
+                        <a href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url"><span class="glyphicons glyphicons-new-window glyphicons-panel"></span></a>
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(milestonesTable)
+                </div>
+            </div>
+            
+        </div>
+    </div>
+   
+}

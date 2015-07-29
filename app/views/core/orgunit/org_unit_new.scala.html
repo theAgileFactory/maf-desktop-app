@@ -1,0 +1,85 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    orgUnitForm: Form[utils.form.OrgUnitFormData],
+    orgUnitTypes: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.org_unit.new.title"),
+    Seq(
+        ("core.org_unit.new.breadcrumb",null)
+    )
+) {
+
+    <div class="maf-form">
+        @if(orgUnitForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+    
+        @helper.form(action = controllers.core.routes.OrgUnitController.save()) {
+            <fieldset>
+            
+                <input type="hidden" name="isActive" value="true"/>
+                
+                @parts.checkbox(
+                    orgUnitForm("canSponsor"), 
+                    parts.Msg.asString("object.org_unit.can_sponsor.label"), 
+                    parts.Msg.asString("object.org_unit.can_sponsor.help")
+                )
+                
+                @parts.checkbox(
+                    orgUnitForm("canDeliver"), 
+                    parts.Msg.asString("object.org_unit.can_deliver.label"), 
+                    parts.Msg.asString("object.org_unit.can_deliver.help")
+                )
+                
+                @helper.inputText(orgUnitForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.ref_id.label"), 'autofocus -> "autofocus")
+                
+                @helper.inputText(orgUnitForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.name.label"))
+                
+                @parts.dropdownlist(orgUnitForm("orgUnitType"), parts.Msg.asString("object.org_unit.type.label"), orgUnitTypes, null, false)
+                
+                @parts.singlevalue_picker(
+                    orgUnitForm("manager"), 
+                    parts.Msg.asString("object.org_unit.manager.label"),
+                    controllers.routes.PickerController.manager().url
+                )
+                
+                @parts.singlevalue_picker(
+                    orgUnitForm("parent"), 
+                    parts.Msg.asString("object.org_unit.parent.label"),
+                    controllers.routes.PickerController.orgUnit().url
+                )
+                
+                @parts.extended_attributes_input(orgUnitForm, classOf[models.pmo.OrgUnit], null)
+                
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
+            </fieldset>
+       }
+    </div> 
+   
+}

@@ -1,0 +1,275 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.agifac.maf.desktop</groupId>
+	<artifactId>maf-desktop-app</artifactId>
+	<version>6.0.1-SNAPSHOT</version>
+	<name>Component "maf-desktop-app", of scope "com.agifac.maf.desktop"</name>
+	<description>This is the main composant of BizDock application</description>
+	<packaging>play2</packaging>
+	<url>https://prod.the-agile-factory.net/site/${project.groupId}/${project.artifactId}-${project.version}</url>
+
+	<organization>
+		<name>The Agile Factory</name>
+		<url>http://www.the-agile-factory.com</url>
+	</organization>
+
+	<scm>
+		<connection>scm:git:https://github.com/theAgileFactory/maf-desktop-app.git</connection>
+		<developerConnection>scm:git:https://github.com/theAgileFactory/maf-desktop-app.git</developerConnection>
+		<url>scm:git:https://github.com/theAgileFactory/maf-desktop-app.git</url>
+	</scm>
+
+	<ciManagement>
+		<system>jenkins</system>
+		<url>https://prod.the-agile-factory.net/jenkins/</url>
+	</ciManagement>
+
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://prod.the-agile-factory.net/redmine/</url>
+	</issueManagement>
+
+	<properties>
+		<project.build.sourceEncoding>latin1</project.build.sourceEncoding>
+		<java.source>1.7</java.source>
+        <java.target>1.7</java.target>
+        <scala.version>2.10</scala.version>
+        <!-- Dependencies properties -->
+		<lib.app-framework.version>6.0.1-SNAPSHOT</lib.app-framework.version>
+		<maf.maf-desktop-datamodel.version>6.0.1-SNAPSHOT</maf.maf-desktop-datamodel.version>
+		<maf.maf-desktop-patcher.version>1.0.0-SNAPSHOT</maf.maf-desktop-patcher.version>
+        <deadbolt.version>2.3.1</deadbolt.version> 
+        <!-- Plugin properties -->
+        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <ivy-maven-plugin.version>0.2.5</ivy-maven-plugin.version>
+        <play2-maven-plugin.version>1.2.5</play2-maven-plugin.version>
+        <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
+        <maven-site-plugin.version>3.0</maven-site-plugin.version>
+        <wagon-ssh.version>2.2</wagon-ssh.version>
+        <maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
+        <maven-checkstyle-plugin.version>2.12.1</maven-checkstyle-plugin.version>
+        <maven-pmd-plugin.version>3.1</maven-pmd-plugin.version>
+        <findbugs-maven-plugin.version>2.5.2</findbugs-maven-plugin.version>
+        <maven-project-info-reports-plugin.version>2.4</maven-project-info-reports-plugin.version>
+        <versions-maven-plugin.version>1.2</versions-maven-plugin.version>
+	</properties>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>https://prod.the-agile-factory.net/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>releases</id>
+			<url>https://prod.the-agile-factory.net/nexus/content/repositories/releases</url>
+		</repository>
+		<site>
+			<id>site</id>
+			<name>site</name>
+			<url>scp://prod.the-agile-factory.net/var/www/html/${project.groupId}/${project.artifactId}-${project.version}</url>
+		</site>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.agifac.lib</groupId>
+			<artifactId>app-framework</artifactId>
+			<version>${lib.app-framework.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>com.agifac.maf.desktop</groupId>
+            <artifactId>maf-desktop-datamodel</artifactId>
+            <version>${maf.maf-desktop-datamodel.version}</version>
+        </dependency>
+        <!-- <dependency>
+            <groupId>com.agifac.maf</groupId>
+            <artifactId>maf-desktop-patcher</artifactId>
+            <version>${maf.maf-desktop-patcher.version}</version>
+        </dependency> -->
+	</dependencies>
+
+	<build>
+
+		<!-- Play source directory -->
+		<sourceDirectory>app</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+
+		<plugins>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/runonce</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>com.github.goldin</groupId>
+				<artifactId>ivy-maven-plugin</artifactId>
+				<version>${ivy-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>get-ivy-dependencies</id>
+						<goals>
+							<goal>ivy</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<ivyconf>${project.basedir}/project/ivyconfig.xml</ivyconf>
+							<dir>${project.basedir}/lib</dir>
+							<dependencies>
+
+								<dependency>
+									<groupId>ivy.be.objectify</groupId>
+									<artifactId>deadbolt-java_${scala.version}</artifactId>
+									<version>${deadbolt.version}</version>
+								</dependency>
+
+								<dependency>
+									<groupId>ivy.be.objectify</groupId>
+									<artifactId>deadbolt-core_${scala.version}</artifactId>
+									<version>${deadbolt.version}</version>
+								</dependency>
+
+							</dependencies>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.nanoko.playframework</groupId>
+				<artifactId>play2-maven-plugin</artifactId>
+				<version>${play2-maven-plugin.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<buildDist>true</buildDist>
+					<buildWar>false</buildWar>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.source}</source>
+					<target>${java.target}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>${maven-site-plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>${wagon-ssh.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<reportPlugins>
+				        <plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-jxr-plugin</artifactId>
+								<version>${maven-jxr-plugin.version}</version>
+								<configuration>
+									<linkXref>true</linkXref>
+								</configuration>
+				        </plugin>
+						<plugin>
+						        <groupId>org.apache.maven.plugins</groupId>
+						        <artifactId>maven-checkstyle-plugin</artifactId>
+						        <version>${maven-checkstyle-plugin.version}</version>
+							<configuration>
+          							<configLocation>conf/checkstyle.xml</configLocation>
+        						</configuration>
+						</plugin>
+						<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-pmd-plugin</artifactId>
+								<version>${maven-pmd-plugin.version}</version>
+								<configuration>
+									<linkXref>true</linkXref>
+									<targetJdk>${java.target}</targetJdk>
+								</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>findbugs-maven-plugin</artifactId>
+							<version>${findbugs-maven-plugin.version}</version>
+							<configuration>
+								<xmlOutput>true</xmlOutput>
+								<xmlOutputDirectory>target/site</xmlOutputDirectory>
+								<effort>Max</effort>
+								<threshold>Low</threshold>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>${maven-project-info-reports-plugin.version}</version>
+							<configuration>
+								<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+								<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+							</configuration>
+							<reports>
+								<report>index</report>
+								<report>issue-tracking</report>
+								<report>summary</report>
+								<report>dependencies</report>
+								<report>scm</report>
+								<report>cim</report>
+								<report>distribution-management</report>
+							</reports>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>versions-maven-plugin</artifactId>
+							<version>${versions-maven-plugin.version}</version>
+							<reports>
+								<report>dependency-updates-report</report>
+								<report>plugin-updates-report</report>
+								<report>property-updates-report</report>
+							</reports>
+						</plugin>
+					</reportPlugins>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<reporting>
+    		<plugins>
+      			<plugin>
+        			<groupId>org.apache.maven.plugins</groupId>
+        			<artifactId>maven-checkstyle-plugin</artifactId>
+        			<version>${maven-checkstyle-plugin.version}</version>
+        			<configuration>
+          				<configLocation>conf/checkstyle.xml</configLocation>
+        			</configuration>
+      			</plugin>
+    		</plugins>
+  	</reporting>	
+</project>

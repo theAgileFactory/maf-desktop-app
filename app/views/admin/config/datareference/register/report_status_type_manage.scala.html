@@ -1,0 +1,73 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    reportStatusTypeForm: Form[utils.form.PortfolioEntryReportStatusTypeFormData],
+    selectableCssClasses: framework.utils.ISelectableValueHolderCollection[framework.utils.CssValueForValueHolder]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.reference_data.register.title", controllers.admin.routes.ConfigurationRegisterController.list().url),
+        ("admin.configuration.reference_data.report_status_type.manage.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.reference_data.register.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+
+    <div class="maf-form">
+        @if(reportStatusTypeForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.admin.routes.ConfigurationRegisterController.processManageReportStatusType()) {
+            <fieldset>
+
+                @if(reportStatusTypeForm("id").value!=null) {
+                    <input type="hidden" name="id" value="@reportStatusTypeForm("id").value"/>
+                }
+                
+                @parts.checkbox(
+                    reportStatusTypeForm("selectable"), 
+                    parts.Msg.asString("object.portfolio_entry_report_status_type.selectable.label"), 
+                    ""
+                )
+                
+                @parts.multi_languages_input_text(reportStatusTypeForm("name"), parts.Msg.asString("object.portfolio_entry_report_status_type.name.label"))
+
+                @parts.multi_languages_input_text(reportStatusTypeForm("description"), parts.Msg.asString("object.portfolio_entry_report_status_type.description.label"))
+                
+                @parts.radiobuttongroup(reportStatusTypeForm("cssClass"), parts.Msg.asString("object.portfolio_entry_report_status_type.css_class.label"), selectableCssClasses)
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationRegisterController.list()'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+    
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-03-03T14:13:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="competency_title" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="bdb598de-3b1f-4957-a9d7-e5b80f0eaf35">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="format" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="competencyId" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1L]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT IFNULL(c_i18n.value, '') AS name
+	FROM competency c
+	LEFT OUTER JOIN i18n_messages c_i18n ON c.name = c_i18n.key AND c_i18n.language = $P{lang}
+	WHERE c.deleted = 0 AND c.id = $P{competencyId}]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<detail>
+		<band height="140" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement style="title" x="0" y="0" width="555" height="60" uuid="04bb32ca-fcf4-4fcf-b25c-db5cb2dfb8e9"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="70" width="555" height="70" uuid="639ae118-77f1-4ca0-b652-c9cc2768880e">
+					<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="lang">
+					<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="format">
+					<subreportParameterExpression><![CDATA[$P{format}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="competencyId">
+					<subreportParameterExpression><![CDATA[$P{competencyId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["competency_actors.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,68 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    processesTable: framework.utils.Table[utils.table.LifeCycleProcessListView],
+    statusTypesTable: framework.utils.Table[utils.table.LifeCycleMilestoneInstanceStatusTypeListView]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.reference_data.governance.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.reference_data.governance.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.governance.life_cycle_processes.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationGovernanceController.manageLifeCycleProcess().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(processesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.governance.status_types.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationGovernanceController.manageStatusType().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(statusTypesTable)
+        </div>
+    </div>
+
+}

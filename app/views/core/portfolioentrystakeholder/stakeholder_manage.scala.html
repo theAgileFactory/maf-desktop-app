@@ -1,0 +1,78 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    stakeholderForm: Form[utils.form.StakeholderFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.stakeholders.label", controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntry.id).url),
+        ("core.portfolio_entry.breadcrump.manage", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.STAKEHOLDERS, breadcrump){
+    
+    <div class="maf-form">
+        @if(stakeholderForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.PortfolioEntryStakeholderController.processManage()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                
+                @if(stakeholderForm("stakeholderId").value!=null){
+                    <input type="hidden" name="stakeholderId" value="@stakeholderForm("stakeholderId").value"/>
+                }
+                
+                @parts.singlevalue_picker(
+                    stakeholderForm("actor"), 
+                    parts.Msg.asString("object.stakeholder.actor.label"),
+                    controllers.routes.PickerController.actor().url
+                )
+                
+                @parts.dropdownlist(
+                    stakeholderForm("stakeholderType"), 
+                    parts.Msg.asString("object.stakeholder.role.label"), 
+                    dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id),
+                    null,
+                    false
+                )
+                
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+   
+}

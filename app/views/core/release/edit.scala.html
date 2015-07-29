@@ -1,0 +1,84 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    release: models.delivery.Release,
+    releaseForm: Form[utils.form.ReleaseFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.delivery.releases.menu.label", controllers.core.routes.ReleaseController.list().url),
+        (release.getName, controllers.core.routes.ReleaseController.view(release.id).url),
+        ("core.release.edit.title", null)
+    )
+}
+
+@template(controllers.core.ReleaseController.MenuItemType.LIST, breadcrump){
+
+    <div class="maf-form">
+        @if(releaseForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.ReleaseController.saveEdit()) {
+            <fieldset>
+
+                <input type="hidden" name="id" value="@release.id"/>
+                
+                @parts.checkbox(
+                    releaseForm("isActive"),
+                    parts.Msg.asString("object.release.is_active.label")
+                )
+                
+                @helper.inputText(releaseForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.name.label"), 'autofocus -> "autofocus")
+                
+                @helper.textarea(releaseForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.release.description.label"))
+
+                @helper.inputText(releaseForm("capacity"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.capacity.label"))
+                
+                @parts.dateinput(releaseForm("cutOffDate"), parts.Msg.asString("object.release.cut_off_date.label"))
+                
+                @parts.dateinput(releaseForm("endTestsDate"), parts.Msg.asString("object.release.end_tests_date.label"))
+                
+                @parts.dateinput(releaseForm("deploymentDate"), parts.Msg.asString("object.release.deployment_date.label"))
+                
+                @parts.singlevalue_picker(
+                    releaseForm("manager"), 
+                    parts.Msg.asString("object.release.manager.label"),
+                    controllers.routes.PickerController.manager().url
+                )
+                
+                @parts.extended_attributes_input(releaseForm, classOf[models.delivery.Release], release.id)
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.core.routes.ReleaseController.view(release.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+   
+}

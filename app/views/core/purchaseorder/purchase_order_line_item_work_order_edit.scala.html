@@ -1,0 +1,69 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    lineItem: models.finance.PurchaseOrderLineItem,
+    workOrder: models.finance.WorkOrder,
+    workOrderForm: Form[utils.form.PurchaseOrderLineItemWorkOrderFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+
+@breadcrump=@{
+    Seq(
+        (parts.Msg.asString("core.purchase_order.breadcrumb", lineItem.purchaseOrder.refId), controllers.core.routes.PurchaseOrderController.view(lineItem.purchaseOrder.id).url),
+        (lineItem.refId, controllers.core.routes.PurchaseOrderController.viewLineItem(lineItem.id).url),
+        ("core.purchase_order.line_item.work_order.edit.breadcrump", null)
+    )
+}
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.purchase_order.title"),
+    breadcrump
+) {
+
+    <p>@parts.Msg("core.purchase_order.line_item.work_order.edit.maximumamount", modelsparts.display_amount(lineItem.getRemainingAmount(workOrder), false, lineItem.currency))</p>
+    
+    <div class="maf-form">
+        @if(workOrderForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.PurchaseOrderController.saveWorkOrder()) {
+            <fieldset>
+            
+                <input type="hidden" name="lineItemId" value="@lineItem.id"/>
+                <input type="hidden" name="workOrderId" value="@workOrderForm("workOrderId").value"/>
+
+                @helper.inputText(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.core.routes.PurchaseOrderController.viewLineItem(lineItem.id).url'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+   
+}

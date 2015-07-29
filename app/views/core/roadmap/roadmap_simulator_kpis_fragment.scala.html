@@ -1,0 +1,114 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    allocation: java.math.BigDecimal,
+    allocationConfirmed: java.math.BigDecimal,
+    allocationNotConfirmed: java.math.BigDecimal,
+    budget: java.math.BigDecimal,
+    budgetCapex: java.math.BigDecimal,
+    budgetOpex: java.math.BigDecimal,
+    forecast: java.math.BigDecimal,
+    forecastCapex: java.math.BigDecimal,
+    forecastOpex: java.math.BigDecimal
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import framework_views.parts.formats._
+
+<div class="row">
+
+
+@restrict(la(as(constants.IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION))) {
+
+<div class="col-sm-4">
+    <div class="panel cockpit-box cockpit-box-primary">
+        <div class="row header">
+            <div class="col-xs-offset-1 col-xs-3 icon">
+                <span class="glyphicons glyphicons-coins"></span>
+            </div>
+            <div class="col-xs-8 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.main")</span>
+                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budget)</p>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-xs-offset-1 col-xs-5 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.additional1")</span>
+                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budgetCapex)</p>
+            </div>
+            <div class="col-xs-6 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.additional2")</span>
+                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budgetOpex)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-4">
+    <div class="panel cockpit-box cockpit-box-primary">
+        <div class="row header">
+            <div class="col-xs-offset-1 col-xs-3 icon">
+                <span class="glyphicons glyphicons-coins"></span>
+            </div>
+            <div class="col-xs-8 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.main")</span>
+                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecast)</p>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-xs-offset-1 col-xs-5 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.additional1")</span>
+                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecastCapex)</p>
+            </div>
+            <div class="col-xs-6 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.additional2")</span>
+                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecastOpex)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+}
+
+<div class="col-sm-4">
+    <div class="panel cockpit-box cockpit-box-primary">
+        <div class="row header">
+            <div class="col-xs-offset-1 col-xs-3 icon">
+                <span class="glyphicons glyphicons-address-book"></span>
+            </div>
+            <div class="col-xs-8 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.allocation.main")</span>
+                <p>@display_number(allocation)</p>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-xs-offset-1 col-xs-5 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.allocation.additional1")</span>
+                <p>@display_number(allocationConfirmed)</p>
+            </div>
+            <div class="col-xs-6 value">
+                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.allocation.additional2")</span>
+                <p>@display_number(allocationNotConfirmed)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>

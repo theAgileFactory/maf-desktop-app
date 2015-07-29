@@ -1,0 +1,46 @@
+.navbar-static-top{margin-bottom: 10px;}
+.breadcrumb{width: auto;}
+.maf-form{}
+/* Form special classes */
+.filter-input{
+	padding:0.5em; 
+	border-radius:5px;
+	margin-right: 0.5em;
+	margin-left: 0.5em;
+	margin-top: 0.25em;
+	border-right-style: solid; 
+	border-right-color: silver;
+	border-right-width: thin;
+	border-left-style: solid;
+	border-left-color: silver;
+	border-left-width: thin;}
+/* Links displayed in a <div class="well"> at the top of the forms */
+.maf-view-links{display: inline;margin-right: 0.5em;}
+.modal-medium {
+  width: 30%;
+}
+.maf-form .tt-dropdown-menu {width: 268px;}
+.large-autocomplete .tt-dropdown-menu {width: 300px;}
+/* IDZone CSS */
+#idzone_wrapper {background-color: #3E5B76;color:#F8F8F8;margin: 0;padding-left: 0;padding-right: 0;padding-top: 0.5em;padding-bottom: 0.5em;}
+#idzone_wrapper p a:link {color: #F8F8F8;}
+#idzone_wrapper p a:visited {color: #F8F8F8;}
+#idzone_wrapper p a:hover {color: #F8F8F8;}
+#idzone_wrapper p a:active {color: #F8F8F8;}
+#idzone_appselector{background: #3E5B76;color: #F8F8F8;}
+#idzone_appselector option{background: #3E5B76;color: #F8F8F8;}
+.idzone_icon {background-position: 0% 50%;background-repeat: no-repeat;padding-left: 1.429em;padding-top: 0.143em;padding-bottom: 0.214em;}
+.idzone_icon-exclamation { background-image: url(/themes/idzone/images/exclamation.png);}
+
+div.jqplot-table-legend-swatch-outline { border: 0 solid #CCCCCC !important;}
+table.jqplot-table-legend { border: 0 solid #CCCCCC !important;}
+.jqplot-point-label, .jqplot-data-label {color: #FFFFFF !important; font-weight: bold;}
+
+
+.breadcrumb {
+    font-size: 20px;
+}
+
+tbody tr:hover td.hasRowSpan { 
+    background-color: #FFFFFF !important;
+}

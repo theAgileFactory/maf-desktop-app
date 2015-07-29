@@ -1,0 +1,82 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    orgUnit: models.pmo.OrgUnit,
+    portfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView], 
+    portfolioEntryPagination: framework.utils.Pagination[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit],
+    actorPortfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
+    actorPortfolioEntryPagination: framework.utils.Pagination[models.finance.PortfolioEntryResourcePlanAllocatedActor],
+    actorPortfolioEntryFilter: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
+    actorActivityTable: framework.utils.Table[utils.table.TimesheetActivityAllocatedActorListView],
+    actorActivityPagination: framework.utils.Pagination[models.timesheet.TimesheetActivityAllocatedActor],
+    actorActivityFilter: framework.utils.FilterConfig[utils.table.TimesheetActivityAllocatedActorListView]
+)
+
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@org_unit_template(parts.Msg.asString("core.org_unit.sidebar.allocation"), orgUnit, controllers.core.OrgUnitController.MenuItemType.ALLOCATION){
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("core.org_unit.allocation.details.requests.title")
+        </div>
+        <div class="panel-body">
+            @parts.table.tableview_with_pagination_and_queryparams(portfolioEntryTable, portfolioEntryPagination, null, null, "id=" + orgUnit.id)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("core.org_unit.allocation.details.actors.portfolio_entry.title")
+        </div>
+        <div class="panel-body">
+            @parts.table.filtered_tableview(
+                actorPortfolioEntryTable, 
+                actorPortfolioEntryPagination, 
+                actorPortfolioEntryFilter, 
+                controllers.core.routes.OrgUnitController.actorsPortfolioEntryAllocationsFilter(orgUnit.id).url,
+                null
+            )
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("core.org_unit.allocation.details.actors.activity.title")
+            <div class="pull-right">
+                @restrict(la(as(constants.IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION))){
+                    <a href="@controllers.core.routes.OrgUnitController.manageActorAllocatedActivity(orgUnit.id)"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                }
+            </div>
+        </div>
+        <div class="panel-body">
+            @parts.table.filtered_tableview(
+                actorActivityTable, 
+                actorActivityPagination, 
+                actorActivityFilter, 
+                controllers.core.routes.OrgUnitController.actorsActivityAllocationsFilter(orgUnit.id).url,
+                null
+            )
+        </div>
+    </div>
+    
+
+
+}

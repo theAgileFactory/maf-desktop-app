@@ -1,0 +1,114 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    budgetLine: models.finance.PortfolioEntryBudgetLine
+)
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.financial.label", controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id).url),
+        (budgetLine.name, null)
+    )
+}
+
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryBudgetLine])
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.FINANCIAL, breadcrump){
+    
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_financial.budget_line.view.title")
+            
+            <div class="pull-right">
+                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id, budgetLine.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                }
+            </div>
+            
+        </div>
+
+        <div class="panel-body">
+        
+            <table class="table table-condensed table-hover">
+                <colgroup>
+                     <col class="col-md-3">
+                     <col class="col-md-9">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.ref_id.label")</th>
+                        <td>@display_object(budgetLine.refId)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.name.label")</th>
+                        <td>@display_object(budgetLine.name)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.expenditure_type.label")</th>
+                        <td>@display_is_opex(budgetLine.isOpex)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.currency.label")</th>
+                        <td>@display_object(budgetLine.currency)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.amount.label")</th>
+                        <td>@display_number(budgetLine.amount)</td>
+                    </tr>
+                    @***for the moment we hide the GL account because it cannot be edited, refs #501
+                    <tr>
+                        <th>@parts.Msg("core.portfolio_entry_financial.budget_line.view.glaccount.label")</th>
+                        <td>@display_object(budgetLine.glAccount)</td>
+                    </tr>***@
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.budget_bucket.label")</th>
+                        <td>@display_budget_bucket(budgetLine.budgetBucket)</td>
+                    </tr>
+
+                </tbody>
+            </table>
+            
+            
+        </div>
+    </div>
+    
+    @if(hasExtendedAttributes) {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @parts.Msg("core.portfolio_entry_financial.budget_line.view.extended.title")
+            </div>
+            <div class="panel-body">
+                @parts.formats.display_extended_attributes(classOf[models.finance.PortfolioEntryBudgetLine], budgetLine.id)
+            </div>
+        </div>
+    }
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)">@parts.Msg("button.back")</a>
+   
+}

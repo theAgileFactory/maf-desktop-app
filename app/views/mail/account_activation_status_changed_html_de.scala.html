@@ -1,0 +1,47 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(platformName: String ,name: String, activationStatus: Boolean)
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>@platformName: Benutzerkonto Status veränderts</title>
+    </head>
+    <body>
+    <p>Sehr geehrte Dame, sehr geehrter Herr @name,</p>
+    <div style="margin-left: 20px;margin-top: 40px;margin-bottom: 40px;">
+        <p>
+        @if(!activationStatus){
+            Ihr Konto wurde freigeschalten.<br/>
+        Sie können sich nun unter Verwendung des alten Passwortes bei @platformName anmelden.     
+        }else{
+        Ihr Konto wurde gesperrt.<br/>
+        Sie können sich nicht mehr bei @platformName anmelden.<br/>
+        Bitte kontaktieren Sie Ihren Administrator falls Sie den Grund für diesen Status nicht kennen.
+        }
+        <p>
+        
+    </div>
+    <p>
+     Mit freundlichen Grüssen,
+    </p>
+    <p>
+    Ihr @platformName Administrator
+    </p>
+    </body>
+</html>

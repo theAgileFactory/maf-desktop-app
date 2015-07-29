@@ -1,0 +1,68 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    kpiDefinition: models.framework_models.kpi.KpiDefinition,
+    kpi: framework.services.kpi.Kpi,
+    kpiSchedulerForm: Form[utils.form.KpiSchedulerFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("admin.kpi.title"),
+    Seq(
+        ("topmenubar.admin.kpimanager.menu.label", controllers.admin.routes.KpiManagerController.index().url),
+        ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
+        (kpi.getValueName(framework.services.kpi.Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
+        ("admin.kpi.editscheduler.title", null)
+    )
+) {
+
+    <div class="maf-form">
+        @if(kpiSchedulerForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+    
+        @helper.form(action = controllers.admin.routes.KpiManagerController.saveScheduler()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@kpiDefinition.id"/>
+                
+                @helper.inputText(kpiSchedulerForm("startTime"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.kpi_definition.scheduler_start_time.label"))
+                
+                @helper.inputText(kpiSchedulerForm("frequency"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.kpi_definition.scheduler_frequency.label"))
+
+                @parts.checkbox(
+                    kpiSchedulerForm("realTime"), 
+                    parts.Msg.asString("object.kpi_definition.scheduler_real_time.label"), 
+                    parts.Msg.asString("object.kpi_definition.scheduler_real_time.help")
+                )
+                
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url">@parts.Msg("button.cancel")</a>
+            </fieldset>
+       }
+    </div> 
+   
+}

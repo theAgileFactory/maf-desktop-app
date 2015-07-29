@@ -1,0 +1,74 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@()
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.system_preferences.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.system_preferences.title", controllers.admin.ConfigurationController.MenuItemType.SYSTEM_PREFERENCES, breadcrump){
+    
+    <a class="btn btn-default" href="@controllers.admin.routes.ConfigurationController.editSystemPreferences().url">
+        <span class="glyphicons glyphicons-edit glyphicons-menu-small"></span>&nbsp; 
+         @parts.Msg("button.update")
+    </a>
+    <br/><br/>
+
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+            <colgroup>
+                <col class="col-md-3">
+                <col class="col-md-7">
+                <col class="col-md-2">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>@parts.Msg("object.preference.name.label")</th>
+                    <th>@parts.Msg("object.preference.description.label")</th>
+                    <th>@parts.Msg("object.preference.value.label")</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="info"><td colspan="3" class="text-center"><em>@parts.Msg("admin.configuration.system_preferences.category.general")</em></td></tr>
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.DISPLAY_LIST_PAGE_SIZE_PREFERENCE)
+                @parts.formats.display_preference_as_row(constants.IMafConstants.APPLICATION_LOGO_PREFERENCE)
+                <tr class="info"><td colspan="3" class="text-center"><em>@parts.Msg("admin.configuration.system_preferences.category.roadmap")</em></td></tr>
+                @parts.formats.display_preference_as_row(constants.IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE)
+                <tr class="info"><td colspan="3" class="text-center"><em>@parts.Msg("admin.configuration.system_preferences.category.financial")</em></td></tr>
+                @parts.formats.display_preference_as_row(constants.IMafConstants.FINANCIAL_USE_PURCHASE_ORDER_PREFERENCE)
+                <tr class="info"><td colspan="3" class="text-center"><em>@parts.Msg("admin.configuration.system_preferences.category.planning")</em></td></tr>
+                @parts.formats.display_preference_as_row(constants.IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE)
+                <tr class="info"><td colspan="3" class="text-center"><em>@parts.Msg("admin.configuration.system_preferences.category.timesheet")</em></td></tr>
+                @parts.formats.display_preference_as_row(constants.IMafConstants.TIMESHEET_MUST_APPROVE_PREFERENCE)
+                @parts.formats.display_preference_as_row(constants.IMafConstants.TIMESHEET_REMINDER_LIMIT_PREFERENCE)
+                @parts.formats.display_preference_as_row(constants.IMafConstants.TIMESHEET_HOURS_PER_DAY)
+                <tr class="info"><td colspan="3" class="text-center"><em>@parts.Msg("admin.configuration.system_preferences.category.security")</em></td></tr>
+                @parts.formats.display_preference_as_row(framework.commons.IFrameworkConstants.API_AUTHZ_MODE_PREFERENCE)
+            </tbody>
+        </table>
+    </div>
+}

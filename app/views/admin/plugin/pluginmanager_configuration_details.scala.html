@@ -1,0 +1,187 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(pluginInstanceName: String, 
+    pluginConfigurationId: Long, 
+    pluginInfo: framework.services.plugins.IPluginManagerService.IPluginInfo,
+    configurationBlocksTable: framework.utils.Table[controllers.admin.PluginManagerController.PluginConfigurationBlockObject],
+    pluginLogsPagination: framework.utils.Pagination[models.framework_models.plugin.PluginLog],
+    pluginLogsTable: framework.utils.Table[models.framework_models.plugin.PluginLog],
+    pluginLogsFilterConfig: framework.utils.FilterConfig[models.framework_models.plugin.PluginLog])
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@startDisabled=@{
+    if(pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTED)
+        || pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STOPPING)
+        || pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTING)){
+        "disabled"
+    }else{
+        ""
+    }
+}
+
+@stopDisabled=@{
+    if(pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STOPPED)
+        || pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STOPPING)
+        || pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTING)){
+        "disabled"
+    }else{
+        ""
+    }
+}
+
+@unregisterDisabled=@{
+        if(pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTED)){
+            "disabled"
+        }else{
+            ""
+        }
+}
+
+@pluginmanager_template(true, 1, pluginInstanceName){
+}{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.plugin_manager.configuration.view.panel.details.title")
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover">
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_configuration.id.label")</th>
+                                <td>@pluginConfigurationId</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_configuration.name.label")</th>
+                                <td>@pluginInstanceName</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_configuration.status.label")</th>
+                                <td>@Html(controllers.admin.PluginManagerController.getHtmlFromPluginStatus(pluginInfo.getPluginStatus()))</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_definition.name.label")</th>
+                                <td><a href="@controllers.admin.routes.PluginManagerController.pluginDefinitionDetails(pluginInfo.getStaticDescriptor().getPluginDefinitionIdentifier())">
+                                @parts.Msg(pluginInfo.getStaticDescriptor().getName())</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+             <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.plugin_manager.configuration.view.panel.admin.title")
+                </div>
+                <div class="panel-body">
+                    <p class="text-center">
+                        <a class="btn btn-success @startDisabled" href="@controllers.admin.routes.PluginManagerController.startPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-play"></i>&nbsp;@parts.Msg("button.start")</a>
+                        <a class="btn btn-danger @stopDisabled" href="@controllers.admin.routes.PluginManagerController.stopPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-stop"></i>&nbsp;@parts.Msg("button.stop")</a>
+                    </p>
+                    @if(pluginInfo.getStaticDescriptor().getActionDescriptors()!=null){
+                    <hr/>
+                    <p class="text-center">
+                        <small>@parts.Msg("admin.plugin_manager.configuration.view.panel.admin.action.title")</small><br/>
+                    </p>
+                    <p class="text-center">
+                        @for((identifier, actionDescriptor) <- pluginInfo.getStaticDescriptor().getActionDescriptors()) {
+                            @if(actionDescriptor.isAdmin()){
+                            <a class="btn btn-primary @stopDisabled" id="_AdminCommand_@actionDescriptor.getIdentifier()" href="#">
+                            @parts.Msg(actionDescriptor.getLabel())</a>
+                            }
+                        }
+                    </p>
+                    }
+                    <hr/>
+                    <p class="text-center">
+                        <a onclick="return maf_confirmRemoveRegistration();" class="btn btn-danger @unregisterDisabled" href="@controllers.admin.routes.PluginManagerController.unregisterPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-bin"></i>&nbsp;@parts.Msg("button.delete")</a>
+                        <script type="text/javascript">
+                            function maf_confirmRemoveRegistration(){
+                                return window.confirm("@parts.Msg("admin.plugin_manager.configuration.delete.confirmation")");
+                            }
+                        </script>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if(pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors()!=null){
+    <div class="row">
+        <div class="col-md-12">
+             <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.title")
+                </div>
+                <div class="panel-body">
+                @parts.table.tableview(configurationBlocksTable)
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    <div class="row">
+        <div class="col-md-12">
+             <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.plugin_manager.configuration.view.panel.log.title")
+                    <div class="pull-right">
+                        <a id="refreshLogs" href="#" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.log.refresh.help")"><i class="glyphicons glyphicons-refresh glyphicons-panel"></i></a>&nbsp;&nbsp;
+                        <script>
+                            $('#refreshLogs').tooltip();
+                        </script>
+                        <a id="flushLogs" href="@controllers.admin.routes.PluginManagerController.flushLogs(pluginConfigurationId).url" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.log.flush.help")"><i class="glyphicons glyphicons-cleaning glyphicons-panel"></i></a>
+                        <script>
+                            $('#flushLogs').tooltip();
+                        </script>
+                    </div>
+                </div>
+                <div class="panel-body">
+                @parts.table.filtered_tableview(
+                    pluginLogsTable,
+                    pluginLogsPagination,
+                    pluginLogsFilterConfig,
+                    controllers.admin.routes.PluginManagerController.filterPluginLogs(pluginConfigurationId).url)
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#refreshLogs").click(function(event){
+                event.preventDefault();
+                _@pluginLogsTable.getId()_refreshTable();
+            });
+            $('[id^="_AdminCommand_"]').click(function(event){
+                event.preventDefault();
+                var id=$(this).attr('id');
+                var adminActionId=id.substring("_AdminCommand_".length,id.length);
+                $.get("@controllers.admin.routes.PluginManagerController.postAdminActionToPlugin(pluginConfigurationId,"")"+adminActionId, 
+                    function(data) {
+                        alert("@parts.Msg("admin.plugin_manager.configuration.view.panel.admin.action.success")");
+                    }).fail(function(){
+                        alert("@parts.Msg("admin.plugin_manager.configuration.view.panel.admin.action.error")");
+                    });
+            });
+        });
+    </script>
+}

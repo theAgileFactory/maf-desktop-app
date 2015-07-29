@@ -1,0 +1,68 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(pluginConfigurationId: Long,
+configurationBlockDescriptor: framework.services.plugins.api.IPluginConfigurationBlockDescriptor, 
+configurationBlockObjectForm: Form[controllers.admin.PluginManagerController.PluginConfigurationBlockObject],
+syntax: framework.commons.IFrameworkConstants.Syntax)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@configurationBlockName=@{parts.Msg(configurationBlockDescriptor.getName())}
+
+@pluginmanager_template(true, 1, parts.Msg.asString("admin.plugin_manager.configuration_block.edit.title.label",configurationBlockName)){
+@framework_views.parts.framework_code_editor_includes(routes.Assets.versioned("").url,syntax)
+}{
+<div class="row">
+    <div class="col-md-12">
+        <blockquote>
+        @parts.Msg(configurationBlockDescriptor.getDescription())
+        </blockquote>
+        <div class="maf-form">
+            @if(configurationBlockObjectForm.hasErrors()){
+                <div class="alert alert-danger">
+                    <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+                </div>
+            }
+            @helper.form(action = controllers.admin.routes.PluginManagerController.updateConfigurationBlock(pluginConfigurationId, configurationBlockDescriptor.getIdentifier())) {
+            <fieldset>
+                @parts.code_editor(configurationBlockObjectForm("value"), "", syntax)
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.admin.routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId)">@parts.Msg("button.cancel")</a>
+                <a id="resetToDefault" href="#" class="pull-right btn btn-primary"><i class="glyphicons glyphicons-restart"></i>&nbsp;@parts.Msg("button.reset_to_default")</a>
+            </fieldset>
+       }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#resetToDefault").click(function(event){
+        event.preventDefault();
+        $.get("@controllers.admin.routes.PluginManagerController.getDefaultConfigurationBlockValue(pluginConfigurationId,configurationBlockDescriptor.getIdentifier())", 
+        function(data) {
+            value_codeEditor.setValue(data);
+            alert("@parts.Msg("admin.plugin_manager.configuration_block.edit.reset_to_default.success")");
+        }).fail(function(){
+            alert("@parts.Msg("admin.plugin_manager.configuration_block.edit.reset_to_default.error")");
+        });
+    });
+});
+</script>
+}

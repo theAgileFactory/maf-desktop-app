@@ -1,0 +1,60 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(title: String, masterMode: Boolean, selfEmailUpdate: Boolean,userAccount: framework.services.account.IUserAccount) 
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@myaccount_template(title, masterMode, selfEmailUpdate, controllers.admin.MyAccount.MenuItemType.VIEW) {
+    <table class="table table-condensed table-hover">
+        <tbody>
+            <tr>
+                <th width="20%">
+                    @parts.Msg("object.user_account.first_name.label")</th>
+                <td>@userAccount.getFirstName()</td>
+            </tr>
+            <tr>
+                <th width="20%">
+                    @parts.Msg("object.user_account.last_name.label")</th>
+                <td>@userAccount.getLastName()</td>
+            </tr>
+            <tr>
+                <th width="20%">
+                    @parts.Msg("object.user_account.email.label")</th>
+                <td>@userAccount.getMail()</td>
+            </tr>
+            <tr>
+                <th width="20%">
+                    @parts.Msg("object.user_account.preferred_language.label")</th>
+                <td>@if(userAccount.getPreferredLanguage() != null) { @framework.utils.LanguageUtil.getLanguageByCode(userAccount.getPreferredLanguage).getName }</td>
+            </tr>
+            <tr>
+                <th width="20%">
+                    @parts.Msg("object.user_account.roles.label")</th>
+                <td>
+                    <ul class="list-unstyled">
+                    @for(systemLevelRoleTypeName <- userAccount.getSystemLevelRoleTypeNames()){
+                           <li><small>@systemLevelRoleTypeName</small></li>
+                        }
+                        </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

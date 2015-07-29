@@ -1,0 +1,82 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    requirementStatusTable: framework.utils.Table[utils.table.RequirementStatusListView],
+    requirementPrioritiesTable: framework.utils.Table[utils.table.RequirementPriorityListView],
+    requirementSeveritiesTable: framework.utils.Table[utils.table.RequirementSeverityListView]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.reference_data.requirements.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.reference_data.requirements.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+
+        <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.requirements.status.title")
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationRequirementController.manageRequirementStatus().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(requirementStatusTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.requirements.priorities.title")
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationRequirementController.manageRequirementPriority().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(requirementPrioritiesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.requirements.severities.title")
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationRequirementController.manageRequirementSeverity().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(requirementSeveritiesTable)
+        </div>
+    </div>
+   
+
+}

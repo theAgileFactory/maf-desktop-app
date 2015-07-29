@@ -1,0 +1,48 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(folderName: String, isInput: Boolean, maxFileNumber: Integer)
+
+@import framework_views.parts
+
+@pluginmanager_template(false, 3, parts.Msg.asString("admin.plugin_manager.sidebar.shared_storage")){
+
+}{
+    
+    <div class="form-group">
+        @helper.form(action = controllers.admin.routes.SharedStorageManagerController.upload(isInput), 'enctype -> "multipart/form-data") {
+            <fieldset>
+                <label for="@folderName">@parts.Msg("admin.shared_storage.upload.file.label")</label>
+                <input type="file" id="@folderName" name="@folderName"/>
+                <span class="help-block"><strong>@parts.Msg("admin.shared_storage.upload.file.help",org.apache.commons.io.FileUtils.byteCountToDisplaySize(controllers.admin.SharedStorageManagerController.MAX_FILE_SIZE),""+maxFileNumber)</strong></span>
+                <input id="upload" type="submit" value="@parts.Msg("button.upload")" class="btn btn-primary"/>
+                <a class="btn btn-default" href="@controllers.admin.routes.SharedStorageManagerController.index()">@parts.Msg("button.cancel")</a>
+            </fieldset>
+        }
+    </div>
+    <script type="text/javascript">
+    $('#@folderName').bind('change', function() {
+          if(this.files[0].size>@controllers.admin.SharedStorageManagerController.MAX_FILE_SIZE){
+              alert("@parts.Msg("admin.shared_storage.upload.file.size.invalid",
+                      org.apache.commons.io.FileUtils.byteCountToDisplaySize(controllers.admin.SharedStorageManagerController.MAX_FILE_SIZE))");
+              $('#upload').attr("disabled", true);
+          }else{
+              $('#upload').attr("disabled", false);
+          }
+    });
+    </script>
+}

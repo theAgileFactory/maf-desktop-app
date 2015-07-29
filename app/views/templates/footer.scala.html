@@ -1,0 +1,65 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@()
+<script>
+function removeURLParameter(url, parameter) {
+    //prefer to use l.search if you have a location/link object
+    var urlparts= url.split('?');
+    if (urlparts.length>=2) {
+
+        var prefix= encodeURIComponent(parameter)+'=';
+        var pars= urlparts[1].split(/[&;]/g);
+
+        //reverse iteration as may be destructive
+        for (var i= pars.length; i-- > 0;) {
+            //idiom for string.startsWith
+            if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
+                pars.splice(i, 1);
+            }
+        }
+
+        url= urlparts[0]+'?'+pars.join('&');
+        return url;
+    } else {
+        return url;
+    }
+}
+</script>
+<footer>
+    <div class="pull-left">&copy; <a href="http://www.the-agile-factory.com/">The Agile Factory</a></div>
+    <div class="pull-right">
+        <div class="btn-group dropup" id="lang-selector">
+        <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button">@framework.utils.LanguageUtil.getCurrent.getName <span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right">
+            @for((language, index) <- framework.utils.LanguageUtil.VALID_LANGUAGES_LIST.zipWithIndex) {
+                <li>
+                    <a id="lang-@index" href="#">@language.getName</a>
+                    <script>
+                        var url = removeURLParameter(document.URL, "lang");
+                        if(url.indexOf("?") <= -1) {
+                            url = url + "?";
+                        }
+                        $("#lang-@index").attr('href', url + '&lang=@language.getValue');
+                    </script>
+                </li>
+            }
+        </ul>
+        </div>
+    </div>
+</footer>
+<p>&nbsp;</p>

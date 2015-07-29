@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-03-17T14:02:13 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="data_quality_main" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" isIgnorePagination="true" uuid="04514ba5-1b70-4801-a1e2-9ed67be8507e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT 1 FROM dual]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<textField>
+				<reportElement style="title" x="0" y="0" width="555" height="60" uuid="77053736-f6fd-4d3e-a160-fda31084cc8b">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("title")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="70">
+			<subreport runToBottom="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="10" width="300" height="60" uuid="2d947116-ba22-4045-8fe4-629cc12c5213">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["pe_with_no_status.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="320" y="10" width="230" height="50" uuid="419eb478-e10b-4451-a92b-ed16237eb896">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("subreport.pe_no_status.definition")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="70">
+			<textField>
+				<reportElement x="320" y="10" width="230" height="50" uuid="acefc199-ede5-4d67-98f1-fd13c9c09cc6">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("subreport.pe_no_stakeholder.definition")]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="10" width="300" height="60" uuid="6fe9cb3c-4ff2-46b0-a5bd-554761ae7a74">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["pe_with_no_stakeholder.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<summary>
+		<band height="260" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="10" width="555" height="250" uuid="416f6e37-e9f6-4afb-9f5d-3c546c6be098">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["graph_pe_is_concept.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

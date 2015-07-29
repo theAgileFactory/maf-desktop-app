@@ -1,0 +1,55 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(tour: utils.tour.Tour, currentStepIndex: Integer)
+
+@import framework_views.parts
+
+<script>
+    var doNotDisplay = false;
+    var tour = new Tour({
+        storage: false,
+        backdrop: true,
+        template: "@template.render",
+        onEnd: function() {
+            if(doNotDisplay) {
+                $.ajax({ 
+                    type: 'GET', 
+                    url: '@controllers.routes.Application.endTour(tour.getUid)'
+                });
+            }
+        },
+        onShown: function() {
+            if((tour.getCurrentStep() + 1) >= @tour.getNumberOfSteps ) {
+                $('#tour-do-not-display').prop('checked', true);
+                doNotDisplay = true;
+            } else {
+                doNotDisplay = false;
+            }
+        },
+        steps: @Html(tour.renderSteps)
+    });
+
+    tour.setCurrentStep(@currentStepIndex);
+    tour.init();
+    tour.start();
+    
+    function maf_tour_changeDoNotDisplay() {
+        doNotDisplay = $('#tour-do-not-display').prop('checked');
+    }
+
+</script>

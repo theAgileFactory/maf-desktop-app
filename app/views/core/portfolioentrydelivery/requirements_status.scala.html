@@ -1,0 +1,275 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    distributedDonutPriority: framework.highcharts.pattern.DistributedDonut,
+    basicBarPriority: framework.highcharts.pattern.BasicBar,
+    distributedDonutSeverity: framework.highcharts.pattern.DistributedDonut,
+    basicBarSeverity: framework.highcharts.pattern.BasicBar
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.requirements_status.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump) {
+
+    <h4>@parts.Msg("core.portfolio_entry_delivery.requirement.status.priority.title")</h4>
+
+    <div class="row">
+    
+        @if(distributedDonutPriority != null) {
+        
+            <div class="col-md-6">
+
+                <div id="distributedDonutPriority"></div>
+                <script type="text/javascript">
+                    $(function () {
+    
+                        var series = @Html(distributedDonutPriority.getSeriesContainer.toJsonArray);
+                        statusTypeData = series[0].data;
+                        statusData = series[1].data;
+            
+                        $('#distributedDonutPriority').highcharts({
+                            credits: {
+                                enabled: false
+                            },
+                            chart: {
+                                type: 'pie'
+                            },
+                            title: {
+                                text: ''
+                            },
+                            plotOptions: {
+                                pie: {
+                                    shadow: false,
+                                    center: ['50%', '50%']
+                                }
+                            },
+                            tooltip: {
+                                enabled: false
+                            },
+                            series: [{
+                                name: 'Status type',
+                                data: statusTypeData,
+                                size: '60%',
+                                dataLabels: {
+                                    formatter: function () {
+                                        return this.point.name + ':' + this.y;
+                                    },
+                                    color: 'white',
+                                    distance: -60,
+                                    align: 'center'
+                                }
+                            }, {
+                                name: 'Status',
+                                data: statusData,
+                                size: '80%',
+                                innerSize: '60%',
+                                
+                                dataLabels: {
+                                    formatter: function () {
+                                        return '<b>' + this.point.name + ':</b> ' + this.y;
+                                    }
+                                }
+                            }]
+                        });
+    
+                    });
+                </script>
+            </div>
+        
+            <div class="col-md-6">
+                <div id="basicBarPriority"></div>
+                <script type="text/javascript">
+                    $(function () {
+    
+                        $('#basicBarPriority').highcharts({
+                            credits: {
+                                enabled: false
+                            },
+                            colors: @Html(framework.highcharts.HighchartsUtils.getColorsAsJson),
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: ''
+                            },
+                            xAxis: {
+                                categories: @Html(basicBarPriority.getCategoriesAsJson)
+                            },
+                            yAxis: {
+                                min: 0,
+                                minTickInterval: 1,
+                                title: {
+                                    text: ''
+                                }
+                            },
+                            tooltip: {
+                                headerFormat: '<table>',
+                                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
+                                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                                footerFormat: '</table>',
+                                shared: true,
+                                useHTML: true
+                            },
+                            plotOptions: {
+                                column: {
+                                    borderWidth: 0
+                                }
+                            },
+                            series: @Html(basicBarPriority.getSeriesContainer.toJsonArray)
+                        });
+    
+                    });
+                </script>
+            </div>
+        } else {
+            <div class="col-md-12">@parts.Msg("chart.empty")</div>
+        }
+        
+    </div>
+    
+    <h4>@parts.Msg("core.portfolio_entry_delivery.requirement.status.severity.title")</h4>
+    
+    <div class="row">
+    
+        @if(distributedDonutSeverity != null) {
+    
+            <div class="col-md-6">
+                <div id="distributedDonutSeverity"></div>
+                <script type="text/javascript">
+                    $(function () {
+    
+                        var series = @Html(distributedDonutSeverity.getSeriesContainer.toJsonArray);
+                        severityData = series[0].data;
+                        isBlockerData = series[1].data;
+            
+                        $('#distributedDonutSeverity').highcharts({
+                            credits: {
+                                enabled: false
+                            },
+                            chart: {
+                                type: 'pie'
+                            },
+                            title: {
+                                text: ''
+                            },
+                            plotOptions: {
+                                pie: {
+                                    shadow: false,
+                                    center: ['50%', '50%']
+                                }
+                            },
+                            tooltip: {
+                                enabled: false
+                            },
+                            series: [{
+                                name: 'Severity',
+                                data: severityData,
+                                size: '60%',
+                                dataLabels: {
+                                    formatter: function () {
+                                        return this.point.name + ':' + this.y;
+                                    },
+                                    color: 'white',
+                                    distance: -60,
+                                    align: 'center'
+                                }
+                            }, {
+                                name: 'Is blocker',
+                                data: isBlockerData,
+                                size: '80%',
+                                innerSize: '60%',
+                                
+                                dataLabels: {
+                                    formatter: function () {
+                                        return '<b>' + this.point.name + ':</b> ' + this.y;
+                                    }
+                                }
+                            }]
+                        });
+    
+                    });
+                </script>
+            </div>
+            
+            <div class="col-md-6">
+                <div id="basicBarSeverity"></div>
+                <script type="text/javascript">
+                    $(function () {
+    
+                        $('#basicBarSeverity').highcharts({
+                            credits: {
+                                enabled: false
+                            },
+                            colors: @Html(framework.highcharts.HighchartsUtils.getColorsAsJson),
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: ''
+                            },
+                            xAxis: {
+                                categories: @Html(basicBarSeverity.getCategoriesAsJson)
+                            },
+                            yAxis: {
+                                min: 0,
+                                minTickInterval: 1,
+                                title: {
+                                    text: ''
+                                }
+                            },
+                            tooltip: {
+                                headerFormat: '<table>',
+                                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
+                                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                                footerFormat: '</table>',
+                                shared: true,
+                                useHTML: true
+                            },
+                            plotOptions: {
+                                column: {
+                                    borderWidth: 0
+                                }
+                            },
+                            series: @Html(basicBarSeverity.getSeriesContainer.toJsonArray)
+                        });
+    
+                    });
+                </script>
+            </div>
+        
+        } else {
+            <div class="col-md-12">@parts.Msg("chart.empty")</div>
+        }
+        
+    </div>
+    
+    
+
+}

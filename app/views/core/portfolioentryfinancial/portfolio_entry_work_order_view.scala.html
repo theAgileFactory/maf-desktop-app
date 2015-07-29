@@ -1,0 +1,195 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    workOrder: models.finance.WorkOrder
+)
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@tab=@{
+    if(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+        "engaged"
+    } else {
+        "costToComplete"
+    }
+}
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.financial.label", controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id).url),
+        (workOrder.name, null)
+    )
+}
+
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.WorkOrder])
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.FINANCIAL, breadcrump){
+
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_financial.work_order.view.details.title")
+            
+            <div class="pull-right">
+                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id, workOrder.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                }
+            </div>
+            
+        </div>
+
+        <div class="panel-body">
+        
+            <table class="table table-condensed table-hover">
+                <colgroup>
+                     <col class="col-md-3">
+                     <col class="col-md-9">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>@parts.Msg("object.work_order.expenditure_type.label")</th>
+                        <td>@display_is_opex(workOrder.isOpex)</td>
+                    </tr>
+                    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+                        <tr>
+                            <th>@parts.Msg("object.work_order.shared.label")</th>
+                            <td>@display_boolean(workOrder.shared)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th>@parts.Msg("object.work_order.is_engaged.label")</th>
+                        <td>@display_boolean(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()))</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.work_order.name.label")</th>
+                        <td>@display_object(workOrder.name)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.work_order.description.label")</th>
+                        <td>@display_object(workOrder.description)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.work_order.amount.label")</th>
+                        <td>@display_number(workOrder.getComputedAmount(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()))</td>
+                    </tr>
+                    @if(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                        <tr>
+                            <th>@parts.Msg("object.work_order.amount_received.label")</th>
+                            <td>@display_number(workOrder.getComputedAmountReceived(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()))</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th>@parts.Msg("object.work_order.currency.label")</th>
+                        <td>@display_object(workOrder.currency)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.work_order.portfolio_entry_planning_package.label")</th>
+                        <td>@display_portfolio_entry_planning_package(workOrder.portfolioEntryPlanningPackage)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.work_order.start_date.label")</th>
+                        <td>@display_date(workOrder.startDate)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.work_order.due_date.label")</th>
+                        <td>@display_date(workOrder.dueDate)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    @if(hasExtendedAttributes) {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @parts.Msg("core.portfolio_entry_financial.work_order.view.extended.title")
+            </div>
+            <div class="panel-body">
+                @parts.formats.display_extended_attributes(classOf[models.finance.WorkOrder], workOrder.id)
+            </div>
+        </div>
+    }
+    
+    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+    
+        @if(workOrder.purchaseOrderLineItem != null && workOrder.purchaseOrderLineItem.isCancelled == false) {
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_financial.work_order.view.lineitem.title")
+                </div>
+
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                           <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.purchase_order.label")</th>
+                                <td>
+                                    @restrict(la(as(constants.IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION))){
+                                        <a href="@controllers.core.routes.PurchaseOrderController.view(workOrder.purchaseOrderLineItem.purchaseOrder.id)">
+                                    }
+                                    @display_object(workOrder.purchaseOrderLineItem.purchaseOrder.refId)
+                                    @restrict(la(as(constants.IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION))){
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                           <tr>
+                                <th>@parts.Msg("object.work_order.purchase_order_line_item.label")</th>
+                                <td>
+                                    @restrict(la(as(constants.IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION))){
+                                        <a href="@controllers.core.routes.PurchaseOrderController.viewLineItem(workOrder.purchaseOrderLineItem.id)">
+                                    }
+                                    @display_object(workOrder.purchaseOrderLineItem.refId)
+                                    @restrict(la(as(constants.IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION))){
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.description.label")</th>
+                                <td>@display_object(workOrder.purchaseOrderLineItem.description)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.cost_center.label")</th>
+                                <td>@display_cost_center(workOrder.purchaseOrderLineItem.costCenter)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    
+    }
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)">@parts.Msg("button.back")</a>
+   
+}

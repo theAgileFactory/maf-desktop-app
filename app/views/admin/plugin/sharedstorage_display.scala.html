@@ -1,0 +1,56 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(title: String, 
+    inputFileTable: framework.utils.Table[controllers.admin.SharedStorageManagerController.SharedStorageFile],
+    outputFileTable: framework.utils.Table[controllers.admin.SharedStorageManagerController.SharedStorageFile])
+
+@import framework_views.parts
+
+@pluginmanager_template(false, 3, parts.Msg.asString("admin.plugin_manager.sidebar.shared_storage")){
+
+}{
+
+    <blockquote>@parts.Msg("admin.shared_storage.view.header")</blockquote>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @framework.commons.IFrameworkConstants.INPUT_FOLDER_NAME
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.SharedStorageManagerController.uploadForm(framework.commons.IFrameworkConstants.INPUT_FOLDER_NAME, true).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+        
+        <div class="panel-body">
+            @parts.table.tableview(inputFileTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @framework.commons.IFrameworkConstants.OUTPUT_FOLDER_NAME
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.SharedStorageManagerController.uploadForm(framework.commons.IFrameworkConstants.OUTPUT_FOLDER_NAME, false).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(outputFileTable)
+        </div>
+    </div>
+
+}

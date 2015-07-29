@@ -1,0 +1,98 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    reporting: models.reporting.Reporting,
+    reportingForm: Form[utils.form.ReportingFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("admin.reporting.title"),
+    Seq(
+        ("topmenubar.admin.reporting.menu.label",controllers.admin.routes.ReportingController.indexForCategory(reporting.reportingCategory.id).url),
+        (reporting.getName,null)
+    )
+) {
+
+    <span id="reporting-@(reporting.id)-edit"></span>
+    
+    <div class="maf-form">
+        @if(reportingForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.admin.routes.ReportingController.save()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@reporting.id"/>
+                
+                <div class="form-group ">
+                    <label class="control-label">@parts.Msg("object.reporting.name.label")</label>
+                    <div class="">@parts.formats.display_object(reporting.name)</div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="control-label">@parts.Msg("object.reporting.description.label")</label>
+                    <div class="">@parts.formats.display_object(reporting.description)</div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="control-label">@parts.Msg("object.reporting.type.label")</label>
+                    <div class="">@display_is_standard(reporting.isStandard)</div>
+                </div>
+                
+                @parts.checkbox(
+                    reportingForm("isActive"), 
+                    parts.Msg.asString("object.reporting.is_active.label"), 
+                    parts.Msg.asString("object.reporting.is_active.help")
+                )
+                
+                @parts.checkbox(
+                    reportingForm("isPublic"), 
+                    parts.Msg.asString("object.reporting.is_public.label"), 
+                    parts.Msg.asString("object.reporting.is_public.help")
+                )
+
+                @parts.autocomplete(
+                    reportingForm("category"),
+                    parts.Msg.asString("object.reporting.category.label"),
+                    controllers.admin.routes.ReportingCategoryController.search().url
+                )
+                
+                @parts.multivalue_picker(
+                    reportingForm("principals"), 
+                    parts.Msg.asString("object.reporting.principals.label"),
+                    controllers.routes.PickerController.principalsUid().url
+                )
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.admin.routes.ReportingController.indexForCategory(reporting.reportingCategory.id).url'>@parts.Msg("button.cancel")</a>
+
+            </fieldset>
+        }
+
+    </div> 
+
+
+}

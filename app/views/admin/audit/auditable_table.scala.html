@@ -1,0 +1,101 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(title: String, table: framework.utils.Table[framework.services.audit.Auditable])
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@table.setColumnFormatter(
+    "objectClass",
+    {(anObject: framework.services.audit.Auditable, value: Option[java.lang.String]) => {
+        if(value.isEmpty){
+            ""
+        }else{
+            parts.formats.display_value_holder(controllers.admin.AuditableController.getSelectedValueForObjectClass(anObject), true)
+        }
+    }
+})
+
+@table.setColumnFormatter(
+    "isAuditable",
+    {(anObject: framework.services.audit.Auditable, aboolean: Option[Boolean])   =>  {
+        if(aboolean.isEmpty){
+            ""
+        }else{
+            parts.formats.display_boolean(aboolean.get)
+        }
+    }
+})
+
+@table.setColumnFormatter("deleteActionLink", {(anObject: framework.services.audit.Auditable, objectClass: Option[java.lang.String])   =>  {
+            "<a onclick=\"return maf_confirmDelete('"+anObject.toString()+"');\" href=\""+controllers.admin.routes.AuditableController.deleteAuditable(objectClass.get)+"\" class=\"glyphicons glyphicons-bin\"></a>"
+        }
+})
+@table.setColumnFormatter("editActionLink", {(anObject: framework.services.audit.Auditable, objectClass: Option[java.lang.String])   =>  {
+            "<a  href=\""+controllers.admin.routes.AuditableController.editAuditable(objectClass.get)+"\" class=\"glyphicons glyphicons-edit\"></a>"
+        }
+})
+
+@templates.main_bc_nosidebar(
+    title,
+    Seq(
+        ("topmenubar.admin.audit.menu.label",null)
+    )
+) {
+    <blockquote>@parts.Msg("admin.auditable.list.header")</blockquote>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("admin.auditable.list.title")
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.AuditableController.createAuditable()"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                &nbsp;
+                <a href="#" id="exportAuditLog"><span class="glyphicons glyphicons-download-alt glyphicons-panel"></span></a>
+            </div>
+        </div>
+        <div class="panel-body">
+            @parts.table.tableview(table)
+        </div>
+    </div>
+
+    <script>
+        function maf_confirmDelete(value){
+            return window.confirm("@parts.Msg("admin.auditable.delete.confirmation")");
+        }
+        $(document).ready(function(){
+            $('#exportAuditLog').click(function(){
+                $('#exportAuditLog').attr('disabled','disabled');
+                $('#exportAuditLog').toggleClass("btn-primary").toggleClass("btn-default");
+                maf_performPostJsonReceiveJson(
+                        '@controllers.admin.routes.AuditableController.exportAuditLogs().url', 
+                        JSON.stringify({}), 
+                        function(){
+                            alert("@parts.Msg("admin.auditable.export.ajax.success")");
+                            $('#exportAuditLog').removeAttr('disabled');
+                            $('#exportAuditLog').toggleClass("btn-primary").toggleClass("btn-default");
+                        }, 
+                        function(){
+                            alert("@parts.Msg("admin.auditable.export.ajax.error")");
+                            $('#exportAuditLog').removeAttr('disabled');
+                            $('#exportAuditLog').toggleClass("btn-primary").toggleClass("btn-default");
+                        })
+            });
+        });
+    </script>
+}

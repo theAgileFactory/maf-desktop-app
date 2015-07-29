@@ -1,0 +1,29 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(field: Field, fieldLabel: String, bootstrapColor: String)
+@import framework_views.parts
+@boxValue = @{ field.value.getOrElse("false") }
+
+<div class="checkbox" style="margin-top: -12px;">
+    <h4>
+        <label for="@field.id" class="label label-@bootstrapColor" style="padding-top:6px;">
+            <input type="checkbox" id="@(field.id)" name="@(field.name)" value="true" @if(!boxValue.equals("false")){checked="checked"} />
+            <strong>@fieldLabel</strong>
+        </label>
+    </h4>
+</div>

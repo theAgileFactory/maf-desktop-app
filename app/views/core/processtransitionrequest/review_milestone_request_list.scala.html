@@ -1,0 +1,34 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    table: framework.utils.Table[utils.table.MilestoneRequestListView],
+    pagination: framework.utils.Pagination[models.governance.ProcessTransitionRequest]
+)
+
+@import framework_views.parts
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.process_transition_request.review_milestone_request_list.title"),
+    Seq(
+        ("topmenubar.governance.review_milestone_request.menu.label",null)
+    )
+) {
+    <blockquote>@parts.Msg("core.process_transition_request.review_milestone_request_list.header")</blockquote>
+    
+    @parts.table.tableview_with_pagination(table, pagination)
+}

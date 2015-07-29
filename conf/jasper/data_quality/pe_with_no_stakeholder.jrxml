@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2014-12-04T09:46:33 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pe_with_no_status" pageWidth="300" pageHeight="60" columnWidth="300" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="af569d61-2a16-49c5-bb2d-13a873699253">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<queryString language="SQL">
+		<![CDATA[SELECT pe.governance_id as pe_gouv_id, pe.name as pe_name, concat(first_name, ' ', last_name) as pe_manager_name
+FROM portfolio_entry pe, actor act, life_cycle_instance lci
+WHERE pe.id NOT IN (SELECT DISTINCT portfolio_entry_id FROM stakeholder WHERE portfolio_entry_id IS NOT NULL)
+AND pe.deleted = 0 AND pe.archived = 0 AND pe.is_public = 1
+AND lci.is_concept = 0 and lci.deleted = 0
+AND pe.manager_id=act.id
+AND lci.id = pe.active_life_cycle_instance_id]]>
+	</queryString>
+	<field name="pe_name" class="java.lang.String"/>
+	<field name="pe_gouv_id" class="java.lang.String"/>
+	<field name="pe_manager_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="24">
+			<textField>
+				<reportElement style="row-header" x="0" y="0" width="280" height="24" uuid="7ce2d110-9de7-433c-be73-a5022e4b1ca4">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("subreport.pe_no_stakeholder.title")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="180" y="0" width="100" height="20" uuid="ec296f39-e1cb-4f70-9781-e9a3ad8333dd">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.pe.manager")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="0e12025c-52ca-4520-801d-b2bccbdf713a">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.pe.gov_id")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="60" y="0" width="120" height="20" uuid="6a8164c6-d57e-428d-b075-9e25854ae441">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.pe.name")]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="8b7309ff-ac60-44ac-9ff6-650839a88f42">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{pe_gouv_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="60" y="0" width="120" height="20" uuid="3493f8ed-4803-4f2b-90a6-c8416c4bb84c">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{pe_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement key="" style="row" stretchType="RelativeToBandHeight" x="180" y="0" width="100" height="20" uuid="68b8c1f2-408e-4572-b330-7cea9216dd7f">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{pe_manager_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

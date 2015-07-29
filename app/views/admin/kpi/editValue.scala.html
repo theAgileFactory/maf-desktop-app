@@ -1,0 +1,76 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    kpiDefinition: models.framework_models.kpi.KpiDefinition,
+    kpi: framework.services.kpi.Kpi,
+    kpiValueDefinition: models.framework_models.kpi.KpiValueDefinition,
+    valueType: String,
+    kpiValueDefinitionForm: Form[utils.form.KpiValueDefinitionFormData],
+    renderTypes: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("admin.kpi.title"),
+    Seq(
+        ("topmenubar.admin.kpimanager.menu.label", controllers.admin.routes.KpiManagerController.index().url),
+        ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
+        (kpi.getValueName(framework.services.kpi.Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
+        (valueType, controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
+        ("admin.kpi.edit.title", null)
+    )
+) {
+
+    <div class="maf-form">
+        @if(kpiValueDefinitionForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+    
+        @helper.form(action = controllers.admin.routes.KpiManagerController.saveValue()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@kpiValueDefinition.id"/>
+                <input type="hidden" name="valueType" value="@valueType"/>
+                
+                @if(kpiDefinition.isStandard) {
+                    <div class="form-group ">
+                        <label class="control-label">@parts.Msg("object.kpi_value_definition.name.label")</label>
+                        <div class="">@parts.Msg(kpiValueDefinition.name)</div>
+                    </div>
+                } else {
+                    @parts.multi_languages_input_text(kpiValueDefinitionForm("name"), parts.Msg.asString("object.kpi_value_definition.name.label"))
+                }
+                
+                @parts.dropdownlist(kpiValueDefinitionForm("renderType"), parts.Msg.asString("object.kpi_value_definition.render_type.label"), renderTypes, null, false)
+                
+                @helper.inputText(kpiValueDefinitionForm("renderPattern"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.kpi_value_definition.render_pattern.label"))
+                
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url">@parts.Msg("button.cancel")</a>
+            </fieldset>
+       }
+    </div> 
+   
+}

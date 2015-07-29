@@ -1,0 +1,3028 @@
+########################
+# App framework
+########################
+
+#----------------------
+# title
+#----------------------
+
+main.application.title.header=BizDock
+main.application.title=
+
+#----------------------
+# js
+#----------------------
+
+js.unchecked=false
+js.checked=true
+js.from=from
+js.to=to
+js.filtersselectortitle=Select filters
+js.columnsselectortitle=Select columns
+js.empty=empty
+js.kpi=KPI
+
+#----------------------
+# plugin
+#----------------------
+
+plugin.failed.start=The plugin {0} failed to start, reported cause is >>> {1}
+plugin.success.start=The plugin {0} started successfully
+plugin.failed.stop=The plugin {0} has reported an error while stopping, please communicate the following id to your administrator {1}
+plugin.success.stop=The plugin {0} has been stopped
+
+#----------------------
+# colors
+#----------------------
+
+maf.color.default=Gray
+maf.color.info=Cyan
+maf.color.primary=Blue
+maf.color.success=Green
+maf.color.warning=Amber
+maf.color.danger=Red
+
+#----------------------
+# days
+#----------------------
+
+day.monday=Monday
+day.tuesday=Tuesday
+day.wednesday=Wednesday
+day.thursday=Thursday
+day.friday=Friday
+day.saturday=Saturday
+day.sunday=Sunday
+
+#----------------------
+# months
+#----------------------
+
+month.january=January
+month.february=February
+month.march=March
+month.april=April
+month.may=May
+month.june=June
+month.july=July
+month.august=August
+month.september=September
+month.october=October
+month.november=November
+month.december=December
+
+#----------------------
+# form: messages, constraints and errors
+#----------------------
+
+standard.form.error.title=Please correct the errors.
+
+form.input.select.choose=Select a value
+form.input.date.placeholder=Enter a date
+form.input.date.invalid=Invalid date
+form.input.date.error.after=The date must be after {0}.
+form.input.date.error.before=The date must be before {0}.
+form.input.multi_languages_string.required=required for at least one language
+form.input.multi_languages_string.required.error=Mandatory for at least one language
+form.input.image.required=Please provide an image in one of the following formats: gif, jpeg or png.
+form.input.image.error.max_width=Please provide an image with a width equals or lesser than {0} px.
+form.input.image.error.max_height=Please provide an image with a height equals or lesser than {0} px.
+form.input.password.invalid=The password is not valid (must be at least 8 characters long)
+form.input.password.error.insufficient_strength=The password you choose is not strong enough
+form.input.oldpassword.invalid=Invalid old password
+form.input.confirmationpassword.invalid=The password is different from the control password
+form.input.url.invalid=Invalid URL
+form.input.url.help=Provide a valid URL that is prefixed by "http://" or "https://", for example https://www.bizdock.io/features
+form.input.file_field.error=The file is missing or not well formated.
+form.input.file_field.name.label=Name
+form.input.file_field.type.label=Type
+form.input.file_field.type.UPLOAD.label=<span class="glyphicons glyphicons-upload"></span> Upload
+form.input.file_field.type.URL.label=<span class="glyphicons glyphicons-link"></span> URL
+form.input.file_field.file.label=File
+
+#----------------------
+# default messages
+#----------------------
+
+default.delete.confirmation.message=Are you sure you want to delete this record ?
+default.delete.file.confirmation.message=Are you sure you want to delete this file ?
+default.delete.file.error.message=Failed to delete this file, please reload the page and try again.
+
+#----------------------
+# buttons
+#----------------------
+
+button.accept=Accept
+button.activate=Activate
+button.add=Add
+button.approve=Approve
+button.associate=Associate
+button.back=Back
+button.cancel=Cancel
+button.change=Change
+button.close=Close
+button.configure=Configure
+button.confirm=Confirm
+button.create=Create
+button.edit=Edit
+button.decide_later=Decide later
+button.delete=Delete
+button.execute=Execute
+button.export=Export
+button.filter=Filter
+button.generate=Generate
+button.next=Next
+button.prev=Prev
+button.previous=Previous
+button.refresh=Refresh
+button.reject=Reject
+button.reset_to_default=Reset to default
+button.save=Save
+button.search=Search
+button.send=Send
+button.signin=Sign in
+button.start=Start
+button.stop=Stop
+button.submit=Submit
+button.update=Update
+button.upload=Upload
+button.open=Open
+
+#----------------------
+# captcha
+#----------------------
+
+captcha.field.label=Type the word displayed in the image
+captcha.refresh.label=not readable? change text
+captcha.error.wrong_word=You typed the wrong text, please try again
+
+#----------------------
+# standalone authentication
+#----------------------
+
+authentication.standalone.form.title=Login
+authentication.standalone.username.label=Username
+authentication.standalone.password.label=Password
+authentication.standalone.button.label=Sign in
+authentication.standalone.error.message=Wrong username or password
+authentication.standalone.locked.account.message=Your account has been locked. Please contact your administrator.
+authentication.standalone.password.issue.message=I can''t access my account.
+authentication.standalone.reset.form.title=Reset your password
+authentication.standalone.reset.mail.label=Enter your mail address
+authentication.standalone.reset.submit.label=Request password reset
+authentication.standalone.reset.cancel.label=Cancel
+authentication.standalone.reset.success.message=You password has been reset, you''ll receive an e-mail soon.
+authentication.standalone.reset.mail.validation.message=The e-mail provided is invalid.
+authentication.standalone.reset.mail.unknown.message=Unknown e-mail address
+
+#----------------------
+# federated authentication
+#----------------------
+authentication.federated.logout.title=Logout successful
+authentication.federated.logout.message.success=You have successfully logged out of the BizDock.
+authentication.federated.logout.message.loginlink=click here to login again
+
+#----------------------
+# table and filter
+#----------------------
+
+table.empty=There is no data to display.
+table.pagination.records=record(s)
+table.row_action.select_a_value=Please select at least one value
+table.row_action.actions=Actions
+
+filter.togglebutton.label=filters
+filter.table.excel.success=Success : You will receive a notification when your excel file is ready for download.
+filter.table.excel.failure=Error : Unable to export the Excel file.
+filter.table.ajax.error.message=Failed to communicate with the server, please refresh the page.
+filter.table.empty.textfilter=All
+
+#----------------------
+# chart
+#----------------------
+
+chart.empty=The chart is empty.
+
+#----------------------
+# password strength
+#----------------------
+
+password.strength.title=Password strength
+password.strength.explanation=Use at least 8 characters. Don’t use a password from another web site.
+password.strength.message=Weak passwords won''t be accepted
+password.strength.weak=Weak
+password.strength.average=OK
+password.strength.ok=Strong
+
+#----------------------
+# picker
+#----------------------
+
+picker.title.single=Select a value
+picker.title.multi=Select values
+picker.ajax.wait.message=Loading...
+picker.ajax.failure.message=Failed to communicate with the server. Please refresh the page.
+picker.novalue.message=No value found
+picker.already.selected.message=Already selected
+
+#----------------------
+# validation key
+#----------------------
+
+validationkey.invalid.title=Invalid action
+validationkey.invalid.explanation=This validation key is invalid (or outdated), please contact your administrator.
+validationkey.invalid.home.link=Back to home page
+
+#----------------------
+# KPI
+#----------------------
+
+kpi.trend.error=Error while loading the trend
+kpi.trend.nodata=There is no data.
+kpi.label.last_update=Last update
+kpi.label.trend=Trend
+
+#----------------------
+# Data types
+#----------------------
+
+data_type.User.label=User
+data_type.SystemLevelRoleType.label=Role
+data_type.Actor.label=Employee
+data_type.BudgetBucket.label=Budget bucket
+data_type.BudgetBucketLine.label=Budget bucket line
+data_type.CostCenter.label=Cost center
+data_type.GoodsReceipt.label=Goods receipt
+data_type.Iteration.label=Iteration
+data_type.OrgUnit.label=Org unit
+data_type.PortfolioEntryBudget.label=Initiative''s budget
+data_type.PortfolioEntryBudgetLine.label=Initiative''s budget line
+data_type.PortfolioEntryEvent.label=Event
+data_type.PortfolioEntry.label=Initiative
+data_type.PortfolioEntryPlanningPackage.label=Package
+data_type.PortfolioEntryReport.label=Initiative''s report
+data_type.PortfolioEntryResourcePlanAllocatedActor.label=Allocated employee (initiative)
+data_type.PortfolioEntryResourcePlanAllocatedOrgUnit.label=Allocated org unit
+data_type.PortfolioEntryResourcePlanAllocatedCompetency.label=Allocated competency
+data_type.PortfolioEntryRisk.label=Risk
+data_type.Portfolio.label=Portfolio
+data_type.Stakeholder.label=Stakeholder
+data_type.PurchaseOrderLineItem.label=Purchase order line
+data_type.PurchaseOrder.label=Purchase order
+data_type.Release.label=Release
+data_type.Requirement.label=Requirement
+data_type.TimesheetActivityAllocatedActor.label=Allocated employee (activity)
+data_type.WorkOrder.label=Work order
+data_type.ApplicationBlock.label=Application block
+
+#----------------------
+# Custom attribute types
+#----------------------
+
+custom_attribute.type.BOOLEAN.label=Boolean
+custom_attribute.type.INTEGER.label=Integer
+custom_attribute.type.DECIMAL.label=Number
+custom_attribute.type.STRING.label=String
+custom_attribute.type.TEXT.label=Text
+custom_attribute.type.DATE.label=Date
+custom_attribute.type.SINGLE_ITEM.label=Single dropdown
+custom_attribute.type.DYNAMIC_SINGLE_ITEM.label=Autocomplete
+custom_attribute.type.IMAGE.label=Image
+custom_attribute.type.MULTI_ITEM.label=Multi dropdown
+custom_attribute.type.URL.label=URL
+
+########################
+# Components
+########################
+
+#----------------------
+# ID zone
+#----------------------
+
+idzone.messages.title=Messages
+idzone.messages.not_read.empty=No new message
+idzone.messages.messaging=Messaging
+idzone.notifications.title=Notifications
+idzone.notifications.not_read.empty=No new notification
+idzone.notifications.view_all=View all notifications
+idzone.my.myaccount=My profile
+idzone.my.personalspace=My personal space
+idzone.my.support=Support
+idzone.my.logout=Sign out
+
+#----------------------
+# export
+#----------------------
+
+excel.export.success.title=New Excel export file
+excel.export.success.message=The export [{0}] for [{1}] has been successfully put into your personal space
+excel.export.failure.title=Excel export error
+excel.export.failure.message=An error happened while generating the excel export for [{0}], please contact the administrator (or retry later).
+
+#----------------------
+# shortcut
+#----------------------
+
+shortcut.add.message.success=The page has been bookmarked.
+shortcut.add.message.already=This page is already bookmarked.
+shortcut.add.message.error=Impossible to bookmark this page due to a technical error.
+shortcut.delete.message.error=Impossible to delete this bookmark due to a technical error.
+shortcut.delete.message.success=The bookmark has been removed.
+
+#----------------------
+# tour
+#----------------------
+
+tour.donotdisplay=do not display again
+
+tour.top_menu_bar.step0.title=Quick Tour
+tour.top_menu_bar.step0.content=<strong>Welcome to BizDock!</strong><br/><br/>This Quick Tour will help you with the main functionalities and the navigation of BizDock.
+tour.top_menu_bar.step1.title=Language
+tour.top_menu_bar.step1.content=To start, choose the language in which you want to view BizDock.
+tour.top_menu_bar.step2.title=Language
+tour.top_menu_bar.step2.content=You can then modify your account in order to set your preferred language for future connections.
+tour.top_menu_bar.step3.title=Roadmap
+tour.top_menu_bar.step3.content=The roadmap shows all active initiatives (according to your permissions). You can easily sort and filter them!
+tour.top_menu_bar.step4.title=Cockpit
+tour.top_menu_bar.step4.content=You cockpit contains all information that concerns you, for example your initiatives as manager or your team''s members.
+tour.top_menu_bar.step5.title=New
+tour.top_menu_bar.step5.content=The New menu allows you to create any type of data according to your permissions.
+tour.top_menu_bar.step6.title=Governance
+tour.top_menu_bar.step6.content=Find here the milestones'' planning and all governance actions for which you are required.
+tour.top_menu_bar.step7.title=Delivery
+tour.top_menu_bar.step7.content=Visualize here the releases either by list or with a gantt chart.
+tour.top_menu_bar.step8.title=Tools
+tour.top_menu_bar.step8.content=The Tools menu contains the timesheets or the reporting modules.
+tour.top_menu_bar.step9.title=Admin
+tour.top_menu_bar.step9.content=Customize here your BizDock instance! You can change the configuration and manage the BizDock users.
+tour.top_menu_bar.step10.title=Search
+tour.top_menu_bar.step10.content=The search page allows you to find easily the main BizDock data.
+tour.top_menu_bar.step11.title=Messages
+tour.top_menu_bar.step11.content=BizDock includes a messaging system in order to directly communicate with other users.
+tour.top_menu_bar.step12.title=Notifications
+tour.top_menu_bar.step12.content=At each time your attention is required you will receive a notification!
+tour.top_menu_bar.step13.title=My Account
+tour.top_menu_bar.step13.content=You want change your password? Download a resource? Or just sign out? Simply use the My account menu.
+
+tour.breadcrumb.step0.title=Bookmarks
+tour.breadcrumb.step0.content=You can bookmark the current page by clicking on the pin icon.
+tour.breadcrumb.step1.title=Help
+tour.breadcrumb.step1.content=You need more information about the current page? Simply click on the help icon.
+
+#----------------------
+# top menu bar
+#----------------------
+
+#roadmap
+topmenubar.roadmap.menu.label=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
+
+#cockpit
+topmenubar.cockpit.menu.label=<i class="glyphicons glyphicons-dashboard"></i>&nbsp;Cockpit
+
+#new
+topmenubar.new.menu.label=<i class="glyphicons glyphicons-gift"></i>&nbsp;New
+topmenubar.new.initiative.menu.label=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Initiative
+topmenubar.new.actor.menu.label=<i class="glyphicons glyphicons-parents"></i>&nbsp;Employee
+topmenubar.new.org_unit.menu.label=<i class="glyphicons glyphicons-building"></i>&nbsp;Org unit
+topmenubar.new.portfolio.menu.label=<i class="glyphicons glyphicons-sort"></i>&nbsp;Portfolio
+topmenubar.new.budget_bucket.menu.label=<i class="glyphicons glyphicons-calculator"></i>&nbsp;Budget bucket
+topmenubar.new.release.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Release
+
+#governance
+topmenubar.governance.menu.label=<i class="glyphicons glyphicons-cluster"></i>&nbsp;Governance
+topmenubar.governance.milestone_planning.menu.label=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Milestone planning
+topmenubar.governance.provide_approval.menu.label=<i class="glyphicons glyphicons-thumbs-up"></i>&nbsp;Provide approval
+topmenubar.governance.review_milestone_request.menu.label=<i class="glyphicons glyphicons-transfer"></i>&nbsp;Review milestone requests
+
+#delivery
+topmenubar.delivery.menu.label=<i class="glyphicons glyphicons-cargo"></i>&nbsp;Delivery
+topmenubar.delivery.releases.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
+
+#architecture
+topmenubar.architecture.menu.label=<i class="glyphicons glyphicons-globe-af"></i>&nbsp;Architecture
+
+#tools
+topmenubar.tools.menu.label=<i class="glyphicons glyphicons-settings"></i>&nbsp;Tools
+topmenubar.tools.timesheet.menu.label=<i class="glyphicons glyphicons-clock"></i>&nbsp;Timesheet
+topmenubar.tools.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting
+
+#admin
+topmenubar.admin.menu.label=<i class="glyphicons glyphicons-king"></i>&nbsp;Admin
+topmenubar.admin.usermanager.menu.label=<i class="glyphicons glyphicons-user"></i>&nbsp;User administration
+topmenubar.admin.configuration.menu.label=<i class="glyphicons glyphicons-classic-hammer"></i>&nbsp;Configuration
+topmenubar.admin.integration.menu.label=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration
+topmenubar.admin.kpimanager.menu.label=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manager
+topmenubar.admin.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting manager
+topmenubar.admin.integrationhub.menu.label=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration hub
+topmenubar.admin.audit.menu.label=<i class="glyphicons glyphicons-signal"></i>&nbsp;Audit log
+
+#search
+topmenubar.search.menu.label=<i class="glyphicons glyphicons-search"></i>&nbsp;Search
+
+#----------------------
+# standard KPIs
+#----------------------
+
+kpi.risks_and_issues.main.name=Risks & Issues
+kpi.risks_and_issues.additional1.name=Risks
+kpi.risks_and_issues.additional2.name=Issues
+
+kpi.deviation_capex.main.name=Deviation CAPEX
+kpi.deviation_capex.additional1.name=Budget
+kpi.deviation_capex.additional2.name=Forecast
+
+kpi.deviation_opex.main.name=Deviation OPEX
+kpi.deviation_opex.additional1.name=Budget
+kpi.deviation_opex.additional2.name=Forecast
+
+kpi.allocated_actor_days.main.name=Employees
+kpi.allocated_actor_days.additional1.name=Confirmed
+kpi.allocated_actor_days.additional2.name=Not confirmed
+
+kpi.allocated_org_unit_days.main.name=Resources requests
+kpi.allocated_org_unit_days.additional1.name=Confirmed
+kpi.allocated_org_unit_days.additional2.name=Not confirmed
+
+kpi.portfolio_number_of_entries.main.name=Number of initiatives
+kpi.portfolio_number_of_entries.additional1.name=Concept
+kpi.portfolio_number_of_entries.additional2.name=Active
+
+kpi.portfolio_deviation_capex.main.name=CAPEX Deviation
+kpi.portfolio_deviation_capex.additional1.name=Budget
+kpi.portfolio_deviation_capex.additional2.name=Forecast
+
+kpi.portfolio_deviation_opex.main.name=OPEX Deviation
+kpi.portfolio_deviation_opex.additional1.name=Budget
+kpi.portfolio_deviation_opex.additional2.name=Forecast
+
+kpi.requirement_story_points.main.name=Open story points
+kpi.requirement_story_points.additional1.name=Total
+kpi.requirement_story_points.additional2.name=Closed
+
+kpi.requirement_number.main.name=Open requirements
+kpi.requirement_number.additional1.name=Total
+kpi.requirement_number.additional2.name=Closed
+
+kpi.defect_number.main.name=Open defects
+kpi.defect_number.additional1.name=Blocker
+kpi.defect_number.additional2.name=Non-blocker
+
+kpi.requirement_is_scoped.main.name=In-scope requirements
+kpi.requirement_is_scoped.additional1.name=Total
+kpi.requirement_is_scoped.additional2.name=Non-scoped
+
+kpi.portfolio_entry_progress.main.name=Progress
+kpi.portfolio_entry_progress.additional1.name=Planned days
+kpi.portfolio_entry_progress.additional2.name=Consumed days
+
+#----------------------
+# standard reports
+# Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
+#----------------------
+
+report.release_requirements.name=Release''s requirements
+report.release_requirements.description=List of requirements for a release
+report.release_requirements.release.name=Release
+
+report.competency.name=Competency
+report.competency.description=Employees with this competency and allocations.
+report.competency.competency.name=Competency
+
+report.status_report.name=Status report
+report.status_report.description=The status report for an initiative.
+report.status_report.initiative.name=Initiative
+
+report.timesheet_period.name=Timesheet entries for a period
+report.timesheet_period.description=List of all timesheet entries for a given period. The entries are grouped by employee and activity.
+report.timesheet_period.start_date.name=Start period date
+report.timesheet_period.end_date.name=End period date
+
+report.timesheet_project.name=Timesheet entries for a project
+report.timesheet_project.description=List of all timesheet entries for a given project. The entries are grouped by employee and date.
+report.timesheet_project.initiative.name=Initiative
+
+report.milestones_overdue.name=Milestones overdue
+report.milestones_overdue.description=List of late milestones for the active initiatives.
+
+#----------------------
+# permissions
+#----------------------
+
+permission.roadmap_display_permission.description=Permission which allows a user to see the "Roadmap" link and to access the page. It does not restrict WHICH initiatives are displayed.
+permission.cockpit_display_permission.description=Permission which allows a user to see the "Cockpit" link and to access the page. It does not restrict WHICH initiatives are displayed
+permission.portfolio_entry_view_public_permission.description=Permission which allows a user to list and see basic data of all public and non-conceptual initiatives.
+permission.portfolio_entry_view_details_all_permission.description=Permission which allows a user to view all the details of any initiatives (except the financial details).
+permission.portfolio_entry_view_details_as_manager_permission.description=Permission which allows a user to view all the details of an initiative (except the financial details) for which he is the manager.
+permission.portfolio_entry_view_details_as_stakeholder_permission.description=Permission which allows a user to view all the details of an initiative (except the financial details) for which he is a direct or a portfolio stakeholder.
+permission.portfolio_entry_view_details_as_portfolio_manager_permission.description=Permission which allows a user to view all the details of an initiative (except the financial details) for which he is a manager of at least one portfolio.
+permission.portfolio_entry_edit_all_permission.description=Permission which allows a user to edit all the details of any initiatives.
+permission.portfolio_entry_edit_as_manager_permission.description=Permission which allows a user to edit all the details of an initiative (except the financial details) for which he is the manager.
+permission.portfolio_entry_edit_as_portfolio_manager_permission.description=Permission which allows a user to edit all the details of an initiative (except the financial details) for which he is a manager of at least one portfolio.
+permission.portfolio_entry_view_financial_info_all_permission.description=Permission which allows a user to view the financial details of any initiatives.
+permission.portfolio_entry_view_financial_info_as_manager_permission.description=Permission which allows a user to view the financial details of an initiative for which he is the manager.
+permission.portfolio_entry_view_financial_info_as_stakeholder_permission.description=Permission which allows a user to view the financial details of an initiative for which he is a direct or a portfolio stakeholder.
+permission.portfolio_entry_view_financial_info_as_portfolio_manager_permission.description=Permission which allows a user to view the financial details of an initiative for which he is a manager of at least one portfolio.
+permission.portfolio_entry_edit_financial_info_all_permission.description=Permission which allows a user to edit and remove the financial details of any initiatives.
+permission.portfolio_entry_edit_financial_info_as_manager_permission.description=Permission which allows a user to edit and remove the financial details of an initiative for which he is the manager.
+permission.portfolio_entry_delete_all_permission.description=Permission which allows a user to delete any initiatives.
+permission.portfolio_entry_review_request_all_permission.description=Permission which allows a user to display and process all the review requests of any initiatives.
+permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Permission which allows a user to display and process all the review requests of any initiatives for which he is a manager of at least one portfolio.
+permission.purchase_order_view_all_permission.description=Permission which allows a user to view all details of any purchase orders.
+permission.admin_user_administration_permission.description=Permission which allows a user to create, edit and remove the users.
+permission.admin_hub_monitoring_permission.description=Permission which allows a user to display the logs of the integration hub.
+permission.admin_audit_log_permission.description=Permission which allows a user to configure the audit log.
+permission.personal_space_read_permission.description=Permission which allows a user to display and access its personal space.
+permission.admin_provisioning_manager_permission.description=Permission which allows to receive the notifications of provisioning failures.
+permission.scm_developer_permission.description=Permission which is required to be able to use the source code repository.
+permission.scm_admin_permission.description=Permission which is required to be able to administrate the source code repository.
+permission.jenkins_viewer_permission.description=Permission which allows a user to use Jenkins as a viewer.
+permission.jenkins_deploy_permission.description=Permission which allows a user to create and deploy jobs on Jenkins.
+permission.portfolio_entry_submission_permission.description=Permission which allows a user to submit a create a new initiative (intake).
+permission.admin_configuration_permission.description=Permission which allows a user to modify the configuration (system preferences, roles...) of the application.
+permission.admin_plugin_manager_permission.description=Permission which allows to configure and manage the third party modules.
+permission.admin_kpi_manager_permission.description=Permission which allows to configure and manage the KPIs.
+permission.milestone_approval_permission.description=Permission which allows a user to vote for a milestone for which he is an approver.
+permission.milestone_decide_permission.description=Permission which allows a user to decide the final status of any milestones (approve or reject). This is also called "the final approval".
+permission.milestone_overview_permission.description=Permission which allows a user to display the milestones'' planning.
+permission.search_permission.description=Permission which allows a user to see the "Search" link and to access the page. It does not restrict WHICH results are displayed.
+permission.actor_view_all_permission.description=Permission which allows a user to view the details of any employees.
+permission.actor_view_as_superior_permission.description=Permission which allows a user to view the details of an employee for which he is a superior (direct or not).
+permission.actor_edit_all_permission.description=Permission which allows a user to edit the details of any employees.
+permission.org_unit_view_all_permission.description=Permission which allows a user to view the details of any org units.
+permission.org_unit_view_as_responsible_permission.description=Permission which allows a user to view the details of an org unit for which he is a responsible (direct or not).
+permission.org_unit_edit_all_permission.description=Permission which allows a user to edit the details of any org units.
+permission.portfolio_view_details_all_permission.description=Permission which allows a user to view the details (except the financial details) of any portfolios.
+permission.portfolio_view_details_as_manager_permission.description=Permission which allows a user to view the details (except the financial details) of a portfolio for which he is the manager.
+permission.portfolio_view_details_as_stakeholder_permission.description=Permission which allows a user to view the details (except the financial details) of a portfolio for which he is a stakeholder.
+permission.portfolio_view_financial_info_all_permission.description=Permission which allows a user to view the financial details of any portfolios.
+permission.portfolio_view_financial_info_as_manager_permission.description=Permission which allows a user to view the financial details of a portfolio for which he is the manager.
+permission.portfolio_edit_all_permission.description=Permission which allows a user to edit the details of any portfolios.
+permission.portfolio_edit_as_portfolio_manager_permission.description=Permission which allows a user to edit the details of a portfolio for which he is the manager.
+permission.budget_bucket_view_all_permission.description=Permission which allows a user to view the details of any budget buckets.
+permission.budget_bucket_view_as_owner_permission.description=Permission which allows a user to view the details of a budget bucket for which he is the owner.
+permission.budget_bucket_edit_all_permission.description=Permission which allows a user to edit the details of any budget buckets.
+permission.budget_bucket_edit_as_owner_permission.description=Permission which allows a user to edit the details of a budget bucket for which he is the owner.
+permission.reporting_view_all_permission.description=Permission which allows a user to view the details of any reports.
+permission.reporting_view_as_viewer_permission.description=Permission which allows a user to view the details of a report for which he is a viewer.
+permission.reporting_administration_permission.description=Permission which allows a user to manage any reports and categories. This permission doesn''t allow the user to view the report.
+permission.timesheet_entry_permission.description=Permission which allows a user to fill his timesheet.
+permission.timesheet_approval_all_permission.description=Permission which allows a user to approve a reject any timesheets.
+permission.timesheet_approval_as_manager_permission.description=Permission which allows a user to approve or reject a timesheet which has been filled by any subordinates (direct or not).
+permission.timesheet_lock_all_permission.description=Permission which allows a user to lock and unlock any timesheets.
+permission.admin.system_owner.description=Permission which allows a user to change (possibly purchase) additional resources for the system
+permission.release_view_all_permission.description=Permission which allows a user to view the details of any releases.
+permission.release_view_as_manager_permission.description=Permission which allows a user to view the details of a release for which he is the manager.
+permission.release_edit_all_permission.description=Permission which allows a user to edit the details of any releases.
+permission.release_edit_as_manager_permission.description=Permission which allows a user to edit the details of a release for which he is the manager.
+permission.api_manager_permission.description=Permission which allows a user to configure the api keys and authorizations.
+permission.api_tester_permission.description=Permission which allows a user to access the API documentation and test interface.
+permission.roadmap_simulator_permission.description=Permission which allows a user to simulate the capacity scenarios in the roadmap.
+permission.admin_custom_attribute_permission.description=Permission which allows a user to manage the custom attributes.
+permission.architecture_permission.description=Permission which allows a user to use the architecture module (DevDock).
+permission.application_block_edit_all_permission.description=Permission which allows a user to manage the application blocks (DevDock).
+
+#----------------------
+# preferences
+#----------------------
+
+preference.display_list_page_size_preference.description=Number of rows displayed in a table (size of a table page)
+preference.display_list_page_size_preference.name=Number of rows
+preference.governance_reviewed_requests_display_duration.description=How many days the accepted or rejected requests are displayed in the request dashboard
+preference.governance_reviewed_requests_display_duration.name=Display of reviewed requests
+preference.financial_use_purchase_order_preference.description=If true then the system use the purchase orders to engage amount of work orders.
+preference.financial_use_purchase_order_preference.name=Use purchase order
+preference.roadmap_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default roadmap view.
+preference.roadmap_filter_storage_preference.name=Stores the JSON configuration of the roadmap filter
+preference.application_logo_preference.description=Logo that is displayed on the top left of each page.<br/>Authorized formats: gif, jpeg or png.<br/>Max height: 50 px.
+preference.application_logo_preference.name=Application logo
+preference.homepage_logo_preference.description=Logo that is displayed on the homepage (if no third party module is available).<br/>Authorized formats: gif, jpeg or png.<br/>Max width: 100 px.<br/>Max height: 100 px.
+preference.homepage_logo_preference.name=Homepage logo
+preference.timesheet_must_approve_preference.description=If true then the timesheets should be approved by the managers.
+preference.timesheet_must_approve_preference.name=Approve timesheet
+preference.timesheet_reminder_limit_preference.description=The reminder limit is the maximal number of late timesheets (for each subordinate) that are displayed in the cockpit of a manager.<br/>A late timesheet is a timesheet that is not submitted and which belongs to a past period.
+preference.timesheet_reminder_limit_preference.name=Reminder limit for late timesheets
+preference.timesheet_hours_per_day.description=Defines the expected number of hours for a day when filling a timesheet.
+preference.timesheet_hours_per_day.name=Number of hours per day
+preference.requirements_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default requirements view.
+preference.requirements_filter_storage_preference.name=Stores the JSON configuration of the requirements filter
+preference.packages_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default packages view.
+preference.packages_filter_storage_preference.name=Stores the JSON configuration of the packages filter
+preference.package_status_on_going_fulfillment_percentage.name=Completion percentage for "On-going" status of packages
+preference.package_status_on_going_fulfillment_percentage.description=The percentage value of a package''s completion when its status is "On-going".
+preference.api_authz_mode_preference.name=API authenticaton mode
+preference.api_authz_mode_preference.description=The level of authentication for the APIs.\
+BizDock can use a secured signature mechanism or a lower security model based on a unique application key.
+preference.roadmap_capacity_simulator_warning_limit.name=Tolerance for capacity overflow
+preference.roadmap_capacity_simulator_warning_limit.description=The tolerance (in percent) that is accepted for a capacity overflow when drawing the capacity simulator table. In this specific case the cell is amber instead of red.
+preference.smtp_host_preference.name=Host
+preference.smtp_host_preference.description=The SMTP host, for example smtp.gmail.com
+preference.smtp_port_preference.name=Port
+preference.smtp_port_preference.description=The SMTP port, for example 587
+preference.smtp_ssl_preference.name=SSL
+preference.smtp_ssl_preference.description=Define if the host server uses SSL
+preference.smtp_tls_preference.name=TLS
+preference.smtp_tls_preference.description=Define if the host server uses TLS
+preference.smtp_user_preference.name=Username
+preference.smtp_user_preference.description=The SMTP server username
+preference.smtp_password_preference.name=Password
+preference.smtp_password_preference.description=The SMTP server password
+
+#----------------------
+# authentication
+#----------------------
+
+authentication.not_accessible=The instance is not accessible, please contact your administrator for more information.
+
+#----------------------
+# licenses management
+#----------------------
+
+licenses_management.cannot_create_portfolio_entry=This is not possible to create a new initiative because you have consumed all available licenses. Please contact your administrator for more information.
+licenses_management.cannot_create_user=This is not possible to create a new user because you have consumed all available licenses. Please contact your administrator for more information.
+
+########################
+# Objects
+########################
+
+#----------------------
+# userAccount
+#----------------------
+
+object.user_account.uid.label=Username
+object.user_account.type.label=Account type
+object.user_account.uid.invalid=A username must be at least 2 and not more than 60 characters long (letters, digits or @._-).
+object.user_account.uid.auth_not_found=The specified username cannot be found.
+object.user_account.uid.already_exists=The username already exists, please select another one.
+object.user_account.is_active.label=Active
+object.user_account.first_name.label=First name
+object.user_account.first_name.invalid=The first name must be at least 2 characters long and not more than 64.
+object.user_account.last_name.label=Last name
+object.user_account.last_name.invalid=The last name must be at least 2 characters long and not more than 64.
+object.user_account.full_name.label=Name
+object.user_account.preferred_language.label=Preferred language
+object.user_account.email.label=Email
+object.user_account.email.invalid=The e-mail address is not valid.
+object.user_account.email.already_exists=The email already exists, please select another one.
+object.user_account.roles.label=Roles
+object.user_account.permissions.label=Permissions
+object.user_account.password.label=Password
+object.user_account.password_confirmation.label=Password confirmation
+object.user_account.old_password.label=Old password
+
+#----------------------
+# apiRegistration
+#----------------------
+object.api_registration.name.label=Name
+object.api_registration.description.label=Description
+object.api_registration.testable.label=Is testable
+object.api_registration.authorizations.label=Api authorizations
+object.api_registration.secret.key.label=Secret key
+object.api_registration.application.key.label=Application key
+object.api_registration.key.protocol.version.label=Protocol version
+object.api_registration.key.hash.algorithm.label=Hash algorithm
+object.api_registration.applicationName.invalid=An application name must be at least 3 letters and must not exceed 64
+object.api_registration.description.invalid=The application description size is exceeding the maximum allowed
+
+#----------------------
+# preference
+#----------------------
+
+object.preference.name.label=Name
+object.preference.description.label=Description
+object.preference.value.label=Value
+
+#----------------------
+# notification
+#----------------------
+
+object.notification.date.label=Posted
+object.notification.is_read.label=Read
+object.notification.message.label=Message
+object.notification.title.label=Subject
+object.notification.table.empty=There is no notification.
+
+#----------------------
+# message
+#----------------------
+
+object.message.date.label=Posted
+object.message.sender.label=Sender
+object.message.message.label=Message
+object.message.message.invalid=The message value cannot exceed 255 letters.
+object.message.title.label=Subject
+object.message.principaluids.label=Recipients
+object.message.table.empty=There is no message
+
+#----------------------
+# role
+#----------------------
+
+object.role.selectable.label=Active
+object.role.name.label=Name
+object.role.name.already_used=This name is already used by another role
+object.role.description.label=Description
+object.role.permissions.label=Permissions
+
+#----------------------
+# customAttributeDefinition
+#----------------------
+
+object.custom_attribute_definition.uuid.label=ID
+object.custom_attribute_definition.attribute_type.label=Type
+object.custom_attribute_definition.name.label=Name
+object.custom_attribute_definition.description.label=Description
+object.custom_attribute_definition.configuration.label=Configuration
+object.custom_attribute_definition.is_displayed.label=Displayed
+object.custom_attribute_definition.is_displayed.help=Check this box to display the custom attributes in the corresponding tables.
+object.custom_attribute_definition.table.empty=There is currently no custom attribute.
+
+#----------------------
+# customAttributeItem
+#----------------------
+
+object.custom_attribute_item.name.label=Name
+object.custom_attribute_item.description.label=Description
+object.custom_attribute_item.table.empty=There is currently no option.
+
+#----------------------
+# portfolioEntryType
+#----------------------
+
+object.portfolio_entry_type.name.label=Name
+object.portfolio_entry_type.description.label=Description
+object.portfolio_entry_type.selectable.label=Selectable
+object.portfolio_entry_type.table.empty=There is currently no initiative type.
+
+#----------------------
+# portfolioEntryDependencyType
+#----------------------
+
+object.portfolio_entry_dependency_type.name.label=Name
+object.portfolio_entry_dependency_type.contrary.label=Contrary
+object.portfolio_entry_dependency_type.description.label=Description
+object.portfolio_entry_dependency_type.is_active.label=Active
+object.portfolio_entry_dependency_type.table.empty=There is currently no dependency type.
+
+#----------------------
+# portfolioType
+#----------------------
+
+object.portfolio_type.name.label=Name
+object.portfolio_type.description.label=Description
+object.portfolio_type.selectable.label=Selectable
+object.portfolio_type.table.empty=There is currently no portfolio type.
+
+#----------------------
+# actorType
+#----------------------
+
+object.actor_type.name.label=Name
+object.actor_type.description.label=Description
+object.actor_type.ref_id.label=Ref ID
+object.actor_type.ref_id.invalid=This ref ID is already used for another employee type.
+object.actor_type.selectable.label=Selectable
+object.actor_type.table.empty=There is currently no actor type.
+
+#----------------------
+# orgUnitType
+#----------------------
+
+object.org_unit_type.name.label=Name
+object.org_unit_type.description.label=Description
+object.org_unit_type.selectable.label=Selectable
+object.org_unit_type.table.empty=There is currently no org unit type.
+
+#----------------------
+# competency
+#----------------------
+
+object.competency.name.label=Name
+object.competency.description.label=Description
+object.competency.is_active.label=Active
+object.competency.is_default.label=Principal
+object.competency.is_default.help=The principal competency is used when processing the capacity table on the roadmap (other competencies are ignored).
+object.competency.table.empty=There is currently no competency.
+
+#----------------------
+# stakeholderType
+#----------------------
+
+object.stakeholder_type.name.label=Name
+object.stakeholder_type.description.label=Description
+object.stakeholder_type.selectable.label=Active
+object.stakeholder_type.portolio_types.label=Associated portfolio types
+object.stakeholder_type.portolio_entry_types.label=Associated initiative types
+object.stakeholder_type.table.empty=There is currently no stakeholder type.
+
+#----------------------
+# portfolioEntryRiskType
+#----------------------
+
+object.portfolio_entry_risk_type.name.label=Name
+object.portfolio_entry_risk_type.description.label=Description
+object.portfolio_entry_risk_type.selectable.label=Active
+object.portfolio_entry_risk_type.table.empty=There is currently no risk type.
+
+#----------------------
+# portfolioEntryReportStatusType
+#----------------------
+
+object.portfolio_entry_report_status_type.name.label=Name
+object.portfolio_entry_report_status_type.description.label=Description
+object.portfolio_entry_report_status_type.selectable.label=Active
+object.portfolio_entry_report_status_type.css_class.label=Color
+object.portfolio_entry_report_status_type.table.empty=There is currently no report status type.
+
+#----------------------
+# portfolioEntryEventType
+#----------------------
+
+object.portfolio_entry_event_type.name.label=Name
+object.portfolio_entry_event_type.selectable.label=Active
+object.portfolio_entry_event_type.bootstrap_glyphicon.label=Icon
+object.portfolio_entry_event_type.table.empty=There is currently no event type.
+
+#----------------------
+# requirementStatus
+#----------------------
+
+object.requirement_status.id.label=Id
+object.requirement_status.type.label=Type
+object.requirement_status.type.NEW.label=New
+object.requirement_status.type.OPEN.label=Open
+object.requirement_status.type.CLOSED.label=Closed
+object.requirement_status.type.DEPLOYED.label=In production
+object.requirement_status.name.label=Name
+object.requirement_status.description.label=Description
+object.requirement_status.table.empty=There is currently no status.
+
+#----------------------
+# requirementPriority
+#----------------------
+
+object.requirement_priority.id.label=Id
+object.requirement_priority.is_must.label=Mandatory
+object.requirement_priority.name.label=Name
+object.requirement_priority.description.label=Description
+object.requirement_priority.table.empty=There is currently no priority.
+
+#----------------------
+# requirementSeverity
+#----------------------
+
+object.requirement_severity.id.label=Id
+object.requirement_severity.is_blocker.label=Blocker
+object.requirement_severity.name.label=Name
+object.requirement_severity.description.label=Description
+object.requirement_severity.table.empty=There is currently no severity.
+
+#----------------------
+# timesheetActivity
+#----------------------
+
+object.timesheet_activity.type.label=Type
+object.timesheet_activity.name.label=Name
+object.timesheet_activity.description.label=Description
+object.timesheet_activity.table.empty=There is currently no timesheet activity.
+
+#----------------------
+# timesheetActivityType
+#----------------------
+
+object.timesheet_activity_type.name.label=Name
+object.timesheet_activity_type.description.label=Description
+object.timesheet_activity_type.table.empty=There is currently no timesheet activity type.
+
+#----------------------
+# timesheetReport
+#----------------------
+
+object.timesheet_report.actor.label=Employee
+object.timesheet_report.period.label=Period
+object.timesheet_report.period.value=from {0} to {1}
+object.timesheet_report.hours.label=Reported hours
+object.timesheet_report.status.label=Status
+object.timesheet_report.status.OPEN.label=Open
+object.timesheet_report.status.SUBMITTED.label=Submitted
+object.timesheet_report.status.APPROVED.label=Approved
+object.timesheet_report.status.REJECTED.label=Rejected
+object.timesheet_report.status.LOCKED.label=Locked
+object.timesheet_report.status.UNLOCKED.label=Unlocked
+object.timesheet_report.reminder.help=Send a reminder to the employee that he/she should fill his/her timesheet
+object.timesheet_report.comments.label=Comments
+object.timesheet_report.table.empty=There is currently no timesheet.
+
+#----------------------
+# portfolioEntry
+#----------------------
+
+object.portfolio_entry.is_condfidential.label=Confidential initiative
+object.portfolio_entry.is_condfidential.help=The confidential initiatives are not visible by users which don''t participate to it.
+object.portfolio_entry.is_active.label=Active
+object.portfolio_entry.governance_id.label=Governance ID
+object.portfolio_entry.erp_ref_id.label=ERP ref ID
+object.portfolio_entry.creation_date.label=Creation date
+object.portfolio_entry.is_public.label=Public
+object.portfolio_entry.name.label=Name
+object.portfolio_entry.description.label=Description
+object.portfolio_entry.type.label=Type
+object.portfolio_entry.manager.label=Initiative manager
+object.portfolio_entry.sponsoring_unit.label=Sponsoring unit
+object.portfolio_entry.delivery_units.label=Delivery unit(s)
+object.portfolio_entry.portfolio.label=Portfolio
+object.portfolio_entry.portfolios.label=Portfolio(s)
+object.portfolio_entry.life_cycle_process.label=Life cycle process
+object.portfolio_entry.status.label=Status
+object.portfolio_entry.last_milestone.label=Last milestone passed
+object.portfolio_entry.archived.label=Archived
+object.portfolio_entry.is_concept.label=Concept
+object.portfolio_entry.stakeholder_types.label=Stakeholder type(s)
+object.portfolio_entry.scope_description.label=Document
+object.portfolio_entry.release.label=Release
+object.portfolio_entry.dependency_type.label=Type
+object.portfolio_entry.dependency.label=Initiative
+object.portfolio_entry.dependency.same.error=The chosen initiative should not be the current.
+object.portfolio_entry.dependency.already.error=The chosen initiative is already a dependency for the selected type.
+object.portfolio_entry.dependency.delete.confirmation=Are you sure you want to delete this dependency?
+object.portfolio_entry.table.empty=There is no initiative.
+
+#----------------------
+# portfolio
+#----------------------
+
+object.portfolio.ref_id.label=Ref ID
+object.portfolio.name.label=Name
+object.portfolio.type.label=Type
+object.portfolio.is_active.label=Active
+object.portfolio.is_active.help=An inactive portfolio can''t be assigned.
+object.portfolio.stakeholder_types.label=Stakeholder type(s)
+object.portfolio.manager.label=Manager
+object.portfolio.table.empty=There is no portfolio.
+
+#----------------------
+# portfolioEntryReport
+#----------------------
+
+object.portfolio_entry_report.report_date.label=Report date
+object.portfolio_entry_report.author.label=Author
+object.portfolio_entry_report.status.label=Status
+object.portfolio_entry_report.comments.label=Comment
+object.portfolio_entry_report.portfolio_entry.label=Initiative
+object.portfolio_entry_report.table.empty=There is no report.
+
+#----------------------
+# portfolioEntryRisk
+#----------------------
+
+object.portfolio_entry_risk.is_active.label=Active
+object.portfolio_entry_risk.is_active.help=If the risk/issue is still active (e.g. did not occurred)
+object.portfolio_entry_risk.name.label=Name
+object.portfolio_entry_risk.description.label=Description
+object.portfolio_entry_risk.creation_date.label=Creation date
+object.portfolio_entry_risk.target_date.label=Target date
+object.portfolio_entry_risk.due_date.label=Due date
+object.portfolio_entry_risk.type.label=Type
+object.portfolio_entry_risk.is_mitigated.label=Mitigated
+object.portfolio_entry_risk.mitigation_comment.label=Mitigation action
+object.portfolio_entry_risk.owner.label=Owner
+object.portfolio_entry_risk.table.empty=There is no risk/issue.
+
+#----------------------
+# portfolioEntryEvent
+#----------------------
+
+object.portfolio_entry_event.type.label=Type
+object.portfolio_entry_event.creation_date.label=Creation date
+object.portfolio_entry_event.actor.label=Author
+object.portfolio_entry_event.message.label=Message
+object.portfolio_entry_event.table.empty=There is no event.
+
+#----------------------
+# portfolioEntryPlanningPackage
+#----------------------
+
+object.portfolio_entry_planning_package.date.label=Date
+object.portfolio_entry_planning_package.date.period=from {0} to {1}
+object.portfolio_entry_planning_package.start_date.label=Start date
+object.portfolio_entry_planning_package.start_date.invalid=The start date cannot be filled alone: to enter a single date, just fill the field "End date" and let "Start date" empty. For a period, just fill both date fields.
+object.portfolio_entry_planning_package.end_date.label=End date
+object.portfolio_entry_planning_package.end_date.invalid=The end date should be after the start date.
+object.portfolio_entry_planning_package.is_important.label=Important
+object.portfolio_entry_planning_package.name.label=Name
+object.portfolio_entry_planning_package.description.label=Description
+object.portfolio_entry_planning_package.group.label=Group
+object.portfolio_entry_planning_package.css_class.label=Color
+object.portfolio_entry_planning_package.status.label=Status
+object.portfolio_entry_planning_package.status.NOT_STARTED.label=Not started
+object.portfolio_entry_planning_package.status.ON_GOING.label=On-going
+object.portfolio_entry_planning_package.status.CLOSED.label=Closed
+object.portfolio_entry_planning_package.allocated_resources_days.label=Allocated resources'' days
+object.portfolio_entry_planning_package.timesheets_days.label=Timesheets'' days
+object.portfolio_entry_planning_package.table.empty=There is no planning package.
+object.portfolio_entry_planning_package.pattern.table.empty=There is no package pattern.
+
+#----------------------
+# portfolioEntryPlanningPackageGroup
+#----------------------
+
+object.portfolio_entry_planning_package_group.name.label=Name
+object.portfolio_entry_planning_package_group.description.label=Description
+object.portfolio_entry_planning_package_group.is_active.label=Active
+object.portfolio_entry_planning_package_group.packages.label=Packages
+object.portfolio_entry_planning_package_group.table.empty=There is no package group.
+
+#----------------------
+# stakeholder
+#----------------------
+
+object.stakeholder.actor.label=Name
+object.stakeholder.role.label=Role
+object.stakeholder.role.invalid=This role is already added for the selected employee.
+object.stakeholder.portfolio.label=Portfolio
+object.stakeholder.table.empty=There is no stakeholder.
+
+#----------------------
+# lifeCycleProcess
+#----------------------
+
+object.life_cycle_process.short_name.label=Short name
+object.life_cycle_process.name.label=Name
+object.life_cycle_process.description.label=Description
+object.life_cycle_process.is_active.label=Active
+object.life_cycle_process.table.empty=There is no process.
+
+#----------------------
+# lifeCycleMilestoneInstanceStatusType
+#----------------------
+
+object.life_cycle_milestone_instance_status_type.name.label=Name
+object.life_cycle_milestone_instance_status_type.description.label=Description
+object.life_cycle_milestone_instance_status_type.selectable.label=Active
+object.life_cycle_milestone_instance_status_type.is_approved.label=Approved
+object.life_cycle_milestone_instance_status_type.table.empty=There is no status type.
+
+#----------------------
+# lifeCycleMilestone
+#----------------------
+
+object.life_cycle_milestone.short_name.label=Short name
+object.life_cycle_milestone.name.label=Name
+object.life_cycle_milestone.description.label=Description
+object.life_cycle_milestone.is_review_required.label=Review required
+object.life_cycle_milestone.default_status_type.label=Default status type
+object.life_cycle_milestone.is_active.label=Active
+object.life_cycle_milestone.approvers.label=Approvers
+object.life_cycle_milestone.table.empty=There is no milestone.
+
+#----------------------
+# lifeCyclePhase
+#----------------------
+
+object.life_cycle_phase.name.label=Name
+object.life_cycle_phase.start_milestone.label=Start milestone
+object.life_cycle_phase.end_milestone.label=End milestone
+object.life_cycle_phase.gap_days_start.label=Gap days for the start date
+object.life_cycle_phase.gap_days_end.label=Gap days for the end date
+object.life_cycle_phase.is_roadmap_phase.label=Roadmap phase
+object.life_cycle_phase.table.empty=There is no phase.
+
+#----------------------
+# lifeCycleMilestoneInstance
+#----------------------
+
+object.life_cycle_milestone_instance.milestone.label=Milestone
+object.life_cycle_milestone_instance.portfolio_entry.label=Initiative
+object.life_cycle_milestone_instance.due_date.label=Due date
+object.life_cycle_milestone_instance.status.label=Status
+object.life_cycle_milestone_instance.status.APPROVED.label=Approved
+object.life_cycle_milestone_instance.status.REJECTED.label=Rejected
+object.life_cycle_milestone_instance.status.UNKNOWN.label=Unknown
+object.life_cycle_milestone_instance.status.PENDING.label=Pending
+object.life_cycle_milestone_instance.is_passed.label=Passed
+object.life_cycle_milestone_instance.is_approved.label=Approved
+object.life_cycle_milestone_instance.proposed_date.label=Proposed date
+object.life_cycle_milestone_instance.passed_date.label=Passed date
+object.life_cycle_milestone_instance.approver.label=Decision maker
+object.life_cycle_milestone_instance.gate_comments.label=Comments
+object.life_cycle_milestone_instance.gate_comments.placeholder=provide a comment
+object.life_cycle_milestone_instance.document.label=Download the description document
+object.life_cycle_milestone_instance.table.approval.empty=There is no milestone to approve.
+
+#----------------------
+# plannedLifeCycleMilestoneInstance
+#----------------------
+
+object.planned_life_cycle_milestone_instance.planned_date.label=Planned date
+object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Available
+object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Not planned
+
+#----------------------
+# lifeCycleMilestoneInstanceApprover
+#----------------------
+
+object.life_cycle_milestone_instance_approver.actor.label=Employee
+object.life_cycle_milestone_instance_approver.status.label=Status
+object.life_cycle_milestone_instance_approver.status.PENDING.label=Pending
+object.life_cycle_milestone_instance_approver.status.APPROVED.label=Approved
+object.life_cycle_milestone_instance_approver.status.REJECTED.label=Rejected
+object.life_cycle_milestone_instance_approver.status.NOT_VOTED.label=No vote
+object.life_cycle_milestone_instance_approver.approval_date.label=Vote date
+object.life_cycle_milestone_instance_approver.comments.label=Comments
+object.life_cycle_milestone_instance_approver.comments.placeholder=provide a comment
+object.life_cycle_milestone_instance_approver.table.empty=There is no approver.
+
+#----------------------
+# processTransitionRequest
+#----------------------
+
+object.process_transition_request.portfolio_entry.label=Initiative
+object.process_transition_request.life_cycle_milestone.label=Milestone
+object.process_transition_request.requester.label=Requester
+object.process_transition_request.passed_date.label=Proposed date
+object.process_transition_request.creation_date.label=Submission date
+object.process_transition_request.comments.label=Comments
+object.process_transition_request.description_document.label=Milestone description document
+object.process_transition_request.description_document.error=Impossible to add the document to the milestone
+object.process_transition_request.table.milestone.empty=There is no milestone approval request.
+
+#----------------------
+# actor
+#----------------------
+
+object.actor.employee_id.label=Employee ID
+object.actor.title.label=Title
+object.actor.name.label=Name
+object.actor.is_active.label=Active
+object.actor.is_active.help=An inactive employee can''t be assigned and is strikethrough.
+object.actor.org_unit.label=Org unit
+object.actor.manager.label=Manager
+object.actor.uid.label=Unique ID
+object.actor.uid.help=Would be used as BizDock username
+object.actor.uid.invalid=This unique ID is already used by another employee.
+object.actor.first_name.label=First name
+object.actor.last_name.label=Last name
+object.actor.mail.label=Email
+object.actor.mobile_phone.label=Mobile phone
+object.actor.fix_phone.label=Fix phone
+object.actor.type.label=Type
+object.actor.erp_ref_id.label=ERP ref ID
+object.actor.table.empty=There is no employee.
+
+#----------------------
+# orgUnit
+#----------------------
+
+object.org_unit.ref_id.label=Ref ID
+object.org_unit.name.label=Name
+object.org_unit.type.label=Type
+object.org_unit.is_active.label=Active
+object.org_unit.is_active.help=An inactive entry can''t be selected and is scratched
+object.org_unit.manager.label=Manager
+object.org_unit.can_sponsor.label=Can sponsor
+object.org_unit.can_sponsor.help=If checked then the org unit can be selected as a sponsor unit of an initiative.
+object.org_unit.can_deliver.label=Can deliver
+object.org_unit.can_deliver.help=If checked then the org unit can be selected as a delivery unit of an initiative.
+object.org_unit.parent.label=Parent
+object.org_unit.children.label=Children
+object.org_unit.actors.label=Members
+object.org_unit.table.empty=There is no org unit.
+
+#----------------------
+# attachment
+#----------------------
+
+object.attachment.name.label=Name
+object.attachment.document.label=Document
+object.attachment.last_update.label=Last update
+object.attachment.empty=There is no attachment.
+
+#----------------------
+# portfolioEntryBudgetLine
+#----------------------
+
+object.portfolio_entry_budget_line.ref_id.label=Ref ID
+object.portfolio_entry_budget_line.name.label=Name
+object.portfolio_entry_budget_line.portfolio_entry.label=Initiative
+object.portfolio_entry_budget_line.expenditure_type.label=Expenditure type
+object.portfolio_entry_budget_line.is_opex.label=OPEX
+object.portfolio_entry_budget_line.is_opex.help=Check this box if the budget line is OPEX, else it means it''s CAPEX.
+object.portfolio_entry_budget_line.currency.label=Currency
+object.portfolio_entry_budget_line.amount.label=Amount
+object.portfolio_entry_budget_line.budget_bucket.label=Budget bucket
+object.portfolio_entry_budget_line.gl_account.label=GL account
+object.portfolio_entry_budget_line.table.empty=There is no budget line.
+
+#----------------------
+# allocatedResource
+#----------------------
+
+object.allocated_resource.type.label=Type
+object.allocated_resource.resource.label=Resource
+object.allocated_resource.actor.label=Employee
+object.allocated_resource.org_unit.label=Delivery unit
+object.allocated_resource.competency.label=Competency
+object.allocated_resource.portfolio_entry.label=Initiative
+object.allocated_resource.timesheet_activity.label=Activity
+object.allocated_resource.days.label=Days
+object.allocated_resource.date.label=Date
+object.allocated_resource.date.period=from {0} to {1}
+object.allocated_resource.start_date.label=Start date
+object.allocated_resource.start_date.invalid=The start date cannot be filled alone: to enter a single date, just fill the field "End date" and let "Start date" empty. For a period, just fill both date fields.
+object.allocated_resource.end_date.label=End date
+object.allocated_resource.end_date.invalid=The end date should be after the start date.
+object.allocated_resource.package.label=Package
+object.allocated_resource.follow_package_dates.label=Follow package dates
+object.allocated_resource.is_confirmed.label=Confirmed
+object.allocated_resource.actor.table.empty=There is no allocation.
+object.allocated_resource.org_unit.table.empty=There is no allocation.
+object.allocated_resource.competency.table.empty=There is no allocation.
+object.allocated_resource.table.empty=There is no allocation.
+
+#----------------------
+# requirement
+#----------------------
+
+object.requirement.is_defect.label=Defect
+object.requirement.external_ref_id.label=External ref ID
+object.requirement.external_link.label=External link
+object.requirement.name.label=Name
+object.requirement.category.label=Category
+object.requirement.status.label=Status
+object.requirement.priority.label=Priority
+object.requirement.severity.label=Severity
+object.requirement.author.label=Author
+object.requirement.story_points.label=Story points
+object.requirement.initial_estimation.label=Estimation
+object.requirement.is_scoped.label=In scope
+object.requirement.iteration.label=Iteration
+object.requirement.release.label=Release
+object.requirement.release.help=A requirement can be manually attached to any release which is associated to the initiative with the "Manual" type.
+object.requirement.table.empty=There is no requirement.
+
+#----------------------
+# iteration
+#----------------------
+
+object.iteration.name.label=Name
+object.iteration.description.label=Description
+object.iteration.is_closed.label=Closed
+object.iteration.story_points.label=Story points
+object.iteration.start_date.label=Start date
+object.iteration.end_date.label=End date
+object.iteration.source.label=Source
+object.iteration.release.label=Release
+object.iteration.release.help=An iteration can be manually attached to any release which is associated to the initiative with the "By iteration" type.
+object.iteration.table.empty=There is no iteration.
+
+#----------------------
+# release
+#----------------------
+
+object.release.is_active.label=Active
+object.release.name.label=Name
+object.release.description.label=Description
+object.release.capacity.label=Available capacity
+object.release.cut_off_date.label=Cut-off date
+object.release.cut_off_date.invalid=The cut-off date should be before the end of tests date (if given) and the deployment date.
+object.release.end_tests_date.label=End of tests date
+object.release.end_tests_date.invalid=The end of tests date should be before the deployment date.
+object.release.deployment_date.label=Deployment date
+object.release.manager.label=Delivery manager
+object.release.portfolio_entry.unassign.confirmation=Are you sure you want to remove this initiative from this release?
+object.release.portfolio_entry.type.label=Requirements'' relation type
+object.release.portfolio_entry.type.NONE.label=No requirement
+object.release.portfolio_entry.type.ALL.label=All requirements
+object.release.portfolio_entry.type.BY_ITERATION.label=By iteration
+object.release.portfolio_entry.type.BY_REQUIREMENT.label=Manual
+object.release.portfolio_entry.already_assigned=This initiative is already part of this release.
+object.release.table.empty=There is no release.
+
+#----------------------
+# workOrder
+#----------------------
+
+object.work_order.name.label=Name
+object.work_order.description.label=Description
+object.work_order.shared.label=Shared
+object.work_order.shared.help=This work order can used a shared purchase order.
+object.work_order.expenditure_type.label=Expenditure type
+object.work_order.is_opex.label=OPEX
+object.work_order.is_opex.help=Check this box if the work order is OPEX, else it means it''s CAPEX.
+object.work_order.currency.label=Currency
+object.work_order.amount.label=Amount
+object.work_order.amount.invalid=The given amount is too big.
+object.work_order.amount_open.label=Open amount
+object.work_order.amount_received.label=Expended amount
+object.work_order.amount_received.invalid=The expended amount is too big: it must be smaller or equal to the work order amount.
+object.work_order.start_date.label=Start date
+object.work_order.due_date.label=Due date
+object.work_order.due_date.invalid=The due date should be after the start date.
+object.work_order.portfolio_entry.label=Initiative
+object.work_order.is_engaged.label=Engaged
+object.work_order.purchase_order_line_item.label=Item
+object.work_order.portfolio_entry_planning_package.label=Package
+object.work_order.follow_package_dates.label=Follow package dates
+object.work_order.table.empty=There is no work order.
+
+#----------------------
+# purchaseOrder
+#----------------------
+
+object.purchase_order.ref_id.label=Ref ID
+object.purchase_order.description.label=Description
+object.purchase_order.is_cancelled.label=Cancelled
+object.purchase_order.amount.label=Total amount
+object.purchase_order.line_items.label=Items
+object.purchase_order.table.empty=There is no purchase order.
+
+#----------------------
+# purchaseOrderLineItem
+#----------------------
+
+object.purchase_order_line_item.ref_id.label=Ref ID
+object.purchase_order_line_item.line_id.label=Line ID
+object.purchase_order_line_item.creation_date.label=Creation date
+object.purchase_order_line_item.due_date.label=Due date
+object.purchase_order_line_item.quantity.label=Quantity
+object.purchase_order_line_item.quantity_received.label=Quantity received
+object.purchase_order_line_item.quantity_billed.label=Quantity billed
+object.purchase_order_line_item.unit_price.label=Unit price
+object.purchase_order_line_item.amount_billed.label=Billed amount
+object.purchase_order_line_item.supplier.label=Supplier
+object.purchase_order_line_item.material_code.label=Material code
+object.purchase_order_line_item.gl_account.label=GL account
+object.purchase_order_line_item.shipment_type.label=Shipment type
+object.purchase_order_line_item.requester.label=Requester
+object.purchase_order_line_item.description.label=Description
+object.purchase_order_line_item.purchase_order.label=Purchase order
+object.purchase_order_line_item.is_associated.label=Allocated
+object.purchase_order_line_item.shared.label=Shared
+object.purchase_order_line_item.expenditure_type.label=Expenditure type
+object.purchase_order_line_item.currency.label=Currency
+object.purchase_order_line_item.amount.label=Amount
+object.purchase_order_line_item.remaining_amount.label=Remaining amount
+object.purchase_order_line_item.amount_received.label=Expended amount
+object.purchase_order_line_item.amount_open.label=Open amount
+object.purchase_order_line_item.cost_center.label=Cost center
+object.purchase_order_line_item.is_cancelled.label=Cancelled
+object.purchase_order_line_item.table.empty=There is no purchase order line item.
+
+#----------------------
+# goodsReceipt
+#----------------------
+
+object.goods_receipt.ref_id.label=Ref ID
+object.goods_receipt.quantity_received.label=Quantity received
+object.goods_receipt.amount_received.label=Amount received
+object.goods_receipt.table.empty=There is no good receipt.
+
+#----------------------
+# budgetBucket
+#----------------------
+
+object.budget_bucket.ref_id.label=Ref ID
+object.budget_bucket.name.label=Name
+object.budget_bucket.owner.label=Owner
+object.budget_bucket.is_approved.label=Approved
+object.budget_bucket.is_approved.help=Check this box if the budget bucket is approved.
+object.budget_bucket.is_active.label=Active
+object.budget_bucket.is_active.help=Check this box if the budget bucket is active.
+object.budget_bucket.table.empty=There is no budget bucket.
+
+#----------------------
+# budgetBucketLine
+#----------------------
+
+object.budget_bucket_line.ref_id.label=Ref ID
+object.budget_bucket_line.name.label=Name
+object.budget_bucket_line.expenditure_type.label=Expenditure type
+object.budget_bucket_line.is_opex.label=OPEX
+object.budget_bucket_line.is_opex.help=Check this box if the budget line is OPEX, else it means it''s CAPEX.
+object.budget_bucket_line.currency.label=Currency
+object.budget_bucket_line.amount.label=Amount
+object.budget_bucket_line.table.empty=There is no budget line.
+
+#----------------------
+# reporting
+#----------------------
+
+object.reporting.name.label=Name
+object.reporting.description.label=Description
+object.reporting.is_public.label=Public
+object.reporting.is_public.help=If not checked then the report is not available for all users that is not in the report access list.
+object.reporting.language.label=Language
+object.reporting.format.label=Format
+object.reporting.type.label=Type
+object.reporting.is_active.label=Active
+object.reporting.is_active.help=If not checked then the report is not available for downloading.
+object.reporting.category.label=Category
+object.reporting.principals.label=Users who have access to the report
+object.reporting.table.empty=There is no report
+object.reporting.category.delete.error=Impossible to delete a category which contains a report.
+
+#----------------------
+# kpiDefinition
+#----------------------
+
+object.kpi_definition.name.label=Name
+object.kpi_definition.css_glyphicon.label=Icon
+object.kpi_definition.additional1.label=First additional value''s label (top left of the KPI box)
+object.kpi_definition.additional2.label=Second additional value''s label (top right of the KPI box)
+object.kpi_definition.uid.label=UID
+object.kpi_definition.is_active.label=Active
+object.kpi_definition.is_active.help=An inactive KPI is neither displayed nor computed.
+object.kpi_definition.has_trend.label=Trend
+object.kpi_definition.has_box_display.label=Box display
+object.kpi_definition.data_source.label=Data source
+object.kpi_definition.data_source.PLUGIN.label=External
+object.kpi_definition.data_source.BIZDOCK.label=BizDock
+object.kpi_definition.is_real_time.label=Filterable
+object.kpi_definition.parameters.label=Parameters
+object.kpi_definition.scheduler_start_time.label=Start time
+object.kpi_definition.scheduler_start_time.invalid=This value is not correctly formatted. Please use a format that respects this example: 15h45.
+object.kpi_definition.scheduler_frequency.label=Frequency (minutes)
+object.kpi_definition.scheduler_real_time.label=Real time
+object.kpi_definition.scheduler_real_time.help=If this box is checked then the KPI is displayed with a real time computation. The values stored thanks the scheduler are used only for the trend.
+
+#----------------------
+# kpiValueDefinition
+#----------------------
+
+object.kpi_value_definition.name.label=Name
+object.kpi_value_definition.type.label=Type
+object.kpi_value_definition.render_type.label=Render type
+object.kpi_value_definition.render_type.VALUE.label=Value
+object.kpi_value_definition.render_type.PATTERN.label=Pattern
+object.kpi_value_definition.render_type.LABEL.label=Label
+object.kpi_value_definition.render_pattern.label=Render pattern
+object.kpi_value_definition.render_pattern.invalid=The render pattern should be given if the render type is "Pattern".
+
+#----------------------
+# kpiColorRule
+#----------------------
+
+object.kpi_color_rule.rule.label=Rule
+object.kpi_color_rule.color.label=Color
+object.kpi_color_rule.render_label.label=Render label
+
+#----------------------
+# pluginDefinition
+#----------------------
+
+object.plugin_definition.name.label=Plugin name
+object.plugin_definition.description.label=Description
+object.plugin_definition.is_available.label=Active
+object.plugin_definition.version.label=Version
+object.plugin_definition.provider.label=Provider web site
+object.plugin_definition.multi_instance.label=Multi instance allowed
+
+#----------------------
+# pluginConfiguration
+#----------------------
+
+object.plugin_configuration.name.label=Instance name
+object.plugin_configuration.id.label=ID
+object.plugin_configuration.status.label=Status
+
+#----------------------
+# pluginConfigurationBlock
+#----------------------
+
+object.plugin_configuration_block.name.label=Name
+object.plugin_configuration_block.description.label=Description
+
+#----------------------
+# pluginLog
+#----------------------
+
+object.plugin_log.last_update.label=Time
+object.plugin_log.transaction_id.label=Transaction ID
+object.plugin_log.log_message.label=Message
+object.plugin_log.is_error.label=Error
+object.plugin_log.event.label=Event type
+object.plugin_log.data_type.label=Data type
+object.plugin_log.internal_id.label=Internal ID
+object.plugin_log.external_id.label=External ID
+
+#----------------------
+# applicationBlock
+#----------------------
+
+object.application_block.archived.label=Archived
+object.application_block.archived.help=An archived application block is not displayed in the tree.
+object.application_block.archived.confirmation.message=By archiving an application block, all its children will be also archived. Continue?
+object.application_block.ref_id.label=Ref ID
+object.application_block.name.label=Name
+object.application_block.description.label=Description
+object.application_block.parent.label=Parent
+object.application_block.table.empty=There is no application block.
+
+########################
+# Error pages
+########################
+
+#----------------------
+# 400 bad request
+#----------------------
+
+bad_request.error.title=Bad request
+bad_request.error.message=Some parameters are missing or incorrectly formatted.
+bad_request.error.home.link=Back to home page
+
+#----------------------
+# 403 forbidden
+#----------------------
+
+forbidden.access.title=Access forbidden
+forbidden.access.explanation=You attempted to access a restricted page, this has been reported.
+forbidden.access.home.link=Back to home page
+
+#----------------------
+# 404 not found
+#----------------------
+
+notfound.error.title=Page not found
+notfound.error.message=This page doesn''t exist.
+notfound.error.home.link=Back to home page
+
+#----------------------
+# 500 unexpected error
+#----------------------
+
+unexpected.error.title=Unexpected error
+unexpected.error.message=An error occurred, please contact your administrator and provide him with the UUID {0}.
+unexpected.error.home.link=Back to home page
+
+########################
+# Common pages
+########################
+
+#----------------------
+# home
+#----------------------
+
+index.noemployee.notif=Your BizDock user account is not associated with an employee. Consequently, some features are not available.\
+ To create an employee and associate it to your account, please click on "Employee" inside the "New" menu (some specific permissions are required to do this action).
+index.notifications.title=Unread notifications
+index.initiatives.title=Last created initiatives
+index.initiatives.create=Create an initiative
+index.profile.title=Your profile
+index.help.title=Help
+index.help.bizdock.label=What is BizDock?
+index.help.intake.label=Create an initiative
+index.help.roadmap.label=Roadmap
+index.help.cockpit.label=Cockpit
+index.help.profile.label=My profile
+index.quick_links.title=Quick links
+index.intake.label=Intake
+index.intake.description=Submit an idea or start a new project
+index.roadmap.label=Roadmap
+index.roadmap.description=View all initiatives and filter them according to your needs
+index.cockpit.label=Cockpit
+index.cockpit.description=Manage your initiatives.
+index.search.label=Search
+index.search.description=Find easily and quickly what you want
+
+#----------------
+# messaging
+#----------------
+
+messaging.breadcrumb=<i class="glyphicons glyphicons-conversation"></i>&nbsp;Messaging
+messaging.list.title=Your messages
+messaging.list.success.deleted=The message has been deleted.
+messaging.send.title=Send a message
+messaging.send.success=Your message "{0}" has been successfully sent.
+
+#----------------
+# notifications
+#----------------
+
+notifications.breadcrumb=<i class="glyphicons glyphicons-bell"></i>&nbsp;Your notifications
+notifications.list.title=Your notifications
+notifications.action.delete=Delete
+notifications.action.delete.confirmation.message=Are you sure you want to delete the selected notifications?
+notifications.action.delete.successful.message=The selected notifications have been deleted.
+notifications.list.success.deleted=The notification has been deleted.
+
+#----------------------
+# my
+#----------------------
+
+#my profile
+my.my_profile.breadcrumb=<i class="glyphicons glyphicons-nameplate"></i>&nbsp;My profile
+my.my_profile.sidebar.details=Details
+my.my_profile.sidebar.update_data=Update basic information
+my.my_profile.sidebar.update_password=Change password
+my.my_profile.sidebar.update_email=Change mail address
+my.my_profile.update_data.header=If you update these basic informations all the BizDock third party modules will be subsequently updated.
+my.my_profile.update_data.successful=Your data has been updated. WARNING: The update of the other BizDock modules may require a few minutes.
+my.my_profile.update_password.header=Please provide a new password.
+my.my_profile.update_password.successful=You password has been successfully changed.
+my.my_profile.update_email.header=If you update your e-mail address, you will receive an e-mail to the specified address to complete its validation.
+my.my_profile.update_email.successful=Please check your mailbox and click on the link you should receive within a few minutes to validate your new e-mail address.
+my.my_profile.update_email.message.subject=E-mail update validation
+my.my_profile.update_email.validation.title=Mail update validation
+my.my_profile.update_email.validation.success=Your e-mail address has been updated.<br/>WARNING: The update of the other BizDock modules may require a few minutes.
+my.my_profile.update_email.validation.error=This validation URL is invalid or expired. No change will be performed.
+
+#personal storage
+my.personalstorage.tableview.title=My personal storage
+my.personalstorage.tableview.breadcrumb=<i class="glyphicons glyphicons-folder-open"></i>&nbsp;&nbsp;My personal storage
+my.personalstorage.tableview.explanation.text=This is a temporary storage and the files are automatically deleted after 12 hours.
+my.personalstorage.file.name.label=File name
+my.personalstorage.file.lastmodified.label=Last update
+my.personalstorage.file.size.label=Size
+
+########################
+# Core pages
+########################
+
+#----------------------
+# roadmap
+#----------------------
+
+#helpers
+core.roadmap.title=Roadmap
+core.roadmap.planning.title=Planning
+
+#planning
+core.roadmap.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Planning
+core.roadmap.planning.nosource=There is no initiative to display: either the configured filters are too much specific or the start and end dates of the initiatives are not filled.
+
+#simulator
+core.roadmap.simulator.capacity_kpis=Capacity KPI
+core.roadmap.simulator.capacity_kpis.budget.main=Budget
+core.roadmap.simulator.capacity_kpis.budget.additional1=CAPEX
+core.roadmap.simulator.capacity_kpis.budget.additional2=OPEX
+core.roadmap.simulator.capacity_kpis.forecast.main=Forecast
+core.roadmap.simulator.capacity_kpis.forecast.additional1=CAPEX
+core.roadmap.simulator.capacity_kpis.forecast.additional2=OPEX
+core.roadmap.simulator.capacity_kpis.allocation.main=Allocations
+core.roadmap.simulator.capacity_kpis.allocation.additional1=Confirmed
+core.roadmap.simulator.capacity_kpis.allocation.additional2=Not confirmed
+core.roadmap.simulator.capacity_forecast=Capacity table
+core.roadmap.simulator.capacity_forecast.org_units.label=Org units
+core.roadmap.simulator.capacity_forecast.competencies.label=Competencies
+core.roadmap.simulator.capacity_forecast.year.label=Year
+core.roadmap.simulator.capacity_forecast.only_confirmed.label=Only confirmed
+core.roadmap.simulator.capacity_forecast.org_unit.label=Org unit
+core.roadmap.simulator.capacity_forecast.competency.label=Competency
+core.roadmap.simulator.capacity_forecast.resource.label=Resource
+core.roadmap.simulator.capacity_forecast.confirmed_initiatives.label=Confirmed initiatives
+core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label=Not confirmed initiatives
+core.roadmap.simulator.capacity_forecast.activities.label=Activities
+core.roadmap.simulator.capacity_forecast.available.label=Available
+core.roadmap.simulator.capacity_forecast.planned.label=Planned
+
+#----------------------
+# search
+#----------------------
+
+core.search.title=Search
+core.search.header=You can use this form to search the principal data, such that the initiatives and the employees.<br/>The "*" (star) character represents a wildcard, for example "*test*" will return all entries including the key word "test" at any place.<br/><strong>Warning:</strong> the search results depends on your rights as a consequence the found entries may vary from one user to another.
+core.search.type.portfolio_entry=Initiative
+core.search.type.actor=Employee
+core.search.type.portfolio=Portfolio
+core.search.type.org_unit=Org unit
+core.search.type.purchase_order=Purchase order
+core.search.type.budget_bucket=Budget bucket
+core.search.keywords.placeholder=Enter search keyword
+core.search.submit.error=Please enter search keyword
+core.search.submit.noresult=There is no result for your search
+
+#----------------------
+# reporting
+#----------------------
+
+#helpers
+core.reporting.title=Reports
+core.reporting.category.title=Reports repository
+
+#generate
+core.reporting.generate.request.success=Your request to download a report has been correctly submitted. You will be notified when the report will be ready.
+core.reporting.generate.process.success.title=A new report is ready to dowload
+core.reporting.generate.process.success.message=A new report is available in your personal space and could be downloaded.
+core.reporting.generate.process.failure.title=Error during report creation
+core.reporting.generate.process.failure.message=An error has occured when creating a requested report, please try later.
+
+#----------------------
+# cockpit
+#----------------------
+
+#helpers
+core.cockpit.title=Cockpit
+core.cockpit.sidebar.initiatives=Initiatives
+core.cockpit.sidebar.portfolios=Portfolios
+core.cockpit.sidebar.subordinates=Subordinates
+core.cockpit.sidebar.subordinates.members=Employees
+core.cockpit.sidebar.subordinates.allocations_overview=Allocations overview
+core.cockpit.sidebar.subordinates.allocations_details=Allocations details
+core.cockpit.sidebar.subordinates.timesheet=Timesheets
+core.cockpit.sidebar.org_units=Org units
+core.cockpit.sidebar.budget_buckets=Budget buckets
+core.cockpit.sidebar.releases=Releases
+core.cockpit.sidebar.my_allocations=Allocations
+
+#initiatives
+core.cockpit.my_initiatives.as_manager=My initiatives as manager
+core.cockpit.my_initiatives.as_stakeholder=My initiatives as stakeholder
+
+#portfolios
+core.cockpit.my_portfolios.as_manager=My portfolios as manager
+core.cockpit.my_portfolios.as_stakeholder=My portfolios as stakeholder
+
+#subordinates
+core.cockpit.subordinates.timesheet.late.title=Late timesheets
+core.cockpit.subordinates.timesheet.submitted.title=Timesheets to review
+core.cockpit.subordinates.allocations.no_data=There is no allocation to display.
+core.cockpit.subordinates.allocations.details.portfolio_entry.title=Initiative''s allocations for the subordinates
+core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm=Confirm
+core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm.successful=The allocations have been confirmed successfully.
+core.cockpit.subordinates.allocations.details.activity.title=Activity''s allocations for the subordinates
+
+#budget buckets
+core.cockpit.my_budget_buckets.as_owner=My budget buckets as owner
+core.cockpit.my_budget_buckets.as_responsible=My budget buckets as responsible
+
+#----------------------
+# budget bucket
+#----------------------
+
+#helpers
+core.budget_bucket.title=Budget bucket
+
+#view
+core.budget_bucket.view.chart.budget=Budget
+core.budget_bucket.view.chart.initiative=Initiative budget
+core.budget_bucket.view.details.title=Details
+core.budget_bucket.view.budget.title=Budget lines
+core.budget_bucket.view.initiative.title=Initiative budget lines
+
+#new
+core.budget_bucket.new.title=Create a budget bucket
+core.budget_bucket.new.breadcrumb=<i class="glyphicons glyphicons-calculator"></i>&nbsp;Create a budget bucket
+core.budget_bucket.new.successful=The budget bucket has been correctly created.
+
+#edit
+core.budget_bucket.edit.title=Edit
+core.budget_bucket.edit.successful=The budget bucket has been correctly updated.
+
+#delete
+core.budget_bucket.delete.confirmation.message=Are you sure you want to delete this budget bucket?
+core.budget_bucket.delete.successful=The budget bucket has been correctly removed.
+
+#manage line
+core.budget_bucket.line.manage.title=Manage a line
+core.budget_bucket.line.add.successful=The line has been added successfully.
+core.budget_bucket.line.edit.successful=The line has been updated successfully.
+
+#delete line
+core.budget_bucket.line.delete.successful=The line has been correctly removed.
+
+#----------------------
+# timesheet
+#----------------------
+
+#helper
+core.timesheet.title=Timesheet
+core.timesheet.error=An error occurred, please try again.
+core.timesheet.empty=The timesheet is currently empty.
+
+#fill
+core.timesheet.fill.empty=The timesheet is currently empty. Please add an entry by clicking on the icon <span class="glyphicons glyphicons-plus"></span>
+core.timesheet.fill.has_been_updated.message=Are you sure you want to leave this page without saving the data you have entered?
+core.timesheet.fill.add.initiative.label=Initiative
+core.timesheet.fill.add.activity.label=Other activity
+core.timesheet.fill.no_initiative=You are associated with no initiative.
+core.timesheet.fill.no_activity=No available activity.
+core.timesheet.fill.select_initiative=Please select an initiative
+core.timesheet.fill.select_activity_type=- Select an activity -
+core.timesheet.fill.select_activity=- Select a task -
+core.timesheet.fill.save.successful=The timesheet has been saved successfully.
+core.timesheet.fill.save.error.bad_data=Impossible to save the timesheet due to incorrect data, please check it.
+core.timesheet.fill.save.error.non_editable=Impossible to save a non-editable timesheet.
+core.timesheet.fill.submit.confirmation=Are you sure your timesheet is fully filled and you want to submit it (no modification is possible after)?
+core.timesheet.fill.submit.successful.with_approval=The timesheet has been submitted successfully.
+core.timesheet.fill.submit.successful.without_approval=The timesheet has been approved successfully.
+core.timesheet.fill.submit.error.not_saved=You need to save the timesheet before submitting it.
+core.timesheet.fill.submit.error.empty=Please add at least one entry before submitting the timesheet.
+core.timesheet.fill.submit.notification.title.with_approval=A timesheet has been submitted.
+core.timesheet.fill.submit.notification.message.with_approval={0} has submitted a timesheet and your are required to review it.
+
+#fill weekly
+core.timesheet.fill.weekly.copy.title=Copy the entries of the previous week to the current timesheet.
+core.timesheet.fill.weekly.copy.successful=The entries of the previous week have been copied successfully.
+core.timesheet.fill.weekly.copy.info.empty=There is no entry to copy.
+core.timesheet.fill.weekly.week.label=Week from {0} to {1}
+core.timesheet.fill.weekly.table.entry.label=Initiative / Activity
+core.timesheet.fill.weekly.table.subentry.label=Package / Task
+core.timesheet.fill.weekly.table.total.label=Total
+
+#approve
+core.timesheet.approve.successful=The timesheet has been approved successfully.
+core.timesheet.approve.notification.title=Your timesheet has been approved.
+core.timesheet.approve.notification.message.with_comments=The timesheet for the period from {0} to {1} has been approved. Your manager has posted the following comments:<br/><em>{2}</em>
+core.timesheet.approve.notification.message.without_comments=The timesheet for the period from {0} to {1} has been approved.
+
+#reject
+core.timesheet.reject.successful=The timesheet has been rejected successfully.
+core.timesheet.reject.notification.title=Your timesheet has been rejected.
+core.timesheet.reject.notification.message.with_comments=The timesheet for the period from {0} to {1} has been rejected. Your manager has posted the following comments:<br/><em>{2}</em>
+core.timesheet.reject.notification.message.without_comments=The timesheet for the period from {0} to {1} has been rejected.
+
+#send reminder
+core.timesheet.send_reminder.successful=The reminder has been has been sent successfully.
+core.timesheet.send_reminder.notification.title=Your are late for a timesheet.
+core.timesheet.send_reminder.notification.message=Please fill and submit the timesheet for the period from {0} to {1}.
+
+#----------------------
+# milestone
+#----------------------
+
+#helper
+core.milestone_approval.title=Provide approval
+
+#planning
+core.milestone.planning.title=Milestone planning
+core.milestone.planning.header=Please find below <span class="label label-success">Passed</span>,  <span class="label label-danger">Rejected</span> and <span class="label label-warning">Pending</span> milestones for all active, non-conceptual and public initiatives.<br/>\
+By clicking on a date, a short summary of all milestones (for this date) is displayed; and by clicking on a bullet, a complete summary of the corresponding milestone is displayed.
+core.milestone.planning.today=Today
+core.milestone.planning.modal.approvers=Approvers
+
+#approval list
+core.milestone.approval.list.header=Please find below the milestones for which your approval is expected.<br><i style="color: red;" class="glyphicons glyphicons-bell"></i>&nbsp;means that the due date is in the 3 next days or that you are late in providing your feedback.
+
+#approval process
+core.milestone.approval.process.alreadyvoted=Your have already vote for this milestone!
+core.milestone.approval.process.alreadydecided=The final approval for the milestone is already done!
+core.milestone.approval.process.header=You are requested to give your approval for a life cycle milestone of an initiative.
+core.milestone.approval.process.panel.milestone.title=Milestone details
+core.milestone.approval.process.panel.milestone.download.label=Download the milestone description document
+core.milestone.approval.process.panel.portfolioentry.title={0} details
+core.milestone.approval.process.panel.approvers.title=Approval status
+core.milestone.approval.process.panel.vote.title=Your feedback
+core.milestone.approval.process.panel.vote.successfull=Your feedback has been correctly registered.
+core.milestone.approval.process.panel.vote.decisionrequired.notification.title=Final approval required
+core.milestone.approval.process.panel.vote.decisionrequired.notification.message=You are required to record the final approval for a milestone of the initiative "{0}"
+core.milestone.approval.process.panel.decide.title=Record final approval
+core.milestone.approval.process.panel.decide.header=You are about to record the final approval for a project.<br>This is an action which cannot be undone.
+core.milestone.approval.process.panel.decide.successfull=The final approval has been correctly registered.
+core.milestone.approval.process.panel.decide.approve.notification.title=Milestone approved
+core.milestone.approval.process.panel.decide.approve.notification.message=The final approval for a milestone of the initiative "{0}" has been registered: the milestone is approved.
+core.milestone.approval.process.panel.decide.reject.notification.title=Milestone rejected
+core.milestone.approval.process.panel.decide.reject.notification.message=The final approval for a milestone of the initiative "{0}" has been registered: the milestone is rejected.
+
+#----------------------
+# process transition request
+#----------------------
+
+#review milestone request list
+core.process_transition_request.review_milestone_request_list.title=Review milestone requests
+core.process_transition_request.review_milestone_request_list.header=Thanks to review the following requests to trigger a milestone approval
+
+#process milestone request
+core.process_transition_request.process_milestone_request.message.already_processed=The milestone approval request has been already processed.
+core.process_transition_request.process_milestone_request.title=Accept or Reject a milestone approval request
+core.process_transition_request.process_milestone_request.header=Someone has sent a milestone approval request.<br>You may:<ul><li><span class="label label-success"><i class="glyphicons glyphicons-play"></i>&nbsp;Approve</span> the request and this will start an approval process</li><li><span class="label label-danger"><i class="glyphicons glyphicons-remove"></i>&nbsp;Reject</span> the request and the requester will be notified</li></ul>
+core.process_transition_request.process_milestone_request.panel.request.title=Request
+core.process_transition_request.process_milestone_request.panel.request.download=Download the milestone description document
+core.process_transition_request.process_milestone_request.panel.portfolio_entry.title=Initiative details
+core.process_transition_request.process_milestone_request.panel.form.title=Accept or reject the request
+core.process_transition_request.process_milestone_request.panel.form.passed_date.label=Change the approval date
+core.process_transition_request.process_milestone_request.panel.form.approvers.label=Change the default approvers
+core.process_transition_request.process_milestone_request.panel.form.comments.label=Provide a comment
+core.process_transition_request.process_milestone_request.panel.form.reject.successful=The submission is rejected. A new submission will be required to trigger again the approval process.
+core.process_transition_request.process_milestone_request.panel.form.reject.notification.title=Milestone approval request rejected
+core.process_transition_request.process_milestone_request.panel.form.reject.notification.message=The milestone approval request for the initiative "{0}" has been rejected.
+core.process_transition_request.process_milestone_request.panel.form.accept.instance.successful=The milestone approval request has been accepted. The approvers can now vote.
+core.process_transition_request.process_milestone_request.panel.form.accept.approved.successful=The milestone approval request has been accepted and no further approval required: the milestone is approved.
+core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.title=Milestone approval request accepted
+core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.message=The milestone approval request for the Initiative "{0}" has been accepted. The approvers can now vote.
+core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.title=Milestone vote required
+core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message=You are required to vote for a milestone approval of the Initiative "{0}"
+core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title=Milestone approved
+core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message=The milestone approval request for the Initiative "{0}" has been accepted and no further approval required: the milestone is approved.
+
+#----------------------
+# portfolio
+#----------------------
+
+#helpers
+core.portfolio.sidebar.overview.label=Overview
+core.portfolio.sidebar.view.label=Details
+core.portfolio.title=Portfolio
+
+#overview
+core.portfolio.overview.red_reports=Initiatives with <span class="label label-danger">Red</span> status
+core.portfolio.overview.late_milestones=Late planned milestones <i style="color: red;" class="glyphicons glyphicons-bell"></i>
+
+#view
+core.portfolio.view.details.title=Details
+core.portfolio.view.stakeholders.title=Stakeholders of the portfolio
+core.portfolio.view.entries.title=Initiatives of the portfolio
+
+#new
+core.portfolio.new.title=Create a portfolio
+core.portfolio.new.breadcrumb=<i class="glyphicons glyphicons-sort"></i>&nbsp;Create a portfolio
+core.portfolio.new.successful=The portfolio has been created.
+
+#edit
+core.portfolio.edit.title=Edit
+core.portfolio.edit.successful=The portfolio has been updated.
+
+#delete
+core.portfolio.delete.confirmation.message=Are you sure you want to delete this portfolio?
+core.portfolio.delete.successful=The portfolio has been removed.
+
+#manage stakeholder
+core.portfolio_stakeholder.manage.title=Manage a stakeholder
+core.portfolio_stakeholder.add.successful=The stakeholder has been added successfully.
+core.portfolio_stakeholder.edit.successful=The stakeholder has been updated successfully.
+
+#delete stakeholder
+core.portfolio_stakeholder.delete=The stakeholder has been removed.
+
+#----------------------
+# portfolio entry: main
+#----------------------
+
+#helpers
+core.portfolio_entry.sidebar.overview.label=Overview
+core.portfolio_entry.sidebar.view.label=Details
+core.portfolio_entry.sidebar.financial.label=Financials
+core.portfolio_entry.sidebar.financial.status.label=Status
+core.portfolio_entry.sidebar.financial.details.label=Details
+core.portfolio_entry.sidebar.stakeholders.label=Stakeholders
+core.portfolio_entry.sidebar.governance.label=Governance
+core.portfolio_entry.sidebar.delivery.label=Delivery
+core.portfolio_entry.sidebar.delivery.requirements.label=Requirements
+core.portfolio_entry.sidebar.delivery.requirements_status.label=Requirements status
+core.portfolio_entry.sidebar.delivery.iterations.label=Iterations
+core.portfolio_entry.sidebar.delivery.releases.label=Releases
+core.portfolio_entry.sidebar.planning.label=Planning
+core.portfolio_entry.sidebar.planning.overview.label=Overview
+core.portfolio_entry.sidebar.planning.packages.label=Packages
+core.portfolio_entry.sidebar.planning.resources.label=Resources
+core.portfolio_entry.sidebar.status_reporting.label=Status reporting
+core.portfolio_entry.sidebar.status_reporting.registers.label=Status registers
+core.portfolio_entry.sidebar.status_reporting.events.label=Events
+core.portfolio_entry.sidebar.pluginconfig.label=Integration
+core.portfolio_entry.breadcrump.edit=Edit
+core.portfolio_entry.breadcrump.manage=Manage
+core.portfolio_entry.breadcrump.view=Details
+core.portfolio_entry.breadcrump.new=New
+
+#create
+core.portfolio_entry.create.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Submit a new initiative
+core.portfolio_entry.create.title=Submit a new initiative
+core.portfolio_entry.create.step2.title=Additional information
+core.portfolio_entry.create.success.message=Your initiative has been submitted.
+core.portfolio_entry.create.notification.title=New initiative
+core.portfolio_entry.create.notification.message=A new initiative has been submitted in your portfolio {0}.
+core.portfolio_entry.create.notification.manager.message=A new initiative has been assigned to you.
+core.portfolio_entry.create.help.portfolioentrytype.title=Definitions of initiative types
+core.portfolio_entry.create.help.lifecycleprocess.title=Definitions of life cycle processes
+core.portfolio_entry.create.help.extendedattributes.title=Definitions of custom attributes
+
+#overview
+core.portfolio_entry.overview.milestones_trend.panel.title=Milestones trend
+core.portfolio_entry.overview.milestones_trend.panel.empty=The milestones trend table is empty.
+core.portfolio_entry.overview.milestones_trend.panel.milestone.label=Milestone
+core.portfolio_entry.overview.milestones_trend.panel.budget.label=Budget
+core.portfolio_entry.overview.milestones_trend.panel.resources.label=Resources
+core.portfolio_entry.overview.milestones_trend.panel.resources.value.label={0} day(s)
+core.portfolio_entry.overview.status.panel.title=Latest status report
+core.portfolio_entry.overview.milestones.panel.title=Next milestones
+
+#view
+core.portfolio_entry.view.details.title=Details
+core.portfolio_entry.view.extended.title=Custom attribute(s)
+core.portfolio_entry.view.portfolios.title=Portfolio(s)
+core.portfolio_entry.view.dependencies.title=Dependencies
+core.portfolio_entry.view.attachments.title=Attachment documents
+
+#edit
+core.portfolio_entry.edit.successful=The initiative has been updated.
+
+#plugin config
+core.portfolio_entry.plugin_config.title=Update the configuration of the plugins
+core.portfolio_entry.plugin_config.empty=There is no plugin to configure
+core.portfolio_entry.plugin_config.not_started=The plugin is not started
+core.portfolio_entry.plugin_config.registered_plugins.title=Registered plugins
+core.portfolio_entry.plugin_config.registered_plugins.empty=There is no registered plugin.
+core.portfolio_entry.plugin_config.available_plugins.title=Available plugins
+core.portfolio_entry.plugin_config.available_plugins.empty=There is no available plugin.
+
+#edit portfolios
+core.portfolio_entry.editportfolios.title=Edit the portfolios
+core.portfolio_entry.editportfolios.successful=The portfolios have been updated.
+
+#delete
+core.portfolio_entry.delete.confirmation.message=Are you sure you want to delete this initiative?
+core.portfolio_entry.delete.successful=The initiative has been removed.
+
+#new attachment
+core.portfolio_entry.attachment.new.title=Add a new document
+core.portfolio_entry.attachment.new.successful=The document has been added successfully.
+
+#delete attachment
+core.portfolio_entry.attachment.delete=The attachment has been deleted.
+
+#dependency
+core.portfolio_entry.dependency.add.title=Add a dependency
+core.portfolio_entry.dependency.add.successful=The dependency has been added successfully.
+core.portfolio_entry.dependency.delete=The dependency has been deleted.
+
+#----------------------
+# portfolio entry: financial
+#----------------------
+
+#view (status, details)
+core.portfolio_entry_financial.view.budget.title=Budget
+core.portfolio_entry_financial.view.budget.panel.budget.title=Budget lines
+core.portfolio_entry_financial.view.forecast.title=Forecast
+core.portfolio_entry_financial.view.forecast.panel.cost_to_complete.title=Not engaged work orders
+core.portfolio_entry_financial.view.forecast.panel.engaged_work_order.title=Engaged work orders
+core.portfolio_entry_financial.view.forecast.panel.engaged_purchase_order.title=Purchase order line items
+core.portfolio_entry_financial.view.status.table.budget.label=Budget
+core.portfolio_entry_financial.view.status.table.cost_to_complete.label=Cost to complete
+core.portfolio_entry_financial.view.status.table.engaged.label=Engaged
+core.portfolio_entry_financial.view.status.table.forecast.label=Forecast
+core.portfolio_entry_financial.view.status.table.deviation.label=Deviation
+core.portfolio_entry_financial.view.status.table.status.label=Status
+
+#view budget line
+core.portfolio_entry_financial.budget_line.view.title=Budget line details
+core.portfolio_entry_financial.budget_line.view.extended.title=Custom attribute(s)
+
+#manage budget line
+core.portfolio_entry_financial.budget_line.manage.title=Manage a budget line
+core.portfolio_entry_financial.budget_line.add.successful=The budget line has been added successfully.
+core.portfolio_entry_financial.budget_line.edit.successful=The budget line has been updated.
+
+#delete budget line
+core.portfolio_entry_financial.budget_line.delete.successful=The budget line has been removed.
+
+#view work order
+core.portfolio_entry_financial.work_order.view.details.title=Details of the work order
+core.portfolio_entry_financial.work_order.view.extended.title=Custom attribute(s)
+core.portfolio_entry_financial.work_order.view.lineitem.title=Purchase order
+
+#manage work order
+core.portfolio_entry_financial.work_order.manage.title=Manage a work order
+core.portfolio_entry_financial.work_order.add.successful=The work order has been added successfully.
+core.portfolio_entry_financial.work_order.edit.successful=The work order has been updated.
+
+#delete work order
+core.portfolio_entry_financial.work_order.deleted.successful=The work order has been deleted.
+
+#engage a work order
+core.portfolio_entry_financial.work_order.engage.breadcrump=Engaged
+core.portfolio_entry_financial.work_order.engage.step1.amount.label=Amount to engage
+core.portfolio_entry_financial.work_order.engage.successful=The work order has been engaged.
+
+#select purchase order line item for work order
+core.portfolio_entry_financial.work_order.line_item_select.breadcrump=Link to a purchase order
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.label=Enter the exact ref ID
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.help=WARNING: please ensure that the purchase order contains at least one line item \
+of the same expenditure type (CAPEX/OPEX) and the same currency as the work order otherwise it won''t be found.
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.error.notfound=Impossible to find the purchase order, please check the ref ID.
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.error.noitem=There is no available item for the selected purchase order.
+core.portfolio_entry_financial.work_order.line_item_select.step2.header=Please select a line item by clicking on <span class="glyphicons glyphicons-lock"></span>
+core.portfolio_entry_financial.work_order.line_item_select.step2.selectedpurchaseorder=The selected purchase order is <strong>{0}</strong>.
+core.portfolio_entry_financial.work_order.line_item_select.step2.lineitems.title=Select an item
+core.portfolio_entry_financial.work_order.line_item_select.step3.header=Please provide the amount you want allocate from the purchase order to the work order
+core.portfolio_entry_financial.work_order.line_item_select.step3.selectedlineitem=The selected line item is <strong>{0}</strong> from the purchase order <strong>{1}</strong>
+core.portfolio_entry_financial.work_order.line_item_select.step3.maximumamount=The maximum amount that can be allocated is <strong>{0}</strong>
+core.portfolio_entry_financial.work_order.line_item_select.step3.amount.label=Amount
+core.portfolio_entry_financial.work_order.line_item_select.step3.amount.error.toobig=The given amount is too big.
+core.portfolio_entry_financial.work_order.line_item_select.successful=The purchase order has been selected.
+
+#report the balance of a work order
+core.portfolio_entry_financial.work_order.report_balance.breadcrump=Report the balance
+core.portfolio_entry_financial.work_order.report_balance.header=There is still {0} on the work order. Do you want to report this amount into a new work order?
+core.portfolio_entry_financial.work_order.report_balance.yes=Yes, create a new work order
+core.portfolio_entry_financial.work_order.report_balance.no=No, this work order is fully engaged
+core.portfolio_entry_financial.work_order.report_balance.successful=The work order balance has been transferred successfully.
+
+#----------------------
+# portfolio entry: stakeholder
+#----------------------
+
+#list
+core.portfolio_entry_stakeholder.list.manager=Manager: {0}
+core.portfolio_entry_stakeholder.list.title=Stakeholders
+core.portfolio_entry_stakeholder.list.portfolios.title=Stakeholders of the portfolios
+
+#manage
+core.portfolio_entry_stakeholder.add.successful=The stakeholder has been added successfully.
+core.portfolio_entry_stakeholder.edit.successful=The stakeholder has been updated.
+
+#delete
+core.portfolio_entry_stakeholder.delete=The stakeholder has been removed.
+
+#----------------------
+# portfolio entry: governance
+#----------------------
+
+#view
+core.portfolio_entry_governance.view.title=Life cycle process: {0}
+
+#view milestone
+core.portfolio_entry_governance.milestone.view.status.approved=Approved gate
+core.portfolio_entry_governance.milestone.view.status.rejected=Rejected gate
+core.portfolio_entry_governance.milestone.view.status.pending=Pending gate
+core.portfolio_entry_governance.milestone.view.empty=There is no details for this milestone.
+core.portfolio_entry_governance.milestone.view.panel.details.title=Details
+core.portfolio_entry_governance.milestone.view.panel.approvers.title=Approvers
+core.portfolio_entry_governance.milestone.view.panel.budget.title=Budget status at {0}
+core.portfolio_entry_governance.milestone.view.panel.resources.title=Resources status at {0}
+
+#request milestone
+core.portfolio_entry_governance.milestone.request.processstatus.label=Life cycle process status
+core.portfolio_entry_governance.milestone.request.approval.successful=The approval request for the milestone has been created successfully
+core.portfolio_entry_governance.milestone.request.approval.notification.title=New milestone approval request
+core.portfolio_entry_governance.milestone.request.approval.notification.message=A milestone approval has been requested for the initiative "{0}". Please follow the link to process the request.
+core.portfolio_entry_governance.milestone.request.instance.successful=The milestone has been created successfully. The approvers can now vote.
+core.portfolio_entry_governance.milestone.request.voterequired.notification.title=Milestone vote required
+core.portfolio_entry_governance.milestone.request.voterequired.notification.message=You are required to vote for a milestone approval of "{0}"
+core.portfolio_entry_governance.milestone.request.approved.successful=The milestone has been created successfully and is approved.
+core.portfolio_entry_governance.milestone.request.approved.notification.title=Milestone approved
+core.portfolio_entry_governance.milestone.request.approved.notification.message=A milestone for the initiative "{0}" has been approved.
+
+#edit planning
+core.portfolio_entry_governance.planning.edit.title=Update the planning
+core.portfolio_entry_governance.planning.edit.successful=The planning has been updated.
+
+#change process
+core.portfolio_entry_governance.process.change.breadcrump=Change the life cycle process
+core.portfolio_entry_governance.process.change.header=<span class="glyphicons glyphicons-circle-info"></span> Important notice: changing the life cycle process will reset ALL the passed milestones, the planning and the budget.<br>It will also set the initiative to "Concept".
+core.portfolio_entry_governance.process.change.confirm=Are you sure you want to change the life cycle process of this initiative?
+core.portfolio_entry_governance.process.change.successful=The life cycle process has been changed successfully
+core.portfolio_entry_governance.process.change.notification.title=New life cycle process
+core.portfolio_entry_governance.process.change.notification.message=The life cycle process of the initiative "{0}" has been changed to "{1}"
+
+#----------------------
+# portfolio entry: delivery
+#----------------------
+
+#requirements status
+core.portfolio_entry_delivery.requirement.status.priority.title=Distribution of needs by priority
+core.portfolio_entry_delivery.requirement.status.priority.must.false.label=Optional
+core.portfolio_entry_delivery.requirement.status.priority.must.true.label=Mandatory
+core.portfolio_entry_delivery.requirement.status.severity.title=Distribution of defects by severity
+core.portfolio_entry_delivery.requirement.status.severity.blocker.false.label=Non-blocker
+core.portfolio_entry_delivery.requirement.status.severity.blocker.true.label=Blocker
+
+#view requirement
+core.portfolio_entry_delivery.requirement.view.details.title=Details
+core.portfolio_entry_delivery.requirement.view.description.title=Description
+
+#edit requirement
+core.portfolio_entry_delivery.requirement.edit.successful=The requirement has been updated.
+
+#list of iterations
+core.portfolio_entry_delivery.iterations.details.title=Iterations
+core.portfolio_entry_delivery.iterations.burndown.title=Burndown chart
+core.portfolio_entry_delivery.iterations.burndown.start.label=Start
+core.portfolio_entry_delivery.iterations.burndown.end_of_iteration.label=End - "{0}"
+core.portfolio_entry_delivery.iterations.burndown.planned.label=Planned
+core.portfolio_entry_delivery.iterations.burndown.real.label=Real
+
+#view iteration
+core.portfolio_entry_delivery.iteration.view.details.title=Details
+
+#edit iteration
+core.portfolio_entry_delivery.iteration.edit.title=Update an iteration
+core.portfolio_entry_delivery.iteration.edit.successful=The iteration has been updated.
+
+#list of assigned releases
+core.portfolio_entry_delivery.releases.title=Releases assigned to the initiative
+
+#assign a release
+core.portfolio_entry_delivery.release_assign.title=Assign a release
+core.portfolio_entry_delivery.release_assign.successful=The release has been assigned.
+
+#unassign a release
+core.portfolio_entry_delivery.release_unassign.successful=The release has been unassigned.
+
+#----------------------
+# portfolio entry: planning
+#----------------------
+
+#overview
+core.portfolio_entry_planning.overview.no_planning=The planning is empty.
+core.portfolio_entry_planning.overview.phase.label=Phase
+core.portfolio_entry_planning.overview.milestone.label=Milestone
+core.portfolio_entry_planning.overview.package.label=Package
+core.portfolio_entry_planning.overview.release.label=Release
+core.portfolio_entry_planning.overview.iteration.label=Iteration
+
+#list of packages
+core.portfolio_entry_planning.packages.title=Packages
+core.portfolio_entry_planning.packages.new.package=Package
+core.portfolio_entry_planning.packages.new.groups=Groups of packages
+core.portfolio_entry_planning.packages.nogroup=There is no group available
+core.portfolio_entry_planning.packages.gantt.lastupdate=Last update
+
+#add groups
+core.portfolio_entry_planning.package.groups.title=Add groups of packages
+core.portfolio_entry_planning.package.groups.selectagroup=Please select at least 1 group.
+core.portfolio_entry_planning.package.groups.successful=The packages for the selected groups has been added successfully.
+
+#view package
+core.portfolio_entry_planning.package.view.title=Details
+
+#manage package
+core.portfolio_entry_planning.package.manage.title=Manage a package
+core.portfolio_entry_planning.package.add.successful=The package has been created successfully.
+core.portfolio_entry_planning.package.edit.successful=The package has been updated.
+
+#delete package
+core.portfolio_entry_planning.package.delete.successful=The package has been removed.
+
+#list of resources
+core.portfolio_entry_planning.resources.actor.title=Allocated employees
+core.portfolio_entry_planning.resources.general.title=Allocation requests
+core.portfolio_entry_planning.resources.new.org_unit=Delivery unit
+core.portfolio_entry_planning.resources.new.competency=Competency
+core.portfolio_entry_planning.resources.no_competency=There is no competency available
+
+#manage allocated actor
+core.portfolio_entry_planning.allocated_actor.manage.noactor=You need to add at least one stakeholder in order to allocate an actor to the initiative.
+core.portfolio_entry_planning.allocated_actor.manage.title=Manage an allocated employee
+core.portfolio_entry_planning.allocated_actor.add.successful=The employee has been allocated successfully.
+core.portfolio_entry_planning.allocated_actor.edit.successful=The allocated employee has been updated.
+core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title=A confirmed allocation has been updated
+core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message=A confirmed allocation for the employee "{0}" has been updated, please check its content by clicking here.
+
+#delete allocated actor
+core.portfolio_entry_planning.allocated_actor.delete.successful=The allocated employee has been removed.
+
+#manage allocated org unit
+core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=You need to add at least one delivery unit to the initiative in order to allocate it.
+core.portfolio_entry_planning.allocated_org_unit.manage.title=Manage an allocated delivery unit
+core.portfolio_entry_planning.allocated_org_unit.add.successful=The delivery unit has been allocated successfully.
+core.portfolio_entry_planning.allocated_org_unit.edit.successful=The allocated delivery unit has been updated.
+
+#delete allocated org unit
+core.portfolio_entry_planning.allocated_org_unit.delete.successful=The allocated delivery unit has been removed.
+
+#manage allocated competency
+core.portfolio_entry_planning.allocated_competency.manage.title=Manage an allocated competency
+core.portfolio_entry_planning.allocated_competency.add.successful=The competency has been allocated successfully.
+core.portfolio_entry_planning.allocated_competency.edit.successful=The allocated competency has been updated.
+
+#delete allocated competency
+core.portfolio_entry_planning.allocated_competency.delete.successful=The allocated competency has been removed.
+
+#reallocate a resource to an actor
+core.portfolio_entry_planning.reallocate_org_unit.title=Assign an employee from {0}
+core.portfolio_entry_planning.reallocate_competency.title=Assign an employee with the competency "{0}"
+core.portfolio_entry_planning.reallocate_resource.successful=The assignment has been done successfully.
+core.portfolio_entry_planning.reallocate.report_balance.title=Carry over the days balance
+core.portfolio_entry_planning.reallocate.report_balance.header=There are still {0} days on the initial allocation. Do you want to carry over this value into a new allocation?
+core.portfolio_entry_planning.reallocate.report_balance.yes=Yes, create a new allocation
+core.portfolio_entry_planning.reallocate.report_balance.no=No, this assignment is completed
+core.portfolio_entry_planning.reallocate.report_balance.successful=The remaining days has been carried over successfully.
+
+#----------------------
+# portfolio entry: status reporting
+#----------------------
+
+#registers
+core.portfolio_entry_status_reporting.registers.report.title=Status report
+core.portfolio_entry_status_reporting.registers.risks_and_issues.title=Risks & Issues
+core.portfolio_entry_status_reporting.registers.risks_and_issues.risks.title=Risks register
+core.portfolio_entry_status_reporting.registers.risks_and_issues.issues.title=Issues register
+
+#view report
+core.portfolio_entry_status_reporting.report.view.title=Report of {0}
+core.portfolio_entry_status_reporting.report.view.details.title=Details
+
+#manage report
+core.portfolio_entry_status_reporting.report.manage.title=Manage a report
+core.portfolio_entry_status_reporting.report.add.successful=The report has been added successfully.
+core.portfolio_entry_status_reporting.report.edit.successful=The report has been updated.
+core.portfolio_entry_status_reporting.report.delete.successful=The report has been removed.
+
+#view risk/issue
+core.portfolio_entry_status_reporting.risk.view.title=Risk
+core.portfolio_entry_status_reporting.issue.view.title=Issue
+
+#manage risk/issue
+core.portfolio_entry_status_reporting.risk.manage.title=Manage a risk
+core.portfolio_entry_status_reporting.issue.manage.title=Manage an issue
+core.portfolio_entry_status_reporting.risk.add.successful=The risk has been added successfully.
+core.portfolio_entry_status_reporting.issue.add.successful=The issue has been added successfully.
+core.portfolio_entry_status_reporting.risk.edit.successful=The risk has been updated.
+core.portfolio_entry_status_reporting.issue.edit.successful=The issue has been updated.
+
+#manage event
+core.portfolio_entry_status_reporting.event.manage.title=Manage an event
+core.portfolio_entry_status_reporting.event.add.successful=The event has been added successfully.
+core.portfolio_entry_status_reporting.event.edit.successful=The event has been updated.
+
+#delete event
+core.portfolio_entry_status_reporting.event.delete.successful=The event has been removed.
+
+#----------------------
+# purchase order
+#----------------------
+
+#helpers
+core.purchase_order.title=Purchase order
+core.purchase_order.breadcrumb=<i class="glyphicons glyphicons-shopping-cart"></i>&nbsp;Purchase order "{0}"
+
+#view
+core.purchase_order.view.details.title=Details of the purchase order
+core.purchase_order.view.lineitems.title=Items
+
+#view line item
+core.purchase_order.line_item.view.details.title=Details of the purchase order line item
+core.purchase_order.line_item.view.workorders.title=Engaged work orders by this item
+core.purchase_order.line_item.view.goodsreceipts.title=Goods receipts
+
+#edit work order
+core.purchase_order.line_item.work_order.edit.breadcrump=Update the engaged amount of a work order
+core.purchase_order.line_item.work_order.edit.maximumamount=The maximum amount that can be allocated is <strong>{0}</strong>
+core.purchase_order.line_item.work_order.edit.successful=The engaged amount has been updated successfully.
+
+#----------------------
+# actor
+#----------------------
+
+#helpers
+core.actor.sidebar.overview=Details
+core.actor.sidebar.portfolio_entries=Initiatives
+core.actor.sidebar.portfolios=Portfolios
+core.actor.sidebar.allocation=Allocation
+core.actor.sidebar.allocation.overview=Overview
+core.actor.sidebar.allocation.details=Details
+core.actor.sidebar.allocation.capacity=Capacity
+core.actor.sidebar.timesheet=Timesheet
+core.actor.breadcrumb.edit=Edit
+
+#view
+core.actor.view.details.title=Details
+core.actor.view.competencies.title=Competencies
+core.actor.view.org_unit_actors.title=Employee of the same organizational unit
+
+#new
+core.actor.new.title=Create an employee
+core.actor.new.breadcrumb=<i class="glyphicons glyphicons-parents"></i>&nbsp;Create an employee
+core.actor.new.successful=The employee has been created successfully.
+
+#edit
+core.actor.edit.successful=The employee has been updated.
+
+#delete
+core.actor.delete.confirmation.message=Are you sure you want to delete this employee?
+core.actor.delete.successful=The employee has been removed.
+
+#edit competencies
+core.actor.competencies.no_competency=There is no competency available
+core.actor.competencies.edit.breadcrumb=Edit the competencies
+core.actor.competencies.edit.successful=The competencies have been updated.
+core.actor.default_competency.edit.header=Please select the principal competency from the employee''s competencies.
+
+#allocations
+core.actor.allocations.no_data=There is no allocation to display.
+
+#allocation details
+core.actor.allocation.details.portfolio_entry.title=Allocations - Initiatives
+core.actor.allocation.details.activity.title=Allocations - Activities
+
+#manage allocated activity
+core.actor.allocated_activity.manage.breadcrumb=Manage an allocated activity
+core.actor.allocated_activity.add.successful=The activity has been allocated successfully.
+core.actor.allocated_activity.edit.successful=The allocated activity has been updated.
+core.actor.allocated_activity.delete.successful=The allocated activity has been removed.
+
+#capacity
+core.actor.capacity.footer=The values are expressed in man days.
+core.actor.capacity.has_been_updated.message=Are you sure you want to leave this page without saving the data you have entered?
+core.actor.capacity.save.successful=The capacities have been saved successfully.
+
+#----------------------
+# org unit
+#----------------------
+
+#helpers
+core.org_unit.sidebar.overview=Details
+core.org_unit.sidebar.portfolio_entries=Initiatives
+core.org_unit.sidebar.allocation=Allocation
+core.org_unit.sidebar.allocation.overview=Overview
+core.org_unit.sidebar.allocation.details=Details
+
+#view
+core.org_unit.view.details.title=Details
+
+#new
+core.org_unit.new.title=Create an org unit
+core.org_unit.new.breadcrumb=<i class="glyphicons glyphicons-building"></i>&nbsp;Create an org unit
+core.org_unit.new.successful=The org unit has been created successfully.
+
+#edit
+core.org_unit.edit.title=Edit
+core.org_unit.edit.successful=The org unit has been updated
+
+#delete
+core.org_unit.delete.confirmation.message=Are you sure you want to delete this org unit?
+core.org_unit.delete.successful=The org unit has been removed.
+
+#allocations
+core.org_unit.allocations.no_data=There is no allocation to display.
+
+#allocation details
+core.org_unit.allocation.details.requests.title=Allocation requests
+core.org_unit.allocation.details.actors.portfolio_entry.title=Initiative''s allocations for the employees
+core.org_unit.allocation.details.actors.activity.title=Activity''s allocations for the employees
+
+#manage allocated activity
+core.org_unit.actor_allocated_activity.manage.breadcrumb=Manage an allocated activity for an employee
+core.org_unit.actor_allocated_activity.add.successful=The activity has been allocated successfully.
+
+#----------------------
+# release
+#----------------------
+
+#list and planning
+core.release.list.title=Releases
+core.release.list.planning.title=Planning
+core.release.list.planning.no_source=There is no release to display: the configured filters are too much specific.
+core.release.list.planning.phase.full=Build & Rollout
+core.release.list.planning.phase.execution=Build
+core.release.list.planning.phase.rollout=Rollout
+
+#create
+core.release.create.title=Create a release
+core.release.create.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Create a release
+core.release.create.successful=The release has been created successfully.
+
+#edit
+core.release.edit.title=Edit
+core.release.edit.successful=The release has been updated.
+
+#view
+core.release.view.details.title=Details
+core.release.view.initiatives.title=Initiatives
+
+#delete
+core.release.delete.confirmation.message=Are you sure you want to delete this release?
+core.release.delete.successful=The release has been removed.
+
+#view initiative
+core.release.initiative.view.requirements.title=Requirements
+
+#----------------------
+# architecture
+#----------------------
+
+#helper
+core.architecture.title=Architecture
+
+#index
+core.architecture.index.application_block.tree.title=Application blocks
+
+#application block
+core.architecture.application_block.view.details.title=Details
+core.architecture.application_block.view.root.label=Main
+
+########################
+# Admin pages
+########################
+
+#----------------------
+# user administration
+#----------------------
+
+#helper
+admin.user_manager.unknown_user=Unknown user
+admin.user_manager.sidebar.search=Search and update a user
+admin.user_manager.sidebar.create=Create a new user
+admin.user_manager.sidebar.export=Export users list
+admin.user_manager.update.success=The data has been updated. Please note that this might takes a few minutes before being effective in all the BizDock modules.
+
+#search
+admin.user_manager.search.header=Look for an existing user in order to perform some modifications.<br/>\
+Please enter the user login/username, or the user mail address or the name of the user.
+admin.user_manager.search.by.title=Search using
+admin.user_manager.search.by_uid.label=Username
+admin.user_manager.search.by_mail.label=Email
+admin.user_manager.search.by_full_name.label=Full name ("*" allowed)
+admin.user_manager.search.not_found=The user account associated with "{0}" was not found.
+admin.user_manager.search.result.title=Found users
+admin.user_manager.search.result.header=Please select the user to edit
+
+#export
+admin.user_manager.export.success=Your request to export the users list has been correctly submitted. You will be notified when the file will be ready.
+
+#view user
+admin.user_manager.view.action.lock.help=Lock
+admin.user_manager.view.action.unlock.help=Unlock
+admin.user_manager.view.action.reset_password.help=Reset password
+admin.user_manager.view.action.delete.help=Delete the user account
+admin.user_manager.view.action.edit_account_type.help=Edit the user account type
+
+#delete user
+admin.user_manager.delete.confirmation=Are you sure you want to delete the account {0} ?
+admin.user_manager.delete.success=Account {0} successfully delete !
+admin.user_manager.delete.notification.title=User marked for deletion
+admin.user_manager.delete.notification.message=The user "{0}" has been deleted at {1}, please wait a few minutes before\
+ attempting the creation of a user with the same username.
+
+#reset password
+admin.user_manager.reset_password.confirmation=Are you sure you want to reset the password for user {0} ?
+admin.user_manager.reset_password.success=Password successfully reseted
+admin.user_manager.reset_password.mail.subject=Change your password
+
+#change status
+admin.user_manager.change_status.confirmation=Are you sure you want to change the activation status of the account {0} ?
+admin.user_manager.change_status.success=Account activation status changed.
+admin.user_manager.change_status.mail.subject=Account status changed
+
+#edit basic data
+admin.user_manager.edit_basic_data.title=Update basic information
+admin.user_manager.edit_basic_data.header=If you update these basic informations all the BizDock third party modules will be subsequently updated.
+
+#edit user account type
+admin.user_manager.edit_account_type.title=Update account type
+admin.user_manager.edit_account_type.header=If you update the account type, the roles will be reset.
+
+#edit email
+admin.user_manager.edit_email.title=Change email address
+admin.user_manager.edit_email.header=If you update your e-mail address, you will receive an e-mail to the specified address to complete its validation.
+
+#edit roles
+admin.user_manager.edit_roles.title=Edit roles
+admin.user_manager.edit_roles.header=Edit the top level roles for the user. You can select one or several roles. The super user role is required for user administration features (use with care).
+
+#create user
+admin.user_manager.create.header=Please fill the form to create a new user.<br/>\
+Please don''t forget to set the roles for this user.<br/>\
+Once the creation will be complete the user will be notified with an e-mail.<br/>\
+<u>NB</u>: since the user creation is asynchronous, you might have to wait a few moment before the creation is completed.
+admin.user_manager.create.basic_data.title=Basic data
+admin.user_manager.create.success=The user has been created successfully.
+admin.user_manager.create.mail.subject=Account created
+admin.user_manager.create.actor.header=The created user is not associated with an employee. You can either create automatically an employee from the user data or select an existing one. It is also possible to create him later.
+admin.user_manager.create.actor.create.title=Create an employee
+admin.user_manager.create.actor.create.header=The user data (first name, last name and email address) will be used to create the employee.
+admin.user_manager.create.actor.create.successful=The employee has been correctly created and associated with the user.
+admin.user_manager.create.actor.select.title=Select an existing employee
+admin.user_manager.create.actor.select.header=Select an employee from all not already associated ones.
+admin.user_manager.create.actor.select.label=Employee
+admin.user_manager.create.actor.select.successful=The selected employee has been correctly associated with the user.
+admin.user_manager.create.actor.later.title=Decide later
+admin.user_manager.create.actor.later.header=Let currently the user without employee. It''s possible to make the association later, simply by creating a new employee with the username under the field "Unique ID".
+
+#resync
+admin.user_manager.resync.header=The re-synchronization allow, when a user provisioning issue occurred\
+(for instance : unavailability of the LDAP server during a user creation) to ask for an automatic\
+repair action.
+
+#----------------------
+# configuration: system preferences
+#----------------------
+
+#helpers
+admin.configuration.system_preferences.title=System preferences
+admin.configuration.system_preferences.breadcrumb.edit=Update
+admin.configuration.system_preferences.category.general=General
+admin.configuration.system_preferences.category.roadmap=Roadmap
+admin.configuration.system_preferences.category.planning=Planning
+admin.configuration.system_preferences.category.financial=Financials
+admin.configuration.system_preferences.category.timesheet=Timesheet
+admin.configuration.system_preferences.category.security=Security
+
+#edit
+admin.configuration.system_preferences.edit.success=The system preferences have been updated.
+
+#----------------------
+# configuration: SMTP
+#----------------------
+
+#helpers
+admin.configuration.smtp.title=SMTP configuration
+admin.configuration.smtp.breadcrumb.edit=Update
+
+#edit
+admin.configuration.smtp.edit.success=The SMTP configuration has been updated.
+
+#----------------------
+# configuration: roles
+#----------------------
+
+#helpers
+admin.configuration.roles.title=Roles
+
+#manage
+admin.configuration.roles.manage.title=Manage a role
+admin.configuration.roles.add.successful=The role has been added successfully. Please select now its permissions.
+admin.configuration.roles.edit.successful=The role has been updated. The resulting new rights will be effective in a few minutes.
+admin.configuration.roles.delete.successful=The role has been removed.
+
+#----------------------
+# configuration: reference data
+#----------------------
+
+#helpers
+admin.configuration.reference_data.title=Reference data
+admin.configuration.reference_data.portfolio.title=Initiatives & Portfolios
+admin.configuration.reference_data.portfolio.portfolioentrytypes.title=Initiative types
+admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Initiative''s dependency types
+admin.configuration.reference_data.portfolio.portfoliotypes.title=Portfolio types
+admin.configuration.reference_data.actorsandorgunits.title=Employees & Org units
+admin.configuration.reference_data.actorsandorgunits.actortypes.title=Employee types
+admin.configuration.reference_data.actorsandorgunits.orgunittypes.title=Org unit types
+admin.configuration.reference_data.actorsandorgunits.competencies.title=Competencies
+admin.configuration.reference_data.actorsandorgunits.stakeholdertypes.title=Stakeholder types
+admin.configuration.reference_data.governance.title=Governance
+admin.configuration.reference_data.governance.life_cycle_processes.title=Life cycle processes
+admin.configuration.reference_data.governance.status_types.title=Milestone status types
+admin.configuration.reference_data.governance.life_cycle_milestones.title=Milestones
+admin.configuration.reference_data.governance.life_cycle_phases.title=Phases
+admin.configuration.reference_data.requirements.title=Requirements
+admin.configuration.reference_data.requirements.status.title=Status
+admin.configuration.reference_data.requirements.priorities.title=Priorities
+admin.configuration.reference_data.requirements.severities.title=Severities
+admin.configuration.reference_data.planning_packages.title=Packages
+admin.configuration.reference_data.planning_packages.groups.title=Package groups
+admin.configuration.reference_data.planning_packages.patterns.title=Package patterns
+admin.configuration.reference_data.register.title=Registers
+admin.configuration.reference_data.register.risktypes.title=Risk types
+admin.configuration.reference_data.register.report_status_types.title=Report status types
+admin.configuration.reference_data.register.event_types.title=Event types
+admin.configuration.reference_data.timesheetactivities.title=Timesheet activities
+admin.configuration.reference_data.timesheetactivities.types.title=Types
+admin.configuration.reference_data.timesheetactivities.activities.title=Activities
+
+#manage portfolio entry type
+admin.configuration.reference_data.portfolioentrytype.manage.title=Manage an initiative type
+admin.configuration.reference_data.portfolioentrytype.add.successful=The initiative type has been added successfully.
+admin.configuration.reference_data.portfolioentrytype.edit.successful=The initiative type has been updated.
+admin.configuration.reference_data.portfolioentrytype.delete.successful=The initiative type has been removed.
+
+#manage portfolio entry dependency type
+admin.configuration.reference_data.portfolioentrydependencytype.manage.title=Manage a dependency type
+admin.configuration.reference_data.portfolioentrydependencytype.add.successful=The dependency type has been added successfully.
+admin.configuration.reference_data.portfolioentrydependencytype.edit.successful=The dependency type has been updated.
+admin.configuration.reference_data.portfolioentrydependencytype.delete.successful=The dependency type has been removed.
+
+#manage portfolio type
+admin.configuration.reference_data.portfoliotype.manage.title=Manage a portfolio type
+admin.configuration.reference_data.portfoliotype.add.successful=The portfolio type has been added successfully.
+admin.configuration.reference_data.portfoliotype.edit.successful=The portfolio type has been updated.
+admin.configuration.reference_data.portfoliotype.delete.successful=The portfolio type has been removed.
+
+#manage actor type
+admin.configuration.reference_data.actortype.manage.title=Manage an employee type
+admin.configuration.reference_data.actortype.add.successful=The employee type has been added successfully.
+admin.configuration.reference_data.actortype.edit.successful=The employee type has been updated.
+admin.configuration.reference_data.actortype.delete.successful=The employee type has been removed.
+
+#manage org unit type
+admin.configuration.reference_data.orgunittype.manage.title=Manage an org unit type
+admin.configuration.reference_data.orgunittype.add.successful=The org unit type has been added successfully.
+admin.configuration.reference_data.orgunittype.edit.successful=The org unit type has been updated.
+admin.configuration.reference_data.orgunittype.delete.successful=The org unit type has been removed.
+
+#manage org unit type
+admin.configuration.reference_data.competency.manage.title=Manage a competency
+admin.configuration.reference_data.competency.add.successful=The competency has been added successfully.
+admin.configuration.reference_data.competency.edit.successful=The competency has been updated.
+admin.configuration.reference_data.competency.delete.successful=The competency has been removed.
+
+#manage stakeholder type
+admin.configuration.reference_data.stakeholdertype.manage.title=Manage a stakeholder type
+admin.configuration.reference_data.stakeholdertype.add.successful=The stakeholder type has been added successfully.
+admin.configuration.reference_data.stakeholdertype.edit.successful=The stakeholder type has been updated.
+admin.configuration.reference_data.stakeholdertype.delete.successful=The stakeholder type has been removed.
+
+#manage life cycle process
+admin.configuration.reference_data.life_cycle_process.manage.title=Manage a life cycle process
+admin.configuration.reference_data.life_cycle_process.add.successful=The life cycle process has been added successfully.
+admin.configuration.reference_data.life_cycle_process.edit.successful=The life cycle process has been updated.
+admin.configuration.reference_data.life_cycle_process.delete.successful=The life cycle process has been removed.
+admin.configuration.reference_data.life_cycle_process.delete.error=This is not possible to remove a life cycle process which is instantiated by an initiative.
+
+#manage life life cycle milestone instance status type
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.manage.title=Manage a milestone status type
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.add.successful=The status type has been added successfully.
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.edit.successful=The status type has been updated.
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.delete.successful=The status type has been removed.
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.delete.error=This is not possible to remove a status type which is used by a milestone of an initiative.
+
+#manage life cycle milestone
+admin.configuration.reference_data.life_cycle_milestone.manage.title=Manage a milestone
+admin.configuration.reference_data.life_cycle_milestone.add.successful=The milestone has been added successfully.
+admin.configuration.reference_data.life_cycle_milestone.edit.successful=The milestone has been updated.
+admin.configuration.reference_data.life_cycle_milestone.delete.successful=The milestone has been removed.
+admin.configuration.reference_data.life_cycle_milestone.delete.error=This is not possible to remove a milestone which is instantiated by an initiative or used by a phase.
+
+#manage life cycle phase
+admin.configuration.reference_data.life_cycle_phase.manage.title=Manage a phase
+admin.configuration.reference_data.life_cycle_phase.add.successful=The phase has been added successfully.
+admin.configuration.reference_data.life_cycle_phase.edit.successful=The phase has been updated.
+admin.configuration.reference_data.life_cycle_phase.delete.successful=The phase has been removed.
+
+#manage requirement status
+admin.configuration.reference_data.requirementstatus.manage.title=Manage a status
+admin.configuration.reference_data.requirementstatus.add.successful=The status has been added successfully.
+admin.configuration.reference_data.requirementstatus.edit.successful=The status has been updated.
+admin.configuration.reference_data.requirementstatus.delete.successful=The status has been removed.
+
+#manage requirement priority
+admin.configuration.reference_data.requirementpriority.manage.title=Manage a priority
+admin.configuration.reference_data.requirementpriority.add.successful=The priority has been added successfully.
+admin.configuration.reference_data.requirementpriority.edit.successful=The priority has been updated.
+admin.configuration.reference_data.requirementpriority.delete.successful=The priority has been removed.
+
+#manage requirement severity
+admin.configuration.reference_data.requirementseverity.manage.title=Manage a severity
+admin.configuration.reference_data.requirementseverity.add.successful=The severity has been added successfully.
+admin.configuration.reference_data.requirementseverity.edit.successful=The severity has been updated.
+admin.configuration.reference_data.requirementseverity.delete.successful=The severity has been removed.
+
+#manage package group
+admin.configuration.reference_data.package_group.manage.title=Manage a package group
+admin.configuration.reference_data.package_group.add.successful=The package group has been added successfully.
+admin.configuration.reference_data.package_group.edit.successful=The package group has been updated.
+admin.configuration.reference_data.package_group.delete.successful=The package group has been removed.
+
+#manage package pattern
+admin.configuration.reference_data.package_pattern.manage.title=Manage a package pattern
+admin.configuration.reference_data.package_pattern.add.successful=The package pattern has been added successfully.
+admin.configuration.reference_data.package_pattern.edit.successful=The package pattern has been updated.
+admin.configuration.reference_data.package_pattern.delete.successful=The package pattern has been removed.
+
+#manage risk type
+admin.configuration.reference_data.risktype.manage.title=Manage a risk type
+admin.configuration.reference_data.risktype.add.successful=The risk type has been added successfully.
+admin.configuration.reference_data.risktype.edit.successful=The risk type has been updated.
+admin.configuration.reference_data.risktype.delete.successful=The risk type has been removed.
+
+#manage report status type
+admin.configuration.reference_data.report_status_type.manage.title=Manage a report status type
+admin.configuration.reference_data.report_status_type.add.successful=The report status type has been added successfully.
+admin.configuration.reference_data.report_status_type.edit.successful=The report status type has been updated.
+admin.configuration.reference_data.report_status_type.delete.successful=The report status type has been removed.
+
+#manage event type
+admin.configuration.reference_data.event_type.manage.title=Manage an event type
+admin.configuration.reference_data.event_type.add.successful=The event type has been added successfully.
+admin.configuration.reference_data.event_type.edit.successful=The event type has been updated.
+admin.configuration.reference_data.event_type.delete.successful=The event type has been removed.
+
+#manage timesheet activity type
+admin.configuration.reference_data.timesheetactivitytype.manage.title=Manage a timesheet activity type
+admin.configuration.reference_data.timesheetactivitytype.add.successful=The timesheet activity type has been added successfully.
+admin.configuration.reference_data.timesheetactivitytype.edit.successful=The timesheet activity type has been updated.
+admin.configuration.reference_data.timesheetactivitytype.delete.successful=The timesheet activity type has been removed.
+
+#manage timesheet activity
+admin.configuration.reference_data.timesheetactivity.manage.title=Manage a timesheet activity
+admin.configuration.reference_data.timesheetactivity.add.successful=The timesheet activity has been added successfully.
+admin.configuration.reference_data.timesheetactivity.edit.successful=The timesheet activity has been updated.
+admin.configuration.reference_data.timesheetactivity.delete.successful=The timesheet activity has been removed.
+
+#----------------------
+# configuration: custom attributes
+#----------------------
+
+#helpers
+admin.configuration.custom_attributes.title=Custom attributes
+
+#manage
+admin.configuration.custom_attribute.manage.title=Manage a custom attribute
+admin.configuration.custom_attribute.add.successful=The custom attribute has been added successfully.
+admin.configuration.custom_attribute.edit.successful=The custom attribute has been updated.
+admin.configuration.custom_attribute.delete.successful=The custom attribute has been removed.
+
+#items
+admin.configuration.custom_attribute.items.title=Options
+
+#manage item
+admin.configuration.custom_attribute.item.manage.title=Manage an option
+admin.configuration.custom_attribute.item.add.successful=The option has been added successfully.
+admin.configuration.custom_attribute.item.edit.successful=The option has been updated.
+admin.configuration.custom_attribute.item.delete.successful=The option has been removed.
+
+#----------------------
+# plugin manager
+#----------------------
+
+#helper
+admin.plugin_manager.sidebar.active_plugins=Active plugins
+admin.plugin_manager.sidebar.available_plugins=Available plugins
+admin.plugin_manager.sidebar.shared_storage=Data exchange storage
+
+#active plugins
+admin.plugin_manager.active_plugins.header=The table below contains the plugins which are currenty registered within the system.
+
+#available plugins
+admin.plugin_manager.available_plugins.details.label=Details
+admin.plugin_manager.available_plugins.activate.label=Activate
+
+#view definition
+admin.plugin_manager.definition.view.not_exists=The plugin definition {0} does not exists
+admin.plugin_manager.definition.view.not_available=This plugin is not available in your actual configuration. Please <a href="mailto:support@the-agile-factory.com">contact</a> us to request an upgrade.
+admin.plugin_manager.definition.view.panel.description.title=Description
+
+#view configuration (instance)
+admin.plugin_manager.configuration.view.not_exists=The plugin instance {0} does not exists
+admin.plugin_manager.configuration.view.panel.details.title=Plugin description
+admin.plugin_manager.configuration.view.panel.admin.title=Administration
+admin.plugin_manager.configuration.view.panel.admin.action.title=Admin commands
+admin.plugin_manager.configuration.view.panel.admin.action.success=The action has been sucessfully sent to the plugin
+admin.plugin_manager.configuration.view.panel.admin.action.error=An error occured while sending the action to the plugin, please contact your administrator
+admin.plugin_manager.configuration.view.panel.admin.start.success=Plugin {0} is starting, this may takes a few time
+admin.plugin_manager.configuration.view.panel.admin.start.error=Plugin {0} failed to start, see error log
+admin.plugin_manager.configuration.view.panel.admin.stop.success=Plugin {0} is stopping, this may takes a few time
+admin.plugin_manager.configuration.view.panel.configuration.title=Plugin configuration
+admin.plugin_manager.configuration.view.panel.log.title=Plugin logs
+admin.plugin_manager.configuration.view.panel.log.refresh.help=Refresh
+admin.plugin_manager.configuration.view.panel.log.flush.help=Flush logs
+admin.plugin_manager.configuration.view.panel.log.flush.success=Plugin logs have been flushed
+
+#new configuration (instance)
+admin.plugin_manager.configuration.new.title=Create new plugin instance
+admin.plugin_manager.configuration.new.header=You are about to create an instance of plugin.<br/>\
+Please provide a name for the instance (this allows to differenciate multiple instances of the same plugin). 
+admin.plugin_manager.configuration.new.success=The plugin instance {0} has been successfully registered.
+admin.plugin_manager.configuration.new.error=The plugin instance {0} has fail to register.
+
+#delete configuration (instance)
+admin.plugin_manager.configuration.delete.confirmation=You are about to delete a plugin instance.\\nTHIS WILL DELETE THE PLUGIN AS WELL AS ALL ITS CONFIGURATION.\\nPlease confirm !
+admin.plugin_manager.configuration.delete.success=The plugin instance {0} has been successfully unregistered
+admin.plugin_manager.configuration.delete.error=The plugin instance {0} failed to be unregistered (the plugin was probably running, please stop it before attempting a new unregistration)
+
+#edit configuration block
+admin.plugin_manager.configuration_block.edit.title.label=Configuration block edition - {0}
+admin.plugin_manager.configuration_block.edit.success=The configuration {0} has been successfully saved. WARNING: You should restart the plugin to use the new configuration.
+admin.plugin_manager.configuration_block.edit.reset_to_default.error=Error while attempting to reset to the default configuration. Please try again or contact your administrator.
+admin.plugin_manager.configuration_block.edit.reset_to_default.success=Configuration reseted to default (if you save now your will lose your previous configuration)
+
+#view shared storage
+admin.shared_storage.view.header=The data exchange storage is used for data integration between your BizDock instance and the outside world.\
+It has two folders : inputs and outputs.<br/>The "inputs" folder should be used for data input and the "outputs" folder for data output.\
+You can refer to the content of the shared storage in the plugin configuration.
+admin.shared_storage.view.file.name.label=File name
+admin.shared_storage.view.file.last_modified.label=Last update
+admin.shared_storage.view.file.size.label=Size
+
+#shared storage: upload file
+admin.shared_storage.upload.file.label=Upload a new file
+admin.shared_storage.upload.file.help=The file size is limited to {0} and you cannot upload more than {1} files
+admin.shared_storage.upload.file.size.invalid=Cannot upload, the file size is limited to {0}
+admin.shared_storage.upload.error.max_number=Too much files in this folder, please delete a file before uploading a new one
+admin.shared_storage.upload.no_file=No file was selected
+admin.shared_storage.upload.success=File succesfully upoaded
+
+#shared storage: delete file
+admin.shared_storage.delete.success=File deleted
+
+#----------------------
+# API manager
+#----------------------
+
+admin.api_manager.menu.keys.label=API keys
+admin.api_manager.menu.browser.label=API browser
+admin.api_manager.title=API configuration manager
+admin.api_manager.table.title=Registered applications
+admin.api_manager.unknown.application.message=Unknown application name : {0}
+admin.api_manager.keys.reseted.message=Keys for application {0} successfully reseted
+admin.api_manager.registration.deleted.message=Application {0} has been successfully deleted
+admin.api_manager.registration.updated.message=Application {0} has been successfully updated
+admin.api_manager.registration.created.message=Application {0} has been successfully created
+admin.api_manager.registration.name.alreadyexists.message=The specified application name {0} already exists, please choose another one
+admin.api_manager.registration.creation.error.message=Failed to create the specified application, please contact your administrator
+admin.api_manager.authorizations.invalid.message=The syntax of the authorizations is invalid (please refer to the online documentation) : {0}
+admin.api_manager.registration.new.header=You are about to create a new application allowed to call the APIs.<br/>\
+Please provide an application name, a description and some authorizationns.<br/>\
+Please refer to BizDock documentation for explanations about the authorizations syntax.
+admin.api_manager.registration.edit.header=You are about to edit an application allowed to call the APIs.<br/>\
+Please refer to BizDock documentation for explanations about the authorizations syntax.
+admin.api_manager.registration.resetkeys.message=You are about to reset you API keys.<br/>\
+Please note that this will automatically and immediately invalidate the previous keys.
+admin.api_manager.registration.delete.message=You are about to delete you application configuration.<br/>\
+Please note that this will automatically and immediately prevent the application to connect to the APIs.
+admin.api_manager.registration.display.header=Configuration for application {0}
+admin.api_manager.apibrowser.title=API browser
+admin.api_manager.browser.button.explanation=The button below opens the API browser.<br/>\
+This interface describes all the available APIs and allow to test each API (simulating application calls).
+admin.api_manager.apibrowser.explanation=The documentation below contains all the APIs.<br/>\
+However please note that some APIs requires some specific authorizations which may prevent you from testing the API.
+admin.api_manager.apibrowser.simulator.application.select.label=Tested application
+
+#----------------------
+# KPI manager
+#----------------------
+
+#list
+admin.kpi.title=KPI manager
+admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
+admin.kpi.object_type.models.pmo.Portfolio=Portfolio
+
+#view
+admin.kpi.view.details.title=Details
+admin.kpi.view.scheduler.title=Scheduler
+admin.kpi.view.scheduler.delete.comfirm=Are you sure you want to delete the scheduler of this KPI?
+admin.kpi.view.scheduler.no_scheduler=There is no scheduler configured. Please click on the icon <span class="glyphicons glyphicons-adjust-alt"></span> to configure it.
+admin.kpi.scheduler.delete=The scheduler has been correctly removed
+admin.kpi.scheduler.trigger=The scheduler has been correctly triggered
+admin.kpi.view.values.title=Values'' definition
+admin.kpi.view.rules.title=Coloring rules
+admin.kpi.rule.delete=The rule has been removed
+
+#edit
+admin.kpi.edit.title=Edit
+admin.kpi.edit.successful=The KPI has been updated.
+
+#edit value
+admin.kpi.value.edit.successful=The KPI value definition has been updated.
+
+#edit scheduler
+admin.kpi.editscheduler.title=Configure the scheduler
+admin.kpi.editscheduler.successful=The scheduler has been updated.
+
+#edit color
+admin.kpi.rule.manage.title=Manage a coloring rule
+admin.kpi.rule.add.successful=The coloring rule has been created successfully.
+admin.kpi.rule.edit.successful=The coloring rule has been updated.
+
+#create
+admin.kpi.create.title=Create a custom KPI
+admin.kpi.create.header=The data of the KPI should be provided externally, for example thanks the API. \
+Please read the <a href="https://help.bizdock.io/doku.php?id=admin-guide:kpi" target="_blank">help</a> for more information.
+admin.kpi.create.successful=The KPI has been created.
+
+#delete
+admin.kpi.delete.confirm.message=Are you sure you want to delete this KPI? All data will be lost.
+admin.kpi.delete.error=Impossible to delete this KPI.
+admin.kpi.delete.successful=The KPI has been deleted.
+
+#----------------------
+# reporting
+#----------------------
+
+#helper
+admin.reporting.standard=Standard
+admin.reporting.customized=Customized
+
+#index
+admin.reporting.title=Reporting manager
+admin.reporting.category.title=Reports repository
+
+#edit
+admin.reporting.edit.successful=The report has been updated.
+
+#----------------------
+# system owner
+#----------------------
+
+admin.systemowner.info.title=Your BizDock instance
+admin.systemowner.info.breadcrumb=Information
+admin.systemowner.info.systemusers.title=System users
+admin.systemowner.info.activeusers.label=Number of active users
+admin.systemowner.info.registeredusers.label=Number of "registered" users
+admin.systemowner.info.systemowners.label=System owner(s)
+admin.systemowner.info.config.title=System configuration
+admin.systemowner.info.version.label=BizDock version
+admin.systemowner.info.sizing.label=System sizing
+admin.systemowner.info.storage.label=Remaining storage space
+admin.systemowner.info.authentication.label=Authentication mode
+admin.systemowner.info.plugins.title=Available plugins
+
+#----------------------
+# audit log
+#----------------------
+
+#helper
+admin.auditable.object_class.label=Object Class
+admin.auditable.is_auditable.label=Audited
+
+#list
+admin.auditable.list.title=List of auditable objects
+admin.auditable.list.header=You can configure the system to keep track of the changes done on some objects.<br/>\
+Thanks to select the objects you want to follow.
+
+#manage
+admin.auditable.manage.title=Manage an auditable object
+admin.auditable.manage.not_found=Auditable object not found
+admin.auditable.manage.success=Auditable configuration successfully saved
+
+#delete
+admin.auditable.delete.confirmation=Warning: do you really want to delete ?
+admin.auditable.delete.success=The auditable object has been removed.
+
+#export
+admin.auditable.export.ajax.success=The audit logs will be generated in a few seconds and stored into your personal space.\\n Please wait for the notification.
+admin.auditable.export.ajax.error=An unexpected error happens while exporting the audit log, please contact your administrator
+admin.auditable.export.notification.success.title=Audit log loaded
+admin.auditable.export.notification.success.message=The audit log archive has been successfully loaded to your personal space
+admin.auditable.export.notification.error.title=Export audit log error
+admin.auditable.export.notification.error.message=The system failed to export your audit log archive, please contact your administrator
+admin.auditable.export.notification.not_found.message=No audit logs found for this system, have you activated the audit log for any object ?
+

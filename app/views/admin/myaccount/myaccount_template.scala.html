@@ -1,0 +1,44 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(title: String, masterMode: Boolean, selfEmailUpdate: Boolean, currentType: controllers.admin.MyAccount.MenuItemType = controllers.admin.MyAccount.MenuItemType.VIEW)(content: Html)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import framework.utils.SideBar
+@import framework.utils.Menu.ClickableMenuItem
+
+@sidebarInstance=@{
+    val sidebarInstance = new SideBar();
+    sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.details",controllers.admin.routes.MyAccount.display(), "glyphicons glyphicons-zoom-in", currentType.equals(controllers.admin.MyAccount.MenuItemType.VIEW))); 
+    sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_data",controllers.admin.routes.MyAccount.editBasicData(), "glyphicons glyphicons-nameplate", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_DATA))); 
+    if(masterMode){
+       sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_password", controllers.admin.routes.MyAccount.editPassword(), "glyphicons glyphicons-retweet-2", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_PASSWORD)));
+    }
+    if(selfEmailUpdate){
+       sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_email", controllers.admin.routes.MyAccount.editEmail(), "social social-e-mail", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_MAIL)));
+    }
+    sidebarInstance;
+}
+
+@templates.main_bc_iconsbar(title,
+    sidebarInstance, 
+    Seq(("my.my_profile.breadcrumb", controllers.admin.routes.MyAccount.display().url),(title, null))) {
+}{
+@content
+}

@@ -1,0 +1,75 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    pluginInfoPairs: List[org.apache.commons.lang3.tuple.Triple[Long, String, framework.services.plugins.IPluginManagerService.IPluginInfo]]
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+@import java.math.BigInteger; var cRegisteredPlugins=0; var cAvailablePlugins=0
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.plugin_config.title", null)
+    )
+}
+
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntry])
+}
+
+@portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.PLUGINCONFIG, breadcrump){
+
+    @if(pluginInfoPairs != null && pluginInfoPairs.size > 0) {
+    
+        <h4>@parts.Msg("core.portfolio_entry.plugin_config.registered_plugins.title")</h4>
+        <div class="row">
+            @for(pluginInfoPair <- pluginInfoPairs){
+                @if(models.framework_models.plugin.PluginRegistration.isRegistered(pluginInfoPair.getLeft(), constants.MafDataType.getPortfolioEntry(), portfolioEntry.id)) {
+                    @portfolio_entry_plugin_config_box(pluginInfoPair, portfolioEntry.id)
+                    @(cRegisteredPlugins+=1)
+                }
+            }
+        </div>
+        @if(cRegisteredPlugins.equals(0)) {
+            @parts.Msg("core.portfolio_entry.plugin_config.registered_plugins.empty")
+        }
+        
+        <h4>@parts.Msg("core.portfolio_entry.plugin_config.available_plugins.title")</h4>
+        <div class="row">
+            @for(pluginInfoPair <- pluginInfoPairs){
+                @if(!models.framework_models.plugin.PluginRegistration.isRegistered(pluginInfoPair.getLeft(), constants.MafDataType.getPortfolioEntry(), portfolioEntry.id)
+                    && pluginInfoPair.getRight().getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTED)) {
+                    @portfolio_entry_plugin_config_box(pluginInfoPair, portfolioEntry.id)
+                    @(cAvailablePlugins+=1)
+                }
+            }
+        </div>
+        @if(cAvailablePlugins.equals(0)) {
+            @parts.Msg("core.portfolio_entry.plugin_config.available_plugins.empty")
+        }
+
+    } else {
+        @parts.Msg("core.portfolio_entry.plugin_config.empty")
+    }
+}

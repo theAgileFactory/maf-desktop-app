@@ -1,0 +1,3043 @@
+########################
+# App framework
+########################
+
+#----------------------
+# title
+#----------------------
+
+main.application.title.header=BizDock
+main.application.title=
+
+#----------------------
+# js
+#----------------------
+
+js.unchecked=faux
+js.checked=vrai
+js.from=de
+js.to=à
+js.filtersselectortitle=Sélectionner les filtres
+js.columnsselectortitle=Sélectionner les colonnes
+js.empty=vide
+js.kpi=KPI
+
+#----------------------
+# plugin
+#----------------------
+
+plugin.failed.start=Le démarrage du plugin {0} a échoué, la cause est >>> {1}
+plugin.success.start=Le plugin {0} a démarré.
+plugin.failed.stop=L''arrêt du plugin {0} a échoué, veuillez donner l''ID suivant à votre administrateur {1}
+plugin.success.stop=Le plugin {0} a été arrêté.
+
+#----------------------
+# colors
+#----------------------
+
+maf.color.default=Gris
+maf.color.info=Cyan
+maf.color.primary=Bleu
+maf.color.success=Vert
+maf.color.warning=Orange
+maf.color.danger=Rouge
+
+#----------------------
+# days
+#----------------------
+
+day.monday=Lundi
+day.tuesday=Mardi
+day.wednesday=Mercredi
+day.thursday=Jeudi
+day.friday=Vendredi
+day.saturday=Samedi
+day.sunday=Dimanche
+
+#----------------------
+# months
+#----------------------
+
+month.january=Janvier
+month.february=Février
+month.march=Mars
+month.april=Avril
+month.may=Mai
+month.june=Juin
+month.july=Juillet
+month.august=Août
+month.september=Septembre
+month.october=Octobre
+month.november=Novembre
+month.december=Décembre
+
+#----------------------
+# form: messages, constraints and errors
+#----------------------
+
+standard.form.error.title=Veuillez corriger les données erronées ci-dessous
+
+form.input.select.choose=Choisir une valeur
+form.input.date.placeholder=Veuillez cliquer pour saisir une date
+form.input.date.invalid=Date non valable
+form.input.date.error.after=La date doit être après le {0}.
+form.input.date.error.before=La date doit être avant le {0}.
+form.input.multi_languages_string.required=requis pour au moins une langue
+form.input.multi_languages_string.required.error=Ce champ est obligatoire pour au moins une langue
+form.input.image.required=Veuillez fournir une image dans dans l''un de ces formats: gif, jpeg ou png.
+form.input.image.error.max_width=Veuillez fournir une image dont la largeur est égale ou inférieure à {0} px.
+form.input.image.error.max_height=Veuillez fournir une image dont la hauteur est égale ou inférieure à {0} px.
+form.input.password.invalid=Le mot de passe saisi n''est pas valable: il doit contenir au minimum 8 caractères.
+form.input.password.error.insufficient_strength=Le mot de passe n''est pas assez sûr
+form.input.oldpassword.invalid=Ancien mot de passe incorrect.
+form.input.confirmationpassword.invalid=La confirmation ne correspond pas au mot de passe saisi.
+form.input.url.invalid=L''URL n''est pas valable
+form.input.url.help=Veuillez fournir une URL valable et prefixée par "http://" ou "https://", par exemple https://www.bizdock.io/features
+form.input.file_field.error=Le fichier est manquant ou mal formaté.
+form.input.file_field.name.label=Nom
+form.input.file_field.type.label=Type
+form.input.file_field.type.UPLOAD.label=<span class="glyphicons glyphicons-upload"></span> Fichier local
+form.input.file_field.type.URL.label=<span class="glyphicons glyphicons-link"></span> URL
+form.input.file_field.file.label=Fichier
+
+#----------------------
+# default messages
+#----------------------
+
+default.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer cette entrée?
+default.delete.file.confirmation.message=Etes-vous sûr(e) de vouloir supprimer ce fichier?
+default.delete.file.error.message=Erreur lors de la suppression du fichier, veuillez recharger la page et réessayer.
+
+#----------------------
+# default play translations (only for non-English)
+#----------------------
+
+error.required=Veuillez remplir ce champ
+error.email=Adresse email incorrecte
+error.invalid=Valeur non valable
+error.minLength=La longueur minimale est de {0}
+error.maxLength=La longueur maximale est de {0}
+error.min=Doit être plus grand ou égal à {0}
+error.max=Doit être plus petit ou égal à {0}
+
+#----------------------
+# buttons
+#----------------------
+
+button.accept=Accepter
+button.activate=Activer
+button.add=Ajouter
+button.approve=Approuver
+button.associate=Lier
+button.back=Retour
+button.cancel=Annuler
+button.change=Changer
+button.close=Fermer
+button.configure=Configurer
+button.confirm=Confirmer
+button.create=Créer
+button.edit=Editer
+button.decide_later=Décider plus tard
+button.delete=Supprimer
+button.execute=Exécuter
+button.export=Exporter
+button.filter=Filtrer
+button.generate=Générer
+button.next=Suivant
+button.prev=Précédent
+button.previous=Précédent
+button.refresh=Rafraîchir
+button.reject=Rejeter
+button.reset_to_default=Réinitialiser aux valeurs par défaut
+button.save=Sauver
+button.search=Rechercher
+button.send=Envoyer
+button.signin=Se connecter
+button.start=Démarrer
+button.stop=Arrêter
+button.submit=Soumettre
+button.update=Mettre à jour
+button.upload=Télécharger
+button.open=Ouvrir
+
+#----------------------
+# captcha
+#----------------------
+
+captcha.field.label=Entrez le mot affiché dans l''image ci-dessus
+captcha.refresh.label=Pas lisible? changer de mot
+captcha.error.wrong_word=Mot incorrect
+
+#----------------------
+# standalone authentication
+#----------------------
+
+authentication.standalone.form.title=Login
+authentication.standalone.username.label=Nom d''utilisateur
+authentication.standalone.password.label=Mot de passe
+authentication.standalone.button.label=Se connecter
+authentication.standalone.error.message=Mot de passe ou nom d''utilisateur incorrect
+authentication.standalone.locked.account.message=Votre compte a été verouillé, veuillez contacter votre administrateur.
+authentication.standalone.password.issue.message=Je ne peux pas accéder à mon compte
+authentication.standalone.reset.form.title=Réinitialisation du mot de passe
+authentication.standalone.reset.mail.label=Entrez votre adresse mail
+authentication.standalone.reset.submit.label=Demander un nouveau mot de passe
+authentication.standalone.reset.cancel.label=Annuler
+authentication.standalone.reset.success.message=Votre mot de passe a été réinitialisé. Un mail a été envoyé à votre adresse.
+authentication.standalone.reset.mail.validation.message=L''adresse mail est invalide.
+authentication.standalone.reset.mail.unknown.message=Adresse mail inconnue
+
+#----------------------
+# federated authentication
+#----------------------
+authentication.federated.logout.title=Déconnexion effectuée avec succès
+authentication.federated.logout.message.success=Vous avez été déconnecté avec succès de BizDock.
+authentication.federated.logout.message.loginlink=cliquer ici pour vous connecter de nouveau
+
+#----------------------
+# table and filter
+#----------------------
+
+table.empty=Il n''existe aucune donnée
+table.pagination.records=entrée(s)
+table.row_action.select_a_value=Veuillez sélectionner au moins une valeur
+table.row_action.actions=Actions
+
+filter.togglebutton.label=filtres
+filter.table.excel.success=Succès: vous aller recevoir une notification lorsque le fichier Excel sera disponible au téléchargement.
+filter.table.excel.failure=Erreur: impossible de créer le fichier Excel
+filter.table.ajax.error.message=Problème de communication avec le serveur, veuillez rafraichir la page.
+filter.table.empty.textfilter=Tout
+
+#----------------------
+# chart
+#----------------------
+
+chart.empty=Le graphique est vide.
+
+#----------------------
+# password strength
+#----------------------
+
+password.strength.title=Recommandations
+password.strength.explanation=Utilisez un mot de passe de plus de 8 caractères. Evitez les mots évidents.
+password.strength.message=Les mots de passe faibles seront rejetés.
+password.strength.weak=Faible
+password.strength.average=OK
+password.strength.ok=Fort
+
+#----------------------
+# picker
+#----------------------
+
+picker.title.single=Choisir une valeur
+picker.title.multi=Choisir une ou plusieurs valeur(s)
+picker.ajax.wait.message=Chargement des données...
+picker.ajax.failure.message=Problème de communication avec le serveur, veuillez rafraichir la page.
+picker.novalue.message=Aucune donnée trouvée
+picker.already.selected.message=Cette valeur a déjà été sélectionnée.
+
+#----------------------
+# validation key
+#----------------------
+
+validationkey.invalid.title=Action non valable
+validationkey.invalid.explanation=Cette clé n''est pas valable (ou échue), veuiller contacter votre administrateur.
+validationkey.invalid.home.link=Retour à la page d''accueil
+
+#----------------------
+# KPI
+#----------------------
+
+kpi.trend.error=Erreur lors du chargement de la tendance
+kpi.trend.nodata=Il n''y a aucune donnée.
+kpi.label.last_update=Dernière mise à jour
+kpi.label.trend=Tendance
+
+#----------------------
+# Data types
+#----------------------
+
+data_type.User.label=Utilisateur
+data_type.SystemLevelRoleType.label=Rôle
+data_type.Actor.label=Employé
+data_type.BudgetBucket.label=Enveloppe budgétaire
+data_type.BudgetBucketLine.label=Ligne d''enveloppe budgétaire
+data_type.CostCenter.label=Centre de coût
+data_type.GoodsReceipt.label=Entrée de marchandises
+data_type.Iteration.label=Itération
+data_type.OrgUnit.label=Unité d''organisation
+data_type.PortfolioEntryBudget.label=Budget d''initiative
+data_type.PortfolioEntryBudgetLine.label=Ligne de budget d''initiative
+data_type.PortfolioEntryEvent.label=Evénement
+data_type.PortfolioEntry.label=Initiative
+data_type.PortfolioEntryPlanningPackage.label=Livrable
+data_type.PortfolioEntryReport.label=Rapport d''initiative
+data_type.PortfolioEntryResourcePlanAllocatedActor.label=Allocation d''employé (initiative)
+data_type.PortfolioEntryResourcePlanAllocatedOrgUnit.label=Allocation d''unité d''organisation
+data_type.PortfolioEntryResourcePlanAllocatedCompetency.label=Allocation de compétence
+data_type.PortfolioEntryRisk.label=Risque
+data_type.Portfolio.label=Portefeuille
+data_type.Stakeholder.label=Intervenant
+data_type.PurchaseOrderLineItem.label=Ligne de bon de commande
+data_type.PurchaseOrder.label=Bon de commande
+data_type.Release.label=Release
+data_type.Requirement.label=Exigence
+data_type.TimesheetActivityAllocatedActor.label=Allocation d''employé (activité)
+data_type.WorkOrder.label=Bon de travail
+data_type.ApplicationBlock.label=Bloc applicatif
+
+#----------------------
+# Custom attribute types
+#----------------------
+
+custom_attribute.type.BOOLEAN.label=Booléen
+custom_attribute.type.INTEGER.label=Entier
+custom_attribute.type.DECIMAL.label=Nombre
+custom_attribute.type.STRING.label=Chaîne de caractères
+custom_attribute.type.TEXT.label=Texte
+custom_attribute.type.DATE.label=Date
+custom_attribute.type.SINGLE_ITEM.label=Menu déroulant à choix unique
+custom_attribute.type.DYNAMIC_SINGLE_ITEM.label=Autocomplétion
+custom_attribute.type.IMAGE.label=Image
+custom_attribute.type.MULTI_ITEM.label=Menu déroulant à choix multiple
+custom_attribute.type.URL.label=URL
+
+########################
+# Components
+########################
+
+#----------------------
+# ID zone
+#----------------------
+
+idzone.messages.title=Messages
+idzone.messages.not_read.empty=Pas de nouveau message
+idzone.messages.messaging=Messagerie
+idzone.notifications.title=Notifications
+idzone.notifications.not_read.empty=Pas de nouvelle notification
+idzone.notifications.view_all=Voir toutes les notifications
+idzone.my.myaccount=Mon profil
+idzone.my.personalspace=Mon espace de stockage
+idzone.my.support=Support
+idzone.my.logout=Se déconnecter
+
+#----------------------
+# export
+#----------------------
+
+excel.export.success.title=Nouveau fichier Excel d''exportation
+excel.export.success.message=L''export [{0}] pour [{1}] a été correctement généré dans votre espace de stockage personnel
+excel.export.failure.title=Erreur d''exportation Excel
+excel.export.failure.message=Une erreur est survenue lors de la génération du fichier Excel pour [{0}], veuillez contacter votre administrateur (ou réessayer ultérieurement).
+
+#----------------------
+# shortcut
+#----------------------
+
+shortcut.add.message.success=Cette page a été ajoutée aux favoris.
+shortcut.add.message.already=Cette page est déjà dans la liste des favoris.
+shortcut.add.message.error=Impossible d''ajouter cette page aux favoris suite à une erreur technique.
+shortcut.delete.message.error=Impossible de supprimer ce favoris suite à une erreur technique.
+shortcut.delete.message.success=Le favoris a été supprimé.
+
+#----------------------
+# tour
+#----------------------
+
+tour.donotdisplay=ne plus afficher
+
+tour.top_menu_bar.step0.title=Tour rapide
+tour.top_menu_bar.step0.content=<strong>Bienvenue sur BizDock!</strong><br/><br/>Ce tour rapide vous aidera à prendre en main les fonctionnalités principales ainsi que le menu de navigation de BizDock.
+tour.top_menu_bar.step1.title=Langue
+tour.top_menu_bar.step1.content=Pour bien commencer, choisissez la langue dans laquelle vous souhaitez afficher BizDock.
+tour.top_menu_bar.step2.title=Langue
+tour.top_menu_bar.step2.content=Vous pourrez par la suite modifier votre compte afin de configurer votre langue préférée qui sera automatiquement sélectionnée après chaque connexion.
+tour.top_menu_bar.step3.title=Feuille de route
+tour.top_menu_bar.step3.content=La feuille de route vous montre les initiatives actives (selon vos permissions). Vous pouvez ensuite les trier et les filtrer selon vos besoins.
+tour.top_menu_bar.step4.title=Cockpit
+tour.top_menu_bar.step4.content=Votre cockpit contient toutes les informations qui vous concernent, par exemple vos initiatives en tant que responsable ou les membres de votre équipe.
+tour.top_menu_bar.step5.title=Nouveau
+tour.top_menu_bar.step5.content=Le menu Nouveau vous permet de créer tout type de données selon vos permissions.
+tour.top_menu_bar.step6.title=Gouvernance
+tour.top_menu_bar.step6.content=Trouvez ici l''agenda des jalons ainsi que les actions de gouvernance pour lesquelles vous être requis.
+tour.top_menu_bar.step7.title=Livraison
+tour.top_menu_bar.step7.content=Visualisez ici les releases soit par liste, soit grâce à un diagramme de gantt.
+tour.top_menu_bar.step8.title=Outils
+tour.top_menu_bar.step8.content=Le menu Outils contient les feuilles de temps et le module reporting.
+tour.top_menu_bar.step9.title=Admin
+tour.top_menu_bar.step9.content=Personnalisez ici votre instance de BizDock! Vous pouvez changer la configuration ainsi que gérer les utilisateurs de BizDock.
+tour.top_menu_bar.step10.title=Rechercher
+tour.top_menu_bar.step10.content=La page de recherche vous permet de trouver facilement les données principales de BizDock.
+tour.top_menu_bar.step11.title=Messages
+tour.top_menu_bar.step11.content=BizDock intègre un outil de messagerie afin de communiquer directement avec les autres utilisateurs.
+tour.top_menu_bar.step12.title=Notifications
+tour.top_menu_bar.step12.content=A chaque fois que vos attention est requise, vous recevrez une notification!
+tour.top_menu_bar.step13.title=Mon compte
+tour.top_menu_bar.step13.content=Vous souhaitez changer de mot de passe? Télécharger une ressource? Ou simplement vous déconnecter? Utilisez alors le menu Mon compte.
+
+tour.breadcrumb.step0.title=Favoris
+tour.breadcrumb.step0.content=Vous pouvez ajouter la page courante aux favoris en cliquant sur cet icône.
+tour.breadcrumb.step1.title=Aide
+tour.breadcrumb.step1.content=Vous avez besoin de plus d''information sur la page courante? Il vous suffit de cliquer sur l''icône aide.
+
+#----------------------
+# top menu bar
+#----------------------
+
+#roadmap
+topmenubar.roadmap.menu.label=<i class="glyphicons glyphicons-road"></i>&nbsp;Feuille de route
+
+#cockpit
+topmenubar.cockpit.menu.label=<i class="glyphicons glyphicons-dashboard"></i>&nbsp;Cockpit
+
+#new
+topmenubar.new.menu.label=<i class="glyphicons glyphicons-gift"></i>&nbsp;Nouveau
+topmenubar.new.initiative.menu.label=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Initiative
+topmenubar.new.actor.menu.label=<i class="glyphicons glyphicons-parents"></i>&nbsp;Employé
+topmenubar.new.org_unit.menu.label=<i class="glyphicons glyphicons-building"></i>&nbsp;Unité d''organisation
+topmenubar.new.portfolio.menu.label=<i class="glyphicons glyphicons-sort"></i>&nbsp;Portefeuille
+topmenubar.new.budget_bucket.menu.label=<i class="glyphicons glyphicons-calculator"></i>&nbsp;Enveloppe budgétaire
+topmenubar.new.release.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Release
+
+#governance
+topmenubar.governance.menu.label=<i class="glyphicons glyphicons-cluster"></i>&nbsp;Gouvernance
+topmenubar.governance.milestone_planning.menu.label=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Agenda des jalons
+topmenubar.governance.provide_approval.menu.label=<i class="glyphicons glyphicons-thumbs-up"></i>&nbsp;Approuver un jalon
+topmenubar.governance.review_milestone_request.menu.label=<i class="glyphicons glyphicons-transfer"></i>&nbsp;Revoir les requêtes de jalon
+
+#delivery
+topmenubar.delivery.menu.label=<i class="glyphicons glyphicons-cargo"></i>&nbsp;Livraison
+topmenubar.delivery.releases.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
+
+#architecture
+topmenubar.architecture.menu.label=<i class="glyphicons glyphicons-globe-af"></i>&nbsp;Architecture
+
+#tools
+topmenubar.tools.menu.label=<i class="glyphicons glyphicons-settings"></i>&nbsp;Outils
+topmenubar.tools.timesheet.menu.label=<i class="glyphicons glyphicons-clock"></i>&nbsp;Feuille de temps
+topmenubar.tools.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Rapports
+
+#admin
+topmenubar.admin.menu.label=<i class="glyphicons glyphicons-king"></i>&nbsp;Admin
+topmenubar.admin.usermanager.menu.label=<i class="glyphicons glyphicons-user"></i>&nbsp;Gestion des utilisateurs
+topmenubar.admin.configuration.menu.label=<i class="glyphicons glyphicons-classic-hammer"></i>&nbsp;Configuration
+topmenubar.admin.integration.menu.label=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Intégration
+topmenubar.admin.kpimanager.menu.label=<i class="glyphicons glyphicons-stats"></i>&nbsp;Gestion des KPIs
+topmenubar.admin.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Gestion des rapports
+topmenubar.admin.monitoring.hubmonitor.menu.label=<i class="glyphicons glyphicons-screenshot"></i>&nbsp;Surveillance
+topmenubar.admin.audit.menu.label=<i class="glyphicons glyphicons-signal"></i>&nbsp;Journal d''audit
+
+#search
+topmenubar.search.menu.label=<i class="glyphicons glyphicons-search"></i>&nbsp;Rechercher
+
+#----------------------
+# standard KPIs
+#----------------------
+
+kpi.risks_and_issues.main.name=Risques & Incidents
+kpi.risks_and_issues.additional1.name=Risques
+kpi.risks_and_issues.additional2.name=Incidents
+
+kpi.deviation_capex.main.name=Déviation CAPEX
+kpi.deviation_capex.additional1.name=Budget
+kpi.deviation_capex.additional2.name=Prévision
+
+kpi.deviation_opex.main.name=Déviation OPEX
+kpi.deviation_opex.additional1.name=Budget
+kpi.deviation_opex.additional2.name=Prévision
+
+kpi.allocated_actor_days.main.name=Employés
+kpi.allocated_actor_days.additional1.name=Confirmés
+kpi.allocated_actor_days.additional2.name=Non confirmés
+
+kpi.allocated_org_unit_days.main.name=Affectations
+kpi.allocated_org_unit_days.additional1.name=Confirmées
+kpi.allocated_org_unit_days.additional2.name=Non confirmées
+
+kpi.portfolio_number_of_entries.main.name=Nombre d''initiatives
+kpi.portfolio_number_of_entries.additional1.name=Conceptuelles
+kpi.portfolio_number_of_entries.additional2.name=Actives
+
+kpi.portfolio_deviation_capex.main.name=Déviation CAPEX
+kpi.portfolio_deviation_capex.additional1.name=Budget
+kpi.portfolio_deviation_capex.additional2.name=Prévision
+
+kpi.portfolio_deviation_opex.main.name=Déviation OPEX
+kpi.portfolio_deviation_opex.additional1.name=Budget
+kpi.portfolio_deviation_opex.additional2.name=Prévision
+
+kpi.requirement_story_points.main.name=Story points ouverts
+kpi.requirement_story_points.additional1.name=Total
+kpi.requirement_story_points.additional2.name=Fermés
+
+kpi.requirement_number.main.name=Exigences ouvertes
+kpi.requirement_number.additional1.name=Total
+kpi.requirement_number.additional2.name=Fermées
+
+kpi.defect_number.main.name=Anomalies ouvertes
+kpi.defect_number.additional1.name=Bloquantes
+kpi.defect_number.additional2.name=Non-bloquantes
+
+kpi.requirement_is_scoped.main.name=Exigences approuvées
+kpi.requirement_is_scoped.additional1.name=Total
+kpi.requirement_is_scoped.additional2.name=Non-approuvées
+
+kpi.portfolio_entry_progress.main.name=Avancement
+kpi.portfolio_entry_progress.additional1.name=Jours prévus
+kpi.portfolio_entry_progress.additional2.name=Jours consommés
+
+#----------------------
+# standard reports
+# Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
+#----------------------
+
+report.release_requirements.name=Exigences d''une release
+report.release_requirements.description=Liste des exigences d''une release
+report.release_requirements.release.name=Release
+
+report.competency.name=Compétence
+report.competency.description=Employés avec cette compétence et affectations.
+report.competency.competency.name=Compétence
+
+report.status_report.name=Rapport d''état
+report.status_report.description=Le rapport d''état d''une initiative
+report.status_report.initiative.name=Initiative
+
+report.timesheet_period.name=Entrées de feuilles de temps pour une période
+report.timesheet_period.description=Liste de toutes les entrées de feuilles de temps pour une période donnée. Les entrées sont groupées par employé et activité.
+report.timesheet_period.start_date.name=Date de début de la période
+report.timesheet_period.end_date.name=Date de fin de la période
+
+report.timesheet_project.name=Entrées de feuilles de temps pour un projet
+report.timesheet_project.description=Liste de toutes les entrées de feuilles de temps pour une projet donnée. Les entrées sont groupées par employé et date.
+report.timesheet_project.initiative.name=Initiative
+
+report.milestones_overdue.name=Jalons en retard
+report.milestones_overdue.description=Liste des jalons en retard pour les initiatives actives.
+
+#----------------------
+# permissions
+#----------------------
+
+permission.roadmap_display_permission.description=Autorise un utilisateur à voir le lien "Feuille de route" et d''accéder à la page. 
+permission.cockpit_display_permission.description=Autorise un utilisateur à voir le lien "Cockpit" et d''accéder à la page.
+permission.portfolio_entry_view_public_permission.description=Autorise un utilisateur à lister et à voir les données de base de toutes les initiatives publiques et non-conceptuelles.
+permission.portfolio_entry_view_details_all_permission.description=Autorise un utilisateur à voir tous les détails (sauf les données financières) de toute initiative.
+permission.portfolio_entry_view_details_as_manager_permission.description=Autorise un utilisateur à voir tous les détails (sauf les données financières) d''une initiative pour laquelle il est le responsable.
+permission.portfolio_entry_view_details_as_stakeholder_permission.description=Autorise un utilisateur à voir tous les détails (sauf les données financières) d''une initiative pour laquelle il est intervenant (direct ou d''un portefeuille).
+permission.portfolio_entry_view_details_as_portfolio_manager_permission.description=Autorise un utilisateur à voir tous les détails (sauf les données financières) d''une initiative pour laquelle il est responsable d''au moins un portefeuille.
+permission.portfolio_entry_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails (sauf les données financières) de toute initiative.
+permission.portfolio_entry_edit_as_manager_permission.description=Autorise un utilisateur à mettre à jour tous les détails (sauf les données financières) d''une initiative pour laquelle il est le responsable.
+permission.portfolio_entry_edit_as_portfolio_manager_permission.description=Autorise un utilisateur à mettre à jour tous les détails (sauf les données financières) d''une initiative pour laquelle il est reponsable d''au moins un portefeuille.
+permission.portfolio_entry_view_financial_info_all_permission.description=Autorise un utilisateur à voir toutes les données financières de toute initiative.
+permission.portfolio_entry_view_financial_info_as_manager_permission.description=Autorise un utilisateur à voir toutes les données financières d''une initiative pour laquelle il est le responsable.
+permission.portfolio_entry_view_financial_info_as_stakeholder_permission.description=Autorise un utilisateur à voir toutes les données financières d''une initiative pour laquelle il est intervenant (direct ou d''un portefeuille).
+permission.portfolio_entry_view_financial_info_as_portfolio_manager_permission.description=Autorise un utilisateur à voir toutes les données financières d''une initiative pour laquelle il est responsable d''au moins un portefeuille.
+permission.portfolio_entry_edit_financial_info_all_permission.description=Autorise un utilisateur à mettre à jour toutes les données financières de toute initiative.
+permission.portfolio_entry_edit_financial_info_as_manager_permission.description=Autorise un utilisateur à mettre à jour toutes les données financières d''une initiative pour laquelle il est le responsable.
+permission.portfolio_entry_delete_all_permission.description=Autorise un utilisateur à supprimer toute initiative.
+permission.portfolio_entry_review_request_all_permission.description=Autorise un utilisateur à afficher et traiter toutes les requêtes de jalon de toute initiative.
+permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Autorise un utilisateur à afficher et traiter les requêtes de jalon d''une initiative pour laquelle il est reponsable d''au moins un portefeuille.
+permission.purchase_order_view_all_permission.description=Autorise un utilisateur à voir tous les détails de tous les bons de commande.
+permission.admin_user_administration_permission.description=Autorise un utilisateur à créer, mettre à jour et supprimer tout utilisateur.
+permission.admin_hub_monitoring_permission.description=Autorise un utilisateur à afficher le journal du hub.
+permission.admin_audit_log_permission.description=Autorise un utilisateur à configurer le journal d''audit.
+permission.personal_space_read_permission.description=Autorise un utilisateur à afficher son espace de stockage.
+permission.admin_provisioning_manager_permission.description=Autorise un utilisateur à recevoir les notifications suite à une erreur de provisionnement.
+permission.scm_developer_permission.description=Autorise un utilisateur à utiliser l''outil de gestion de versions.
+permission.scm_admin_permission.description=Autorise un utilisateur à administrer l''outil de gestion de versions.
+permission.jenkins_viewer_permission.description=Autorise un utilisateur à utiliser Jenkins en lecture.
+permission.jenkins_deploy_permission.description=Autorise un utilisateur à créer et déployer des jobs dans Jenkins.
+permission.portfolio_entry_submission_permission.description=Autorise un utilisateur à créer une nouvelle initiative.
+permission.admin_configuration_permission.description=Autorise un utilisateur à modifier la configuration de l''application (préférences systèmes, rôles...).
+permission.admin_plugin_manager_permission.description=Autorise un utilisateur à configurer et gérer les modules tiers.
+permission.admin_kpi_manager_permission.description=Autorise un utilisateur à configurer et gérer les KPIs.
+permission.milestone_approval_permission.description=Autorise un utilisateur à voter pour un jalon dont il est un approbateur.
+permission.milestone_decide_permission.description=Autorise un utilisateur à décider (approuver ou rejeter) du statut final de tout jalon.
+permission.milestone_overview_permission.description=Autorise un utilisateur à afficher l''agenda des jalons.
+permission.search_permission.description=Autorise un utilisateur à voir le lien "Rechercher" et d''accéder à la page. 
+permission.actor_view_all_permission.description=Autorise un utilisateur à voir tous les détails de tout employé.
+permission.actor_view_as_superior_permission.description=Autorise un utilisateur à voir tous les détails d''un employé pour lequel il est un supérieur (direct ou non).
+permission.actor_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails de tout employé.
+permission.org_unit_view_all_permission.description=Autorise un utilisateur à voir tous les détails de toute unité d''organisation.
+permission.org_unit_view_as_responsible_permission.description=Autorise un utilisateur à voir tous les délails d''une unité d''organisation pour lequel il est un responsable (direct ou non).
+permission.org_unit_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails de toute unité d''organisation.
+permission.portfolio_view_details_all_permission.description=Autorise un utilisateur à afficher les détails (sauf les données financières) de tout portefeuille.
+permission.portfolio_view_details_as_manager_permission.description=Autorise un utilisateur à afficher les détails (sauf les données financières) d''un portefeuille pour lequel il est le responsable.
+permission.portfolio_view_details_as_stakeholder_permission.description=Autorise un utilisateur à afficher les détails (sauf les données financières) d''un portefeuille pour lequel il est un intervenant.
+permission.portfolio_view_financial_info_all_permission.description=Autorise un utilisateur à afficher les données financières de tout portefeuille.
+permission.portfolio_view_financial_info_as_manager_permission.description=Autorise un utilisateur à afficher les données financières d''un portefeuille pour lequel il est le responsable.
+permission.portfolio_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails de tout portefeuille.
+permission.portfolio_edit_as_portfolio_manager_permission.description=Autorise un utilisateur à mettre à jour tous les détails d''un portefeuille pour lequel il est le responsable.
+permission.budget_bucket_view_all_permission.description=Autorise un utilisateur à voir tous les détails de toute enveloppe budgétaire.
+permission.budget_bucket_view_as_owner_permission.description=Autorise un utilisateur à voir tous les détails d''une enveloppe budgétaire pour laquelle il est le propriétaire.
+permission.budget_bucket_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails de toute enveloppe budgétaire.
+permission.budget_bucket_edit_as_owner_permission.description=Autorise un utilisateur à mettre à jour tous les détails d''une enveloppe budgétaire pour laquelle il est le propriétaire.
+permission.reporting_view_all_permission.description=Autorise un utilisateur à voir tous les rapports.
+permission.reporting_view_as_viewer_permission.description=Autorise un utilisateur à voir un rapport pour lequel il est autorisé.
+permission.reporting_administration_permission.description=Autorise un utilisateur à gérer tous les rapports et les categéries.
+permission.timesheet_entry_permission.description=Autorise un utilisateur à saisir ses heures de travail.
+permission.timesheet_approval_all_permission.description=Autorise un utilisateur à approuver ou rejeter toute feuille de temps.
+permission.timesheet_approval_as_manager_permission.description=Autorise un utilisateur à approuver ou rejeter une feuille de temps qui a été saisie par tout subordonné (direct ou non).
+permission.timesheet_lock_all_permission.description=Autorise un utilisateur à vérouiller et dévérouiller toute feuille de temps.
+permission.admin.system_owner.description=Autorise un utilisateur de modifier et/ou commander des ressources (licences, performances..) supplémentaires.
+permission.release_view_all_permission.description=Autorise un utilisateur à voir tous les détails de toute release.
+permission.release_view_as_manager_permission.description=Autorise un utilisateur à afficher tous les détails d''une release pour laquelle il est le responsable.
+permission.release_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails de toute release.
+permission.release_edit_as_manager_permission.description=Autorise un utilisateur à mettre à jour tous les détails d''une release pour laquelle il est le responsable.
+permission.api_manager_permission.description=Autorise une utilisateur à créer des clefs et configurer les autorisations pour les API.
+permission.api_tester_permission.description=Autorise un utilisateur d''accéder à la documentation et à l''interface de test des API.
+permission.roadmap_simulator_permission.description=Autorise un utilisateur de simuler les scénarios de capacité dans la feuille de route.
+permission.admin_custom_attribute_permission.description=Autorise un utilisateur à gérer les attributs personnalisés.
+permission.architecture_permission.description=Autorise un utilisateur à utiliser le module d''architecture (DevDock).
+permission.application_block_edit_all_permission.description=Autorise un utilisateur à gérer les blocs applicatifs (DevDock).
+
+#----------------------
+# preferences
+#----------------------
+
+preference.display_list_page_size_preference.description=Nombre de lignes dans une table (par page)
+preference.display_list_page_size_preference.name=Nombre de lignes
+preference.governance_reviewed_requests_display_duration.description=Nombre de jours que sont affichées les requêtes traitées (dans le tableau de bord des requêtes)
+preference.governance_reviewed_requests_display_duration.name=Echéances des requêtes
+preference.financial_use_purchase_order_preference.description=Si les bons de commande sont activés alors le système les utilise pour engager les ordres de travail.
+preference.financial_use_purchase_order_preference.name=Utilisation des bons de commande
+preference.roadmap_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default roadmap view.
+preference.roadmap_filter_storage_preference.name=Stores the JSON configuration of the roadmap filter
+preference.application_logo_preference.description=Logo qui est affiché en haut à gauche de chaque page.<br/>Formats autorisés: gif, jpeg ou png.<br/>Hauteur maximale: 50 px.
+preference.application_logo_preference.name=Logo de l''application
+preference.homepage_logo_preference.description=Logo qui est affiché sur la page d''accueil (si aucun module tiers n''est activé).<br/>Formats autorisés: gif, jpeg ou png.<br/>Largeur maximals: 100px.<br/>Hauteur maximale: 100 px.
+preference.homepage_logo_preference.name=Logo de la page d''accueil
+preference.timesheet_must_approve_preference.description=Si l''approbation des feuilles de temps est activée alors les responsables doivent les approuver manuellement.
+preference.timesheet_must_approve_preference.name=Approbation des feuilles de temps
+preference.timesheet_reminder_limit_preference.description=La limite de rappel est le nombre maximal de feuilles de temps en retard (pour chaque subordonné) qui sont affichées dans le cockpit d''un responsable<br/>Une feuille de temps est en retard si elle n''a pas été soumise et qu''elle correspond à une période passée.
+preference.timesheet_reminder_limit_preference.name=Limite de rappel pour les feuilles de temps en retard
+preference.timesheet_hours_per_day.description=Définis le nombre attendu d''heures pour un jour lors du remplissage d''une feuille de temps.
+preference.timesheet_hours_per_day.name=Nombre d''heures par jour
+preference.requirements_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default requirements view.
+preference.requirements_filter_storage_preference.name=Stores the JSON configuration of the requirements filter
+preference.packages_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default packages view.
+preference.packages_filter_storage_preference.name=Stores the JSON configuration of the packages filter
+preference.package_status_on_going_fulfillment_percentage.name=Pourcentage d''accomplissement du statut "En cours" des livrables
+preference.package_status_on_going_fulfillment_percentage.description=Valeur en pourcent de l''accomplissement d''un livrable lorsque son statut est "En cours".
+preference.api_authz_mode_preference.name=Mode d''authentification des APIs
+preference.api_authz_mode_preference.description=Niveau de sécurité pour l''authentification des APIs.\
+BizDock peut utiliser un mécanisme basé sur la signature des requêtes ou un modèle moins sécurisé basé sur une clef d''application.
+preference.roadmap_capacity_simulator_warning_limit.name=Tolérance de dépassement d''une capacité
+preference.roadmap_capacity_simulator_warning_limit.description=La tolérance (en pourcent) qui est acceptée lors d''un dépassement de capacité quand la table de simulation des capacités est affichée. Dans ce cas, la cellule est orange au lieu de rouge.
+preference.smtp_host_preference.name=Hôte
+preference.smtp_host_preference.description=L''url du serveur SMTP, par exemple smtp.gmail.com
+preference.smtp_port_preference.name=Port
+preference.smtp_port_preference.description=Le port du serveur SMTP, par exemple 587
+preference.smtp_ssl_preference.name=SSL
+preference.smtp_ssl_preference.description=Défini si le serveur SMTP utilise SSL
+preference.smtp_tls_preference.name=TLS
+preference.smtp_tls_preference.description=Défini si le serveur SMTP utilise TLS
+preference.smtp_user_preference.name=Nom d''utilisateur
+preference.smtp_user_preference.description=Le nom d''utilisateur du serveur SMTP
+preference.smtp_password_preference.name=Mot de passe
+preference.smtp_password_preference.description=Le mot de passe du serveur SMTP
+
+#----------------------
+# authentication
+#----------------------
+
+authentication.not_accessible=Votre instance n''est pas accessible, veuillez contacter votre administrateur pour plus d''information.
+
+#----------------------
+# licenses management
+#----------------------
+
+licenses_management.cannot_create_portfolio_entry=Impossible de créer une nouvelle initiative car vous avez consommé toutes les licences disponibles. Veuillez contacter votre administrateur pour plus d''information.
+licenses_management.cannot_create_user=Impossible de créer une nouvel utilisateur car vous avez consommé toutes les licences disponibles. Veuillez contacter votre administrateur pour plus d''information.
+
+########################
+# Objects
+########################
+
+#----------------------
+# userAccount
+#----------------------
+
+object.user_account.uid.label=Nom d''utilisateur
+object.user_account.type.label=Type d''utilisateur
+object.user_account.uid.invalid=Un nom d''utilisateur doit contenir au minimum 2 caractères et au maximum 60 (uniquement des chiffres, des lettres ou @._-).
+object.user_account.uid.auth_not_found=Ce nom d''utilisateur n''a pas pu être trouvé dans le système d''authentification.
+object.user_account.uid.already_exists=Ce nom d''utilisateur est déjà utilisé par un autre compte.
+object.user_account.is_active.label=Actif
+object.user_account.first_name.label=Prénom
+object.user_account.first_name.invalid=Le prénom doit contenir au minimum 2 caractères et au maximum 64.
+object.user_account.last_name.label=Nom
+object.user_account.last_name.invalid=Le nom doit contenir au minimum 2 caractères et au maximum 64.
+object.user_account.full_name.label=Nom
+object.user_account.preferred_language.label=Langue par défaut
+object.user_account.email.label=Email
+object.user_account.email.invalid=L''adresse email saisie n''est pas valable.
+object.user_account.email.already_exists=Cette adresse email est déjà utilisée par un autre compte.
+object.user_account.roles.label=Rôles
+object.user_account.permissions.label=Permissions
+object.user_account.password.label=Mot de passe
+object.user_account.password_confirmation.label=Confirmation du mot de passe
+object.user_account.old_password.label=Ancien mot de passe
+
+#----------------------
+# apiRegistration
+#----------------------
+object.api_registration.name.label=Nom
+object.api_registration.description.label=Description
+object.api_registration.testable.label=Testable
+object.api_registration.authorizations.label=Authorizations
+object.api_registration.secret.key.label=Clef secrète
+object.api_registration.application.key.label=Clef d''application
+object.api_registration.key.protocol.version.label=Version du protocole
+object.api_registration.key.hash.algorithm.label=Algorithme de hashage
+object.api_registration.applicationName.invalid=Un nom d''application doit avoir au moins 3 et ne peut excéder 64 caractères
+object.api_registration.description.invalid=La taille de la description excède le maximum autorisé
+
+#----------------------
+# preference
+#----------------------
+
+object.preference.name.label=Nom
+object.preference.description.label=Description
+object.preference.value.label=Valeur
+
+#----------------------
+# notification
+#----------------------
+
+object.notification.date.label=Date
+object.notification.is_read.label=Lue
+object.notification.message.label=Message
+object.notification.title.label=Sujet
+object.notification.table.empty=Il n''existe aucune notification.
+
+#----------------------
+# message
+#----------------------
+
+object.message.date.label=Date
+object.message.sender.label=Expéditeur
+object.message.message.label=Message
+object.message.message.invalid=La longueur maximale d''un message est de 255 caractères.
+object.message.title.label=Sujet
+object.message.principaluids.label=Destinataires
+object.message.table.empty=Il n''existe aucun message.
+
+#----------------------
+# role
+#----------------------
+
+object.role.selectable.label=Actif
+object.role.name.label=Nom
+object.role.name.already_used=Ce nom est déjà utilisé par un autre rôle
+object.role.description.label=Description
+object.role.permissions.label=Permissions
+
+#----------------------
+# customAttributeDefinition
+#----------------------
+
+object.custom_attribute_definition.uuid.label=ID
+object.custom_attribute_definition.attribute_type.label=Type
+object.custom_attribute_definition.name.label=Nom
+object.custom_attribute_definition.description.label=Description
+object.custom_attribute_definition.configuration.label=Configuration
+object.custom_attribute_definition.is_displayed.label=Affiché
+object.custom_attribute_definition.is_displayed.help=Cocher cette case pour afficher l''attribut personnalisé dans les tables correspondantes.
+object.custom_attribute_definition.table.empty=Il n''existe aucun attribut personnalisé.
+
+#----------------------
+# customAttributeItem
+#----------------------
+
+object.custom_attribute_item.name.label=Nom
+object.custom_attribute_item.description.label=Description
+object.custom_attribute_item.table.empty=Il n''existe aucune option.
+
+#----------------------
+# portfolioEntryType
+#----------------------
+
+object.portfolio_entry_type.name.label=Nom
+object.portfolio_entry_type.description.label=Description
+object.portfolio_entry_type.selectable.label=Sélectionnable
+object.portfolio_entry_type.table.empty=Il n''existe aucun type d''initiative.
+
+#----------------------
+# portfolioEntryDependencyType
+#----------------------
+
+object.portfolio_entry_dependency_type.name.label=Nom
+object.portfolio_entry_dependency_type.contrary.label=Contraire
+object.portfolio_entry_dependency_type.description.label=Description
+object.portfolio_entry_dependency_type.is_active.label=Actif
+object.portfolio_entry_dependency_type.table.empty=Il n''existe aucun type de dépendance.
+
+#----------------------
+# portfolioType
+#----------------------
+
+object.portfolio_type.name.label=Nom
+object.portfolio_type.description.label=Description
+object.portfolio_type.selectable.label=Sélectionnable
+object.portfolio_type.table.empty=Il n''existe aucun type de portefeuille.
+
+#----------------------
+# actorType
+#----------------------
+
+object.actor_type.name.label=Nom
+object.actor_type.description.label=Description
+object.actor_type.ref_id.label=No de réf.
+object.actor_type.ref_id.invalid=Ce numéro de référence est déjà utilisé pour un autre type d''employé.
+object.actor_type.selectable.label=Sélectionnable
+object.actor_type.table.empty=Il n''existe aucun type d''employé.
+
+#----------------------
+# orgUnitType
+#----------------------
+
+object.org_unit_type.name.label=Nom
+object.org_unit_type.description.label=Description
+object.org_unit_type.selectable.label=Sélectionnable
+object.org_unit_type.table.empty=Il n''existe aucun type d''unité d''organisation.
+
+#----------------------
+# competency
+#----------------------
+
+object.competency.name.label=Nom
+object.competency.description.label=Description
+object.competency.is_active.label=Active
+object.competency.is_default.label=Principale
+object.competency.is_default.help=La compétence principale est utilisée lors du calcul de la table des capacités sur la feuille de route (les autres compétences sont ignorées).
+object.competency.table.empty=Il n''existe aucune compétence.
+
+#----------------------
+# stakeholderType
+#----------------------
+
+object.stakeholder_type.name.label=Nom
+object.stakeholder_type.description.label=Description
+object.stakeholder_type.selectable.label=Actif
+object.stakeholder_type.portolio_types.label=Types de portefeuille associés
+object.stakeholder_type.portolio_entry_types.label=Types d''initiative associés
+object.stakeholder_type.table.empty=Il n''existe aucun type d''intervenant.
+
+#----------------------
+# portfolioEntryRiskType
+#----------------------
+
+object.portfolio_entry_risk_type.name.label=Nom
+object.portfolio_entry_risk_type.description.label=Description
+object.portfolio_entry_risk_type.selectable.label=Actif
+object.portfolio_entry_risk_type.table.empty=Il n''existe aucun type de risque.
+
+#----------------------
+# portfolioEntryReportStatusType
+#----------------------
+
+object.portfolio_entry_report_status_type.name.label=Nom
+object.portfolio_entry_report_status_type.description.label=Description
+object.portfolio_entry_report_status_type.selectable.label=Actif
+object.portfolio_entry_report_status_type.css_class.label=Couleur
+object.portfolio_entry_report_status_type.table.empty=Il n''existe aucun type de statut de rapport.
+
+#----------------------
+# portfolioEntryEventType
+#----------------------
+
+object.portfolio_entry_event_type.name.label=Nom
+object.portfolio_entry_event_type.selectable.label=Actif
+object.portfolio_entry_event_type.bootstrap_glyphicon.label=Icône
+object.portfolio_entry_event_type.table.empty=Il n''existe aucun type d''événement.
+
+#----------------------
+# requirementStatus
+#----------------------
+
+object.requirement_status.id.label=Id
+object.requirement_status.type.label=Type
+object.requirement_status.type.NEW.label=Nouveau
+object.requirement_status.type.OPEN.label=Ouvert
+object.requirement_status.type.CLOSED.label=Fermé
+object.requirement_status.type.DEPLOYED.label=En production
+object.requirement_status.name.label=Nom
+object.requirement_status.description.label=Description
+object.requirement_status.table.empty=Il n''existe aucun statut.
+
+#----------------------
+# requirementPriority
+#----------------------
+
+object.requirement_priority.id.label=Id
+object.requirement_priority.is_must.label=Obligatoire
+object.requirement_priority.name.label=Nom
+object.requirement_priority.description.label=Description
+object.requirement_priority.table.empty=Il n''existe aucune priorité.
+
+#----------------------
+# requirementSeverity
+#----------------------
+
+object.requirement_severity.id.label=Id
+object.requirement_severity.is_blocker.label=Bloquant
+object.requirement_severity.name.label=Nom
+object.requirement_severity.description.label=Description
+object.requirement_severity.table.empty=Il n''existe aucune gravité.
+
+#----------------------
+# timesheetActivity
+#----------------------
+
+object.timesheet_activity.type.label=Type
+object.timesheet_activity.name.label=Nom
+object.timesheet_activity.description.label=Description
+object.timesheet_activity.table.empty=Il n''existe aucune activité de feuille de temps.
+
+#----------------------
+# timesheetActivityType
+#----------------------
+
+object.timesheet_activity_type.name.label=Nom
+object.timesheet_activity_type.description.label=Description
+object.timesheet_activity_type.table.empty=Il n''existe aucun type d''activité de feuille de temps.
+
+#----------------------
+# timesheetReport
+#----------------------
+
+object.timesheet_report.actor.label=Employé
+object.timesheet_report.period.label=Période
+object.timesheet_report.period.value=du {0} au {1}
+object.timesheet_report.hours.label=Heures reportées
+object.timesheet_report.status.label=Statut
+object.timesheet_report.status.OPEN.label=Ouverte
+object.timesheet_report.status.SUBMITTED.label=Soumise
+object.timesheet_report.status.APPROVED.label=Approuvée
+object.timesheet_report.status.REJECTED.label=Rejetée
+object.timesheet_report.status.LOCKED.label=Vérouillée
+object.timesheet_report.status.UNLOCKED.label=Dévérouillée
+object.timesheet_report.reminder.help=Envoyer un rappel à l''employé(e) qu''il/elle doit remplir sa feuille de temps.
+object.timesheet_report.comments.label=Commentaire
+object.timesheet_report.table.empty=Il n''existe aucune feuille de temps.
+
+#----------------------
+# portfolioEntry
+#----------------------
+
+object.portfolio_entry.is_condfidential.label=Initiative confidentielle
+object.portfolio_entry.is_condfidential.help=Une initiative confidentielle n''est pas visible par les utilisateurs qui n''y participent pas.
+object.portfolio_entry.is_active.label=Active
+object.portfolio_entry.governance_id.label=No de gouvernance
+object.portfolio_entry.erp_ref_id.label=No ERP
+object.portfolio_entry.creation_date.label=Date de création
+object.portfolio_entry.is_public.label=Publique
+object.portfolio_entry.name.label=Nom
+object.portfolio_entry.description.label=Description
+object.portfolio_entry.type.label=Type
+object.portfolio_entry.manager.label=Responsable de l''initiative
+object.portfolio_entry.sponsoring_unit.label=Client interne
+object.portfolio_entry.delivery_units.label=Fournisseur(s) interne(s)
+object.portfolio_entry.portfolio.label=Portefeuille
+object.portfolio_entry.portfolios.label=Portefeuille(s)
+object.portfolio_entry.life_cycle_process.label=Processus de gouvernance
+object.portfolio_entry.status.label=Statut
+object.portfolio_entry.last_milestone.label=Dernier jalon passé
+object.portfolio_entry.archived.label=Archivé
+object.portfolio_entry.is_concept.label=Concept
+object.portfolio_entry.stakeholder_types.label=Rôle(s) de l''intervenant
+object.portfolio_entry.scope_description.label=Document
+object.portfolio_entry.release.label=Release
+object.portfolio_entry.dependency_type.label=Type
+object.portfolio_entry.dependency.label=Initiative
+object.portfolio_entry.dependency.same.error=L''initiative choisie ne doit pas être la courante.
+object.portfolio_entry.dependency.already.error=L''initiative choisie est déjà une dépendance pour le type sélectionné.
+object.portfolio_entry.dependency.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer cette dépendance?
+object.portfolio_entry.table.empty=Il n''existe aucune initiative.
+
+#----------------------
+# portfolio
+#----------------------
+
+object.portfolio.ref_id.label=Référence
+object.portfolio.name.label=Nom
+object.portfolio.type.label=Type
+object.portfolio.is_active.label=Actif
+object.portfolio.is_active.help=Un portefeuille inactif ne peut pas être assigné à une initiative.
+object.portfolio.stakeholder_types.label=Rôle(s) de l''intervenant
+object.portfolio.manager.label=Responsable
+object.portfolio.table.empty=Il n''existe aucun portefeuille.
+
+#----------------------
+# portfolioEntryReport
+#----------------------
+
+object.portfolio_entry_report.report_date.label=Date du rapport
+object.portfolio_entry_report.author.label=Auteur
+object.portfolio_entry_report.status.label=Statut
+object.portfolio_entry_report.comments.label=Commentaire
+object.portfolio_entry_report.portfolio_entry.label=Initiative
+object.portfolio_entry_report.table.empty=Il n''existe aucun rapport.
+
+#----------------------
+# portfolioEntryRisk
+#----------------------
+
+object.portfolio_entry_risk.is_active.label=Actif
+object.portfolio_entry_risk.is_active.help=Décocher cette case si le risque/incident ne s''est pas produit.
+object.portfolio_entry_risk.name.label=Nom
+object.portfolio_entry_risk.description.label=Description
+object.portfolio_entry_risk.creation_date.label=Date de création
+object.portfolio_entry_risk.target_date.label=Date d''échéance
+object.portfolio_entry_risk.due_date.label=Date d''échéance
+object.portfolio_entry_risk.type.label=Type
+object.portfolio_entry_risk.is_mitigated.label=Modéré
+object.portfolio_entry_risk.mitigation_comment.label=Action de modération
+object.portfolio_entry_risk.owner.label=Propriétaire
+object.portfolio_entry_risk.table.empty=Il n''existe aucun risque/incident.
+
+#----------------------
+# portfolioEntryEvent
+#----------------------
+
+object.portfolio_entry_event.type.label=Type
+object.portfolio_entry_event.creation_date.label=Date de création
+object.portfolio_entry_event.actor.label=Auteur
+object.portfolio_entry_event.message.label=Message
+object.portfolio_entry_event.table.empty=Il n''existe aucun évènement.
+
+#----------------------
+# portfolioEntryPlanningPackage
+#----------------------
+
+object.portfolio_entry_planning_package.date.label=Date
+object.portfolio_entry_planning_package.date.period=du {0} au {1}
+object.portfolio_entry_planning_package.start_date.label=Date de début
+object.portfolio_entry_planning_package.start_date.invalid=La date de début ne peut pas être renseignée seule: pour saisir une simple date, il faut remplir le champ "Date de fin" et laisser "Date de début" vide. Pour une période il suffit de renseigner les deux champs.
+object.portfolio_entry_planning_package.end_date.label=Date de fin
+object.portfolio_entry_planning_package.end_date.invalid=La date de fin doit être ultérieure à la date de début.
+object.portfolio_entry_planning_package.is_important.label=Important
+object.portfolio_entry_planning_package.name.label=Nom
+object.portfolio_entry_planning_package.description.label=Description
+object.portfolio_entry_planning_package.group.label=Groupe
+object.portfolio_entry_planning_package.css_class.label=Couleur
+object.portfolio_entry_planning_package.status.label=Statut
+object.portfolio_entry_planning_package.status.NOT_STARTED.label=Non commencé
+object.portfolio_entry_planning_package.status.ON_GOING.label=En cours
+object.portfolio_entry_planning_package.status.CLOSED.label=Fermé
+object.portfolio_entry_planning_package.allocated_resources_days.label=Jours des ressources allouées
+object.portfolio_entry_planning_package.timesheets_days.label=Jours des feuilles de temps
+object.portfolio_entry_planning_package.table.empty=Il n''existe aucun livrable.
+object.portfolio_entry_planning_package.pattern.table.empty=Il n''existe aucun modèle de livrable.
+
+#----------------------
+# portfolioEntryPlanningPackageGroup
+#----------------------
+
+object.portfolio_entry_planning_package_group.name.label=Nom
+object.portfolio_entry_planning_package_group.description.label=Description
+object.portfolio_entry_planning_package_group.is_active.label=Actif
+object.portfolio_entry_planning_package_group.packages.label=Livrables
+object.portfolio_entry_planning_package_group.table.empty=Il n''existe aucun groupe de livrables
+
+#----------------------
+# stakeholder
+#----------------------
+
+object.stakeholder.actor.label=Nom
+object.stakeholder.role.label=Rôle
+object.stakeholder.role.invalid=Ce rôle existe déjà pour l''employé sélectionné.
+object.stakeholder.portfolio.label=Portefeuille
+object.stakeholder.table.empty=Il n''existe aucun intervenant.
+
+#----------------------
+# lifeCycleProcess
+#----------------------
+
+object.life_cycle_process.short_name.label=Nom court
+object.life_cycle_process.name.label=Nom
+object.life_cycle_process.description.label=Description
+object.life_cycle_process.is_active.label=Actif
+object.life_cycle_process.table.empty=Il n''existe aucun processus de gouvernance.
+
+#----------------------
+# lifeCycleMilestoneInstanceStatusType
+#----------------------
+
+object.life_cycle_milestone_instance_status_type.name.label=Nom
+object.life_cycle_milestone_instance_status_type.description.label=Description
+object.life_cycle_milestone_instance_status_type.selectable.label=Actif
+object.life_cycle_milestone_instance_status_type.is_approved.label=Approuvé
+object.life_cycle_milestone_instance_status_type.table.empty=Il n''existe aucun type de statut.
+
+#----------------------
+# lifeCycleMilestone
+#----------------------
+
+object.life_cycle_milestone.short_name.label=Nom court
+object.life_cycle_milestone.name.label=Nom
+object.life_cycle_milestone.description.label=Description
+object.life_cycle_milestone.is_review_required.label=Revue requise
+object.life_cycle_milestone.default_status_type.label=Type de status par défaut
+object.life_cycle_milestone.is_active.label=Actif
+object.life_cycle_milestone.approvers.label=Approbateurs
+object.life_cycle_milestone.table.empty=Il n''existe aucun jalon.
+
+#----------------------
+# lifeCyclePhase
+#----------------------
+
+object.life_cycle_phase.name.label=Nom
+object.life_cycle_phase.start_milestone.label=Jalon de début
+object.life_cycle_phase.end_milestone.label=Jalon de fin
+object.life_cycle_phase.gap_days_start.label=Décalage en jours pour la date de début
+object.life_cycle_phase.gap_days_end.label=Décalage en jours pour la date de fin
+object.life_cycle_phase.is_roadmap_phase.label=Phase de feuille de route
+object.life_cycle_phase.table.empty=Il n''existe aucune phase.
+
+#----------------------
+# lifeCycleMilestoneInstance
+#----------------------
+
+object.life_cycle_milestone_instance.milestone.label=Jalon
+object.life_cycle_milestone_instance.portfolio_entry.label=Initiative
+object.life_cycle_milestone_instance.due_date.label=Date d''échéance
+object.life_cycle_milestone_instance.status.label=Statut
+object.life_cycle_milestone_instance.status.APPROVED.label=Approuvé
+object.life_cycle_milestone_instance.status.REJECTED.label=Rejeté
+object.life_cycle_milestone_instance.status.UNKNOWN.label=Inconnu
+object.life_cycle_milestone_instance.status.PENDING.label=En attente
+object.life_cycle_milestone_instance.is_passed.label=Passé
+object.life_cycle_milestone_instance.is_approved.label=Approuvé
+object.life_cycle_milestone_instance.proposed_date.label=Date proposée
+object.life_cycle_milestone_instance.passed_date.label=Date de passage
+object.life_cycle_milestone_instance.approver.label=Décideur
+object.life_cycle_milestone_instance.gate_comments.label=Commentaire
+object.life_cycle_milestone_instance.gate_comments.placeholder=Soumettre un commentaire
+object.life_cycle_milestone_instance.document.label=Télécharger le document de description
+object.life_cycle_milestone_instance.table.approval.empty=Il n''existe aucun jalon à approuver.
+
+#----------------------
+# plannedLifeCycleMilestoneInstance
+#----------------------
+
+object.planned_life_cycle_milestone_instance.planned_date.label=Date planifiée
+object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Disponible
+object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Non planifié
+
+#----------------------
+# lifeCycleMilestoneInstanceApprover
+#----------------------
+
+object.life_cycle_milestone_instance_approver.actor.label=Employé
+object.life_cycle_milestone_instance_approver.status.label=Statut
+object.life_cycle_milestone_instance_approver.status.PENDING.label=En attente
+object.life_cycle_milestone_instance_approver.status.APPROVED.label=Approuvé
+object.life_cycle_milestone_instance_approver.status.REJECTED.label=Rejeté
+object.life_cycle_milestone_instance_approver.status.NOT_VOTED.label=Pas voté
+object.life_cycle_milestone_instance_approver.approval_date.label=Date du vote
+object.life_cycle_milestone_instance_approver.comments.label=Commentaires
+object.life_cycle_milestone_instance_approver.comments.placeholder=Soumettre un commentaire
+object.life_cycle_milestone_instance_approver.table.empty=Il n''existe aucun approbateur.
+
+#----------------------
+# processTransitionRequest
+#----------------------
+
+object.process_transition_request.portfolio_entry.label=Initiative
+object.process_transition_request.life_cycle_milestone.label=Jalon
+object.process_transition_request.requester.label=Demandeur
+object.process_transition_request.passed_date.label=Date proposée
+object.process_transition_request.creation_date.label=Date d''envoi
+object.process_transition_request.comments.label=Commentaires
+object.process_transition_request.description_document.label=Document de description du jalon
+object.process_transition_request.description_document.error=Impossible d''ajouter le document
+object.process_transition_request.table.milestone.empty=Il n''existe aucune requête d''approbation de jalon.
+
+#----------------------
+# actor
+#----------------------
+
+object.actor.employee_id.label=No d''employé
+object.actor.title.label=Titre
+object.actor.name.label=Nom
+object.actor.is_active.label=Actif
+object.actor.is_active.help=Un employé inactif ne peut pas être assigné à d''autres entités.
+object.actor.org_unit.label=Unité d''organisation
+object.actor.manager.label=Responsable
+object.actor.uid.label=Identifiant
+object.actor.uid.help=Utilisé comme nom d''utilisateur BizDock
+object.actor.uid.invalid=Cet identifiant est déjà utilisé par un autre employé.
+object.actor.first_name.label=Prénom
+object.actor.last_name.label=Nom
+object.actor.mail.label=Email
+object.actor.mobile_phone.label=Téléphone mobile
+object.actor.fix_phone.label=Téléphone fixe
+object.actor.type.label=Type
+object.actor.erp_ref_id.label=No ERP
+object.actor.table.empty=Il n''existe aucun employé.
+
+#----------------------
+# orgUnit
+#----------------------
+
+object.org_unit.ref_id.label=Référence
+object.org_unit.name.label=Nom
+object.org_unit.type.label=Type
+object.org_unit.is_active.label=Actif
+object.org_unit.is_active.help=Une unité inactive ne peut pas être sélectionnée.
+object.org_unit.manager.label=Responsable
+object.org_unit.can_sponsor.label=Client interne
+object.org_unit.can_sponsor.help=Veuillez cocher cette case si l''unité peut être sélectionnée comme client interne d''une initiative.
+object.org_unit.can_deliver.label=Fournisseur interne
+object.org_unit.can_deliver.help=Veuillez cocher cette case si l''unité peut être sélectionnée comme fournisseur interne d''une initiative.
+object.org_unit.parent.label=Unité parente
+object.org_unit.children.label=Sous-unités
+object.org_unit.actors.label=Membres
+object.org_unit.table.empty=Il n''existe aucune unité d''organisation.
+
+#----------------------
+# attachment
+#----------------------
+
+object.attachment.name.label=Nom
+object.attachment.document.label=Document
+object.attachment.last_update.label=Dernière mise à jour
+object.attachment.empty=Il n''existe aucune pièce jointe.
+
+#----------------------
+# portfolioEntryBudgetLine
+#----------------------
+
+object.portfolio_entry_budget_line.ref_id.label=Référence
+object.portfolio_entry_budget_line.name.label=Nom
+object.portfolio_entry_budget_line.portfolio_entry.label=Initiative
+object.portfolio_entry_budget_line.expenditure_type.label=Type de dépense
+object.portfolio_entry_budget_line.is_opex.label=OPEX
+object.portfolio_entry_budget_line.is_opex.help=Cocher cette case si la ligne de budget est de type OPEX, sinon elle sera de type CAPEX.
+object.portfolio_entry_budget_line.currency.label=Devise
+object.portfolio_entry_budget_line.amount.label=Montant
+object.portfolio_entry_budget_line.budget_bucket.label=Enveloppe budgétaire
+object.portfolio_entry_budget_line.gl_account.label=Compte comptable
+object.portfolio_entry_budget_line.table.empty=Il n''existe aucune ligne de budget.
+
+#----------------------
+# allocatedResource
+#----------------------
+
+object.allocated_resource.type.label=Type
+object.allocated_resource.resource.label=Ressource
+object.allocated_resource.actor.label=Employé
+object.allocated_resource.org_unit.label=Fournisseur interne
+object.allocated_resource.competency.label=Compétence
+object.allocated_resource.portfolio_entry.label=Initiative
+object.allocated_resource.timesheet_activity.label=Activité
+object.allocated_resource.days.label=Jours
+object.allocated_resource.date.label=Date
+object.allocated_resource.date.period=du {0} au {1}
+object.allocated_resource.start_date.label=Date de début
+object.allocated_resource.start_date.invalid=La date de début ne peut pas être renseignée seule: pour saisir une simple date, il faut remplir le champ "Date de fin" et laisser "Date de début" vide. Pour une période il suffit de renseigner les deux champs.
+object.allocated_resource.end_date.label=Date de fin
+object.allocated_resource.end_date.invalid=La date de fin doit être ultérieure à la date de début.
+object.allocated_resource.package.label=Livrable
+object.allocated_resource.follow_package_dates.label=Suivre les dates du livrable
+object.allocated_resource.is_confirmed.label=Confirmé
+object.allocated_resource.actor.table.empty=Il n''existe aucune allocation.
+object.allocated_resource.org_unit.table.empty=Il n''existe aucune allocation.
+object.allocated_resource.competency.table.empty=Il n''existe aucune allocation.
+object.allocated_resource.table.empty=Il n''existe aucune allocation.
+
+#----------------------
+# requirement
+#----------------------
+
+object.requirement.is_defect.label=Anomalie
+object.requirement.external_ref_id.label=ID externe
+object.requirement.external_link.label=Lien externe
+object.requirement.name.label=Nom
+object.requirement.category.label=Catégorie
+object.requirement.status.label=Statut
+object.requirement.priority.label=Priorité
+object.requirement.severity.label=Gravité
+object.requirement.author.label=Auteur
+object.requirement.story_points.label=Points
+object.requirement.initial_estimation.label=Estimation
+object.requirement.is_scoped.label=Approuvé
+object.requirement.iteration.label=Itération
+object.requirement.release.label=Release
+object.requirement.release.help=Une exigence peut être manuellement attachée à toute release qui est associée à l''initiative avec le type "Manuel".
+object.requirement.table.empty=Il n''existe aucun exigence.
+
+#----------------------
+# iteration
+#----------------------
+
+object.iteration.name.label=Nom
+object.iteration.description.label=Description
+object.iteration.is_closed.label=Fermé
+object.iteration.story_points.label=Points
+object.iteration.start_date.label=Date de début
+object.iteration.end_date.label=Date de fin
+object.iteration.source.label=Source
+object.iteration.release.label=Release
+object.iteration.release.help=Une itération peut être manuellement attachée à toute release qui est associée à l''initiative avec le type "Par itération".
+object.iteration.table.empty=Il n''existe aucune itération.
+
+#----------------------
+# release
+#----------------------
+
+object.release.is_active.label=Active
+object.release.name.label=Nom
+object.release.description.label=Description
+object.release.capacity.label=Capacité disponible
+object.release.cut_off_date.label=Date butoir
+object.release.cut_off_date.invalid=La date butoir doit être antérieure à la date de fin des tests (si donnée) et à la date de déploiement.
+object.release.end_tests_date.label=Date de fin des tests
+object.release.end_tests_date.invalid=La date de fin des tests doit être antérieure à la date de déploiement.
+object.release.deployment_date.label=Date de déploiement
+object.release.manager.label=Responsable de la livraison
+object.release.portfolio_entry.unassign.confirmation=Etes-vous sûr(e) de vouloir retirer cette initiative de cette release?
+object.release.portfolio_entry.type.label=Type de relation des exigences
+object.release.portfolio_entry.type.NONE.label=Pas d''exigence
+object.release.portfolio_entry.type.ALL.label=Toutes les exigences
+object.release.portfolio_entry.type.BY_ITERATION.label=Par itération
+object.release.portfolio_entry.type.BY_REQUIREMENT.label=Manuel
+object.release.portfolio_entry.already_assigned=Cette initiative est déjà incluse dans cette release.
+object.release.table.empty=Il n''existe aucune release.
+
+#----------------------
+# workOrder
+#----------------------
+
+object.work_order.name.label=Nom
+object.work_order.description.label=Description
+object.work_order.shared.label=Partagé
+object.work_order.shared.help=Cet ordre de travail peut être engagé avec un bon de commande partagé.
+object.work_order.expenditure_type.label=Type de dépense
+object.work_order.is_opex.label=OPEX
+object.work_order.is_opex.help=Cocher cette case si la ligne de budget est de type OPEX, sinon elle sera de type CAPEX.
+object.work_order.currency.label=Devise
+object.work_order.amount.label=Montant
+object.work_order.amount.invalid=Le montant donné est trop élevé.
+object.work_order.amount_open.label=Montant ouvert
+object.work_order.amount_received.label=Montant dépensé
+object.work_order.amount_received.invalid=Le montant dépensé est trop élevé: il doit être inférieur ou égal au montant de l''ordre de travail.
+object.work_order.start_date.label=Date de début
+object.work_order.due_date.label=Date d''échéance
+object.work_order.due_date.invalid=La date d''échéance doit être ultérieure à la date de début.
+object.work_order.portfolio_entry.label=Initiative
+object.work_order.is_engaged.label=Engagé
+object.work_order.purchase_order_line_item.label=Article
+object.work_order.portfolio_entry_planning_package.label=Livrable
+object.work_order.follow_package_dates.label=Suivre les dates du livrable
+object.work_order.table.empty=Il n''existe aucun ordre de travail.
+
+#----------------------
+# purchaseOrder
+#----------------------
+
+object.purchase_order.ref_id.label=Référence
+object.purchase_order.description.label=Description
+object.purchase_order.is_cancelled.label=Annulé
+object.purchase_order.amount.label=Montant total
+object.purchase_order.line_items.label=Articles
+object.purchase_order.table.empty=Il n''existe aucun bon de commande.
+
+#----------------------
+# purchaseOrderLineItem
+#----------------------
+
+object.purchase_order_line_item.ref_id.label=Référence
+object.purchase_order_line_item.line_id.label=Numéro de ligne
+object.purchase_order_line_item.creation_date.label=Date de création
+object.purchase_order_line_item.due_date.label=Date d''échéance
+object.purchase_order_line_item.quantity.label=Quantité
+object.purchase_order_line_item.quantity_received.label=Quantité reçue
+object.purchase_order_line_item.quantity_billed.label=Quantité facturée
+object.purchase_order_line_item.unit_price.label=Prix unitaire
+object.purchase_order_line_item.amount_billed.label=Montant facturé
+object.purchase_order_line_item.supplier.label=Fournisseur
+object.purchase_order_line_item.material_code.label=Code de matériel
+object.purchase_order_line_item.gl_account.label=Compte comptable
+object.purchase_order_line_item.shipment_type.label=Méthode d''expédition
+object.purchase_order_line_item.requester.label=Demandeur
+object.purchase_order_line_item.description.label=Description
+object.purchase_order_line_item.purchase_order.label=Bon de commande
+object.purchase_order_line_item.is_associated.label=Alloué
+object.purchase_order_line_item.shared.label=Partagé
+object.purchase_order_line_item.expenditure_type.label=Type de dépense
+object.purchase_order_line_item.currency.label=Devise
+object.purchase_order_line_item.amount.label=Montant
+object.purchase_order_line_item.remaining_amount.label=Montant restant
+object.purchase_order_line_item.amount_received.label=Montant dépensé
+object.purchase_order_line_item.amount_open.label=Montant ouvert
+object.purchase_order_line_item.cost_center.label=Centre de coût
+object.purchase_order_line_item.is_cancelled.label=Annulé
+object.purchase_order_line_item.table.empty=Il n''existe aucun article.
+
+#----------------------
+# goodsReceipt
+#----------------------
+
+object.goods_receipt.ref_id.label=Référence
+object.goods_receipt.quantity_received.label=Quantité reçue
+object.goods_receipt.amount_received.label=Montant reçu
+object.goods_receipt.table.empty=Il n''existe aucune entrée de marchandises.
+
+#----------------------
+# budgetBucket
+#----------------------
+
+object.budget_bucket.ref_id.label=Référence
+object.budget_bucket.name.label=Nom
+object.budget_bucket.owner.label=Propriétaire
+object.budget_bucket.is_approved.label=Approuvée
+object.budget_bucket.is_approved.help=Veuillez cocher cette case si l''enveloppe budgétaire est approuvée.
+object.budget_bucket.is_active.label=Active
+object.budget_bucket.is_active.help=Veuillez cocher cette case si l''enveloppe budgétaire est active.
+object.budget_bucket.table.empty=Il n''existe aucune enveloppe budgétaire.
+
+#----------------------
+# budgetBucketLine
+#----------------------
+
+object.budget_bucket_line.ref_id.label=Référence
+object.budget_bucket_line.name.label=Nom
+object.budget_bucket_line.expenditure_type.label=Type de dépense
+object.budget_bucket_line.is_opex.label=OPEX
+object.budget_bucket_line.is_opex.help=Cocher cette case si la ligne de budget est de type OPEX, sinon elle sera de type CAPEX.
+object.budget_bucket_line.currency.label=Devise
+object.budget_bucket_line.amount.label=Montant
+object.budget_bucket_line.table.empty=Il n''existe aucune ligne budgétaire.
+
+#----------------------
+# reporting
+#----------------------
+
+object.reporting.name.label=Nom
+object.reporting.description.label=Description
+object.reporting.is_public.label=Public
+object.reporting.is_public.help=Si non coché alors le rapport n''est pas disponible pour tous les utilisateurs ne figurant pas dans la liste des accès du rapport.
+object.reporting.language.label=Langue
+object.reporting.format.label=Format
+object.reporting.type.label=Type
+object.reporting.is_active.label=Actif
+object.reporting.is_active.help=Si non coché alors le rapport ne peut pas être téléchargé.
+object.reporting.category.label=Catégorie
+object.reporting.principals.label=Utilisateurs qui ont accès au rapport
+object.reporting.table.empty=Il n''existe aucun rapport.
+object.reporting.category.delete.error=Impossible de supprimer une catégorie qui contient un rapport.
+
+#----------------------
+# kpiDefinition
+#----------------------
+
+object.kpi_definition.name.label=Nom
+object.kpi_definition.css_glyphicon.label=Icône
+object.kpi_definition.additional1.label=Label de la valeur complémentaire 1 (en haut à gauche des KPI)
+object.kpi_definition.additional2.label=Label de la valeur complémentaire 2 (en haut à droite des KPI)
+object.kpi_definition.uid.label=UID
+object.kpi_definition.is_active.label=Actif
+object.kpi_definition.is_active.help=Un KPI désactivé n''est jamais affiché ni calculé.
+object.kpi_definition.has_trend.label=Evolution
+object.kpi_definition.has_box_display.label=Affichage étendu
+object.kpi_definition.data_source.label=Source des données
+object.kpi_definition.data_source.PLUGIN.label=Externe
+object.kpi_definition.data_source.BIZDOCK.label=BizDock
+object.kpi_definition.is_real_time.label=Filtrable
+object.kpi_definition.parameters.label=Paramètres
+object.kpi_definition.scheduler_start_time.label=Heure de début
+object.kpi_definition.scheduler_start_time.invalid=La valeur n''est pas correctement formatée. Veuillez utiliser un format selon l''example suivant: 15h45.
+object.kpi_definition.scheduler_frequency.label=Fréquence (minutes)
+object.kpi_definition.scheduler_real_time.label=Temps réel
+object.kpi_definition.scheduler_real_time.help=Si coché, le KPI est toujours affiché en temps réel. Les valeurs sauvées grâce au plannificateur sont utilisées uniquement pour le graphique de tendance.
+
+#----------------------
+# kpiValueDefinition
+#----------------------
+
+object.kpi_value_definition.name.label=Nom
+object.kpi_value_definition.type.label=Type
+object.kpi_value_definition.render_type.label=Type de rendu
+object.kpi_value_definition.render_type.VALUE.label=Valeur
+object.kpi_value_definition.render_type.PATTERN.label=Modèle
+object.kpi_value_definition.render_type.LABEL.label=Label
+object.kpi_value_definition.render_pattern.label=Modèle de rendu
+object.kpi_value_definition.render_pattern.invalid=Le modèle de rendu doit être renseigné si le type de rendu vaut "Modèle".
+
+#----------------------
+# kpiColorRule
+#----------------------
+
+object.kpi_color_rule.rule.label=Règle
+object.kpi_color_rule.color.label=Couleur
+object.kpi_color_rule.render_label.label=Label de rendu
+
+#----------------------
+# pluginDefinition
+#----------------------
+
+object.plugin_definition.name.label=Nom du plugin
+object.plugin_definition.description.label=Description
+object.plugin_definition.is_available.label=Actif
+object.plugin_definition.version.label=Version
+object.plugin_definition.provider.label=Site web du fournisseur du plugin
+object.plugin_definition.multi_instance.label=Instances multiples authorisées
+
+#----------------------
+# pluginConfiguration
+#----------------------
+
+object.plugin_configuration.name.label=Nom de l''instance
+object.plugin_configuration.id.label=ID
+object.plugin_configuration.status.label=Statut
+
+#----------------------
+# pluginConfigurationBlock
+#----------------------
+
+object.plugin_configuration_block.name.label=Nom
+object.plugin_configuration_block.description.label=Description
+
+#----------------------
+# pluginLog
+#----------------------
+
+object.plugin_log.last_update.label=Heure
+object.plugin_log.transaction_id.label=ID de transaction
+object.plugin_log.log_message.label=Message
+object.plugin_log.is_error.label=Erreur
+object.plugin_log.event.label=Type d''évènement
+object.plugin_log.data_type.label=Type de donnée
+object.plugin_log.internal_id.label=ID interne
+object.plugin_log.external_id.label=ID externe
+
+#----------------------
+# applicationBlock
+#----------------------
+
+object.application_block.archived.label=Archivé
+object.application_block.archived.help=Un bloc applicatif archivé n''est pas affiché dans l''arbre.
+object.application_block.archived.confirmation.message=En archivant un bloc applicatif, tous ses enfants seront également archivés. Continuer?
+object.application_block.ref_id.label=Référence
+object.application_block.name.label=Nom
+object.application_block.description.label=Description
+object.application_block.parent.label=Parent
+object.application_block.table.empty=Aucun bloc applicatif
+
+########################
+# Error pages
+########################
+
+#----------------------
+# 400 bad request
+#----------------------
+
+bad_request.error.title=Erreur dans la requête
+bad_request.error.message=Certains paramètres sont manquants ou mal formatés.
+bad_request.error.home.link=Retour à la page d''accueil
+
+#----------------------
+# 403 forbidden
+#----------------------
+
+forbidden.access.title=Accès interdit
+forbidden.access.explanation=Vous avez tenté d''accéder à une ressource protégée, l''opération a été reportée.
+forbidden.access.home.link=Retour à la page d''accueil
+
+#----------------------
+# 404 not found
+#----------------------
+
+notfound.error.title=Cette page n''existe pas
+notfound.error.message=La page que vous avez tentée d''accéder n''existe pas.
+notfound.error.home.link=Retour à la page d''accueil
+
+#----------------------
+# 500 unexpected error
+#----------------------
+
+unexpected.error.title=Erreur innatendue
+unexpected.error.message=Une erreur est survenue, veuillez contacter votre administrateur en lui fournissant le numéro suivant: {0}
+unexpected.error.home.link=Retour à la page d''accueil
+
+########################
+# Common pages
+########################
+
+#----------------------
+# home
+#----------------------
+
+index.noemployee.notif=Votre compte utilisateur BizDock n''est pas associé à un employé. Par conséquent, certaines fonctionnalités ne sont pas disponibles.\
+ Pour créer un employé et l''associer à votre compte, veuillez sélectionner "Employé" dans le menu "Nouveau" (des permissions spécifiques sont nécessaires pour réaliser cette action).
+index.notifications.title=Notifications non lues
+index.initiatives.title=Dernières initiatives créées
+index.initiatives.create=Créer une initiative
+index.profile.title=Votre profil
+index.help.title=Aide
+index.help.bizdock.label=Qu''est-ce que BizDock?
+index.help.intake.label=Créer une initiative
+index.help.roadmap.label=Feuille de route
+index.help.cockpit.label=Cockpit
+index.help.profile.label=Mon profil
+index.quick_links.title=Liens rapides
+index.intake.label=Nouveau
+index.intake.description=Soumettre une idée ou démarrer un nouveau projet.
+index.roadmap.label=Feuille de route
+index.roadmap.description=Découvrir toutes les initiatives et les filtrer selon vos besoins.
+index.cockpit.label=Cockpit
+index.cockpit.description=Gérer ses initiatives.
+index.search.label=Rechercher
+index.search.description=Trouver facilement et rapidement ce que vous désirez.
+
+#----------------
+# messaging
+#----------------
+
+messaging.breadcrumb=<i class="glyphicons glyphicons-conversation"></i>&nbsp;Messagerie
+messaging.list.title=Vos messages
+messaging.list.success.deleted=Le message a été supprimé.
+messaging.send.title=Envoyer un message
+messaging.send.success=Le message "{0}" a été envoyé.
+
+#----------------
+# notifications
+#----------------
+
+notifications.breadcrumb=<i class="glyphicons glyphicons-bell"></i>&nbsp;Vos notifications
+notifications.list.title=Vos notifications
+notifications.action.delete=Supprimer
+notifications.action.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer les notifications sélectionnées?
+notifications.action.delete.successful.message=Les notifications sélectionnées ont été supprimées.
+notifications.list.success.deleted=La notification a été supprimée.
+
+#----------------------
+# my
+#----------------------
+
+#my profile
+my.my_profile.breadcrumb=<i class="glyphicons glyphicons-nameplate"></i>&nbsp;Mon profil
+my.my_profile.sidebar.details=Détails
+my.my_profile.sidebar.update_data=Mettre à jour les données
+my.my_profile.sidebar.update_password=Changer de mot de passe
+my.my_profile.sidebar.update_email=Mettre à jour l''adresse email
+my.my_profile.update_data.header=En mettant à jour vos informations principales depuis BizDock, tous les modules tiers seront modifiés en conséquence.
+my.my_profile.update_data.successful=Vos informations ont été mises à jour. Veuillez noter que la mise à jour peut prendre quelques minutes pour qu''elle soit effective dans tous les modules BizDock.
+my.my_profile.update_password.header=Veuillez saisir votre nouveau mot de passe.
+my.my_profile.update_password.successful=Votre mot de passe a été changé avec succès.
+my.my_profile.update_email.header=Après la mise à jour de votre adresse email, nous vous enverrons un message afin de valider la nouvelle adresse.
+my.my_profile.update_email.successful=Veuillez consulter votre boîte de messagerie et cliquer sur lien que nous venons de vous envoyer.
+my.my_profile.update_email.message.subject=Validation de la mise à jour de l''adresse email
+my.my_profile.update_email.validation.title=Validation de la mise à jour de l''adresse email
+my.my_profile.update_email.validation.success=Votre adresse email a été mise à jour.<br/>Attention: la mise à jour dans les modules tiers peut prendre quelques minutes.
+my.my_profile.update_email.validation.error=La validation a échoué car le code de validation n''est pas valable ou a expiré.
+
+#personal storage
+my.personalstorage.tableview.title=Mon espace de stockage
+my.personalstorage.tableview.breadcrumb=<i class="glyphicons glyphicons-folder-open"></i>&nbsp;&nbsp;Mon espace de stockage
+my.personalstorage.tableview.explanation.text=Les fichiers sont automatiquement supprimés 12 heures après leur dépôt.
+my.personalstorage.file.name.label=Nom du fichier
+my.personalstorage.file.lastmodified.label=Dernière modification
+my.personalstorage.file.size.label=Taille
+
+########################
+# Core pages
+########################
+
+#----------------------
+# intake
+#----------------------
+
+#----------------------
+# roadmap
+#----------------------
+
+#helpers
+core.roadmap.title=Feuille de route
+core.roadmap.planning.title=Agenda
+
+#planning
+core.roadmap.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Agenda
+core.roadmap.planning.nosource=Il n''existe aucune initiative à afficher.
+
+#simulator
+core.roadmap.simulator.capacity_kpis=KPI de capacité
+core.roadmap.simulator.capacity_kpis.budget.main=Budget
+core.roadmap.simulator.capacity_kpis.budget.additional1=CAPEX
+core.roadmap.simulator.capacity_kpis.budget.additional2=OPEX
+core.roadmap.simulator.capacity_kpis.forecast.main=Prévision
+core.roadmap.simulator.capacity_kpis.forecast.additional1=CAPEX
+core.roadmap.simulator.capacity_kpis.forecast.additional2=OPEX
+core.roadmap.simulator.capacity_kpis.allocation.main=Affectations
+core.roadmap.simulator.capacity_kpis.allocation.additional1=Confirmées
+core.roadmap.simulator.capacity_kpis.allocation.additional2=Non confirmées
+core.roadmap.simulator.capacity_forecast=Table de capacité
+core.roadmap.simulator.capacity_forecast.org_units.label=Unités d''organisation
+core.roadmap.simulator.capacity_forecast.competencies.label=Compétences
+core.roadmap.simulator.capacity_forecast.year.label=Année
+core.roadmap.simulator.capacity_forecast.only_confirmed.label=Uniquement les confirmées
+core.roadmap.simulator.capacity_forecast.org_unit.label=Unité d''organisation
+core.roadmap.simulator.capacity_forecast.competency.label=Compétence
+core.roadmap.simulator.capacity_forecast.resource.label=Ressource
+core.roadmap.simulator.capacity_forecast.confirmed_initiatives.label=Initiatives confirmées
+core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label=Initiatives non confirmées
+core.roadmap.simulator.capacity_forecast.activities.label=Activités
+core.roadmap.simulator.capacity_forecast.available.label=Disponible
+core.roadmap.simulator.capacity_forecast.planned.label=Planifié
+
+#----------------------
+# search
+#----------------------
+
+core.search.title=Rechercher
+core.search.header=Vous pouvez utiliser ce formulaire pour rechercher les informations principales, tels que les initiative ou les employés.<br/>Le caractère "*" (étoile) représente un passe-partout, par exemple "*test*" retournera toutes les entrées incluant le mot clé "test" à n''importe quel endroit.<br/><strong>Attention:</strong> Le résultat de votre recherche dépend de vos droits, ainsi les entrées affichées peuvent varier d''un utilisateur à un autre.
+core.search.type.portfolio_entry=Initiative
+core.search.type.actor=Employé
+core.search.type.portfolio=Portefeuille
+core.search.type.org_unit=Unité d''organisation
+core.search.type.purchase_order=Bon de commande
+core.search.type.budget_bucket=Enveloppe budgétaire
+core.search.keywords.placeholder=Veuillez saisir un mot clé
+core.search.submit.error=Veuillez saisir un mot clé
+core.search.submit.noresult=Aucun résultat
+
+#----------------------
+# milestone planning
+#----------------------
+
+#----------------------
+# reporting
+#----------------------
+
+#helpers
+core.reporting.title=Rapports
+core.reporting.category.title=Catégories de rapport
+
+#generate
+core.reporting.generate.request.success=Votre demande de téléchargement d''un rapport a été enregistrée. Vous serez notifié(e) lorsque le rapport sera prêt.
+core.reporting.generate.process.success.title=Un rapport est disponible au téléchargement
+core.reporting.generate.process.success.message=Un nouveau rapport est disponible dans votre espace de stockage personnel et peut être téléchargé.
+core.reporting.generate.process.failure.title=Erreur lors de la création d''un rapport
+core.reporting.generate.process.failure.message=Une erreur s''est produite lors de la création d''un rapport, veuillez réessayer ultérieurement.
+
+#----------------------
+# cockpit
+#----------------------
+
+core.cockpit.title=Cockpit
+core.cockpit.sidebar.initiatives=Initiatives
+core.cockpit.sidebar.portfolios=Portefeuilles
+core.cockpit.sidebar.subordinates=Subordonnés
+core.cockpit.sidebar.subordinates.members=Employés
+core.cockpit.sidebar.subordinates.allocations_overview=Vue d''ensemble des affectations
+core.cockpit.sidebar.subordinates.allocations_details=Détails de affectations
+core.cockpit.sidebar.subordinates.timesheet=Feuilles de temps
+core.cockpit.sidebar.org_units=Unités d''organisation
+core.cockpit.sidebar.budget_buckets=Enveloppes budgétaires
+core.cockpit.sidebar.releases=Releases
+core.cockpit.sidebar.my_allocations=Affectations
+
+#initiatives
+core.cockpit.my_initiatives.as_manager=Mes initiatives en tant que responsable
+core.cockpit.my_initiatives.as_stakeholder=Mes initiatives en tant qu''intervenant
+
+#portfolios
+core.cockpit.my_portfolios.as_manager=Mes portefeuilles en tant que responsable
+core.cockpit.my_portfolios.as_stakeholder=Mes portefeuilles en tant qu''intervenant
+
+#subordinates
+core.cockpit.subordinates.timesheet.late.title=Feuilles de temps en retard
+core.cockpit.subordinates.timesheet.submitted.title=Feuilles de temps à approuver
+core.cockpit.subordinates.allocations.no_data=Il n''y a pas d''affectation à afficher.
+core.cockpit.subordinates.allocations.details.portfolio_entry.title=Affectations d''initiative des subordonnés
+core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm=Confirmer
+core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm.successful=Les affectations ont été confirmées.
+core.cockpit.subordinates.allocations.details.activity.title=Affectations d''activité des subordonnés
+
+#budget buckets
+core.cockpit.my_budget_buckets.as_owner=Mes enveloppes en tant que propriétaire
+core.cockpit.my_budget_buckets.as_responsible=Mes enveloppes en tant que responsable
+
+#----------------------
+# budget bucket
+#----------------------
+
+#helpers
+core.budget_bucket.title=Enveloppe budgétaire
+
+#view
+core.budget_bucket.view.chart.budget=Budget
+core.budget_bucket.view.chart.initiative=Budget des initiatives
+core.budget_bucket.view.details.title=Détails
+core.budget_bucket.view.budget.title=Lignes de budget
+core.budget_bucket.view.initiative.title=Lignes de budget des initiatives
+
+#new
+core.budget_bucket.new.title=Créer une enveloppe budgétaire
+core.budget_bucket.new.breadcrumb=<i class="glyphicons glyphicons-calculator"></i>&nbsp;Créer une enveloppe budgétaire
+core.budget_bucket.new.successful=L''enveloppe budgétaire a été créée.
+
+#edit
+core.budget_bucket.edit.title=Mettre à jour
+core.budget_bucket.edit.successful=L''enveloppe budgétaire a été mise à jour.
+
+#delete
+core.budget_bucket.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer cette enveloppe budgétaire?
+core.budget_bucket.delete.successful=L''enveloppe budgétaire a été supprimée.
+
+#manage line
+core.budget_bucket.line.manage.title=Gérer une ligne
+core.budget_bucket.line.add.successful=La ligne a été créée.
+core.budget_bucket.line.edit.successful=La ligne a été mise à jour.
+
+#delete line
+core.budget_bucket.line.delete.successful=La ligne a été supprimée.
+
+#----------------------
+# timesheet
+#----------------------
+
+#helper
+core.timesheet.title=Feuille de temps
+core.timesheet.error=Une erreur est survenue, veuiller ressayer.
+core.timesheet.empty=La feuille de temps est actuellement vide.
+
+
+#fill
+core.timesheet.fill.empty=La feuille de temps est actuellement vide. Veuillez ajouter une entrée en cliquant sur l''icône <span class="glyphicons glyphicons-plus"></span>
+core.timesheet.fill.has_been_updated.message=Etes-vous sûr(e) de vouloir quitter cette page sans sauver les données que vous avez saisies?
+core.timesheet.fill.add.initiative.label=Initiative
+core.timesheet.fill.add.activity.label=Autre activité
+core.timesheet.fill.no_initiative=Vous n''êtes associé à aucune initiative.
+core.timesheet.fill.no_activity=Aucune activité disponible.
+core.timesheet.fill.select_initiative=Veuillez sélectionner une initiative
+core.timesheet.fill.select_activity_type=- Sélectionner une activité -
+core.timesheet.fill.select_activity=- Sélectionner une tâche -
+core.timesheet.fill.save.successful=La feuille de temps a été sauvée.
+core.timesheet.fill.save.error.bad_data=Impossible de sauver la feuille de temps car elle contient des données incorrectes, veuillez la vérifier.
+core.timesheet.fill.save.error.non_editable=Impossible de sauver une feuille de temps non-éditable.
+core.timesheet.fill.submit.confirmation=Etes-vous sûr(e) que votre feuille de temps soit entièrement replie et que vous souhaitez la soumettre (aucune modification posible après)?
+core.timesheet.fill.submit.successful.with_approval=La feuille de temps a été soumise.
+core.timesheet.fill.submit.successful.without_approval=La feuille de temps a été approuvée.
+core.timesheet.fill.submit.error.not_saved=Vous devez sauver votre feuille de temps avant de la soumettre.
+core.timesheet.fill.submit.error.empty=Veuillez ajouter au moins une entrée avant de soumettre la feuille de temps.
+core.timesheet.fill.submit.notification.title.with_approval= Une feuille de temps a été soumise
+core.timesheet.fill.submit.notification.message.with_approval={0} a soumis une feuille de temps et vous êtes requis pour son approbation.
+
+#fill weekly
+core.timesheet.fill.weekly.copy.title=Copier les entrées de la semaine précédente dans la feuille de temps courante.
+core.timesheet.fill.weekly.copy.successful=Les entrées de la semaine précédente ont été copiées.
+core.timesheet.fill.weekly.copy.info.empty=Il n''existe aucune entrée à copier.
+core.timesheet.fill.weekly.week.label=Semaine du {0} au {1}
+core.timesheet.fill.weekly.table.entry.label=Initiative / Activité
+core.timesheet.fill.weekly.table.subentry.label=Livrable / Tâche
+core.timesheet.fill.weekly.table.total.label=Total
+
+#approve
+core.timesheet.approve.successful=La feuille de temps a été approuvée.
+core.timesheet.approve.notification.title=Votre feuille de temps a été approuvée.
+core.timesheet.approve.notification.message.with_comments=La feuille de temps pour la période du {0} au {1} a été approuvée. Votre responsablle a ajouté le commentaire suivant:<br/><em>{2}</em>
+core.timesheet.approve.notification.message.without_comments=La feuille de temps pour la période du {0} au {1} a été approuvée.
+
+#reject
+core.timesheet.reject.successful=La feuille de temps a été rejetée.
+core.timesheet.reject.notification.title=Votre feuille de temps a été rejetée.
+core.timesheet.reject.notification.message.with_comments=La feuille de temps pour la période du {0} au {1} a été rejetée. Votre responsablle a ajouté le commentaire suivant:<br/><em>{2}</em>
+core.timesheet.reject.notification.message.without_comments=La feuille de temps pour la période du {0} au {1} a été rejetée.
+
+#send reminder
+core.timesheet.send_reminder.successful=Le rappel a été envoyé.
+core.timesheet.send_reminder.notification.title=Vous êtes en retard pour une feuille de temps.
+core.timesheet.send_reminder.notification.message=Veuillez remplir et soumettre la feuille de temps pour la période du {0} au {1}.
+
+#----------------------
+# milestone
+#----------------------
+
+#helper
+core.milestone_approval.title=Soumettre une approbation
+
+#planning
+core.milestone.planning.title=Agenda des jalons
+core.milestone.planning.header=Vous trouvez ci-dessous la liste des jalons <span class="label label-success">Passé</span>,  <span class="label label-danger">Rejeté</span> et <span class="label label-warning">En attente</span> pour les initiatives actives, non-conceptuelles et publiques.<br/>\
+En cliquant sur une date, un bref résumé de tous les jalons (pour cette date) est affiché; et en cliquant sur une puce, un résumé complet du jalon correspondant est affiché.
+core.milestone.planning.today=Aujourd''hui
+core.milestone.planning.modal.approvers=Approbateurs
+
+#approval list
+core.milestone.approval.list.header=Vous trouvez ci-dessous la liste des jalons pour lesquels une approbation est attendue.<br/><i style="color: red;" class="glyphicons glyphicons-bell"></i>&nbsp;signifie que la date d''échéance est dans les 3 prochains jours ou que vous êtes en retard pour soumettre votre avis.
+
+#approval process
+core.milestone.approval.process.alreadyvoted=Vous avez déjà voté pour ce jalon!
+core.milestone.approval.process.alreadydecided=La décision finale a déjà été prise pour ce jalon!
+core.milestone.approval.process.header=Vous êtes requis pour donner votre approbation au jalon d''une initiative.
+core.milestone.approval.process.panel.milestone.title=Détails du jalon
+core.milestone.approval.process.panel.milestone.download.label=Télécharger le document de description du jalon
+core.milestone.approval.process.panel.portfolioentry.title=Détails de l''initiative
+core.milestone.approval.process.panel.approvers.title=Statut de l''approbation
+core.milestone.approval.process.panel.vote.title=Votre avis
+core.milestone.approval.process.panel.vote.successfull=Votre vote a été enregistré!
+core.milestone.approval.process.panel.vote.decisionrequired.notification.title=Décision finale requise
+core.milestone.approval.process.panel.vote.decisionrequired.notification.message=Vous êtes requis pour prendre la décision finale d''un jalon de l''initiative "{0}"
+core.milestone.approval.process.panel.decide.title=Soumettre la décision finale
+core.milestone.approval.process.panel.decide.header=Vous êtes requis pour prendre la décision finale pour un jalon d''une initiative.<br/>Cette action est définitive.
+core.milestone.approval.process.panel.decide.successfull=La décision finale a été enregistrée!
+core.milestone.approval.process.panel.decide.approve.notification.title=Jalon approuvé
+core.milestone.approval.process.panel.decide.approve.notification.message=La décision finale pour un jalon de l''initiative "{0}" a été enregistrée: le jalon est approuvé.
+core.milestone.approval.process.panel.decide.reject.notification.title=Jalon rejeté
+core.milestone.approval.process.panel.decide.reject.notification.message=La décision finale pour un jalon de l''initiative "{0}" a été enregistrée: le jalon est rejeté.
+
+#----------------------
+# process transition request
+#----------------------
+
+#review milestone request list
+core.process_transition_request.review_milestone_request_list.title=Revoir les requêtes de jalon
+core.process_transition_request.review_milestone_request_list.header=Merci de revoir les requêtes ci-dessous afin de démarrer une approbation de jalon
+
+#process milestone request
+core.process_transition_request.process_milestone_request.message.already_processed=La requête d''approbation de jalon a déjà été traitée
+core.process_transition_request.process_milestone_request.title=Accepter ou rejeter une requête d''approbation de jalon
+core.process_transition_request.process_milestone_request.header=Un utilisateur a envoyé une requête d''approbation de jalon<br>Vous pouvez:<ul><li><span class="label label-success"><i class="glyphicons glyphicons-play"></i>&nbsp;Approuver</span> la requête et ainsi démarrer le processus d''approbation</li><li><span class="label label-danger"><i class="glyphicons glyphicons-remove"></i>&nbsp;Rejeter</span> la requête (le demandeur en sera notifié)</li></ul>
+core.process_transition_request.process_milestone_request.panel.request.title=Requête
+core.process_transition_request.process_milestone_request.panel.request.download=Télécharger le document joint
+core.process_transition_request.process_milestone_request.panel.portfolio_entry.title=Détails de l''initiative
+core.process_transition_request.process_milestone_request.panel.form.title=Accepter ou rejeter la requête
+core.process_transition_request.process_milestone_request.panel.form.passed_date.label=Changer la date d''approbation
+core.process_transition_request.process_milestone_request.panel.form.approvers.label=Changer les approbateurs
+core.process_transition_request.process_milestone_request.panel.form.comments.label=Saisir un commentaire
+core.process_transition_request.process_milestone_request.panel.form.reject.successful=La requête est rejetée. Une nouvelle requête est nécessaire pour démarrer le processus d''approbation.
+core.process_transition_request.process_milestone_request.panel.form.reject.notification.title=Requête d''approbation d''un jalon rejetée
+core.process_transition_request.process_milestone_request.panel.form.reject.notification.message=La requête d''approbation d''un jalon pour l''initiative "{0}" a été rejetée.
+core.process_transition_request.process_milestone_request.panel.form.accept.instance.successful=La requête d''approbation d''un jalon a été acceptée. Les approbateurs peuvent maintenant voter.
+core.process_transition_request.process_milestone_request.panel.form.accept.approved.successful=La requête d''approbation d''un jalon a été acceptée et aucun vote n''est requis: le jalon est approuvé.
+core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.title=Requête d''approbation d''un jalon acceptée
+core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.message=La requête d''approbation d''un jalon pour l''initiative "{0}" a été acceptée. Les approbateurs peuvent maintenant voter.
+core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.title=Vote de jalon requis
+core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message=Vous êtes requis pour voter pour l''approbation d''un jalon de l''initiative "{0}"
+core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title=Jalon approuvé
+core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message=La requête d''approbation d''un jalon pour l''initiative "{0}" a été acceptée et aucun vote n''est requis: le jalon est approuvé.
+
+#----------------------
+# portfolio
+#----------------------
+
+#helpers
+core.portfolio.sidebar.overview.label=Vue d''ensemble
+core.portfolio.sidebar.view.label=Détails
+core.portfolio.title=Portefeuille
+
+#overview
+core.portfolio.overview.red_reports=Initiatives avec un statut <span class="label label-danger">Rouge</span>
+core.portfolio.overview.late_milestones=Jalons en retard <i style="color: red;" class="glyphicons glyphicons-bell"></i>
+
+#view
+core.portfolio.view.details.title=Détails
+core.portfolio.view.stakeholders.title=Intervenants du portefeuille
+core.portfolio.view.entries.title=Initiatives du portefeuille
+
+#new
+core.portfolio.new.title=Ajouter un portefeuille
+core.portfolio.new.breadcrumb=<i class="glyphicons glyphicons-sort"></i>&nbsp;Ajouter un portefeuille
+core.portfolio.new.successful=Le portefeuille a été ajouté.
+
+#edit
+core.portfolio.edit.title=Mettre à jour
+core.portfolio.edit.successful=Le portefeuille a été mis à jour.
+
+#delete
+core.portfolio.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer ce portefeuille?
+core.portfolio.delete.successful=Le portefeuille a été supprimé.
+
+#manage stakeholder
+core.portfolio_stakeholder.manage.title=Gérer un intervenant
+core.portfolio_stakeholder.add.successful=L''intervenant a été ajouté.
+core.portfolio_stakeholder.edit.successful=L''intervenant a été mis à jour.
+
+#delete stakeholder
+core.portfolio_stakeholder.delete=L''intervenant a été supprimé.
+
+#----------------------
+# portfolio entry: main
+#----------------------
+
+#helpers
+core.portfolio_entry.sidebar.overview.label=Vue d''ensemble
+core.portfolio_entry.sidebar.view.label=Détails
+core.portfolio_entry.sidebar.financial.label=Finances
+core.portfolio_entry.sidebar.financial.status.label=Statut
+core.portfolio_entry.sidebar.financial.details.label=Détails
+core.portfolio_entry.sidebar.stakeholders.label=Intervenants
+core.portfolio_entry.sidebar.governance.label=Gouvernance
+core.portfolio_entry.sidebar.delivery.label=Livraison
+core.portfolio_entry.sidebar.delivery.requirements.label=Exigences
+core.portfolio_entry.sidebar.delivery.requirements_status.label=Statut des exigences
+core.portfolio_entry.sidebar.delivery.iterations.label=Itérations
+core.portfolio_entry.sidebar.delivery.releases.label=Releases
+core.portfolio_entry.sidebar.planning.label=Planification
+core.portfolio_entry.sidebar.planning.overview.label=Vue d''ensemble
+core.portfolio_entry.sidebar.planning.packages.label=Livrables
+core.portfolio_entry.sidebar.planning.resources.label=Ressources
+core.portfolio_entry.sidebar.status_reporting.label=Rapports d''état
+core.portfolio_entry.sidebar.status_reporting.registers.label=Registres d''état
+core.portfolio_entry.sidebar.status_reporting.events.label=Evènements
+core.portfolio_entry.sidebar.pluginconfig.label=Intégration
+core.portfolio_entry.breadcrump.edit=Mettre à jour
+core.portfolio_entry.breadcrump.manage=Gérer
+core.portfolio_entry.breadcrump.view=Détails
+core.portfolio_entry.breadcrump.new=Nouveau
+
+#create
+core.portfolio_entry.create.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Soumettre une nouvelle initiative
+core.portfolio_entry.create.title=Soumettre une nouvelle initiative
+core.portfolio_entry.create.step2.title=Informations complémentaires
+core.portfolio_entry.create.success.message=Votre initiative a été soumise
+core.portfolio_entry.create.notification.title=Nouvelle initiative
+core.portfolio_entry.create.notification.message=Une nouvelle initiative a été ajoutée à votre portefeuille {0}
+core.portfolio_entry.create.notification.manager.message=Une nouvelle initiative vous a été assignée.
+core.portfolio_entry.create.help.portfolioentrytype.title=Définitions des types d''initiative
+core.portfolio_entry.create.help.lifecycleprocess.title=Définitions des processus de gouvernance
+core.portfolio_entry.create.help.extendedattributes.title=Définitions des attributs personnalisés
+
+#overview
+core.portfolio_entry.overview.milestones_trend.panel.title=Tendance des jalons
+core.portfolio_entry.overview.milestones_trend.panel.empty=Le tableau de tendance des jalons est vide.
+core.portfolio_entry.overview.milestones_trend.panel.milestone.label=Jalon
+core.portfolio_entry.overview.milestones_trend.panel.budget.label=Budget
+core.portfolio_entry.overview.milestones_trend.panel.resources.label=Ressources
+core.portfolio_entry.overview.milestones_trend.panel.resources.value.label={0} jour(s)
+core.portfolio_entry.overview.status.panel.title=Dernier rapport d''état
+core.portfolio_entry.overview.milestones.panel.title=Prochains jalons
+
+#view
+core.portfolio_entry.view.details.title=Détails
+core.portfolio_entry.view.extended.title=Attribut(s) personnalisé(s)
+core.portfolio_entry.view.portfolios.title=Portefeuille(s)
+core.portfolio_entry.view.dependencies.title=Dépendances
+core.portfolio_entry.view.attachments.title=Documents
+
+#edit
+core.portfolio_entry.edit.successful=L''initiative a été mise à jour.
+
+#plugin config
+core.portfolio_entry.plugin_config.title=Mettre à jour la configuration des plugins
+core.portfolio_entry.plugin_config.empty=Il n''y a pas de plugin à configurer.
+core.portfolio_entry.plugin_config.not_started=Le plugin n''est pas démarré
+core.portfolio_entry.plugin_config.registered_plugins.title=Plugins enregistrés
+core.portfolio_entry.plugin_config.registered_plugins.empty=Aucun plugin enregistré.
+core.portfolio_entry.plugin_config.available_plugins.title=Plugins disponibles
+core.portfolio_entry.plugin_config.available_plugins.empty=Aucun plugin disponible.
+
+#edit portfolios
+core.portfolio_entry.editportfolios.title=Mettre à jour les portefeuilles
+core.portfolio_entry.editportfolios.successful=Les portefeuilles ont été mis à jour.
+
+#delete
+core.portfolio_entry.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer cette initiative?
+core.portfolio_entry.delete.successful=L''initiative a été supprimée.
+
+#new attachment
+core.portfolio_entry.attachment.new.title=Nouveau document
+core.portfolio_entry.attachment.new.successful=Le document a été joint.
+
+#delete attachment
+core.portfolio_entry.attachment.delete=Le document a été supprimé.
+
+#dependency
+core.portfolio_entry.dependency.add.title=Ajouter une dépendance
+core.portfolio_entry.dependency.add.successful=La dépendance a été ajoutée.
+core.portfolio_entry.dependency.delete=La dépendance a été supprimée.
+
+#----------------------
+# portfolio entry: financial
+#----------------------
+
+#view (status, details)
+core.portfolio_entry_financial.view.budget.title=Budget
+core.portfolio_entry_financial.view.budget.panel.budget.title=Lignes de budget
+core.portfolio_entry_financial.view.forecast.title=Prévision
+core.portfolio_entry_financial.view.forecast.panel.cost_to_complete.title=Ordres de travail non-engagés
+core.portfolio_entry_financial.view.forecast.panel.engaged_work_order.title=Ordres de travail engagés
+core.portfolio_entry_financial.view.forecast.panel.engaged_purchase_order.title=Lignes de bons de commande
+core.portfolio_entry_financial.view.status.table.budget.label=Budget
+core.portfolio_entry_financial.view.status.table.cost_to_complete.label=Coût d''achèvement
+core.portfolio_entry_financial.view.status.table.engaged.label=Engagé
+core.portfolio_entry_financial.view.status.table.forecast.label=Prévision
+core.portfolio_entry_financial.view.status.table.deviation.label=Déviation
+core.portfolio_entry_financial.view.status.table.status.label=Statut
+
+#view budget line
+core.portfolio_entry_financial.budget_line.view.title=Détails de la ligne de budget
+core.portfolio_entry_financial.budget_line.view.extended.title=Attribut(s) personnalisé(s)
+
+#manage budget line
+core.portfolio_entry_financial.budget_line.manage.title=Gérer une ligne de budget
+core.portfolio_entry_financial.budget_line.add.successful=La ligne de budget a été créée.
+core.portfolio_entry_financial.budget_line.edit.successful=La ligne de budget a été mise à jour.
+
+#delete budget line
+core.portfolio_entry_financial.budget_line.delete.successful=La ligne de budget a été supprimée.
+
+#view work order
+core.portfolio_entry_financial.work_order.view.details.title=Détails de l''ordre de travail
+core.portfolio_entry_financial.work_order.view.extended.title=Attribut(s) personnalisé(s)
+core.portfolio_entry_financial.work_order.view.lineitem.title=Bon de commande
+
+#manage work order
+core.portfolio_entry_financial.work_order.manage.title=Gérer un ordre de travail
+core.portfolio_entry_financial.work_order.add.successful=L''ordre de travail a été créé.
+core.portfolio_entry_financial.work_order.edit.successful=L''ordre de travail a été mis à jour.
+
+#delete work order
+core.portfolio_entry_financial.work_order.deleted.successful=L''ordre de travail a été supprimé.
+
+#engage a work order
+core.portfolio_entry_financial.work_order.engage.breadcrump=Engager
+core.portfolio_entry_financial.work_order.engage.step1.amount.label=Montant à engager
+core.portfolio_entry_financial.work_order.engage.successful=L''ordre de travail a été engagé.
+
+#select purchase order line item for work order
+core.portfolio_entry_financial.work_order.line_item_select.breadcrump=Lier un bon de commande
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.label=Saisir la référence exacte
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.help=ATTENTION: Le bon de commande doit contenir au moins une ligne du même type de dépense \
+(CAPEX ou OPEX) et de la même devise que ceux de l''ordre de travail. Dans le cas contraire il ne sera pas trouvé.
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.error.notfound=Impossible de trouver le bon de commande, veuillez vérifier la référence.
+core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.error.noitem=Il n''existe aucun article disponible pour le bon de commande sélectionné.
+core.portfolio_entry_financial.work_order.line_item_select.step2.header=Veuillez sélectionner un article du bon de commande en cliquant sur <span class="glyphicons glyphicons-lock"></span>
+core.portfolio_entry_financial.work_order.line_item_select.step2.selectedpurchaseorder=Le bon de commande sélectionné est <strong>{0}</strong>
+core.portfolio_entry_financial.work_order.line_item_select.step2.lineitems.title=Sélectionner un article
+core.portfolio_entry_financial.work_order.line_item_select.step3.header=Veuillez saisir le montant que vous souhaitez allouer à l''ordre de travail.
+core.portfolio_entry_financial.work_order.line_item_select.step3.selectedlineitem=L''article sélectionné est <strong>{0}</strong> du bon de commande <strong>{1}</strong>
+core.portfolio_entry_financial.work_order.line_item_select.step3.maximumamount=Le montant maximum pouvant être alloué est <strong>{0}</strong>
+core.portfolio_entry_financial.work_order.line_item_select.step3.amount.label=Montant
+core.portfolio_entry_financial.work_order.line_item_select.step3.amount.error.toobig=Le montant renseigné est trop élevé.
+core.portfolio_entry_financial.work_order.line_item_select.successful=Le bon de commande a été lié à l''ordre de travail.
+
+#report the balance of a work order
+core.portfolio_entry_financial.work_order.report_balance.breadcrump=Reporter le solde
+core.portfolio_entry_financial.work_order.report_balance.header=Il existe un solde de {0} dans l''ordre de travail. Souhaitez-vous reporter ce montant dans un nouvel ordre de travail?
+core.portfolio_entry_financial.work_order.report_balance.yes=Oui, créer un ordre de travail
+core.portfolio_entry_financial.work_order.report_balance.no=Non, cet ordre de travail est entièrement engagé.
+core.portfolio_entry_financial.work_order.report_balance.successful=Le solde de l''ordre de travail a été reporté.
+
+#----------------------
+# portfolio entry: stakeholder
+#----------------------
+
+#list
+core.portfolio_entry_stakeholder.list.manager=Responsable de l''initiative: {0}
+core.portfolio_entry_stakeholder.list.title=Intervenants directs
+core.portfolio_entry_stakeholder.list.portfolios.title=Intervenants provenant des portefeuilles
+
+#manage
+core.portfolio_entry_stakeholder.add.successful=L''intervenant a été ajouté.
+core.portfolio_entry_stakeholder.edit.successful=L''intervenant a été mis à jour.
+
+#delete
+core.portfolio_entry_stakeholder.delete=L''intervenant a été supprimé.
+
+#----------------------
+# portfolio entry: governance
+#----------------------
+
+#view
+core.portfolio_entry_governance.view.title=Processus de gouvernance: {0}
+
+#view milestone
+core.portfolio_entry_governance.milestone.view.status.approved=Etape approuvée
+core.portfolio_entry_governance.milestone.view.status.rejected=Etape rejetée
+core.portfolio_entry_governance.milestone.view.status.pending=Etape en attente
+core.portfolio_entry_governance.milestone.view.empty=Il n''existe aucun détail pour ce jalon.
+core.portfolio_entry_governance.milestone.view.panel.details.title=Détails
+core.portfolio_entry_governance.milestone.view.panel.approvers.title=Approbateurs
+core.portfolio_entry_governance.milestone.view.panel.budget.title=Etat du budget au {0}
+core.portfolio_entry_governance.milestone.view.panel.resources.title=Etat des ressources au {0}
+
+#request milestone
+core.portfolio_entry_governance.milestone.request.processstatus.label=Statut du processus de gouvernance
+core.portfolio_entry_governance.milestone.request.approval.successful=La requête d''approbation de jalon a été créée
+core.portfolio_entry_governance.milestone.request.approval.notification.title=Nouvelle requête d''approbation de jalon
+core.portfolio_entry_governance.milestone.request.approval.notification.message=Une requête d''approbation de jalon a été soumise pour l''initiative "{0}". Veuillez suivre le lien pour traiter la requête.
+core.portfolio_entry_governance.milestone.request.instance.successful=Le jalon a été créé. Les approbateurs peuvent maintenant voter.
+core.portfolio_entry_governance.milestone.request.voterequired.notification.title=Vote de jalon requis
+core.portfolio_entry_governance.milestone.request.voterequired.notification.message=Vous êtes requis pour voter à l''approbation d''un jalon de l''initiative {0}
+core.portfolio_entry_governance.milestone.request.approved.successful=Le jalon a été créé et est approuvé.
+core.portfolio_entry_governance.milestone.request.approved.notification.title=Jalon approuvé
+core.portfolio_entry_governance.milestone.request.approved.notification.message=Un jalon pour l''initiative "{0}" a été approuvé.
+
+#edit planning
+core.portfolio_entry_governance.planning.edit.title=Mettre à jour l''agenda
+core.portfolio_entry_governance.planning.edit.successful=L''agenda a été mis à jour.
+
+#change process
+core.portfolio_entry_governance.process.change.breadcrump=Changer le processus de gouvernance
+core.portfolio_entry_governance.process.change.header=<span class="glyphicons glyphicons-circle-info"></span> Information importante: le changement du processus de gouvernance réinitialisera TOUS les jalons, l''agenda ainsi que le budget.<br/>L''initiative sera également changée en "Concept".
+core.portfolio_entry_governance.process.change.confirm=Etes-vous sûr(e) de vouloir changer de processus de gouvernance?
+core.portfolio_entry_governance.process.change.successful=Le processus de gouvernance a été changé.
+core.portfolio_entry_governance.process.change.notification.title=Nouveau processus de gouvernance
+core.portfolio_entry_governance.process.change.notification.message=Le processus de gouvernance de l''initiative "{0}" a été changé en "{1}".
+
+#----------------------
+# portfolio entry: delivery
+#----------------------
+
+#requirements status
+core.portfolio_entry_delivery.requirement.status.priority.title=Répartition par priorité des besoins
+core.portfolio_entry_delivery.requirement.status.priority.must.false.label=Optionnel
+core.portfolio_entry_delivery.requirement.status.priority.must.true.label=Obligatoire
+core.portfolio_entry_delivery.requirement.status.severity.title=Répartition par gravité des anomalies
+core.portfolio_entry_delivery.requirement.status.severity.blocker.false.label=Non-bloquant
+core.portfolio_entry_delivery.requirement.status.severity.blocker.true.label=Bloquant
+
+#view requirement
+core.portfolio_entry_delivery.requirement.view.details.title=Détails
+core.portfolio_entry_delivery.requirement.view.description.title=Description
+
+#edit requirement
+core.portfolio_entry_delivery.requirement.edit.successful=L''exigence a été mise à jour.
+
+#list of iterations
+core.portfolio_entry_delivery.iterations.details.title=Itérations
+core.portfolio_entry_delivery.iterations.burndown.title=Graphique burndown
+core.portfolio_entry_delivery.iterations.burndown.start.label=Début
+core.portfolio_entry_delivery.iterations.burndown.end_of_iteration.label=Fin - "{0}"
+core.portfolio_entry_delivery.iterations.burndown.planned.label=Prévu
+core.portfolio_entry_delivery.iterations.burndown.real.label=Réel
+
+#view iteration
+core.portfolio_entry_delivery.iteration.view.details.title=Détails
+
+#edit iteration
+core.portfolio_entry_delivery.iteration.edit.title=Mettre à jour une itération
+core.portfolio_entry_delivery.iteration.edit.successful=L''itération a été mise à jour.
+
+#list of assigned releases
+core.portfolio_entry_delivery.releases.title=Releases associées à l''initiative
+
+#assign a release
+core.portfolio_entry_delivery.release_assign.title=Inclure dans une release
+core.portfolio_entry_delivery.release_assign.successful=L''initiative a été incluse dans la release.
+
+#unassign a release
+core.portfolio_entry_delivery.release_unassign.successful=L''initiative a été exclue de la release.
+
+#----------------------
+# portfolio entry: planning
+#----------------------
+
+#overview
+core.portfolio_entry_planning.overview.no_planning=La planification est vide.
+core.portfolio_entry_planning.overview.phase.label=Phase
+core.portfolio_entry_planning.overview.milestone.label=Jalon
+core.portfolio_entry_planning.overview.package.label=Livrable
+core.portfolio_entry_planning.overview.release.label=Release
+core.portfolio_entry_planning.overview.iteration.label=Itération
+
+#list of packages
+core.portfolio_entry_planning.packages.title=Livrables
+core.portfolio_entry_planning.packages.new.package=Livrable
+core.portfolio_entry_planning.packages.new.groups=Groupes de livrables
+core.portfolio_entry_planning.packages.nogroup=Aucun groupe disponible
+core.portfolio_entry_planning.packages.gantt.lastupdate=Dernière mise à jour
+
+#add groups
+core.portfolio_entry_planning.package.groups.title=Ajouter des groupes de livrables
+core.portfolio_entry_planning.package.groups.selectagroup=Veuillez sélectionner au moins 1 groupe.
+core.portfolio_entry_planning.package.groups.successful=Les livrables des groupes sélectionnés ont été ajoutés.
+
+#view package
+core.portfolio_entry_planning.package.view.title=Détails
+
+#manage package
+core.portfolio_entry_planning.package.manage.title=Gérer un livrable
+core.portfolio_entry_planning.package.add.successful=Le livrable a été créé.
+core.portfolio_entry_planning.package.edit.successful=Le livrable a été mis à jour.
+
+#delete package
+core.portfolio_entry_planning.package.delete.successful=Le livrable a été supprimé.
+
+#list of resources
+core.portfolio_entry_planning.resources.actor.title=Employés affectés
+core.portfolio_entry_planning.resources.general.title=Requêtes d''affectation
+core.portfolio_entry_planning.resources.new.org_unit=Fournisseur interne
+core.portfolio_entry_planning.resources.new.competency=Compétence
+core.portfolio_entry_planning.resources.no_competency=Aucune compétence disponible
+
+#manage allocated actor
+core.portfolio_entry_planning.allocated_actor.manage.noactor=Vous devez ajouter au moins un intervenant afin de pouvoir affecter un employé à l''initiative.
+core.portfolio_entry_planning.allocated_actor.manage.title=Gérer un employé affecté
+core.portfolio_entry_planning.allocated_actor.add.successful=L''employé a été affecté.
+core.portfolio_entry_planning.allocated_actor.edit.successful=L''employé affecté a été mis à jour.
+core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title=Une affectation a été modifiée
+core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message=Une affectation pour l''employé "{0}" a été modifiée, veuillez vérifier son contenu en cliquant ici.
+
+#delete allocated actor
+core.portfolio_entry_planning.allocated_actor.delete.successful=L''employé affecté a été supprimé.
+
+#manage allocated org unit
+core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=Vous devez ajouter au moins un fournisseur interne à l''initiative afin de pouvoir l''affecter.
+core.portfolio_entry_planning.allocated_org_unit.manage.title=Gérer un fournisseur interne affecté
+core.portfolio_entry_planning.allocated_org_unit.add.successful=Le fournisseur interne a été affecté.
+core.portfolio_entry_planning.allocated_org_unit.edit.successful=Le fournisseur interne affecté a été mis à jour.
+
+#delete allocated org unit
+core.portfolio_entry_planning.allocated_org_unit.delete.successful=Le fournisseur interne affecté a été supprimé.
+
+#manage allocated competency
+core.portfolio_entry_planning.allocated_competency.manage.title=Gérer une compétence affectée
+core.portfolio_entry_planning.allocated_competency.add.successful=La compétence a été affectée.
+core.portfolio_entry_planning.allocated_competency.edit.successful=La compétence affectée a été mise à jour.
+
+#delete allocated competency
+core.portfolio_entry_planning.allocated_competency.delete.successful=La compétence affectée a été supprimée.
+
+#reallocate a resource to an actor
+core.portfolio_entry_planning.reallocate_org_unit.title=Affecter un employé de {0}
+core.portfolio_entry_planning.reallocate_competency.title=Affecter un employé avec la compétence "{0}"
+core.portfolio_entry_planning.reallocate_resource.successful=L''employé a été affecté.
+core.portfolio_entry_planning.reallocate.report_balance.title=Reporter le solde de jours
+core.portfolio_entry_planning.reallocate.report_balance.header=Il existe un solde de {0} jours dans l''affectation initiale. Souhaitez-vous reporter cette valeur dans une nouvelle affectation?
+core.portfolio_entry_planning.reallocate.report_balance.yes=Oui, créer une nouvelle affectation
+core.portfolio_entry_planning.reallocate.report_balance.no=Non, cette assignation est complétée
+core.portfolio_entry_planning.reallocate.report_balance.successful=Le solde de jours de l''affectation a été reporté.
+
+#----------------------
+# portfolio entry: status reporting
+#----------------------
+
+#registers
+core.portfolio_entry_status_reporting.registers.report.title=Rapports
+core.portfolio_entry_status_reporting.registers.risks_and_issues.title=Risques & Incidents
+core.portfolio_entry_status_reporting.registers.risks_and_issues.risks.title=Registre des risques
+core.portfolio_entry_status_reporting.registers.risks_and_issues.issues.title=Registre des incidents
+
+#view report
+core.portfolio_entry_status_reporting.report.view.title=Rapport du {0}
+core.portfolio_entry_status_reporting.report.view.details.title=Détails
+
+#manage report
+core.portfolio_entry_status_reporting.report.manage.title=Gérer un rapport
+core.portfolio_entry_status_reporting.report.add.successful=Le rapport a été créé.
+core.portfolio_entry_status_reporting.report.edit.successful=Le rapport a été mis à jour.
+core.portfolio_entry_status_reporting.report.delete.successful=Le rapport a été supprimé.
+
+#view risk/issue
+core.portfolio_entry_status_reporting.risk.view.title=Risque
+core.portfolio_entry_status_reporting.issue.view.title=Incident
+
+#manage risk/issue
+core.portfolio_entry_status_reporting.risk.manage.title=Gérer un risque
+core.portfolio_entry_status_reporting.issue.manage.title=Gérer un incident
+core.portfolio_entry_status_reporting.risk.add.successful=Le risque a été ajouté.
+core.portfolio_entry_status_reporting.issue.add.successful=L''incident a été ajouté.
+core.portfolio_entry_status_reporting.risk.edit.successful=Le risque a été mis à jour.
+core.portfolio_entry_status_reporting.issue.edit.successful=L''incident a été mis à jour.
+
+#manage event
+core.portfolio_entry_status_reporting.event.manage.title=Gérer un évènement
+core.portfolio_entry_status_reporting.event.add.successful=L''évènement a été créé.
+core.portfolio_entry_status_reporting.event.edit.successful=L''évènement a été mis à jour.
+
+#delete event
+core.portfolio_entry_status_reporting.event.delete.successful=L''évènement a été supprimé.
+
+#----------------------
+# purchase order
+#----------------------
+
+#helpers
+core.purchase_order.title=Bon de commande
+core.purchase_order.breadcrumb=<i class="glyphicons glyphicons-shopping-cart"></i>&nbsp;Bon de commande "{0}"
+
+#view
+core.purchase_order.view.details.title=Détails du bon de commande
+core.purchase_order.view.lineitems.title=Articles
+
+#view line item
+core.purchase_order.line_item.view.details.title=Détails de l''article du bon de commande
+core.purchase_order.line_item.view.workorders.title=Ordres de travail engagés par cet article
+core.purchase_order.line_item.view.goodsreceipts.title=Entrées de marchandises
+
+#edit work order
+core.purchase_order.line_item.work_order.edit.breadcrump=Mettre à jour le montant engagé d''un ordre de travail
+core.purchase_order.line_item.work_order.edit.maximumamount=Le montant maximum qui peut être engagé est <strong>{0}</strong>
+core.purchase_order.line_item.work_order.edit.successful=Le montant engagé a été mis à jour.
+
+#----------------------
+# actor
+#----------------------
+
+#helpers
+core.actor.sidebar.overview=Détails
+core.actor.sidebar.portfolio_entries=Initiatives
+core.actor.sidebar.portfolios=Portefeuilles
+core.actor.sidebar.allocation=Affectation
+core.actor.sidebar.allocation.overview=Vue d''ensemble
+core.actor.sidebar.allocation.details=Détails
+core.actor.sidebar.allocation.capacity=Capacité
+core.actor.sidebar.timesheet=Feuille de temps
+core.actor.breadcrumb.edit=Mettre à jour
+
+#view
+core.actor.view.details.title=Détails
+core.actor.view.competencies.title=Compétences
+core.actor.view.org_unit_actors.title=Employés de la même unité d''organisation
+
+#new
+core.actor.new.title=Ajouter un employé
+core.actor.new.breadcrumb=<i class="glyphicons glyphicons-parents"></i>&nbsp;Ajouter un employé
+core.actor.new.successful=L''employé a été créé.
+
+#edit
+core.actor.edit.successful=L''employé a été mis à jour.
+
+#delete
+core.actor.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer cet employé?
+core.actor.delete.successful=L''employé a été supprimé.
+
+#edit competencies
+core.actor.competencies.no_competency=Aucune compétence disponible
+core.actor.competencies.edit.breadcrumb=Mettre à jour les compétences
+core.actor.competencies.edit.successful=Les compétences ont été mises à jour.
+core.actor.default_competency.edit.header=Veuillez sélectionner la compétence principale parmis les compétences de l''employé.
+
+#allocations
+core.actor.allocations.no_data=Il n''y a pas d''affectation à afficher.
+
+#allocation details
+core.actor.allocation.details.portfolio_entry.title=Affectations - Initiatives
+core.actor.allocation.details.activity.title=Affectations - Activités
+
+#manage allocated activity
+core.actor.allocated_activity.manage.breadcrumb=Géré une activité affectée
+core.actor.allocated_activity.add.successful=L''activité a été affectée.
+core.actor.allocated_activity.edit.successful=L''activité affectée a été mise à jour.
+core.actor.allocated_activity.delete.successful=L''activité affectée a été supprimée.
+
+#capacity
+core.actor.capacity.footer=Les valeurs sont exprimées en jours homme.
+core.actor.capacity.has_been_updated.message=Etes-vous sûr(e) de vouloir quitter cette page sans sauver les données que vous avez saisies?
+core.actor.capacity.save.successful=Les capacités ont été sauvées.
+
+#----------------------
+# org unit
+#----------------------
+
+#helpers
+core.org_unit.sidebar.overview=Détails
+core.org_unit.sidebar.portfolio_entries=Initiatives
+core.org_unit.sidebar.allocation=Affectation
+core.org_unit.sidebar.allocation.overview=Vue d''ensemble
+core.org_unit.sidebar.allocation.details=Détails
+
+#view
+core.org_unit.view.details.title=Détails
+
+#new
+core.org_unit.new.title=Ajouter une unité d''organisation
+core.org_unit.new.breadcrumb=<i class="glyphicons glyphicons-building"></i>&nbsp;Ajouter une unité d''organisation
+core.org_unit.new.successful=L''unité d''organisation a été créée.
+
+#edit
+core.org_unit.edit.title=Mettre à jour
+core.org_unit.edit.successful=L''unité d''organisation a été mise à jour.
+
+#delete
+core.org_unit.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer cette unité d''organisation?
+core.org_unit.delete.successful=L''unité d''organisation a été supprimée.
+
+#allocations
+core.org_unit.allocations.no_data=Il n''y a pas d''affectation à afficher.
+
+#allocation details
+core.org_unit.allocation.details.requests.title=Requêtes d''affectation
+core.org_unit.allocation.details.actors.portfolio_entry.title=Affectations d''initiative pour les employés
+core.org_unit.allocation.details.actors.activity.title=Affectations d''activité pour les employés
+
+#manage actor allocated activity
+core.org_unit.actor_allocated_activity.manage.breadcrumb=Géré une activité affectée pour un employé
+core.org_unit.actor_allocated_activity.add.successful=L''activité a été affectée.
+
+#----------------------
+# release
+#----------------------
+
+#list and planning
+core.release.list.title=Releases
+core.release.list.planning.title=Agenda
+core.release.list.planning.no_source=Il n''existe aucune release à afficher: les filtres configurés sont trop spécifiques.
+core.release.list.planning.phase.full=Réalisation et Déploiement
+core.release.list.planning.phase.execution=Réalisation
+core.release.list.planning.phase.rollout=Déploiement
+
+#create
+core.release.create.title=Créer une release
+core.release.create.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Créer une release
+core.release.create.successful=La release a été créée.
+
+#edit
+core.release.edit.title=Mettre à jour
+core.release.edit.successful=La release a été mise à jour.
+
+#view
+core.release.view.details.title=Détails
+core.release.view.initiatives.title=Initiatives
+
+#delete
+core.release.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer cette release?
+core.release.delete.successful=La release a été supprimée.
+
+#view initiative
+core.release.initiative.view.requirements.title=Exigences
+
+#----------------------
+# architecture
+#----------------------
+
+#helper
+core.architecture.title=Architecture
+
+#index
+core.architecture.index.application_block.tree.title=Blocs applicatifs
+
+#application block
+core.architecture.application_block.view.details.title=Détails
+core.architecture.application_block.view.root.label=Principal
+
+########################
+# Admin pages
+########################
+
+#----------------------
+# user administration
+#----------------------
+
+#helper
+admin.user_manager.unknown_user=Utilisateur inconnu
+admin.user_manager.sidebar.search=Rechercher un utilisateur
+admin.user_manager.sidebar.create=Créer un nouvel utilisateur
+admin.user_manager.sidebar.export=Exporter les utilisateurs
+admin.user_manager.update.success=Les données ont été mises à jour. Veuillez noter que la mise à jour peut prendre quelques minutes pour qu''elle soit effective dans tous les modules BizDock.
+
+#search
+admin.user_manager.search.header=Le formulaire ci-dessous vous permet de rechercher un compte utilisateur existant afin de le mettre à jour.<br/>\
+Veuillez saisir le nom d''utilisatuer, l''adresse email ou le nom du titulaire du compte.
+admin.user_manager.search.by.title=Rechercher par
+admin.user_manager.search.by_uid.label=Nom d''utilisateur
+admin.user_manager.search.by_mail.label=Adresse email
+admin.user_manager.search.by_full_name.label=Nom/Prénom ("*" autorisé)
+admin.user_manager.search.not_found=Aucun compte utilisateur pour "{0}" n''a été trouvé.
+admin.user_manager.search.result.title=Utilisateurs trouvés
+admin.user_manager.search.result.header=Veuillez sélectionner l''utilisateur à mettre à jour
+
+#export
+admin.user_manager.export.success=Votre requête d''exportation des utilisateurs a été soumise. Vous serez notifié(e) lorsque le fichier sera disponible.
+
+#view user
+admin.user_manager.view.action.lock.help=Désactiver
+admin.user_manager.view.action.unlock.help=Activer
+admin.user_manager.view.action.reset_password.help=Réinitialiser le mot de passe
+admin.user_manager.view.action.delete.help=Supprimer le compte
+admin.user_manager.view.action.edit_account_type.help=Changer de le type d''utilisateur
+
+#delete user
+admin.user_manager.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer ce compte?
+admin.user_manager.delete.success=Le compte "{0}" a été supprimé.
+admin.user_manager.delete.notification.title=Utilisateur marqué pour être supprimé
+admin.user_manager.delete.notification.message=L''utilisateur "{0}" a été marqué pour être supprimé, la modification sera effective dans quelques minutes.
+
+#reset password
+admin.user_manager.reset_password.confirmation=Etes-vous sûr(e) de vouloir réinitialiser le mot de passe du compte {0}?
+admin.user_manager.reset_password.success=Le mot de passe a été réinitialisé.
+admin.user_manager.reset_password.mail.subject=Mise à jour du mot de passe
+
+#change status
+admin.user_manager.change_status.confirmation=Etes-vous sûr(e) de vouloir mettre à jour le statut du compte {0}?
+admin.user_manager.change_status.success=Le statut du compte a été mis à jour.
+admin.user_manager.change_status.mail.subject=Statut du compte mis à jour.
+
+#edit basic data
+admin.user_manager.edit_basic_data.title=Mettre à jour les informations principales
+admin.user_manager.edit_basic_data.header=En mettant à jour les informations principales, tous les modules tiers seront modifiés en conséquence.
+
+#edit user account type
+admin.user_manager.edit_account_type.title=Mettre à jour le type d''utilisateur
+admin.user_manager.edit_account_type.header=En mettant à jour le type d''utilisateur, ses rôles seront ré-initialisées.
+
+#edit email
+admin.user_manager.edit_email.title=Modifier l''adresse email
+admin.user_manager.edit_email.header=En mettant à jour l''adresse email, un message de validation sera envoyé à la nouvelle adresse.
+
+#edit roles
+admin.user_manager.edit_roles.title=Mettre à jour les rôles
+admin.user_manager.edit_roles.header=Veuillez sélectioner le ou les rôle(s) de l''utilisateur. Le rôle SUPER_USER_ROLE est requis pour utiliser les fonctions d''administration de BizDock.
+
+#create user
+admin.user_manager.create.header=Veuillez remplir le formulaire ci-dessous pour créer un nouvel utilisateur.<br/>\
+Il est important de ne pas oublier de sélectioner son ou ses rôle(s).<br/>\
+Attention: la création de l''utilisateur dans les modules tiers peut prendre quelques minutes.
+admin.user_manager.create.basic_data.title=Informations principales
+admin.user_manager.create.success=L''utilisateur a été créé
+admin.user_manager.create.mail.subject=Le compte a été créé
+admin.user_manager.create.actor.header=L''utilisateur créé n''est pas associé à un employé. Vous pouvez soit créer automatiquement un employé à partir des données de l''utilisateur ou sélectionner un employé existant. Il est aussi possible de le créer ultérieurement.
+admin.user_manager.create.actor.create.title=Créer un employé
+admin.user_manager.create.actor.create.header=Les données de l''utilisateur (prénom, nom et adresse email) seront utilisées pour la création de l''employé.
+admin.user_manager.create.actor.create.successful=L''employé a été créé et associé à l''utilisateur.
+admin.user_manager.create.actor.select.title=Sélectionner un employé existant
+admin.user_manager.create.actor.select.header=Choisir un employé parmis tous ceux qui ne sont pas déjà associés à un utilisateur.
+admin.user_manager.create.actor.select.label=Employé
+admin.user_manager.create.actor.select.successful=L''employé sélectionné a été associé à l''utilisateur.
+admin.user_manager.create.actor.later.title=Décider plus tard
+admin.user_manager.create.actor.later.header=Laisser l''utilisateur sans employé. Il sera possible de créer l''association ultérieurement, simplement en créant un nouvel employé avec le nom d''utilisateur pour la champ "Identifiant".
+
+#resync
+admin.user_manager.resync.header=La synchronisation permet, lorsqu''une erreur de chargement s''est produite (par exemple l''indisponibilité du serveur LDAP lors de la création d''un nouvel utilisateur), de resynchroniser les données avec les modules tiers.
+
+#----------------------
+# configuration: system preferences
+#----------------------
+
+#helpers
+admin.configuration.system_preferences.title=Préférences systèmes
+admin.configuration.system_preferences.breadcrumb.edit=Mettre à jour
+admin.configuration.system_preferences.category.general=Général
+admin.configuration.system_preferences.category.roadmap=Feuille de route
+admin.configuration.system_preferences.category.planning=Planification
+admin.configuration.system_preferences.category.financial=Finances
+admin.configuration.system_preferences.category.timesheet=Feuille de temps
+admin.configuration.system_preferences.category.security=Sécurité
+
+#edit
+admin.configuration.system_preferences.edit.success=Les préférences systèmes ont été mises à jour.
+
+#----------------------
+# configuration: SMTP
+#----------------------
+
+#helpers
+admin.configuration.smtp.title=Configuration SMTP
+admin.configuration.smtp.breadcrumb.edit=Mettre à jour
+
+#edit
+admin.configuration.smtp.edit.success=La configuration SMTP a été mise à jour.
+
+#----------------------
+# configuration: roles
+#----------------------
+
+#helpers
+admin.configuration.roles.title=Rôles
+
+#manage
+admin.configuration.roles.manage.title=Gérer un rôle
+admin.configuration.roles.add.successful=Le rôle a été ajouté. Veuillez sélectionner ses permissions.
+admin.configuration.roles.edit.successful=Le rôle a été mis à jour. Les nouveaux droits résultants seront effectifs dans quelques minutes.
+admin.configuration.roles.delete.successful=Le rôle a été supprimé.
+
+#----------------------
+# configuration: reference data
+#----------------------
+
+#helpers
+admin.configuration.reference_data.title=Données de référence
+admin.configuration.reference_data.portfolio.title=Initiatives & Portefeuilles
+admin.configuration.reference_data.portfolio.portfolioentrytypes.title=Types d''initiative
+admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Type de dépendance d''initiative
+admin.configuration.reference_data.portfolio.portfoliotypes.title=Types de portefeuille
+admin.configuration.reference_data.actorsandorgunits.title=Employés & Unités d''organisation
+admin.configuration.reference_data.actorsandorgunits.actortypes.title=Types d''employé
+admin.configuration.reference_data.actorsandorgunits.orgunittypes.title=Types d''unité d''organisation
+admin.configuration.reference_data.actorsandorgunits.competencies.title=Compétences
+admin.configuration.reference_data.actorsandorgunits.stakeholdertypes.title=Types d''intervenant
+admin.configuration.reference_data.governance.title=Gouvernance
+admin.configuration.reference_data.governance.life_cycle_processes.title=Processus de gouvernance
+admin.configuration.reference_data.governance.status_types.title=Types de statut des jalons
+admin.configuration.reference_data.governance.life_cycle_milestones.title=Jalons
+admin.configuration.reference_data.governance.life_cycle_phases.title=Phases
+admin.configuration.reference_data.requirements.title=Exigences
+admin.configuration.reference_data.requirements.status.title=Statuts
+admin.configuration.reference_data.requirements.priorities.title=Priorités
+admin.configuration.reference_data.requirements.severities.title=Gravités
+admin.configuration.reference_data.planning_packages.title=Livrables
+admin.configuration.reference_data.planning_packages.groups.title=Groupes de livrables
+admin.configuration.reference_data.planning_packages.patterns.title=Modèles de livrables
+admin.configuration.reference_data.register.title=Registres
+admin.configuration.reference_data.register.risktypes.title=Types de risque
+admin.configuration.reference_data.register.report_status_types.title=Types de statut de rapport
+admin.configuration.reference_data.register.event_types.title=Types d''événement
+admin.configuration.reference_data.timesheetactivities.title=Activités de feuille de temps
+admin.configuration.reference_data.timesheetactivities.types.title=Types
+admin.configuration.reference_data.timesheetactivities.activities.title=Activités
+
+#manage portfolio entry type
+admin.configuration.reference_data.portfolioentrytype.manage.title=Gérer un type d''initiative
+admin.configuration.reference_data.portfolioentrytype.add.successful=Le type d''initiative a été ajouté.
+admin.configuration.reference_data.portfolioentrytype.edit.successful=Le type d''initiative a été mis à jour.
+admin.configuration.reference_data.portfolioentrytype.delete.successful=Le type d''initiative a été supprimé.
+
+#manage portfolio entry dependency type
+admin.configuration.reference_data.portfolioentrydependencytype.manage.title=Gérer un type de dépendance
+admin.configuration.reference_data.portfolioentrydependencytype.add.successful=Le type de dépendance a été ajouté.
+admin.configuration.reference_data.portfolioentrydependencytype.edit.successful=Le type de dépendance a été mis à jour.
+admin.configuration.reference_data.portfolioentrydependencytype.delete.successful=Le type de dépendance a été supprimé.
+
+#manage portfolio type
+admin.configuration.reference_data.portfoliotype.manage.title=Gérer un type de portefeuille
+admin.configuration.reference_data.portfoliotype.add.successful=Le type de portefeuille a été ajouté.
+admin.configuration.reference_data.portfoliotype.edit.successful=Le type de portefeuille a été mis à jour.
+admin.configuration.reference_data.portfoliotype.delete.successful=Le type de portefeuille a été supprimé.
+
+#manage actor type
+admin.configuration.reference_data.actortype.manage.title=Gérer un type d''employé
+admin.configuration.reference_data.actortype.add.successful=Le type d''employé a été ajouté.
+admin.configuration.reference_data.actortype.edit.successful=Le type d''employé a été mis à jour.
+admin.configuration.reference_data.actortype.delete.successful=Le type d''employé a été supprimé.
+
+#manage org unit type
+admin.configuration.reference_data.orgunittype.manage.title=Gérer un type d''unité d''organisation
+admin.configuration.reference_data.orgunittype.add.successful=Le type d''unité d''organisation a été ajouté.
+admin.configuration.reference_data.orgunittype.edit.successful=Le type d''unité d''organisation a été mis à jour.
+admin.configuration.reference_data.orgunittype.delete.successful=Le type d''unité d''organisation a été supprimé.
+
+#manage org unit type
+admin.configuration.reference_data.competency.manage.title=Gérer une compétence
+admin.configuration.reference_data.competency.add.successful=La compétence a été ajoutée.
+admin.configuration.reference_data.competency.edit.successful=La compétence a été mise à jour.
+admin.configuration.reference_data.competency.delete.successful=La compétence a été supprimée.
+
+#manage stakeholder type
+admin.configuration.reference_data.stakeholdertype.manage.title=Gérer un type d''intervenant
+admin.configuration.reference_data.stakeholdertype.add.successful=Le type d''intervenant a été ajouté.
+admin.configuration.reference_data.stakeholdertype.edit.successful=Le type d''intervenant a été mis à jour.
+admin.configuration.reference_data.stakeholdertype.delete.successful=Le type d''intervenant a été supprimé.
+
+#manage life cycle process
+admin.configuration.reference_data.life_cycle_process.manage.title=Gérer un processus de gouvernance
+admin.configuration.reference_data.life_cycle_process.add.successful=Le processus de gouvernance a été ajouté.
+admin.configuration.reference_data.life_cycle_process.edit.successful=Le processus de gouvernance a été mis à jour.
+admin.configuration.reference_data.life_cycle_process.delete.successful=Le processus de gouvernance a été supprimé.
+admin.configuration.reference_data.life_cycle_process.delete.error=Impossible de supprimer un processus de grouvernance qui est instancié par une initiative.
+
+#manage life life cycle milestone instance status type
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.manage.title=Gérer un type de statut de jalon
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.add.successful=Le type de statut a été ajouté.
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.edit.successful=Le type de statut a été mis à jour.
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.delete.successful=Le type de statut a été supprimé.
+admin.configuration.reference_data.life_cycle_milestone_instance_status_type.delete.error=Impossible de supprimer un type de statut qui est utilisé par un jalon d''une initiative
+
+#manage life cycle milestone
+admin.configuration.reference_data.life_cycle_milestone.manage.title=Gérer un jalon
+admin.configuration.reference_data.life_cycle_milestone.add.successful=Le jalon a été ajouté.
+admin.configuration.reference_data.life_cycle_milestone.edit.successful=Le jalon a été mis à jour.
+admin.configuration.reference_data.life_cycle_milestone.delete.successful=Le jalon a été supprimé.
+admin.configuration.reference_data.life_cycle_milestone.delete.error=Impossible de supprimer un jalon qui est instancié par une initiative ou utilisé par une phase.
+
+#manage life cycle phase
+admin.configuration.reference_data.life_cycle_phase.manage.title=Gérer une phase
+admin.configuration.reference_data.life_cycle_phase.add.successful=La phase a été ajoutée.
+admin.configuration.reference_data.life_cycle_phase.edit.successful=La phase a été mise à jour.
+admin.configuration.reference_data.life_cycle_phase.delete.successful=La phase a été supprimée.
+
+#manage requirement status
+admin.configuration.reference_data.requirementstatus.manage.title=Gérer un statut
+admin.configuration.reference_data.requirementstatus.add.successful=Le statut a été ajouté.
+admin.configuration.reference_data.requirementstatus.edit.successful=Le statut a été mis à jour.
+admin.configuration.reference_data.requirementstatus.delete.successful=Le statut a été supprimé.
+
+#manage requirement priority
+admin.configuration.reference_data.requirementpriority.manage.title=Gérer une priorité
+admin.configuration.reference_data.requirementpriority.add.successful=La priorité a été ajoutée.
+admin.configuration.reference_data.requirementpriority.edit.successful=La priorité a été mise à jour.
+admin.configuration.reference_data.requirementpriority.delete.successful=La priorité a été supprimée.
+
+#manage requirement severity
+admin.configuration.reference_data.requirementseverity.manage.title=Gérer une gravité
+admin.configuration.reference_data.requirementseverity.add.successful=La gravité a été ajoutée.
+admin.configuration.reference_data.requirementseverity.edit.successful=La gravité a été mise à jour.
+admin.configuration.reference_data.requirementseverity.delete.successful=La gravité a été supprimée.
+
+#manage package group
+admin.configuration.reference_data.package_group.manage.title=Gérer un groupe de livrables
+admin.configuration.reference_data.package_group.add.successful=Le groupe de livrables a été ajouté.
+admin.configuration.reference_data.package_group.edit.successful=Le groupe de livrables a été mis à jour.
+admin.configuration.reference_data.package_group.delete.successful=Le groupe de livrables a été supprimé.
+
+#manage package pattern
+admin.configuration.reference_data.package_pattern.manage.title=Gérer un modèle de livrables
+admin.configuration.reference_data.package_pattern.add.successful=Le modèle de livrables a été ajouté.
+admin.configuration.reference_data.package_pattern.edit.successful=Le modèle de livrables a été mis à jour.
+admin.configuration.reference_data.package_pattern.delete.successful=Le modèle de livrables a été supprimé.
+
+#manage risk type
+admin.configuration.reference_data.risktype.manage.title=Gérer un type de risque
+admin.configuration.reference_data.risktype.add.successful=Le type de risque a été ajouté.
+admin.configuration.reference_data.risktype.edit.successful=Le type de risque a été mis à jour.
+admin.configuration.reference_data.risktype.delete.successful=Le type de risque a été supprimé.
+
+#manage report status type
+admin.configuration.reference_data.report_status_type.manage.title=Gérer un type de statut de rapport
+admin.configuration.reference_data.report_status_type.add.successful=Le type de statut de rapport a été ajouté.
+admin.configuration.reference_data.report_status_type.edit.successful=Le type de statut de rapport a été mis à jour.
+admin.configuration.reference_data.report_status_type.delete.successful=Le type de statut de rapport a été supprimé.
+
+#manage event type
+admin.configuration.reference_data.event_type.manage.title=Gérer un type d''événement
+admin.configuration.reference_data.event_type.add.successful=Le type d''événement a été ajouté.
+admin.configuration.reference_data.event_type.edit.successful=Le type d''événement a été mis à jour.
+admin.configuration.reference_data.event_type.delete.successful=Le type d''événement a été supprimé.
+
+#manage timesheet activity type
+admin.configuration.reference_data.timesheetactivitytype.manage.title=Gérer un type d''activité
+admin.configuration.reference_data.timesheetactivitytype.add.successful=Le type a été ajouté.
+admin.configuration.reference_data.timesheetactivitytype.edit.successful=Le type a été mis à jour.
+admin.configuration.reference_data.timesheetactivitytype.delete.successful=Le type a été supprimé.
+
+#manage timesheet activity
+admin.configuration.reference_data.timesheetactivity.manage.title=Gérer une activité
+admin.configuration.reference_data.timesheetactivity.add.successful=L''activité a été ajoutée.
+admin.configuration.reference_data.timesheetactivity.edit.successful=L''activité a été mise à jour.
+admin.configuration.reference_data.timesheetactivity.delete.successful=L''activité a été supprimée.
+
+#----------------------
+# configuration: custom attributes
+#----------------------
+
+#helpers
+admin.configuration.custom_attributes.title=Attributs personnalisés
+
+#manage
+admin.configuration.custom_attribute.manage.title=Gérer un attribut personnalisé
+admin.configuration.custom_attribute.add.successful=L''attribut personnalisé a été ajouté.
+admin.configuration.custom_attribute.edit.successful=L''attribut personnalisé a été mis à jour.
+admin.configuration.custom_attribute.delete.successful=L''attribut personnalisé a été supprimé.
+
+#items
+admin.configuration.custom_attribute.items.title=Options
+
+#manage item
+admin.configuration.custom_attribute.item.manage.title=Gérer une option
+admin.configuration.custom_attribute.item.add.successful=L''option a été ajoutée.
+admin.configuration.custom_attribute.item.edit.successful=L''option a été mise à jour.
+admin.configuration.custom_attribute.item.delete.successful=L''option a été supprimée.
+
+#----------------------
+# plugin manager
+#----------------------
+
+#helper
+admin.plugin_manager.sidebar.active_plugins=Plugins actifs
+admin.plugin_manager.sidebar.available_plugins=Plugins disponibles
+admin.plugin_manager.sidebar.shared_storage=Espace d''échange de données
+
+#active plugins
+admin.plugin_manager.active_plugins.header=La table ci-dessous contient la liste des plugins actuellement disponibles dans le système.
+
+#available plugins
+admin.plugin_manager.available_plugins.details.label=Détails
+admin.plugin_manager.available_plugins.activate.label=Activer
+
+#view definition
+admin.plugin_manager.definition.view.not_exists=Le plugin {0} n''existe pas
+admin.plugin_manager.definition.view.not_available=Ce plugin n''est pas disponible dans votre configuration actuelle. Veuillez cliquer <a href="mailto:support@the-agile-factory.com">ici</a> pour une mise à jour.
+admin.plugin_manager.definition.view.panel.description.title=Description
+
+#view configuration (instance)
+admin.plugin_manager.configuration.view.not_exists=L''instance {0} n''existe pas
+admin.plugin_manager.configuration.view.panel.details.title=Description du plugin
+admin.plugin_manager.configuration.view.panel.admin.title=Administration
+admin.plugin_manager.configuration.view.panel.admin.action.title=Commande d''administration
+admin.plugin_manager.configuration.view.panel.admin.action.success=La commande a été envoyée avec succès au plugin.
+admin.plugin_manager.configuration.view.panel.admin.action.error=Une erreur est survenue lors de l''envoi de la commande.
+admin.plugin_manager.configuration.view.panel.admin.start.success=Plugin {0} est en cours de démarrage, cela peut prendre quelques secondes. 
+admin.plugin_manager.configuration.view.panel.admin.start.error=Plugin {0} n''a pas pu démarré, veuillez consulter les logs.
+admin.plugin_manager.configuration.view.panel.admin.stop.success=Plugin {0} est en cours d''arrêt, cela peut prendre quelques secondes.
+admin.plugin_manager.configuration.view.panel.configuration.title=Configuration du plugin
+admin.plugin_manager.configuration.view.panel.log.title=Logs du plugin
+admin.plugin_manager.configuration.view.panel.log.refresh.help=Rafraichir
+admin.plugin_manager.configuration.view.panel.log.flush.help=Vider les logs
+admin.plugin_manager.configuration.view.panel.log.flush.success=Les logs ont été vidés.
+
+#new configuration (instance)
+admin.plugin_manager.configuration.new.title=Créer une nouvelle instance de plugin
+admin.plugin_manager.configuration.new.header=Vous allez créer une instance d''un plugin.<br/>\
+Merci de choisir un nom pour cette instance (cela vous permettra de différencier plusieurs instances du même plugin).
+admin.plugin_manager.configuration.new.success=L''instance du plugin {0} a été enegistrée avec succès.
+admin.plugin_manager.configuration.new.error=L''enregistrement de l''instance du plugin {0} a échoué.
+
+#delete configuration (instance)
+admin.plugin_manager.configuration.delete.confirmation=Vous allez supprimer une instance d''un plugin.\\nCELA VA SUPPRIMER L\''INSTANCE AINSI QUE SA CONFIGURATION.\\nMerci de confirmer !
+admin.plugin_manager.configuration.delete.success=L''instance du plugin {0} a été supprimer avec succès.
+admin.plugin_manager.configuration.delete.error=La suppression de l''instance du plugin {0} a échoué (le plugin était probablement en cours d''éxécution, veuillez l''arrêter avant d''essager de le supprimer de nouveau).
+
+#edit configuration block
+admin.plugin_manager.configuration_block.edit.title.label=Edition de la configuration - {0}
+admin.plugin_manager.configuration_block.edit.success=La configuration {0} a été enregistrée avec succès. ATTENTION: Vous devez redémarrer le plugin pour qu''elle soit prise en compte.
+admin.plugin_manager.configuration_block.edit.reset_to_default.error=Erreur lors de la réinitialisation à la configuration par défaut. Merci de réessayer.
+admin.plugin_manager.configuration_block.edit.reset_to_default.success=Configuration réinitialisée. Si vous sauvez maintenant, votre configuration précédente sera perdue.
+
+#view shared storage
+admin.shared_storage.view.header=L''espace d''échange de données est utilisé pour l''intégration entre BizDock et le monde extérieur.\
+Il content deux répertoires: inputs et outputs.<br/>Le répertoire "inputs" doit en principe recevoir des fichiers et le répertoire "ouputs" exposer le résultats de traitements.\
+ Les fichiers de cette espace peuvent être référencés dans les propriétés des plugins.
+admin.shared_storage.view.file.name.label=Nom de fichier
+admin.shared_storage.view.file.last_modified.label=Dernière modification
+admin.shared_storage.view.file.size.label=Taille
+
+#shared storage: upload file
+admin.shared_storage.upload.file.label=Ajouter un fichier
+admin.shared_storage.upload.file.help=La taille d''un fichier est limitée a {0} et vous ne pouvez pas chargez plus de {1} fichiers
+admin.shared_storage.upload.file.size.invalid=Chargement impossible la taille d''un fichier est limitée à {0}
+admin.shared_storage.upload.error.max_number=Trop de fichier dans ce répertoire, veuillez en effacer un avant de tenter d''en ajouter un nouveau
+admin.shared_storage.upload.no_file=Aucun fichier n''a été sélectionné
+admin.shared_storage.upload.success=Chargement réussi
+
+#shared storage: delete file
+admin.shared_storage.delete.success=Fichier supprimé
+
+#----------------------
+# API manager
+#----------------------
+
+admin.api_manager.menu.keys.label=Clefs d''API
+admin.api_manager.menu.browser.label=API browser
+admin.api_manager.title=Configuration des APIs
+admin.api_manager.table.title=Applications enregistrées
+admin.api_manager.unknown.application.message=Application inconnue : {0}
+admin.api_manager.keys.reseted.message=Les clefs pour l''application {0} on été réinitialisées avec succès
+admin.api_manager.registration.deleted.message=L''application {0} a été éffacée avec succès
+admin.api_manager.registration.updated.message=L''application {0} a été mise à jour avec succès
+admin.api_manager.registration.created.message=L''application {0} a été créée avec succès
+admin.api_manager.registration.name.alreadyexists.message=L''application {0} existe déjà, veuillez choisir un autre nom
+admin.api_manager.registration.creation.error.message=Impossible de créer l''application, contacter votre administrateur
+admin.api_manager.authorizations.invalid.message=La syntaxe des autorisations n''est pas valide (veuillez vous referrez à la documentation) : {0}
+admin.api_manager.registration.new.header=Vous êtes sur le point de créer une nouvelle application autorisée à appeler des APIs.<br/>\
+Veuillez entrer un nom d''application, une description et les configurer les autorizations.<br/>\
+Veuillez vous référer à la documentation pour connaitre la syntaxe à utiliser.
+admin.api_manager.registration.edit.header=Vous êtes sur le point de modifier une application autorisée à appeler des APIs.<br/>\
+Veuillez vous référer à la documentation pour connaitre la syntaxe à utiliser pour les autorisations.
+admin.api_manager.registration.resetkeys.message=Vous êtes sur le point de réinitialiser les clefs pour cette application.<br/>\
+Attention, ceci invalidera immédiatement les clefs actuelles.
+admin.api_manager.registration.delete.message=Vous êtes sur le point d''effacer cette application.<br/>\
+Attention, ceci interdira immédiatement tout accès de cette application aux APIs.
+admin.api_manager.registration.display.header=Configuration de l''application {0}
+admin.api_manager.apibrowser.title=API browser
+admin.api_manager.browser.button.explanation=Le bouton ci-dessous ouvre l''API browser.<br/>\
+Cet outil permet d''accéder à la documentation de toutes les APIs et de les tester (en simulant les appels d''applications).
+admin.api_manager.apibrowser.explanation=La documentation ci-dessous décrit les APIs disponibles.<br/>\
+Notez cependant que certaines APIs requièrent des niveau d''autorizations spécifiques et pourraient vous interdire de tester ces APIs.
+admin.api_manager.apibrowser.simulator.application.select.label=Application testée
+
+#----------------------
+# KPI manager
+#----------------------
+
+#list
+admin.kpi.title=Gestion des KPIs
+admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
+admin.kpi.object_type.models.pmo.Portfolio=Portefeuille
+
+#view
+admin.kpi.view.details.title=Détails
+admin.kpi.view.scheduler.title=Planificateur
+admin.kpi.view.scheduler.delete.comfirm=Etes-vous sûr(e) de vouloir supprimer le planificateur de le KPI?
+admin.kpi.view.scheduler.no_scheduler=Aucun planificateur n''est configuré. Veuillez cliquer sur l''icône <span class="glyphicons glyphicons-adjust-alt"></span> pour le configurer.
+admin.kpi.scheduler.delete=Le planificateur a été supprimé.
+admin.kpi.scheduler.trigger=Le planificateur a été déclenché.
+admin.kpi.view.values.title=Définition des valeurs
+admin.kpi.view.rules.title=Règles de coloration
+admin.kpi.rule.delete=La règle a été supprimée.
+
+#edit
+admin.kpi.edit.title=Mettre à jour
+admin.kpi.edit.successful=Le KPI a été mis à jour.
+
+#edit value
+admin.kpi.value.edit.successful=La définition de la valeur de l''KPI a été mise à jour.
+
+#edit scheduler
+admin.kpi.editscheduler.title=Configurer le plannificateur
+admin.kpi.editscheduler.successful=Le plannificateur a été mis à jour.
+
+#edit color
+admin.kpi.rule.manage.title=Gérer une règle de coloration
+admin.kpi.rule.add.successful=La règle de coloration a été créée.
+admin.kpi.rule.edit.successful=La règle de coloration a été modifiée.
+
+#create
+admin.kpi.create.title=Créer un KPI personnalisé
+admin.kpi.create.header=Le données du KPI doivent être fournies externement, par exemple grâce à l''API. \
+Veuillez lire <a href="https://help.bizdock.io/doku.php?id=admin-guide:kpi" target="_blank">l''aide</a> pour plus d''information.
+admin.kpi.create.successful=Le KPI a été créé.
+
+#delete
+admin.kpi.delete.confirm.message=de: Etes-vous sûr(e) de vouloir supprimer ce KPI? Toutes les données seront perdues.
+admin.kpi.delete.error=Impossible de supprimer ce KPI.
+admin.kpi.delete.successful=Le KPI a été supprimé.
+
+#----------------------
+# reporting
+#----------------------
+
+#helper
+admin.reporting.standard=Standard
+admin.reporting.customized=Personnalisé
+
+#index
+admin.reporting.title=Gestion des rapports
+admin.reporting.category.title=Catégories de rapport
+
+#edit
+admin.reporting.edit.successful=Le rapport a été mise à jour.
+
+#----------------------
+# system owner
+#----------------------
+
+admin.systemowner.info.title=Votre instance BizDock
+admin.systemowner.info.breadcrumb=Information
+admin.systemowner.info.systemusers.title=Utilisateurs
+admin.systemowner.info.activeusers.label=Nombre d''utilisateurs actifs
+admin.systemowner.info.registeredusers.label=Nombre d''utilisateurs
+admin.systemowner.info.systemowners.label=Administrateurs du système
+admin.systemowner.info.config.title=Configuration du système
+admin.systemowner.info.version.label=Version de BizDock
+admin.systemowner.info.sizing.label=Taille de l''instance
+admin.systemowner.info.storage.label=Espace de stockage restant
+admin.systemowner.info.authentication.label=Mode d''authentification
+admin.systemowner.info.plugins.title=Plugins disponible
+
+#----------------------
+# audit log
+#----------------------
+
+#helper
+admin.auditable.object_class.label=Type d''entité
+admin.auditable.is_auditable.label=Audité
+
+#list
+admin.auditable.list.title=Liste des entités auditables
+admin.auditable.list.header=Vous pouvez configurer le système afin qu''il audite les changements réalisés dans différentes entités.<br/>\
+Veuillez choisir les entités à auditer.
+
+#manage
+admin.auditable.manage.title=Gérer une entité auditable
+admin.auditable.manage.not_found=Impossible de trouver l''entité auditable
+admin.auditable.manage.success=L''entité auditable a été mise à jour.
+
+#delete
+admin.auditable.delete.confirmation=Etes-vous sûre de vouloir supprimer cette entité auditable?
+admin.auditable.delete.success=L''entité auditable a été supprimée.
+
+#export
+admin.auditable.export.ajax.success=Le journal d''audit sera archivé dans quelques secondes dans votre espace personel.\\n Vous serez notifié une fois que l''opération aura été effectuée.
+admin.auditable.export.ajax.error=Une erreur inattendue est survenue. Si le problème persiste veuillez contacter votre administrateur.
+admin.auditable.export.notification.success.title=Journal d''audit créé
+admin.auditable.export.notification.success.message=Le journal d''audit est maintenant accessible depuis votre espace personnel
+admin.auditable.export.notification.error.title=Erreur d''exportation du journal d''audit
+admin.auditable.export.notification.error.message=Le système n''a pas réussi a exporter le journal d''audit. Veuillez contacter votre administrateur.
+admin.auditable.export.notification.not_found.message=Aucun journal d''audit n''a pu être trouvé.\n Avez-vous activé l''audit pour au moins un objet?

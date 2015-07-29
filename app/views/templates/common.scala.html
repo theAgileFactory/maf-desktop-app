@@ -1,0 +1,69 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(pageHtmlTitle: String, showIdZone: Boolean = true)(header: Html)(content: Html)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>@pageHtmlTitle</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="BizDock">
+        <meta name="author" content="The Agile Factory">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        @framework_views.parts.framework_required_includes(routes.Assets.versioned("").url)
+
+        <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-filetypes.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-social.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-bootstrap.css")">
+        
+        @header
+    </head>
+    <body>
+        @if(showIdZone) {
+            @idzone()
+        }
+        @utils.AdPanelUtils.display(request.path)
+        @content
+
+        @subjectPresent() {
+            <script>
+                $.ajax({ 
+                    type: 'GET', 
+                    url: '@controllers.routes.Application.viewShortcuts()', 
+                    success: function (data) { 
+                        $("#topmenubar-navbar-left").html(data);
+                    }
+                });
+            </script>
+            
+            @utils.tour.TourUtils.getTour(request.path, request.getQueryString("tourUid"), request.getQueryString("tourStep"))
+        }
+    </body>
+</html>
+
+@**************************************************
+ The root for all the templates.
+ It contains all the JS and CSS imports including
+ the ones of the framework
+ *************************************************@ 

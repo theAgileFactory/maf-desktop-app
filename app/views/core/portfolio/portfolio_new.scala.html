@@ -1,0 +1,65 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioForm: Form[utils.form.PortfolioFormData],
+    portfolioTypes: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.portfolio.new.title"),
+    Seq(
+        ("core.portfolio.new.breadcrumb",null)
+    )
+) {
+
+    <div class="maf-form">
+        @if(portfolioForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+    
+        @helper.form(action = controllers.core.routes.PortfolioController.createSubmit()) {
+            <fieldset>
+            
+                <input type="hidden" name="isActive" value="true"/>
+                
+                @helper.inputText(portfolioForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.name.label"), 'autofocus -> "autofocus")
+                
+                @parts.dropdownlist(portfolioForm("portfolioType"), parts.Msg.asString("object.portfolio.type.label"), portfolioTypes, null, false)
+                
+                @parts.singlevalue_picker(
+                    portfolioForm("manager"), 
+                    parts.Msg.asString("object.portfolio.manager.label"),
+                    controllers.routes.PickerController.manager().url
+                )
+                
+                @parts.extended_attributes_input(portfolioForm, classOf[models.pmo.Portfolio], null)
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
+            </fieldset>
+       }
+    </div> 
+   
+}

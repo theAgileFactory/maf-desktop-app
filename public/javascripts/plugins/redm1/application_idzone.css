@@ -1,0 +1,58 @@
+body {margin-top: 0; margin-left: 0; margin-right: 0;}
+
+/*******************/
+/***** Layout *****/
+/*****************/
+#idzone_wrapper {
+  background: white;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 1.1em;
+  background-color: #3E5B76;
+  /*background-color:rgb(0, 136, 204);*/
+  color:#F8F8F8;
+  margin: 0;
+  padding: 0;
+}
+
+/***** Icons *****/
+.idzone_icon {
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  padding-left: 1.429em;
+  padding-top: 0.143em;
+  padding-bottom: 0.214em;
+}
+.idzone_icon-exclamation { background-image: url(/themes/idzone/images/exclamation.png);}
+
+/***** Bar *****/
+#idzone_bar {background: #3E5B76; color: #F8F8F8; height:34px; font-size: 0.8em; padding: 0.429em 0.429em 0.429em 0.429em;}
+#idzone_bar ul {margin: 0;  padding: 0;}
+#idzone_bar li {
+  float:left;
+  list-style-type:none;
+  margin: 0em 0em 0em 0em;
+  padding: 0em 0em 0em 0em;
+  white-space:nowrap;
+}
+#idzone_bar a {color: #F8F8F8; margin-right: 0.571em; font-weight: bold; text-decoration: none;}
+#idzone_bar a:hover, #idzone_bar a:active{text-decoration: underline;}
+#idzone_bar a img{ border: 0; }
+
+#idzone_bar #idzone_title_appselector{float:left;}
+#idzone_bar #idzone_notifications {float: right; margin-right: 2em; color: #fff; padding-top: 0.429em;}
+#idzone_bar #idzone_identity {float:right;padding-top: 0.429em;}
+
+#idzone_title_appselector #idzone_logo {vertical-align: middle;padding-right:1em;}
+#idzone_title_appselector #idzone_appselector_container {margin-left: 10em; padding-top: 0.214em;}
+#idzone_title_appselector #idzone_appselector_container select {margin: 0;  padding: 0;}
+
+#idzone_appselector{
+	font-size: 1.5em;
+	background: #3E5B76;
+	color: #F8F8F8;
+}
+#idzone_appselector option{
+	background: #3E5B76;
+	color: #F8F8F8;
+}
+

@@ -1,0 +1,172 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    actor: models.pmo.Actor,
+    actorTable: framework.utils.Table[utils.table.ActorListView],
+    competenciesTable: framework.utils.Table[utils.table.CompetencyListView],
+    existCompetencies: Boolean
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@actor_template(parts.Msg.asString("core.actor.sidebar.overview"), actor){
+
+    <div class="row">
+    
+        <div class="col-md-4">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.actor.view.details.title")
+                    
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.ActorController.edit(actor.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                        }
+                        @dynamic(security.DefaultDynamicResourceHandler.ACTOR_DELETE_DYNAMIC_PERMISSION) {
+                            &nbsp;
+                            <a class="pull-right" onclick="return maf_confirmDelete();" href="@controllers.core.routes.ActorController.delete(actor.id)">
+                                <span class="glyphicons glyphicons-bin glyphicons-panel"></span>
+                            </a>
+                            <script type="text/javascript">
+                                function maf_confirmDelete(){
+                                    return window.confirm("@parts.Msg("core.actor.delete.confirmation.message")");
+                                }
+                            </script>
+                        }
+                    </div>
+
+                </div>
+        
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.actor.is_active.label")</th>
+                                <td>@display_boolean(actor.isActive)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.employee_id.label")</th>
+                                <td>@display_object(actor.employeeId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.first_name.label")</th>
+                                <td>@display_object(actor.firstName)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.last_name.label")</th>
+                                <td>@display_object(actor.lastName)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.uid.label")</th>
+                                <td>@display_object(actor.uid)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.title.label")</th>
+                                <td>@display_object(actor.title)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.mail.label")</th>
+                                <td>@display_mail(actor.mail)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.mobile_phone.label")</th>
+                                <td>@display_object(actor.mobilePhone)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.fix_phone.label")</th>
+                                <td>@display_object(actor.fixPhone)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.type.label")</th>
+                                <td>@display_value_holder(actor.actorType)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.erp_ref_id.label")</th>
+                                <td>@display_object(actor.erpRefId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.org_unit.label")</th>
+                                <td>@display_org_unit(actor.orgUnit)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.actor.manager.label")</th>
+                                <td>@display_actor(actor.manager)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.Actor], actor.id)
+                    
+                </div>
+                
+            </div>
+    
+        </div>
+
+        <div class="col-md-8">
+        
+            <div class="panel panel-default">
+                    
+                <div class="panel-heading">
+                    @parts.Msg("core.actor.view.competencies.title")
+                    @dynamic(security.DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION) {
+                        <div class="pull-right">
+                            @if(!existCompetencies) {
+                                <a href='javascript: alert("@parts.Msg("core.actor.competencies.no_competency")");'><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            } else {
+                                <a href="@controllers.core.routes.ActorController.editCompetencies(actor.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            }
+                        </div>
+                    }
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(competenciesTable)
+                </div>
+                
+           </div>
+            
+            @if(actor.orgUnit != null && actorTable != null) {
+                <div class="panel panel-default">
+                    
+                    <div class="panel-heading">
+                        @parts.Msg("core.actor.view.org_unit_actors.title")
+                    </div>
+            
+                    <div class="panel-body">
+                        @parts.table.tableview(actorTable)
+                    </div>
+                    
+               </div>
+           }
+           
+       </div>
+        
+    </div>
+}

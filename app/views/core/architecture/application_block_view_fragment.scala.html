@@ -1,0 +1,161 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    tafTreeJsVarName: String,
+    applicationBlock: models.architecture.ApplicationBlock,
+    applicationBlocks: List[models.architecture.ApplicationBlock]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import views.html.modelsparts._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@ancestors = @{
+    dao.architecture.ArchitectureDao.getApplicationBlockAncestorsFromRoot(applicationBlock.id)
+}
+
+    <h4>
+        @if(applicationBlock != null) {
+            <a href="#" id="bc-application-block-root">@parts.Msg("core.architecture.application_block.view.root.label")</a>
+            <script>
+                $("#bc-application-block-root").click(function(e) {
+                    e.preventDefault();
+                    applicationBlockTree.setCurrentIdAndLoadClickAction(null);
+                });
+            </script>
+            @for((ab, index) <- ancestors.zipWithIndex) {
+                /
+                @if(index < ancestors.size - 1) {
+                    <a href="#" id="bc-application-block-@ab.getId">
+                        @ab.getName
+                    </a>
+                    <script>
+                        $("#bc-application-block-@ab.getId").click(function(e) {
+                            e.preventDefault();
+                            applicationBlockTree.setCurrentIdAndLoadClickAction(@ab.getId);
+                        });
+                    </script>
+                } else {
+                    @ab.getName 
+                }
+
+            }
+        } else {
+            @parts.Msg("core.architecture.application_block.view.root.label")
+        }
+    </h4>
+    
+    @if(applicationBlocks.size > 0) {
+    
+        <br/>
+        
+        <div class="row">
+
+            @for(ab <- applicationBlocks) {
+                <div class="col-lg-3 col-sm-4">
+                    <a href="#" id="application-block-@ab.getId">
+                        <div class="panel cockpit-box cockpit-box-primary">
+                            <div class="row header">
+                                <div class="col-xs-offset-1 col-xs-3 icon">
+                                    <span class="glyphicons glyphicons-hdd"></span>
+                                </div>
+                                <div class="col-xs-8 value">
+                                    <p>@ab.name</p>
+                                </div>
+                            </div>
+                            <div class="row content">
+                                <div class="col-xs-offset-1 value text-center">
+                                    <span class="small">&nbsp;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <script>
+                    $("#application-block-@ab.getId").click(function(e) {
+                        e.preventDefault();
+                        applicationBlockTree.setCurrentIdAndLoadClickAction(@ab.getId);
+                    });
+                </script>
+            }
+            
+        </div>
+            
+    } else {
+        @if(applicationBlock == null) {
+            <br/>@parts.Msg("object.application_block.table.empty")
+        }
+    }
+
+    @if(applicationBlock != null) {
+    
+        <br/>
+        <div class="panel panel-default">
+        
+            <div class="panel-heading">
+                @parts.Msg("core.architecture.application_block.view.details.title")
+                
+                <div class="pull-right">
+                    @restrict(la(as(constants.IMafConstants.APPLICATION_BLOCK_EDIT_ALL_PERMISSION))) {
+                        <a href="#" id="application-block-edit-link"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                        <script>
+                        $("#application-block-edit-link").click(function(e) {
+                            e.preventDefault();
+                            applicationBlockTree.triggerEditNode(@applicationBlock.getId);
+                        });
+                        </script>
+                    }
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.application_block.archived.label")</th>
+                                <td>@display_boolean(applicationBlock.archived)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.application_block.ref_id.label")</th>
+                                <td>@display_object(applicationBlock.refId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.application_block.name.label")</th>
+                                <td>@display_object(applicationBlock.name)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.application_block.description.label")</th>
+                                <td>@display_object(applicationBlock.description, true)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    @parts.formats.display_extended_attributes(classOf[models.architecture.ApplicationBlock], applicationBlock.id)
+                </div>
+            </div>
+        </div>
+    }

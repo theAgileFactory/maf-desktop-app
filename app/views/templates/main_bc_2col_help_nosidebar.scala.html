@@ -1,0 +1,54 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(pageHtmlTitle: String, breadCrumb: Seq[(String, String)], rightTitle: String)(contentTitleBlock: Html)(contentLeft: Html)(contentRight: Html)
+@templates.main_nosidebar(pageHtmlTitle) {
+}{
+@breadcrumb(breadCrumb)
+@flash_message()
+<div class="row">
+    <div class="col-md-12">
+    @contentTitleBlock
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+    @contentLeft
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="glyphicons glyphicons-circle-info"></i>&nbsp;@rightTitle</h3>
+            </div>
+          <div class="panel-body">
+            @contentRight
+          </div>
+        </div>    
+    </div>
+</div>
+}
+@**************************************************
+ A two columns template, without sidebar but
+ with a right "help section" and a breadcrumb.
+ Here are the parameters:
+ - pageHtmlTitle : the page title
+ - breadCrumb : a sequence of tuple Seq(("titleA", "urlA"),("titleB" ->"urlB"),("titleActive" -> null)), last one is considered as active
+ - rightTitle : the title of the right help box
+ - contentTitleBlock : the content for the page section above the two columns
+ - contentLeft : the content for the left part of the page
+ - contentRight : the content for the right part of the page
+ *************************************************@

@@ -1,0 +1,39 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(appConfigTable: framework.utils.Table[framework.services.api.server.IApiApplicationConfiguration])
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@views.html.admin.plugin.pluginmanager_template(false, 4, parts.Msg.asString("admin.api_manager.title")){
+
+}{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("admin.api_manager.table.title")
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ApiManagerController.displayApiRegistrationCreationForm().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+        
+        <div class="panel-body">
+            @parts.table.tableview(appConfigTable)
+        </div>
+    </div>
+}

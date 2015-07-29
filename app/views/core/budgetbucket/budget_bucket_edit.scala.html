@@ -1,0 +1,80 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    budgetBucket: models.finance.BudgetBucket,
+    budgetBucketForm: Form[utils.form.BudgetBucketFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.budget_bucket.title"),
+    Seq(
+        (budgetBucket.getName, controllers.core.routes.BudgetBucketController.view(budgetBucket.id).url),
+        ("core.budget_bucket.edit.title", null)
+    )
+) {
+
+    <div class="maf-form">
+        @if(budgetBucketForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+    
+        @helper.form(action = controllers.core.routes.BudgetBucketController.save()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@budgetBucket.id"/>
+                
+                @parts.checkbox(
+                    budgetBucketForm("isActive"), 
+                    parts.Msg.asString("object.budget_bucket.is_active.label"), 
+                    parts.Msg.asString("object.budget_bucket.is_active.help")
+                )
+            
+                @parts.checkbox(
+                    budgetBucketForm("isApproved"), 
+                    parts.Msg.asString("object.budget_bucket.is_approved.label"), 
+                    parts.Msg.asString("object.budget_bucket.is_approved.help")
+                )
+            
+                @helper.inputText(budgetBucketForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.ref_id.label"), 'autofocus -> "autofocus")
+
+                @helper.inputText(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
+                
+                @parts.singlevalue_picker(
+                    budgetBucketForm("owner"), 
+                    parts.Msg.asString("object.budget_bucket.owner.label"),
+                    controllers.routes.PickerController.actor().url
+                )
+                
+                @parts.extended_attributes_input(budgetBucketForm, classOf[models.finance.BudgetBucket], budgetBucket.id)
+                
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.core.routes.BudgetBucketController.view(budgetBucket.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+       }
+    </div> 
+   
+}

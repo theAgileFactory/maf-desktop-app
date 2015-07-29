@@ -1,0 +1,69 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    dataType: framework.commons.DataType,
+    customAttribute: models.framework_models.common.CustomAttributeDefinition,
+    itemForm: Form[utils.form.CustomAttributeItemFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.custom_attributes.title", controllers.admin.routes.ConfigurationCustomAttributeController.list(dataType.getDataName()).url),
+        (customAttribute.name, controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttribute.id).url),
+        ("admin.configuration.custom_attribute.item.manage.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.custom_attributes.title", controllers.admin.ConfigurationController.MenuItemType.CUSTOM_ATTRIBUTES, breadcrump){
+
+    <div class="maf-form">
+        @if(itemForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.admin.routes.ConfigurationCustomAttributeController.processManageItem()) {
+            <fieldset>
+
+                <input type="hidden" name="customAttributeDefinitionId" value="@customAttribute.id"/>
+    
+                @if(itemForm("id").value!=null) {
+                    <input type="hidden" name="id" value="@itemForm("id").value"/>
+                } 
+                
+                @parts.multi_languages_input_text(itemForm("name"), parts.Msg.asString("object.custom_attribute_item.name.label"))
+
+                @parts.multi_languages_input_text(itemForm("description"), parts.Msg.asString("object.custom_attribute_item.description.label"))
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttribute.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+    
+}

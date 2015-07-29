@@ -1,0 +1,122 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    iteration: models.delivery.Iteration
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.iterations.label", controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id, false).url),
+        (iteration.getName, null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+    <div class="row">
+    
+        <div class="col-md-4">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_delivery.iteration.view.details.title")
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioEntryDeliveryController.editIteration(portfolioEntry.id, iteration.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            &nbsp;
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.iteration.is_closed.label")</th>
+                                <td>@display_boolean(iteration.isClosed)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.iteration.name.label")</th>
+                                <td>@display_object(iteration.name)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.iteration.story_points.label")</th>
+                                <td>@display_number(iteration.storyPoints)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.iteration.start_date.label")</th>
+                                <td>@display_date(iteration.startDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.iteration.end_date.label")</th>
+                                <td>@display_date(iteration.endDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.iteration.source.label")</th>
+                                <td>@display_object(iteration.source)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.iteration.release.label")</th>
+                                <td>@display_release(iteration.release)</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    
+                    @parts.formats.display_extended_attributes(classOf[models.delivery.Iteration], iteration.id)
+                    
+                </div>
+                
+            </div>
+        
+        </div>
+        
+        <div class="col-md-8">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("object.iteration.description.label")
+                </div>
+                <div class="panel-body">
+                    @display_object(iteration.description, true)
+                </div>
+                
+            </div>
+        
+        </div>
+    
+    </div>
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id)">@parts.Msg("button.back")</a>
+
+}

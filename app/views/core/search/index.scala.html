@@ -1,0 +1,69 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    searchForm: Form[controllers.core.SearchController.SearchFormData],
+    objectTypes: framework.utils.ISelectableValueHolderCollection[_],
+    infoLabel: String
+)
+
+@import framework_views.parts
+@import helper._
+@import bootstrap3._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.search.title"),
+    Seq(
+        ("topmenubar.search.menu.label",null)
+    )
+) {
+
+    <blockquote>@parts.Msg("core.search.header")</blockquote>
+    
+    @if(searchForm.hasErrors()){
+        <div class="alert alert-danger">
+            <strong>@parts.Msg("core.search.submit.error")</strong><br/>
+        </div>
+    }
+    
+    @if(infoLabel != null){
+        <div class="alert alert-info">
+            <strong>@parts.Msg(infoLabel)</strong><br/>
+        </div>
+    }
+        
+    <div class="panel panel-primary">
+        <div class="panel-heading "></div>
+        <div class="panel-body">
+        
+            @helper.form(action = controllers.core.routes.SearchController.search(), 'class -> "form-inline") {
+                <fieldset>
+                    @parts.dropdownlist(searchForm("objectType"), "", objectTypes, null, false)
+                    <div class="form-group">
+                        <input type="text" name='@searchForm("keywords").name' value='@searchForm("keywords").value' id='@searchForm("keywords").id' class="form-control" 
+                            placeholder='@parts.Msg("core.search.keywords.placeholder")' autofocus="autofocus">
+                        <span class="help-block text-muted"></span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default">@parts.Msg("button.search")</button>
+                        <span class="help-block text-muted"></span>
+                    </div>
+                </fieldset>
+            }
+        </div>
+    </div>
+}

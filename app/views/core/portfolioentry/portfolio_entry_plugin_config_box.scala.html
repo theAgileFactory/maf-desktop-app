@@ -1,0 +1,55 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    pluginInfoPair: org.apache.commons.lang3.tuple.Triple[Long, String, framework.services.plugins.IPluginManagerService.IPluginInfo],
+    portfolioEntryId: Long
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+
+<div class="col-sm-6 col-md-3">
+    <div class="thumbnail">
+        <img src="@controllers.admin.routes.PluginManagerController.image(pluginInfoPair.getRight().getStaticDescriptor().getPluginDefinitionIdentifier(),true)" style="max-height: 100px;" />
+        <div class="caption text-center">
+            <h4>@parts.Msg(pluginInfoPair.getRight().getStaticDescriptor().getName())</h4>
+            <p>@pluginInfoPair.getMiddle()</p>
+            @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                @if(pluginInfoPair.getRight().getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTED) &&
+                    pluginInfoPair.getRight().getConfigurator()!=null &&
+                    pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration()!=null &&
+                    pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry())!=null){
+                    @if(models.framework_models.plugin.PluginRegistration.isRegistered(pluginInfoPair.getLeft(), constants.MafDataType.getPortfolioEntry(), portfolioEntryId)) {
+                        <a href="@pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry()).getRouteForRegistrationController(framework.services.plugins.api.IPluginContext.HttpMethod.GET, portfolioEntryId, framework.services.plugins.api.AbstractConfiguratorController.INITIAL_ACTION)" class="btn btn-success btn-block" role="button">
+                            <i class="glyphicons glyphicons-cogwheel"></i> @parts.Msg("button.configure")
+                        </a>
+                    } else {
+                        <a href="@pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry()).getRouteForRegistrationController(framework.services.plugins.api.IPluginContext.HttpMethod.GET, portfolioEntryId, framework.services.plugins.api.AbstractConfiguratorController.INITIAL_ACTION)" class="btn btn-primary btn-block" role="button">
+                            <i class="glyphicons glyphicons-circle-plus"></i> @parts.Msg("button.activate")
+                        </a>
+                    }
+                } else {
+                    <a href="#" class="btn btn-light btn-block" role="button" disabled="disabled">
+                        <i class="glyphicons glyphicons-pause"></i> @parts.Msg("core.portfolio_entry.plugin_config.not_started")
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(pluginDescriptor: framework.services.plugins.api.IStaticPluginRunnerDescriptor, isAvailable: Boolean)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@pluginmanager_template(false, 2, parts.Msg.asString(pluginDescriptor.getName())){
+}{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.plugin_manager.definition.view.panel.description.title")
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img src="@controllers.admin.routes.PluginManagerController.image(pluginDescriptor.getPluginDefinitionIdentifier(),true)" style="max-height: 120px;" />
+                            <br/>&nbsp;
+                        </div>
+                        <div class="col-md-10">
+                            @if(!isAvailable){
+                                <div class="alert alert-info">
+                                @parts.Msg("admin.plugin_manager.definition.view.not_available")
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <table class="table table-condensed table-hover">
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_definition.name.label")</th>
+                                <td>@parts.Msg(pluginDescriptor.getName())</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_definition.description.label")</th>
+                                <td>@parts.Msg(pluginDescriptor.getDescription())</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_definition.version.label")</th>
+                                <td>@pluginDescriptor.getVersion()</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_definition.provider.label")</th>
+                                <td>@parts.formats.display_url(pluginDescriptor.getVendorUrl().toString())</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.plugin_definition.multi_instance.label")</th>
+                                <td>@parts.formats.display_boolean(pluginDescriptor.multiInstanceAllowed())</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <a class="btn btn-default" href="@controllers.admin.routes.PluginManagerController.registration()">@parts.Msg("button.back")</a>
+}

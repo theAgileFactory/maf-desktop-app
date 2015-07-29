@@ -1,0 +1,87 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    lifeCycleMilestone: models.governance.LifeCycleMilestone,
+    requestMilestoneForm: Form[utils.form.RequestMilestoneFormData],
+    status: List[String],
+    plannedDate: models.governance.PlannedLifeCycleMilestoneInstance
+)
+
+@import helper._
+@import bootstrap3._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.governance.label", controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url),
+        (lifeCycleMilestone.getName, null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.GOVERNANCE, breadcrump){
+    
+    <div class="maf-form">
+        @if(requestMilestoneForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+    
+        @helper.form(action = controllers.core.routes.PortfolioEntryGovernanceController.processRequestMilestone(), 'enctype -> "multipart/form-data") {
+        
+            <fieldset>
+
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                <input type="hidden" name="milestoneId" value="@lifeCycleMilestone.id"/>
+                
+                <div class="form-group">
+                    <label class="control-label">@parts.Msg.asString("core.portfolio_entry_governance.milestone.request.processstatus.label")</label>
+                    <div style="font-size: 1.5em;">
+                        @for(s <- status) {
+                            @Html(s)
+                        }
+                    </div>
+                </div>
+                
+                @if(plannedDate != null && plannedDate.plannedDate != null) {
+                    <div class="form-group">
+                        <label class="control-label">@parts.Msg.asString("object.planned_life_cycle_milestone_instance.planned_date.label")</label>
+                        <div>@display_date(plannedDate.plannedDate)</div>
+                    </div>
+                }
+
+                @parts.dateinput(requestMilestoneForm("passedDate"), parts.Msg.asString("object.process_transition_request.passed_date.label"))
+                
+                @parts.file_field(requestMilestoneForm("descriptionDocument"), Messages("object.process_transition_request.description_document.label"))
+
+                @helper.textarea(requestMilestoneForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.process_transition_request.comments.label"))
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+    </div>
+
+}

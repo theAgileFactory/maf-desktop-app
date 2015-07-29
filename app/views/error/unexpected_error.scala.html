@@ -1,0 +1,35 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(title: String, uuid: String)
+@import framework_views.parts
+@templates.common(parts.Msg.asString("unexpected.error.title")) {
+    <style type="text/css">
+    </style>
+} {
+
+    <div class="container">
+        <br/><br/>
+        <div class="jumbotron">
+            <h1>5<span class="glyphicons glyphicons-skull text-danger"></span>0 <small>@parts.Msg("unexpected.error.title")</small></h1>
+            <p> @parts.Msg("unexpected.error.message", uuid)</p>
+            <p><a class="btn btn-primary btn-lg" role="button" href="@routes.Application.index">@parts.Msg("unexpected.error.home.link")</a></p>
+        </div>
+    
+    </div>
+    
+}

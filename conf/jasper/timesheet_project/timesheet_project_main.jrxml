@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-06-02T14:40:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_project_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="64422b26-af1a-4a0f-bd76-a140a87f9624">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="REPORT_TIMESHEET_PROJECT_PORTFOLIO_ENTRY" class="java.lang.Long" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[1L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="format" class="java.lang.String">
+		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+CONCAT(e.first_name,' ',e.last_name) AS employee,
+pkg.name AS planning_package_name,
+og.name AS org_unit_name,
+tlog.log_date AS "date",
+sum(tlog.hours) AS hours
+
+FROM 
+timesheet_report tr
+JOIN actor e ON tr.actor_id = e.id AND e.deleted = 0
+JOIN org_unit og ON e.org_unit_id = og.id AND og.deleted = 0
+JOIN timesheet_entry te ON tr.id = te.timesheet_report_id AND te.deleted = 0
+JOIN timesheet_log tlog ON te.id = tlog.timesheet_entry_id AND tlog.deleted = 0
+JOIN portfolio_entry pe ON te.portfolio_entry_id = pe.id AND pe.deleted = 0
+LEFT OUTER JOIN portfolio_entry_planning_package pkg ON pe.id = pkg.portfolio_entry_id AND pkg.deleted = 0  AND te.portfolio_entry_planning_package_id = pkg.id
+
+WHERE
+(tr.status = 'APPROVED' OR tr.status = 'LOCKED')
+AND tr.deleted = 0
+AND te.portfolio_entry_id = $P{REPORT_TIMESHEET_PROJECT_PORTFOLIO_ENTRY} 
+
+GROUP BY tr.actor_id, log_date, pkg.name
+
+ORDER BY tlog.log_date ASC]]>
+	</queryString>
+	<field name="employee" class="java.lang.String"/>
+	<field name="date" class="java.sql.Timestamp"/>
+	<field name="hours" class="java.math.BigDecimal"/>
+	<field name="planning_package_name" class="java.lang.String"/>
+	<field name="org_unit_name" class="java.lang.String"/>
+	<title>
+		<band height="65" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $P{format}.equals("EXCEL")]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="554" height="60" uuid="84894e80-2248-44b7-88a4-6de818ef45f6">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="SUBREPORT_TITLE_PORTFOLIO_ENTRY">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TIMESHEET_PROJECT_PORTFOLIO_ENTRY}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["title.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement style="row-header" x="0" y="0" width="100" height="20" uuid="f9d1aae9-1989-4a0b-8d7a-1f255d4dc696">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.employee")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="100" y="0" width="200" height="20" uuid="66957991-184f-4636-820b-59fb384e0a6f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.planning_package_name")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="300" y="0" width="120" height="20" uuid="4269f01b-d19f-4392-a687-adf0f9f8d171">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.org_unit_name")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="420" y="0" width="80" height="20" uuid="89e08121-5242-4272-ba75-bf48023def67">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.date")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="500" y="0" width="55" height="20" uuid="8574aa4a-b10e-43ee-98f1-0137716b73fd">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.hours")]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[new Boolean($F{hours}.compareTo(BigDecimal.ZERO) > 0)]]></printWhenExpression>
+			<textField>
+				<reportElement style="row" x="0" y="0" width="100" height="20" uuid="eacb4aaa-d854-4463-a230-eb159f46add8">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{employee}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" x="100" y="0" width="200" height="20" uuid="bab95f3b-2322-42f7-b000-5d4890b09098">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[IF($F{planning_package_name} == null,"-",$F{planning_package_name})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" x="300" y="0" width="120" height="20" uuid="48f42e4d-bf54-482a-abed-86bb614ebe9c">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{org_unit_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement style="row" x="420" y="0" width="80" height="20" uuid="7c2fc9af-b39d-4288-bdad-b1d7397fe8ae">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" x="500" y="0" width="55" height="20" uuid="0ec7b9bb-b85b-4c54-88eb-9c533a21d11e">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
+			<textField>
+				<reportElement key="" style="row" x="0" y="10" width="555" height="20" uuid="e5c757b5-db06-47b3-b60c-88748962564a">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[str("page") + " " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

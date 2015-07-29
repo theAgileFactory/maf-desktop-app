@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-02-27T16:15:03 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portfolio_name" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="353d4885-c2f0-4839-b0a4-f8b489eddf2e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="portfolioId" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+	p.name AS name,
+	IFNULL(m_type.value, '') AS type,
+	CONCAT(a.first_name, ' ', a.last_name) AS manager
+
+
+ FROM portfolio p 
+ 
+ 		JOIN portfolio_type pt ON p.portfolio_type_id = pt.id
+		LEFT OUTER JOIN i18n_messages m_type ON pt.name = m_type.`key` AND m_type.language=$P{lang}
+ 
+ 		LEFT OUTER JOIN actor a ON p.manager_id = a.id AND a.deleted = 0
+ 		
+ 
+ WHERE p.id = $P{portfolioId}]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="manager" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement style="title" x="0" y="0" width="555" height="60" uuid="4e0b060c-ceae-4fe4-ae8e-346e74394b48"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="0" y="70" width="170" height="20" uuid="53db814e-8e48-4890-9c12-556affd12c33">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.type")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="0" y="90" width="170" height="20" uuid="1e095ced-d1d9-4396-a5cb-61c3dfacd48e">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.portfolio_manager")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" x="170" y="70" width="385" height="20" uuid="7543ad3e-4348-4f7b-932b-2413dc003e3b">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row" x="170" y="90" width="385" height="20" uuid="e6368894-a78d-42ff-8a74-708affb49e2d">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{manager}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

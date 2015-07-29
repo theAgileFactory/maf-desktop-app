@@ -1,0 +1,64 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(shortcuts: List[models.framework_models.account.Shortcut])
+
+@import framework_views.parts
+
+@if(shortcuts!= null && !shortcuts.isEmpty) {
+    <li class='dropdown'>
+        <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='glyphicons glyphicons-pushpin'></i><b class='caret'></b></a>
+        <ul class='dropdown-menu'>
+            @for(shortcut <- shortcuts) {
+                <li>
+                    <a href='@shortcut.getUrl'>
+                        <span class="shortcut-delete glyphicons glyphicons-bin" data-id="@shortcut.id"></span>
+                        &nbsp;&nbsp;
+                        @shortcut.getName
+                    </a>
+                </li>
+            }
+        </ul>
+    </li>
+    
+    <script>
+        $(".shortcut-delete").click(function(event) {
+            event.preventDefault();
+            var id = $(this).data("id");
+            $.ajax({ 
+                type: 'POST', 
+                url: '@controllers.routes.Application.deleteShortcut()', 
+                data: JSON.stringify({ 'id': id}), 
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data) { 
+                    $.ajax({ 
+                        type: 'GET', 
+                        url: '@controllers.routes.Application.viewShortcuts()', 
+                        success: function (data) { 
+                            $("#topmenubar-navbar-left").html(data);
+                        }
+                    });
+                    alert("@parts.Msg("shortcut.delete.message.success")");
+                },
+                error: function (data) { 
+                    alert("@parts.Msg("shortcut.delete.message.error")");
+                }
+            });
+        });
+    </script>
+}

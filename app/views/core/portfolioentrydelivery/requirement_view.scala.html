@@ -1,0 +1,151 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    requirement: models.delivery.Requirement
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.requirements.label", controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id, false).url),
+        (requirement.getName, null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+    <div class="row">
+    
+        <div class="col-md-4">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_delivery.requirement.view.details.title")
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioEntryDeliveryController.editRequirement(portfolioEntry.id, requirement.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            &nbsp;
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.is_defect.label")</th>
+                                <td>@display_boolean(requirement.isDefect)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.external_ref_id.label")</th>
+                                <td>
+                                    @if(requirement.externalLink != null && !requirement.externalLink.equals("")) {
+                                        @display_url(requirement.externalLink, requirement.externalRefId, true)
+                                    } else {
+                                        @display_object(requirement.externalRefId)
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.name.label")</th>
+                                <td>@display_object(requirement.name)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.iteration.label")</th>
+                                <td>@display_iteration(requirement.iteration)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.release.label")</th>
+                                <td>@display_release(requirement.release)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.category.label")</th>
+                                <td>@display_object(requirement.category)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.status.label")</th>
+                                <td>@display_value_holder(requirement.requirementStatus)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.priority.label")</th>
+                                <td>@display_value_holder(requirement.requirementPriority)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.severity.label")</th>
+                                <td>@display_value_holder(requirement.requirementSeverity)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.is_scoped.label")</th>
+                                <td>@display_boolean(requirement.isScoped)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.author.label")</th>
+                                <td>@display_actor(requirement.author)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.story_points.label")</th>
+                                <td>@display_number(requirement.storyPoints)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.requirement.initial_estimation.label")</th>
+                                <td>@display_number(requirement.initialEstimation)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    @parts.formats.display_extended_attributes(classOf[models.delivery.Requirement], requirement.id)
+                    
+                </div>
+                
+            </div>
+        
+        </div>
+        
+        <div class="col-md-8">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_delivery.requirement.view.description.title")
+                </div>
+                <div class="panel-body">
+                    @display_object(requirement.description, true)
+                </div>
+                
+            </div>
+        
+        </div>
+    
+    </div>
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id, "")">@parts.Msg("button.back")</a>
+
+}

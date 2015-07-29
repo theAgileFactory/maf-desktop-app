@@ -1,0 +1,100 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    actorTypesTable: framework.utils.Table[utils.table.ActorTypeListView],
+    orgUnitTypesTable: framework.utils.Table[utils.table.OrgUnitTypeListView],
+    competenciesTable: framework.utils.Table[utils.table.CompetencyListView],
+    stakeholderTypesTable: framework.utils.Table[utils.table.StakeholderTypeListView]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.reference_data.actorsandorgunits.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.reference_data.actorsandorgunits.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.actorsandorgunits.actortypes.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageActorType().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(actorTypesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.actorsandorgunits.orgunittypes.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageOrgUnitType().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(orgUnitTypesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.actorsandorgunits.competencies.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageCompetency().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(competenciesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.actorsandorgunits.stakeholdertypes.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageStakeholderType().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(stakeholderTypesTable)
+        </div>
+    </div>
+
+}

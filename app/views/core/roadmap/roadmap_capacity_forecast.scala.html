@@ -1,0 +1,249 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    capacityForecastForm: Form[controllers.core.RoadmapController.CapacityForecastForm],
+    orgUnitCapacities: List[controllers.core.RoadmapController.OrgUnitCapacity],
+    competencyCapacities: List[controllers.core.RoadmapController.CompetencyCapacity]
+)
+
+@import framework_views.parts.formats._
+@import framework_views.parts
+@import views.html.modelsparts._
+@import framework.utils.SideBar
+@import framework.utils.Menu.ClickableMenuItem
+
+@sidebarInstance=@{
+    val sidebarInstance=new SideBar()
+    sidebarInstance.addMenuItem(new ClickableMenuItem(
+        "core.roadmap.title",
+        controllers.core.routes.RoadmapController.index().url,
+        "glyphicons glyphicons-road",
+        true)
+    );
+    sidebarInstance.addMenuItem(new ClickableMenuItem(
+        "core.roadmap.planning.title",
+        controllers.core.routes.RoadmapController.viewPlanning().url,
+        "glyphicons glyphicons-calendar",
+        false)
+    );
+    sidebarInstance
+}
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.roadmap.menu.label", controllers.core.routes.RoadmapController.index().url),
+        ("core.roadmap.simulator.capacity_forecast", null)
+    )
+}
+
+@templates.main_bc_iconsbar(
+    parts.Msg.asString("core.roadmap.title"),
+    sidebarInstance,
+    breadcrump
+){
+}{
+
+<span id="roadmap-capacity"></span>
+
+@helper.form(action = controllers.core.routes.RoadmapController.simulatorCapacityForecast(), 'class -> "form-inline pull-right") {
+
+    <input type="hidden" name="selectedRows" value="@capacityForecastForm("selectedRows").value"/>
+    
+    @parts.dropdownlist(capacityForecastForm("year"), parts.Msg.asString("core.roadmap.simulator.capacity_forecast.year.label"), controllers.core.RoadmapController.CapacityForecastForm.getYears())
+    
+    &nbsp; &nbsp; &nbsp;
+    
+    @parts.checkbox(
+        capacityForecastForm("onlyConfirmed"), 
+        parts.Msg.asString("core.roadmap.simulator.capacity_forecast.only_confirmed.label"), 
+        ""
+    )
+    
+    &nbsp; &nbsp; &nbsp;
+    
+    <div class="form-group">
+        <input class="btn btn-default" type="submit" value="@parts.Msg("button.change")" />
+        <span class="help-block text-muted"></span>
+    </div>
+
+}
+
+<div class="clearfix"></div>
+
+<ul class="nav nav-tabs">
+    <li class="active" >
+        <a href="#org-units-content" id="org-units-tab" data-toggle="tab" aria-controls="org-units-content" aria-expanded="true">
+            @parts.Msg("core.roadmap.simulator.capacity_forecast.org_units.label")
+        </a>
+    </li>
+    
+    <li  >
+        <a href="#competencies-content" id="#competencies-tab" data-toggle="tab" aria-controls="competencies-content">
+           @parts.Msg("core.roadmap.simulator.capacity_forecast.competencies.label")
+        </a>
+    </li>
+</ul>
+
+<br/>
+
+<div class="tab-content">
+    
+    <div class="tab-pane fade in active" id="org-units-content" aria-labelledby="org-units-tab">
+    
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <colgroup>
+                    <col style="width: 16%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                </colgroup>
+                
+                <thead>
+                    <tr>
+                        <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.org_unit.label")</th>
+                        <th class="text-center">@parts.Msg("month.january")</th>
+                        <th class="text-center">@parts.Msg("month.february")</th>
+                        <th class="text-center">@parts.Msg("month.march")</th>
+                        <th class="text-center">@parts.Msg("month.april")</th>
+                        <th class="text-center">@parts.Msg("month.may")</th>
+                        <th class="text-center">@parts.Msg("month.june")</th>
+                        <th class="text-center">@parts.Msg("month.july")</th>
+                        <th class="text-center">@parts.Msg("month.august")</th>
+                        <th class="text-center">@parts.Msg("month.september")</th>
+                        <th class="text-center">@parts.Msg("month.october")</th>
+                        <th class="text-center">@parts.Msg("month.november")</th>
+                        <th class="text-center">@parts.Msg("month.december")</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    @for(orgUnitCapacity <- orgUnitCapacities) {
+                        <tr>
+                            <td>@display_org_unit(orgUnitCapacity.getOrgUnit)</td>
+                            @for((key, orgUnitCapacityMonth) <- orgUnitCapacity.getResourceCapacityMonths) {
+                                <td class="bg-@orgUnitCapacityMonth.getBootstrapBackground text-center cell">
+                                    <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.OrgUnit].getName, orgUnitCapacity.getOrgUnit.id, capacityForecastForm("year").value.toInt, key)');">
+                                        @display_number(orgUnitCapacityMonth.getPlanned) / @display_number(orgUnitCapacityMonth.getAvailable)
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    
+    </div>
+
+    <div class="tab-pane fade" id="competencies-content" aria-labelledby="competencies-tab">
+    
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <colgroup>
+                    <col style="width: 16%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                </colgroup>
+                
+                <thead>
+                    <tr>
+                        <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.competency.label")</th>
+                        <th class="text-center">@parts.Msg("month.january")</th>
+                        <th class="text-center">@parts.Msg("month.february")</th>
+                        <th class="text-center">@parts.Msg("month.march")</th>
+                        <th class="text-center">@parts.Msg("month.april")</th>
+                        <th class="text-center">@parts.Msg("month.may")</th>
+                        <th class="text-center">@parts.Msg("month.june")</th>
+                        <th class="text-center">@parts.Msg("month.july")</th>
+                        <th class="text-center">@parts.Msg("month.august")</th>
+                        <th class="text-center">@parts.Msg("month.september")</th>
+                        <th class="text-center">@parts.Msg("month.october")</th>
+                        <th class="text-center">@parts.Msg("month.november")</th>
+                        <th class="text-center">@parts.Msg("month.december")</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    @for(competencyCapacity <- competencyCapacities) {
+                        <tr>
+                            <td>@display_competency(competencyCapacity.getCompetency)</td>
+                            @for((key, competencyCapacityMonth) <- competencyCapacity.getResourceCapacityMonths) {
+                                <td class="bg-@competencyCapacityMonth.getBootstrapBackground text-center cell">
+                                    <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.Competency].getName, competencyCapacity.getCompetency.id, capacityForecastForm("year").value.toInt, key)');">
+                                        @display_number(competencyCapacityMonth.getPlanned) / @display_number(competencyCapacityMonth.getAvailable)
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function maf_capacityForecastLoadCellDetails(e, url) {
+
+        $(".cell").css('border','inherit');
+        $(".cell").css('font-weight','normal');
+        $(e).parent().css('font-weight','bold');
+        $(e).parent().css('border','1px solid #aaa');
+
+        $('#capacity-forecast-cell-details').html('<img src="@framework.utils.Utilities.getAjaxWaitImageUrl()"/>');
+        
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({"selectedRows" : @Html(capacityForecastForm("selectedRows").value)}),
+            success: function (data) {
+                $("#capacity-forecast-cell-details").html(data);
+            }
+        });
+    }
+</script>
+
+<div id="capacity-forecast-cell-details"></div>
+
+<br/>
+<a class="btn btn-default" href="@controllers.core.routes.RoadmapController.index()">@parts.Msg("button.back")</a>
+
+}

@@ -1,0 +1,604 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    report: models.timesheet.TimesheetReport,
+    portfolioEntries: List[models.pmo.PortfolioEntry],
+    activityTypes: List[models.timesheet.TimesheetActivityType]
+)
+
+@import framework_views.parts
+@import helper._
+@import bootstrap3._
+@import framework_views.parts.formats._
+@import views.html.modelsparts._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.timesheet.title"),
+    Seq(
+        ("topmenubar.tools.timesheet.menu.label",null)
+    )
+) {
+
+    <script>
+    
+    /* @*
+    The data object is the representation of the timesheet. It is sent when the user click on Save.
+    
+    var data = {
+        reportId: 153,
+        entries: [ // the keys are the dom IDs of the entries
+            {
+                id: 1, // same as the key
+                inDB: true, // settled to true if the entry is already in the DB
+                toRemove: false, // only if in DB, means the the entry should be removed
+                entryId: 5, // only if in DB
+                portfolioEntryId: 17, // only if "initiative" (mandatory)
+                packageId: null, // only if "initiative" (optional)
+                activityId: null, // only if "activity" (mandatory)
+                logs: [ // the keys are the day indexes (0=monday to 6=sunday)
+                    index: 0; // same as the key
+                    logId: 55; // only if in DB
+                    hours: 2.5; // number of hours
+                ]
+            }
+        ]
+    }
+    
+    *@ */
+    
+    var data = {
+        reportId: @report.id,
+        entries: new Array()
+    }
+    
+    var hasBeenUpdated = false;
+    var lastEntryId = @report.timesheetEntries.size() - 1;
+    
+    </script>
+
+    <div class="row">
+        <div class="col-md-3 ">
+            <h4 class="no-margin"><span class="label label-@(report.getStatusCssClass)">@parts.Msg("object.timesheet_report.status." + report.status.name + ".label")</span></h4>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <div class="btn-group">
+                <a class="btn btn-default" role="button" onclick="return maf_leavePage();" href="@controllers.core.routes.TimesheetController.weeklyFill("%tF".format(report.getPreviousStartDate))">&laquo;</a>
+                <a class="btn btn-default" role="button" id="timesheet-datepicker">@parts.Msg("core.timesheet.fill.weekly.week.label", display_date(report.startDate), display_date(report.getEndDate))</a>
+                <a class="btn btn-default" role="button" onclick="return maf_leavePage();" href="@controllers.core.routes.TimesheetController.weeklyFill("%tF".format(report.getNextStartDate))">&raquo;</a>
+            </div>
+         </div>
+         
+         <div class="col-md-3 text-right">
+         
+            <a id='timesheet-copy-link' class="btn btn-primary" data-toggle="tooltip" title="@parts.Msg("core.timesheet.fill.weekly.copy.title")" href="javascript: maf_copy()" @if(!report.isEditable){disabled}><i class="glyphicons glyphicons-more-windows"></i></a>
+            <script>
+                $('#timesheet-copy-link').tooltip();
+            </script>
+            
+            <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button" @if(!report.isEditable){disabled}>
+                    <i class="glyphicons glyphicons-plus"></i>
+                </button>
+                <ul class="dropdown-menu pull-right text-left">
+                    @if(portfolioEntries.size() == 0) {
+                        <li><a href="javascript: maf_noInitiative();">@parts.Msg("core.timesheet.fill.add.initiative.label")</a></li>
+                    } else {
+                        <li><a href="javascript: maf_addInitiative();">@parts.Msg("core.timesheet.fill.add.initiative.label")</a></li>
+                    }
+                    @if(activityTypes.size() == 0) {
+                        <li><a href="javascript: maf_noActivity();">@parts.Msg("core.timesheet.fill.add.activity.label")</a></li>
+                    } else {
+                        <li><a href="javascript: maf_addActivity();">@parts.Msg("core.timesheet.fill.add.activity.label")</a></li>
+                    }
+                </ul>
+            </div>
+    
+        </div>
+    
+    </div>
+    
+    <br/>
+    
+    <div class="row">
+    
+        <div class="col-md-12">
+            <div id="timesheet-empty" class="alert alert-info @if(report.timesheetEntries.size() > 0){hidden}">@parts.Msg("core.timesheet.fill.empty")</div>
+            <div id="timesheet-table" class="table-responsive @if(report.timesheetEntries.size() == 0){hidden}" >
+                <table class="table">
+                
+                    <thead>
+                        <tr>
+                            <th class="col-md-2">@parts.Msg("core.timesheet.fill.weekly.table.entry.label")</th>
+                            <th class="col-md-2">@parts.Msg("core.timesheet.fill.weekly.table.subentry.label")</th>
+                            <th class="text-center">@parts.Msg("day.monday")<br/><span style="font-weight: normal;"><em>@display_date(report.startDate)</em></span></th>
+                            <th class="text-center">@parts.Msg("day.tuesday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(1))</em></span></th>
+                            <th class="text-center">@parts.Msg("day.wednesday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(2))</em></span></th>
+                            <th class="text-center">@parts.Msg("day.thursday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(3))</em></span></th>
+                            <th class="text-center">@parts.Msg("day.friday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(4))</em></span></th>
+                            <th class="text-center warning">@parts.Msg("day.saturday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(5))</em></span></th>
+                            <th class="text-center warning">@parts.Msg("day.sunday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(6))</em></span></th>
+                            <th class="text-center active">@parts.Msg("core.timesheet.fill.weekly.table.total.label")</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    
+                    <script>
+                        var dayTotals = new Array();
+                        for(i = 0; i < 7; i++) {
+                            dayTotals[i] = 0.0;
+                        }
+                    </script>
+                    
+                    <tbody id="timesheet-table-tbody">
+
+                        @for((entry, id) <- report.timesheetEntries.zipWithIndex) {
+                            <tr id='timesheet-entry-row-@id'>
+                                @if(entry.portfolioEntry != null) {
+                                    <td style="vertical-align:middle">
+                                        @display_portfolio_entry(entry.portfolioEntry)
+                                    </td>
+                                    <td style="vertical-align:middle">
+                                        @if(report.isEditable){
+                                            <select onchange='maf_selectPackage(@id, this)' id='timesheet-entry-package-select-@id' class='form-control'>
+                                                <option></option>
+                                                @for(p <- entry.portfolioEntry.planningPackages) {
+                                                    <option value='@p.id' @if(entry.portfolioEntryPlanningPackage != null && p.id.equals(entry.portfolioEntryPlanningPackage.id)){selected='selected'}>@p.getName</option>
+                                                }
+                                            </select>
+                                        } else {
+                                            @display_portfolio_entry_planning_package(entry.portfolioEntryPlanningPackage)
+                                        }
+                                    </td>
+                                } else {
+                                    <td style="vertical-align:middle" >@entry.timesheetActivity.timesheetActivityType.getName</td>
+                                    <td style="vertical-align:middle" >@entry.timesheetActivity.getName</td>
+                                }
+                                
+                                <script>
+                                    var _logs_@(id) = new Array();
+                                </script>
+                                @for((log, index) <- entry.timesheetLogs.zipWithIndex) {
+                                    <td class='text-center @if(index == 5 || index == 6){warning}'><input type='text' class='form-control text-center' onchange='maf_changeLog(@id, @index, this)' value="@log.hours" @if(!report.isEditable){disabled}></td>
+                                    <script>
+                                        var _log_@(id)_@(index) = {
+                                            index: @index,
+                                            logId: @log.id,
+                                            hours: @log.hours
+                                        };
+                                        _logs_@(id)[@index] = _log_@(id)_@(index);
+                                        dayTotals[@index] += @log.hours;
+                                    </script>
+                                }
+
+                                <td id='timesheet-entry-total-@id' style="vertical-align:middle" class="text-center active">@entry.getTotal</td>
+                                
+                                <td style="vertical-align:middle" class="text-center">
+                                    <button type="button" onclick='javascript: maf_deleteEntry(@id)' class="btn btn-default" @if(!report.isEditable){disabled}><span class="glyphicons glyphicons-bin"></span></button>
+                                </td>
+                            
+                                <script>
+                                    var _entry_@(id) = {
+                                        id: @id,
+                                        inDB: true,
+                                        toRemove: false,
+                                        entryId: @entry.id,
+                                        portfolioEntryId: @if(entry.portfolioEntry != null) {@entry.portfolioEntry.id} else {null},
+                                        packageId: @if(entry.portfolioEntryPlanningPackage != null) {@entry.portfolioEntryPlanningPackage.id} else {null},
+                                        activityId: @if(entry.timesheetActivity != null) {@entry.timesheetActivity.id} else {null},
+                                        logs: _logs_@(id)
+                                    };
+                                    data.entries[@id] = _entry_@(id);
+                                </script>
+                            
+                            </tr>
+                        }
+                    </tbody>
+                    
+                    <tfooter>
+                        <tr>
+                            <td class="active">&nbsp;</td>
+                            <td class="active">&nbsp;</td>
+                            
+                            @for(i <- 0 to 6) {
+                                <td class="text-center active"><span id="timesheet-day-total-@i"></span></td>
+                                <script>
+                                    $("#timesheet-day-total-@i").html(maf_formatNumber(dayTotals[@i], 1));
+                                </script>
+                            }
+                            
+                            <td class="text-center active"><strong><span id="timesheet-total">@report.getTotal</span></strong></td>
+                            <td class="active">&nbsp;</td>
+                        </tr>
+                    </tfooter>
+                </table>
+            </div>
+
+        </div>
+    
+    </div>
+    
+    <a class="btn btn-primary" type="button" id="timesheet-save" @if(!report.isEditable){disabled}>@parts.Msg("button.save")</a>
+    <a class="btn btn-warning" type="button" id="timesheet-submit" @if(!report.isEditable){disabled}>@parts.Msg("button.submit")</a>
+    
+    <script>
+
+        @** Create a JS array with the authorized PE **@
+        var portfolioEntries = new Array();
+        var portfolioEntriesSource = new Array();
+        @for(portfolioEntry <- portfolioEntries) {
+            var fullName = "@if(portfolioEntry.governanceId != null && !portfolioEntry.governanceId.isEmpty) {@Html(portfolioEntry.governanceId) - }@Html(portfolioEntry.name)";
+            portfolioEntries[@portfolioEntry.id] = {id: @portfolioEntry.id, name: fullName};
+            portfolioEntriesSource.push(fullName);
+        }
+        
+        @** Create the HTML options for the available activity types **@
+        var activityTypesOptions = "<option value=''>@parts.Msg("core.timesheet.fill.select_activity_type")</option>";
+        @for(activityType <- activityTypes) {
+            activityTypesOptions += '<option value="@activityType.id">@(activityType.getName)</option>';
+        }
+        
+        @** show a confirm box if the timesheet has been updated **@
+        function maf_leavePage() {
+            if (hasBeenUpdated) {
+                return window.confirm("@parts.Msg("core.timesheet.fill.has_been_updated.message")");
+            } else {
+                return true;
+            }
+        }
+        
+        @** alert message if there is not authorized PE **@
+        function maf_noInitiative() {
+            alert("@parts.Msg("core.timesheet.fill.no_initiative")");
+        }
+        
+        @** alert message if there is available activity type **@
+        function maf_noActivity() {
+            alert("@parts.Msg("core.timesheet.fill.no_activity")");
+        }
+        
+        @** add a new initiative row in the table **@
+        function maf_addInitiative() {
+
+            hasBeenUpdated = true; // the timesheet has been updated
+            lastEntryId++; // compute the ID: = last ID + 1
+            var cLastEntryId = lastEntryId; // safe mode
+            
+            // hide the empty box and display the table
+            $("#timesheet-empty").addClass("hidden");
+            $("#timesheet-table").removeClass("hidden");
+            
+            // store the new entry in the data object
+            maf_addNewEntry(cLastEntryId);
+            
+            // compute the HTML row
+            var _initiativeRowHtml = ""
+                +"<tr id='timesheet-entry-row-" + cLastEntryId + "'>"
+                +"    <td style='vertical-align:middle' class='large-autocomplete'><div id='timesheet-entry-initiative-select-" + cLastEntryId + "'></div></td>"
+                +"    <td><select onchange='maf_selectPackage(" + cLastEntryId + ", this)' id='timesheet-entry-package-select-" + cLastEntryId + "' class='form-control' disabled><option selected='selected'></option></select></td>";
+
+            for(i = 0; i < 7; i++) {
+                _initiativeRowHtml += "<td class='text-center";
+                if (i == 5 || i == 6) {
+                    _initiativeRowHtml += " warning";
+                }
+                _initiativeRowHtml += "'><input type='text' class='timesheetLog" + cLastEntryId + " form-control text-center' onchange='maf_changeLog(" + cLastEntryId + ", " + i + ", this)' disabled></td>";
+            }
+                
+            _initiativeRowHtml += ""
+                +"    <td id='timesheet-entry-total-" + cLastEntryId + "' style='vertical-align:middle' class='text-center active'>0</td>"
+                +"    <td style='vertical-align:middle' class='text-center'><button type='button' class='btn btn-default' onclick='javascript: maf_deleteEntry(" + cLastEntryId + ")'><span class='glyphicons glyphicons-bin'></span></button></td>"
+                +"</tr>";
+
+            $("#timesheet-table-tbody").append(_initiativeRowHtml);
+            
+            // the initiative selector in an autocomplete field
+            $('#timesheet-entry-initiative-select-' + cLastEntryId).editable({
+                mode: 'inline',
+                type: 'typeaheadjs',
+                onblur: 'ignore',
+                toogle: "manual",
+                emptytext: "@parts.Msg("core.timesheet.fill.select_initiative")",
+                validate: function(newValue) {
+                    if (newValue == "") {
+                        return "@parts.Msg("error.required")";
+                    }
+                    for(portfolioEntryId in portfolioEntries){
+                        if(portfolioEntries[portfolioEntryId].name==newValue) {
+                            return {newValue: portfolioEntryId}
+                        }
+                    }
+                    
+                    return "@parts.Msg("core.timesheet.fill.select_initiative")";
+                },
+                success: function(response, newValue) {
+                    
+                    var portfolioEntry = portfolioEntries[newValue];
+                    $(".timesheetLog" + cLastEntryId).removeAttr("disabled");
+  
+                    // disable the initiative selector
+                    $('#timesheet-entry-initiative-select-' + cLastEntryId).editable("disable");
+                    $('#timesheet-entry-initiative-select-' + cLastEntryId).html(portfolioEntry.name);
+                    
+                    // set the portfolio entry id
+                    data.entries[cLastEntryId].portfolioEntryId = parseInt(newValue);
+                    
+                    //load the packages
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        url: "@controllers.core.routes.TimesheetController.getPackages().url",
+                        data: JSON.stringify({'portfolioEntryId' : newValue}),
+                        cache : false,
+                        error: function() {
+                            alert("@parts.Msg("core.timesheet.error")");
+                        }
+                    }).done(function(result) {
+                        $("#timesheet-entry-package-select-" + cLastEntryId).removeAttr("disabled");
+                        for (i = 0; i < result.length; ++i) {
+                            $("#timesheet-entry-package-select-" + cLastEntryId).append('<option value="' + result[i].value + '">' + result[i].text + '</option>');
+                        }
+                    });
+
+                },
+                typeahead: {
+                    local: portfolioEntriesSource
+                }
+            });
+            $('#timesheet-entry-initiative-select-' + cLastEntryId).editable('toggle');
+
+        }
+        
+        @** add a new activity row in the table **@
+        function maf_addActivity() {
+
+            hasBeenUpdated = true; // the timesheet has been updated
+            lastEntryId++; // compute the ID: = last ID + 1
+            var cLastEntryId = lastEntryId; // safe mode
+            
+            $("#timesheet-empty").addClass("hidden");
+            $("#timesheet-table").removeClass("hidden");
+            
+             // hide the empty box and display the table
+            maf_addNewEntry(cLastEntryId);
+        
+             // compute the HTML row
+            var _initiativeRowHtml = ""
+                +"<tr id='timesheet-entry-row-" + cLastEntryId + "'>"
+                +"    <td style='vertical-align:middle'><select onchange='maf_selectActivityType(" + cLastEntryId + ", this)' id='timesheet-entry-activity-type-select-" + cLastEntryId + "' class='form-control'>" + activityTypesOptions + "</select></td>"
+                +"    <td style='vertical-align:middle'><select onchange='maf_selectActivity(" + cLastEntryId + ", this)' id='timesheet-entry-activity-select-" + cLastEntryId + "' class='form-control' disabled><option selected='selected'>@parts.Msg("core.timesheet.fill.select_activity")</option></select></td>";
+
+            for(i = 0; i < 7; i++) {
+                _initiativeRowHtml += "<td class='text-center";
+                if (i == 5 || i == 6) {
+                    _initiativeRowHtml += " warning";
+                }
+                _initiativeRowHtml += "'><input type='text' class='timesheetLog" + cLastEntryId + " form-control text-center' onchange='maf_changeLog(" + cLastEntryId + ", " + i + ", this)' disabled></td>";
+            }
+                
+            _initiativeRowHtml += ""
+                +"    <td id='timesheet-entry-total-" + cLastEntryId + "' style='vertical-align:middle' class='text-center active'>0</td>"
+                +"    <td style='vertical-align:middle' class='text-center'><button type='button' class='btn btn-default' onclick='javascript: maf_deleteEntry(" + cLastEntryId + ")'><span class='glyphicons glyphicons-bin'></span></button></td>"
+                +"</tr>";
+
+            $("#timesheet-table-tbody").append(_initiativeRowHtml);
+
+        }
+        
+        @** delete an entry **@
+        function maf_deleteEntry(id) {
+
+            // update the totals
+            var _total = parseFloat($("#timesheet-total").html());
+            for(i = 0; i < 7; i++) {
+                var _hours = data.entries[id].logs[i].hours;
+                $("#timesheet-day-total-" + i).html(maf_formatNumber(parseFloat($("#timesheet-day-total-" + i).html()) - _hours, 1));
+                _total = _total - _hours
+            }
+            $("#timesheet-total").html(maf_formatNumber(_total, 1))
+            
+            hasBeenUpdated = true; // the timesheet has been updated
+            
+            if (data.entries[id].inDB) {
+                // if the entry is in DB => set a flag in order to delete it from the DB
+                data.entries[id].toRemove = true;
+            } else {
+                // else => simply set the entry to null
+                data.entries[id] = null;
+            }
+            
+            // remove from the display
+            $("#timesheet-entry-row-"+id).remove();
+            
+            // hide table if empty
+            if (maf_isEmpty()) {
+                $("#timesheet-table").addClass("hidden");
+                $("#timesheet-empty").removeClass("hidden");
+            }
+
+        }
+        
+        @** return true if there is no entry **@
+        function maf_isEmpty() {
+            var _isEmpty = true;
+            for (i in data.entries) {
+                var _entry = data.entries[i];
+                if (_entry != null && _entry.toRemove != true) {
+                    _isEmpty = false;
+                }
+            }
+            return _isEmpty;
+        }
+        
+        @** add a new entry in the data object **@
+        function maf_addNewEntry(id) {
+            
+            var _logs = new Array();
+            for(i = 0; i < 7; i++) {
+                _logs[i] = {
+                    index: i,
+                    logId: null,
+                    hours: 0
+                }
+            }
+            
+            var _entry = {
+                id: id,
+                inDB: false,
+                toRemove: null,
+                entryId: null,
+                portfolioEntryId: null,
+                packageId: null,
+                activityId: null,
+                logs: _logs
+            };
+            
+            data.entries[id] = _entry;
+        }
+        
+        @** called when the user select a package **@
+        function maf_selectPackage(id, elem) {
+ 
+            hasBeenUpdated = true;
+
+            if (elem.value != "") {
+                data.entries[id].packageId = parseInt(elem.value);
+            } else {
+                data.entries[id].packageId = null;
+            }
+        }
+        
+        @** called when the user select an activity type **@
+        function maf_selectActivityType(id, elem) {
+
+            $("#timesheet-entry-activity-type-select-" + id).attr("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                url: "@controllers.core.routes.TimesheetController.getActivities().url",
+                data: JSON.stringify({'activityTypeId' : elem.value}),
+                cache : false,
+                error: function() {
+                    alert("@parts.Msg("core.timesheet.error")");
+                }
+            }).done(function(result) {
+                $("#timesheet-entry-activity-select-" + id).removeAttr("disabled");
+                for (i = 0; i < result.length; ++i) {
+                    $("#timesheet-entry-activity-select-" + id).append('<option value="' + result[i].value + '">' + result[i].text + '</option>');
+                }
+            });
+
+        }
+        
+        @** called when the user select an activity **@
+        function maf_selectActivity(id, elem) {
+            data.entries[id].activityId = parseInt(elem.value);
+            $(".timesheetLog" + id).removeAttr("disabled");
+            $("#timesheet-entry-activity-select-" + id).attr("disabled", true);
+        }
+        
+        @** called when the user change one "hours" of the timesheet **@
+        function maf_changeLog(id, index, elem) {
+
+            hasBeenUpdated = true;
+
+            var _hours = parseFloat(elem.value);
+            if(isNaN(_hours)) {
+                _hours = 0
+            }
+            
+            if (_hours > 24) {
+                _hours = 24;
+                $(elem).val("24.0");
+            }
+            
+            var _prevHours = data.entries[id].logs[index].hours;
+            var _prevEntryTotal = parseFloat($("#timesheet-entry-total-" + id).html());
+            var _prevDayTotal = parseFloat($("#timesheet-day-total-" + index).html());
+            var _prevTotal = parseFloat($("#timesheet-total").html());
+
+            data.entries[id].logs[index].hours = _hours;
+            
+            $("#timesheet-entry-total-" + id).html(maf_formatNumber(_prevEntryTotal - _prevHours + _hours, 1));
+            $("#timesheet-day-total-" + index).html(maf_formatNumber(_prevDayTotal - _prevHours + _hours, 1));
+            $("#timesheet-total").html(maf_formatNumber(_prevTotal - _prevHours + _hours, 1))
+            
+        }
+        
+        @** save the timesheet **@
+        $("#timesheet-save").click(function(e) {
+
+            for (id in data.entries) {
+                var _entry = data.entries[id];
+                if (_entry != null) {
+                    if (_entry.portfolioEntryId == null && _entry.activityId == null) {
+                        alert("@parts.Msg("core.timesheet.fill.save.error.bad_data")");
+                        return;
+                    }
+                }
+            }
+
+            $('<form action="@controllers.core.routes.TimesheetController.weeklySave().url" method="POST">'
+                + '<input type="hidden" name="data" value=\'' + JSON.stringify(data) + '\' />'
+                + '</form>').appendTo($(document.body)).submit();
+        });
+        
+        @** submit the timesheet **@
+        $("#timesheet-submit").click(function() {
+            if (hasBeenUpdated) {
+                alert("@parts.Msg("core.timesheet.fill.submit.error.not_saved")");
+            } else {
+                if (maf_isEmpty()) {
+                    alert("@parts.Msg("core.timesheet.fill.submit.error.empty")");
+                } else {
+                    if (window.confirm("@parts.Msg("core.timesheet.fill.submit.confirmation")")) {
+                        window.location.href = '@controllers.core.routes.TimesheetController.weeklySubmit(report.id).url';
+                    }
+                }
+            }
+        });
+        
+        @** copy the previous week to the current **@
+        function maf_copy() {
+            if(maf_leavePage()) {
+                window.location.href = '@controllers.core.routes.TimesheetController.weeklyCopy(report.id).url';
+            }
+        }
+        
+        $('#timesheet-datepicker').datepicker({
+            autoclose: true, 
+            language: "@Http.Context.current().lang().code()",
+            format: "yyyy-mm-dd"
+        });
+        
+        $('#timesheet-datepicker').datepicker('setDate', '@("%tF".format(report.startDate))');
+        
+        $('#timesheet-datepicker').datepicker().on('changeDate', function(e) {
+            if(maf_leavePage()) {
+                var url = '@controllers.core.routes.TimesheetController.weeklyFill("_startDate").url';
+                url = url.replace('_startDate', e.format());
+                window.location.href = url;
+            }
+        });
+
+    </script>
+
+}

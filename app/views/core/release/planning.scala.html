@@ -1,0 +1,66 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    source: String
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+@import framework.utils.SideBar
+@import framework.utils.Menu.ClickableMenuItem
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.delivery.releases.menu.label", controllers.core.routes.ReleaseController.list().url),
+        ("core.release.list.planning.title", null)
+    )
+}
+
+@template(controllers.core.ReleaseController.MenuItemType.PLANNING, breadcrump){
+
+    @if(source != null && !source.trim.equals("[ ]")) {
+    
+        <div class="gantt" id="releases-gantt" style="margin: 0px auto;"></div>
+        
+        <script>
+            $(function() {
+                $("#releases-gantt").gantt({
+                    months: _jquery_gantt_transl.@(Http.Context.current().lang().code()).months,
+                    dow: _jquery_gantt_transl.@(Http.Context.current().lang().code()).dow,
+                    source: @Html(source),
+                    scale: "weeks",
+                    minScale: "days",
+                    maxScale: "months",
+                    itemsPerPage: 15,
+                    navigate: "scroll",
+                    onItemClick: function(data) {
+                        window.location.href = data.url;
+                    }
+                });
+            });
+            
+        </script>
+    
+    } else {
+        <div class="alert alert-info">@parts.Msg("core.release.list.planning.no_source")</div>
+    }
+
+}

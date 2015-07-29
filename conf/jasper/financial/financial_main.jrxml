@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-02-27T15:58:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="financial_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="4253fdea-d2e7-4afa-99ac-a2382a2be9b1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<subDataset name="TypeGroup" uuid="5fd139a4-d8ea-4dfc-beb3-c1b8e388accc">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+		<parameter name="default_currency_code" class="java.lang.String">
+			<defaultValueExpression><![CDATA["CHF"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="use_purchase_order" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="lang" class="java.lang.String">
+			<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT
+	IFNULL(m_type.value, '') AS type,
+	SUM(vpef.capex_budget + vpef.opex_budget) AS budget,
+	SUM(vpef.capex_cost_to_complete + vpef.opex_cost_to_complete + vpef.capex_engaged + vpef.opex_engaged) AS forecast
+
+FROM portfolio_entry pe
+
+	JOIN life_cycle_instance lci ON pe.active_life_cycle_instance_id = lci.id
+	JOIN v_pe_financial vpef ON pe.id = vpef.id
+	JOIN portfolio_entry_type pet ON pe.portfolio_entry_type_id = pet.id
+	LEFT OUTER JOIN i18n_messages m_type ON pet.name = m_type.`key` AND m_type.language=$P{lang}
+	
+WHERE pe.deleted = 0 AND pe.archived = 0 AND pe.is_public = 1 AND lci.is_concept = 0 AND vpef.currency_code = $P{default_currency_code} AND vpef.use_purchase_order = $P{use_purchase_order}
+
+GROUP BY pet.name]]>
+		</queryString>
+		<field name="type" class="java.lang.String"/>
+		<field name="budget" class="java.math.BigDecimal"/>
+		<field name="forecast" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="format" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="default_currency_code" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["CHF"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="use_purchase_order" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+	pe.governance_id AS  governance_id, 
+	pe.name AS name,
+	IFNULL(m_type.value, '') AS type,	
+	vpef.capex_budget AS capex_budget,
+	vpef.opex_budget AS opex_budget,
+	vpef.capex_cost_to_complete AS capex_cost_to_complete,
+	vpef.opex_cost_to_complete AS opex_cost_to_complete,
+	vpef.capex_engaged AS capex_engaged,
+	vpef.opex_engaged AS opex_engaged
+FROM portfolio_entry pe
+	JOIN life_cycle_instance lci ON pe.active_life_cycle_instance_id = lci.id
+	JOIN v_pe_financial vpef ON pe.id = vpef.id
+	JOIN portfolio_entry_type pet ON pe.portfolio_entry_type_id = pet.id
+	LEFT OUTER JOIN i18n_messages m_type ON pet.name = m_type.`key` AND m_type.language=$P{lang}
+WHERE pe.deleted = 0 AND pe.archived = 0 AND pe.is_public = 1 AND lci.is_concept = 0 AND vpef.currency_code = $P{default_currency_code} AND vpef.use_purchase_order = $P{use_purchase_order}
+ORDER BY type, governance_id]]>
+	</queryString>
+	<field name="governance_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="capex_budget" class="java.math.BigDecimal"/>
+	<field name="opex_budget" class="java.math.BigDecimal"/>
+	<field name="capex_cost_to_complete" class="java.math.BigDecimal"/>
+	<field name="opex_cost_to_complete" class="java.math.BigDecimal"/>
+	<field name="capex_engaged" class="java.math.BigDecimal"/>
+	<field name="opex_engaged" class="java.math.BigDecimal"/>
+	<field name="type" class="java.lang.String"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $P{format}.equals("EXCEL")]]></printWhenExpression>
+			<textField>
+				<reportElement style="title" x="0" y="0" width="550" height="60" uuid="45ff4416-989b-46ba-9cae-95eb0e745ff5"/>
+				<textFieldExpression><![CDATA[str("title")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $V{PAGE_NUMBER}.equals(1)]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="20" uuid="84101446-6e78-4039-b959-1e75df83f074">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.id")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="50" y="0" width="140" height="20" uuid="b0fc9e9f-46ea-4dd7-bac6-eb130e5a10f4">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.name")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="270" y="0" width="140" height="20" uuid="a6bff773-39fb-4806-b783-ddf1797d52fb">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.budget")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="410" y="0" width="140" height="20" uuid="3caf2921-b823-47d6-a3ea-ef6f88151550">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.forecast")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="270" y="20" width="70" height="20" uuid="ce537a5c-2a40-4977-bd9f-196b6cd6d11a">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["CAPEX"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="340" y="20" width="70" height="20" uuid="a40a9e70-f1fb-441c-bc79-0ee5f7564636">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["OPEX"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="410" y="20" width="70" height="20" uuid="edb3343d-7395-4858-8dd1-6f95335599ab">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["CAPEX"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="480" y="20" width="70" height="20" uuid="a2ea3375-4319-4501-8efe-61bb068f022c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["OPEX"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="190" y="0" width="80" height="20" uuid="ae42fdb7-02eb-454b-88f8-cbb7105e2e55">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("label.type")]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="20" uuid="4b252950-a002-4b5c-9ac1-f12bf31c2de5">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{governance_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="50" y="0" width="140" height="20" uuid="b6ac4789-8d5a-4dcc-88aa-48cb2bc8fae7">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="270" y="0" width="70" height="20" uuid="645cb6fd-1316-4acc-8f33-d480b2807fda">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{capex_budget}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="340" y="0" width="70" height="20" uuid="b09afaf5-ae52-4ba4-ab65-e5c7ba993ac0">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{opex_budget}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="410" y="0" width="70" height="20" uuid="d8cbc77c-08e9-461f-843c-cca92e5bbb4f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[SUM($F{capex_cost_to_complete},$F{capex_engaged})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="480" y="0" width="70" height="20" uuid="26155391-4b04-4009-a789-28cc1bce3086">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[SUM($F{opex_cost_to_complete},$F{opex_engaged})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="0.00">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="190" y="0" width="80" height="20" uuid="e32fdeb2-5643-46be-8772-6aeb3464555f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="33" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
+			<textField>
+				<reportElement style="row" x="0" y="10" width="550" height="19" uuid="d813ce6e-fdf7-4a5e-96d2-363857872452"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[str("page") + " " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="539">
+			<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
+			<pieChart>
+				<chart evaluationTime="Report">
+					<reportElement x="80" y="40" width="400" height="220" uuid="60dc2b15-0fee-4020-9887-b3d78a9723c7"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="TypeGroup" uuid="dca02139-d8d9-40de-8823-aabc94d474e6">
+							<datasetParameter name="default_currency_code">
+								<datasetParameterExpression><![CDATA[$P{default_currency_code}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="use_purchase_order">
+								<datasetParameterExpression><![CDATA[$P{use_purchase_order}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="lang">
+								<datasetParameterExpression><![CDATA[$P{lang}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{type}]]></keyExpression>
+					<valueExpression><![CDATA[$F{budget}]]></valueExpression>
+				</pieDataset>
+				<piePlot labelFormat="{1} ({2})">
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+			<textField>
+				<reportElement style="subtitle" x="80" y="10" width="400" height="30" uuid="cf13d0c4-3969-4894-b48b-55d2225150ea"/>
+				<textFieldExpression><![CDATA[str("title.chart.budget_by_type")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="subtitle" x="80" y="280" width="400" height="30" uuid="914d1010-07e9-463e-8c52-eb8cf99570f1"/>
+				<textFieldExpression><![CDATA[str("title.chart.forecast_by_type")]]></textFieldExpression>
+			</textField>
+			<pieChart>
+				<chart evaluationTime="Report">
+					<reportElement x="80" y="310" width="400" height="220" uuid="3df7beae-6c13-4adb-9c42-2b0acfee623a"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="TypeGroup" uuid="9e1cf976-460e-46c2-a5e1-6ceef9bc69c0">
+							<datasetParameter name="default_currency_code">
+								<datasetParameterExpression><![CDATA[$P{default_currency_code}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="use_purchase_order">
+								<datasetParameterExpression><![CDATA[$P{use_purchase_order}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="lang">
+								<datasetParameterExpression><![CDATA[$P{lang}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{type}]]></keyExpression>
+					<valueExpression><![CDATA[$F{forecast}]]></valueExpression>
+				</pieDataset>
+				<piePlot labelFormat="{1} ({2})">
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,76 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    uid: String,
+    selectActorForUserFormData: Form[controllers.admin.UserManager.SelectActorForUserFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@usermanager_template(parts.Msg.asString("admin.user_manager.sidebar.create"), controllers.admin.UserManager.MenuItemType.CREATE) {
+    
+    <blockquote>@parts.Msg("admin.user_manager.create.actor.header")</blockquote>
+    
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">@parts.Msg("admin.user_manager.create.actor.create.title")</div>
+                <div class="panel-body">
+                    <p>@parts.Msg("admin.user_manager.create.actor.create.header")</p>
+                    @helper.form(action = controllers.admin.routes.UserManager.createActorFromUser()) {
+                        <input type="hidden" name="uid" value="@uid">
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")">
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">@parts.Msg("admin.user_manager.create.actor.select.title")</div>
+                <div class="panel-body">
+                    <p>@parts.Msg("admin.user_manager.create.actor.select.header")</p>
+                    @helper.form(action = controllers.admin.routes.UserManager.selectActorForUser()) {
+                        <input type="hidden" name="uid" value="@uid">
+                        @parts.singlevalue_picker(
+                            selectActorForUserFormData("actor"), 
+                            parts.Msg.asString("admin.user_manager.create.actor.select.label"),
+                            controllers.routes.PickerController.actorWithoutUid().url
+                        )
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.associate")">
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">@parts.Msg("admin.user_manager.create.actor.later.title")</div>
+                <div class="panel-body">
+                    <p>@parts.Msg("admin.user_manager.create.actor.later.header")</p>
+                    <a class="btn btn-primary" href="@controllers.admin.routes.UserManager.displayUser(uid).url" >@parts.Msg("button.decide_later")</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+}

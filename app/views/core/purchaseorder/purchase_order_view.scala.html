@@ -1,0 +1,95 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    purchaseOrder: models.finance.PurchaseOrder,
+    purchaseOrderLineItemTable: framework.utils.Table[utils.table.PurchaseOrderLineItemListView]
+)
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (parts.Msg.asString("core.purchase_order.breadcrumb", purchaseOrder.refId), null)
+    )
+}
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.purchase_order.title"),
+    breadcrump
+) {
+    
+    <div class="row">
+    
+        <div class="col-md-4">
+    
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.purchase_order.view.details.title")
+                </div>
+        
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-4">
+                             <col class="col-md-8">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order.ref_id.label")</th>
+                                <td>@display_object(purchaseOrder.refId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order.description.label")</th>
+                                <td>@display_object(purchaseOrder.description)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order.is_cancelled.label")</th>
+                                <td>@display_boolean(purchaseOrder.isCancelled)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+        </div>
+    
+        <div class="col-md-8">
+    
+            <div class="panel panel-default">
+                    
+                <div class="panel-heading">
+                    @parts.Msg("core.purchase_order.view.lineitems.title")
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(purchaseOrderLineItemTable)
+                </div>
+                
+            </div>
+    
+        </div>
+    
+    </div>
+   
+}

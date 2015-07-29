@@ -1,0 +1,50 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    actor: models.pmo.Actor, 
+    competencies: framework.utils.ISelectableValueHolderCollection[Long],
+    defaultCompetencyForm: Form[utils.form.ActorDefaultCompetencyFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+
+@actor_template(parts.Msg.asString("core.actor.competencies.edit.breadcrumb"), actor){
+
+    <blockquote>
+        @parts.Msg("core.actor.default_competency.edit.header")
+    </blockquote>
+
+    <div class="maf-form">
+        @helper.form(action = controllers.core.routes.ActorController.processEditDefaultCompetency()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@actor.id"/>
+                
+                @parts.dropdownlist(defaultCompetencyForm("defaultCompetency"), parts.Msg.asString("object.competency.is_default.label"), competencies, parts.Msg.asString("object.competency.is_default.help"), false)
+
+            </fieldset>
+            <br/>
+            <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+        }
+    </div> 
+   
+}

@@ -1,0 +1,92 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    dataType: framework.commons.DataType,
+    customAttributeForm: Form[utils.form.CustomAttributeDefinitionFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.custom_attributes.title", controllers.admin.routes.ConfigurationCustomAttributeController.list(dataType.getDataName()).url),
+        ("admin.configuration.custom_attribute.manage.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.custom_attributes.title", controllers.admin.ConfigurationController.MenuItemType.CUSTOM_ATTRIBUTES, breadcrump){
+
+    @framework_views.parts.framework_code_editor_includes(routes.Assets.versioned("").url, framework.commons.IFrameworkConstants.Syntax.PROPERTIES)
+    
+    <div class="maf-form">
+        @if(customAttributeForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.admin.routes.ConfigurationCustomAttributeController.processManage()) {
+            <fieldset>
+
+                <input type="hidden" name="objectType" value="@dataType.getDataTypeClassName"/>
+    
+                @if(customAttributeForm("id").value!=null) {
+                    <input type="hidden" name="id" value="@customAttributeForm("id").value"/>
+                    <input type="hidden" name="attributeType" value="@customAttributeForm("attributeType").value"/>
+                    <div class="form-group ">
+                        <label class="control-label">@parts.Msg("object.custom_attribute_definition.uuid.label")</label>
+                        <div class="">@customAttributeForm("uuid").value</div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label">@parts.Msg("object.custom_attribute_definition.attribute_type.label")</label>
+                        <div class="">@models.framework_models.common.ICustomAttributeValue.AttributeType.valueOf(customAttributeForm("attributeType").value).getLabel()</div>
+                    </div>
+                } else {
+                    @parts.dropdownlist(customAttributeForm("attributeType"), parts.Msg.asString("object.custom_attribute_definition.attribute_type.label"), controllers.admin.ConfigurationCustomAttributeController.getAllAttributeTypes)
+                }
+                
+                @parts.checkbox(
+                    customAttributeForm("isDisplayed"), 
+                    parts.Msg.asString("object.custom_attribute_definition.is_displayed.label"),
+                    parts.Msg.asString("object.custom_attribute_definition.is_displayed.help")
+                )
+                
+                @parts.multi_languages_input_text(customAttributeForm("name"), parts.Msg.asString("object.custom_attribute_definition.name.label"))
+
+                @parts.multi_languages_input_text(customAttributeForm("description"), parts.Msg.asString("object.custom_attribute_definition.description.label"))
+
+                @parts.code_editor(
+                    customAttributeForm("configuration"), 
+                    parts.Msg.asString("object.custom_attribute_definition.configuration.label"), 
+                    framework.commons.IFrameworkConstants.Syntax.PROPERTIES
+                )
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationCustomAttributeController.list(dataType.getDataName())'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+    
+}

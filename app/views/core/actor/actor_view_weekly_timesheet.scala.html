@@ -1,0 +1,171 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    actor: models.pmo.Actor,
+    report: models.timesheet.TimesheetReport,
+    approvalForm: Form[utils.form.TimesheetReportApprovalFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@actor_template(parts.Msg.asString("core.actor.sidebar.timesheet"), actor, controllers.core.ActorController.MenuItemType.TIMESHEET){
+
+    <div class="row">
+        <div class="col-md-3 ">
+            <h4 class="no-margin"><span class="label label-@(report.getStatusCssClass)">@parts.Msg("object.timesheet_report.status." + report.status.name + ".label")</span></h4>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <div class="btn-group">
+                <a class="btn btn-default" role="button" href="@controllers.core.routes.ActorController.viewWeeklyTimesheet(actor.id, "%tF".format(report.getPreviousStartDate))">&laquo;</a>
+                <a class="btn btn-default" role="button" id="timesheet-datepicker">@parts.Msg("core.timesheet.fill.weekly.week.label", display_date(report.startDate), display_date(report.getEndDate))</a>
+                <a class="btn btn-default" role="button" href="@controllers.core.routes.ActorController.viewWeeklyTimesheet(actor.id, "%tF".format(report.getNextStartDate))">&raquo;</a>
+            </div>
+         </div>
+         
+         <div class="col-md-3 text-right">&nbsp;</div>
+    
+    </div>
+    
+    <br/>
+    
+    
+    <div class="row">
+    
+        <div class="col-md-12">
+            @if(report.timesheetEntries.size() == 0) {
+                <div id="timesheet-empty" class="alert alert-info">@parts.Msg("core.timesheet.empty")</div>
+            } else {
+                <div id="timesheet-table" class="table-responsive">
+                    <table class="table">
+                    
+                        <thead>
+                            <tr>
+                                <th class="col-md-2">@parts.Msg("core.timesheet.fill.weekly.table.entry.label")</th>
+                                <th class="col-md-2">@parts.Msg("core.timesheet.fill.weekly.table.subentry.label")</th>
+                                <th class="text-center">@parts.Msg("day.monday")<br/><span style="font-weight: normal;"><em>@display_date(report.startDate)</em></span></th>
+                                <th class="text-center">@parts.Msg("day.tuesday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(1))</em></span></th>
+                                <th class="text-center">@parts.Msg("day.wednesday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(2))</em></span></th>
+                                <th class="text-center">@parts.Msg("day.thursday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(3))</em></span></th>
+                                <th class="text-center">@parts.Msg("day.friday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(4))</em></span></th>
+                                <th class="text-center warning">@parts.Msg("day.saturday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(5))</em></span></th>
+                                <th class="text-center warning">@parts.Msg("day.sunday")<br/><span style="font-weight: normal;"><em>@display_date(report.getIncDate(6))</em></span></th>
+                                <th class="text-center active">@parts.Msg("core.timesheet.fill.weekly.table.total.label")</th>
+                            </tr>
+                        </thead>
+                        
+                        <script>
+                            var dayTotals = new Array();
+                            for(i = 0; i < 7; i++) {
+                                dayTotals[i] = 0.0;
+                            }
+                        </script>
+                        
+                        <tbody id="timesheet-table-tbody">
+    
+                            @for((entry, id) <- report.timesheetEntries.zipWithIndex) {
+                                <tr id='timesheet-entry-row-@id'>
+                                    @if(entry.portfolioEntry != null) {
+                                        <td>
+                                            @display_portfolio_entry(entry.portfolioEntry)
+                                        </td>
+                                        <td>
+                                            @display_portfolio_entry_planning_package(entry.portfolioEntryPlanningPackage)
+                                        </td>
+                                    } else {
+                                        <td>@entry.timesheetActivity.timesheetActivityType.getName</td>
+                                        <td>@entry.timesheetActivity.getName</td>
+                                    }
+
+                                    @for((log, index) <- entry.timesheetLogs.zipWithIndex) {
+                                        <td class='text-center @if(index == 5 || index == 6){warning}'>@log.hours</td>
+                                        <script>
+                                            dayTotals[@index] += @log.hours;
+                                        </script>
+                                    }
+    
+                                    <td id='timesheet-entry-total-@id' class="text-center active">@entry.getTotal</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                        
+                        <tfooter>
+                            <tr>
+                                <td class="active">&nbsp;</td>
+                                <td class="active">&nbsp;</td>
+                                
+                                @for(i <- 0 to 6) {
+                                    <td class="text-center active"><span id="timesheet-day-total-@i"></span></td>
+                                    <script>
+                                        $("#timesheet-day-total-@i").html(maf_formatNumber(dayTotals[@i], 1));
+                                    </script>
+                                }
+                                
+                                <td class="text-center active"><strong><span id="timesheet-total">@report.getTotal</span></strong></td>
+                            </tr>
+                        </tfooter>
+                    </table>
+                </div>
+
+                 
+                @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION, "", report.id)) {
+                    @if(report.isProcessable) {
+                        @helper.form(action = controllers.core.routes.TimesheetController.processTimesheet()) {
+                            <input type="hidden" name="id" value="@report.id" />
+                            
+                            @helper.textarea(approvalForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.timesheet_report.comments.label"))
+                            
+                            @if(!report.isApproved) {
+                                <button type="submit" class="btn btn-success" name="action" value="APPROVE">@parts.Msg("button.approve")</button>
+                            }
+                            @if(!report.isRejected) {
+                                <button type="submit" class="btn btn-danger" name="action" value="REJECT">@parts.Msg("button.reject")</button>
+                            }
+                        }
+                    }
+                }
+                
+            }
+        </div>
+    
+    </div>
+    
+    <script>
+    
+        $('#timesheet-datepicker').datepicker({
+            autoclose: true, 
+            language: "@Http.Context.current().lang().code()",
+            format: "yyyy-mm-dd"
+        });
+    
+        $('#timesheet-datepicker').datepicker('setDate', '@("%tF".format(report.startDate))');
+    
+       $('#timesheet-datepicker').datepicker().on('changeDate', function(e) {
+            var url = '@controllers.core.routes.ActorController.viewWeeklyTimesheet(actor.id, "_startDate").url';
+            url = url.replace('_startDate', e.format());
+            window.location.href = url;
+        });
+    </script>
+}

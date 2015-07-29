@@ -1,0 +1,156 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    workOrder: models.finance.WorkOrder,
+    workOrderForm: Form[utils.form.WorkOrderFormData],
+    currencies: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@tab=@{
+    if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+        "engaged"
+    } else {
+        "costToComplete"
+    }
+}
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.financial.label", controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id).url),
+        ("core.portfolio_entry_financial.work_order.manage.title", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.FINANCIAL, breadcrump){
+    
+    <div class="maf-form">
+        @if(workOrderForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.PortfolioEntryFinancialController.processManageWorkOrder()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+
+                @if(workOrderForm("workOrderId").value!=null) {
+                    <input type="hidden" name="workOrderId" value="@workOrderForm("workOrderId").value"/>
+                }
+                
+                @***if edit case and the work order is engaged then the user can not update the isOpex and shared fields***@
+                @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                    <input type="hidden" name="isOpex" value="@workOrderForm("isOpex").value"/>
+                    <input type="hidden" name="shared" value="@workOrderForm("shared").value"/>
+                } else {
+                    @parts.checkbox(
+                        workOrderForm("isOpex"), 
+                        parts.Msg.asString("object.work_order.is_opex.label"), 
+                        parts.Msg.asString("object.work_order.is_opex.help")
+                    )
+                    
+                    @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+                        <input type="hidden" name="shared" value="0"/>
+                    } else {
+                        @parts.checkbox(
+                            workOrderForm("shared"), 
+                            parts.Msg.asString("object.work_order.shared.label"), 
+                            parts.Msg.asString("object.work_order.shared.help")
+                        )
+                    }
+                }
+
+                @helper.inputText(workOrderForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.name.label"), 'autofocus -> "autofocus")
+                
+                @helper.textarea(workOrderForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.description.label"))
+
+                @***if the purchase orders are disable or create case or the work order is not engaged then display the amount and currency fields***@
+                @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                
+                    @helper.inputText(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
+
+                    @parts.dropdownlist(workOrderForm("currency"), parts.Msg.asString("object.work_order.currency.label"), currencies, null, false)
+                    
+                } else {
+                
+                    <input type="hidden" name="currency" value="@workOrderForm("currency").value"/>
+                    <input type="hidden" name="amount" value="@workOrderForm("amount").value"/>
+                    
+                }
+                
+                @***if edit case and the work order is engaged and (the work order is shared or the purchase orders are disable) then the user can define the amount received***@
+                @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) && (workOrder.shared || !dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                    @helper.inputText(workOrderForm("amountReceived"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount_received.label"))
+                }
+                
+                @parts.singlevalue_picker(
+                    workOrderForm("portfolioEntryPlanningPackage"), 
+                    parts.Msg.asString("object.work_order.portfolio_entry_planning_package.label"),
+                    controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
+                    Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                )
+                
+                @parts.checkbox(
+                    workOrderForm("followPackageDates"), 
+                    parts.Msg.asString("object.work_order.follow_package_dates.label")
+                )
+                
+                @parts.dateinput(workOrderForm("startDate"), parts.Msg.asString("object.work_order.start_date.label"))
+                
+                @parts.dateinput(workOrderForm("dueDate"), parts.Msg.asString("object.work_order.due_date.label"))
+                
+                @if(workOrderForm("workOrderId").value!=null) {
+                    @parts.extended_attributes_input(workOrderForm, classOf[models.finance.WorkOrder], Long.parseLong(workOrderForm("workOrderId").value))
+                } else {
+                    @parts.extended_attributes_input(workOrderForm, classOf[models.finance.WorkOrder], null)
+                }
+                
+                @views.html.core.portfolioentryplanning.allocated_resource_manage_js()
+                
+                <script>
+
+                $('#@workOrderForm("portfolioEntryPlanningPackage").id').change(function() { 
+                    maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id');
+                });
+                $('#@workOrderForm("followPackageDates").id').change(function() { 
+                    maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id') 
+                });
+
+                maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id');
+                
+                </script>
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+   
+}

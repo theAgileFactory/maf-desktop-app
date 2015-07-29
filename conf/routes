@@ -1,0 +1,899 @@
+#-------------------
+# Root module
+#-------------------
+
+GET    /switch-perspective         framework.utils.TopMenuBarController.switchPerspective(key)
+
+#GET    /ext/*path                  framework.services.ext.ExtensionController.perform(path)
+#POST   /ext/*path                  framework.services.ext.ExtensionController.perform(path)
+
+#Application controller
+GET    /                           controllers.Application.index()
+GET    /notification/redirect      controllers.Application.redirectForNotification(id: Long)
+GET    /notifications              controllers.Application.displayNotifications()
+POST   /notifications/filter       controllers.Application.filterNotifications()
+POST   /notifications/all-ids      controllers.Application.getAllNotificationIds()
+POST   /notifications/delete       controllers.Application.deleteNotifications()
+GET    /notification/delete        controllers.Application.deleteNotification(id: Long)
+GET    /notification/read          controllers.Application.markNotificationAsRead(id: Long)
+GET    /rest/dynacust              controllers.Application.dynamicSingleCustomAttributeApi()
+GET    /rest/idzonedata            controllers.Application.idzone()
+GET    /attach/get/:id             controllers.Application.downloadFileAttachment(id: Long)
+GET    /attach/del/:id             controllers.Application.deleteFileAttachment(id: Long)
+GET    /help                       controllers.Application.help(route: String)
+GET    /shortcuts/view             controllers.Application.viewShortcuts()
+POST   /shortcut/add               controllers.Application.addShortcut()
+POST   /shortcut/delete            controllers.Application.deleteShortcut()
+GET    /tour/end                   controllers.Application.endTour(tourUid: String)
+GET    /adpanel/:page              controllers.Application.getAdPanelContent(page: String)
+
+#Messaging
+GET    /messaging                  controllers.MessagingController.index()
+POST   /message/send               controllers.MessagingController.sendMessage()
+
+#Common redirections
+GET    /redirect/pm                controllers.Redirector.pm()
+GET    /redirect/governance        controllers.Redirector.governance()
+GET    /redirect/ci                controllers.Redirector.ci()
+GET    /redirect/scm               controllers.Redirector.scm()
+GET    /redirect/maf-reporting     controllers.Redirector.reporting()
+
+#Authentication
+GET     /auth/displayLoginForm      controllers.sso.StandaloneAuthenticationController.displayLoginForm()
+GET     /auth/check/:uuid           controllers.sso.StandaloneAuthenticationController.getCaptchaImage(uuid: String)
+GET     /auth/resetForm             controllers.sso.StandaloneAuthenticationController.displayResetPasswordForm() 
+POST    /auth/performReset          controllers.sso.StandaloneAuthenticationController.triggerResetPassword(uuid: String)    
+GET     /not-accessible             controllers.sso.Authenticator.notAccessible()
+GET     /loginStandalone            controllers.sso.Authenticator.loginStandalone(redirect)
+GET     /loginCasMaster             controllers.sso.Authenticator.loginCasMaster(redirect)
+GET     /loginFederated             controllers.sso.Authenticator.loginFederated(redirect)
+GET     /redirectToSavedUrl         controllers.sso.Authenticator.redirectToThePreviouslySavedUrl()
+GET     /callback                   controllers.sso.Authenticator.callback()
+POST    /callback                   controllers.sso.Authenticator.callback()
+GET     /casProxyCallback           controllers.sso.Authenticator.callback()
+POST    /casProxyCallback           controllers.sso.Authenticator.callback()
+GET     /samlCallback               controllers.sso.AlternativeFederatedCallbackController.callback()
+POST    /samlCallback               controllers.sso.AlternativeFederatedCallbackController.callback()
+GET     /logout                     controllers.sso.Authenticator.logout()
+GET     /logout_cas                 org.pac4j.play.CallbackController.logoutAndRedirect()
+GET     /logout_federated           controllers.sso.Authenticator.logoutFederated()
+
+#-------------------
+# My module
+#-------------------
+
+#PersonalStorage controller
+GET     /my/personalstorage/display           controllers.my.MyPersonalStorage.index()
+GET     /my/personalstorage/download/:id      controllers.my.MyPersonalStorage.download(id: String)
+GET     /my/personalstorage/delete/:id        controllers.my.MyPersonalStorage.delete(id: String)
+
+#-------------------
+# KPI
+#-------------------
+
+GET   /kpi/trend                          controllers.KpiController.trend()
+
+GET   /admin/kpis                         controllers.admin.KpiManagerController.index()
+GET   /admin/kpi/view                     controllers.admin.KpiManagerController.view(kpiDefinitionId: Long)
+GET   /admin/kpi/change-order             controllers.admin.KpiManagerController.changeOrder(kpiDefinitionId: Long, isDecrement: Boolean)
+GET   /admin/kpi/edit                     controllers.admin.KpiManagerController.edit(kpiDefinitionId: Long)
+POST  /admin/kpi/save                     controllers.admin.KpiManagerController.save()
+GET   /admin/kpi/value/edit               controllers.admin.KpiManagerController.editValue(kpiValueDefinitionId: Long, valueType: String)
+POST  /admin/kpi/value/save               controllers.admin.KpiManagerController.saveValue()
+GET   /admin/kpi/rule/change-order        controllers.admin.KpiManagerController.changeRuleOrder(kpiColorRuleId: Long, isDecrement: Boolean)
+GET   /admin/kpi/rule/manage              controllers.admin.KpiManagerController.manageRule(kpiDefinitionId: Long, kpiColorRuleId: Long ?= 0)
+POST  /admin/kpi/rule/save                controllers.admin.KpiManagerController.saveRule()
+GET   /admin/kpi/rule/delete              controllers.admin.KpiManagerController.deleteRule(kpiColorRuleId: Long)
+GET   /admin/kpi/scheduler/delete         controllers.admin.KpiManagerController.deleteScheduler(kpiDefinitionId: Long)
+GET   /admin/kpi/scheduler/edit           controllers.admin.KpiManagerController.editScheduler(kpiDefinitionId: Long)
+POST  /admin/kpi/scheduler/save           controllers.admin.KpiManagerController.saveScheduler()
+GET   /admin/kpi/scheduler/trigger        controllers.admin.KpiManagerController.triggerScheduler(kpiDefinitionId: Long)
+GET   /admin/kpi/create                   controllers.admin.KpiManagerController.create(objectType)
+POST  /admin/kpi/create                   controllers.admin.KpiManagerController.processCreate()
+GET   /admin/kpi/delete                   controllers.admin.KpiManagerController.delete(kpiDefinitionId: Long)
+
+
+#-------------------
+# Core: JSON API
+#-------------------
+
+GET   /json/manager                                  controllers.JsonController.manager()
+GET   /json/sponsoring-unit                          controllers.JsonController.sponsoringUnit()
+GET   /json/delivery-unit                            controllers.JsonController.deliveryUnit()
+GET   /json/portfolio                                controllers.JsonController.portfolio()
+GET   /json/purchase-order                           controllers.JsonController.purchaseOrder()
+GET   /json/application-block                        controllers.JsonController.applicationBlock()
+
+#-------------------
+# Core: Picker
+#-------------------
+
+POST   /picker/manager                                controllers.PickerController.manager()
+POST   /picker/owner                                  controllers.PickerController.owner()
+POST   /picker/actor                                  controllers.PickerController.actor()
+POST   /picker/actor-without-uid                      controllers.PickerController.actorWithoutUid()
+POST   /picker/portfolio-entry/actor                  controllers.PickerController.actorOfPortfolioEntry()
+POST   /picker/org-unit/actor                         controllers.PickerController.actorOfOrgUnit()
+POST   /picker/competency/actor                       controllers.PickerController.actorWithCompetency()
+POST   /picker/org-unit                               controllers.PickerController.orgUnit()
+POST   /picker/sponsoring-unit                        controllers.PickerController.sponsoringUnit()
+POST   /picker/delivery-units                         controllers.PickerController.deliveryUnits()
+POST   /picker/portfolio-entry/delivery-units         controllers.PickerController.deliveryUnitsOfPortfolioEntry()
+POST   /picker/cost-center                            controllers.PickerController.costCenter()
+POST   /picker/portfolio                              controllers.PickerController.portfolio()
+POST   /picker/budget-bucket                          controllers.PickerController.budgetBucket()
+POST   /picker/principals/uid                         controllers.PickerController.principalsUid()
+POST   /picker/portfolio-entry/planning-package       controllers.PickerController.planningPackageOfPortfolioEntry()
+POST   /picker/portfolio-type                         controllers.PickerController.portfolioType()
+POST   /picker/portfolio-entry-type                   controllers.PickerController.portfolioEntryType()
+POST   /picker/release/active                         controllers.PickerController.activeRelease()
+
+#-------------------
+# Core: ProcessTransitionRequest
+#-------------------
+
+GET    /request/milestone/list                   controllers.core.ProcessTransitionRequestController.reviewMilestoneRequestList(page: Integer ?= 0)
+GET    /request/milestone/process                controllers.core.ProcessTransitionRequestController.processMilestoneRequest(id: Long, requestId: Long)
+POST   /request/milestone/accept                 controllers.core.ProcessTransitionRequestController.acceptMilestoneRequest()
+GET    /request/milestone/reject                 controllers.core.ProcessTransitionRequestController.rejectMilestoneRequest(id: Long, requestId: Long)
+
+#-------------------
+# Core: Portfolio
+#-------------------
+
+GET    /portfolio/overview                         controllers.core.PortfolioController.overview(id: Long)
+GET    /portfolio/view                             controllers.core.PortfolioController.view(id: Long, portfolioEntryPage: Integer ?= 0, stakeholderPage: Integer ?= 0)
+GET    /portfolio/new                              controllers.core.PortfolioController.create()
+POST   /portfolio/create                           controllers.core.PortfolioController.createSubmit()
+GET    /portfolio/edit                             controllers.core.PortfolioController.edit(id: Long)
+POST   /portfolio/save                             controllers.core.PortfolioController.save()
+GET    /portfolio/delete                           controllers.core.PortfolioController.delete(id: Long)
+
+#-------------------
+# Core: PortfolioStakeholder
+#-------------------
+
+GET    /portfolio/stakeholder/manage               controllers.core.PortfolioStakeholderController.manage(id: Long, stakeholderId: Long ?= 0)
+POST   /portfolio/stakeholder/save                 controllers.core.PortfolioStakeholderController.save()
+GET    /portfolio/stakeholder/delete               controllers.core.PortfolioStakeholderController.delete(id: Long, stakeholderId: Long ?= 0)
+
+#-------------------
+# Core: BudgetBucket
+#-------------------
+
+GET    /budget-bucket/view                           controllers.core.BudgetBucketController.view(id: Long, budgetTablePage: Integer ?= 0, initiativeBudgetTablePage: Integer ?= 0)
+GET    /budget-bucket/new                            controllers.core.BudgetBucketController.create()
+GET    /budget-bucket/edit                           controllers.core.BudgetBucketController.edit(id: Long)
+POST   /budget-bucket/save                           controllers.core.BudgetBucketController.save()
+POST   /budget-bucket/create                         controllers.core.BudgetBucketController.createSubmit()
+GET    /budget-bucket/delete                         controllers.core.BudgetBucketController.delete(id: Long)
+GET    /budget-bucket/line/manage                    controllers.core.BudgetBucketController.manageLine(id: Long, lineId: Long ?= 0)
+POST   /budget-bucket/line/save                      controllers.core.BudgetBucketController.saveLine()
+GET    /budget-bucket/line/delete                    controllers.core.BudgetBucketController.deleteLine(id: Long, lineId: Long)
+
+#-------------------
+# Core: Cockpit
+#-------------------
+
+GET    /cockpit/initiatives                                       controllers.core.CockpitController.initiatives(asManagerPage: Integer ?= 0, asStakeholderPage: Integer ?=0, viewAllAsManager: Boolean ?= false)
+GET    /cockpit/portfolios                                        controllers.core.CockpitController.portfolios(asManagerPage: Integer ?= 0, asStakeholderPage: Integer ?=0, viewAllAsManager: Boolean ?= false)
+GET    /cockpit/subordinates                                      controllers.core.CockpitController.subordinates()
+GET    /cockpit/subordinates/allocations                          controllers.core.CockpitController.subordinatesAllocations()
+GET    /cockpit/subordinates/allocations/details                  controllers.core.CockpitController.subordinatesAllocationsDetails()
+POST   /cockpit/subordinates/allocations/portfolio-entry/filter   controllers.core.CockpitController.portfolioEntryAllocationsFilter()
+POST   /cockpit/subordinates/allocations/portfolio-entry/all-ids  controllers.core.CockpitController.getAllportfolioEntryAllocationIds()
+POST   /cockpit/subordinates/allocations/portfolio-entry/confirm  controllers.core.CockpitController.confirmPortfolioEntryAllocations()
+POST   /cockpit/subordinates/allocations/activity/filter          controllers.core.CockpitController.activityAllocationsFilter()
+GET    /cockpit/subordinates/timesheet                            controllers.core.CockpitController.subordinatesTimesheet()
+GET    /cockpit/org-units                                         controllers.core.CockpitController.orgUnits(page: Integer ?= 0, viewAll: Boolean ?= false)
+GET    /cockpit/budget-buckets                                    controllers.core.CockpitController.budgetBuckets(asOwnerPage: Integer ?= 0, asResponsiblePage: Integer ?= 0, viewAllAsOwner: Boolean ?= false, viewAllAsResponsible: Boolean ?= false)
+GET    /cockpit/releases                                          controllers.core.CockpitController.releases(page: Integer ?= 0, viewAll: Boolean ?= false)
+
+#-------------------
+# Core: Roadmap
+#-------------------
+
+GET    /roadmap                                  controllers.core.RoadmapController.index(reset: Boolean ?= false)
+POST   /roadmap/filter                           controllers.core.RoadmapController.indexFilter()
+GET    /roadmap/planning/view                    controllers.core.RoadmapController.viewPlanning()
+POST   /roadmap/export                           controllers.core.RoadmapController.exportAsExcel()
+POST   /roadmap/simulator/all-ids                controllers.core.RoadmapController.getAllIds()
+POST   /roadmap/simulator/kpis/fragment          controllers.core.RoadmapController.simulatorKpisFragment()
+POST   /roadmap/simulator/capacity-forecast      controllers.core.RoadmapController.simulatorCapacityForecast()
+POST   /roadmap/simulator/capacity-forecast/cell/details/fragment    controllers.core.RoadmapController.simulatorCapacityForecastCellDetailsFragment(objectType: String, objectId: Long, year: Integer, month: Integer)
+
+#-------------------
+# Core: PortfolioEntry
+#-------------------
+
+GET    /portfolio-entry/create             controllers.core.PortfolioEntryController.createStep1()
+POST   /portfolio-entry/create/1           controllers.core.PortfolioEntryController.processCreateStep1()
+POST   /portfolio-entry/create/2           controllers.core.PortfolioEntryController.processCreateStep2()
+GET    /portfolio-entry/overview           controllers.core.PortfolioEntryController.overview(id: Long)
+GET    /portfolio-entry/view               controllers.core.PortfolioEntryController.view(id: Long, attachmentPage: Integer ?= 0)
+GET    /portfolio-entry/edit               controllers.core.PortfolioEntryController.edit(id: Long)
+POST   /portfolio-entry/edit               controllers.core.PortfolioEntryController.processEdit()
+GET    /portfolio-entry/custom-attr/edit   controllers.core.PortfolioEntryController.editCustomAttr(id: Long)
+POST   /portfolio-entry/custom-attr/edit   controllers.core.PortfolioEntryController.processEditCustomAttr()
+GET    /portfolio-entry/plugin/config      controllers.core.PortfolioEntryController.pluginConfig(id: Long)
+GET    /portfolio-entry/delete             controllers.core.PortfolioEntryController.delete(id: Long)
+GET    /portfolio-entry/portfolios/edit    controllers.core.PortfolioEntryController.editPortfolios(id: Long)
+POST   /portfolio-entry/portfolios/edit    controllers.core.PortfolioEntryController.processEditPortfolios()
+GET    /portfolio-entry/attachment/create  controllers.core.PortfolioEntryController.createAttachment(id: Long)
+POST   /portfolio-entry/attachment/create  controllers.core.PortfolioEntryController.processCreateAttachment()
+GET    /portfolio-entry/attachment/delete  controllers.core.PortfolioEntryController.deleteAttachment(id: Long, attachmentId: Long)
+GET    /portfolio-entry/dependency/add     controllers.core.PortfolioEntryController.addDependency(id: Long)
+POST   /portfolio-entry/dependency/add     controllers.core.PortfolioEntryController.processAddDependency()
+GET    /portfolio-entry/dependency/delete  controllers.core.PortfolioEntryController.deleteDependency(id: Long, peDepSourceId: Long, peDepDestinationId: Long, peDepTypeId: Long)
+GET    /portfolio-entry/search             controllers.core.PortfolioEntryController.search()
+
+#-------------------
+# Core: PortfolioEntryFinancial
+#-------------------
+
+GET    /portfolio-entry/financial/status                          controllers.core.PortfolioEntryFinancialController.status(id: Long)
+GET    /portfolio-entry/financial/details                         controllers.core.PortfolioEntryFinancialController.details(id: Long)
+GET    /portfolio-entry/financial/budget-line/view                controllers.core.PortfolioEntryFinancialController.viewBudgetLine(id: Long, budgetLineId: Long ?= 0)
+GET    /portfolio-entry/financial/budget-line/manage              controllers.core.PortfolioEntryFinancialController.manageBudgetLine(id: Long, budgetLineId: Long ?= 0)
+POST   /portfolio-entry/financial/budget-line/manage              controllers.core.PortfolioEntryFinancialController.processManageBudgetLine()
+GET    /portfolio-entry/financial/budget-line/delete              controllers.core.PortfolioEntryFinancialController.deleteBudgetLine(id: Long, budgetLineId: Long)
+GET    /portfolio-entry/financial/work-order/view                 controllers.core.PortfolioEntryFinancialController.viewWorkOrder(id: Long, workOrderId: Long)
+GET    /portfolio-entry/financial/work-order/manage               controllers.core.PortfolioEntryFinancialController.manageWorkOrder(id: Long, workOrderId: Long ?= 0)
+POST   /portfolio-entry/financial/work-order/manage               controllers.core.PortfolioEntryFinancialController.processManageWorkOrder()
+GET    /portfolio-entry/financial/work-order/delete               controllers.core.PortfolioEntryFinancialController.deleteWorkOrder(id: Long, workOrderId: Long)
+GET    /portfolio-entry/financial/work-order/engage/1             controllers.core.PortfolioEntryFinancialController.engageWorkOrderStep1(id: Long, workOrderId: Long)
+POST   /portfolio-entry/financial/work-order/engage/2             controllers.core.PortfolioEntryFinancialController.engageWorkOrderStep2()
+GET    /portfolio-entry/financial/work-order/line-item/select/1   controllers.core.PortfolioEntryFinancialController.selectWorkOrderLineItemStep1(id: Long, workOrderId: Long)
+POST   /portfolio-entry/financial/work-order/line-item/select/2   controllers.core.PortfolioEntryFinancialController.selectWorkOrderLineItemStep2()
+GET    /portfolio-entry/financial/work-order/line-item/select/3   controllers.core.PortfolioEntryFinancialController.selectWorkOrderLineItemStep3(id: Long, workOrderId: Long, lineItemId: Long)
+POST   /portfolio-entry/financial/work-order/line-item/select/4   controllers.core.PortfolioEntryFinancialController.selectWorkOrderLineItemStep4()
+GET    /portfolio-entry/financial/work-order/report-balance       controllers.core.PortfolioEntryFinancialController.workOrderReportBalance(id: Long, workOrderId: Long, amount: Double)
+GET    /portfolio-entry/financial/work-order/report-balance/save  controllers.core.PortfolioEntryFinancialController.workOrderReportBalanceSave(id: Long, workOrderId: Long, amount: Double)
+
+#-------------------
+# Core: PortfolioEntryStakeholder
+#-------------------
+
+GET    /portfolio-entry/stakeholder             controllers.core.PortfolioEntryStakeholderController.index(id: Long)
+GET    /portfolio-entry/stakeholder/manage      controllers.core.PortfolioEntryStakeholderController.manage(id: Long, stakeholderId: Long ?= 0)
+POST   /portfolio-entry/stakeholder/manage      controllers.core.PortfolioEntryStakeholderController.processManage()
+GET    /portfolio-entry/stakeholder/delete      controllers.core.PortfolioEntryStakeholderController.delete(id: Long, stakeholderId: Long ?= 0)
+
+#-------------------
+# Core: PortfolioEntryGovernance
+#-------------------
+
+GET    /portfolio-entry/governance                         controllers.core.PortfolioEntryGovernanceController.index(id: Long)
+GET    /portfolio-entry/governance/milestone/view          controllers.core.PortfolioEntryGovernanceController.viewMilestone(id: Long, milestoneId: Long)
+GET    /portfolio-entry/governance/milestone/request       controllers.core.PortfolioEntryGovernanceController.requestMilestone(id: Long, milestoneId: Long)
+POST   /portfolio-entry/governance/milestone/request       controllers.core.PortfolioEntryGovernanceController.processRequestMilestone()
+GET    /portfolio-entry/governance/planning/edit           controllers.core.PortfolioEntryGovernanceController.editPlanning(id: Long)
+POST   /portfolio-entry/governance/planning/edit           controllers.core.PortfolioEntryGovernanceController.processEditPlanning()
+GET    /portfolio-entry/governance/process/change          controllers.core.PortfolioEntryGovernanceController.changeLifeCycleProcess(id: Long)
+GET    /portfolio-entry/governance/process/change/process  controllers.core.PortfolioEntryGovernanceController.processChangeLifeCycleProcess()
+
+#-------------------
+# Core: PortfolioEntryDelivery
+#-------------------
+
+GET    /portfolio-entry/requirements                      controllers.core.PortfolioEntryDeliveryController.requirements(id: Long, reset: Boolean ?= false)
+POST   /portfolio-entry/requirements/filter               controllers.core.PortfolioEntryDeliveryController.requirementsFilter(id: Long)
+GET    /portfolio-entry/requirements/status               controllers.core.PortfolioEntryDeliveryController.requirementsStatus(id: Long)
+GET    /portfolio-entry/requirement/view                  controllers.core.PortfolioEntryDeliveryController.viewRequirement(id: Long, requirementId: Long)
+GET    /portfolio-entry/requirement/edit                  controllers.core.PortfolioEntryDeliveryController.editRequirement(id: Long, requirementId: Long)
+POST   /portfolio-entry/requirement/edit                  controllers.core.PortfolioEntryDeliveryController.processEditRequirement()
+GET    /portfolio-entry/iterations                        controllers.core.PortfolioEntryDeliveryController.iterations(id: Long, reset: Boolean ?= false)
+POST   /portfolio-entry/iterations/filter                 controllers.core.PortfolioEntryDeliveryController.iterationsFilter(id: Long)
+GET    /portfolio-entry/iteration/view                    controllers.core.PortfolioEntryDeliveryController.viewIteration(id: Long, iterationId: Long)
+GET    /portfolio-entry/iteration/edit                    controllers.core.PortfolioEntryDeliveryController.editIteration(id: Long, iterationId: Long ?= 0)
+POST   /portfolio-entry/iteration/edit                    controllers.core.PortfolioEntryDeliveryController.processEditIteration()
+GET    /portfolio-entry/releases                          controllers.core.PortfolioEntryDeliveryController.releases(id: Long)
+GET    /portfolio-entry/release/assign                    controllers.core.PortfolioEntryDeliveryController.assignRelease(id: Long)
+POST   /portfolio-entry/release/assign                    controllers.core.PortfolioEntryDeliveryController.processAssignRelease()
+GET    /portfolio-entry/release/unassign                  controllers.core.PortfolioEntryDeliveryController.unassignRelease(id: Long, releaseId: Long)
+
+#-------------------
+# Core: PortfolioEntryPlanning
+#-------------------
+
+GET    /portfolio-entry/planning                                               controllers.core.PortfolioEntryPlanningController.overview(id: Long)
+POST   /portfolio-entry/planning                                               controllers.core.PortfolioEntryPlanningController.overviewChangeConf(id: Long)
+GET    /portfolio-entry/packages                                               controllers.core.PortfolioEntryPlanningController.packages(id: Long, reset: Boolean ?= false)
+POST   /portfolio-entry/packages/filter                                        controllers.core.PortfolioEntryPlanningController.packagesFilter(id: Long)
+GET    /portfolio-entry/package/view                                           controllers.core.PortfolioEntryPlanningController.viewPackage(id: Long, planningPackageId: Long)
+GET    /portfolio-entry/package/manage                                         controllers.core.PortfolioEntryPlanningController.managePackage(id: Long, planningPackageId: Long ?= 0)
+POST   /portfolio-entry/package/manage                                         controllers.core.PortfolioEntryPlanningController.processManagePackage()
+GET    /portfolio-entry/package/groups/add                                     controllers.core.PortfolioEntryPlanningController.addPackageGroups(id: Long)
+POST   /portfolio-entry/package/groups/add                                     controllers.core.PortfolioEntryPlanningController.processAddPackageGroups()
+GET    /portfolio-entry/package/delete                                         controllers.core.PortfolioEntryPlanningController.deletePackage(id: Long, planningPackageId: Long)
+GET    /portfolio-entry/package/attachment/create                              controllers.core.PortfolioEntryPlanningController.createPackageAttachment(id: Long, planningPackageId: Long)
+POST   /portfolio-entry/package/attachment/create                              controllers.core.PortfolioEntryPlanningController.processCreatePackageAttachment()
+GET    /portfolio-entry/package/attachment/delete                              controllers.core.PortfolioEntryPlanningController.deletePackageAttachment(id: Long, planningPackageId: Long, attachmentId: Long)
+GET    /portfolio-entry/resources                                              controllers.core.PortfolioEntryPlanningController.resources(id: Long)
+GET    /portfolio-entry/allocated-actor/manage                                 controllers.core.PortfolioEntryPlanningController.manageAllocatedActor(id: Long, allocatedActorId: Long ?= 0)
+POST   /portfolio-entry/allocated-actor/manage                                 controllers.core.PortfolioEntryPlanningController.processManageAllocatedActor()
+GET    /portfolio-entry/allocated-actor/delete                                 controllers.core.PortfolioEntryPlanningController.deleteAllocatedActor(id: Long, allocatedActorId: Long)
+GET    /portfolio-entry/allocated-org-unit/manage                              controllers.core.PortfolioEntryPlanningController.manageAllocatedOrgUnit(id: Long, allocatedOrgUnitId: Long ?= 0)
+POST   /portfolio-entry/allocated-org-unit/manage                              controllers.core.PortfolioEntryPlanningController.processManageAllocatedOrgUnit()
+GET    /portfolio-entry/allocated-org-unit/delete                              controllers.core.PortfolioEntryPlanningController.deleteAllocatedOrgUnit(id: Long, allocatedOrgUnitId: Long)
+GET    /portfolio-entry/allocated-competency/manage                            controllers.core.PortfolioEntryPlanningController.manageAllocatedCompetency(id: Long, allocatedCompetencyId: Long ?= 0)
+POST   /portfolio-entry/allocated-competency/manage                            controllers.core.PortfolioEntryPlanningController.processManageAllocatedCompetency()
+GET    /portfolio-entry/allocated-competency/delete                            controllers.core.PortfolioEntryPlanningController.deleteAllocatedCompetency(id: Long, allocatedCompetencyId: Long)
+GET    /portfolio-entry/allocated-org-unit/reallocate                          controllers.core.PortfolioEntryPlanningController.reallocateOrgUnit(id: Long, allocatedOrgUnitId: Long)
+POST   /portfolio-entry/allocated-org-unit/reallocate                          controllers.core.PortfolioEntryPlanningController.processReallocateOrgUnit()
+GET    /portfolio-entry/allocated-org-unit/reallocate/report-balance           controllers.core.PortfolioEntryPlanningController.reallocateOrgUnitReportBalance(id: Long, allocatedOrgUnitId: Long, days: Double)
+GET    /portfolio-entry/allocated-org-unit/reallocate/report-balance/process   controllers.core.PortfolioEntryPlanningController.processReallocateOrgUnitReportBalance(id: Long, allocatedOrgUnitId: Long, days: Double)
+GET    /portfolio-entry/allocated-competency/reallocate                        controllers.core.PortfolioEntryPlanningController.reallocateCompetency(id: Long, allocatedCompetencyId: Long)
+POST   /portfolio-entry/allocated-competency/reallocate                        controllers.core.PortfolioEntryPlanningController.processReallocateCompetency()
+GET    /portfolio-entry/allocated-competency/reallocate/report-balance         controllers.core.PortfolioEntryPlanningController.reallocateCompetencyReportBalance(id: Long, allocatedCompetencyId: Long, days: Double)
+GET    /portfolio-entry/allocated-competency/reallocate/report-balance/process controllers.core.PortfolioEntryPlanningController.processReallocateCompetencyReportBalance(id: Long, allocatedCompetencyId: Long, days: Double)
+
+#-------------------
+# Core: PortfolioEntryStatusReporting
+#-------------------
+
+GET    /portfolio-entry/status-report/export      controllers.core.PortfolioEntryStatusReportingController.exportStatusReport(id: Long)
+GET    /portfolio-entry/registers                 controllers.core.PortfolioEntryStatusReportingController.registers(id: Long, pageReports: Integer ?= 0, pageRisks: Integer ?= 0, pageIssues: Integer ?= 0, viewAllRisks: Boolean ?= false, viewAllIssues: Boolean ?= false)
+GET    /portfolio-entry/risk/view                 controllers.core.PortfolioEntryStatusReportingController.viewRisk(id: Long, riskId: Long)
+GET    /portfolio-entry/risk/manage               controllers.core.PortfolioEntryStatusReportingController.manageRisk(id: Long, riskId: Long ?= 0, isRisk: Boolean ?= true)
+POST   /portfolio-entry/risk/manage               controllers.core.PortfolioEntryStatusReportingController.processManageRisk()
+GET    /portfolio-entry/report/view               controllers.core.PortfolioEntryStatusReportingController.viewReport(id: Long, reportId: Long)
+GET    /portfolio-entry/report/manage             controllers.core.PortfolioEntryStatusReportingController.manageReport(id: Long, reportId: Long ?= 0)
+POST   /portfolio-entry/report/manage             controllers.core.PortfolioEntryStatusReportingController.processManageReport()
+GET    /portfolio-entry/report/delete             controllers.core.PortfolioEntryStatusReportingController.deleteReport(id: Long, reportId: Long)
+GET    /portfolio-entry/report/attachment/create  controllers.core.PortfolioEntryStatusReportingController.createReportAttachment(id: Long, reportId: Long)
+POST   /portfolio-entry/report/attachment/create  controllers.core.PortfolioEntryStatusReportingController.processCreateReportAttachment()
+GET    /portfolio-entry/report/attachment/delete  controllers.core.PortfolioEntryStatusReportingController.deleteReportAttachment(id: Long, reportId: Long, attachmentId: Long)
+GET    /portfolio-entry/events                    controllers.core.PortfolioEntryStatusReportingController.events(id: Long, reset: Boolean ?= false)
+POST   /portfolio-entry/events/filter             controllers.core.PortfolioEntryStatusReportingController.eventsFilter(id: Long)
+POST   /portfolio-entry/events/export             controllers.core.PortfolioEntryStatusReportingController.exportEventsAsExcel(id: Long)
+GET    /portfolio-entry/event/manage              controllers.core.PortfolioEntryStatusReportingController.manageEvent(id: Long, eventId: Long ?= 0)
+POST   /portfolio-entry/event/manage              controllers.core.PortfolioEntryStatusReportingController.processManageEvent()
+GET    /portfolio-entry/event/delete              controllers.core.PortfolioEntryStatusReportingController.deleteEvent(id: Long, eventId: Long ?= 0)
+
+#-------------------
+# Core: Timesheet
+#-------------------
+
+GET    /timesheet/weekly                            controllers.core.TimesheetController.weeklyFill(stringDate: String ?= "")
+POST   /timesheet/weekly/save                       controllers.core.TimesheetController.weeklySave()
+GET    /timesheet/weekly/submit                     controllers.core.TimesheetController.weeklySubmit(reportId: Long)
+GET    /timesheet/weekly/copy                       controllers.core.TimesheetController.weeklyCopy(reportId: Long)
+POST   /timesheet/process                           controllers.core.TimesheetController.processTimesheet()
+GET    /timesheet/send-reminder                     controllers.core.TimesheetController.sendReminderTimesheet(id: Long)
+POST   /timesheet/portfolio-entry/packages          controllers.core.TimesheetController.getPackages()
+POST   /timesheet/activity-types/activities         controllers.core.TimesheetController.getActivities()
+
+#-------------------
+# Core: PurchaseOrder
+#-------------------
+
+GET    /purchase-order/view                       controllers.core.PurchaseOrderController.view(purchaseOrderId: Long)
+GET    /purchase-order/line-item/view             controllers.core.PurchaseOrderController.viewLineItem(lineItemId: Long)
+GET    /purchase-order/line-item/work-order/edit  controllers.core.PurchaseOrderController.editWorkOrder(lineItemId: Long, workOrderId: Long)
+GET    /purchase-order/line-item/work-order/save  controllers.core.PurchaseOrderController.saveWorkOrder()
+
+#-------------------
+# Core: MilestoneApproval
+#-------------------
+
+GET    /milestone/overview                  controllers.core.MilestoneApprovalController.overview()
+GET    /milestone/overview/modal            controllers.core.MilestoneApprovalController.overviewModal(milestoneInstanceId: Long)
+GET    /milestone/approval/list             controllers.core.MilestoneApprovalController.list(page: Integer ?= 0)
+GET    /milestone/approval/process          controllers.core.MilestoneApprovalController.process(milestoneInstanceId: Long)
+POST   /milestone/approval/vote             controllers.core.MilestoneApprovalController.vote()
+POST   /milestone/approval/decide           controllers.core.MilestoneApprovalController.decide()
+
+#-------------------
+# Core: Search
+#-------------------
+
+GET    /search                             controllers.core.SearchController.index()
+POST   /search                             controllers.core.SearchController.search()
+
+#-------------------
+# Core: Actor
+#-------------------
+
+GET    /actor/view                           controllers.core.ActorController.view(id: Long)
+GET    /actor/new                            controllers.core.ActorController.create()
+GET    /actor/edit                           controllers.core.ActorController.edit(id: Long)
+POST   /actor/save                           controllers.core.ActorController.save()
+GET    /actor/delete                         controllers.core.ActorController.delete(id: Long)
+GET    /actor/competencies/edit              controllers.core.ActorController.editCompetencies(id: Long)
+POST   /actor/competencies/edit              controllers.core.ActorController.processEditCompetencies()
+POST   /actor/default-competency/edit        controllers.core.ActorController.processEditDefaultCompetency()
+GET    /actor/portfolio-entry/list           controllers.core.ActorController.listPortfolioEntries(id: Long, page: Integer ?= 0)
+GET    /actor/portfolio/list                 controllers.core.ActorController.listPortfolios(id: Long, page: Integer ?= 0)
+GET    /actor/allocation                     controllers.core.ActorController.allocation(id: Long)
+GET    /actor/allocation/details             controllers.core.ActorController.allocationDetails(id: Long, pagePortfolioEntry: Integer ?= 0, pageActivity: Integer ?= 0, viewAllActivities: Boolean ?= false)
+GET    /actor/allocated-activity/manage      controllers.core.ActorController.manageAllocatedActivity(id: Long, allocatedActivityId: Long ?= 0)
+POST   /actor/allocated-activity/manage      controllers.core.ActorController.processManageAllocatedActivity()
+POST   /actor/activity-type/activities       controllers.core.ActorController.getActivities()
+GET    /actor/allocated-activity/delete      controllers.core.ActorController.deleteAllocatedActivity(id: Long, allocatedActivityId: Long)
+GET    /actor/capacity                       controllers.core.ActorController.capacity(id: Long, year: Integer ?= 0)
+POST   /actor/capacity/save                  controllers.core.ActorController.saveCapacity()
+GET    /actor/timesheet/weekly/view          controllers.core.ActorController.viewWeeklyTimesheet(id: Long, stringDate: String ?= "")
+
+#-------------------
+# Core: OrgUnit
+#-------------------
+
+GET    /orgunit/view                                       controllers.core.OrgUnitController.view(id: Long, page: Integer ?= 0)
+GET    /orgunit/new                                        controllers.core.OrgUnitController.create()
+GET    /orgunit/edit                                       controllers.core.OrgUnitController.edit(id: Long)
+POST   /orgunit/save                                       controllers.core.OrgUnitController.save()
+GET    /orgunit/delete                                     controllers.core.OrgUnitController.delete(id: Long)
+GET    /orgunit/portfolio-entry/list                       controllers.core.OrgUnitController.listPortfolioEntries(id: Long, page: Integer ?= 0)
+GET    /orgunit/allocation                                 controllers.core.OrgUnitController.allocation(id: Long)
+GET    /orgunit/allocation/details                         controllers.core.OrgUnitController.allocationDetails(id: Long, page: Integer ?= 0)
+POST   /orgunit/allocation/actors/portfolio-entry/filter   controllers.core.OrgUnitController.actorsPortfolioEntryAllocationsFilter(id: Long)
+POST   /orgunit/allocation/actors/activity/filter          controllers.core.OrgUnitController.actorsActivityAllocationsFilter(id: Long)
+GET    /orgunit/allocated-activity/actor/manage            controllers.core.OrgUnitController.manageActorAllocatedActivity(id: Long)
+POST   /orgunit/allocated-activity/actor/manage            controllers.core.OrgUnitController.processManageActorAllocatedActivity()
+
+#-------------------
+# Core: Reporting
+#-------------------
+
+GET    /reporting                              controllers.core.ReportingController.index()
+GET    /reporting/category                     controllers.core.ReportingController.indexForCategory(categoryId: Long)
+POST   /reporting/category/children            controllers.core.ReportingController.loadChildren()
+GET    /reporting/list                         controllers.core.ReportingController.listFragment()
+GET    /reporting/parametrize                  controllers.core.ReportingController.parametrize(id: Long)
+POST   /reporting/generate                     controllers.core.ReportingController.generate()
+
+
+#-------------------
+# Core: Release
+#-------------------
+
+GET    /releases                               controllers.core.ReleaseController.list(reset: Boolean ?= false)
+POST   /releases/filter                        controllers.core.ReleaseController.listFilter()
+POST   /releases/export                        controllers.core.ReleaseController.exportListAsExcel()
+GET    /releases/planning                      controllers.core.ReleaseController.planning()
+GET    /release/view                           controllers.core.ReleaseController.view(id: Long, page: Integer ?= 0)
+GET    /release/initiative/view                controllers.core.ReleaseController.viewInitiative(id: Long, portfolioEntryId: Long)
+GET    /release/new                            controllers.core.ReleaseController.create()
+POST   /release/new/save                       controllers.core.ReleaseController.saveCreate()
+GET    /release/edit                           controllers.core.ReleaseController.edit(id: Long)
+POST   /release/edit/save                      controllers.core.ReleaseController.saveEdit()
+GET    /release/delete                         controllers.core.ReleaseController.delete(id: Long)
+
+#-------------------
+# Core: Architecture
+#-------------------
+
+GET    /architecture                                           controllers.core.ArchitectureController.index(applicationBlockId: java.lang.Long ?= null)
+GET    /architecture/application-blocks                        controllers.core.ArchitectureController.applicationBlocks(reset: Boolean ?= false)
+POST   /architecture/application-blocks/filter                 controllers.core.ArchitectureController.applicationBlocksFilter()
+POST   /architecture/application-blocks/export                 controllers.core.ArchitectureController.applicationBlocksAsExcel()
+GET    /architecture/application-block/manage/fragment         controllers.core.ArchitectureController.manageApplicationBlockFragment(parentId: java.lang.Long ?= null, order: java.lang.Integer ?= null, id: java.lang.Long ?= null)
+POST   /architecture/application-block/manage/fragment         controllers.core.ArchitectureController.manageApplicationBlockProcessFragment()
+GET    /architecture/application-block/view/fragment           controllers.core.ArchitectureController.viewApplicationBlockFragment(applicationBlockId: java.lang.Long ?= null)
+POST   /architecture/application-block/tree/manage             controllers.core.ArchitectureController.manageApplicationBlockTree()
+POST   /architecture/application-block/tree/children           controllers.core.ArchitectureController.loadChildrenApplicationBlockTree()
+
+#-------------------
+# Admin module
+#-------------------
+#MyAccount
+GET    /admin/my-account/view                            controllers.admin.MyAccount.display()
+GET    /admin/my-account/basic-data/edit                 controllers.admin.MyAccount.editBasicData()
+GET    /admin/my-account/email/edit                      controllers.admin.MyAccount.editEmail()
+GET    /admin/my-account/password/edit                   controllers.admin.MyAccount.editPassword()
+POST   /admin/my-account/basic-data/save                 controllers.admin.MyAccount.saveBasicData()
+POST   /admin/my-account/email/save                      controllers.admin.MyAccount.saveEmail()
+POST   /admin/my-account/password/save                   controllers.admin.MyAccount.savePassword()
+GET    /admin/my-account/validate-email/:validationKey   controllers.admin.MyAccount.validateEmailUpdate(validationKey: String)
+
+#UserManager
+GET    /admin/user-management/search                                controllers.admin.UserManager.displayUserSearchForm()
+GET    /admin/user-management/view                                  controllers.admin.UserManager.displayUser(uid: String)
+GET    /admin/user-management/find                                  controllers.admin.UserManager.findUser()
+GET    /admin/user-management/basic-data/edit                       controllers.admin.UserManager.editBasicData(uid: String)
+POST   /admin/user-management/basic-data/save                       controllers.admin.UserManager.saveBasicData()
+GET    /admin/user-management/mail/edit                             controllers.admin.UserManager.editMail(uid: String)
+POST   /admin/user-management/mail/save                             controllers.admin.UserManager.saveMail()
+GET    /admin/user-management/roles/edit                            controllers.admin.UserManager.editRoles(uid: String)
+POST   /admin/user-management/roles/save                            controllers.admin.UserManager.saveRoles()
+GET    /admin/user-management/password/reset                        controllers.admin.UserManager.resetPassword(uid: String)
+GET    /admin/user-management/change-status                         controllers.admin.UserManager.changeActivationStatus(uid: String, activationStatus: Boolean)
+GET    /admin/user-management/new                                   controllers.admin.UserManager.displayUserCreationForm()
+POST   /admin/user-management/create                                controllers.admin.UserManager.saveNewUser()
+POST   /admin/user-management/create/create-actor                   controllers.admin.UserManager.createActorFromUser()
+POST   /admin/user-management/create/select-actor                   controllers.admin.UserManager.selectActorForUser()
+GET    /admin/user-management/delete                                controllers.admin.UserManager.deleteUser(uid: String)
+GET    /admin/user-management/export                                controllers.admin.UserManager.exportAsExcel()
+GET    /admin/user-management/account-type/edit                     controllers.admin.UserManager.editUserAccountType(uid: String)
+POST   /admin/user-management/account-type/save                     controllers.admin.UserManager.saveUserAccountType()
+
+#Configuration
+GET    /admin/config                                                controllers.admin.ConfigurationController.index()
+
+GET    /admin/config/system-preferences                             controllers.admin.ConfigurationController.systemPreferences()
+GET    /admin/config/system-preferences/edit                        controllers.admin.ConfigurationController.editSystemPreferences()
+POST   /admin/config/system-preferences/save                        controllers.admin.ConfigurationController.saveSystemPreferences()
+
+GET    /admin/config/smtp                                           controllers.admin.ConfigurationController.smtp()
+GET    /admin/config/smtp/edit                                      controllers.admin.ConfigurationController.editSmtp()
+POST   /admin/config/smtp/save                                      controllers.admin.ConfigurationController.saveSmtp()
+
+GET    /admin/config/custom-attributes                              controllers.admin.ConfigurationCustomAttributeController.list(dataTypeName: String ?= "PortfolioEntry")
+POST   /admin/config/custom-attributes/change-data-type             controllers.admin.ConfigurationCustomAttributeController.changeDataType()
+GET    /admin/config/custom-attribute/change-order                  controllers.admin.ConfigurationCustomAttributeController.changeOrder(id: Long, isDecrement: Boolean)
+GET    /admin/config/custom-attribute/manage                        controllers.admin.ConfigurationCustomAttributeController.manage(objectType: String, id: Long ?= 0)
+POST   /admin/config/custom-attribute/manage                        controllers.admin.ConfigurationCustomAttributeController.processManage()
+GET    /admin/config/custom-attribute/items                         controllers.admin.ConfigurationCustomAttributeController.items(id: Long)
+GET    /admin/config/custom-attribute/item/change-order             controllers.admin.ConfigurationCustomAttributeController.changeItemOrder(id: Long, itemId: Long, isDecrement: Boolean)
+GET    /admin/config/custom-attribute/item/manage                   controllers.admin.ConfigurationCustomAttributeController.manageItem(id: Long, itemId: Long ?= 0)
+POST   /admin/config/custom-attribute/item/manage                   controllers.admin.ConfigurationCustomAttributeController.processManageItem()
+GET    /admin/config/custom-attribute/item/delete                   controllers.admin.ConfigurationCustomAttributeController.deleteItem(id: Long, itemId: Long ?= 0)
+GET    /admin/config/custom-attribute/delete                        controllers.admin.ConfigurationCustomAttributeController.delete(id: Long)
+
+GET    /admin/config/roles                                          controllers.admin.ConfigurationController.roles()
+GET    /admin/config/roles/manage                                   controllers.admin.ConfigurationController.manageRole(roleTypeId: Long ?= 0)
+POST   /admin/config/roles/manage                                   controllers.admin.ConfigurationController.processManageRole()
+GET    /admin/config/roles/delete                                   controllers.admin.ConfigurationController.deleteRole(roleTypeId: Long)
+
+GET    /admin/config/ref-data/portfolios                             controllers.admin.ConfigurationPortfolioController.list()
+GET    /admin/config/ref-data/portfolio-entry-type/manage            controllers.admin.ConfigurationPortfolioController.managePortfolioEntryType(portfolioEntryTypeId: Long ?= 0)
+POST   /admin/config/ref-data/portfolio-entry-type/save              controllers.admin.ConfigurationPortfolioController.savePortfolioEntryType()
+GET    /admin/config/ref-data/portfolio-entry-type/delete            controllers.admin.ConfigurationPortfolioController.deletePortfolioEntryType(portfolioEntryTypeId: Long ?= 0)
+GET    /admin/config/ref-data/portfolio-type/manage                  controllers.admin.ConfigurationPortfolioController.managePortfolioType(portfolioTypeId: Long ?= 0)
+POST   /admin/config/ref-data/portfolio-type/save                    controllers.admin.ConfigurationPortfolioController.savePortfolioType()
+GET    /admin/config/ref-data/portfolio-type/delete                  controllers.admin.ConfigurationPortfolioController.deletePortfolioType(portfolioTypeId: Long ?= 0)
+GET    /admin/config/ref-data/portfolio-entry-dependency-type/manage controllers.admin.ConfigurationPortfolioController.managePortfolioEntryDependencyType(portfolioEntryDependencyTypeId: Long ?= 0)
+POST   /admin/config/ref-data/portfolio-entry-dependency-type/manage controllers.admin.ConfigurationPortfolioController.savePortfolioEntryDependencyType()
+GET    /admin/config/ref-data/portfolio-entry-dependency-type/delete controllers.admin.ConfigurationPortfolioController.deletePortfolioEntryDependencyType(portfolioEntryDependencyTypeId: Long ?= 0)
+
+GET    /admin/config/ref-data/actors-org-units                      controllers.admin.ConfigurationActorAndOrgUnitController.list()
+GET    /admin/config/ref-data/actor-type/manage                     controllers.admin.ConfigurationActorAndOrgUnitController.manageActorType(actorTypeId: Long ?= 0)
+POST   /admin/config/ref-data/actor-type/save                       controllers.admin.ConfigurationActorAndOrgUnitController.saveActorType()
+GET    /admin/config/ref-data/actor-type/delete                     controllers.admin.ConfigurationActorAndOrgUnitController.deleteActorType(actorTypeId: Long ?= 0)
+GET    /admin/config/ref-data/org-unit-type/manage                  controllers.admin.ConfigurationActorAndOrgUnitController.manageOrgUnitType(orgUnitTypeId: Long ?= 0)
+POST   /admin/config/ref-data/org-unit-type/save                    controllers.admin.ConfigurationActorAndOrgUnitController.saveOrgUnitType()
+GET    /admin/config/ref-data/org-unit-type/delete                  controllers.admin.ConfigurationActorAndOrgUnitController.deleteOrgUnitType(orgUnitTypeId: Long ?= 0)
+GET    /admin/config/ref-data/competency/manage                     controllers.admin.ConfigurationActorAndOrgUnitController.manageCompetency(competencyId: Long ?= 0)
+POST   /admin/config/ref-data/competency/manage                     controllers.admin.ConfigurationActorAndOrgUnitController.processManageCompetency()
+GET    /admin/config/ref-data/competency/delete                     controllers.admin.ConfigurationActorAndOrgUnitController.deleteCompetency(competencyId: Long ?= 0)
+GET    /admin/config/ref-data/stakeholder-type/manage               controllers.admin.ConfigurationActorAndOrgUnitController.manageStakeholderType(stakeholderTypeId: Long ?= 0)
+POST   /admin/config/ref-data/stakeholder-type/save                 controllers.admin.ConfigurationActorAndOrgUnitController.saveStakeholderType()
+GET    /admin/config/ref-data/stakeholder-type/delete               controllers.admin.ConfigurationActorAndOrgUnitController.deleteStakeholderType(stakeholderTypeId: Long ?= 0)
+
+GET    /admin/config/ref-data/requirements                         controllers.admin.ConfigurationRequirementController.list()
+GET    /admin/config/ref-data/requirement-status/manage            controllers.admin.ConfigurationRequirementController.manageRequirementStatus(statusId: Long ?= 0)
+POST   /admin/config/ref-data/requirement-status/save              controllers.admin.ConfigurationRequirementController.saveRequirementStatus()
+GET    /admin/config/ref-data/requirement-status/delete            controllers.admin.ConfigurationRequirementController.deleteRequirementStatus(statusId: Long ?= 0)
+GET    /admin/config/ref-data/requirement-priority/manage          controllers.admin.ConfigurationRequirementController.manageRequirementPriority(priorityId: Long ?= 0)
+POST   /admin/config/ref-data/requirement-priority/save            controllers.admin.ConfigurationRequirementController.saveRequirementPriority()
+GET    /admin/config/ref-data/requirement-priority/delete          controllers.admin.ConfigurationRequirementController.deleteRequirementPriority(priorityId: Long ?= 0)
+GET    /admin/config/ref-data/requirement-severity/manage          controllers.admin.ConfigurationRequirementController.manageRequirementSeverity(severityId: Long ?= 0)
+POST   /admin/config/ref-data/requirement-severity/save            controllers.admin.ConfigurationRequirementController.saveRequirementSeverity()
+GET    /admin/config/ref-data/requirement-severity/delete          controllers.admin.ConfigurationRequirementController.deleteRequirementSeverity(severityId: Long ?= 0)
+
+GET    /admin/config/ref-data/packages                             controllers.admin.ConfigurationPlanningPackageController.list()
+GET    /admin/config/ref-data/package/group/view                   controllers.admin.ConfigurationPlanningPackageController.viewPackageGroup(packageGroupId: Long)
+GET    /admin/config/ref-data/package/group/manage                 controllers.admin.ConfigurationPlanningPackageController.managePackageGroup(packageGroupId: Long ?= 0)
+POST   /admin/config/ref-data/package/group/manage                 controllers.admin.ConfigurationPlanningPackageController.processManagePackageGroup()
+GET    /admin/config/ref-data/package/group/delete                 controllers.admin.ConfigurationPlanningPackageController.deletePackageGroup(packageGroupId: Long)
+GET    /admin/config/ref-data/package/pattern/change-order         controllers.admin.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternId: Long, isDecrement: Boolean)
+GET    /admin/config/ref-data/package/pattern/manage               controllers.admin.ConfigurationPlanningPackageController.managePackagePattern(packageGroupId: Long, packagePatternId: Long ?= 0)
+POST   /admin/config/ref-data/package/pattern/manage               controllers.admin.ConfigurationPlanningPackageController.processManagePackagePattern()
+GET    /admin/config/ref-data/package/pattern/delete               controllers.admin.ConfigurationPlanningPackageController.deletePackagePattern(packagePatternId: Long)
+
+GET    /admin/config/ref-data/registers                            controllers.admin.ConfigurationRegisterController.list()
+GET    /admin/config/ref-data/risk-type/manage                     controllers.admin.ConfigurationRegisterController.manageRiskType(riskTypeId: Long ?= 0)
+POST   /admin/config/ref-data/risk-type/manage                     controllers.admin.ConfigurationRegisterController.processManageRiskType()
+GET    /admin/config/ref-data/risk-type/delete                     controllers.admin.ConfigurationRegisterController.deleteRiskType(riskTypeId: Long ?= 0)
+GET    /admin/config/ref-data/report-status-type/manage            controllers.admin.ConfigurationRegisterController.manageReportStatusType(reportStatusTypeId: Long ?= 0)
+POST   /admin/config/ref-data/report-status-type/manage            controllers.admin.ConfigurationRegisterController.processManageReportStatusType()
+GET    /admin/config/ref-data/report-status-type/delete            controllers.admin.ConfigurationRegisterController.deleteReportStatusType(reportStatusTypeId: Long ?= 0)
+GET    /admin/config/ref-data/event-type/manage                    controllers.admin.ConfigurationRegisterController.manageEventType(eventTypeId: Long ?= 0)
+POST   /admin/config/ref-data/event-type/manage                    controllers.admin.ConfigurationRegisterController.processManageEventType()
+GET    /admin/config/ref-data/event-type/delete                    controllers.admin.ConfigurationRegisterController.deleteEventType(eventTypeId: Long ?= 0)
+
+GET    /admin/config/ref-data/timesheet-activities                  controllers.admin.ConfigurationTimesheetActivityController.list()
+GET    /admin/config/ref-data/timesheet-activity-type/manage        controllers.admin.ConfigurationTimesheetActivityController.manageTimesheetActivityType(timesheetActivityTypeId: Long ?= 0)
+POST   /admin/config/ref-data/timesheet-activity-type/save          controllers.admin.ConfigurationTimesheetActivityController.saveTimesheetActivityType()
+GET    /admin/config/ref-data/timesheet-activity-type/delete        controllers.admin.ConfigurationTimesheetActivityController.deleteTimesheetActivityType(timesheetActivityTypeId: Long)
+GET    /admin/config/ref-data/timesheet-activity/manage             controllers.admin.ConfigurationTimesheetActivityController.manageTimesheetActivity(timesheetActivityId: Long ?= 0)
+POST   /admin/config/ref-data/timesheet-activity/save               controllers.admin.ConfigurationTimesheetActivityController.saveTimesheetActivity()
+GET    /admin/config/ref-data/timesheet-activity/delete             controllers.admin.ConfigurationTimesheetActivityController.deleteTimesheetActivity(timesheetActivityId: Long)
+
+GET    /admin/config/ref-data/governance                             controllers.admin.ConfigurationGovernanceController.list()
+GET    /admin/config/ref-data/governance/process/view                controllers.admin.ConfigurationGovernanceController.viewLifeCycleProcess(lifeCycleProcessId: Long)
+GET    /admin/config/ref-data/governance/process/manage              controllers.admin.ConfigurationGovernanceController.manageLifeCycleProcess(lifeCycleProcessId: Long ?= 0)
+POST   /admin/config/ref-data/governance/process/manage              controllers.admin.ConfigurationGovernanceController.processManageLifeCycleProcess()
+GET    /admin/config/ref-data/governance/process/delete              controllers.admin.ConfigurationGovernanceController.deleteLifeCycleProcess(lifeCycleProcessId: Long)
+GET    /admin/config/ref-data/governance/status-type/manage          controllers.admin.ConfigurationGovernanceController.manageStatusType(statusTypeId: Long ?= 0)
+POST   /admin/config/ref-data/governance/status-type/manage          controllers.admin.ConfigurationGovernanceController.processManageStatusType()
+GET    /admin/config/ref-data/governance/status-type/delete          controllers.admin.ConfigurationGovernanceController.deleteStatusType(statusTypeId: Long)
+GET    /admin/config/ref-data/governance/milestone/change-order      controllers.admin.ConfigurationGovernanceController.changeMilestoneOrder(milestoneId: Long, isDecrement: Boolean)
+GET    /admin/config/ref-data/governance/phase/change-order          controllers.admin.ConfigurationGovernanceController.changePhaseOrder(phaseId: Long, isDecrement: Boolean)
+GET    /admin/config/ref-data/governance/milestone/manage            controllers.admin.ConfigurationGovernanceController.manageMilestone(lifeCycleProcessId: Long, milestoneId: Long ?= 0)
+POST   /admin/config/ref-data/governance/milestone/manage            controllers.admin.ConfigurationGovernanceController.processManageMilestone()
+GET    /admin/config/ref-data/governance/milestone/delete            controllers.admin.ConfigurationGovernanceController.deleteMilestone(milestoneId: Long)
+GET    /admin/config/ref-data/governance/phase/manage                controllers.admin.ConfigurationGovernanceController.managePhase(lifeCycleProcessId: Long, phaseId: Long ?= 0)
+POST   /admin/config/ref-data/governance/phase/manage                controllers.admin.ConfigurationGovernanceController.processManagePhase()
+GET    /admin/config/ref-data/governance/phase/delete                controllers.admin.ConfigurationGovernanceController.deletePhase(phaseId: Long)
+
+#Reporting
+GET    /admin/reporting                                             controllers.admin.ReportingController.index()
+GET    /admin/reporting/category                                    controllers.admin.ReportingController.indexForCategory(categoryId: Long)
+GET    /admin/reporting/list                                        controllers.admin.ReportingController.listFragment()
+GET    /admin/reporting/edit                                        controllers.admin.ReportingController.edit(id: Long)
+POST   /admin/reporting/save                                        controllers.admin.ReportingController.save()
+
+POST   /admin/reporting/category/manage           controllers.admin.ReportingCategoryController.manage()
+POST   /admin/reporting/category/children         controllers.admin.ReportingCategoryController.loadChildren()
+GET    /admin/reporting/category/search           controllers.admin.ReportingCategoryController.search()
+
+#PasswordReset
+GET   /admin/password/reset/:uid/:validationKey    controllers.admin.PasswordReset.displayPasswordResetForm(uid:String, validationKey: String)
+POST  /admin/password/reset/save                   controllers.admin.PasswordReset.savePassword()
+
+#Audit log
+GET    /admin/audit/list                       controllers.admin.AuditableController.listAuditable()
+GET    /admin/audit/delete/:objectClass                 controllers.admin.AuditableController.deleteAuditable(objectClass: java.lang.String)
+GET    /admin/audit/edit/:objectClass                   controllers.admin.AuditableController.editAuditable(objectClass: java.lang.String)
+GET    /admin/audit/create                     controllers.admin.AuditableController.createAuditable()
+POST   /admin/audit/save                       controllers.admin.AuditableController.saveAuditable()
+GET    /admin/audit/excel                      controllers.admin.AuditableController.excelAuditable()
+POST   /admin/audit/pickerobjectclass/values   controllers.admin.AuditableController.singleValuePickerObjectClassValues()
+POST   /admin/audit/export                     controllers.admin.AuditableController.exportAuditLogs()
+
+#Plugin manager
+GET    /admin/plugin/index                         controllers.admin.PluginManagerController.index()
+GET    /admin/plugin/registration/index            controllers.admin.PluginManagerController.registration()
+GET    /admin/plugin/registration/new              controllers.admin.PluginManagerController.displayRegistrationForm(identifier: java.lang.String)
+POST   /admin/plugin/registration/save             controllers.admin.PluginManagerController.registerPlugin()
+GET    /admin/plugin/registration/delete/:id       controllers.admin.PluginManagerController.unregisterPlugin(id: java.lang.Long)
+GET    /admin/plugin/edit                          controllers.admin.PluginManagerController.pluginConfigurationDetails(id: java.lang.Long)
+GET    /admin/plugin/start/:id                     controllers.admin.PluginManagerController.startPlugin(id: java.lang.Long)
+GET    /admin/plugin/stop/:id                      controllers.admin.PluginManagerController.stopPlugin(id: java.lang.Long)
+GET    /admin/plugin/logs/flush/:id                controllers.admin.PluginManagerController.flushLogs(id: java.lang.Long)
+POST   /admin/plugin/logs/filter/:id               controllers.admin.PluginManagerController.filterPluginLogs(id: java.lang.Long)
+GET    /admin/plugin/config/:id/:blockId           controllers.admin.PluginManagerController.editConfigurationBlock(id: java.lang.Long, blockId: java.lang.String)
+POST   /admin/plugin/config/update/:id/:blockId    controllers.admin.PluginManagerController.updateConfigurationBlock(id: java.lang.Long, blockId: java.lang.String)
+GET    /admin/plugin/config/default/:id/:blockId   controllers.admin.PluginManagerController.getDefaultConfigurationBlockValue(id: java.lang.Long, blockId: java.lang.String)
+GET    /admin/plugin/adminaction/:id/:actionId     controllers.admin.PluginManagerController.postAdminActionToPlugin(id: java.lang.Long, actionId: java.lang.String)
+GET    /admin/plugin/definition/:identifier        controllers.admin.PluginManagerController.pluginDefinitionDetails(identifier: java.lang.String)
+GET    /admin/plugin/image/:identifier/:big        controllers.admin.PluginManagerController.image(identifier: java.lang.String, big: Boolean)
+
+#SharedStorage controller
+GET     /admin/sharedstorage/display           controllers.admin.SharedStorageManagerController.index()
+GET     /admin/sharedstorage/download/:id      controllers.admin.SharedStorageManagerController.download(id: String)
+GET     /admin/sharedstorage/delete/:id        controllers.admin.SharedStorageManagerController.delete(id: String)
+GET     /admin/sharedstorage/upload            controllers.admin.SharedStorageManagerController.uploadForm(folderName: String, isInput: Boolean)
+POST    /admin/sharedstorage/upload/:flag      controllers.admin.SharedStorageManagerController.upload(flag: Boolean)
+
+#Configurators routes
+GET    /plugin/custcfg/:actionId/get/:id                      framework.services.plugins.PluginConfiguratorController.doGetForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)
+POST   /plugin/custcfg/:actionId/post/:id                     framework.services.plugins.PluginConfiguratorController.doPostForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)
+GET    /plugin/regcfg/:data/:actionId/get/:id/:objectId       framework.services.plugins.PluginConfiguratorController.doGetForRegistrationConfiguratorController(id: java.lang.Long, data: java.lang.String, objectId: java.lang.Long, actionId: java.lang.String)
+POST   /plugin/regcfg/:data/:actionId/post/:id/:objectId      framework.services.plugins.PluginConfiguratorController.doPostForRegistrationConfiguratorController(id: java.lang.Long, data: java.lang.String, objectId: java.lang.Long, actionId: java.lang.String)
+
+#System owner administration
+GET    /admin/systemowner/info                      controllers.admin.SystemOwnerController.info()
+
+#API manager
+GET     /admin/api/index               controllers.admin.ApiManagerController.index()
+GET     /admin/api/display/:appName    controllers.admin.ApiManagerController.displayApiRegistration(appName: String)
+GET     /admin/api/reset/:appName      controllers.admin.ApiManagerController.resetApiRegistrationKeys(appName: String)
+GET     /admin/api/delete/:appName     controllers.admin.ApiManagerController.deleteApiRegistration(appName: String)
+GET     /admin/api/new                 controllers.admin.ApiManagerController.displayApiRegistrationCreationForm()
+GET     /admin/api/edit/:appName       controllers.admin.ApiManagerController.displayApiRegistrationUpdateForm(appName: String)
+GET     /admin/api/confirm-reset/:appName       controllers.admin.ApiManagerController.displayResetApiRegistrationKeysForm(appName: String)
+GET     /admin/api/confirm-delete/:appName      controllers.admin.ApiManagerController.displayDeleteApiRegistrationForm(appName: String)
+POST    /admin/api/save                controllers.admin.ApiManagerController.saveRegistration()
+POST    /admin/api/update/:appName     controllers.admin.ApiManagerController.updateRegistration(appName: String)
+GET     /admin/api/browser             controllers.admin.ApiManagerController.displayBrowser()
+GET     /admin/api/apibrowser          controllers.admin.ApiManagerController.openBrowser(appName="")
+GET     /admin/api/apibrowser/:appName          controllers.admin.ApiManagerController.openBrowser(appName: String)
+
+#Assets
+GET    /assets/*file            controllers.Assets.versioned(path="/public", file: Asset)
+GET    /webjars/*file           controllers.Assets.at(path="/public", file)
+
+# -------------------------------------------------------------------------------------------------------------------------------------
+# API
+# -------------------------------------------------------------------------------------------------------------------------------------
+
+#System
+GET     /api/system/time           controllers.api.system.SystemApiController.getSystemCurrentTime()
+
+#Actor
+GET     /api/core/actor/find                                              controllers.api.core.ActorApiController.getActorsList(isActive: java.lang.Boolean ?= null, managerId: java.lang.Long ?= null, actorTypeId: java.lang.Long ?= null, competencyId: java.lang.Long ?= null, orgUnitId: java.lang.Long ?= null)
+GET     /api/core/actor/:id                                               controllers.api.core.ActorApiController.getActorById(id: Long)
+GET     /api/core/actor/uid/:uid                                          controllers.api.core.ActorApiController.getActorByUid(uid: String)
+POST    /api/core/actor                                                   controllers.api.core.ActorApiController.createActor()
+PUT     /api/core/actor/:id                                               controllers.api.core.ActorApiController.updateActor(id: Long)
+
+#ActorCapacity
+GET     /api/core/actor-capacity/find                                     controllers.api.core.ActorCapacityApiController.getActorCapacitiesList(actorId: java.lang.Long ?= null, year: java.lang.Integer ?= null)
+
+#ActorType
+GET     /api/core/actor-type/find                                         controllers.api.core.ActorTypeApiController.getActorTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/actor-type/:id                                          controllers.api.core.ActorTypeApiController.getActorTypeById(id: Long)
+
+#Competency
+GET     /api/core/competency/find                                          controllers.api.core.CompetencyApiController.getCompetenciesList(isActive: java.lang.Boolean ?= null, actorId: java.lang.Long ?= null)
+GET     /api/core/competency/:id                                           controllers.api.core.CompetencyApiController.getCompetencyById(id: Long)
+
+#OrgUnit
+GET     /api/core/org-unit/find                                            controllers.api.core.OrgUnitApiController.getOrgUnitsList(isActive: java.lang.Boolean ?= null, managerId: java.lang.Long ?= null, parentId: java.lang.Long ?= null, orgUnitTypeId: java.lang.Long ?= null, canSponsor: java.lang.Boolean ?= null, canDeliver: java.lang.Boolean ?= null)
+GET     /api/core/org-unit/:id                                             controllers.api.core.OrgUnitApiController.getOrgUnitById(id: Long)
+POST    /api/core/org-unit                                             controllers.api.core.OrgUnitApiController.createOrgUnit()
+PUT     /api/core/org-unit/:id                                             controllers.api.core.OrgUnitApiController.updateOrgUnit(id: Long)
+
+#OrgUnitType
+GET     /api/core/org-unit-type/find                                       controllers.api.core.OrgUnitTypeApiController.getOrgUnitTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/org-unit-type/:id                                        controllers.api.core.OrgUnitTypeApiController.getOrgUnitTypeById(id: Long)
+
+#Portfolio
+GET     /api/core/portfolio/find                                           controllers.api.core.PortfolioApiController.getPortfoliosList(isActive: java.lang.Boolean ?= null, managerId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null, portfolioTypeId: java.lang.Long ?= null)
+GET     /api/core/portfolio/:id                                            controllers.api.core.PortfolioApiController.getPortfolioById(id: Long)
+
+#PortfolioType
+GET     /api/core/portfolio-type/find                                      controllers.api.core.PortfolioTypeApiController.getPortfolioTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-type/:id                                       controllers.api.core.PortfolioTypeApiController.getPortfolioTypeById(id: Long)
+
+#PortfolioEntry
+GET     /api/core/portfolio-entry/find                                     controllers.api.core.PortfolioEntryApiController.getPortfolioEntriesList(managerId: java.lang.Long ?= null, sponsoringUnitId: java.lang.Long ?= null, deliveryUnitId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, releaseId: java.lang.Long ?= null, archived: java.lang.Boolean ?= null, portfolioEntryTypeId: java.lang.Long ?= null, isPublic: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry/:id                                      controllers.api.core.PortfolioEntryApiController.getPortfolioEntryById(id: Long)
+POST    /api/core/portfolio-entry                                          controllers.api.core.PortfolioEntryApiController.createPortfolioEntry()
+PUT     /api/core/portfolio-entry/:id                                      controllers.api.core.PortfolioEntryApiController.updatePortfolioEntry(id: Long)
+GET     /api/core/portfolio-entry/:id/event/find                           controllers.api.core.PortfolioEntryApiController.getPortfolioEntryEventsList(id: Long)
+GET     /api/core/portfolio-entry/:id/planning-package/find                controllers.api.core.PortfolioEntryApiController.getPortfolioEntryPlanningPackagesList(id: Long)
+GET     /api/core/portfolio-entry/:id/report/find                          controllers.api.core.PortfolioEntryApiController.getPortfolioEntryReportsList(id: Long)
+GET     /api/core/portfolio-entry/:id/risk/find                            controllers.api.core.PortfolioEntryApiController.getPortfolioEntryRisksList(isActive: java.lang.Boolean ?= null, id: Long)
+GET     /api/core/portfolio-entry/:id/requirement/find                     controllers.api.core.PortfolioEntryApiController.getRequirementsList(id: Long)
+GET     /api/core/portfolio-entry/:id/iteration/find                       controllers.api.core.PortfolioEntryApiController.getIterationsList(id: Long)
+GET     /api/core/portfolio-entry/:id/budget-line/find                     controllers.api.core.PortfolioEntryApiController.getBudgetLinesOfPortfolioEntriesList(id: Long)
+GET     /api/core/portfolio-entry/:id/allocated-org-unit/find              controllers.api.core.PortfolioEntryApiController.getPortfolioEntryResourcePlanAllocatedOrgUnitsList(id: Long)
+GET     /api/core/portfolio-entry/:id/allocated-actor/find                 controllers.api.core.PortfolioEntryApiController.getPortfolioEntryResourcePlanAllocatedActorsList(id: Long)
+GET     /api/core/portfolio-entry/:id/allocated-competency/find            controllers.api.core.PortfolioEntryApiController.getPortfolioEntryResourcePlanAllocatedCompetenciesList(id: Long)
+GET     /api/core/portfolio-entry/:id/work-order/find                      controllers.api.core.PortfolioEntryApiController.getWorkOrdersList(id: Long)
+GET     /api/core/portfolio-entry/:id/work-order/:workOrderId/is-engaged   controllers.api.core.PortfolioEntryApiController.getWorkOrderIsEngaged(id: Long, workOrderId: Long)
+GET     /api/core/portfolio-entry/:id/work-order/:workOrderId/amount       controllers.api.core.PortfolioEntryApiController.getWorkOrderAmount(id: Long, workOrderId: Long)
+GET     /api/core/portfolio-entry/:id/work-order/:workOrderId/amount-received controllers.api.core.PortfolioEntryApiController.getWorkOrderAmountReceived(id: Long, workOrderId: Long)
+
+#PortfolioEntryType
+GET     /api/core/portfolio-entry-type/find                                controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry-type/:id                                 controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypeById(id: Long)
+
+#PortfolioEntryEventType
+GET     /api/core/portfolio-entry-event-type/find                          controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry-event-type/:id                           controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypeById(id: Long)
+
+#PortfolioEntryPlanningPackageGroup
+GET     /api/core/portfolio-entry-planning-package-group/find              controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackageGroupsList(isActive: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry-planning-package-group/:id               controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackageGroupById(id: Long)
+GET     /api/core/portfolio-entry-planning-package-group/:id/pattern/find  controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackagePatternsList(id: Long)
+
+#PortfolioEntryReportStatusType
+GET     /api/core/portfolio-entry-report-status-type/find                  controllers.api.core.PortfolioEntryReportStatusTypeApiController.getPortfolioEntryReportStatusTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry-report-status-type/:id                   controllers.api.core.PortfolioEntryReportStatusTypeApiController.getPortfolioEntryReportStatusTypeById(id: Long)
+
+#PortfolioEntryRiskType
+GET     /api/core/portfolio-entry-risk-type/find                           controllers.api.core.PortfolioEntryRiskTypeApiController.getPortfolioEntryRiskTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry-risk-type/:id                            controllers.api.core.PortfolioEntryRiskTypeApiController.getPortfolioEntryRiskTypeById(id: Long)
+
+#Stakeholder
+GET     /api/core/stakeholder/find                                        controllers.api.core.StakeholderApiController.getStakeholdersList(actorId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null, stakeholderTypeId: java.lang.Long ?= null)
+GET     /api/core/stakeholder/:id                                         controllers.api.core.StakeholderApiController.getStakeholderById(id: Long)
+
+#StakeholderType
+GET     /api/core/stakeholder-type/find                                   controllers.api.core.StakeholderTypeApiController.getStakeholderTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/stakeholder-type/:id                                    controllers.api.core.StakeholderTypeApiController.getStakeholderTypeById(id: Long)
+
+#Release
+GET     /api/core/release/find                                            controllers.api.core.ReleaseApiController.getReleasesList(isActive: java.lang.Boolean ?= null, managerId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null)
+GET     /api/core/release/:id                                             controllers.api.core.ReleaseApiController.getReleaseById(id: Long)
+
+#Requirement Status
+GET     /api/core/requirement-status/find                                 controllers.api.core.RequirementStatusApiController.getRequirementStatusList()
+GET     /api/core/requirement-status/:id                                  controllers.api.core.RequirementStatusApiController.getRequirementStatusById(id: Long)
+
+#Requirement Priority
+GET     /api/core/requirement-priority/find                               controllers.api.core.RequirementPriorityApiController.getRequirementPrioritiesList()
+GET     /api/core/requirement-priority/:id                                controllers.api.core.RequirementPriorityApiController.getRequirementPriorityById(id: Long)
+
+#Requirement Severity
+GET     /api/core/requirement-severity/find                               controllers.api.core.RequirementSeverityApiController.getRequirementSeveritiesList()
+GET     /api/core/requirement-severity/:id                                controllers.api.core.RequirementSeverityApiController.getRequirementSeverityById(id: Long)
+
+#BudgetBucket
+GET     /api/core/budget-bucket/find                                      controllers.api.core.BudgetBucketApiController.getBudgetBucketsList(isActive: java.lang.Boolean ?= null, isApproved: java.lang.Boolean ?= null)
+GET     /api/core/budget-bucket/:id                                       controllers.api.core.BudgetBucketApiController.getBudgetBucketById(id: Long)
+
+#BudgetBucketLine
+GET     /api/core/budget-bucket/:id/line/find                             controllers.api.core.BudgetBucketApiController.getBudgetBucketLinesList(id: Long)
+
+#PortfolioEntryBudgetLine
+GET     /api/core/budget-bucket/:id/portfolio-entry-budget-line/find      controllers.api.core.BudgetBucketApiController.getBudgetLinesOfBudgetBucketsList(id: Long)
+
+#PurchaseOrder
+GET     /api/core/purchase-order/find                                     controllers.api.core.PurchaseOrderApiController.getPurchaseOrdersList(isCancelled: java.lang.Boolean ?= null)
+GET     /api/core/purchase-order/:id                                      controllers.api.core.PurchaseOrderApiController.getPurchaseOrderById(id: Long)
+
+#PurchaseOrderLineItem
+GET     /api/core/purchase-order/:id/line/find                            controllers.api.core.PurchaseOrderApiController.getPurchaseOrderLinesList(id: Long, isCancelled: java.lang.Boolean ?= null)
+
+#CostCenter
+GET     /api/core/cost-center/find                                        controllers.api.core.CostCenterApiController.getCostCentersList()
+GET     /api/core/cost-center/:id                                         controllers.api.core.CostCenterApiController.getCostCenterById(id: Long)
+
+#Currency
+GET     /api/core/currency/find                                           controllers.api.core.CurrencyApiController.getCurrenciesList(isActive: java.lang.Boolean ?= null)
+GET     /api/core/currency/:code                                          controllers.api.core.CurrencyApiController.getCurrencyByCode(code: String)
+
+#Supplier
+GET     /api/core/supplier/find                                           controllers.api.core.SupplierApiController.getSuppliersList()
+GET     /api/core/supplier/:id                                            controllers.api.core.SupplierApiController.getSupplierById(id: java.lang.Long)
+
+#LifeCycleProcess
+GET     /api/core/life-cycle-process/find                                           controllers.api.core.LifeCycleProcessApiController.getLifeCycleProcessesList()
+GET     /api/core/life-cycle-process/:id                                            controllers.api.core.LifeCycleProcessApiController.getLifeCycleProcessById(id: java.lang.Long)
+
+#KPI
+POST    /api/core/kpi/:uid/data                                         controllers.api.core.KpiApiController.addKpiData(uid: String)
+
+#Root
+GET     /api/core/root/instance/status                                  controllers.api.core.RootApiController.instanceStatus()
+GET     /api/core/root/instance/memory-status                           controllers.api.core.RootApiController.instanceMemoryStatus()
+GET     /api/core/root/user/resync                                      controllers.api.core.RootApiController.userResync()
+GET     /api/core/root/user/flush-cache                                 controllers.api.core.RootApiController.userFlushCache()
+GET     /api/core/root/i18n/flush-cache                                 controllers.api.core.RootApiController.i18nFlushCache()
+GET     /api/core/root/table/flush-cache                                controllers.api.core.RootApiController.tableFlushCache()
+GET     /api/core/root/filter/flush-cache                               controllers.api.core.RootApiController.filterFlushCache()
+GET     /api/core/root/ad-panel/flush-cache                             controllers.api.core.RootApiController.adPanelFlushCache()
+GET     /api/core/root/report/reload                                    controllers.api.core.RootApiController.reportReload()
+GET     /api/core/root/kpi/reload                                       controllers.api.core.RootApiController.kpiReload()
+
+# Doc
+GET     /api-docs               controllers.ApiHelpController.getResources
+
+GET     /api-docs/api/system    controllers.ApiHelpController.getResource(path = "/api/system")
+
+GET     /api-docs/api/core/actor                                          controllers.ApiHelpController.getResource(path = "/api/core/actor")
+GET     /api-docs/api/core/actor-capacity                                 controllers.ApiHelpController.getResource(path = "/api/core/actor-capacity")
+GET     /api-docs/api/core/actor-type                                     controllers.ApiHelpController.getResource(path = "/api/core/actor-type")
+
+GET     /api-docs/api/core/competency                                     controllers.ApiHelpController.getResource(path = "/api/core/competency")
+
+GET     /api-docs/api/core/org-unit                                       controllers.ApiHelpController.getResource(path = "/api/core/org-unit")
+GET     /api-docs/api/core/org-unit-type                                  controllers.ApiHelpController.getResource(path = "/api/core/org-unit-type")
+
+GET     /api-docs/api/core/portfolio                                      controllers.ApiHelpController.getResource(path = "/api/core/portfolio")
+GET     /api-docs/api/core/portfolio-type                                 controllers.ApiHelpController.getResource(path = "/api/core/portfolio-type")
+GET     /api-docs/api/core/portfolio-entry                                controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry")
+GET     /api-docs/api/core/portfolio-entry-event-type                     controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-event-type")
+GET     /api-docs/api/core/portfolio-entry-planning-package-group         controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-planning-package-group")
+GET     /api-docs/api/core/portfolio-entry-report-status-type             controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-report-status-type")
+GET     /api-docs/api/core/portfolio-entry-type                           controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-type")
+GET     /api-docs/api/core/portfolio-entry-risk-type                      controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-risk-type")
+
+GET     /api-docs/api/core/stakeholder                                    controllers.ApiHelpController.getResource(path = "/api/core/stakeholder")
+GET     /api-docs/api/core/stakeholder-type                               controllers.ApiHelpController.getResource(path = "/api/core/stakeholder-type")
+
+GET     /api-docs/api/core/release                                        controllers.ApiHelpController.getResource(path = "/api/core/release")
+
+GET     /api-docs/api/core/requirement-severity                           controllers.ApiHelpController.getResource(path = "/api/core/requirement-severity")
+GET     /api-docs/api/core/requirement-priority                           controllers.ApiHelpController.getResource(path = "/api/core/requirement-priority")
+GET     /api-docs/api/core/requirement-status                             controllers.ApiHelpController.getResource(path = "/api/core/requirement-status")
+
+GET     /api-docs/api/core/budget-bucket                                  controllers.ApiHelpController.getResource(path = "/api/core/budget-bucket")
+
+GET     /api-docs/api/core/purchase-order                                 controllers.ApiHelpController.getResource(path = "/api/core/purchase-order")
+
+GET     /api-docs/api/core/cost-center                                    controllers.ApiHelpController.getResource(path = "/api/core/cost-center")
+
+GET     /api-docs/api/core/currency                                       controllers.ApiHelpController.getResource(path = "/api/core/currency")
+
+GET     /api-docs/api/core/supplier                                       controllers.ApiHelpController.getResource(path = "/api/core/supplier")
+
+GET     /api-docs/api/core/life-cycle-process                             controllers.ApiHelpController.getResource(path = "/api/core/life-cycle-process")
+
+GET     /api-docs/api/core/kpi                                            controllers.ApiHelpController.getResource(path = "/api/core/kpi")

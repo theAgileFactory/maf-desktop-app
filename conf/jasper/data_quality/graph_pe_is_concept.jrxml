@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-03-17T14:00:52 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="graph_pe_is_concept" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="544605fd-2b96-44c9-80d1-51d30cd1e23f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<queryString language="SQL">
+		<![CDATA[select is_concept as concept_flag, count(*) as total_pe from portfolio_entry pe, life_cycle_instance lci
+where lci.id = pe.active_life_cycle_instance_id
+and pe.deleted = 0 and pe.is_public = 1 and lci.deleted = 0 and pe.archived = 0
+group by is_concept]]>
+	</queryString>
+	<field name="concept_flag" class="java.lang.Boolean"/>
+	<field name="total_pe" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="320" y="0" width="230" height="50" uuid="181bdc42-1969-4ea9-ba39-71159e878d0d">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("subreport.pe_concept.definition")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row-header" x="0" y="0" width="280" height="24" uuid="33330a93-45c1-4f54-8b32-74a436b7b094">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[str("subreport.pe_concept.title")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="200" splitType="Stretch">
+			<pieChart>
+				<chart isShowLegend="false" evaluationTime="Report">
+					<reportElement x="0" y="0" width="555" height="200" uuid="ce1bfce7-d710-48c8-9715-70fa515c7a38">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{concept_flag}]]></keyExpression>
+					<valueExpression><![CDATA[$F{total_pe}]]></valueExpression>
+					<labelExpression><![CDATA[str("concept." + $F{concept_flag}.toString()) + " (" + $F{total_pe}.toString() + ")"]]></labelExpression>
+				</pieDataset>
+				<piePlot isShowLabels="true" labelFormat="{1}">
+					<plot>
+						<seriesColor seriesOrder="0" color="#777777"/>
+						<seriesColor seriesOrder="1" color="#428BCA"/>
+						<seriesColor seriesOrder="2" color="#5BC0DE"/>
+					</plot>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+</jasperReport>

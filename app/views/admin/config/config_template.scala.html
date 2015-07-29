@@ -1,0 +1,113 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(title: String, menuItemType: controllers.admin.ConfigurationController.MenuItemType, breadcrump: Seq[(String, String)])(content: Html)
+
+@import framework_views.parts
+@import framework.utils.Menu.ClickableMenuItem
+@import framework.utils.Menu.HeaderMenuItem
+@import framework.utils.SideBar
+
+
+@sidebarInstance=@{
+    val sidebarInstance=new SideBar()
+    
+    val systemPreferenceItem = new ClickableMenuItem(
+        "admin.configuration.system_preferences.title",
+        controllers.admin.routes.ConfigurationController.systemPreferences().url,
+        "glyphicons glyphicons-cogwheels",
+        menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.SYSTEM_PREFERENCES));
+    systemPreferenceItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CONFIGURATION_PERMISSION) :: Nil);
+    sidebarInstance.addMenuItem(systemPreferenceItem);
+    
+    val rolesItem = new ClickableMenuItem(
+        "admin.configuration.roles.title",
+        controllers.admin.routes.ConfigurationController.roles().url,
+        "glyphicons glyphicons-security-camera",
+        menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.ROLES));
+    rolesItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CONFIGURATION_PERMISSION) :: Nil);
+    sidebarInstance.addMenuItem(rolesItem);
+    
+    val referenceDataSidebar = new HeaderMenuItem(
+        "admin.configuration.reference_data.title", 
+        "glyphicons glyphicons-sampler",
+        menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA))
+    referenceDataSidebar.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CONFIGURATION_PERMISSION) :: Nil);
+        
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.portfolio.title",
+        controllers.admin.routes.ConfigurationPortfolioController.list().url,
+        "glyphicons glyphicons-wallet",
+        false)
+    );
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.actorsandorgunits.title",
+        controllers.admin.routes.ConfigurationActorAndOrgUnitController.list().url,
+        "glyphicons glyphicons-pawn",
+        false)
+    );
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.governance.title",
+        controllers.admin.routes.ConfigurationGovernanceController.list().url,
+        "glyphicons glyphicons-cluster",
+        false)
+    );
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.requirements.title",
+        controllers.admin.routes.ConfigurationRequirementController.list().url,
+        "glyphicons glyphicons-log-book",
+        false)
+    );
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.planning_packages.title",
+        controllers.admin.routes.ConfigurationPlanningPackageController.list().url,
+        "glyphicons glyphicons-package",
+        false)
+    );
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.register.title",
+        controllers.admin.routes.ConfigurationRegisterController.list().url,
+        "glyphicons glyphicons-inbox",
+        false)
+    );
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.timesheetactivities.title",
+        controllers.admin.routes.ConfigurationTimesheetActivityController.list().url,
+        "glyphicons glyphicons-clock",
+        false)
+    );
+    sidebarInstance.addMenuItem(referenceDataSidebar)
+    
+    val customAttributeItem = new ClickableMenuItem(
+        "admin.configuration.custom_attributes.title",
+        controllers.admin.routes.ConfigurationCustomAttributeController.list().url,
+        "glyphicons glyphicons-magic",
+        menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.CUSTOM_ATTRIBUTES));
+    customAttributeItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) :: Nil);
+    sidebarInstance.addMenuItem(customAttributeItem);
+    
+    sidebarInstance
+}
+
+@templates.main_bc_iconsbar(
+    parts.Msg.asString(title),
+    sidebarInstance,
+    breadcrump
+) {
+}{
+    @content
+}

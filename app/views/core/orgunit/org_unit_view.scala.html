@@ -1,0 +1,126 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    orgUnit: models.pmo.OrgUnit,
+    childrenTable: framework.utils.Table[utils.table.OrgUnitListView],
+    actorsTable: framework.utils.Table[utils.table.ActorListView]
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@org_unit_template(parts.Msg.asString("core.org_unit.sidebar.overview"), orgUnit){
+
+    <div class="row">
+    
+        <div class="col-md-4">
+
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.org_unit.view.details.title")
+                    @restrict(la(as(constants.IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION))){
+                        <div class="pull-right">
+                            <a href="@controllers.core.routes.OrgUnitController.edit(orgUnit.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            &nbsp;
+                            <a class="pull-right" onclick="return maf_confirmDelete();" href="@controllers.core.routes.OrgUnitController.delete(orgUnit.id)">
+                                <span class="glyphicons glyphicons-bin glyphicons-panel"></span>
+                            </a>
+                        </div>
+                        
+                        <script type="text/javascript">
+                            function maf_confirmDelete(){
+                                return window.confirm("@parts.Msg("core.org_unit.delete.confirmation.message")");
+                            }
+                        </script>
+                    }
+                </div>
+        
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.org_unit.ref_id.label")</th>
+                                <td>@display_object(orgUnit.refId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.org_unit.is_active.label")</th>
+                                <td>@display_boolean(orgUnit.isActive)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.org_unit.can_sponsor.label")</th>
+                                <td>@display_boolean(orgUnit.canSponsor)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.org_unit.can_deliver.label")</th>
+                                <td>@display_boolean(orgUnit.canDeliver)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.org_unit.type.label")</th>
+                                <td>@display_value_holder(orgUnit.orgUnitType)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.org_unit.manager.label")</th>
+                                <td>@display_actor(orgUnit.manager)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.org_unit.parent.label")</th>
+                                <td>@display_org_unit(orgUnit.parent)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.OrgUnit], orgUnit.id)
+                </div>
+                
+            </div>
+        
+        </div>
+            
+        <div class="col-md-8">
+    
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("object.org_unit.children.label")
+                </div>
+                <div class="panel-body">
+                    @parts.table.tableview(childrenTable)
+                </div>
+            </div>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("object.org_unit.actors.label")
+                </div>
+                <div class="panel-body">
+                    @parts.table.tableview(actorsTable)
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+}

@@ -1,0 +1,68 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    title: String,
+    allRoles: framework.utils.ISelectableValueHolderCollection[String],
+    allUserAccountTypes: framework.utils.ISelectableValueHolderCollection[String],
+    userAccountForm: Form[controllers.admin.UserManager.UserAccountFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@usermanager_template(title, controllers.admin.UserManager.MenuItemType.CREATE) {
+<blockquote>@parts.Msg("admin.user_manager.create.header")</blockquote>
+<div class="maf-form">
+    @if(userAccountForm.hasErrors()){
+        <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+        </div>
+    }
+    @helper.form(action = controllers.admin.routes.UserManager.saveNewUser()) {
+        <fieldset>
+            <legend>@parts.Msg("admin.user_manager.create.basic_data.title")</legend>
+            @helper.inputText(userAccountForm("uid"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.uid.label"))
+            @helper.inputText(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label"))
+            @helper.inputText(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
+            @helper.inputText(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
+            @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.utils.LanguageUtil.getValidLanguagesAsValueHolderCollection, null, false)
+            @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes,null,false)
+            <div id="rolesSelector">
+            <legend>@parts.Msg("object.user_account.roles.label")</legend>
+            @parts.checkboxlist(userAccountForm("systemLevelRoleTypes"), "", allRoles)
+            </div>
+        </fieldset>
+        <br/>
+        <input type="submit" value="@parts.Msg("button.create")" class="btn btn-primary"/>
+    }
+</div>  
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#accountType").change(function(){
+        var selectedAccountType=$(this).val();
+        if(selectedAccountType!='@framework.services.account.IUserAccount.AccountType.STANDARD.name()'){
+            $("#rolesSelector").hide();
+        }else{
+            $("#rolesSelector").show();
+        }
+    });
+});
+</script> 
+}

@@ -1,0 +1,192 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry, 
+    lastMilestone: models.governance.LifeCycleMilestoneInstance,
+    portfolioTable: framework.utils.Table[utils.table.PortfolioListView],
+    dependenciesTable: framework.utils.Table[utils.table.PortfolioEntryDependencyListView],
+    attachmentTable: framework.utils.Table[utils.table.AttachmentListView],
+    attachmentPagination: framework.utils.Pagination[models.framework_models.common.Attachment]
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.view.label", null)
+    )
+}
+
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntry])
+}
+
+@portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.VIEW, breadcrump){
+
+    <span id="portfolio-entry-@(portfolioEntry.id)-details"></span>
+    
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <div class="panel panel-default" id="details">
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry.view.details.title")
+                    
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a id="portfolio-entry-edit" href="@controllers.core.routes.PortfolioEntryController.edit(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                        }
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION) {
+                            &nbsp;&nbsp;
+                            <a id="portfolio-entry-delete" onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryController.delete(portfolioEntry.id)"><span class="glyphicons glyphicons-bin glyphicons-panel"></span></a>
+                            <script type="text/javascript">
+                                function maf_confirmDelete(){
+                                    return window.confirm("@parts.Msg("core.portfolio_entry.delete.confirmation.message", portfolioEntry.portfolioEntryType.getName.toLowerCase)");
+                                }
+                            </script>
+                        }
+                    </div>
+                </div>
+                
+                <div class="panel-body">
+    
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.description.label")</th>
+                                <td>@display_object(portfolioEntry.getDescription, true)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.type.label")</th>
+                                <td>@display_value_holder(portfolioEntry.portfolioEntryType)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.creation_date.label")</th>
+                                <td>@display_date(portfolioEntry.creationDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.governance_id.label")</th>
+                                <td>@display_object(portfolioEntry.governanceId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.erp_ref_id.label")</th>
+                                <td>@display_object(portfolioEntry.erpRefId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.manager.label")</th>
+                                <td>@display_actor(portfolioEntry.manager)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.last_milestone.label")</th>
+                                <td>@display_milestone_instance(lastMilestone)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.sponsoring_unit.label")</th>
+                                <td>@display_org_unit(portfolioEntry.sponsoringUnit)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.delivery_units.label")</th>
+                                <td>@display_list_of_values(portfolioEntry.deliveryUnits, "display")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+            
+            @if(hasExtendedAttributes) {
+            
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @parts.Msg("core.portfolio_entry.view.extended.title")
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <div class="pull-right">
+                                <a href="@controllers.core.routes.PortfolioEntryController.editCustomAttr(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            </div>
+                        }
+                    </div>
+                    <div class="panel-body">
+                        @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
+                    </div>
+                </div>
+            }
+            
+        </div>
+        
+        <div class="col-md-6">
+        
+            <div class="panel panel-default" id="portfolios">
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry.view.portfolios.title")
+                    @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        <div class="pull-right">
+                            <a href="@controllers.core.routes.PortfolioEntryController.editPortfolios(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    @parts.table.tableview(portfolioTable)
+                </div>
+            </div>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry.view.dependencies.title")
+                    @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        <div class="pull-right">
+                            <a href="@controllers.core.routes.PortfolioEntryController.addDependency(portfolioEntry.id)"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    @parts.table.tableview(dependenciesTable)
+                </div>
+            </div>
+            
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry.view.attachments.title")
+                    
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioEntryController.createAttachment(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview_with_pagination_and_queryparams(attachmentTable, attachmentPagination, null, null, "id=" + portfolioEntry.id)
+                </div>
+            </div>
+        </div>
+    </div>
+  
+
+}

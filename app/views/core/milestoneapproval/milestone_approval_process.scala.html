@@ -1,0 +1,214 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    milestoneInstance: models.governance.LifeCycleMilestoneInstance,
+    descriptionDocument: models.framework_models.common.Attachment,
+    approverInstance: models.governance.LifeCycleMilestoneInstanceApprover,
+    table: framework.utils.Table[utils.table.MilestoneApproverListView],
+    portfolioEntry: models.pmo.PortfolioEntry,
+    status: List[String],
+    approvalForm: Form[utils.form.ProcessMilestoneApprovalFormData],
+    decisionForm: Form[utils.form.ProcessMilestoneDecisionFormData],
+    statusTypes: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import framework_views.parts
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import views.html.modelsparts._
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.milestone_approval.title"),
+    Seq(
+        ("topmenubar.governance.provide_approval.menu.label", controllers.core.routes.MilestoneApprovalController.list(0).url),
+        (portfolioEntry.getName, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        (milestoneInstance.lifeCycleMilestone.getShortName, null)
+    )
+) {
+    <div style="font-size: 1.5em;">
+        @for(s <- status) {
+            @Html(s)
+        }
+    </div>
+    <br/>
+    <blockquote>@parts.Msg("core.milestone.approval.process.header")</blockquote>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading ">@parts.Msg("core.milestone.approval.process.panel.milestone.title")</div>
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                            <col class="col-md-4">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.life_cycle_milestone_instance.milestone.label")</th>
+                                <td>@display_milestone_instance(milestoneInstance)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.life_cycle_milestone_instance.proposed_date.label")</th>
+                                <td>@display_date(milestoneInstance.passedDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.life_cycle_milestone_instance.gate_comments.label")</th>
+                                <td>@display_object(milestoneInstance.gateComments)</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    
+                    @if(descriptionDocument != null) {
+                        <br>
+                        <p class="text-center">
+                            <a href="@framework.utils.Utilities.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary">
+                                <i class="glyphicons glyphicons-download"></i> @parts.Msg("core.milestone.approval.process.panel.milestone.download.label")
+                            </a>
+                        </p>
+                    }
+                </div>
+            </div>
+        
+            <div class="panel panel-default">
+                <div class="panel-heading ">@parts.Msg("core.milestone.approval.process.panel.portfolioentry.title", portfolioEntry.portfolioEntryType.getName)</div>
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                            <col class="col-md-4">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.governance_id.label")</th>
+                                <td>@display_object(portfolioEntry.governanceId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.name.label")</th>
+                                <td>@display_portfolio_entry(portfolioEntry)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.description.label")</th>
+                                <td>@display_object(portfolioEntry.getDescription)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.type.label")</th>
+                                <td>@display_value_holder(portfolioEntry.portfolioEntryType)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.life_cycle_process.label")</th>
+                                <td>@display_object(portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.getName)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.last_milestone.label")</th>
+                                <td>@display_milestone_instance(portfolioEntry.lastApprovedLifeCycleMilestoneInstance)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.creation_date.label")</th>
+                                <td>@display_date(portfolioEntry.creationDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.manager.label")</th>
+                                <td>@display_actor(portfolioEntry.manager)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio_entry.sponsoring_unit.label")</th>
+                                <td>@display_org_unit(portfolioEntry.sponsoringUnit)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+        
+            <div class="panel panel-default">
+                    <div class="panel-heading ">@parts.Msg("core.milestone.approval.process.panel.approvers.title")</div>
+                    <div class="panel-body">
+                        @parts.table.tableview(table)
+                    </div>
+            </div>
+        
+            @if(approverInstance != null && approverInstance.hasApproved == null) {
+                <div class="panel panel-primary">
+                    <div class="panel-heading ">@parts.Msg("core.milestone.approval.process.panel.vote.title")</div>
+                    <div class="panel-body">
+                    
+                        <div class="maf-form">
+                            @helper.form(action = controllers.core.routes.MilestoneApprovalController.vote()) {
+                            
+                                <fieldset>
+    
+                                    <input type="hidden" name="approverInstanceId" value="@approverInstance.id"/>
+    
+                                    @parts.radiobuttonlist(approvalForm("hasApproved"), "", controllers.core.MilestoneApprovalController.getVoteValues)
+    
+                                    @helper.textarea(approvalForm("comments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("object.life_cycle_milestone_instance_approver.comments.placeholder"))
+    
+                                    <input class="btn btn-primary" type="submit" value="@parts.Msg("button.submit")" />
+    
+                                </fieldset>
+    
+                            }
+                        </div>
+                        
+                    </div>
+                </div>
+            }
+            
+            @restrict(la(as(constants.IMafConstants.MILESTONE_DECIDE_PERMISSION))){
+                <div class="panel panel-primary">
+                    <div class="panel-heading ">@parts.Msg("core.milestone.approval.process.panel.decide.title")</div>
+                    <div class="panel-body">
+                    
+                        <div class="alert alert-warning">@parts.Msg("core.milestone.approval.process.panel.decide.header")</div>
+
+                        <div class="maf-form">
+                            @helper.form(action = controllers.core.routes.MilestoneApprovalController.decide()) {
+                            
+                                <fieldset>
+    
+                                    <input type="hidden" name="milestoneInstanceId" value="@milestoneInstance.id"/>
+    
+                                    @parts.dropdownlist(decisionForm("lifeCycleMilestoneInstanceStatusType"), parts.Msg.asString("object.life_cycle_milestone_instance.status.label"), statusTypes)
+
+                                    @parts.dateinput(decisionForm("passedDate"), parts.Msg.asString("object.life_cycle_milestone_instance.passed_date.label"))
+
+                                    @helper.textarea(decisionForm("comments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("object.life_cycle_milestone_instance.gate_comments.placeholder"))
+    
+                                    <input class="btn btn-primary" type="submit" value="@parts.Msg("button.submit")" />
+    
+                                </fieldset>
+    
+                            }
+                        </div>
+                        
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    
+
+}

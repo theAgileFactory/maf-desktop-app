@@ -1,0 +1,94 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(appConfig: framework.services.api.server.IApiApplicationConfiguration)
+
+@import helper._ 
+@import bootstrap3._ 
+@import framework_views.parts
+
+@views.html.admin.plugin.pluginmanager_template(false, 4,parts.Msg.asString("admin.api_manager.title")){ 
+<style>
+<!--
+pre {
+    white-space: pre-wrap;       /* CSS 3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+-->
+</style>
+}{
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("admin.api_manager.registration.display.header", appConfig.getApplicationName())
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ApiManagerController.displayResetApiRegistrationKeysForm(appConfig.getApplicationName())"><span class="glyphicons glyphicons-roundabout glyphicons-panel"></span></a>
+                &nbsp;
+                <a href="@controllers.admin.routes.ApiManagerController.displayApiRegistrationUpdateForm(appConfig.getApplicationName())"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                &nbsp;
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-condensed table-hover">
+                <colgroup>
+                    <col class="col-md-2">
+                    <col class="col-md-10">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.name.label")</th>
+                        <td>@appConfig.getApplicationName()</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.description.label")</th>
+                        <td>@parts.formats.display_object(appConfig.getDescription(), true)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.testable.label")</th>
+                        <td>@parts.formats.display_boolean(appConfig.isTestable)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.authorizations.label")</th>
+                        <td>@parts.formats.display_object(appConfig.getApiAuthorizationsAsString(), true)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.secret.key.label")</th>
+                        <td><pre>@appConfig.getSignatureGenerator().getSharedSecret()</pre></td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.application.key.label")</th>
+                        <td><pre>@appConfig.getSignatureGenerator().getApplicationKey()</pre></td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.key.protocol.version.label")</th>
+                        <td>@appConfig.getSignatureGenerator().getProtocolVersion()</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.api_registration.key.hash.algorithm.label")</th>
+                        <td>@appConfig.getSignatureGenerator().getHashAlgorithm()</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <a class="btn btn-default" href="@controllers.admin.routes.ApiManagerController.index()">@parts.Msg("button.back")</a>
+
+}

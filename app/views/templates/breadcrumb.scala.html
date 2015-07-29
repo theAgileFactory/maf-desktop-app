@@ -1,0 +1,73 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(breadCrumb: Seq[(String, String)])
+@import framework_views.parts
+@if(breadCrumb!=null){
+<div class="row">
+    <div class="col-md-12">
+    
+        <div class="pull-right visible-lg visible-md" style="padding-top:5px; padding-right: 5px;">
+            <a id="pinThisPage" class="btn btn-default" href="#"><i class="glyphicons glyphicons-pushpin glyphicons-menu-small"></i></a>
+            <a id="helpTarget" class="btn btn-default" target="_blank" href="@controllers.routes.Application.help(request.path)"><i class="glyphicons glyphicons-circle-question-mark glyphicons-menu-small"></i></a>
+        </div>
+
+        <ol class="breadcrumb">
+            @for((value, index) <- breadCrumb.zipWithIndex) {
+                @if(value._2==null){
+                    <li @if(index.equals(breadCrumb.length-1)){class="active"}>@parts.Msg(value._1)</li>
+                }else{
+                    <li @if(index.equals(breadCrumb.length-1)){class="active"}><a href="@value._2">@parts.Msg(value._1)</a></li>
+                }
+            }
+        </ol>
+
+        <script type="text/javascript">
+            $("#pinThisPage").click(function() {
+                var name = $(document).attr('title');
+                var route = window.location.pathname + window.location.search;
+                $.ajax({ 
+                    type: 'POST', 
+                    url: '@controllers.routes.Application.addShortcut()', 
+                    data: JSON.stringify({ 'name': name, 'route': route }), 
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success: function (data) { 
+                        $.ajax({ 
+                            type: 'GET', 
+                            url: '@controllers.routes.Application.viewShortcuts()', 
+                            success: function (data) { 
+                                $("#topmenubar-navbar-left").html(data);
+                            }
+                        });
+                        alert(data.message);
+                    },
+                    error: function (data) { 
+                        alert("@parts.Msg("shortcut.add.message.error")");
+                    }
+                });
+            });
+        </script>
+
+    </div>
+</div>
+}
+@**************************************************
+ Display a breadcrumb with the "pageb URL" pin
+ Here are the parameters:
+ - breadCrumb : a sequence of tuple Seq(("titleA", "urlA"),("titleB" ->"urlB"),("titleActive" -> null)), last one is considered as active
+ *************************************************@

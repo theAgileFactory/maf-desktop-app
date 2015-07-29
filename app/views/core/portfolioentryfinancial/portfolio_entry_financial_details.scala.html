@@ -1,0 +1,112 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    budgetLineTable: framework.utils.Table[utils.table.PortfolioEntryBudgetLineListView],
+    costToCompleteWorkOrderTable: framework.utils.Table[utils.table.WorkOrderListView],
+    engagedWorkOrderTable: framework.utils.Table[utils.table.WorkOrderListView],
+    lineItemTable: framework.utils.Table[utils.table.PurchaseOrderLineItemListView]
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.financial.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.FINANCIAL, breadcrump){
+
+    <span id="portfolio-entry-@(portfolioEntry.id)-financial-details"></span>
+    
+    <h4>@parts.Msg("core.portfolio_entry_financial.view.budget.title")</h4>
+
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_financial.view.budget.panel.budget.title")
+            
+            <div class="pull-right">
+                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                }
+            </div>
+        </div>
+
+        <div class="panel-body">
+            @parts.table.tableview(budgetLineTable)
+        </div>
+    </div>
+    
+    <h4>@parts.Msg("core.portfolio_entry_financial.view.forecast.title")</h4>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_financial.view.forecast.panel.cost_to_complete.title")
+            
+            <div class="pull-right">
+                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                }
+            </div>
+        </div>
+
+        <div class="panel-body">
+            @parts.table.tableview(costToCompleteWorkOrderTable)
+        </div>
+        
+    </div>
+
+
+    @if(engagedWorkOrderTable.hasValues) {
+        <div class="panel panel-default">
+        
+            <div class="panel-heading">
+                @parts.Msg("core.portfolio_entry_financial.view.forecast.panel.engaged_work_order.title")
+            </div>
+
+            <div class="panel-body">
+                @parts.table.tableview(engagedWorkOrderTable)
+            </div>
+            
+        </div>
+    }
+
+    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && lineItemTable.hasValues) {
+        <div class="panel panel-default">
+    
+            <div class="panel-heading">
+                @parts.Msg("core.portfolio_entry_financial.view.forecast.panel.engaged_purchase_order.title")
+            </div>
+
+            <div class="panel-body">
+                @parts.table.tableview(lineItemTable)
+            </div>
+        
+        </div>
+    }
+
+
+}

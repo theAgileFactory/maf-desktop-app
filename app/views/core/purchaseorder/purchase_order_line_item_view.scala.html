@@ -1,0 +1,199 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    purchaseOrderLineItem: models.finance.PurchaseOrderLineItem,
+    workOrderTable: framework.utils.Table[utils.table.PurchaseOrderLineItemWorkOrderListView],
+    goodsReceiptTable: framework.utils.Table[utils.table.GoodsReceiptListView]
+)
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (parts.Msg.asString("core.purchase_order.breadcrumb", purchaseOrderLineItem.purchaseOrder.refId), controllers.core.routes.PurchaseOrderController.view(purchaseOrderLineItem.purchaseOrder.id).url),
+        (purchaseOrderLineItem.refId, null)
+    )
+}
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("core.purchase_order.title"),
+    breadcrump
+) {
+
+    <div class="row">
+
+        <div class="col-md-4">
+            
+            <div class="panel panel-default">
+        
+                <div class="panel-heading">
+                    @parts.Msg("core.purchase_order.line_item.view.details.title")
+                </div>
+
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-4">
+                             <col class="col-md-8">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.ref_id.label")</th>
+                                <td>@display_object(purchaseOrderLineItem.refId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.line_id.label")</th>
+                                <td>@display_object(purchaseOrderLineItem.lineId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.is_associated.label")</th>
+                                <td>@display_boolean(purchaseOrderLineItem.isAssociated)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.shared.label")</th>
+                                <td>@display_boolean(purchaseOrderLineItem.isShared)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.description.label")</th>
+                                <td>@display_object(purchaseOrderLineItem.description)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.creation_date.label")</th>
+                                <td>@display_date(purchaseOrderLineItem.creationDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.due_date.label")</th>
+                                <td>@display_date(purchaseOrderLineItem.dueDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.expenditure_type.label")</th>
+                                <td>@display_is_opex(purchaseOrderLineItem.isOpex)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.quantity.label")</th>
+                                <td>@display_number(purchaseOrderLineItem.quantity)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.quantity_received.label")</th>
+                                <td>@display_number(purchaseOrderLineItem.quantityTotalReceived)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.quantity_billed.label")</th>
+                                <td>@display_number(purchaseOrderLineItem.quantityBilled)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.currency.label")</th>
+                                <td>@display_object(purchaseOrderLineItem.currency)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.unit_price.label")</th>
+                                <td>@display_number(purchaseOrderLineItem.unitPrice)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.amount.label")</th>
+                                <td>@display_number(purchaseOrderLineItem.amount)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.remaining_amount.label")</th>
+                                <td>@display_number(purchaseOrderLineItem.getRemainingAmount)</td>
+                            </tr>
+                            @if(!purchaseOrderLineItem.isAssociated || purchaseOrderLineItem.isShared == false) {
+                                <tr>
+                                    <th>@parts.Msg("object.purchase_order_line_item.amount_received.label")</th>
+                                    <td>@display_number(purchaseOrderLineItem.amountReceived)</td>
+                                </tr>
+                                <tr>
+                                    <th>@parts.Msg("object.purchase_order_line_item.amount_billed.label")</th>
+                                    <td>@display_number(purchaseOrderLineItem.amountBilled)</td>
+                                </tr>
+                            }
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.cost_center.label")</th>
+                                <td>@display_cost_center(purchaseOrderLineItem.costCenter)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.supplier.label")</th>
+                                <td>@display_supplier(purchaseOrderLineItem.supplier)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.material_code.label")</th>
+                                <td>@display_object(purchaseOrderLineItem.materialCode)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.gl_account.label")</th>
+                                <td>@display_object(purchaseOrderLineItem.glAccount)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.shipment_type.label")</th>
+                                <td>@display_value_holder(purchaseOrderLineItem.shipmentType)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.requester.label")</th>
+                                <td>@display_actor(purchaseOrderLineItem.requester)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.purchase_order_line_item.is_cancelled.label")</th>
+                                <td>@display_boolean(purchaseOrderLineItem.isCancelled)</td>
+                            </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+        </div>
+        
+                    
+        <div class="col-md-8">
+        
+            <div class="panel panel-default">
+        
+                <div class="panel-heading">
+                    @parts.Msg("core.purchase_order.line_item.view.workorders.title")
+                </div>
+
+                <div class="panel-body">
+                    @parts.table.tableview(workOrderTable)
+                </div>
+                
+            </div>
+            
+            <div class="panel panel-default">
+            
+                <div class="panel-heading">
+                    @parts.Msg("core.purchase_order.line_item.view.goodsreceipts.title")
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(goodsReceiptTable)
+                </div>
+            
+        </div>
+
+        </div>
+
+    </div>
+    
+    
+
+}

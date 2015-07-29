@@ -1,0 +1,134 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolio: models.pmo.Portfolio,
+    portfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryListView],
+    portfolioEntryPagination: framework.utils.Pagination[models.pmo.PortfolioEntry],
+    stakeholderTable: framework.utils.Table[utils.table.PortfolioStakeholderListView],
+    stakeholderPagination: framework.utils.Pagination[models.pmo.Stakeholder]
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (portfolio.getName, controllers.core.routes.PortfolioController.overview(portfolio.id).url),
+        ("core.portfolio.sidebar.view.label", null)
+    )
+}
+
+@portfolio_template(portfolio, controllers.core.PortfolioController.MenuItemType.VIEW, breadcrump){
+
+    <div class="row">
+    
+        <div class="col-md-5">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio.view.details.title")
+                    @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION) {
+                        <div class="pull-right">
+                            <a href="@controllers.core.routes.PortfolioController.edit(portfolio.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            &nbsp;&nbsp;
+                            <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioController.delete(portfolio.id)"><span class="glyphicons glyphicons-bin glyphicons-panel"></span></a>
+                            <script type="text/javascript">
+                                function maf_confirmDelete(){
+                                    return window.confirm("@parts.Msg("core.portfolio.delete.confirmation.message")");
+                                }
+                            </script>
+                        </div>
+                    }
+                </div>
+        
+                <div class="panel-body">
+                
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio.ref_id.label")</th>
+                                <td>@display_object(portfolio.refId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio.name.label")</th>
+                                <td>@display_object(portfolio.name)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio.is_active.label")</th>
+                                <td>@display_boolean(portfolio.isActive)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio.type.label")</th>
+                                <td>@display_value_holder(portfolio.portfolioType)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.portfolio.manager.label")</th>
+                                <td>@display_actor(portfolio.manager)</td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                    
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.Portfolio], portfolio.id)
+                    
+                </div>
+                
+            </div>
+        
+        </div>
+        
+        <div class="col-md-7">
+
+            <div class="panel panel-default">
+        
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio.view.stakeholders.title")
+                    
+                    <div class="pull-right">
+                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION) {
+                            <a href="@controllers.core.routes.PortfolioStakeholderController.manage(portfolio.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview_with_pagination_and_queryparams(stakeholderTable, stakeholderPagination, null, null, "id=" + portfolio.id)
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio.view.entries.title")
+        </div>
+        <div class="panel-body">
+            @parts.table.tableview_with_pagination_and_queryparams(portfolioEntryTable, portfolioEntryPagination, null, null, "id=" + portfolio.id)
+        </div>
+    </div>
+}

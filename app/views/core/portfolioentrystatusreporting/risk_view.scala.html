@@ -1,0 +1,119 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    portfolioEntryRisk: models.pmo.PortfolioEntryRisk
+)
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.status_reporting.registers.label", controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url),
+        (portfolioEntryRisk.name, null)
+    )
+}
+
+@isRisk=@{
+    !portfolioEntryRisk.hasOccured
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.REPORTING, breadcrump){
+
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            @if(isRisk) {
+                @parts.Msg("core.portfolio_entry_status_reporting.risk.view.title")
+            } else {
+                @parts.Msg("core.portfolio_entry_status_reporting.issue.view.title")
+            }
+            
+            <div class="pull-right">
+                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, portfolioEntryRisk.id)"><span class="glyphicons glyphicons-edit"></span></a>
+                    &nbsp;
+                }
+            </div>
+            
+        </div>
+
+        <div class="panel-body">
+        
+            <table class="table table-condensed table-hover">
+                <colgroup>
+                     <col class="col-md-3">
+                     <col class="col-md-9">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_risk.name.label")</th>
+                        <td>@display_object(portfolioEntryRisk.name)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_risk.description.label")</th>
+                        <td>@display_object(portfolioEntryRisk.description)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_risk.creation_date.label")</th>
+                        <td>@display_date(portfolioEntryRisk.creationDate)</td>
+                    </tr>
+                    <tr>
+                        <th>
+                            @if(isRisk) {
+                                @parts.Msg("object.portfolio_entry_risk.target_date.label")
+                            } else {
+                                @parts.Msg("object.portfolio_entry_risk.due_date.label")
+                            }
+                        </th>
+                        <td>@display_date(portfolioEntryRisk.targetDate)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_risk.type.label")</th>
+                        <td>@display_value_holder(portfolioEntryRisk.portfolioEntryRiskType)</td>
+                    </tr>
+                    @if(isRisk) {
+                        <tr>
+                            <th>@parts.Msg("object.portfolio_entry_risk.is_mitigated.label")</th>
+                            <td>@display_boolean(portfolioEntryRisk.isMitigated)</td>
+                        </tr>
+                        <tr>
+                            <th>@parts.Msg("object.portfolio_entry_risk.mitigation_comment.label")</th>
+                            <td>@display_object(portfolioEntryRisk.mitigationComment)</td>
+                        </tr>
+                    }
+                    @if(!isRisk) {
+                        <tr>
+                            <th>@parts.Msg("object.portfolio_entry_risk.owner.label")</th>
+                            <td >@display_actor(portfolioEntryRisk.owner)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            
+            @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryRisk], portfolioEntryRisk.id)
+        </div>
+    </div>
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.back")</a>
+}

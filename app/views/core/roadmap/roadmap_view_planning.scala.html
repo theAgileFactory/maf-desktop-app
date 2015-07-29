@@ -1,0 +1,125 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    source: String
+)
+
+@import framework_views.parts
+@import framework.utils.SideBar
+@import framework.utils.Menu.ClickableMenuItem
+
+@sidebarInstance=@{
+    val sidebarInstance=new SideBar()
+    sidebarInstance.addMenuItem(new ClickableMenuItem(
+        "core.roadmap.title",
+        controllers.core.routes.RoadmapController.index().url,
+        "glyphicons glyphicons-road",
+        false)
+    );
+    sidebarInstance.addMenuItem(new ClickableMenuItem(
+        "core.roadmap.planning.title",
+        controllers.core.routes.RoadmapController.viewPlanning().url,
+        "glyphicons glyphicons-calendar",
+        true)
+    );
+    sidebarInstance
+}
+
+@breadcrump=@{
+    Seq(
+        ("topmenubar.roadmap.menu.label", controllers.core.routes.RoadmapController.index().url),
+        ("core.roadmap.planning.breadcrumb", null)
+    )
+}
+
+@templates.main_bc_iconsbar(
+    parts.Msg.asString("core.roadmap.title"),
+    sidebarInstance,
+    breadcrump
+){
+}{
+
+    <span id="roadmap-planning"></span>
+
+    @if(source != null && !source.trim.equals("[ ]")) {
+
+        <div class="gantt" id="roadmap-gantt"></div>
+        
+        <div id="roadmap-gantt-popup" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">
+                            <a id="roadmap-gantt-popup-link" href=""><span id="roadmap-gantt-popup-title"></span></a>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="roadmap-gantt-popup-table" class="table table-condensed table-hover">
+                            <colgroup>
+                                 <col class="col-md-3">
+                                 <col class="col-md-9">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>@parts.Msg("object.portfolio_entry.description.label")</th>
+                                    <td class="description"></td>
+                                </tr>
+                                <tr>
+                                    <th>@parts.Msg("object.portfolio_entry.manager.label")</th>
+                                    <td class="manager"></td>
+                                </tr>
+                                <tr>
+                                    <th>@parts.Msg("object.portfolio_entry.portfolios.label")</th>
+                                    <td class="portfolios"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(function() {
+                $("#roadmap-gantt").gantt({
+                    months: _jquery_gantt_transl.@(Http.Context.current().lang().code()).months,
+                    dow: _jquery_gantt_transl.@(Http.Context.current().lang().code()).dow,
+                    source: @Html(source),
+                    scale: "weeks",
+                    minScale: "days",
+                    maxScale: "months",
+                    itemsPerPage: 10000,
+                    navigate: "scroll",
+                    onItemClick: function(data) {
+                        $('#roadmap-gantt-popup-title').html(data.name);
+                        $("#roadmap-gantt-popup-link").attr("href", data.url);
+                        $('#roadmap-gantt-popup-table .description').html(data.description);
+                        $('#roadmap-gantt-popup-table .manager').html(data.manager);
+                        $('#roadmap-gantt-popup-table .portfolios').html(data.portfolios);
+                        $('#roadmap-gantt-popup').modal('show');
+                    }
+                });
+            });
+            
+        </script>
+    
+    } else {
+        <div class="alert alert-info">@parts.Msg("core.roadmap.planning.nosource")</div>
+    }
+}

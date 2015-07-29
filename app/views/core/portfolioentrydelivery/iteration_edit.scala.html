@@ -1,0 +1,68 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    iterationForm: Form[utils.form.IterationFormData],
+    releases: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.iterations.label", controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id).url),
+        ("core.portfolio_entry_delivery.iteration.edit.title", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+    <div class="maf-form">
+        @if(iterationForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processEditIteration()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                <input type="hidden" name="iterationId" value="@iterationForm("iterationId").value"/>
+                
+                @helper.inputText(iterationForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.iteration.story_points.label"), 'autofocus -> "autofocus")
+                
+                @parts.dropdownlist(iterationForm("release"), parts.Msg.asString("object.iteration.release.label"), releases, parts.Msg.asString("object.iteration.release.help"), false)
+                
+                @parts.extended_attributes_input(iterationForm, classOf[models.delivery.Iteration], Long.parseLong(iterationForm("iterationId").value))
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+   
+}

@@ -1,0 +1,48 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(portfolioEntry: models.pmo.PortfolioEntry, withLink: Boolean = true)
+
+@import framework_views.parts
+
+@if(portfolioEntry != null && !portfolioEntry.deleted) {
+
+    @if(withLink && security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
+        <a href="@controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id)">
+    }
+
+    @if(!portfolioEntry.isPublic){
+        <i id='portfolio-entry-confidential' class='glyphicons glyphicons-eye-close' title='@parts.Msg("object.portfolio_entry.is_condfidential.label")'></i>&nbsp;
+    }
+    
+    @if(portfolioEntry.archived){
+        <i id='portfolio-entry-archived' class='glyphicons glyphicons-compressed' title='@parts.Msg("object.portfolio_entry.archived.label")'></i>&nbsp;
+    }
+    
+    @if(portfolioEntry.activeLifeCycleInstance.isConcept){
+        <i class='glyphicons glyphicons-lightbulb' title='@parts.Msg("object.portfolio_entry.is_concept.label")'></i>&nbsp;
+    }
+    
+    @portfolioEntry.getName
+    
+    @if(withLink && security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
+        </a>
+    }
+
+} else {
+    @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
+}

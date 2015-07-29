@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperTemplate PUBLIC "-//JasperReports//DTD Template//EN" "http://jasperreports.sourceforge.net/dtds/jaspertemplate.dtd">
+
+<jasperTemplate>
+	<style name="row" mode="Opaque" forecolor="#000000" backcolor="#EEEEEE" vAlign="Middle" isBlankWhenNull="true" fontName="SansSerif" fontSize="8">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<topPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="row-header" mode="Opaque" forecolor="#FFFFFF" backcolor="#066990" hAlign="Center" vAlign="Middle" isBlankWhenNull="true" fontName="SansSerif" fontSize="10" isBold="true">
+		<box padding="2" leftPadding="0" rightPadding="0">
+			<topPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="2.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="subtitle" forecolor="#000000" hAlign="Center" fontName="SansSerif" fontSize="16" isBold="false" isUnderline="false"/>
+	<style name="title" mode="Opaque" forecolor="#FFFFFF" backcolor="#066990" vAlign="Middle" fontName="SansSerif" fontSize="24" isBold="false" isUnderline="false">
+		<box leftPadding="20"/>
+	</style>
+</jasperTemplate>

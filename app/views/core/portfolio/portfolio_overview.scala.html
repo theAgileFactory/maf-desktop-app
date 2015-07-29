@@ -1,0 +1,65 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolio: models.pmo.Portfolio,
+    reportTable: framework.utils.Table[utils.table.PortfolioReportListView],
+    milesonteTable: framework.utils.Table[utils.table.PortfolioMilestoneListView]
+)
+
+@import framework_views.parts
+@import views.html.modelsparts._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        (portfolio.getName, null)
+    )
+}
+
+@portfolio_template(portfolio, controllers.core.PortfolioController.MenuItemType.OVERVIEW, breadcrump){
+
+    <div class="row">
+        @views.html.framework_views.parts.kpi.display_kpi_dashboard(classOf[models.pmo.Portfolio], portfolio.id)
+        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_VIEW_FINANCIAL_DYNAMIC_PERMISSION) {
+            @views.html.framework_views.parts.kpi.display_kpi_box("KPI_PORTFOLIO_DEVIATION_CAPEX", portfolio.id)
+            @views.html.framework_views.parts.kpi.display_kpi_box("KPI_PORTFOLIO_DEVIATION_OPEX", portfolio.id)
+        }
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">@parts.Msg("core.portfolio.overview.red_reports")</div>
+                <div class="panel-body">
+                    @parts.table.tableview(reportTable)
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">@parts.Msg("core.portfolio.overview.late_milestones")</div>
+                <div class="panel-body">
+                    @parts.table.tableview(milesonteTable)
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,103 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry, 
+    groups: List[models.pmo.PortfolioEntryPlanningPackageGroup],
+    groupsForm: Form[utils.form.PortfolioEntryPlanningPackageGroupsFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.planning.packages.label", controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id).url),
+        ("core.portfolio_entry_planning.package.groups.title", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.PLANNING, breadcrump){
+
+    <div class="maf-form">
+        @if(groupsForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@{groupsForm("groups").error.map { error => parts.Msg(error.message) }}</strong>
+            </div>
+        }
+
+        @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.processAddPackageGroups()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+
+                <table id="goups_table" class="table table-condensed table-hover">
+                    <colgroup>
+                        <col style="width: 40px;">
+                        <col class="col-md-2">
+                        <col class="col-md-5">
+                        <col class="col-md-5">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>@parts.Msg("object.portfolio_entry_planning_package_group.name.label")</th>
+                            <th>@parts.Msg("object.portfolio_entry_planning_package_group.description.label")</th>
+                            <th>@parts.Msg("object.portfolio_entry_planning_package_group.packages.label")</th>
+                        </tr>
+                    </thead>
+                    <tbody class="rowlink" data-link="row">
+                        @for((group, i) <- groups.zipWithIndex) {
+                            <tr>
+                                <td class="rowlink-skip"><input type="checkbox" value="@group.id" name="groups[@i]" id="groups_@i"></td>
+                                <td>
+                                    <a class="hidden" href="javascript: maf_checkGroup('groups_@i');"></a>
+                                    <strong>@group.getName</strong></td>
+                                <td>@if(group.getDescription != null && !group.getDescription.equals("")) { @Html(group.getDescription) } else { @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA }</td>
+                                <td>
+                                    @for(pattern <- group.portfolioEntryPlanningPackagePatterns) {
+                                        @pattern.getName<br/>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <script>
+                    $('#goups_table tbody').rowlink();
+                    function maf_checkGroup(id) {
+                        if($('#' + id).is(':checked')) {
+                            $('#' + id).prop('checked', false);
+                        } else {
+                            $('#' + id).prop('checked', true);
+                        }
+                    }
+                </script>
+
+            </fieldset>
+            <br/>
+            <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+            <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id).url">@parts.Msg("button.cancel")</a>
+        }
+    </div> 
+   
+}

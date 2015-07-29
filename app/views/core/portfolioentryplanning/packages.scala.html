@@ -1,0 +1,103 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry, 
+    table: framework.utils.Table[utils.table.PortfolioEntryPlanningPackageListView],
+    pagination: framework.utils.Pagination[models.pmo.PortfolioEntryPlanningPackage],
+    filterConfig: framework.utils.FilterConfig[utils.table.PortfolioEntryPlanningPackageListView],
+    groups: List[models.pmo.PortfolioEntryPlanningPackageGroup],
+    ganttSource: String
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.planning.packages.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.PLANNING, breadcrump){
+
+    <span id="portfolio-entry-@(portfolioEntry.id)-packages"></span>
+
+    <div class="panel panel-default" id="packages-table">
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_planning.packages.title")
+            
+            <div class="pull-right">
+                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    <div class="btn-group">
+                        <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicons glyphicons-plus glyphicons-panel"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right text-left">
+                            <li><a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_planning.packages.new.package")</a></li>
+                            @if(groups.size() == 0) {
+                                <li><a href='javascript: alert("@parts.Msg("core.portfolio_entry_planning.packages.nogroup")");'>@parts.Msg("core.portfolio_entry_planning.packages.new.groups")</a></li>
+                            } else {
+                                <li><a href="@controllers.core.routes.PortfolioEntryPlanningController.addPackageGroups(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_planning.packages.new.groups")</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="panel-body">
+            @parts.table.filtered_tableview(
+                table, 
+                pagination, 
+                filterConfig, 
+                controllers.core.routes.PortfolioEntryPlanningController.packagesFilter(portfolioEntry.id).url,
+                null
+            )
+        </div>
+    </div>
+    
+    @if(ganttSource != null && !ganttSource.trim.equals("[ ]")) {
+    
+        <div class="pull-right small">
+            @parts.Msg("core.portfolio_entry_planning.packages.gantt.lastupdate"):
+            @parts.formats.display_date(new Date(), framework.utils.Utilities.getDefaultDatePattern() + " kk:mm") &nbsp;
+            <a href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)"><span class="glyphicons glyphicons-refresh"></span></a>
+        </div>&nbsp;
+        <div class="gantt" id="packages-gantt" style="margin: 0px auto;"></div>
+        
+        <script>
+            $(function() {
+                $("#packages-gantt").gantt({
+                    months: _jquery_gantt_transl.@(Http.Context.current().lang().code()).months,
+                    dow: _jquery_gantt_transl.@(Http.Context.current().lang().code()).dow,
+                    source: @Html(ganttSource),
+                    scale: "weeks",
+                    minScale: "days",
+                    maxScale: "months",
+                    itemsPerPage: 100000,
+                    navigate: "scroll"
+                });
+            });
+            
+        </script>
+    
+    }
+}

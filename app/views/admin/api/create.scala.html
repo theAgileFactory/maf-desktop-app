@@ -1,0 +1,50 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(appConfigForm: Form[controllers.admin.ApiManagerController.ApiRegistrationObject])
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+
+@views.html.admin.plugin.pluginmanager_template(false, 4, parts.Msg.asString("admin.api_manager.title")){
+}{
+<div class="row">
+    <div class="col-md-12">
+        <blockquote>
+        @parts.Msg("admin.api_manager.registration.new.header")
+        </blockquote>
+        <div class="maf-form">
+            @if(appConfigForm.hasErrors()){
+                <div class="alert alert-danger">
+                    <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+                </div>
+            }
+            @helper.form(action = controllers.admin.routes.ApiManagerController.saveRegistration()) {
+            <fieldset>
+                @parts.checkbox(appConfigForm("testable"), parts.Msg.asString("object.api_registration.testable.label"))
+                @helper.inputText(appConfigForm("applicationName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.api_registration.name.label"), 'autofocus -> "autofocus")
+                @helper.textarea(appConfigForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.api_registration.description.label"))
+                @helper.textarea(appConfigForm("authorizations"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.api_registration.authorizations.label"), 'rows -> "15")
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
+                <a class="btn btn-default" href="@controllers.admin.routes.ApiManagerController.index()">@parts.Msg("button.cancel")</a>
+            </fieldset>
+       }
+        </div>
+    </div>
+</div>
+}

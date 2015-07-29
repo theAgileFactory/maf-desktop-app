@@ -1,0 +1,54 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    orgUnit: models.pmo.OrgUnit,
+    ganttSource: String
+)
+
+@import framework_views.parts
+
+@org_unit_template(parts.Msg.asString("core.org_unit.sidebar.allocation"), orgUnit, controllers.core.OrgUnitController.MenuItemType.ALLOCATION){
+
+    @if(ganttSource != null && !ganttSource.trim.equals("[ ]")) {
+    
+        <div class="gantt" id="allocation-gantt"></div>
+        
+        <script>
+            $(function() {
+                $("#allocation-gantt").gantt({
+                    months: _jquery_gantt_transl.@(Http.Context.current().lang().code()).months,
+                    dow: _jquery_gantt_transl.@(Http.Context.current().lang().code()).dow,
+                    source: @Html(ganttSource),
+                    scale: "weeks",
+                    minScale: "days",
+                    maxScale: "months",
+                    itemsPerPage: 100000,
+                    navigate: "scroll",
+                    onItemClick: function(data) {
+                        window.location.href = data.url;
+                    }
+                });
+            });
+            
+        </script>
+    
+    } else {
+        @parts.Msg("core.org_unit.allocations.no_data")
+    }
+
+}

@@ -1,0 +1,186 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    lifeCycleMilestone: models.governance.LifeCycleMilestone,
+    lifeCycleMilestoneInstances: List[models.governance.LifeCycleMilestoneInstance],
+    approversTables: List[framework.utils.Table[utils.table.MilestoneApproverListView]],
+    budgetLinesTables: List[framework.utils.Table[utils.table.PortfolioEntryBudgetLineListView]],
+    resourcesTables: List[framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedResourceListView]],
+    descriptionDocuments: List[models.framework_models.common.Attachment]
+)
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.governance.label", controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url),
+        (lifeCycleMilestone.getName, null)
+    )
+}
+
+@nMilestoneInstances=@{
+    lifeCycleMilestoneInstances.size
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.GOVERNANCE, breadcrump){
+
+    @if(lifeCycleMilestoneInstances != null && lifeCycleMilestoneInstances.size > 0) {
+
+        <ul id="milestoneInstances" class="nav nav-tabs">
+            @for((lifeCycleMilestoneInstance, index) <- lifeCycleMilestoneInstances.zipWithIndex) {
+                <li @if(index.equals(0)) { class="active" }>
+                    <a href="#milestoneInstance@(index)" id="milestoneInstance@(index)-tab" data-toggle="tab" aria-controls="milestoneInstance@(index)" @if(index.equals(0)) {aria-expanded="true"}>
+                        @if(lifeCycleMilestoneInstance.isPassed && lifeCycleMilestoneInstance.lifeCycleMilestoneInstanceStatusType != null) {
+                            @if(lifeCycleMilestoneInstance.lifeCycleMilestoneInstanceStatusType.isApproved) {
+                                @parts.Msg("core.portfolio_entry_governance.milestone.view.status.approved") (@display_date(lifeCycleMilestoneInstance.passedDate).toString.trim)
+                            } else {
+                                @parts.Msg("core.portfolio_entry_governance.milestone.view.status.rejected") (@display_date(lifeCycleMilestoneInstance.passedDate).toString.trim)
+                            }
+                        } else {
+                            @parts.Msg("core.portfolio_entry_governance.milestone.view.status.pending")
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+        
+        <br/>
+
+        <div id="milestoneInstancesContent" class="tab-content">
+            @for((lifeCycleMilestoneInstance, index) <- lifeCycleMilestoneInstances.zipWithIndex) {
+                <div class="tab-pane fade @if(index.equals(0)) {in active}" id="milestoneInstance@(index)" aria-labelledby="milestoneInstance@(index)-tab">
+                    <div class="row">
+                        <div class="col-md-5">
+                        
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @parts.Msg("core.portfolio_entry_governance.milestone.view.panel.details.title")
+                                </div>
+                                <div class="panel-body">
+
+                                    <table class="table table-condensed table-hover">
+                                        <colgroup>
+                                             <col class="col-md-3">
+                                             <col class="col-md-9">
+                                        </colgroup>
+                                        <tbody>
+                                            <tr>
+                                                <th>@parts.Msg("object.life_cycle_milestone_instance.is_passed.label")</th>
+                                                <td>@display_boolean(lifeCycleMilestoneInstance.isPassed)</td>
+                                            </tr>
+                                            @if(lifeCycleMilestoneInstance.isPassed) {
+                                                @if(lifeCycleMilestoneInstance.lifeCycleMilestoneInstanceStatusType != null) {
+                                                    <tr>
+                                                        <th>@parts.Msg("object.life_cycle_milestone_instance.is_approved.label")</th>
+                                                        <td>@display_boolean(lifeCycleMilestoneInstance.lifeCycleMilestoneInstanceStatusType.isApproved)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>@parts.Msg("object.life_cycle_milestone_instance.status.label")</th>
+                                                        <td>@display_object(lifeCycleMilestoneInstance.lifeCycleMilestoneInstanceStatusType.name)</td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <th>@parts.Msg("object.life_cycle_milestone_instance.approver.label")</th>
+                                                    <td>@display_actor(lifeCycleMilestoneInstance.approver)</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>@parts.Msg("object.life_cycle_milestone_instance.passed_date.label")</th>
+                                                    <td>@display_date(lifeCycleMilestoneInstance.passedDate)</td>
+                                                </tr>
+                                            } else {
+                                                <tr>
+                                                    <th>@parts.Msg("object.life_cycle_milestone_instance.proposed_date.label")</th>
+                                                    <td>@display_date(lifeCycleMilestoneInstance.passedDate)</td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <th>@parts.Msg("object.life_cycle_milestone_instance.gate_comments.label")</th>
+                                                <td>@display_object(lifeCycleMilestoneInstance.gateComments)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    @if(descriptionDocuments(index) != null) {
+                                        <br>
+                                        <p class="text-center">
+                                            <a href="@framework.utils.Utilities.getAttachmentDownloadUrl(descriptionDocuments(index).id)" class="btn btn-primary">
+                                                <i class="glyphicons glyphicons-download"></i> @parts.Msg("object.life_cycle_milestone_instance.document.label")
+                                            </a>
+                                        </p>
+                                    }
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @parts.Msg("core.portfolio_entry_governance.milestone.view.panel.approvers.title")
+                                </div>
+                                <div class="panel-body">
+                                    @parts.table.tableview(approversTables(index))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @if(lifeCycleMilestoneInstance.isPassed) {
+                    
+                        <div class="row">
+                            @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION) {
+                                <div class="col-md-5">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            @parts.Msg("core.portfolio_entry_governance.milestone.view.panel.budget.title", display_date(lifeCycleMilestoneInstance.passedDate))
+                                        </div>
+                                        <div class="panel-body">
+                                            @parts.table.tableview(budgetLinesTables(index))
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-7">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        @parts.Msg("core.portfolio_entry_governance.milestone.view.panel.resources.title", display_date(lifeCycleMilestoneInstance.passedDate))
+                                    </div>
+                                    <div class="panel-body">
+                                        @parts.table.tableview(resourcesTables(index))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    }
+                    
+                </div>
+            }
+        </div>
+
+    } else {
+        <div class="alert alert-warning">@parts.Msg("core.portfolio_entry_governance.milestone.view.empty")</div>
+    }
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id)">@parts.Msg("button.back")</a>
+}
