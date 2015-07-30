@@ -35,9 +35,9 @@
         <java.target>1.7</java.target>
         <scala.version>2.10</scala.version>
         <!-- Dependencies properties -->
-		<lib.app-framework.version>6.0.1-SNAPSHOT</lib.app-framework.version>
-		<maf.maf-desktop-datamodel.version>6.0.1-SNAPSHOT</maf.maf-desktop-datamodel.version>
-		<maf.maf-desktop-patcher.version>1.0.0-SNAPSHOT</maf.maf-desktop-patcher.version>
+		<lib.app-framework.version>7.0.0</lib.app-framework.version>
+		<maf.maf-desktop-datamodel.version>7.0.0</maf.maf-desktop-datamodel.version>
+		<!--<maf.maf-desktop-patcher.version>1.0.0-SNAPSHOT</maf.maf-desktop-patcher.version>-->
         <deadbolt.version>2.3.1</deadbolt.version> 
         <!-- Plugin properties -->
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
