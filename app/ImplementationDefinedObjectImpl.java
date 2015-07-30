@@ -1,3 +1,4 @@
+
 /*! LICENSE
  *
  * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
@@ -15,9 +16,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import models.pmo.OrgUnit;
-import models.pmo.Portfolio;
-import play.mvc.Call;
 import constants.IMafConstants;
 import controllers.Assets.Asset;
 import framework.commons.DataType;
@@ -27,6 +25,9 @@ import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
 import framework.utils.Menu.SeparatorMenuItem;
 import framework.utils.TopMenuBar;
+import models.pmo.OrgUnit;
+import models.pmo.Portfolio;
+import play.mvc.Call;
 
 /**
  * Define the objects which can only be defined in the implementation.
@@ -121,7 +122,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         // main menu (BizDock)
         defineRoadmapMenu(null);
         defineCockpitMenu(null);
-        defineNewMenu(null);
+        defineBizDockNewMenu();
         defineGovernanceMenu(null);
         defineToolsMenu(null);
         defineAdminMenu(null);
@@ -131,6 +132,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         TopMenuBar.getInstance().add(DEVDOCK_PERSPECTIVE_KEY, views.html.templates.devdock_logo.render());
         defineArchitectureMenu(DEVDOCK_PERSPECTIVE_KEY);
         defineCockpitMenu(DEVDOCK_PERSPECTIVE_KEY);
+        defineDevDockNewMenu();
         defineDeliveryMenu(DEVDOCK_PERSPECTIVE_KEY);
         defineAdminMenu(DEVDOCK_PERSPECTIVE_KEY);
         defineSearchMenu(DEVDOCK_PERSPECTIVE_KEY);
@@ -192,15 +194,15 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         ClickableMenuItem systemPreferenceMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(2), "topmenubar.admin.configuration.menu.label",
                 controllers.admin.routes.ConfigurationController.index());
         adminMenuItem.addSubMenuItem(systemPreferenceMenuItem);
-        systemPreferenceMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION,
-                IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
+        systemPreferenceMenuItem.setAuthorizedPermissions(
+                DeadboltUtils.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
 
         // Plugin manager
         ClickableMenuItem pluginManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(3), "topmenubar.admin.integration.menu.label",
                 controllers.admin.routes.PluginManagerController.index());
         adminMenuItem.addSubMenuItem(pluginManagerMenuItem);
-        pluginManagerMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION,
-                IMafConstants.API_MANAGER_PERMISSION));
+        pluginManagerMenuItem
+                .setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION, IMafConstants.API_MANAGER_PERMISSION));
 
         // KPI manager
         ClickableMenuItem kpiManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(4), "topmenubar.admin.kpimanager.menu.label",
@@ -244,8 +246,8 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
         ClickableMenuItem viewReportingMenuItem = new ClickableMenuItem(TopMenus.TOOLS.name(2), "topmenubar.tools.reporting.menu.label",
                 controllers.core.routes.ReportingController.index());
-        viewReportingMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.REPORTING_VIEW_ALL_PERMISSION,
-                IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
+        viewReportingMenuItem.setAuthorizedPermissions(
+                DeadboltUtils.getListOfArray(IMafConstants.REPORTING_VIEW_ALL_PERMISSION, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
         toolsMenuItem.addSubMenuItem(viewReportingMenuItem);
     }
 
@@ -257,8 +259,8 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineDeliveryMenu(String perspectiveKey) {
         HeaderMenuItem deliveryMenuItem = new HeaderMenuItem(TopMenus.DELIVERY.name(), "topmenubar.delivery.menu.label");
-        deliveryMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION,
-                IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
+        deliveryMenuItem.setAuthorizedPermissions(
+                DeadboltUtils.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(deliveryMenuItem);
         } else {
@@ -267,8 +269,8 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
         ClickableMenuItem viewReleasesMenuItem = new ClickableMenuItem(TopMenus.DELIVERY.name(1), "topmenubar.delivery.releases.menu.label",
                 controllers.core.routes.ReleaseController.list(false));
-        viewReleasesMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION,
-                IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
+        viewReleasesMenuItem.setAuthorizedPermissions(
+                DeadboltUtils.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
         deliveryMenuItem.addSubMenuItem(viewReleasesMenuItem);
     }
 
@@ -306,15 +308,15 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
             TopMenuBar.getInstance().get(perspectiveKey).addMenuItem(governanceMenuItem);
         }
 
-        ClickableMenuItem milestonePlanningMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(1), "topmenubar.governance.milestone_planning.menu.label",
-                controllers.core.routes.MilestoneApprovalController.overview());
+        ClickableMenuItem milestonePlanningMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(1),
+                "topmenubar.governance.milestone_planning.menu.label", controllers.core.routes.MilestoneApprovalController.overview());
         milestonePlanningMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION));
         governanceMenuItem.addSubMenuItem(milestonePlanningMenuItem);
 
         ClickableMenuItem provideApprovalMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(2), "topmenubar.governance.provide_approval.menu.label",
                 controllers.core.routes.MilestoneApprovalController.list(0));
-        provideApprovalMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.MILESTONE_APPROVAL_PERMISSION,
-                IMafConstants.MILESTONE_DECIDE_PERMISSION));
+        provideApprovalMenuItem.setAuthorizedPermissions(
+                DeadboltUtils.getListOfArray(IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION));
         governanceMenuItem.addSubMenuItem(provideApprovalMenuItem);
 
         ClickableMenuItem reviewRequestMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(3),
@@ -326,21 +328,14 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     }
 
     /**
-     * Define the new menu.
-     * 
-     * @param perspectiveKey
-     *            the perspective key, let null for the main
+     * Define the new menu for BizDock.
      */
-    private void defineNewMenu(String perspectiveKey) {
+    private void defineBizDockNewMenu() {
         HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label");
         newMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION,
                 IMafConstants.ACTOR_EDIT_ALL_PERMISSION, IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION,
-                IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION, IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
-        if (perspectiveKey == null) {
-            TopMenuBar.getInstance().addMenuItem(newMenuItem);
-        } else {
-            TopMenuBar.getInstance().get(perspectiveKey).addMenuItem(newMenuItem);
-        }
+                IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
+        TopMenuBar.getInstance().addMenuItem(newMenuItem);
 
         ClickableMenuItem newInitiativeMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.initiative.menu.label",
                 controllers.core.routes.PortfolioEntryController.createStep1());
@@ -349,8 +344,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
         SeparatorMenuItem newSeparatorMenuItem = new SeparatorMenuItem();
         newSeparatorMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION,
-                IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION,
-                IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
+                IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newSeparatorMenuItem);
 
         ClickableMenuItem newActorMenuItem = new ClickableMenuItem(TopMenus.NEW.name(2), "topmenubar.new.actor.menu.label",
@@ -373,7 +367,18 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         newBudgetBucketMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newBudgetBucketMenuItem);
 
-        ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(6), "topmenubar.new.release.menu.label",
+    }
+
+    /**
+     * Define the new menu for DevDock.
+     */
+    private void defineDevDockNewMenu() {
+
+        HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label");
+        newMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
+        TopMenuBar.getInstance().get(DEVDOCK_PERSPECTIVE_KEY).addMenuItem(newMenuItem);
+
+        ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.release.menu.label",
                 controllers.core.routes.ReleaseController.create());
         newReleaseMenuItem.setAuthorizedPermissions(DeadboltUtils.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newReleaseMenuItem);
