@@ -19,6 +19,7 @@ package utils.reporting;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,6 +30,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import dao.finance.CurrencyDAO;
+import dao.finance.PurchaseOrderDAO;
+import dao.reporting.ReportingDao;
+import framework.services.ServiceManager;
+import framework.services.notification.INotificationManagerPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IPersonalStoragePlugin;
+import framework.utils.Msg;
+import framework.utils.SysAdminUtils;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.reporting.Reporting;
@@ -55,17 +65,9 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import play.Logger;
+import play.Play;
 import play.mvc.Http.Context;
 import scala.concurrent.duration.Duration;
-import dao.finance.CurrencyDAO;
-import dao.finance.PurchaseOrderDAO;
-import dao.reporting.ReportingDao;
-import framework.services.ServiceManager;
-import framework.services.notification.INotificationManagerPlugin;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.services.storage.IPersonalStoragePlugin;
-import framework.utils.Msg;
-import framework.utils.SysAdminUtils;
 
 /**
  * Provides the methods to manage the jasper reports.
@@ -115,7 +117,7 @@ public class JasperUtils {
         parameters.put(JRParameter.REPORT_LOCALE, locale);
 
         // set the report folder as the relative path (for the resources)
-        SimpleFileResolver fileResolver = new SimpleFileResolver(new File(getReportFolder(report)));
+        SimpleFileResolver fileResolver = new SimpleFileResolver(getReportFolder(report));
         LocalJasperReportsContext ctx = new LocalJasperReportsContext(DefaultJasperReportsContext.getInstance());
         ctx.setFileResolver(fileResolver);
         final JasperFillManager fillManager = JasperFillManager.getInstance(ctx);
@@ -144,8 +146,8 @@ public class JasperUtils {
             public void run() {
 
                 IPersonalStoragePlugin personalStorage = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
-                INotificationManagerPlugin notificationManagerPlugin =
-                        ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class);
+                INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
+                        INotificationManagerPlugin.class);
 
                 OutputStream out = null;
                 String fileName = null;
@@ -157,9 +159,8 @@ public class JasperUtils {
                     switch (format) {
 
                     case POWER_POINT:
-                        fileName =
-                                String.format(POWER_POINT_FILE_NAME, report.template, language,
-                                        new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()));
+                        fileName = String.format(POWER_POINT_FILE_NAME, report.template, language,
+                                new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()));
                         out = personalStorage.createNewFile(uid, fileName);
                         JRPptxExporter pptxExporter = new JRPptxExporter();
                         pptxExporter.setExporterInput(new SimpleExporterInput(print));
@@ -259,24 +260,19 @@ public class JasperUtils {
         jasperReports = new HashMap<String, JasperReport>();
 
         for (Reporting report : ReportingDao.getReportingAsList()) {
-            File reportsFolder = new File(getRootFolder(report));
-            if (reportsFolder.exists()) {
-                File reportFile = new File(getReportPath(report));
-                if (reportFile.exists()) {
-                    try {
-                        JasperDesign jasperDesign = JRXmlLoader.load(reportFile);
-                        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-                        jasperReports.put(report.template, jasperReport);
-                        Logger.debug("the jasper report " + report.template + " has been loaded");
-                    } catch (Exception e) {
-                        Logger.error(e.getMessage());
-                    }
-
-                } else {
-                    Logger.error("impossible to findRelease the jasper report: " + getReportPath(report));
+            File reportFile = getReportPath(report);
+            if (reportFile != null && reportFile.exists()) {
+                try {
+                    JasperDesign jasperDesign = JRXmlLoader.load(reportFile);
+                    JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+                    jasperReports.put(report.template, jasperReport);
+                    Logger.debug("the jasper report " + report.template + " has been loaded");
+                } catch (Exception e) {
+                    Logger.error(e.getMessage());
                 }
+
             } else {
-                Logger.error("impossible to findRelease the reports folder: " + getRootFolder(report));
+                Logger.error("impossible to find the jasper report for: " + report.template);
             }
         }
 
@@ -290,36 +286,33 @@ public class JasperUtils {
     }
 
     /**
-     * Get the root folder for the reports.
+     * Get the root folder of a report as a file.
      * 
      * @param report
      *            the report
      */
-    public static String getRootFolder(Reporting report) {
+    private static File getReportFolder(Reporting report) {
         if (report.isStandard) {
-            return play.Configuration.root().getString("maf.report.standard.root");
+            URL url = Play.application().classloader().getResource("jasper/" + report.template);
+            return new File(url.getPath());
         } else {
-            return play.Configuration.root().getString("maf.report.custom.root");
+            return new File(play.Configuration.root().getString("maf.report.custom.root") + "/" + report.template);
         }
     }
 
     /**
-     * Get the root folder of a report.
+     * Get the file of the definition of a report.
      * 
      * @param report
      *            the report
      */
-    public static String getReportFolder(Reporting report) {
-        return getRootFolder(report) + "/" + report.template + "/";
-    }
-
-    /**
-     * Get the full path of the definition of a report.
-     * 
-     * @param report
-     *            the report
-     */
-    public static String getReportPath(Reporting report) {
-        return getReportFolder(report) + report.template + "_main.jrxml";
+    private static File getReportPath(Reporting report) {
+        String filePath = report.template + "/" + report.template + "_main.jrxml";
+        if (report.isStandard) {
+            URL url = Play.application().classloader().getResource("jasper/" + filePath);
+            return new File(url.getPath());
+        } else {
+            return new File(play.Configuration.root().getString("maf.report.custom.root") + "/" + filePath);
+        }
     }
 }
