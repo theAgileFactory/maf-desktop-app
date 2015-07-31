@@ -19,7 +19,6 @@ package utils.reporting;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -293,8 +292,7 @@ public class JasperUtils {
      */
     private static File getReportFolder(Reporting report) {
         if (report.isStandard) {
-            URL url = Play.application().classloader().getResource("jasper/" + report.template);
-            return new File(url.getPath());
+            return Play.application().getFile("conf/jasper/" + report.template);
         } else {
             return new File(play.Configuration.root().getString("maf.report.custom.root") + "/" + report.template);
         }
@@ -309,8 +307,7 @@ public class JasperUtils {
     private static File getReportPath(Reporting report) {
         String filePath = report.template + "/" + report.template + "_main.jrxml";
         if (report.isStandard) {
-            URL url = Play.application().classloader().getResource("jasper/" + filePath);
-            return new File(url.getPath());
+            return Play.application().getFile("conf/jasper/" + filePath);
         } else {
             return new File(play.Configuration.root().getString("maf.report.custom.root") + "/" + filePath);
         }
