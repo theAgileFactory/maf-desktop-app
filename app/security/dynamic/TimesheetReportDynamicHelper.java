@@ -17,25 +17,26 @@
  */
 package security.dynamic;
 
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.Expression;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.OrderBy;
-
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
-import constants.IMafConstants;
-import dao.pmo.ActorDao;
-import dao.timesheet.TimesheetDao;
-import framework.services.ServiceManager;
-import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
-import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import models.pmo.Actor;
 import models.sql.ActorHierarchy;
 import models.timesheet.TimesheetReport;
 import play.Logger;
 import play.mvc.Http;
+
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.OrderBy;
+
+import constants.IMafConstants;
+import dao.pmo.ActorDao;
+import dao.timesheet.TimesheetDao;
+import framework.security.DeadboltUtils;
+import framework.services.ServiceManager;
+import framework.services.account.AccountManagementException;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IUserAccount;
+import framework.services.session.IUserSessionManagerPlugin;
 
 /**
  * Provides all method to compute the dynamic permissions for a timesheet
@@ -67,7 +68,7 @@ public class TimesheetReportDynamicHelper {
 
         // user has permission TIMESHEET_APPROVAL_ALL_PERMISSION
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
@@ -75,7 +76,7 @@ public class TimesheetReportDynamicHelper {
         // TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION AND
         // user or his subordinates is manager of the actor of the report OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION)) {
+        if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION)) {
 
             raw += "actor.manager.id=" + actor.id + " OR ";
 

@@ -17,24 +17,25 @@
  */
 package security.dynamic;
 
+import models.pmo.Actor;
+import models.pmo.Portfolio;
+import play.Logger;
+import play.mvc.Http;
+
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioDao;
+import framework.security.DeadboltUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
-import models.pmo.Actor;
-import models.pmo.Portfolio;
-import play.Logger;
-import play.mvc.Http;
 
 /**
  * Provides all method to compute the dynamic permissions for a portfolio.
@@ -64,7 +65,7 @@ public class PortfolioDynamicHelper {
 
         // user has permission PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
@@ -74,14 +75,14 @@ public class PortfolioDynamicHelper {
             // user has permission
             // PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION AND
             // user is manager of the portfolio OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION)) {
                 raw += "manager.id=" + actor.id + " OR ";
             }
 
             // user has permission
             // PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION AND
             // user is direct stakeholder of the portfolio
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
                 raw += "(stakeholders.deleted=false AND stakeholders.actor.id=" + actor.id + ") OR ";
             }
 
@@ -137,7 +138,7 @@ public class PortfolioDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission PORTFOLIO_EDIT_ALL_PERMISSION OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
@@ -145,7 +146,7 @@ public class PortfolioDynamicHelper {
             // PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION
             // AND user is manager of the portfolio
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION)
+            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION)
                     && actor.id.equals(portfolio.manager.id)) {
                 return true;
             }
@@ -173,7 +174,7 @@ public class PortfolioDynamicHelper {
             // user has permission
             // PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION
             // OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
                 return true;
             }
 
@@ -181,7 +182,7 @@ public class PortfolioDynamicHelper {
             // PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION
             // AND is manager of the portfolio
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
+            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
                     && actor.id.equals(portfolio.manager.id)) {
                 return true;
             }

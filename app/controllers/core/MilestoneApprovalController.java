@@ -41,7 +41,6 @@ import utils.form.ProcessMilestoneApprovalFormData;
 import utils.form.ProcessMilestoneDecisionFormData;
 import utils.table.MilestoneApprovalListView;
 import utils.table.MilestoneApproverListView;
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 
@@ -54,6 +53,7 @@ import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
+import framework.security.DeadboltUtils;
 import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -173,7 +173,7 @@ public class MilestoneApprovalController extends Controller {
 
         // get the milestone instances required for a vote/decision
         Pagination<LifeCycleMilestoneInstance> pagination;
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
             pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPagination();
         } else {
             // if the sign in user hasn't the permission
@@ -239,7 +239,7 @@ public class MilestoneApprovalController extends Controller {
 
         // if the user hasn't the permission MILESTONE_DECIDE_PERMISSION, then
         // he must be an approver of the milestone instance
-        if (!DeadboltAnalyzer.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
+        if (!DeadboltUtils.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
             if (approverInstance == null) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             } else {
@@ -295,7 +295,7 @@ public class MilestoneApprovalController extends Controller {
 
         // construct the decision form
         Form<ProcessMilestoneDecisionFormData> processMilestoneDecisionForm = null;
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
             processMilestoneDecisionForm = processMilestoneDecisionFormTemplate.fill(new ProcessMilestoneDecisionFormData(milestoneInstance));
         }
 
@@ -337,12 +337,11 @@ public class MilestoneApprovalController extends Controller {
 
             String url = controllers.core.routes.MilestoneApprovalController.process(milestoneInstanceId).url();
 
-            List<Principal> principals =
-                    Principal.find.where().eq("deleted", false).eq("systemLevelRoles.isEnabled", true)
-                            .eq("systemLevelRoles.systemLevelRoleType.deleted", false).eq("systemLevelRoles.systemLevelRoleType.selectable", true)
-                            .eq("systemLevelRoles.systemLevelRoleType.systemPermissions.deleted", false)
-                            .eq("systemLevelRoles.systemLevelRoleType.systemPermissions.selectable", true)
-                            .eq("systemLevelRoles.systemLevelRoleType.systemPermissions.name", IMafConstants.MILESTONE_DECIDE_PERMISSION).findList();
+            List<Principal> principals = Principal.find.where().eq("deleted", false).eq("systemLevelRoles.isEnabled", true)
+                    .eq("systemLevelRoles.systemLevelRoleType.deleted", false).eq("systemLevelRoles.systemLevelRoleType.selectable", true)
+                    .eq("systemLevelRoles.systemLevelRoleType.systemPermissions.deleted", false)
+                    .eq("systemLevelRoles.systemLevelRoleType.systemPermissions.selectable", true)
+                    .eq("systemLevelRoles.systemLevelRoleType.systemPermissions.name", IMafConstants.MILESTONE_DECIDE_PERMISSION).findList();
 
             for (Principal principal : principals) {
 
@@ -382,8 +381,8 @@ public class MilestoneApprovalController extends Controller {
         Ebean.beginTransaction();
 
         try {
-            LifeCycleMilestoneInstanceStatusType status =
-                    LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeById(processMilestoneDecisionFormData.lifeCycleMilestoneInstanceStatusType);
+            LifeCycleMilestoneInstanceStatusType status = LifeCycleMilestoneDao
+                    .getLCMilestoneInstanceStatusTypeById(processMilestoneDecisionFormData.lifeCycleMilestoneInstanceStatusType);
 
             milestoneInstance = LifeCycleMilestoneDao.doPassed(milestoneInstance.id, status, processMilestoneDecisionFormData.comments);
 

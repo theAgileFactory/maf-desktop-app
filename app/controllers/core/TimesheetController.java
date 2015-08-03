@@ -419,7 +419,7 @@ public class TimesheetController extends Controller {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        return ok(mapper.valueToTree(options));
+        return ok((JsonNode) mapper.valueToTree(options));
     }
 
     /**
@@ -440,7 +440,7 @@ public class TimesheetController extends Controller {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        return ok(mapper.valueToTree(options));
+        return ok((JsonNode) mapper.valueToTree(options));
     }
 
     /**
@@ -472,14 +472,15 @@ public class TimesheetController extends Controller {
 
             if (formData.comments != null && !formData.comments.equals("")) {
                 // with comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET), controllers.core.routes.TimesheetController
-                        .weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.approve.notification.title",
-                        "core.timesheet.approve.notification.message.with_comments", startDate, endDate, formData.comments);
+                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                        controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
+                        "core.timesheet.approve.notification.title", "core.timesheet.approve.notification.message.with_comments", startDate, endDate,
+                        formData.comments);
             } else {
                 // without comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET), controllers.core.routes.TimesheetController
-                        .weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.approve.notification.title",
-                        "core.timesheet.approve.notification.message.without_comments", startDate, endDate);
+                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                        controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
+                        "core.timesheet.approve.notification.title", "core.timesheet.approve.notification.message.without_comments", startDate, endDate);
             }
 
             Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.approve.successful"));
@@ -492,13 +493,13 @@ public class TimesheetController extends Controller {
 
             if (formData.comments != null && !formData.comments.equals("")) {
                 // with comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET), controllers.core.routes.TimesheetController
-                        .weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.reject.notification.title",
+                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                        controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.reject.notification.title",
                         "core.timesheet.reject.notification.message.with_comments", startDate, endDate, formData.comments);
             } else {
                 // without comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET), controllers.core.routes.TimesheetController
-                        .weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.reject.notification.title",
+                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                        controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.reject.notification.title",
                         "core.timesheet.reject.notification.message.without_comments", startDate, endDate);
             }
 
@@ -526,8 +527,8 @@ public class TimesheetController extends Controller {
 
         // send the notification
         ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
-                controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
-                "core.timesheet.send_reminder.notification.title", "core.timesheet.send_reminder.notification.message", startDate, endDate);
+                controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.send_reminder.notification.title",
+                "core.timesheet.send_reminder.notification.message", startDate, endDate);
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.send_reminder.successful"));
 
@@ -599,8 +600,8 @@ public class TimesheetController extends Controller {
 
         try {
 
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME,
+                    IUserSessionManagerPlugin.class);
             String uid = userSessionManagerPlugin.getUserSessionId(ctx());
             return ActorDao.getActorByUid(uid);
 

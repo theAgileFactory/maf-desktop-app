@@ -31,14 +31,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>latin1</project.build.sourceEncoding>
-		<java.source>1.7</java.source>
-        <java.target>1.7</java.target>
+		<java.source>1.8</java.source>
+        <java.target>1.8</java.target>
         <scala.version>2.10</scala.version>
         <!-- Dependencies properties -->
 		<lib.app-framework.version>7.0.1-SNAPSHOT</lib.app-framework.version>
 		<maf.maf-desktop-datamodel.version>7.0.1-SNAPSHOT</maf.maf-desktop-datamodel.version>
 		<!--<maf.maf-desktop-patcher.version>1.0.0-SNAPSHOT</maf.maf-desktop-patcher.version>-->
-        <deadbolt.version>2.3.1</deadbolt.version> 
         <!-- Plugin properties -->
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <ivy-maven-plugin.version>0.2.5</ivy-maven-plugin.version>
@@ -114,41 +113,6 @@
 									<filtering>false</filtering>
 								</resource>
 							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-
-			<plugin>
-				<groupId>com.github.goldin</groupId>
-				<artifactId>ivy-maven-plugin</artifactId>
-				<version>${ivy-maven-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>get-ivy-dependencies</id>
-						<goals>
-							<goal>ivy</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<ivyconf>${project.basedir}/project/ivyconfig.xml</ivyconf>
-							<dir>${project.basedir}/lib</dir>
-							<dependencies>
-
-								<dependency>
-									<groupId>ivy.be.objectify</groupId>
-									<artifactId>deadbolt-java_${scala.version}</artifactId>
-									<version>${deadbolt.version}</version>
-								</dependency>
-
-								<dependency>
-									<groupId>ivy.be.objectify</groupId>
-									<artifactId>deadbolt-core_${scala.version}</artifactId>
-									<version>${deadbolt.version}</version>
-								</dependency>
-
-							</dependencies>
 						</configuration>
 					</execution>
 				</executions>

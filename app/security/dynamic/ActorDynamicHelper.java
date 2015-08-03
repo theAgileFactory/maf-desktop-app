@@ -17,23 +17,24 @@
  */
 package security.dynamic;
 
+import models.pmo.Actor;
+import models.sql.ActorHierarchy;
+import play.Logger;
+import play.mvc.Http;
+
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
+import framework.security.DeadboltUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
-import models.pmo.Actor;
-import models.sql.ActorHierarchy;
-import play.Logger;
-import play.mvc.Http;
 
 /**
  * Provides all method to compute the dynamic permissions for an actor.
@@ -62,7 +63,7 @@ public class ActorDynamicHelper {
 
         // user has permission ACTOR_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.ACTOR_VIEW_ALL_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
@@ -75,7 +76,7 @@ public class ActorDynamicHelper {
             // user has permission
             // ACTOR_VIEW_AS_SUPERIOR_PERMISSION AND
             // user or his subordinates is manager of the actor OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION)) {
                 raw += "manager.id = " + actor.id + " OR ";
 
                 String subordinatesString = ActorHierarchy.getSubordinatesAsString(actor.id, ",");
@@ -136,7 +137,7 @@ public class ActorDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
@@ -170,7 +171,7 @@ public class ActorDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 

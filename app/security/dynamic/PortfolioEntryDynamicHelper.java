@@ -17,26 +17,27 @@
  */
 package security.dynamic;
 
+import models.pmo.Actor;
+import models.pmo.PortfolioEntry;
+import play.Logger;
+import play.mvc.Http;
+
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
+import framework.security.DeadboltUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
-import models.pmo.Actor;
-import models.pmo.PortfolioEntry;
-import play.Logger;
-import play.mvc.Http;
 
 /**
  * Provides all method to compute the dynamic permissions for a portfolio entry.
@@ -95,14 +96,14 @@ public class PortfolioEntryDynamicHelper {
 
         // user has permission PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION
         // AND portfolioEntry is public AND portfolioEntry is not a concept
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION)) {
             raw += "(isPublic=true AND activeLifeCycleInstance.isConcept=false) OR ";
         }
 
@@ -112,21 +113,21 @@ public class PortfolioEntryDynamicHelper {
             // user has permission
             // PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION AND
             // user is manager of the portfolioEntry OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION)) {
                 raw += "manager.id=" + actor.id + " OR ";
             }
 
             // user has permission
             // PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION AND
             // user is direct stakeholder of the portfolioEntry
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
                 raw += "(stakeholders.deleted=false AND stakeholders.actor.id=" + actor.id + ") OR ";
             }
 
             // user has permission
             // PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION AND
             // user is stakeholder of a portfolio of the portfolioEntry
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
                 raw += "(portfolios.deleted=false AND portfolios.stakeholders.deleted=false AND portfolios.stakeholders.actor.id=" + actor.id + ") OR ";
             }
 
@@ -135,7 +136,7 @@ public class PortfolioEntryDynamicHelper {
             // AND
             // user
             // is portfolio manager of the portfolioEntry
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_PORTFOLIO_MANAGER_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_PORTFOLIO_MANAGER_PERMISSION)) {
                 raw += "(portfolios.deleted=false AND portfolios.manager.id=" + actor.id + ") OR ";
             }
 
@@ -193,7 +194,7 @@ public class PortfolioEntryDynamicHelper {
 
             // user has permission PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION
             // OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION)) {
                 Logger.debug("has PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION");
                 return true;
             }
@@ -204,7 +205,7 @@ public class PortfolioEntryDynamicHelper {
                 // user has permission
                 // PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION AND user
                 // is manager of the portfolioEntry OR
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION)
                         && actor.id.equals(portfolioEntry.manager.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION and is manager");
                     return true;
@@ -213,7 +214,7 @@ public class PortfolioEntryDynamicHelper {
                 // user has permission
                 // PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION AND
                 // user is direct stakeholder of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)
                         && StakeholderDao.isStakeholderOfPE(actor.id, portfolioEntry.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION and is stakeholder");
                     return true;
@@ -222,7 +223,7 @@ public class PortfolioEntryDynamicHelper {
                 // user has permission
                 // PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION AND
                 // user is stakeholder of a portfolio of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)
                         && PortfolioEntryDao.isPortfolioStakeholderOfPE(actor.id, portfolioEntry.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION and is portfolio stakeholder");
                     return true;
@@ -231,7 +232,7 @@ public class PortfolioEntryDynamicHelper {
                 // user has permission
                 // PORTFOLIO_ENTRY_VIEW_DETAILS_AS_PORTFOLIO_MANAGER_PERMISSION
                 // AND user is portfolio manager of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_PORTFOLIO_MANAGER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_DETAILS_AS_PORTFOLIO_MANAGER_PERMISSION)
                         && PortfolioEntryDao.isPortfolioManagerOfPE(actor.id, portfolioEntry.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_DETAILS_AS_PORTFOLIO_MANAGER_PERMISSION and is portfolio manager");
                     return true;
@@ -261,8 +262,8 @@ public class PortfolioEntryDynamicHelper {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
-            boolean canManageArchived = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class)
-                    .getPreferenceValueAsBoolean(IMafConstants.LICENSE_CAN_MANAGE_ARCHIVED_PORTFOLIO_ENTRY_PREFERENCE);
+            boolean canManageArchived = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsBoolean(
+                    IMafConstants.LICENSE_CAN_MANAGE_ARCHIVED_PORTFOLIO_ENTRY_PREFERENCE);
 
             // the preference
             // LICENSE_CAN_MANAGE_ARCHIVED_PORTFOLIO_ENTRY_PREFERENCE is false
@@ -273,7 +274,7 @@ public class PortfolioEntryDynamicHelper {
             }
 
             // user has permission PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION)) {
                 Logger.debug("has PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION");
                 return true;
             }
@@ -285,8 +286,7 @@ public class PortfolioEntryDynamicHelper {
                 // PORTFOLIO_ENTRY_EDIT_AS_MANAGER_PERMISSION
                 // AND is
                 // manager of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_AS_MANAGER_PERMISSION)
-                        && actor.id.equals(portfolioEntry.manager.id)) {
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_AS_MANAGER_PERMISSION) && actor.id.equals(portfolioEntry.manager.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_EDIT_AS_MANAGER_PERMISSION and is manager");
                     return true;
                 }
@@ -294,7 +294,7 @@ public class PortfolioEntryDynamicHelper {
                 // user has permission
                 // PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION AND user
                 // is portfolio manager of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION)
                         && PortfolioEntryDao.isPortfolioManagerOfPE(actor.id, portfolioEntry.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION and is portfolio manager");
                     return true;
@@ -324,7 +324,7 @@ public class PortfolioEntryDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission PORTFOLIO_ENTRY_DELETE_ALL_PERMISSION
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_DELETE_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_DELETE_ALL_PERMISSION)) {
                 Logger.debug("has PORTFOLIO_ENTRY_DELETE_ALL_PERMISSION");
                 return true;
             }
@@ -352,7 +352,7 @@ public class PortfolioEntryDynamicHelper {
             // user has permission
             // PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION
             // OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
                 Logger.debug("has PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION");
                 return true;
             }
@@ -363,7 +363,7 @@ public class PortfolioEntryDynamicHelper {
                 // user has permission
                 // PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION
                 // AND is manager of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
                         && actor.id.equals(portfolioEntry.manager.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION and is manager");
                     return true;
@@ -373,7 +373,7 @@ public class PortfolioEntryDynamicHelper {
                 // PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION
                 // AND
                 // user is direct stakeholder of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION)
                         && StakeholderDao.isStakeholderOfPE(actor.id, portfolioEntry.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION and is stakeholder");
                     return true;
@@ -384,7 +384,7 @@ public class PortfolioEntryDynamicHelper {
                 // AND
                 // user is stakeholder of a portfolio of the
                 // portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION)
                         && PortfolioEntryDao.isPortfolioStakeholderOfPE(actor.id, portfolioEntry.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION and is portfolio stakeholder");
                     return true;
@@ -393,7 +393,7 @@ public class PortfolioEntryDynamicHelper {
                 // user has permission
                 // PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_PORTFOLIO_MANAGER_PERMISSION
                 // AND is portfolio manager of the portfolioEntry
-                if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_PORTFOLIO_MANAGER_PERMISSION)
+                if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_PORTFOLIO_MANAGER_PERMISSION)
                         && PortfolioEntryDao.isPortfolioManagerOfPE(actor.id, portfolioEntry.id)) {
                     Logger.debug("has PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_PORTFOLIO_MANAGER_PERMISSION and is portfolio manager");
                     return true;
@@ -424,7 +424,7 @@ public class PortfolioEntryDynamicHelper {
             // user has permission
             // PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_ALL_PERMISSION
             // OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_ALL_PERMISSION)) {
                 Logger.debug("has PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_ALL_PERMISSION");
                 return true;
             }
@@ -433,7 +433,7 @@ public class PortfolioEntryDynamicHelper {
             // PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION
             // AND is manager of the portfolioEntry
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
+            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
                     && actor.id.equals(portfolioEntry.manager.id)) {
                 Logger.debug("has PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION and is manager");
                 return true;
@@ -462,7 +462,7 @@ public class PortfolioEntryDynamicHelper {
 
             // user has permission PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION
             // OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION)) {
                 Logger.debug("has PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION");
                 return true;
             }
@@ -471,7 +471,7 @@ public class PortfolioEntryDynamicHelper {
             // PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION
             // AND user is portfolio manager of the portfolioEntry
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION)
+            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION)
                     && PortfolioEntryDao.isPortfolioManagerOfPE(actor.id, portfolioEntry.id)) {
                 Logger.debug("has PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION and is portfolio manager");
                 return true;

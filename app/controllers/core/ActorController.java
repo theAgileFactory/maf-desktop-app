@@ -24,34 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
-import constants.IMafConstants;
-import controllers.core.TimesheetController.OptionData;
-import dao.finance.PortfolioEntryResourcePlanDAO;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioDao;
-import dao.pmo.PortfolioEntryDao;
-import dao.pmo.StakeholderDao;
-import dao.timesheet.TimesheetDao;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.IColumnFormatter;
-import framework.utils.JqueryGantt;
-import framework.utils.Menu.ClickableMenuItem;
-import framework.utils.Menu.HeaderMenuItem;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.SideBar;
-import framework.utils.Table;
-import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.pmo.Actor;
 import models.pmo.ActorCapacity;
@@ -85,6 +57,35 @@ import utils.table.PortfolioEntryListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
 import utils.table.PortfolioListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import constants.IMafConstants;
+import controllers.core.TimesheetController.OptionData;
+import dao.finance.PortfolioEntryResourcePlanDAO;
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioDao;
+import dao.pmo.PortfolioEntryDao;
+import dao.pmo.StakeholderDao;
+import dao.timesheet.TimesheetDao;
+import framework.utils.CustomAttributeFormAndDisplayHandler;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.IColumnFormatter;
+import framework.utils.JqueryGantt;
+import framework.utils.Menu.ClickableMenuItem;
+import framework.utils.Menu.HeaderMenuItem;
+import framework.utils.Msg;
+import framework.utils.Pagination;
+import framework.utils.SideBar;
+import framework.utils.Table;
+import framework.utils.Utilities;
 
 /**
  * The controller which displays / allows to edit an actor.
@@ -446,8 +447,7 @@ public class ActorController extends Controller {
 
         // prepare the data (to order them)
         SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
-        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActive(id,
-                true)) {
+        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActive(id, true)) {
             if (allocatedActor.endDate != null) {
                 sortableCollection.addObject(new DateSortableObject(allocatedActor.endDate, allocatedActor));
             }
@@ -505,8 +505,8 @@ public class ActorController extends Controller {
                 SourceDataValue dataValue = new SourceDataValue(controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id).url(),
                         null, null, null, null);
 
-                item.values.add(new SourceValue(from, to, "",
-                        views.html.framework_views.parts.formats.display_number.render(allocatedActor.days, null, false).body(), cssClass, dataValue));
+                item.values.add(new SourceValue(from, to, "", views.html.framework_views.parts.formats.display_number.render(allocatedActor.days, null, false)
+                        .body(), cssClass, dataValue));
 
                 items.add(item);
 
@@ -543,8 +543,8 @@ public class ActorController extends Controller {
                 SourceDataValue dataValue = new SourceDataValue(controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, false).url(), null,
                         null, null, null);
 
-                item.values.add(new SourceValue(from, to, "",
-                        views.html.framework_views.parts.formats.display_number.render(allocatedActivity.days, null, false).body(), cssClass, dataValue));
+                item.values.add(new SourceValue(from, to, "", views.html.framework_views.parts.formats.display_number.render(allocatedActivity.days, null,
+                        false).body(), cssClass, dataValue));
 
                 items.add(item);
             }
@@ -601,8 +601,8 @@ public class ActorController extends Controller {
         columnsToHide.add("followPackageDates");
         columnsToHide.add("actor");
 
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryTable = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
-                .fill(allocationListView, columnsToHide);
+        Table<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryTable = PortfolioEntryResourcePlanAllocatedActorListView.templateTable.fill(
+                allocationListView, columnsToHide);
 
         portfolioEntryTable.setLineAction(new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
             @Override
@@ -693,7 +693,7 @@ public class ActorController extends Controller {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        return ok(mapper.valueToTree(options));
+        return ok((JsonNode) mapper.valueToTree(options));
     }
 
     /**
@@ -878,9 +878,8 @@ public class ActorController extends Controller {
 
         if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION, "")) {
 
-            sideBar.addMenuItem(
-                    new ClickableMenuItem("core.actor.sidebar.portfolio_entries", controllers.core.routes.ActorController.listPortfolioEntries(id, 0),
-                            "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.INITIATIVES)));
+            sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolio_entries", controllers.core.routes.ActorController.listPortfolioEntries(id,
+                    0), "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.INITIATIVES)));
 
             sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolios", controllers.core.routes.ActorController.listPortfolios(id, 0),
                     "glyphicons glyphicons-sort", currentType.equals(MenuItemType.PORTFOLIOS)));
@@ -888,14 +887,14 @@ public class ActorController extends Controller {
             HeaderMenuItem allocationMenu = new HeaderMenuItem("core.actor.sidebar.allocation", "glyphicons glyphicons-address-book",
                     currentType.equals(MenuItemType.ALLOCATION));
 
-            allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.overview",
-                    controllers.core.routes.ActorController.allocation(id), "glyphicons glyphicons-radar", false));
+            allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.overview", controllers.core.routes.ActorController
+                    .allocation(id), "glyphicons glyphicons-radar", false));
 
-            allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.details",
-                    controllers.core.routes.ActorController.allocationDetails(id, 0, 0, false), "glyphicons glyphicons-zoom-in", false));
+            allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.details", controllers.core.routes.ActorController
+                    .allocationDetails(id, 0, 0, false), "glyphicons glyphicons-zoom-in", false));
 
-            allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.capacity",
-                    controllers.core.routes.ActorController.capacity(id, 0), "glyphicons glyphicons-equalizer", false));
+            allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.capacity", controllers.core.routes.ActorController.capacity(id,
+                    0), "glyphicons glyphicons-equalizer", false));
 
             sideBar.addMenuItem(allocationMenu);
 

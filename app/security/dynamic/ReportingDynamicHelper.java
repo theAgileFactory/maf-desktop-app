@@ -20,7 +20,6 @@ package security.dynamic;
 import models.reporting.Reporting;
 import play.Logger;
 import play.mvc.Http;
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
@@ -28,6 +27,7 @@ import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 
 import constants.IMafConstants;
+import framework.security.DeadboltUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
@@ -61,14 +61,14 @@ public class ReportingDynamicHelper {
 
         // user has permission REPORTING_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.REPORTING_VIEW_ALL_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission
         // REPORTING_VIEW_AS_VIEWER_PERMISSION AND
         // (the report is public OR the user has access to it)
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION)) {
             raw += "(isPublic = 1 OR reportingAuthorization.principals.uid='" + userAccount.getIdentifier() + "') OR ";
         }
 

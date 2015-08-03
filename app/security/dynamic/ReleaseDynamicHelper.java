@@ -17,24 +17,25 @@
  */
 package security.dynamic;
 
+import models.delivery.Release;
+import models.pmo.Actor;
+import play.Logger;
+import play.mvc.Http;
+
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
 import constants.IMafConstants;
 import dao.delivery.ReleaseDAO;
 import dao.pmo.ActorDao;
+import framework.security.DeadboltUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
-import models.delivery.Release;
-import models.pmo.Actor;
-import play.Logger;
-import play.mvc.Http;
 
 /**
  * Provides all method to compute the dynamic permissions for a release.
@@ -63,14 +64,14 @@ public class ReleaseDynamicHelper {
 
         // user has permission RELEASE_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.RELEASE_VIEW_ALL_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission RELEASE_VIEW_AS_MANAGER_PERMISSION AND is the
         // manager of the release OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
+        if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
             raw += "manager.id = " + actor.id + " OR ";
         }
 
@@ -124,15 +125,14 @@ public class ReleaseDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission RELEASE_EDIT_ALL_PERMISSION OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.RELEASE_EDIT_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
             // user has permission RELEASE_EDIT_AS_MANAGER_PERMISSION AND is
             // manager of the release
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION)
-                    && actor.id.equals(release.manager.id)) {
+            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION) && actor.id.equals(release.manager.id)) {
                 return true;
             }
 

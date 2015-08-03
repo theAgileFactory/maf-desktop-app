@@ -17,25 +17,26 @@
  */
 package security.dynamic;
 
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.Expression;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.OrderBy;
-
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
-import constants.IMafConstants;
-import dao.finance.BudgetBucketDAO;
-import dao.pmo.ActorDao;
-import framework.services.ServiceManager;
-import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
-import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import models.finance.BudgetBucket;
 import models.pmo.Actor;
 import models.sql.ActorHierarchy;
 import play.Logger;
 import play.mvc.Http;
+
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.OrderBy;
+
+import constants.IMafConstants;
+import dao.finance.BudgetBucketDAO;
+import dao.pmo.ActorDao;
+import framework.security.DeadboltUtils;
+import framework.services.ServiceManager;
+import framework.services.account.AccountManagementException;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IUserAccount;
+import framework.services.session.IUserSessionManagerPlugin;
 
 /**
  * Provides all method to compute the dynamic permissions for a budget bucket.
@@ -65,14 +66,14 @@ public class BudgetBucketDynamicHelper {
 
         // user has permission BUDGET_BUCKET_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
+        if (DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION AND
         // user or his subordinates is owner of the budgetBucket OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
+        if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
 
             raw += "owner.id = " + actor.id + " OR ";
 
@@ -133,7 +134,7 @@ public class BudgetBucketDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission BUDGET_BUCKET_EDIT_ALL_PERMISSION OR
-            if (DeadboltAnalyzer.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION)) {
+            if (DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION)) {
                 Logger.debug("has BUDGET_BUCKET_EDIT_ALL_PERMISSION");
                 return true;
             }
@@ -141,7 +142,7 @@ public class BudgetBucketDynamicHelper {
             // user has permission BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION
             // AND is owner or responsible of the budget bucket
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltAnalyzer.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION)
+            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION)
                     && (actor.id.equals(budgetBucket.owner.id) || ActorHierarchy.getSubordinatesAsId(actor.id).contains(budgetBucket.owner.id))) {
 
                 Logger.debug("has BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION and is owner or responsible");

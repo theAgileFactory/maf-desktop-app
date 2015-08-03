@@ -47,7 +47,6 @@ import utils.form.WorkOrderFormData;
 import utils.table.PortfolioEntryBudgetLineListView;
 import utils.table.PurchaseOrderLineItemListView;
 import utils.table.WorkOrderListView;
-import be.objectify.deadbolt.core.DeadboltAnalyzer;
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
@@ -57,6 +56,7 @@ import dao.finance.PurchaseOrderDAO;
 import dao.finance.WorkOrderDAO;
 import dao.pmo.PortfolioEntryDao;
 import framework.highcharts.pattern.BasicBar;
+import framework.security.DeadboltUtils;
 import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -127,8 +127,8 @@ public class PortfolioEntryFinancialController extends Controller {
         for (PortfolioEntryBudgetLine budgetLine : budgetLines) {
             portfolioEntryBudgetLineListView.add(new PortfolioEntryBudgetLineListView(budgetLine));
         }
-        Table<PortfolioEntryBudgetLineListView> budgetLinesTable =
-                PortfolioEntryBudgetLineListView.templateTable.fill(portfolioEntryBudgetLineListView, hideColumnsForBudgetTable);
+        Table<PortfolioEntryBudgetLineListView> budgetLinesTable = PortfolioEntryBudgetLineListView.templateTable.fill(portfolioEntryBudgetLineListView,
+                hideColumnsForBudgetTable);
 
         /*
          * create the work orders tables
@@ -177,8 +177,8 @@ public class PortfolioEntryFinancialController extends Controller {
                 engagedWorkOrderListView.add(new WorkOrderListView(workOrder));
             }
         }
-        Table<WorkOrderListView> costToCompleteWorkOrderTable =
-                WorkOrderListView.templateTable.fill(costToCompleteWorkOrderListView, hideColumnsForCostToCompleteTable);
+        Table<WorkOrderListView> costToCompleteWorkOrderTable = WorkOrderListView.templateTable.fill(costToCompleteWorkOrderListView,
+                hideColumnsForCostToCompleteTable);
         Table<WorkOrderListView> engagedWorkOrderTable = WorkOrderListView.templateTable.fill(engagedWorkOrderListView, hideColumnsForEngagedTable);
 
         /*
@@ -207,8 +207,7 @@ public class PortfolioEntryFinancialController extends Controller {
             // get the current user
             IUserAccount userAccount;
             try {
-                IUserSessionManagerPlugin userSessionManagerPlugin =
-                        ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
+                IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
                 IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
                 userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(ctx()));
             } catch (Exception e) {
@@ -218,7 +217,7 @@ public class PortfolioEntryFinancialController extends Controller {
             // if the user hasn't the permission
             // PURCHASE_ORDER_VIEW_ALL_PERMISSION
             // then we remove the action line
-            if (!DeadboltAnalyzer.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
+            if (!DeadboltUtils.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
                 lineItemsTable.setLineAction(null);
             }
 
@@ -612,8 +611,8 @@ public class PortfolioEntryFinancialController extends Controller {
         WorkOrder workOrder = WorkOrderDAO.getWorkOrderById(workOrderId);
 
         // initiate the form
-        Form<EngageWorkOrderAmountSelectorFormData> selectorForm =
-                engageWorkOrderAmountSelectorFormTemplate.fill(new EngageWorkOrderAmountSelectorFormData(workOrder));
+        Form<EngageWorkOrderAmountSelectorFormData> selectorForm = engageWorkOrderAmountSelectorFormTemplate.fill(new EngageWorkOrderAmountSelectorFormData(
+                workOrder));
 
         return ok(views.html.core.portfolioentryfinancial.portfolio_entry_engage_work_order_1.render(portfolioEntry, workOrder, selectorForm));
     }
@@ -657,8 +656,7 @@ public class PortfolioEntryFinancialController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.engage.successful"));
 
         if (remainingAmount > 0) {
-            return redirect(controllers.core.routes.PortfolioEntryFinancialController
-                    .workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
+            return redirect(controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
         } else {
             return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
         }
@@ -734,8 +732,8 @@ public class PortfolioEntryFinancialController extends Controller {
 
         // get all active items (for the expenditure type and currency of the
         // WO)
-        List<PurchaseOrderLineItem> purchaseOrderLineItems =
-                PurchaseOrderDAO.getPurchaseOrderLineItemActiveAsListByPOAndCurrencyAndOpex(purchaseOrder.id, workOrder.currency.code, workOrder.isOpex);
+        List<PurchaseOrderLineItem> purchaseOrderLineItems = PurchaseOrderDAO.getPurchaseOrderLineItemActiveAsListByPOAndCurrencyAndOpex(purchaseOrder.id,
+                workOrder.currency.code, workOrder.isOpex);
 
         // construct the items
         List<PurchaseOrderLineItemListView> purchaseOrderLineItemListView = new ArrayList<PurchaseOrderLineItemListView>();
@@ -785,8 +783,8 @@ public class PortfolioEntryFinancialController extends Controller {
         hidePOColumns.add("amountOpen");
 
         // construct the table
-        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable =
-                PurchaseOrderLineItemListView.templateTable.fill(purchaseOrderLineItemListView, hidePOColumns);
+        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable = PurchaseOrderLineItemListView.templateTable.fill(purchaseOrderLineItemListView,
+                hidePOColumns);
 
         // set no line action
         purchaseOrderLineItemsTable.setLineAction(null);
@@ -825,8 +823,8 @@ public class PortfolioEntryFinancialController extends Controller {
         if (workOrder.shared) {
 
             // initiate the amount selector form
-            Form<PurchaseOrderLineItemAmountSelectorFormData> selectorForm =
-                    lineItemAmountSelectorFormTemplate.fill(new PurchaseOrderLineItemAmountSelectorFormData(workOrder, lineItem));
+            Form<PurchaseOrderLineItemAmountSelectorFormData> selectorForm = lineItemAmountSelectorFormTemplate
+                    .fill(new PurchaseOrderLineItemAmountSelectorFormData(workOrder, lineItem));
 
             return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_line_item_select_3.render(portfolioEntry, workOrder, lineItem,
                     selectorForm));
@@ -906,8 +904,7 @@ public class PortfolioEntryFinancialController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.line_item_select.successful"));
 
         if (remainingAmount > 0) {
-            return redirect(controllers.core.routes.PortfolioEntryFinancialController
-                    .workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
+            return redirect(controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
         } else {
             return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
         }
