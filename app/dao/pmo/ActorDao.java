@@ -33,7 +33,7 @@ import models.pmo.Competency;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;

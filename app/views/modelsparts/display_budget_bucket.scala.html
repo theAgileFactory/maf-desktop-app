@@ -21,7 +21,7 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @if(budgetBucket!= null && !budgetBucket.deleted) {
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.BUDGET_BUCKET_VIEW_DYNAMIC_PERMISSION, "", budgetBucket.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.BUDGET_BUCKET_VIEW_DYNAMIC_PERMISSION, "", budgetBucket.id)) {
         <a href="@controllers.core.routes.BudgetBucketController.view(budgetBucket.id)">@budgetBucket.getName</a>
     } else {
         @budgetBucket.getName

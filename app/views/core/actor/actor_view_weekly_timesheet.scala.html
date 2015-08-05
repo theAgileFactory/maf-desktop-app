@@ -130,7 +130,7 @@
                 </div>
 
                  
-                @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION, "", report.id)) {
+                @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION, "", report.id)) {
                     @if(report.isProcessable) {
                         @helper.form(action = controllers.core.routes.TimesheetController.processTimesheet()) {
                             <input type="hidden" name="id" value="@report.id" />

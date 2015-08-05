@@ -21,7 +21,7 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @if(planningPackage!= null && !planningPackage.deleted) {
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", planningPackage.portfolioEntry.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", planningPackage.portfolioEntry.id)) {
         <a href="@controllers.core.routes.PortfolioEntryPlanningController.viewPackage(planningPackage.portfolioEntry.id, planningPackage.id)">@planningPackage.getName</a>
     } else {
         @planningPackage.getName

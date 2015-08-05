@@ -22,7 +22,7 @@ import java.util.List;
 import models.finance.BudgetBucket;
 import models.finance.BudgetBucketLine;
 import models.sql.TotalAmount;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;

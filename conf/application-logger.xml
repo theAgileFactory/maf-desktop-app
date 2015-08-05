@@ -45,8 +45,7 @@
 	<logger name="play" level="INFO" />
 	<logger name="application" level="INFO" />
 	<logger name="logger.tools" level="INFO" />
-	<logger name="framework.services.api" level="INFO" />
-	<logger name="service.plugins" level="DEBUG" />
+	<logger name="framework.security" level="DEBUG" />
 	<logger name="framework.services.audit.AuditLoggerUtilities" level="INFO">
 		<appender-ref ref="FILE_AUDIT" />
 	</logger>

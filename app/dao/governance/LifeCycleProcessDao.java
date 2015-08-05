@@ -21,7 +21,7 @@ import java.util.List;
 
 import models.governance.LifeCycleInstance;
 import models.governance.LifeCycleProcess;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 

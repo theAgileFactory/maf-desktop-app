@@ -22,7 +22,7 @@
 
 @if(portfolio!= null && !portfolio.deleted) {
 
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
         <a href="@controllers.core.routes.PortfolioController.overview(portfolio.id)">
     }
 
@@ -32,7 +32,7 @@
         @portfolio.getName
     }
     
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
         </a>
     }
 } else {

@@ -93,6 +93,7 @@ import utils.table.AttachmentListView;
 import utils.table.PortfolioEntryEventListView;
 import utils.table.PortfolioEntryReportListView;
 import utils.table.PortfolioEntryRiskListView;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the status reporting (events, risks,
@@ -174,7 +175,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> hideColumnsForReport = new HashSet<String>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForReport.add("editActionLink");
             hideColumnsForReport.add("deleteActionLink");
         }
@@ -196,7 +197,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Set<String> hideColumnsForRisk = new HashSet<String>();
         hideColumnsForRisk.add("owner");
         hideColumnsForRisk.add("dueDate");
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForRisk.add("editActionLink");
         }
 
@@ -216,7 +217,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Set<String> hideColumnsForIssue = new HashSet<String>();
         hideColumnsForIssue.add("isMitigated");
         hideColumnsForIssue.add("targetDate");
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForIssue.add("editActionLink");
         }
 
@@ -416,7 +417,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> hideColumnsForEvent = filterConfig.getColumnsToHide();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForEvent.add("editActionLink");
             hideColumnsForEvent.add("deleteActionLink");
         }
@@ -468,7 +469,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> hideColumns = new HashSet<String>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
 

@@ -22,7 +22,7 @@ import java.util.List;
 import models.pmo.PortfolioEntryRisk;
 import models.pmo.PortfolioEntryRiskType;
 import play.Play;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.ExpressionList;
 

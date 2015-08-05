@@ -90,7 +90,7 @@ public class Global extends GlobalSettings {
 
     @Override
     public void beforeStart(Application app) {
-        initSwaggerConfiguration();
+        //initSwaggerConfiguration();
         super.beforeStart(app);
     }
 

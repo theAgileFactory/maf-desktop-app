@@ -30,8 +30,6 @@ import play.mvc.Result;
 import security.DefaultDeadboltHandler;
 import utils.form.RoleFormData;
 import utils.table.RoleListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 
 import com.avaje.ebean.Ebean;
 
@@ -49,6 +47,8 @@ import framework.utils.Msg;
 import framework.utils.PreferenceFormAndDisplayHandler;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 
 /**
  * The administration interface which is used to configuration the BizDock
@@ -203,10 +203,6 @@ public class ConfigurationController extends Controller {
                     PreferenceFormAndDisplayHandler.validateAndSavePreference(requestData, field);
                 }
                 Ebean.commitTransaction();
-
-                // reset the mailer plugin configuration
-                Play.application().plugin(framework.utils.MafMailerPlugin.class).reset();
-
             } catch (Exception e) {
                 Ebean.rollbackTransaction();
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -301,7 +297,7 @@ public class ConfigurationController extends Controller {
 
             roleFormData.fill(role);
             role.save();
-            role.saveManyToManyAssociations("systemPermissions");
+            // role.saveManyToManyAssociations("systemPermissions");
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.roles.add.successful"));
 
@@ -325,7 +321,7 @@ public class ConfigurationController extends Controller {
             roleFormData.fill(role);
             role.systemPermissions.addAll(previousNonSelectablePermissions);
             role.update();
-            role.saveManyToManyAssociations("systemPermissions");
+            // role.saveManyToManyAssociations("systemPermissions");
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.roles.edit.successful"));
 

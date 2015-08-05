@@ -17,6 +17,9 @@
  */
 package security;
 
+import java.util.Optional;
+
+import play.libs.F.Promise;
 import play.mvc.Http;
 import play.mvc.Result;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
@@ -37,6 +40,7 @@ import framework.utils.Msg;
  * @author Pierre-Yves Cloux
  */
 public class DefaultDeadboltHandler extends CommonDeadboltHandler {
+    private DefaultDynamicResourceHandler dynamicResourceHandler=new DefaultDynamicResourceHandler();
 
     @Override
     public Result redirectToLoginPage(String redirectUrl) {
@@ -49,8 +53,9 @@ public class DefaultDeadboltHandler extends CommonDeadboltHandler {
     }
 
     @Override
-    public DynamicResourceHandler getDynamicResourceHandler(Http.Context context) {
-        return new DefaultDynamicResourceHandler();
+    public Promise<Optional<DynamicResourceHandler>> getDynamicResourceHandler(Http.Context context) {
+        //WARNING : context can be null in some cases
+        return Promise.promise(() -> Optional.of(getDynamicResourceHandler()));
     }
 
     /**
@@ -68,5 +73,9 @@ public class DefaultDeadboltHandler extends CommonDeadboltHandler {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private DefaultDynamicResourceHandler getDynamicResourceHandler() {
+        return dynamicResourceHandler;
     }
 }

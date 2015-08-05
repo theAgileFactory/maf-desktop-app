@@ -32,6 +32,7 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
 import framework.utils.Msg;
+import framework.security.SecurityUtils;
 
 /**
  * Compute and display the milestones trend table.
@@ -78,7 +79,7 @@ public class MilestonesTrend {
             // colgroup
             table += "<colgroup>";
             table += "<col class=\"col-md-1\">";
-            if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
+            if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
                 table += "<col class=\"col-md-1\">";
             }
             table += "<col class=\"col-md-1\">";
@@ -90,7 +91,7 @@ public class MilestonesTrend {
             // header
             table += "<thead><tr>";
             table += "<th style=\"white-space: nowrap\">" + Msg.get("core.portfolio_entry.overview.milestones_trend.panel.milestone.label") + "</th>";
-            if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
+            if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
                 table +=
                         "<th style=\"white-space: nowrap\">" + Msg.get("core.portfolio_entry.overview.milestones_trend.panel.budget.label") + " ("
                                 + CurrencyDAO.getCurrencyDefaultAsCode() + ")" + "</th>";
@@ -112,7 +113,7 @@ public class MilestonesTrend {
                                 + controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(this.portfolioEntryId, row.lifeCycleMilestoneId)
                                         .url() + "\"></a>" + row.milestoneInstance.lifeCycleMilestone.getShortName() + "</td>";
 
-                if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
+                if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
                     table += "<td style=\"white-space: nowrap\">" + row.renderBugdteContent() + "</td>";
                 }
 

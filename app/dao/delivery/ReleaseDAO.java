@@ -25,7 +25,7 @@ import models.delivery.ReleasePortfolioEntry;
 import models.delivery.ReleasePortfolioEntry.Type;
 import models.delivery.ReleasePortfolioEntryId;
 import models.delivery.Requirement;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.ExpressionList;
 

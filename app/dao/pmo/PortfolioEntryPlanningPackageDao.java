@@ -22,7 +22,7 @@ import java.util.List;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackageGroup;
 import models.pmo.PortfolioEntryPlanningPackagePattern;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.ExpressionList;
 

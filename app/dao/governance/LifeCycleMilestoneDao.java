@@ -39,7 +39,7 @@ import models.governance.LifeCycleMilestoneInstanceStatusType;
 import models.governance.LifeCyclePhase;
 import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.PortfolioEntry;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 /**
  * DAO for the {@link LifeCycleMilestone} and {@link LifeCycleMilestoneInstance}

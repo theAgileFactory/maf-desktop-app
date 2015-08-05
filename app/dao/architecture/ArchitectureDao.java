@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import models.architecture.ApplicationBlock;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 /**
  * DAO for the {@link ApplicationBlock} object.

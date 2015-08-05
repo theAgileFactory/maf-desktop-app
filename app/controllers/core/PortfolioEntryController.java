@@ -24,16 +24,53 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import models.finance.PortfolioEntryBudget;
+import models.finance.PortfolioEntryResourcePlan;
+import models.framework_models.account.NotificationCategory;
+import models.framework_models.account.NotificationCategory.Code;
+import models.framework_models.common.Attachment;
+import models.governance.LifeCycleInstance;
+import models.governance.LifeCycleInstancePlanning;
+import models.governance.LifeCycleMilestone;
+import models.governance.LifeCycleMilestoneInstance;
+import models.governance.LifeCycleProcess;
+import models.governance.PlannedLifeCycleMilestoneInstance;
+import models.pmo.Actor;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryDependency;
+import models.pmo.PortfolioEntryType;
+
 import org.apache.commons.lang3.tuple.Triple;
+
+import play.Logger;
+import play.Play;
+import play.data.Form;
+import play.i18n.Messages;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import security.CheckPortfolioEntryExists;
+import security.DefaultDynamicResourceHandler;
+import security.dynamic.PortfolioEntryDynamicHelper;
+import services.licensesmanagement.LicensesManagementServiceImpl;
+import utils.MilestonesTrend;
+import utils.form.AttachmentFormData;
+import utils.form.EmptyEditFormData;
+import utils.form.PortfolioEntryCreateFormData;
+import utils.form.PortfolioEntryDependencyFormData;
+import utils.form.PortfolioEntryEditFormData;
+import utils.form.PortfolioEntryPortfoliosFormData;
+import utils.table.AttachmentListView;
+import utils.table.GovernanceListView;
+import utils.table.PortfolioEntryDependencyListView;
+import utils.table.PortfolioListView;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.ControllersUtils;
@@ -61,45 +98,12 @@ import framework.utils.Pagination;
 import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import models.finance.PortfolioEntryBudget;
-import models.finance.PortfolioEntryResourcePlan;
-import models.framework_models.account.NotificationCategory;
-import models.framework_models.account.NotificationCategory.Code;
-import models.framework_models.common.Attachment;
-import models.governance.LifeCycleInstance;
-import models.governance.LifeCycleInstancePlanning;
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstance;
-import models.governance.LifeCycleProcess;
-import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.pmo.Actor;
-import models.pmo.Portfolio;
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryDependency;
-import models.pmo.PortfolioEntryType;
-import play.Logger;
-import play.Play;
-import play.data.Form;
-import play.i18n.Messages;
-import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
-import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
-import security.dynamic.PortfolioEntryDynamicHelper;
-import services.licensesmanagement.LicensesManagementServiceImpl;
-import utils.MilestonesTrend;
-import utils.form.AttachmentFormData;
-import utils.form.EmptyEditFormData;
-import utils.form.PortfolioEntryCreateFormData;
-import utils.form.PortfolioEntryDependencyFormData;
-import utils.form.PortfolioEntryEditFormData;
-import utils.form.PortfolioEntryPortfoliosFormData;
-import utils.table.AttachmentListView;
-import utils.table.GovernanceListView;
-import utils.table.PortfolioEntryDependencyListView;
-import utils.table.PortfolioListView;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+import be.objectify.deadbolt.java.actions.Dynamic;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which manages a portfolio entry.
@@ -341,9 +345,9 @@ public class PortfolioEntryController extends Controller {
         // send a notification to the portfolio manager (if it exists)
         if (portfolioEntry.portfolios != null && portfolioEntry.portfolios.size() > 0) {
             Portfolio portfolio = portfolioEntry.portfolios.get(0);
-            ActorDao.sendNotification(portfolio.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), "core.portfolio_entry.create.notification.title",
-                    "core.portfolio_entry.create.notification.message", portfolio.name);
+            ActorDao.sendNotification(portfolio.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY), controllers.core.routes.PortfolioEntryController
+                    .view(portfolioEntry.id, 0).url(), "core.portfolio_entry.create.notification.title", "core.portfolio_entry.create.notification.message",
+                    portfolio.name);
         }
 
         Utilities.sendSuccessFlashMessage(Messages.get("core.portfolio_entry.create.success.message"));
@@ -375,7 +379,7 @@ public class PortfolioEntryController extends Controller {
 
         // if the user is not permitted to see the details of the PE, then
         // redirect him to the view page
-        if (!DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "")) {
+        if (!SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "")) {
             return redirect(controllers.core.routes.PortfolioEntryController.view(id, 0));
         }
 
@@ -394,8 +398,7 @@ public class PortfolioEntryController extends Controller {
 
         // Milestones trend
         LifeCycleInstance activeLifeCycleProcessInstance = portfolioEntry.activeLifeCycleInstance;
-        List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao
-                .getLCMilestoneInstanceAsListByLCInstance(activeLifeCycleProcessInstance.id);
+        List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByLCInstance(activeLifeCycleProcessInstance.id);
         MilestonesTrend milestonesTrend = new MilestonesTrend(activeLifeCycleProcessInstance.lifeCycleProcess.lifeCycleMilestones, milestoneInstances);
 
         return ok(views.html.core.portfolioentry.portfolio_entry_overview.render(portfolioEntry, milestonesTable, milestonesTrend));
@@ -438,12 +441,12 @@ public class PortfolioEntryController extends Controller {
         }
 
         Set<String> columnsToHideForDependencies = new HashSet<String>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             columnsToHideForDependencies.add("deleteActionLink");
         }
 
-        Table<PortfolioEntryDependencyListView> dependenciesFilledTable = PortfolioEntryDependencyListView.templateTable
-                .fill(portfolioEntryDependenciesListView, columnsToHideForDependencies);
+        Table<PortfolioEntryDependencyListView> dependenciesFilledTable = PortfolioEntryDependencyListView.templateTable.fill(
+                portfolioEntryDependenciesListView, columnsToHideForDependencies);
 
         /*
          * Get the attachments
@@ -453,20 +456,19 @@ public class PortfolioEntryController extends Controller {
         FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntry.class, id);
 
         // create the table
-        Pagination<Attachment> attachmentPagination = new Pagination<Attachment>(
-                Attachment.getAttachmentsFromObjectTypeAndObjectIdAsExpressionList(PortfolioEntry.class, id), 5,
-                Play.application().configuration().getInt("maf.number_page_links"));
+        Pagination<Attachment> attachmentPagination = new Pagination<Attachment>(Attachment.getAttachmentsFromObjectTypeAndObjectIdAsExpressionList(
+                PortfolioEntry.class, id), 5, Play.application().configuration().getInt("maf.number_page_links"));
         attachmentPagination.setCurrentPage(attachmentPage);
         attachmentPagination.setPageQueryName("attachmentPage");
 
         List<AttachmentListView> attachmentsListView = new ArrayList<AttachmentListView>();
         for (Attachment attachment : attachmentPagination.getListOfObjects()) {
-            attachmentsListView
-                    .add(new AttachmentListView(attachment, controllers.core.routes.PortfolioEntryController.deleteAttachment(id, attachment.id).url()));
+            attachmentsListView.add(new AttachmentListView(attachment, controllers.core.routes.PortfolioEntryController.deleteAttachment(id, attachment.id)
+                    .url()));
         }
 
         Set<String> hideColumns = new HashSet<String>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
 
@@ -542,7 +544,7 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry updPortfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryFormData.id);
         portfolioEntryFormData.fill(updPortfolioEntry);
         updPortfolioEntry.update();
-        updPortfolioEntry.saveManyToManyAssociations("deliveryUnits");
+        // updPortfolioEntry.saveManyToManyAssociations("deliveryUnits");
 
         // update the licenses number (because the flag is archived is used for
         // the computation and could be modified)
@@ -595,8 +597,7 @@ public class PortfolioEntryController extends Controller {
 
         // get the plugins which are registered for portfolio entry
         IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        List<Triple<Long, String, IPluginInfo>> pluginInfos = pluginManagerService
-                .getPluginSupportingRegistrationForDataType(MafDataType.getPortfolioEntry());
+        List<Triple<Long, String, IPluginInfo>> pluginInfos = pluginManagerService.getPluginSupportingRegistrationForDataType(MafDataType.getPortfolioEntry());
 
         return ok(views.html.core.portfolioentry.portfolio_entry_plugin_config.render(portfolioEntry, pluginInfos));
     }
@@ -639,8 +640,7 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // construct the form
-        Form<PortfolioEntryPortfoliosFormData> portfolioEntryPortfoliosForm = portfoliosFormTemplate
-                .fill(new PortfolioEntryPortfoliosFormData(portfolioEntry));
+        Form<PortfolioEntryPortfoliosFormData> portfolioEntryPortfoliosForm = portfoliosFormTemplate.fill(new PortfolioEntryPortfoliosFormData(portfolioEntry));
 
         // get the portfolios value holders
         DefaultSelectableValueHolderCollection<Long> portfolios = PortfolioDao.getPortfolioActiveAsVH();
@@ -674,7 +674,8 @@ public class PortfolioEntryController extends Controller {
 
         PortfolioEntry updPortfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryPortfoliosFormData.id);
         portfolioEntryPortfoliosFormData.fill(updPortfolioEntry);
-        updPortfolioEntry.saveManyToManyAssociations("portfolios");
+        updPortfolioEntry.save();
+        // updPortfolioEntry.saveManyToManyAssociations("portfolios");
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.editportfolios.successful"));
 
@@ -899,17 +900,15 @@ public class PortfolioEntryController extends Controller {
 
         SideBar sideBar = new SideBar();
 
-        if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
-            sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.overview.label",
-                    controllers.core.routes.PortfolioEntryController.overview(portfolioEntryId), "glyphicons glyphicons-radar",
-                    currentType.equals(MenuItemType.OVERVIEW)));
+        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
+            sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.overview.label", controllers.core.routes.PortfolioEntryController
+                    .overview(portfolioEntryId), "glyphicons glyphicons-radar", currentType.equals(MenuItemType.OVERVIEW)));
         }
 
-        sideBar.addMenuItem(
-                new ClickableMenuItem("core.portfolio_entry.sidebar.view.label", controllers.core.routes.PortfolioEntryController.view(portfolioEntryId, 0),
-                        "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.VIEW)));
+        sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.view.label", controllers.core.routes.PortfolioEntryController.view(
+                portfolioEntryId, 0), "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.VIEW)));
 
-        if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
+        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
             HeaderMenuItem financialMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.financial.label", "glyphicons glyphicons-coins",
                     currentType.equals(MenuItemType.FINANCIAL));
@@ -924,14 +923,14 @@ public class PortfolioEntryController extends Controller {
         }
 
         sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.stakeholders.label",
-                controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntryId), "glyphicons glyphicons-group",
-                currentType.equals(MenuItemType.STAKEHOLDERS)));
+                controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntryId), "glyphicons glyphicons-group", currentType
+                        .equals(MenuItemType.STAKEHOLDERS)));
 
-        if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
+        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.governance.label",
-                    controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntryId), "glyphicons glyphicons-cluster",
-                    currentType.equals(MenuItemType.GOVERNANCE)));
+                    controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntryId), "glyphicons glyphicons-cluster", currentType
+                            .equals(MenuItemType.GOVERNANCE)));
 
             HeaderMenuItem deliveryMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.delivery.label", "glyphicons glyphicons-cargo",
                     currentType.equals(MenuItemType.DELIVERY));
@@ -972,14 +971,13 @@ public class PortfolioEntryController extends Controller {
                     "glyphicons glyphicons-inbox", false));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.events.label",
-                    controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId, false), "glyphicons glyphicons-bullhorn",
-                    false));
+                    controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId, false), "glyphicons glyphicons-bullhorn", false));
 
             sideBar.addMenuItem(reportingMenu);
 
         }
 
-        if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
+        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
             ClickableMenuItem pluginMenu = new ClickableMenuItem("core.portfolio_entry.sidebar.pluginconfig.label",
                     controllers.core.routes.PortfolioEntryController.pluginConfig(portfolioEntryId), "glyphicons glyphicons-cloud",
                     currentType.equals(MenuItemType.PLUGINCONFIG));

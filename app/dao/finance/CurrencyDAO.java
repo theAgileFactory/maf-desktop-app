@@ -20,7 +20,7 @@ package dao.finance;
 import java.util.List;
 
 import models.finance.Currency;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.ExpressionList;
 

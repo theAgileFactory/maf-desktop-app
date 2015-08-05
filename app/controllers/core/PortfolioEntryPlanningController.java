@@ -113,6 +113,7 @@ import utils.table.AttachmentListView;
 import utils.table.PortfolioEntryPlanningPackageListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the planning of a portfolio entry.
@@ -635,7 +636,7 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         Set<String> hideColumnsForPackage = filterConfig.getColumnsToHide();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForPackage.add("editActionLink");
             hideColumnsForPackage.add("deleteActionLink");
         }
@@ -696,7 +697,7 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         Set<String> hideColumns = new HashSet<String>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
 
@@ -1110,7 +1111,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Set<String> hideColumnsForResourcePlanTable = new HashSet<String>();
         hideColumnsForResourcePlanTable.add("portfolioEntryName");
         hideColumnsForResourcePlanTable.add("followPackageDates");
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForResourcePlanTable.add("editActionLink");
             hideColumnsForResourcePlanTable.add("removeActionLink");
             hideColumnsForResourcePlanTable.add("reallocate");

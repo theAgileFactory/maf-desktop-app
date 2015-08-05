@@ -99,7 +99,7 @@ public class ProcessTransitionRequestController extends Controller {
             MilestoneRequestListView milestoneRequest = new MilestoneRequestListView(request);
             if (milestoneRequest.portfolioEntry != null
                     && milestoneRequest.milestone != null
-                    && DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, "",
+                    && DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, "",
                             milestoneRequest.portfolioEntry.id)) {
                 requestsListView.add(milestoneRequest);
             }

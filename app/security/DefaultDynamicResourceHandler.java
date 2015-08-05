@@ -49,6 +49,7 @@ import models.reporting.Reporting;
 import models.timesheet.TimesheetReport;
 import play.Logger;
 import play.cache.Cache;
+import play.libs.F.Promise;
 import play.mvc.Http;
 import play.mvc.Http.Context;
 import security.dynamic.ActorDynamicHelper;
@@ -105,260 +106,272 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
      */
     static {
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
-                if (portfolioEntry == null) {
-                    return true;
-                } else {
-                    return PortfolioEntryDynamicHelper.isPortfolioEntryViewAllowed(portfolioEntry.id);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryViewAllowed(portfolioEntry.id);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
-                if (portfolioEntry == null) {
-                    return true;
-                } else {
-                    return PortfolioEntryDynamicHelper.isPortfolioEntryDetailsAllowed(portfolioEntry);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryDetailsAllowed(portfolioEntry);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
-                if (portfolioEntry == null) {
-                    return true;
-                } else {
-                    return PortfolioEntryDynamicHelper.isPortfolioEntryEditAllowed(portfolioEntry);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryEditAllowed(portfolioEntry);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
-                if (portfolioEntry == null) {
-                    return true;
-                } else {
-                    return PortfolioEntryDynamicHelper.isPortfolioEntryDeleteAllowed(portfolioEntry);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryDeleteAllowed(portfolioEntry);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
-                if (portfolioEntry == null) {
-                    return true;
-                } else {
-                    return PortfolioEntryDynamicHelper.isPortfolioEntryViewFinancialAllowed(portfolioEntry);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryViewFinancialAllowed(portfolioEntry);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
-                if (portfolioEntry == null) {
-                    return true;
-                } else {
-                    return PortfolioEntryDynamicHelper.isPortfolioEntryEditFinancialAllowed(portfolioEntry);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryEditFinancialAllowed(portfolioEntry);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
-                if (portfolioEntry == null) {
-                    return true;
-                } else {
-                    return PortfolioEntryDynamicHelper.isPortfolioEntryReviewRequestAllowed(portfolioEntry);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryReviewRequestAllowed(portfolioEntry);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Portfolio portfolio = PortfolioDao.getPortfolioById(getId(context));
-                if (portfolio == null) {
-                    return true;
-                } else {
-                    return PortfolioDynamicHelper.isPortfolioViewAllowed(portfolio.id);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Portfolio portfolio = PortfolioDao.getPortfolioById(getId(context));
+                    if (portfolio == null) {
+                        return true;
+                    } else {
+                        return PortfolioDynamicHelper.isPortfolioViewAllowed(portfolio.id);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Portfolio portfolio = PortfolioDao.getPortfolioById(getId(context));
-                if (portfolio == null) {
-                    return true;
-                } else {
-                    return PortfolioDynamicHelper.isPortfolioEditAllowed(portfolio);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Portfolio portfolio = PortfolioDao.getPortfolioById(getId(context));
+                    if (portfolio == null) {
+                        return true;
+                    } else {
+                        return PortfolioDynamicHelper.isPortfolioEditAllowed(portfolio);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.PORTFOLIO_VIEW_FINANCIAL_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Portfolio portfolio = PortfolioDao.getPortfolioById(getId(context));
-                if (portfolio == null) {
-                    return true;
-                } else {
-                    return PortfolioDynamicHelper.isPortfolioViewFinancialAllowed(portfolio);
-                }
-
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Portfolio portfolio = PortfolioDao.getPortfolioById(getId(context));
+                    if (portfolio == null) {
+                        return true;
+                    } else {
+                        return PortfolioDynamicHelper.isPortfolioViewFinancialAllowed(portfolio);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.BUDGET_BUCKET_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(getId(context));
-                if (budgetBucket == null) {
-                    return true;
-                } else {
-                    return BudgetBucketDynamicHelper.isBudgetBucketViewAllowed(budgetBucket.id);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(getId(context));
+                    if (budgetBucket == null) {
+                        return true;
+                    } else {
+                        return BudgetBucketDynamicHelper.isBudgetBucketViewAllowed(budgetBucket.id);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(getId(context));
-                if (budgetBucket == null) {
-                    return true;
-                } else {
-                    return BudgetBucketDynamicHelper.isBudgetBucketEditAllowed(budgetBucket);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(getId(context));
+                    if (budgetBucket == null) {
+                        return true;
+                    } else {
+                        return BudgetBucketDynamicHelper.isBudgetBucketEditAllowed(budgetBucket);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Release release = ReleaseDAO.getReleaseById(getId(context));
-                if (release == null) {
-                    return true;
-                } else {
-                    return ReleaseDynamicHelper.isReleaseViewAllowed(release.id);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Release release = ReleaseDAO.getReleaseById(getId(context));
+                    if (release == null) {
+                        return true;
+                    } else {
+                        return ReleaseDynamicHelper.isReleaseViewAllowed(release.id);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.RELEASE_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Release release = ReleaseDAO.getReleaseById(getId(context));
-                if (release == null) {
-                    return true;
-                } else {
-                    return ReleaseDynamicHelper.isReleaseEditAllowed(release);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Release release = ReleaseDAO.getReleaseById(getId(context));
+                    if (release == null) {
+                        return true;
+                    } else {
+                        return ReleaseDynamicHelper.isReleaseEditAllowed(release);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.REPORTING_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Reporting report = ReportingDao.getReportingById(getId(context));
-                if (report == null) {
-                    return true;
-                } else {
-                    return ReportingDynamicHelper.isReportViewAllowed(report.id);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Reporting report = ReportingDao.getReportingById(getId(context));
+                    if (report == null) {
+                        return true;
+                    } else {
+                        return ReportingDynamicHelper.isReportViewAllowed(report.id);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                TimesheetReport report = TimesheetDao.getTimesheetReportById(getId(context));
-
-                if (report == null) {
-                    return true;
-                } else {
-                    return TimesheetReportDynamicHelper.isTimesheetReportApprovalAllowed(report.id);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    TimesheetReport report = TimesheetDao.getTimesheetReportById(getId(context));
+    
+                    if (report == null) {
+                        return true;
+                    } else {
+                        return TimesheetReportDynamicHelper.isTimesheetReportApprovalAllowed(report.id);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Actor actor = ActorDao.getActorById(getId(context));
-
-                if (actor == null) {
-                    return true;
-                } else {
-                    return ActorDynamicHelper.isActorViewAllowed(actor.id);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Actor actor = ActorDao.getActorById(getId(context));
+    
+                    if (actor == null) {
+                        return true;
+                    } else {
+                        return ActorDynamicHelper.isActorViewAllowed(actor.id);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Actor actor = ActorDao.getActorById(getId(context));
-                if (actor == null) {
-                    return true;
-                } else {
-                    return ActorDynamicHelper.isActorEditAllowed(actor);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Actor actor = ActorDao.getActorById(getId(context));
+                    if (actor == null) {
+                        return true;
+                    } else {
+                        return ActorDynamicHelper.isActorEditAllowed(actor);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.ACTOR_DELETE_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                Actor actor = ActorDao.getActorById(getId(context));
-                if (actor == null) {
-                    return true;
-                } else {
-                    return ActorDynamicHelper.isActorDeleteAllowed(actor);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    Actor actor = ActorDao.getActorById(getId(context));
+                    if (actor == null) {
+                        return true;
+                    } else {
+                        return ActorDynamicHelper.isActorDeleteAllowed(actor);
+                    }
+                });
             }
         });
 
         HANDLERS.put(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-
-                OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(getId(context));
-
-                if (orgUnit == null) {
-                    return true;
-                } else {
-                    return OrgUnitDynamicHelper.isOrgUnitViewAllowed(orgUnit.id);
-                }
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(getId(context));
+    
+                    if (orgUnit == null) {
+                        return true;
+                    } else {
+                        return OrgUnitDynamicHelper.isOrgUnitViewAllowed(orgUnit.id);
+                    }
+                });
             }
         });
 
     }
 
     @Override
-    public boolean checkPermission(String permissionValue, DeadboltHandler deadboltHandler, Context ctx) {
+    public Promise<Boolean> checkPermission(String permissionValue, DeadboltHandler deadboltHandler, Context ctx) {
         boolean permissionOk = false;
 
         try {
@@ -377,21 +390,23 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
             Logger.error("impossible to get the user", e);
         }
 
-        return permissionOk;
+        final boolean permissionOkFinal = permissionOk;
+        return Promise.promise(() -> permissionOkFinal);
     }
 
     @Override
-    public boolean isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Context context) {
+    public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Context context) {
 
         String cacheKey = getCacheKey(name, getId(context));
         Boolean isAllowed = (Boolean) Cache.get(cacheKey);
         if (isAllowed != null) {
             Logger.debug("dynamic permission " + cacheKey + " read from cache, and result is: " + isAllowed);
-            return isAllowed;
+            final boolean isAllowedFinal = isAllowed;
+            return Promise.promise(() -> isAllowedFinal);
         }
 
         DynamicResourceHandler handler = HANDLERS.get(name);
-        boolean result = false;
+        Promise<Boolean> result = Promise.promise(() -> false);
         if (handler == null) {
             Logger.error("No handler available for " + name);
         } else {
@@ -400,25 +415,11 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
         }
 
         // set the result
-        Cache.set(cacheKey, result, CACHE_TTL);
+        Cache.set(cacheKey, result.get(5000l), CACHE_TTL);
 
         return result;
     }
-
-    /**
-     * Define if the current context (id) is allowed for a dynamic permission.
-     * 
-     * @param name
-     *            the dynamic permission name
-     * @param meta
-     *            the meta, can be empty
-     */
-    public static boolean isAllowed(String name, String meta) {
-        DefaultDeadboltHandler handler = new DefaultDeadboltHandler();
-        DefaultDynamicResourceHandler dynamicHandler = new DefaultDynamicResourceHandler();
-        return dynamicHandler.isAllowed(name, meta, handler, Http.Context.current());
-    }
-
+    
     /**
      * Define if a specific object is allowed for a dynamic permission.
      * 
@@ -429,7 +430,7 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
      * @param id
      *            the object id
      */
-    public static boolean isAllowed(String name, String meta, Long id) {
+    public static boolean isStaticAllowedWithObject(String name, String meta, Long id) {
 
         String cacheKey = getCacheKey(name, id);
         Boolean isAllowed = (Boolean) Cache.get(cacheKey);

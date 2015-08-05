@@ -74,6 +74,7 @@ import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the delivery part of a portfolio entry.
@@ -139,7 +140,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             }
 
             Set<String> hideColumns = filterConfig.getColumnsToHide();
-            if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
                 hideColumns.add("editActionLink");
             }
 
@@ -193,7 +194,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             }
 
             Set<String> hideColumns = filterConfig.getColumnsToHide();
-            if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
                 hideColumns.add("editActionLink");
             }
 
@@ -612,7 +613,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         Set<String> hideColumns = filterConfig.getColumnsToHide();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("editActionLink");
         }
 
@@ -743,7 +744,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         Set<String> columnsToHide = new HashSet<>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             columnsToHide.add("unassignActionLink");
         }
 

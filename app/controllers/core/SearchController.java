@@ -51,7 +51,7 @@ import controllers.ControllersUtils;
 import dao.finance.PurchaseOrderDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
@@ -61,6 +61,7 @@ import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to search entities.
@@ -98,11 +99,11 @@ public class SearchController extends Controller {
 
         objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit")));
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && DeadboltUtils.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && SecurityUtils.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order")));
         }
 
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.BUDGET_BUCKET, Msg.get("core.search.type.budget_bucket")));
         }
 

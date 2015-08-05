@@ -31,7 +31,7 @@ import play.Play;
 import play.libs.F.Function;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
-import play.libs.ws.WSRequestHolder;
+import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 import services.licensesmanagement.LoginEventRequest.ErrorCode;
 
@@ -286,7 +286,8 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
 
         Logger.debug("URL: " + url);
 
-        WSRequestHolder request = WS.url(url).setHeader(HTTP_HEADER_API_KEY, this.getApiSecretKey());
+        WSRequest request = WS.url(url);
+        request.setHeader(HTTP_HEADER_API_KEY, this.getApiSecretKey());
 
         if (queryParams != null) {
             for (NameValuePair param : queryParams) {

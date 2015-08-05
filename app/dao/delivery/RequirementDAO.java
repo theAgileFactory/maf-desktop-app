@@ -26,7 +26,7 @@ import models.delivery.RequirementStatus;
 import models.delivery.RequirementStatus.Type;
 import models.delivery.TotalRequirement;
 import models.delivery.TotalStoryPoints;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;

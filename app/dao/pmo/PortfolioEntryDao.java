@@ -27,7 +27,7 @@ import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryDependencyType;
 import models.pmo.PortfolioEntryType;
 import models.sql.TotalAmount;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;

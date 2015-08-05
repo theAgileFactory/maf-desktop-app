@@ -30,7 +30,7 @@ import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.sql.TotalDays;
 import play.Play;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;

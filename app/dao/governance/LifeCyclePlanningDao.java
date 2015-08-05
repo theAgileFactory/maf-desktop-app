@@ -23,7 +23,7 @@ import java.util.List;
 import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCycleMilestoneInstance;
 import models.governance.PlannedLifeCycleMilestoneInstance;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;

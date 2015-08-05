@@ -39,6 +39,7 @@ import dao.pmo.StakeholderDao;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage a stakeholder of a portfolio entry.
@@ -87,7 +88,7 @@ public class PortfolioEntryStakeholderController extends Controller {
         }
 
         Set<String> hideColumnsForStakeholder = new HashSet<String>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForStakeholder.add("editActionLink");
             hideColumnsForStakeholder.add("removeActionLink");
         }

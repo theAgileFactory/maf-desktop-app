@@ -57,10 +57,6 @@ import utils.table.PortfolioEntryListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
 import utils.table.PortfolioListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -86,6 +82,11 @@ import framework.utils.Pagination;
 import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+import be.objectify.deadbolt.java.actions.Dynamic;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which displays / allows to edit an actor.
@@ -325,7 +326,7 @@ public class ActorController extends Controller {
         ActorCompetenciesFormData competenciesFormData = boundForm.get();
 
         competenciesFormData.fill(actor);
-        actor.saveManyToManyAssociations("competencies");
+        // actor.saveManyToManyAssociations("competencies");
 
         if (actor.competencies.size() == 0) {
             actor.defaultCompetency = null;
@@ -802,7 +803,7 @@ public class ActorController extends Controller {
         Form<ActorCapacityFormData> capacityForm = capacityFormTemplate.fill(new ActorCapacityFormData(actor, year));
 
         // can edit
-        boolean canEdit = DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION, "");
+        boolean canEdit = SecurityUtils.dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION, "");
 
         return ok(views.html.core.actor.actor_capacity.render(actor, year, capacityForm, canEdit));
     }
@@ -876,7 +877,7 @@ public class ActorController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.overview", controllers.core.routes.ActorController.view(id),
                 "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.OVERVIEW)));
 
-        if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION, "")) {
+        if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION, "")) {
 
             sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolio_entries", controllers.core.routes.ActorController.listPortfolioEntries(id,
                     0), "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.INITIATIVES)));

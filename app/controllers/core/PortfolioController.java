@@ -53,6 +53,7 @@ import framework.utils.Pagination;
 import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which displays / allows to edit a portfolio.
@@ -135,7 +136,7 @@ public class PortfolioController extends Controller {
 
         Set<String> hideColumnsForStakeholder = new HashSet<String>();
         hideColumnsForStakeholder.add("portfolio");
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForStakeholder.add("editActionLink");
             hideColumnsForStakeholder.add("removeActionLink");
         }

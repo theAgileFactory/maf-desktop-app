@@ -33,7 +33,7 @@
 		<project.build.sourceEncoding>latin1</project.build.sourceEncoding>
 		<java.source>1.8</java.source>
         <java.target>1.8</java.target>
-        <scala.version>2.10</scala.version>
+        <scala.version>2.11</scala.version>
         <!-- Dependencies properties -->
 		<lib.app-framework.version>7.0.1-SNAPSHOT</lib.app-framework.version>
 		<maf.maf-desktop-datamodel.version>7.0.1-SNAPSHOT</maf.maf-desktop-datamodel.version>
@@ -137,6 +137,7 @@
 				<configuration>
 					<source>${java.source}</source>
 					<target>${java.target}</target>
+					<compilerArguments>-Xlint:deprecation</compilerArguments>
 				</configuration>
 			</plugin>
 

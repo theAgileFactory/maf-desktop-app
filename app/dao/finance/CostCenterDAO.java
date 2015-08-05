@@ -22,7 +22,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import models.finance.CostCenter;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 import play.mvc.Http;
 
 import com.avaje.ebean.RawSql;

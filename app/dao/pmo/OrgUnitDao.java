@@ -26,7 +26,7 @@ import models.pmo.OrgUnitType;
 
 import org.apache.commons.lang3.StringUtils;
 
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 import play.mvc.Http;
 
 import com.avaje.ebean.Ebean;

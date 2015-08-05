@@ -31,12 +31,16 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.security.SecurityUtils;
+import framework.security.SecurityUtils;
+import framework.utils.Utilities;
+
 
 /**
  * Provides all method to compute the dynamic permissions for an org unit.
@@ -65,14 +69,14 @@ public class OrgUnitDynamicHelper {
 
         // user has permission ORG_UNIT_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_ALL_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION AND
         // user or his subordinates is manager of the orgUnit OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION)) {
+        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION)) {
 
             raw += "manager.id = " + actor.id + " OR ";
 
@@ -88,7 +92,8 @@ public class OrgUnitDynamicHelper {
         ExpressionList<OrgUnit> expressionList;
 
         if (orderBy != null) {
-            expressionList = OrgUnitDao.findOrgUnit.setOrderBy(orderBy).where();
+            expressionList = OrgUnitDao.findOrgUnit.where();
+            Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         } else {
             expressionList = OrgUnitDao.findOrgUnit.where();
         }

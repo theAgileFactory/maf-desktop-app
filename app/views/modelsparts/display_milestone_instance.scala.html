@@ -23,13 +23,13 @@
 
 @if(milestoneInstance!= null && !milestoneInstance.deleted) {
 
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
         <a href="@controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(portfolioEntry.id, milestoneInstance.lifeCycleMilestone.id)">
     }
 
     @display_milestone(milestoneInstance.lifeCycleMilestone)
     
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
         </a>
     }
 

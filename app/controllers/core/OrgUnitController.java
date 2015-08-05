@@ -81,6 +81,7 @@ import utils.table.PortfolioEntryListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which displays / allows to edit an org unit.
@@ -605,7 +606,7 @@ public class OrgUnitController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.org_unit.sidebar.overview", controllers.core.routes.OrgUnitController.view(id, 0),
                 "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.OVERVIEW)));
 
-        if (DefaultDynamicResourceHandler.isAllowed(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
+        if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
 
             sideBar.addMenuItem(
                     new ClickableMenuItem("core.org_unit.sidebar.portfolio_entries", controllers.core.routes.OrgUnitController.listPortfolioEntries(id, 0),

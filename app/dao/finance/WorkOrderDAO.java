@@ -20,7 +20,7 @@ package dao.finance;
 import java.util.List;
 
 import models.finance.WorkOrder;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 /**
  * DAO for the {@link WorkOrder} object.

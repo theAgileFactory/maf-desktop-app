@@ -56,7 +56,7 @@ import dao.finance.PurchaseOrderDAO;
 import dao.finance.WorkOrderDAO;
 import dao.pmo.PortfolioEntryDao;
 import framework.highcharts.pattern.BasicBar;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -65,6 +65,7 @@ import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the financial part of a portfolio
@@ -107,7 +108,7 @@ public class PortfolioEntryFinancialController extends Controller {
         // hide columns for budget table
         Set<String> hideColumnsForBudgetTable = new HashSet<String>();
         hideColumnsForBudgetTable.add("portfolioEntryName");
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForBudgetTable.add("editActionLink");
             hideColumnsForBudgetTable.add("removeActionLink");
         }
@@ -136,16 +137,16 @@ public class PortfolioEntryFinancialController extends Controller {
 
         // define the columns to hide for the cost to complete table
         Set<String> hideColumnsForCostToCompleteTable = new HashSet<String>();
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("editActionLink");
             hideColumnsForCostToCompleteTable.add("deleteActionLink");
         }
         if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
-                || !DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+                || !SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("selectLineItemActionLink");
         }
         if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
-                || !DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+                || !SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("engageWorkOrder");
         }
         hideColumnsForCostToCompleteTable.add("amountReceived");
@@ -157,13 +158,13 @@ public class PortfolioEntryFinancialController extends Controller {
         Set<String> hideColumnsForEngagedTable = new HashSet<String>();
         hideColumnsForEngagedTable.add("selectLineItemActionLink");
         hideColumnsForEngagedTable.add("engageWorkOrder");
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForEngagedTable.add("editActionLink");
         }
         if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
             hideColumnsForEngagedTable.add("shared");
         }
-        if (!DefaultDynamicResourceHandler.isAllowed("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")
+        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")
                 || PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
             hideColumnsForEngagedTable.add("deleteActionLink");
         }
@@ -217,7 +218,7 @@ public class PortfolioEntryFinancialController extends Controller {
             // if the user hasn't the permission
             // PURCHASE_ORDER_VIEW_ALL_PERMISSION
             // then we remove the action line
-            if (!DeadboltUtils.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
+            if (!SecurityUtils.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
                 lineItemsTable.setLineAction(null);
             }
 

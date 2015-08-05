@@ -238,17 +238,11 @@ public class SharedStorageManagerController extends Controller {
             return redirectToIndexAsPromiseWithErrorMessage(Msg.get("admin.shared_storage.upload.error.max_number"));
         }
 
-        // Perform the upload
-        final boolean isSizeExceeded = request().body().isMaxSizeExceeded();
+        // Perform the upload       
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    if (isSizeExceeded) {
-                        Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.file.size.invalid",
-                                FileUtils.byteCountToDisplaySize(MAX_FILE_SIZE)));
-                        return redirect(routes.SharedStorageManagerController.index());
-                    }
                     MultipartFormData body = request().body().asMultipartFormData();
                     FilePart filePart = body.getFile(folderName);
                     if (filePart != null) {
@@ -259,6 +253,8 @@ public class SharedStorageManagerController extends Controller {
                         Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.no_file"));
                     }
                 } catch (Exception e) {
+                    Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.file.size.invalid",
+                            FileUtils.byteCountToDisplaySize(MAX_FILE_SIZE)));
                     String message = String.format("Failure while uploading a new file in %s", folderName);
                     log.error(message);
                     throw new IOException(message, e);

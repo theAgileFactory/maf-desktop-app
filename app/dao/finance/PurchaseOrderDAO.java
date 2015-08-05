@@ -24,7 +24,7 @@ import javax.persistence.PersistenceException;
 import models.finance.PurchaseOrder;
 import models.finance.PurchaseOrderLineItem;
 import models.finance.PurchaseOrderLineShipmentStatusType;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.ExpressionList;
 

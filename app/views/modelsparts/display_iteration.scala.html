@@ -21,7 +21,7 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @if(iteration!= null && !iteration.deleted) {
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", iteration.portfolioEntry.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", iteration.portfolioEntry.id)) {
         <a href="@controllers.core.routes.PortfolioEntryDeliveryController.viewIteration(iteration.portfolioEntry.id, iteration.id)">@iteration.getName</a>
     } else {
         @iteration.getName

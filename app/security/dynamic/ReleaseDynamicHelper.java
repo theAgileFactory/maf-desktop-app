@@ -30,12 +30,15 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.delivery.ReleaseDAO;
 import dao.pmo.ActorDao;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.security.SecurityUtils;
+import framework.security.SecurityUtils;
+import framework.utils.Utilities;
 
 /**
  * Provides all method to compute the dynamic permissions for a release.
@@ -64,14 +67,14 @@ public class ReleaseDynamicHelper {
 
         // user has permission RELEASE_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_ALL_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission RELEASE_VIEW_AS_MANAGER_PERMISSION AND is the
         // manager of the release OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
+        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
             raw += "manager.id = " + actor.id + " OR ";
         }
 
@@ -80,7 +83,8 @@ public class ReleaseDynamicHelper {
         ExpressionList<Release> expressionList;
 
         if (orderBy != null) {
-            expressionList = ReleaseDAO.findRelease.setOrderBy(orderBy).where();
+            expressionList = ReleaseDAO.findRelease.where();
+            Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         } else {
             expressionList = ReleaseDAO.findRelease.where();
         }
@@ -125,14 +129,14 @@ public class ReleaseDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission RELEASE_EDIT_ALL_PERMISSION OR
-            if (DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_ALL_PERMISSION)) {
+            if (SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
             // user has permission RELEASE_EDIT_AS_MANAGER_PERMISSION AND is
             // manager of the release
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION) && actor.id.equals(release.manager.id)) {
+            if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION) && actor.id.equals(release.manager.id)) {
                 return true;
             }
 

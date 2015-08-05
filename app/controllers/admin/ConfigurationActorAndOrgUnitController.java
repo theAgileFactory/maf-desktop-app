@@ -37,8 +37,6 @@ import utils.table.ActorTypeListView;
 import utils.table.CompetencyListView;
 import utils.table.OrgUnitTypeListView;
 import utils.table.StakeholderTypeListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
 import dao.pmo.ActorDao;
@@ -47,6 +45,8 @@ import dao.pmo.StakeholderDao;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 
 /**
  * Manage the actors and org units reference data.
@@ -442,8 +442,9 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         stakeholderTypeFormData.description.persist();
         stakeholderTypeFormData.name.persist();
 
-        stakeholderType.saveManyToManyAssociations("portfolioTypes");
-        stakeholderType.saveManyToManyAssociations("portfolioEntryTypes");
+        // stakeholderType.saveManyToManyAssociations("portfolioTypes");
+        // stakeholderType.saveManyToManyAssociations("portfolioEntryTypes");
+        stakeholderType.save();
 
         RootApiController.flushFilters();
 

@@ -31,12 +31,15 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.timesheet.TimesheetDao;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.security.SecurityUtils;
+import framework.security.SecurityUtils;
+import framework.utils.Utilities;
 
 /**
  * Provides all method to compute the dynamic permissions for a timesheet
@@ -68,7 +71,7 @@ public class TimesheetReportDynamicHelper {
 
         // user has permission TIMESHEET_APPROVAL_ALL_PERMISSION
         // OR
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
@@ -76,7 +79,7 @@ public class TimesheetReportDynamicHelper {
         // TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION AND
         // user or his subordinates is manager of the actor of the report OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION)) {
+        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION)) {
 
             raw += "actor.manager.id=" + actor.id + " OR ";
 
@@ -92,7 +95,8 @@ public class TimesheetReportDynamicHelper {
         ExpressionList<TimesheetReport> expressionList;
 
         if (orderBy != null) {
-            expressionList = TimesheetDao.findTimesheetReport.setOrderBy(orderBy).where();
+            expressionList = TimesheetDao.findTimesheetReport.where();
+            Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         } else {
             expressionList = TimesheetDao.findTimesheetReport.where();
         }

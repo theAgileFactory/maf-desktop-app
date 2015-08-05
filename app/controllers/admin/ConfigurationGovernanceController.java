@@ -20,16 +20,6 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import constants.IMafConstants;
-import controllers.api.core.RootApiController;
-import dao.governance.LifeCycleMilestoneDao;
-import dao.governance.LifeCyclePlanningDao;
-import dao.governance.LifeCycleProcessDao;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
 import models.governance.LifeCycleInstance;
 import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCycleMilestone;
@@ -48,6 +38,16 @@ import utils.table.LifeCycleMilestoneInstanceStatusTypeListView;
 import utils.table.LifeCycleMilestoneListView;
 import utils.table.LifeCyclePhaseListView;
 import utils.table.LifeCycleProcessListView;
+import constants.IMafConstants;
+import controllers.api.core.RootApiController;
+import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.LifeCyclePlanningDao;
+import dao.governance.LifeCycleProcessDao;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 
 /**
  * Manage the portfolios and portfolio entries reference data.
@@ -441,7 +441,7 @@ public class ConfigurationGovernanceController extends Controller {
 
             milestoneFormData.fill(milestone);
             milestone.save();
-            milestone.saveManyToManyAssociations("approvers");
+            // milestone.saveManyToManyAssociations("approvers");
 
             // create a planned date for each planning of the life cycle process
             for (LifeCycleInstance processInstance : lifeCycleProcess.lifeCycleInstances) {
@@ -461,7 +461,7 @@ public class ConfigurationGovernanceController extends Controller {
 
             milestoneFormData.fill(milestone);
             milestone.update();
-            milestone.saveManyToManyAssociations("approvers");
+            // milestone.saveManyToManyAssociations("approvers");
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_milestone.edit.successful"));
         }

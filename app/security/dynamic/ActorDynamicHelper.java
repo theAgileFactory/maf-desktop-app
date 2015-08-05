@@ -29,12 +29,15 @@ import com.avaje.ebean.OrderBy;
 
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.security.SecurityUtils;
+import framework.security.SecurityUtils;
+import framework.utils.Utilities;
 
 /**
  * Provides all method to compute the dynamic permissions for an actor.
@@ -63,7 +66,7 @@ public class ActorDynamicHelper {
 
         // user has permission ACTOR_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_ALL_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
@@ -76,7 +79,7 @@ public class ActorDynamicHelper {
             // user has permission
             // ACTOR_VIEW_AS_SUPERIOR_PERMISSION AND
             // user or his subordinates is manager of the actor OR
-            if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION)) {
+            if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION)) {
                 raw += "manager.id = " + actor.id + " OR ";
 
                 String subordinatesString = ActorHierarchy.getSubordinatesAsString(actor.id, ",");
@@ -92,7 +95,9 @@ public class ActorDynamicHelper {
         ExpressionList<Actor> expressionList;
 
         if (orderBy != null) {
-            expressionList = ActorDao.findActor.setOrderBy(orderBy).where();
+            expressionList = ActorDao.findActor.where();
+            Utilities.updateExpressionListWithOrderBy(orderBy,expressionList);
+            
         } else {
             expressionList = ActorDao.findActor.where();
         }
@@ -137,7 +142,7 @@ public class ActorDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
@@ -171,7 +176,7 @@ public class ActorDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (DeadboltUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 

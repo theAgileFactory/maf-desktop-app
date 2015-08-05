@@ -21,7 +21,7 @@ import java.util.List;
 
 import models.pmo.Stakeholder;
 import models.pmo.StakeholderType;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.ExpressionList;
 

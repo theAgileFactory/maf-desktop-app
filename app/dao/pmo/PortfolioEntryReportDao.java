@@ -22,7 +22,7 @@ import java.util.List;
 import models.pmo.PortfolioEntryReport;
 import models.pmo.PortfolioEntryReportStatusType;
 import play.Play;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 import com.avaje.ebean.ExpressionList;
 

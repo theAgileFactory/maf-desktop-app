@@ -27,12 +27,15 @@ import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 
 import constants.IMafConstants;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.security.SecurityUtils;
+import framework.security.SecurityUtils;
+import framework.utils.Utilities;
 
 /**
  * Provides all method to compute the dynamic permissions for a report.
@@ -61,14 +64,14 @@ public class ReportingDynamicHelper {
 
         // user has permission REPORTING_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_ALL_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission
         // REPORTING_VIEW_AS_VIEWER_PERMISSION AND
         // (the report is public OR the user has access to it)
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION)) {
             raw += "(isPublic = 1 OR reportingAuthorization.principals.uid='" + userAccount.getIdentifier() + "') OR ";
         }
 
@@ -77,9 +80,10 @@ public class ReportingDynamicHelper {
         ExpressionList<Reporting> expressionList;
 
         if (orderBy != null) {
-            expressionList = Reporting.find.setDistinct(true).setOrderBy(orderBy).where();
+            expressionList = Reporting.find.where();
+            Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         } else {
-            expressionList = Reporting.find.setDistinct(true).where();
+            expressionList = Reporting.find.where();
         }
 
         expressionList = expressionList.eq("deleted", false);
@@ -100,7 +104,7 @@ public class ReportingDynamicHelper {
      */
     public static boolean isReportViewAllowed(Long reportingId) {
         try {
-            return getReportsViewAllowedAsQuery(Expr.eq("id", reportingId), null).findRowCount() > 0 ? true : false;
+            return getReportsViewAllowedAsQuery(Expr.eq("id", reportingId), null).query().setDistinct(true).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("ReportingDynamicHelper.isReportViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());

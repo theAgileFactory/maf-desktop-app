@@ -27,7 +27,7 @@ import com.google.common.collect.Lists;
 import models.reporting.Reporting;
 import models.reporting.ReportingAuthorization;
 import models.reporting.ReportingCategory;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 import play.mvc.Http;
 
 /**

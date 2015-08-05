@@ -27,13 +27,13 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.form.ReportingFormData;
 import utils.table.ReportingListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.reporting.ReportingDao;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 
 /**
  * The controller which allows to manage the reports.
@@ -133,7 +133,7 @@ public class ReportingController extends Controller {
 
         reportingFormData.fill(report);
         report.save();
-        report.reportingAuthorization.saveManyToManyAssociations("principals");
+        // report.reportingAuthorization.saveManyToManyAssociations("principals");
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.reporting.edit.successful"));
 

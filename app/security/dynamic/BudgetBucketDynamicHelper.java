@@ -31,12 +31,15 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.finance.BudgetBucketDAO;
 import dao.pmo.ActorDao;
-import framework.security.DeadboltUtils;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.security.SecurityUtils;
+import framework.security.SecurityUtils;
+import framework.utils.Utilities;
 
 /**
  * Provides all method to compute the dynamic permissions for a budget bucket.
@@ -66,14 +69,14 @@ public class BudgetBucketDynamicHelper {
 
         // user has permission BUDGET_BUCKET_VIEW_ALL_PERMISSION
         // OR
-        if (DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
+        if (SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION AND
         // user or his subordinates is owner of the budgetBucket OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
+        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
 
             raw += "owner.id = " + actor.id + " OR ";
 
@@ -89,7 +92,8 @@ public class BudgetBucketDynamicHelper {
         ExpressionList<BudgetBucket> expressionList;
 
         if (orderBy != null) {
-            expressionList = BudgetBucketDAO.findBudgetBucket.setOrderBy(orderBy).where();
+            expressionList = BudgetBucketDAO.findBudgetBucket.where();
+            Utilities.updateExpressionListWithOrderBy(orderBy,expressionList);
         } else {
             expressionList = BudgetBucketDAO.findBudgetBucket.where();
         }
@@ -134,7 +138,7 @@ public class BudgetBucketDynamicHelper {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission BUDGET_BUCKET_EDIT_ALL_PERMISSION OR
-            if (DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION)) {
+            if (SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION)) {
                 Logger.debug("has BUDGET_BUCKET_EDIT_ALL_PERMISSION");
                 return true;
             }
@@ -142,7 +146,7 @@ public class BudgetBucketDynamicHelper {
             // user has permission BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION
             // AND is owner or responsible of the budget bucket
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && DeadboltUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION)
+            if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION)
                     && (actor.id.equals(budgetBucket.owner.id) || ActorHierarchy.getSubordinatesAsId(actor.id).contains(budgetBucket.owner.id))) {
 
                 Logger.debug("has BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION and is owner or responsible");

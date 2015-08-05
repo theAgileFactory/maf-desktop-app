@@ -21,7 +21,7 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @if(release!= null && !release.deleted) {
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION, "", release.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION, "", release.id)) {
         <a href="@controllers.core.routes.ReleaseController.view(release.id)">
     }
     
@@ -31,7 +31,7 @@
         <span style="text-decoration: line-through">@release.getName</span>
     }
     
-    @if(security.DefaultDynamicResourceHandler.isAllowed(security.DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION, "", release.id)) {
+    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION, "", release.id)) {
         </a>
     }
 } else {

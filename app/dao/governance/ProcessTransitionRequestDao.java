@@ -21,7 +21,7 @@ import java.util.List;
 
 import models.governance.ProcessTransitionRequest;
 import models.governance.ProcessTransitionRequest.RequestType;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 import framework.utils.Pagination;
 
 /**

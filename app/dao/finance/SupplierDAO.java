@@ -22,7 +22,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import models.finance.Supplier;
-import play.db.ebean.Model.Finder;
+import com.avaje.ebean.Model.Finder;
 
 /**
  * DAO for the {@link Supplier} object.
