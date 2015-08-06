@@ -35,6 +35,7 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.reporting.ReportingDao;
 import dao.timesheet.TimesheetDao;
+import framework.security.SecurityUtils;
 import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -415,7 +416,7 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
         }
 
         // set the result
-        Cache.set(cacheKey, result.get(5000l), CACHE_TTL);
+        Cache.set(cacheKey, result.get(SecurityUtils.DEFAULT_TIMEOUT), CACHE_TTL);
 
         return result;
     }
