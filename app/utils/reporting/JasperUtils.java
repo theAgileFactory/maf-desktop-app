@@ -219,7 +219,7 @@ public class JasperUtils {
 
                 } catch (Exception e) {
 
-                    Logger.error(e.getMessage());
+                    log.error(e.getMessage());
 
                     if (out != null) {
                         try {
@@ -243,12 +243,14 @@ public class JasperUtils {
      */
     public static Connection getDataAdapter() {
         try {
-            return DriverManager.getConnection(play.Configuration.root().getString("db.default.url"), play.Configuration.root().getString("db.default.user"),
+            return DriverManager.getConnection(
+                    play.Configuration.root().getString("db.default.url"), 
+                    play.Configuration.root().getString("db.default.username"),
                     play.Configuration.root().getString("db.default.password"));
         } catch (SQLException e) {
-            Logger.error(e.getMessage());
-            return null;
+            log.error("Unable to initialize the access to the database for the reports",e);
         }
+        return null;
     }
 
     /**
@@ -265,13 +267,15 @@ public class JasperUtils {
                     JasperDesign jasperDesign = JRXmlLoader.load(reportFile);
                     JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
                     jasperReports.put(report.template, jasperReport);
-                    Logger.debug("the jasper report " + report.template + " has been loaded");
+                    if(log.isDebugEnabled()){
+                        log.debug("the jasper report " + report.template + " has been loaded");
+                    }
                 } catch (Exception e) {
-                    Logger.error(e.getMessage());
+                    log.error("Error while loading the report "+report.template,e.getMessage());
                 }
 
             } else {
-                Logger.error("impossible to find the jasper report for: " + report.template);
+                log.error("Jasper report " + report.template+" not found !");
             }
         }
 

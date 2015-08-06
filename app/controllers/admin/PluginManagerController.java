@@ -37,6 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
+import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
 import security.DefaultDeadboltHandler;
@@ -240,7 +241,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result image(String identifier, boolean isBigImage) {
+    public static Promise<Result> image(String identifier, boolean isBigImage) {
         IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
         InputStream inStream = null;
         if (isBigImage) {
@@ -249,9 +250,16 @@ public class PluginManagerController extends Controller {
             inStream = pluginManagerService.getPluginSmallImageSrc(identifier);
         }
         if (inStream == null) {
-            return notFound();
+            if(log.isDebugEnabled()){
+                log.debug("Image ["+(isBigImage?"BIG":"SMALL")+"] not found for plugin "+identifier);
+            }
+            return Promise.promise(() -> notFound());
         }
-        return ok(inStream);
+        if(log.isDebugEnabled()){
+            log.debug("Image ["+(isBigImage?"BIG":"SMALL")+"] was found for plugin "+identifier);
+        }
+        final InputStream finalInStream = inStream;
+        return Promise.promise(() ->ok(finalInStream));
     }
 
     /**
