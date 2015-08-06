@@ -166,43 +166,44 @@ public abstract class AuthenticationConfigurationUtils {
         }
         log.info("SAML configuration found, loading properties");
         try {
-//            PropertiesConfiguration cfg = new PropertiesConfiguration(samlConfigFile);
-//            String publicUrl = Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url");
-//            if (cfg.containsKey("maf.saml.entityId")) {
-//                saml2Client.setSpEntityId(cfg.getString("maf.saml.entityId"));
-//            } else {
-//                saml2Client.setSpEntityId(publicUrl);
-//            }
-//
-//            // Set the user profile attribute defined in the configuration (if
-//            // any)
-//            if (cfg.containsKey("maf.saml.profile.attribute")) {
-//                ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class)
-//                        .setUserProfileAttributeName(cfg.getString("maf.saml.profile.attribute"));
-//            }
-//
-//            File configurationDirectory = samlConfigFile.getParentFile();
-//            saml2Client.setKeystorePath(new File(configurationDirectory, cfg.getString("maf.saml.keystorefile")).getAbsolutePath());
-//            saml2Client.setKeystorePassword(cfg.getString("maf.saml.keystore.password"));
-//            saml2Client.setPrivateKeyPassword(cfg.getString("maf.saml.privatekey.password"));
-//            saml2Client.setIdpMetadataPath(new File(configurationDirectory, cfg.getString("maf.saml.idpmetadata")).getAbsolutePath());
-//            saml2Client.setCallbackUrl(publicUrl + controllers.sso.routes.AlternativeFederatedCallbackController.callback().url() + SAML_CLIENT_ID_EXTENTION);
-//            saml2Client.setMaximumAuthenticationLifetime(cfg.getInt("maf.saml.maximum.authentication.lifetime"));
-//
-//            // Write the client meta data to the file system
-//            String spMetaDataFileName = cfg.getString("maf.saml.spmetadata");
-//            FileUtils.write(new File(configurationDirectory, spMetaDataFileName), saml2Client.printClientMetadata());
-//            log.info("Service Provider meta-data written to the file system in " + spMetaDataFileName);
-//
+            PropertiesConfiguration cfg = new PropertiesConfiguration(samlConfigFile);
+            String publicUrl = Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url");
+            if (cfg.containsKey("maf.saml.entityId")) {
+                saml2Client.setSpEntityId(cfg.getString("maf.saml.entityId"));
+            } else {
+                saml2Client.setSpEntityId(publicUrl);
+            }
+
+            // Set the user profile attribute defined in the configuration (if
+            // any)
+            if (cfg.containsKey("maf.saml.profile.attribute")) {
+                ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class)
+                        .setUserProfileAttributeName(cfg.getString("maf.saml.profile.attribute"));
+            }
+
+            File configurationDirectory = samlConfigFile.getParentFile();
+            saml2Client.setKeystorePath(new File(configurationDirectory, cfg.getString("maf.saml.keystorefile")).getAbsolutePath());
+            saml2Client.setKeystorePassword(cfg.getString("maf.saml.keystore.password"));
+            saml2Client.setPrivateKeyPassword(cfg.getString("maf.saml.privatekey.password"));
+            saml2Client.setIdpMetadataPath(new File(configurationDirectory, cfg.getString("maf.saml.idpmetadata")).getAbsolutePath());
+            //saml2Client.setCallbackUrl(publicUrl + controllers.sso.routes.AlternativeFederatedCallbackController.callback().url() + SAML_CLIENT_ID_EXTENTION);
+            saml2Client.setMaximumAuthenticationLifetime(cfg.getInt("maf.saml.maximum.authentication.lifetime"));
+
+            // Write the client meta data to the file system
+            String spMetaDataFileName = cfg.getString("maf.saml.spmetadata");
+            FileUtils.write(new File(configurationDirectory, spMetaDataFileName), saml2Client.printClientMetadata());
+            log.info("Service Provider meta-data written to the file system in " + spMetaDataFileName);
+
 //            final Clients clients = new Clients(
 //                    publicUrl + controllers.sso.routes.AlternativeFederatedCallbackController.callback().url() + SAML_CLIENT_ID_EXTENTION, saml2Client);
-//            clients.init();
-//            Config.setClients(clients);
-//            if (cfg.containsKey("maf.saml.logout.url")) {
-//                Config.setDefaultLogoutUrl(cfg.getString("maf.saml.logout.url"));
-//            } else {
-//                Config.setDefaultLogoutUrl(controllers.sso.routes.Authenticator.logoutFederated().url());
-//            }
+            final Clients clients = new Clients(publicUrl+controllers.sso.routes.Authenticator.callback().url(),saml2Client);
+            clients.init();
+            Config.setClients(clients);
+            if (cfg.containsKey("maf.saml.logout.url")) {
+                Config.setDefaultLogoutUrl(cfg.getString("maf.saml.logout.url"));
+            } else {
+                Config.setDefaultLogoutUrl(controllers.sso.routes.Authenticator.logoutFederated().url());
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to initialize the FEDERATED SSO", e);
         }

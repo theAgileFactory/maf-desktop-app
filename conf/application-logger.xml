@@ -45,9 +45,9 @@
 	<logger name="play" level="INFO" />
 	<logger name="application" level="INFO" />
 	<logger name="logger.tools" level="INFO" />
-	<logger name="controllers" level="DEBUG" />
-	<logger name="framework.services.api" level="DEBUG" />
-	<logger name="play.modules.swagger" level="DEBUG" />
+	<logger name="controllers.sso" level="DEBUG" />
+	<logger name="security" level="DEBUG" />
+	<logger name="org.pac4j" level="DEBUG" />
 	
 	<logger name="framework.services.audit.AuditLoggerUtilities" level="INFO">
 		<appender-ref ref="FILE_AUDIT" />
