@@ -40,7 +40,7 @@ import framework.utils.Msg;
  * @author Pierre-Yves Cloux
  */
 public class DefaultDeadboltHandler extends CommonDeadboltHandler {
-    private DefaultDynamicResourceHandler dynamicResourceHandler=new DefaultDynamicResourceHandler();
+    private DefaultDynamicResourceHandler dynamicResourceHandler = new DefaultDynamicResourceHandler();
 
     @Override
     public Result redirectToLoginPage(String redirectUrl) {
@@ -54,7 +54,7 @@ public class DefaultDeadboltHandler extends CommonDeadboltHandler {
 
     @Override
     public Promise<Optional<DynamicResourceHandler>> getDynamicResourceHandler(Http.Context context) {
-        //WARNING : context can be null in some cases
+        // WARNING : context can be null in some cases
         return Promise.promise(() -> Optional.of(getDynamicResourceHandler()));
     }
 
