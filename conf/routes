@@ -853,47 +853,47 @@ GET     /api/core/root/report/reload                                    controll
 GET     /api/core/root/kpi/reload                                       controllers.api.core.RootApiController.kpiReload()
 
 # Doc
-GET     /api-docs               controllers.ApiHelpController.getResources
+GET     /api-docs               @pl.matisoft.swagger.ApiHelpController.getResources
 
-GET     /api-docs/api/system    controllers.ApiHelpController.getResource(path = "/api/system")
+GET     /api-docs/api/system    @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/system")
 
-GET     /api-docs/api/core/actor                                          controllers.ApiHelpController.getResource(path = "/api/core/actor")
-GET     /api-docs/api/core/actor-capacity                                 controllers.ApiHelpController.getResource(path = "/api/core/actor-capacity")
-GET     /api-docs/api/core/actor-type                                     controllers.ApiHelpController.getResource(path = "/api/core/actor-type")
+GET     /api-docs/api/core/actor                                          @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/actor")
+GET     /api-docs/api/core/actor-capacity                                 @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/actor-capacity")
+GET     /api-docs/api/core/actor-type                                     @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/actor-type")
 
-GET     /api-docs/api/core/competency                                     controllers.ApiHelpController.getResource(path = "/api/core/competency")
+GET     /api-docs/api/core/competency                                     @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/competency")
 
-GET     /api-docs/api/core/org-unit                                       controllers.ApiHelpController.getResource(path = "/api/core/org-unit")
-GET     /api-docs/api/core/org-unit-type                                  controllers.ApiHelpController.getResource(path = "/api/core/org-unit-type")
+GET     /api-docs/api/core/org-unit                                       @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/org-unit")
+GET     /api-docs/api/core/org-unit-type                                  @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/org-unit-type")
 
-GET     /api-docs/api/core/portfolio                                      controllers.ApiHelpController.getResource(path = "/api/core/portfolio")
-GET     /api-docs/api/core/portfolio-type                                 controllers.ApiHelpController.getResource(path = "/api/core/portfolio-type")
-GET     /api-docs/api/core/portfolio-entry                                controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry")
-GET     /api-docs/api/core/portfolio-entry-event-type                     controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-event-type")
-GET     /api-docs/api/core/portfolio-entry-planning-package-group         controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-planning-package-group")
-GET     /api-docs/api/core/portfolio-entry-report-status-type             controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-report-status-type")
-GET     /api-docs/api/core/portfolio-entry-type                           controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-type")
-GET     /api-docs/api/core/portfolio-entry-risk-type                      controllers.ApiHelpController.getResource(path = "/api/core/portfolio-entry-risk-type")
+GET     /api-docs/api/core/portfolio                                      @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio")
+GET     /api-docs/api/core/portfolio-type                                 @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio-type")
+GET     /api-docs/api/core/portfolio-entry                                @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio-entry")
+GET     /api-docs/api/core/portfolio-entry-event-type                     @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio-entry-event-type")
+GET     /api-docs/api/core/portfolio-entry-planning-package-group         @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio-entry-planning-package-group")
+GET     /api-docs/api/core/portfolio-entry-report-status-type             @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio-entry-report-status-type")
+GET     /api-docs/api/core/portfolio-entry-type                           @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio-entry-type")
+GET     /api-docs/api/core/portfolio-entry-risk-type                      @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/portfolio-entry-risk-type")
 
-GET     /api-docs/api/core/stakeholder                                    controllers.ApiHelpController.getResource(path = "/api/core/stakeholder")
-GET     /api-docs/api/core/stakeholder-type                               controllers.ApiHelpController.getResource(path = "/api/core/stakeholder-type")
+GET     /api-docs/api/core/stakeholder                                    @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/stakeholder")
+GET     /api-docs/api/core/stakeholder-type                               @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/stakeholder-type")
 
-GET     /api-docs/api/core/release                                        controllers.ApiHelpController.getResource(path = "/api/core/release")
+GET     /api-docs/api/core/release                                        @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/release")
 
-GET     /api-docs/api/core/requirement-severity                           controllers.ApiHelpController.getResource(path = "/api/core/requirement-severity")
-GET     /api-docs/api/core/requirement-priority                           controllers.ApiHelpController.getResource(path = "/api/core/requirement-priority")
-GET     /api-docs/api/core/requirement-status                             controllers.ApiHelpController.getResource(path = "/api/core/requirement-status")
+GET     /api-docs/api/core/requirement-severity                           @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/requirement-severity")
+GET     /api-docs/api/core/requirement-priority                           @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/requirement-priority")
+GET     /api-docs/api/core/requirement-status                             @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/requirement-status")
 
-GET     /api-docs/api/core/budget-bucket                                  controllers.ApiHelpController.getResource(path = "/api/core/budget-bucket")
+GET     /api-docs/api/core/budget-bucket                                  @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/budget-bucket")
 
-GET     /api-docs/api/core/purchase-order                                 controllers.ApiHelpController.getResource(path = "/api/core/purchase-order")
+GET     /api-docs/api/core/purchase-order                                 @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/purchase-order")
 
-GET     /api-docs/api/core/cost-center                                    controllers.ApiHelpController.getResource(path = "/api/core/cost-center")
+GET     /api-docs/api/core/cost-center                                    @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/cost-center")
 
-GET     /api-docs/api/core/currency                                       controllers.ApiHelpController.getResource(path = "/api/core/currency")
+GET     /api-docs/api/core/currency                                       @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/currency")
 
-GET     /api-docs/api/core/supplier                                       controllers.ApiHelpController.getResource(path = "/api/core/supplier")
+GET     /api-docs/api/core/supplier                                       @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/supplier")
 
-GET     /api-docs/api/core/life-cycle-process                             controllers.ApiHelpController.getResource(path = "/api/core/life-cycle-process")
+GET     /api-docs/api/core/life-cycle-process                             @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/life-cycle-process")
 
-GET     /api-docs/api/core/kpi                                            controllers.ApiHelpController.getResource(path = "/api/core/kpi")
+GET     /api-docs/api/core/kpi                                            @pl.matisoft.swagger.ApiHelpController.getResource(path = "/api/core/kpi")
