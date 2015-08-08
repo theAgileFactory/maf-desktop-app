@@ -71,7 +71,7 @@ public class ReportingController extends Controller {
      * one.
      */
     @Restrict({ @Group(IMafConstants.REPORTING_VIEW_ALL_PERMISSION), @Group(IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION) })
-    public static Result index() {
+    public Result index() {
         List<ReportingCategory> roots = ReportingDao.getReportingCategoryRootsAsList();
         Long categoryId = null;
         if (roots != null && roots.size() > 0) {
@@ -87,14 +87,14 @@ public class ReportingController extends Controller {
      * @param categoryId
      *            the category id
      */
-    public static Result indexForCategory(Long categoryId) {
+    public Result indexForCategory(Long categoryId) {
         return ok(views.html.core.reporting.index.render(categoryId));
     }
 
     /**
      * Action that loads the children of a category.
      */
-    public static Result loadChildren() {
+    public Result loadChildren() {
 
         try {
 
@@ -117,7 +117,7 @@ public class ReportingController extends Controller {
      * Display the list of authorized reports for a category.
      */
     @Restrict({ @Group(IMafConstants.REPORTING_VIEW_ALL_PERMISSION), @Group(IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION) })
-    public static Result listFragment() {
+    public Result listFragment() {
 
         if (request().getQueryString("categoryId") != null) {
 
@@ -159,7 +159,7 @@ public class ReportingController extends Controller {
      */
     @With(CheckReportingExists.class)
     @Dynamic(DefaultDynamicResourceHandler.REPORTING_VIEW_DYNAMIC_PERMISSION)
-    public static Result parametrize(Long id) {
+    public Result parametrize(Long id) {
 
         // get the report
         Reporting report = ReportingDao.getReportingById(id);
@@ -175,7 +175,7 @@ public class ReportingController extends Controller {
      */
     @With(CheckReportingExists.class)
     @Dynamic(DefaultDynamicResourceHandler.REPORTING_VIEW_DYNAMIC_PERMISSION)
-    public static Result generate() {
+    public Result generate() {
 
         // bind the form
         Form<ReportingParamsFormData> boundForm = formTemplate.bindFromRequest();

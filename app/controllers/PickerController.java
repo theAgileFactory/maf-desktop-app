@@ -42,28 +42,28 @@ public class PickerController extends Controller {
     /**
      * The manager picker.
      */
-    public static Result manager() {
+    public Result manager() {
         return ActorPicker.pickerTemplate.handle(request());
     }
 
     /**
      * The owner picker.
      */
-    public static Result owner() {
+    public Result owner() {
         return ActorPicker.pickerTemplate.handle(request());
     }
 
     /**
      * The actor picker.
      */
-    public static Result actor() {
+    public Result actor() {
         return ActorPicker.pickerTemplate.handle(request());
     }
 
     /**
      * The actors without uid (null or empty).
      */
-    public static Result actorWithoutUid() {
+    public Result actorWithoutUid() {
         return ActorPicker.pickerWithoutUidTemplate.handle(request());
     }
 
@@ -72,7 +72,7 @@ public class PickerController extends Controller {
      * 
      * The portfolio entry id is given as a picker parameter.
      */
-    public static Result actorOfPortfolioEntry() {
+    public Result actorOfPortfolioEntry() {
         return ActorPicker.pickerForPortfolioEntryTemplate.handle(request());
     }
 
@@ -81,7 +81,7 @@ public class PickerController extends Controller {
      * 
      * The org unit id is given as a picker parameter.
      */
-    public static Result actorOfOrgUnit() {
+    public Result actorOfOrgUnit() {
         return ActorPicker.pickerForOrgUnitTemplate.handle(request());
     }
 
@@ -90,28 +90,28 @@ public class PickerController extends Controller {
      * 
      * The competency id is given as a picker parameter.
      */
-    public static Result actorWithCompetency() {
+    public Result actorWithCompetency() {
         return ActorPicker.pickerWithCompetencyTemplate.handle(request());
     }
 
     /**
      * The org unit picker.
      */
-    public static Result orgUnit() {
+    public Result orgUnit() {
         return OrgUnitPicker.pickerTemplate.handle(request());
     }
 
     /**
      * The sponsoring unit picker.
      */
-    public static Result sponsoringUnit() {
+    public Result sponsoringUnit() {
         return OrgUnitPicker.canSponsorPickerTemplate.handle(request());
     }
 
     /**
      * The delivery units picker.
      */
-    public static Result deliveryUnits() {
+    public Result deliveryUnits() {
         return OrgUnitPicker.canDeliverPickerTemplate.handle(request());
     }
 
@@ -120,35 +120,35 @@ public class PickerController extends Controller {
      * 
      * The portfolio entry id is given as a picker parameter.
      */
-    public static Result deliveryUnitsOfPortfolioEntry() {
+    public Result deliveryUnitsOfPortfolioEntry() {
         return OrgUnitPicker.canDeliverPickerForPortfolioEntryTemplate.handle(request());
     }
 
     /**
      * The cost center picker.
      */
-    public static Result costCenter() {
+    public Result costCenter() {
         return CostCenterPicker.pickerTemplate.handle(request());
     }
 
     /**
      * The portfolio picker.
      */
-    public static Result portfolio() {
+    public Result portfolio() {
         return PortfolioPicker.portfolioPickerHandler.handle(request());
     }
 
     /**
      * The budget bucket picker.
      */
-    public static Result budgetBucket() {
+    public Result budgetBucket() {
         return BudgetBucketPicker.pickerTemplate.handle(request());
     }
 
     /**
      * The principals picker (multi and by uid).
      */
-    public static Result principalsUid() {
+    public Result principalsUid() {
         return PrincipalPicker.pickerTemplateUid.handle(request());
     }
 
@@ -157,28 +157,28 @@ public class PickerController extends Controller {
      * 
      * The portfolio entry id is given as a picker parameter.
      */
-    public static Result planningPackageOfPortfolioEntry() {
+    public Result planningPackageOfPortfolioEntry() {
         return PlanningPackagePicker.pickerTemplate.handle(request());
     }
 
     /**
      * The portfolio type picker.
      */
-    public static Result portfolioType() {
+    public Result portfolioType() {
         return PortfolioTypePicker.pickerTemplate.handle(request());
     }
 
     /**
      * The portfolio entry type picker.
      */
-    public static Result portfolioEntryType() {
+    public Result portfolioEntryType() {
         return PortfolioEntryTypePicker.pickerTemplate.handle(request());
     }
 
     /**
      * The active release picker.
      */
-    public static Result activeRelease() {
+    public Result activeRelease() {
         return ReleasePicker.allActiveTemplate.handle(request());
     }
 

@@ -80,7 +80,7 @@ public class ActorApiController extends ApiController {
     @ApiOperation(value = "list the Actors", notes = "Return the list of Actors in the system", response = Actor.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getActorsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
+    public Result getActorsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
             value = "managerId", required = false) @QueryParam("managerId") Long managerId,
             @ApiParam(value = "actorTypeId", required = false) @QueryParam("actorTypeId") Long actorTypeId, @ApiParam(value = "competencyId",
                     required = false) @QueryParam("competencyId") Long competencyId,
@@ -122,7 +122,7 @@ public class ActorApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getActorById(@ApiParam(value = "actor's id", required = true) @PathParam("id") Long id) {
+    public Result getActorById(@ApiParam(value = "actor's id", required = true) @PathParam("id") Long id) {
 
         try {
             if (ActorDao.getActorById(id) == null) {
@@ -147,7 +147,7 @@ public class ActorApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getActorByUid(@ApiParam(value = "actor's uid", required = true) @PathParam("uid") String uid) {
+    public Result getActorByUid(@ApiParam(value = "actor's uid", required = true) @PathParam("uid") String uid) {
 
         try {
             if (ActorDao.getActorByUid(uid) == null) {
@@ -170,7 +170,7 @@ public class ActorApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 201, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public static Result createActor() {
+    public Result createActor() {
         try {
 
             // Json to object
@@ -238,7 +238,7 @@ public class ActorApiController extends ApiController {
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public static Result updateActor(@ApiParam(value = "An actor id", required = true) @PathParam("id") Long id) {
+    public Result updateActor(@ApiParam(value = "An actor id", required = true) @PathParam("id") Long id) {
         try {
 
             // check if actor exist

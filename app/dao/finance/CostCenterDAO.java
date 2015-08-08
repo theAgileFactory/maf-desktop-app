@@ -41,7 +41,7 @@ public abstract class CostCenterDAO {
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, CostCenter> find = new Finder<>(Long.class, CostCenter.class);
+    public static Finder<Long, CostCenter> find = new Finder<>(CostCenter.class);
 
     /**
      * Default constructor.

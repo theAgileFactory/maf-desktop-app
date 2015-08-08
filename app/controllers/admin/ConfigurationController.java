@@ -96,7 +96,7 @@ public class ConfigurationController extends Controller {
      * Display the correct page according to permission.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION), @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) })
-    public static Result index() {
+    public Result index() {
 
         if (DefaultDeadboltHandler.isAllowed(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationController.systemPreferences());
@@ -113,7 +113,7 @@ public class ConfigurationController extends Controller {
      * The system preferences page.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result systemPreferences() {
+    public Result systemPreferences() {
         return ok(views.html.admin.config.systempreferences.index.render());
     }
 
@@ -121,7 +121,7 @@ public class ConfigurationController extends Controller {
      * Form to edit the system preferences.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result editSystemPreferences() {
+    public Result editSystemPreferences() {
         Form<PrefsData> requestData = systemPreferencesFormTemplate.fill(new PrefsData());
         for (String field : editableFieldsValues) {
             PreferenceFormAndDisplayHandler.fillWithPreference(requestData, field);
@@ -133,7 +133,7 @@ public class ConfigurationController extends Controller {
      * Process the form to edit the values.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result saveSystemPreferences() {
+    public Result saveSystemPreferences() {
 
         Form<PrefsData> requestData = systemPreferencesFormTemplate.bindFromRequest();
 
@@ -167,7 +167,7 @@ public class ConfigurationController extends Controller {
      * The SMTP configuration page.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result smtp() {
+    public Result smtp() {
         return ok(views.html.admin.config.smtp.index.render());
     }
 
@@ -175,7 +175,7 @@ public class ConfigurationController extends Controller {
      * Form to edit the SMTP configuration.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result editSmtp() {
+    public Result editSmtp() {
         Form<PrefsData> requestData = systemPreferencesFormTemplate.fill(new PrefsData());
         for (String field : smtpFieldsValues) {
             PreferenceFormAndDisplayHandler.fillWithPreference(requestData, field);
@@ -187,7 +187,7 @@ public class ConfigurationController extends Controller {
      * Process the form to edit the SMTP configuration.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result saveSmtp() {
+    public Result saveSmtp() {
 
         Form<PrefsData> requestData = systemPreferencesFormTemplate.bindFromRequest();
 
@@ -220,7 +220,7 @@ public class ConfigurationController extends Controller {
      * The roles page.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result roles() {
+    public Result roles() {
 
         // get all active role types
         List<SystemLevelRoleType> roleTypes = SystemLevelRoleType.getAllActiveRoles();
@@ -243,7 +243,7 @@ public class ConfigurationController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result manageRole(Long roleTypeId) {
+    public Result manageRole(Long roleTypeId) {
 
         Form<RoleFormData> roleForm = roleFormTemplate;
 
@@ -263,7 +263,7 @@ public class ConfigurationController extends Controller {
      * Process the form to create/edit a role.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result processManageRole() {
+    public Result processManageRole() {
 
         // bind the form
         Form<RoleFormData> boundForm = roleFormTemplate.bindFromRequest();
@@ -357,7 +357,7 @@ public class ConfigurationController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-    public static Result deleteRole(Long roleTypeId) {
+    public Result deleteRole(Long roleTypeId) {
 
         SystemLevelRoleType role = SystemLevelRoleType.getActiveRoleFromId(roleTypeId);
 

@@ -99,7 +99,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result requirements(Long id, Boolean reset) {
+    public Result requirements(Long id, Boolean reset) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -169,7 +169,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result requirementsFilter(Long id) {
+    public Result requirementsFilter(Long id) {
 
         try {
 
@@ -215,7 +215,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result requirementsStatus(Long id) {
+    public Result requirementsStatus(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -353,7 +353,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result viewRequirement(Long id, Long requirementId) {
+    public Result viewRequirement(Long id, Long requirementId) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -379,7 +379,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result editRequirement(Long id, Long requirementId) {
+    public Result editRequirement(Long id, Long requirementId) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -407,7 +407,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEditRequirement() {
+    public Result processEditRequirement() {
 
         // bind the form
         Form<RequirementFormData> boundForm = formTemplate.bindFromRequest();
@@ -453,7 +453,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result iterations(Long id, Boolean reset) {
+    public Result iterations(Long id, Boolean reset) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -566,7 +566,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result iterationsFilter(Long id) {
+    public Result iterationsFilter(Long id) {
 
         try {
 
@@ -633,7 +633,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result viewIteration(Long id, Long iterationId) {
+    public Result viewIteration(Long id, Long iterationId) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -659,7 +659,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result editIteration(Long id, Long iterationId) {
+    public Result editIteration(Long id, Long iterationId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -686,7 +686,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEditIteration() {
+    public Result processEditIteration() {
 
         // bind the form
         Form<IterationFormData> boundForm = iterationFormTemplate.bindFromRequest();
@@ -730,7 +730,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result releases(Long id) {
+    public Result releases(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -761,7 +761,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result assignRelease(Long id) {
+    public Result assignRelease(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -777,7 +777,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processAssignRelease() {
+    public Result processAssignRelease() {
 
         // bind the form
         Form<ReleasePortfolioEntryFormData> boundForm = assignReleaseFormTemplate.bindFromRequest();
@@ -819,7 +819,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result unassignRelease(Long id, Long releaseId) {
+    public Result unassignRelease(Long id, Long releaseId) {
 
         ReleasePortfolioEntry association = ReleaseDAO.getReleaseByIdAndPE(releaseId, id);
 

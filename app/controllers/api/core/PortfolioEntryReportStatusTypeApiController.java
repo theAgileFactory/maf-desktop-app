@@ -55,7 +55,7 @@ public class PortfolioEntryReportStatusTypeApiController extends ApiController {
             response = PortfolioEntryReportStatusType.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result
+    public Result
             getPortfolioEntryReportStatusTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(PortfolioEntryReportDao.getPEReportStatusTypeByFilter(selectable));
@@ -77,7 +77,7 @@ public class PortfolioEntryReportStatusTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryReportStatusTypeById(
+    public Result getPortfolioEntryReportStatusTypeById(
             @ApiParam(value = "portfolio entry report status type id", required = true) @PathParam("id") Long id) {
 
         try {

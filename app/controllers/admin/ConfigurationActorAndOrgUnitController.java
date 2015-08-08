@@ -68,7 +68,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
     /**
      * Display the lists of data.
      */
-    public static Result list() {
+    public Result list() {
 
         // actor types
         List<ActorType> actorTypes = ActorDao.getActorTypeAsList();
@@ -119,7 +119,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param actorTypeId
      *            the actor type id (set 0 for create case)
      */
-    public static Result manageActorType(Long actorTypeId) {
+    public Result manageActorType(Long actorTypeId) {
 
         // initiate the form with the template
         Form<ActorTypeFormData> actorTypeForm = actorTypeFormTemplate;
@@ -140,7 +140,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
     /**
      * Process the edit/create form of an actor type.
      */
-    public static Result saveActorType() {
+    public Result saveActorType() {
 
         // bind the form
         Form<ActorTypeFormData> boundForm = actorTypeFormTemplate.bindFromRequest();
@@ -200,7 +200,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param actorTypeId
      *            the actor type id
      */
-    public static Result deleteActorType(Long actorTypeId) {
+    public Result deleteActorType(Long actorTypeId) {
         ActorType actorType = ActorDao.getActorTypeById(actorTypeId);
 
         actorType.doDelete();
@@ -218,7 +218,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param orgUnitTypeId
      *            the org unit type id (set 0 for create case)
      */
-    public static Result manageOrgUnitType(Long orgUnitTypeId) {
+    public Result manageOrgUnitType(Long orgUnitTypeId) {
 
         // initiate the form with the template
         Form<OrgUnitTypeFormData> orgUnitTypeForm = orgUnitTypeFormTemplate;
@@ -238,7 +238,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
     /**
      * Process the edit/create form of an org unit type.
      */
-    public static Result saveOrgUnitType() {
+    public Result saveOrgUnitType() {
 
         // bind the form
         Form<OrgUnitTypeFormData> boundForm = orgUnitTypeFormTemplate.bindFromRequest();
@@ -284,7 +284,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param orgUnitTypeId
      *            the org unit type id
      */
-    public static Result deleteOrgUnitType(Long orgUnitTypeId) {
+    public Result deleteOrgUnitType(Long orgUnitTypeId) {
         OrgUnitType orgUnitType = OrgUnitDao.getOrgUnitTypeById(orgUnitTypeId);
 
         orgUnitType.doDelete();
@@ -302,7 +302,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param competencyId
      *            the competency id (set 0 for create case)
      */
-    public static Result manageCompetency(Long competencyId) {
+    public Result manageCompetency(Long competencyId) {
 
         // initiate the form with the template
         Form<CompetencyFormData> competencyForm = competencyFormTemplate;
@@ -322,7 +322,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
     /**
      * Process the edit/create form of a competency.
      */
-    public static Result processManageCompetency() {
+    public Result processManageCompetency() {
 
         // bind the form
         Form<CompetencyFormData> boundForm = competencyFormTemplate.bindFromRequest();
@@ -368,7 +368,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param competencyId
      *            the competency id
      */
-    public static Result deleteCompetency(Long competencyId) {
+    public Result deleteCompetency(Long competencyId) {
 
         Competency competency = ActorDao.getCompetencyById(competencyId);
 
@@ -387,7 +387,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param stakeholderTypeId
      *            the stakeholder type id (set 0 for create case)
      */
-    public static Result manageStakeholderType(Long stakeholderTypeId) {
+    public Result manageStakeholderType(Long stakeholderTypeId) {
 
         // initiate the form with the template
         Form<StakeholderTypeFormData> stakeholderTypeForm = stakeholderTypeFormTemplate;
@@ -407,7 +407,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
     /**
      * Process the edit/create form of a stakeholder type.
      */
-    public static Result saveStakeholderType() {
+    public Result saveStakeholderType() {
 
         // bind the form
         Form<StakeholderTypeFormData> boundForm = stakeholderTypeFormTemplate.bindFromRequest();
@@ -457,7 +457,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      * @param stakeholderTypeId
      *            the stakeholder type id
      */
-    public static Result deleteStakeholderType(Long stakeholderTypeId) {
+    public Result deleteStakeholderType(Long stakeholderTypeId) {
 
         StakeholderType stakeholderType = StakeholderDao.getStakeholderTypeById(stakeholderTypeId);
 

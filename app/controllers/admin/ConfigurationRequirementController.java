@@ -61,7 +61,7 @@ public class ConfigurationRequirementController extends Controller {
     /**
      * Display the lists of data.
      */
-    public static Result list() {
+    public Result list() {
 
         // status
         List<RequirementStatus> requirementStatus = RequirementDAO.getRequirementStatusAsList();
@@ -103,7 +103,7 @@ public class ConfigurationRequirementController extends Controller {
      * @param statusId
      *            the requirement status id (set 0 for create case)
      */
-    public static Result manageRequirementStatus(Long statusId) {
+    public Result manageRequirementStatus(Long statusId) {
 
         // initiate the form with the template
         Form<RequirementStatusFormData> statusForm = statusFormTemplate;
@@ -123,7 +123,7 @@ public class ConfigurationRequirementController extends Controller {
     /**
      * Process the edit/create form of a requirement status.
      */
-    public static Result saveRequirementStatus() {
+    public Result saveRequirementStatus() {
 
         // bind the form
         Form<RequirementStatusFormData> boundForm = statusFormTemplate.bindFromRequest();
@@ -169,7 +169,7 @@ public class ConfigurationRequirementController extends Controller {
      * @param statusId
      *            the requirement status id
      */
-    public static Result deleteRequirementStatus(Long statusId) {
+    public Result deleteRequirementStatus(Long statusId) {
         RequirementStatus status = RequirementDAO.getRequirementStatusById(statusId);
 
         status.doDelete();
@@ -187,7 +187,7 @@ public class ConfigurationRequirementController extends Controller {
      * @param priorityId
      *            the requirement priority id (set 0 for create case)
      */
-    public static Result manageRequirementPriority(Long priorityId) {
+    public Result manageRequirementPriority(Long priorityId) {
         // initiate the form with the template
         Form<RequirementPriorityFormData> priorityForm = priorityFormTemplate;
 
@@ -206,7 +206,7 @@ public class ConfigurationRequirementController extends Controller {
     /**
      * Process the edit/create form of a requirement priority.
      */
-    public static Result saveRequirementPriority() {
+    public Result saveRequirementPriority() {
         // bind the form
         Form<RequirementPriorityFormData> boundForm = priorityFormTemplate.bindFromRequest();
 
@@ -251,7 +251,7 @@ public class ConfigurationRequirementController extends Controller {
      * @param priorityId
      *            the requirement priority id
      */
-    public static Result deleteRequirementPriority(Long priorityId) {
+    public Result deleteRequirementPriority(Long priorityId) {
         RequirementPriority priority = RequirementDAO.getRequirementPriorityById(priorityId);
 
         priority.doDelete();
@@ -269,7 +269,7 @@ public class ConfigurationRequirementController extends Controller {
      * @param severityId
      *            the requirement severity id (set 0 for create case)
      */
-    public static Result manageRequirementSeverity(Long severityId) {
+    public Result manageRequirementSeverity(Long severityId) {
         // initiate the form with the template
         Form<RequirementSeverityFormData> severityForm = severityFormTemplate;
 
@@ -288,7 +288,7 @@ public class ConfigurationRequirementController extends Controller {
     /**
      * Process the edit/create form of a requirement severity.
      */
-    public static Result saveRequirementSeverity() {
+    public Result saveRequirementSeverity() {
         // bind the form
         Form<RequirementSeverityFormData> boundForm = severityFormTemplate.bindFromRequest();
 
@@ -333,7 +333,7 @@ public class ConfigurationRequirementController extends Controller {
      * @param severityId
      *            the requirement severity id
      */
-    public static Result deleteRequirementSeverity(Long severityId) {
+    public Result deleteRequirementSeverity(Long severityId) {
         RequirementSeverity severity = RequirementDAO.getRequirementSeverityById(severityId);
 
         severity.doDelete();

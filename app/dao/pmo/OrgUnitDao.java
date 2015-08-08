@@ -46,9 +46,9 @@ import framework.utils.Pagination;
  */
 public abstract class OrgUnitDao {
 
-    public static Finder<Long, OrgUnit> findOrgUnit = new Finder<>(Long.class, OrgUnit.class);
+    public static Finder<Long, OrgUnit> findOrgUnit = new Finder<>(OrgUnit.class);
 
-    public static Finder<Long, OrgUnitType> findOrgUnitType = new Finder<>(Long.class, OrgUnitType.class);
+    public static Finder<Long, OrgUnitType> findOrgUnitType = new Finder<>(OrgUnitType.class);
 
     /**
      * Default constructor.

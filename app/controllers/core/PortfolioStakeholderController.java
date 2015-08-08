@@ -50,7 +50,7 @@ public class PortfolioStakeholderController extends Controller {
      *            the stakeholder id (set to 0 for create case)
      */
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
-    public static Result manage(Long id, Long stakeholderId) {
+    public Result manage(Long id, Long stakeholderId) {
 
         // get the portfolio
         Portfolio portfolio = PortfolioDao.getPortfolioById(id);
@@ -77,7 +77,7 @@ public class PortfolioStakeholderController extends Controller {
      * Perform the save for a new/update portfolio stakeholder.
      */
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
-    public static Result save() {
+    public Result save() {
 
         // bind the form
         Form<StakeholderFormData> boundForm = formTemplate.bindFromRequest();
@@ -137,7 +137,7 @@ public class PortfolioStakeholderController extends Controller {
      *            the stakeholder id
      */
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
-    public static Result delete(Long id, Long stakeholderId) {
+    public Result delete(Long id, Long stakeholderId) {
 
         // get the stakeholder
         Stakeholder stakeholder = StakeholderDao.getStakeholderById(stakeholderId);

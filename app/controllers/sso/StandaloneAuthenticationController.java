@@ -64,7 +64,7 @@ public class StandaloneAuthenticationController extends Controller {
     /**
      * Display the authentication form.
      */
-    public static Result displayLoginForm() {
+    public Result displayLoginForm() {
         FormClient formClient = (FormClient) Config.getClients().findClient("FormClient");
         String errorParameter = request().getQueryString(ERROR_PARAMETER);
         boolean hasError = false;
@@ -89,7 +89,7 @@ public class StandaloneAuthenticationController extends Controller {
      * @param uuid
      *            the unique captcha id
      */
-    public static Promise<Result> getCaptchaImage(final String uuid) {
+    public Promise<Result> getCaptchaImage(final String uuid) {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -103,7 +103,7 @@ public class StandaloneAuthenticationController extends Controller {
     /**
      * Display reset password form.
      */
-    public static Result displayResetPasswordForm() {
+    public Result displayResetPasswordForm() {
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest();
         String encodedUuid = new String(Base64.encodeBase64(UUID.randomUUID().toString().getBytes(), false, true));
         Form<ResetPasswordRequest> formLoaded = passwordResetRequestForm.fill(resetPasswordRequest);
@@ -116,7 +116,7 @@ public class StandaloneAuthenticationController extends Controller {
      * @param uuid
      *            the user uid
      */
-    public static Result triggerResetPassword(final String uuid) {
+    public Result triggerResetPassword(final String uuid) {
         Form<ResetPasswordRequest> boundForm = passwordResetRequestForm.bindFromRequest();
         if (boundForm.hasErrors()) {
             return badRequest(reset_password.render(uuid, boundForm));

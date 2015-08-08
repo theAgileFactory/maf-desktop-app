@@ -72,7 +72,7 @@ public class PortfolioController extends Controller {
      */
     @With(CheckPortfolioExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION)
-    public static Result overview(Long id) {
+    public Result overview(Long id) {
 
         // get the portfolio
         Portfolio portfolio = PortfolioDao.getPortfolioById(id);
@@ -106,7 +106,7 @@ public class PortfolioController extends Controller {
      */
     @With(CheckPortfolioExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION)
-    public static Result view(Long id, Integer portfolioEntryPage, Integer stakeholderPage) {
+    public Result view(Long id, Integer portfolioEntryPage, Integer stakeholderPage) {
 
         // get the portfolio
         Portfolio portfolio = PortfolioDao.getPortfolioById(id);
@@ -152,7 +152,7 @@ public class PortfolioController extends Controller {
      * Form to create a new portfolio (available from the Admin menu).
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION) })
-    public static Result create() {
+    public Result create() {
 
         // construct the form
         Form<PortfolioFormData> portfolioForm = formTemplate;
@@ -167,7 +167,7 @@ public class PortfolioController extends Controller {
      * Process the creation of a portfolio.
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION) })
-    public static Result createSubmit() {
+    public Result createSubmit() {
 
         // bind the form
         Form<PortfolioFormData> boundForm = formTemplate.bindFromRequest();
@@ -201,7 +201,7 @@ public class PortfolioController extends Controller {
      */
     @With(CheckPortfolioExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
 
         // get the portfolio
         Portfolio portfolio = PortfolioDao.getPortfolioById(id);
@@ -220,7 +220,7 @@ public class PortfolioController extends Controller {
      */
     @With(CheckPortfolioExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
-    public static Result save() {
+    public Result save() {
 
         // bind the form
         Form<PortfolioFormData> boundForm = formTemplate.bindFromRequest();
@@ -259,7 +259,7 @@ public class PortfolioController extends Controller {
      */
     @With(CheckPortfolioExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
 
         // get the portfolio
         Portfolio portfolio = PortfolioDao.getPortfolioById(id);

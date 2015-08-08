@@ -109,7 +109,7 @@ public class CockpitController extends Controller {
      *            set to true to display also the archived entries (for the
      *            "as manager" table)
      */
-    public static Result initiatives(Integer asManagerPage, Integer asStakeholderPage, Boolean viewAllAsManager) {
+    public Result initiatives(Integer asManagerPage, Integer asStakeholderPage, Boolean viewAllAsManager) {
 
         /**
          * get the current actor id
@@ -177,7 +177,7 @@ public class CockpitController extends Controller {
      *            set to true to display also the archived entries (for the
      *            "as manager" table)
      */
-    public static Result portfolios(Integer asManagerPage, Integer asStakeholderPage, Boolean viewAllAsManager) {
+    public Result portfolios(Integer asManagerPage, Integer asStakeholderPage, Boolean viewAllAsManager) {
 
         /**
          * get the current actor id
@@ -237,7 +237,7 @@ public class CockpitController extends Controller {
      * Display the list of the employees for which the sign-in user is the
      * manager.
      */
-    public static Result subordinates() {
+    public Result subordinates() {
 
         /**
          * get the current actor id
@@ -275,7 +275,7 @@ public class CockpitController extends Controller {
      * Display the allocations' gantt chart of the employees for which the
      * sign-in user is the manager.
      */
-    public static Result subordinatesAllocations() {
+    public Result subordinatesAllocations() {
 
         /**
          * get the current actor id
@@ -417,7 +417,7 @@ public class CockpitController extends Controller {
      * Display the allocations (by portfolio entry and by activity) of the
      * employees for which the sign-in user is the manager.
      */
-    public static Result subordinatesAllocationsDetails() {
+    public Result subordinatesAllocationsDetails() {
 
         /**
          * get the current actor id
@@ -455,7 +455,7 @@ public class CockpitController extends Controller {
     /**
      * Filter the porfolio entry allocations.
      */
-    public static Result portfolioEntryAllocationsFilter() {
+    public Result portfolioEntryAllocationsFilter() {
 
         try {
 
@@ -497,7 +497,7 @@ public class CockpitController extends Controller {
      * Get all portfolio entry allocation ids according to the current filter
      * configuration.
      */
-    public static Result getAllportfolioEntryAllocationIds() {
+    public Result getAllportfolioEntryAllocationIds() {
 
         try {
 
@@ -535,7 +535,7 @@ public class CockpitController extends Controller {
     /**
      * Confirm the selected portfolio entry allocations.
      */
-    public static Result confirmPortfolioEntryAllocations() {
+    public Result confirmPortfolioEntryAllocations() {
 
         try {
 
@@ -577,7 +577,7 @@ public class CockpitController extends Controller {
     /**
      * Filter the activity allocations.
      */
-    public static Result activityAllocationsFilter() {
+    public Result activityAllocationsFilter() {
 
         try {
 
@@ -617,7 +617,7 @@ public class CockpitController extends Controller {
      * Display the late and the submitted timesheets of the subordinates of the
      * sign-in user.
      */
-    public static Result subordinatesTimesheet() {
+    public Result subordinatesTimesheet() {
 
         /**
          * get the current actor id
@@ -684,7 +684,7 @@ public class CockpitController extends Controller {
      * @param viewAll
      *            set to true to display also the inactive org units
      */
-    public static Result orgUnits(Integer page, Boolean viewAll) {
+    public Result orgUnits(Integer page, Boolean viewAll) {
 
         /**
          * get the current actor id
@@ -737,7 +737,7 @@ public class CockpitController extends Controller {
      * @param viewAllAsResponsible
      *            set to true to include the inactive budget buckets
      */
-    public static Result budgetBuckets(Integer asOwnerPage, Integer asResponsiblePage, Boolean viewAllAsOwner, Boolean viewAllAsResponsible) {
+    public Result budgetBuckets(Integer asOwnerPage, Integer asResponsiblePage, Boolean viewAllAsOwner, Boolean viewAllAsResponsible) {
 
         /**
          * get the current actor id
@@ -852,7 +852,7 @@ public class CockpitController extends Controller {
      * @param viewAll
      *            set to true to display also non-active releases
      */
-    public static Result releases(Integer page, Boolean viewAll) {
+    public Result releases(Integer page, Boolean viewAll) {
 
         /**
          * get the current actor id

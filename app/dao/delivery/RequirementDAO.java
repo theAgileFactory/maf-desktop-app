@@ -46,10 +46,10 @@ import framework.utils.ISelectableValueHolderCollection;
  */
 public abstract class RequirementDAO {
 
-    public static Finder<Long, Requirement> findRequirement = new Finder<>(Long.class, Requirement.class);
-    public static Finder<Long, RequirementPriority> findRequirementPriority = new Finder<>(Long.class, RequirementPriority.class);
-    public static Finder<Long, RequirementSeverity> findRequirementSeverity = new Finder<>(Long.class, RequirementSeverity.class);
-    public static Finder<Long, RequirementStatus> findRequirementStatus = new Finder<>(Long.class, RequirementStatus.class);
+    public static Finder<Long, Requirement> findRequirement = new Finder<>(Requirement.class);
+    public static Finder<Long, RequirementPriority> findRequirementPriority = new Finder<>(RequirementPriority.class);
+    public static Finder<Long, RequirementSeverity> findRequirementSeverity = new Finder<>(RequirementSeverity.class);
+    public static Finder<Long, RequirementStatus> findRequirementStatus = new Finder<>(RequirementStatus.class);
 
     /**
      * Default constructor.

@@ -89,7 +89,7 @@ public class ProcessTransitionRequestController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION),
             @Group(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION) })
-    public static Result reviewMilestoneRequestList(Integer page) {
+    public Result reviewMilestoneRequestList(Integer page) {
 
         Pagination<ProcessTransitionRequest> pagination = ProcessTransitionRequestDao.getProcessTransitionRequestMilestoneApprovalToReviewAsPagination();
         pagination.setCurrentPage(page);
@@ -120,7 +120,7 @@ public class ProcessTransitionRequestController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
-    public static Result processMilestoneRequest(Long id, Long requestId) {
+    public Result processMilestoneRequest(Long id, Long requestId) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -182,7 +182,7 @@ public class ProcessTransitionRequestController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
-    public static Result acceptMilestoneRequest() {
+    public Result acceptMilestoneRequest() {
 
         Form<ProcessMilestoneRequestFormData> boundForm = processMilestoneRequestFormTemplate.bindFromRequest();
 
@@ -311,7 +311,7 @@ public class ProcessTransitionRequestController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
-    public static Result rejectMilestoneRequest(Long id, Long requestId) {
+    public Result rejectMilestoneRequest(Long id, Long requestId) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);

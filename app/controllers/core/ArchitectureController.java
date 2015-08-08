@@ -86,7 +86,7 @@ public class ArchitectureController extends Controller {
      *            root blocks.
      */
     @Restrict({ @Group(IMafConstants.ARCHITECTURE_PERMISSION) })
-    public static Result index(Long applicationBockId) {
+    public Result index(Long applicationBockId) {
         return ok(views.html.core.architecture.index.render(applicationBockId));
     }
 
@@ -98,7 +98,7 @@ public class ArchitectureController extends Controller {
      *            root blocks.
      */
     @Restrict({ @Group(IMafConstants.ARCHITECTURE_PERMISSION) })
-    public static Result viewApplicationBlockFragment(Long applicationBockId) {
+    public Result viewApplicationBlockFragment(Long applicationBockId) {
 
         ApplicationBlock applicationBlock = applicationBockId != null ? ArchitectureDao.getApplicationBlockById(applicationBockId) : null;
         List<ApplicationBlock> applicationBlocks = applicationBlock != null ? ArchitectureDao.getApplicationBlockActiveAsListByParent(applicationBlock.id)
@@ -114,7 +114,7 @@ public class ArchitectureController extends Controller {
      *            define if the filter should be reseted
      */
     @Restrict({ @Group(IMafConstants.ARCHITECTURE_PERMISSION) })
-    public static Result applicationBlocks(Boolean reset) {
+    public Result applicationBlocks(Boolean reset) {
 
         try {
 
@@ -154,7 +154,7 @@ public class ArchitectureController extends Controller {
      * Filter the application blocks.
      */
     @Restrict({ @Group(IMafConstants.ARCHITECTURE_PERMISSION) })
-    public static Result applicationBlocksFilter() {
+    public Result applicationBlocksFilter() {
 
         try {
 
@@ -203,7 +203,7 @@ public class ArchitectureController extends Controller {
      * Export the content of the current list of application blocks as Excel.
      */
     @Restrict({ @Group(IMafConstants.ARCHITECTURE_PERMISSION) })
-    public static Promise<Result> applicationBlocksAsExcel() {
+    public Promise<Result> applicationBlocksAsExcel() {
 
         return Promise.promise(new Function0<Result>() {
             @Override
@@ -307,7 +307,7 @@ public class ArchitectureController extends Controller {
      *            the application block id, null for create case
      */
     @Restrict({ @Group(IMafConstants.APPLICATION_BLOCK_EDIT_ALL_PERMISSION) })
-    public static Result manageApplicationBlockFragment(Long parentId, Integer order, Long id) {
+    public Result manageApplicationBlockFragment(Long parentId, Integer order, Long id) {
 
         Form<ApplicationBlockFormData> applicationBlockForm = null;
         ApplicationBlock parent = null;
@@ -343,7 +343,7 @@ public class ArchitectureController extends Controller {
      * Process the form to create/edit an application block.
      */
     @Restrict({ @Group(IMafConstants.APPLICATION_BLOCK_EDIT_ALL_PERMISSION) })
-    public static Result manageApplicationBlockProcessFragment() {
+    public Result manageApplicationBlockProcessFragment() {
 
         // bind the form
         Form<ApplicationBlockFormData> boundForm = applicationBlockFormTemplate.bindFromRequest();
@@ -415,7 +415,7 @@ public class ArchitectureController extends Controller {
      * Manage an application block in the tree.
      */
     @Restrict({ @Group(IMafConstants.APPLICATION_BLOCK_EDIT_ALL_PERMISSION) })
-    public static Result manageApplicationBlockTree() {
+    public Result manageApplicationBlockTree() {
 
         try {
 
@@ -442,7 +442,7 @@ public class ArchitectureController extends Controller {
      * Load the children of an application block in the tree.
      */
     @Restrict({ @Group(IMafConstants.ARCHITECTURE_PERMISSION) })
-    public static Result loadChildrenApplicationBlockTree() {
+    public Result loadChildrenApplicationBlockTree() {
 
         try {
 

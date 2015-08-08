@@ -17,8 +17,8 @@
  */
 package controllers.sso;
 
-import org.pac4j.play.java.JavaController;
 import org.pac4j.play.java.RequiresAuthentication;
+import org.pac4j.play.java.SecureController;
 
 import play.Logger;
 import play.libs.F.Function0;
@@ -51,7 +51,7 @@ import framework.utils.Utilities;
  * 
  * @author Pierre-Yves Cloux
  */
-public class Authenticator extends JavaController {
+public class Authenticator extends SecureController {
     private static Logger.ALogger log = Logger.of(Authenticator.class);
 
     /**
@@ -65,7 +65,7 @@ public class Authenticator extends JavaController {
      *         protected area)
      */
     @RequiresAuthentication(clientName = "Saml2Client")
-    public static Result loginFederated(String redirectUrl) {
+    public Result loginFederated(String redirectUrl) {
         return loginCode(redirectUrl);
     }
 
@@ -80,7 +80,7 @@ public class Authenticator extends JavaController {
      *         protected area)
      */
     @RequiresAuthentication(clientName = "CasClient")
-    public static Result loginCasMaster(String redirectUrl) {
+    public Result loginCasMaster(String redirectUrl) {
         return loginCode(redirectUrl);
     }
 
@@ -95,7 +95,7 @@ public class Authenticator extends JavaController {
      *         protected area)
      */
     @RequiresAuthentication(clientName = "FormClient")
-    public static Result loginStandalone(String redirectUrl) {
+    public Result loginStandalone(String redirectUrl) {
         return loginCode(redirectUrl);
     }
 
@@ -103,7 +103,7 @@ public class Authenticator extends JavaController {
      * Redirect the user to the previous saved URL.
      */
     @SubjectPresent
-    public static Result redirectToThePreviouslySavedUrl() {
+    public Result redirectToThePreviouslySavedUrl() {
 
         // event: success login / STANDALONE
         IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
@@ -156,7 +156,7 @@ public class Authenticator extends JavaController {
     /**
      * Not accessible page (license).
      */
-    public static Result notAccessible() {
+    public Result notAccessible() {
         return ok(views.html.sso.not_accessible.render());
     }
 
@@ -164,7 +164,7 @@ public class Authenticator extends JavaController {
      * Clear the user session and logout the user.<br/>
      * The user is then redirected to the login page.
      */
-    public static Promise<Result> callback() {
+    public Promise<Result> customCallback() {
 
         if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).isInstanceAccessible()) {
 
@@ -184,14 +184,14 @@ public class Authenticator extends JavaController {
         if (log.isDebugEnabled()) {
             log.debug("Received call back from CAS server : " + ctx().request().toString());
         }
-        return org.pac4j.play.CallbackController.callback();
+        return callback();
     }
 
     /**
      * Clear the user session and logout the user.<br/>
      * The user is then redirected to the login page.
      */
-    public static Result logout() {
+    public Result customLogout() {
         if (log.isDebugEnabled()) {
             log.debug("Logout requested");
         }
@@ -202,7 +202,14 @@ public class Authenticator extends JavaController {
             ctx().response().discardCookie("_redmine_session");
         }
         // Workaround
-        return org.pac4j.play.CallbackController.logoutAndRedirect();
+        return logoutAndRedirect();
+    }
+    
+    /**
+     * The user is then redirected to the login page.
+     */
+    public Result customLogoutCas(){
+        return logoutAndRedirect();
     }
 
     /**
@@ -210,7 +217,7 @@ public class Authenticator extends JavaController {
      * 
      * @return
      */
-    public static Result logoutFederated() {
+    public Result customLogoutFederated() {
         return ok(views.html.sso.federated_logout.render(Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
                 "maf.public.url")));
     }

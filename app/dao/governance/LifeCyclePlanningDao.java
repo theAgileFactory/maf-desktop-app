@@ -36,9 +36,9 @@ import com.avaje.ebean.RawSqlBuilder;
  */
 public abstract class LifeCyclePlanningDao {
 
-    public static Finder<Long, LifeCycleInstancePlanning> findLifeCycleInstancePlanning = new Finder<>(Long.class, LifeCycleInstancePlanning.class);
+    public static Finder<Long, LifeCycleInstancePlanning> findLifeCycleInstancePlanning = new Finder<>(LifeCycleInstancePlanning.class);
 
-    public static Finder<Long, PlannedLifeCycleMilestoneInstance> findPlannedLifeCycleMilestoneInstance = new Finder<>(Long.class,
+    public static Finder<Long, PlannedLifeCycleMilestoneInstance> findPlannedLifeCycleMilestoneInstance = new Finder<>(
             PlannedLifeCycleMilestoneInstance.class);
 
     /**

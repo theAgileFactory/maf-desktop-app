@@ -58,7 +58,7 @@ public class PurchaseOrderController extends Controller {
      *            the purchase order id
      */
     @Restrict({ @Group(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION) })
-    public static Result view(Long purchaseOrderId) {
+    public Result view(Long purchaseOrderId) {
 
         // get the purchase order
         PurchaseOrder purchaseOrder = PurchaseOrderDAO.getPurchaseOrderById(purchaseOrderId);
@@ -87,7 +87,7 @@ public class PurchaseOrderController extends Controller {
      *            the line item id
      */
     @Restrict({ @Group(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION) })
-    public static Result viewLineItem(Long lineItemId) {
+    public Result viewLineItem(Long lineItemId) {
 
         // get the purchase order line item
         PurchaseOrderLineItem lineItem = PurchaseOrderDAO.getPurchaseOrderLineItemById(lineItemId);
@@ -129,7 +129,7 @@ public class PurchaseOrderController extends Controller {
      *            the work order id
      */
     @Restrict({ @Group(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION) })
-    public static Result editWorkOrder(Long lineItemId, Long workOrderId) {
+    public Result editWorkOrder(Long lineItemId, Long workOrderId) {
 
         // get the purchase order line item
         PurchaseOrderLineItem lineItem = PurchaseOrderDAO.getPurchaseOrderLineItemById(lineItemId);
@@ -147,7 +147,7 @@ public class PurchaseOrderController extends Controller {
      * Process the save of the work order (allocated amount).
      */
     @Restrict({ @Group(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION) })
-    public static Result saveWorkOrder() {
+    public Result saveWorkOrder() {
 
         // bind the form
         Form<PurchaseOrderLineItemWorkOrderFormData> boundForm = workOrderFormTemplate.bindFromRequest();

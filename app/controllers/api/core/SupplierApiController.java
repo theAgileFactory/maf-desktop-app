@@ -49,7 +49,7 @@ public class SupplierApiController extends ApiController {
     @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
     @ApiOperation(value = "list the Suppliers", notes = "Return the list of Suppliers in the system", response = Supplier.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getSuppliersList() {
+    public Result getSuppliersList() {
 
         try {
             return getJsonSuccessResponse(SupplierDAO.getSupplierAsList());
@@ -69,7 +69,7 @@ public class SupplierApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getSupplierById(@ApiParam(value = "supplier's id", required = true) @PathParam("id") Long id) {
+    public Result getSupplierById(@ApiParam(value = "supplier's id", required = true) @PathParam("id") Long id) {
 
         try {
             if (SupplierDAO.getSupplierById(id) == null) {

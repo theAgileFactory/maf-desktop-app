@@ -39,13 +39,13 @@ import framework.utils.Pagination;
  */
 public abstract class PortfolioEntryPlanningPackageDao {
 
-    public static Finder<Long, PortfolioEntryPlanningPackage> findPortfolioEntryPlanningPackage = new Finder<>(Long.class,
+    public static Finder<Long, PortfolioEntryPlanningPackage> findPortfolioEntryPlanningPackage = new Finder<>(
             PortfolioEntryPlanningPackage.class);
 
-    public static Finder<Long, PortfolioEntryPlanningPackageGroup> findPortfolioEntryPlanningPackageGroup = new Finder<>(Long.class,
+    public static Finder<Long, PortfolioEntryPlanningPackageGroup> findPortfolioEntryPlanningPackageGroup = new Finder<>(
             PortfolioEntryPlanningPackageGroup.class);
 
-    public static Finder<Long, PortfolioEntryPlanningPackagePattern> findPortfolioEntryPlanningPackagePattern = new Finder<>(Long.class,
+    public static Finder<Long, PortfolioEntryPlanningPackagePattern> findPortfolioEntryPlanningPackagePattern = new Finder<>(
             PortfolioEntryPlanningPackagePattern.class);
 
     /**

@@ -106,7 +106,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @SubjectPresent
-    public static Result view(Long id, Integer page) {
+    public Result view(Long id, Integer page) {
 
         // get the orgUnit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
@@ -137,7 +137,7 @@ public class OrgUnitController extends Controller {
      * Form to create a new org unit (available from Admin menu).
      */
     @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
-    public static Result create() {
+    public Result create() {
 
         // construct the form
         Form<OrgUnitFormData> orgUnitForm = formTemplate;
@@ -156,7 +156,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
 
         // get the orgUnit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
@@ -174,7 +174,7 @@ public class OrgUnitController extends Controller {
      * Process the save of an org unit (create and edit cases).
      */
     @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
-    public static Result save() {
+    public Result save() {
 
         // bind the form
         Form<OrgUnitFormData> boundForm = formTemplate.bindFromRequest();
@@ -231,7 +231,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
 
         // get the org unit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
@@ -257,7 +257,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
-    public static Result listPortfolioEntries(Long id, Integer page) {
+    public Result listPortfolioEntries(Long id, Integer page) {
 
         // get the org unit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
@@ -285,7 +285,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
-    public static Result allocation(Long id) {
+    public Result allocation(Long id) {
 
         // get the org unit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
@@ -423,7 +423,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
-    public static Result allocationDetails(Long id, Integer page) {
+    public Result allocationDetails(Long id, Integer page) {
 
         // get the org unit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
@@ -483,7 +483,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
-    public static Result actorsPortfolioEntryAllocationsFilter(Long id) {
+    public Result actorsPortfolioEntryAllocationsFilter(Long id) {
 
         try {
 
@@ -514,7 +514,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckOrgUnitExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
-    public static Result actorsActivityAllocationsFilter(Long id) {
+    public Result actorsActivityAllocationsFilter(Long id) {
 
         try {
 
@@ -543,7 +543,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckActorExists.class)
     @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
-    public static Result manageActorAllocatedActivity(Long id) {
+    public Result manageActorAllocatedActivity(Long id) {
 
         // get the org unit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
@@ -563,7 +563,7 @@ public class OrgUnitController extends Controller {
      */
     @With(CheckActorExists.class)
     @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
-    public static Result processManageActorAllocatedActivity() {
+    public Result processManageActorAllocatedActivity() {
 
         // bind the form
         Form<TimesheetActivityAllocatedActorFormData> boundForm = allocatedActivityFormTemplate.bindFromRequest();

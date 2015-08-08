@@ -118,7 +118,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result exportStatusReport(Long id) {
+    public Result exportStatusReport(Long id) {
 
         Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateName());
 
@@ -158,7 +158,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result registers(Long id, Integer pageReports, Integer pageRisks, Integer pageIssues, Boolean viewAllRisks, Boolean viewAllIssues) {
+    public Result registers(Long id, Integer pageReports, Integer pageRisks, Integer pageIssues, Boolean viewAllRisks, Boolean viewAllIssues) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -241,7 +241,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result events(Long id, Boolean reset) {
+    public Result events(Long id, Boolean reset) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -295,7 +295,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result eventsFilter(Long id) {
+    public Result eventsFilter(Long id) {
 
         try {
 
@@ -326,7 +326,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Promise<Result> exportEventsAsExcel(final Long id) {
+    public Promise<Result> exportEventsAsExcel(final Long id) {
 
         return Promise.promise(new Function0<Result>() {
             @Override
@@ -439,7 +439,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result viewReport(Long id, Long reportId) {
+    public Result viewReport(Long id, Long reportId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -488,7 +488,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageReport(Long id, Long reportId) {
+    public Result manageReport(Long id, Long reportId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -530,7 +530,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageReport() {
+    public Result processManageReport() {
 
         // bind the form
         Form<PortfolioEntryReportFormData> boundForm = reportFormTemplate.bindFromRequest();
@@ -622,7 +622,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteReport(Long id, Long reportId) {
+    public Result deleteReport(Long id, Long reportId) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -660,7 +660,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result createReportAttachment(Long id, Long reportId) {
+    public Result createReportAttachment(Long id, Long reportId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -680,7 +680,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processCreateReportAttachment() {
+    public Result processCreateReportAttachment() {
 
         Form<AttachmentFormData> boundForm = attachmentFormTemplate.bindFromRequest();
 
@@ -721,7 +721,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteReportAttachment(Long id, Long reportId, Long attachmentId) {
+    public Result deleteReportAttachment(Long id, Long reportId, Long attachmentId) {
 
         // get the report
         PortfolioEntryReport report = PortfolioEntryReportDao.getPEReportById(reportId);
@@ -756,7 +756,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result viewRisk(Long id, Long riskId) {
+    public Result viewRisk(Long id, Long riskId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -785,7 +785,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageRisk(Long id, Long riskId, Boolean isRisk) {
+    public Result manageRisk(Long id, Long riskId, Boolean isRisk) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -832,7 +832,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageRisk() {
+    public Result processManageRisk() {
 
         // bind the form
         Form<PortfolioEntryRiskFormData> boundForm = riskFormTemplate.bindFromRequest();
@@ -912,7 +912,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageEvent(Long id, Long eventId) {
+    public Result manageEvent(Long id, Long eventId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -949,7 +949,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageEvent() {
+    public Result processManageEvent() {
 
         // bind the form
         Form<PortfolioEntryEventFormData> boundForm = eventFormTemplate.bindFromRequest();
@@ -1021,7 +1021,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteEvent(Long id, Long eventId) {
+    public Result deleteEvent(Long id, Long eventId) {
 
         // get the event
         PortfolioEntryEvent event = PortfolioEntryEventDao.getPEEventById(eventId);

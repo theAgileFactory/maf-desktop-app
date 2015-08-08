@@ -85,7 +85,7 @@ public class TimesheetController extends Controller {
      *            report including this date, if empty it uses the current date.
      */
     @Restrict({ @Group(IMafConstants.TIMESHEET_ENTRY_PERMISSION) })
-    public static Result weeklyFill(String stringDate) {
+    public Result weeklyFill(String stringDate) {
 
         // get the current actor
         Actor actor = getCurrentActor();
@@ -117,7 +117,7 @@ public class TimesheetController extends Controller {
      * Save the weekly timesheet.
      */
     @Restrict({ @Group(IMafConstants.TIMESHEET_ENTRY_PERMISSION) })
-    public static Result weeklySave() {
+    public Result weeklySave() {
 
         String[] dataString = request().body().asFormUrlEncoded().get("data");
 
@@ -298,7 +298,7 @@ public class TimesheetController extends Controller {
      *            the report id
      */
     @Restrict({ @Group(IMafConstants.TIMESHEET_ENTRY_PERMISSION) })
-    public static Result weeklyCopy(Long reportId) {
+    public Result weeklyCopy(Long reportId) {
 
         // get the report
         TimesheetReport report = TimesheetDao.getTimesheetReportById(reportId);
@@ -358,7 +358,7 @@ public class TimesheetController extends Controller {
      *            the report id
      */
     @Restrict({ @Group(IMafConstants.TIMESHEET_ENTRY_PERMISSION) })
-    public static Result weeklySubmit(Long reportId) {
+    public Result weeklySubmit(Long reportId) {
 
         // get the report
         TimesheetReport report = TimesheetDao.getTimesheetReportById(reportId);
@@ -405,7 +405,7 @@ public class TimesheetController extends Controller {
      * Get the packages of a portfolio entry.
      */
     @Restrict({ @Group(IMafConstants.TIMESHEET_ENTRY_PERMISSION) })
-    public static Result getPackages() {
+    public Result getPackages() {
 
         JsonNode json = request().body().asJson();
         Long portfolioEntryId = json.findPath("portfolioEntryId").asLong();
@@ -426,7 +426,7 @@ public class TimesheetController extends Controller {
      * Get the activities of type.
      */
     @Restrict({ @Group(IMafConstants.TIMESHEET_ENTRY_PERMISSION) })
-    public static Result getActivities() {
+    public Result getActivities() {
 
         JsonNode json = request().body().asJson();
         Long activityTypeId = json.findPath("activityTypeId").asLong();
@@ -448,7 +448,7 @@ public class TimesheetController extends Controller {
      */
     @With(CheckTimesheetReportExists.class)
     @Dynamic(DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION)
-    public static Result processTimesheet() {
+    public Result processTimesheet() {
 
         // bind the form
         Form<TimesheetReportApprovalFormData> boundForm = timesheetReportApprovalFormTemplate.bindFromRequest();
@@ -517,7 +517,7 @@ public class TimesheetController extends Controller {
      */
     @With(CheckTimesheetReportExists.class)
     @Dynamic(DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION)
-    public static Result sendReminderTimesheet(Long id) {
+    public Result sendReminderTimesheet(Long id) {
 
         // get the report
         TimesheetReport report = TimesheetDao.getTimesheetReportById(id);

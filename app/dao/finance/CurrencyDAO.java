@@ -37,7 +37,7 @@ public abstract class CurrencyDAO {
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, Currency> find = new Finder<>(Long.class, Currency.class);
+    public static Finder<Long, Currency> find = new Finder<>(Currency.class);
 
     /**
      * Default constructor.

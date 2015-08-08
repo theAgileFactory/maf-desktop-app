@@ -59,13 +59,13 @@ import framework.utils.Msg;
  */
 public abstract class ActorDao {
 
-    public static Finder<Long, Actor> findActor = new Finder<>(Long.class, Actor.class);
+    public static Finder<Long, Actor> findActor = new Finder<>(Actor.class);
 
-    public static Finder<Long, ActorCapacity> findActorCapacity = new Finder<>(Long.class, ActorCapacity.class);
+    public static Finder<Long, ActorCapacity> findActorCapacity = new Finder<>(ActorCapacity.class);
 
-    public static Finder<Long, ActorType> findActorType = new Finder<>(Long.class, ActorType.class);
+    public static Finder<Long, ActorType> findActorType = new Finder<>(ActorType.class);
 
-    public static Finder<Long, Competency> findCompetency = new Finder<>(Long.class, Competency.class);
+    public static Finder<Long, Competency> findCompetency = new Finder<>(Competency.class);
 
     /**
      * Default constructor.

@@ -57,7 +57,7 @@ public class PortfolioEntryPlanningPackageGroupApiController extends ApiControll
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryPlanningPackageGroupsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive) {
+    public Result getPortfolioEntryPlanningPackageGroupsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive) {
         try {
             return getJsonSuccessResponse(PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupAsListByFilter(isActive));
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class PortfolioEntryPlanningPackageGroupApiController extends ApiControll
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryPlanningPackageGroupById(
+    public Result getPortfolioEntryPlanningPackageGroupById(
             @ApiParam(value = "portfolio entry planning package group id", required = true) @PathParam("id") Long id) {
 
         try {
@@ -103,7 +103,7 @@ public class PortfolioEntryPlanningPackageGroupApiController extends ApiControll
             notes = "Return the list of Patterns of the specified Portfolio Entry Planning Package Group in the system",
             response = PortfolioEntryPlanningPackagePattern.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryPlanningPackagePatternsList(
+    public Result getPortfolioEntryPlanningPackagePatternsList(
             @ApiParam(value = "portfolio entry planning package group id", required = true) @PathParam("id") Long id) {
 
         try {

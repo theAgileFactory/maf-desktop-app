@@ -51,17 +51,17 @@ import com.avaje.ebean.Model.Finder;
  */
 public abstract class LifeCycleMilestoneDao {
 
-    public static Finder<Long, LifeCycleMilestone> findLifeCycleMilestone = new Finder<Long, LifeCycleMilestone>(Long.class, LifeCycleMilestone.class);
+    public static Finder<Long, LifeCycleMilestone> findLifeCycleMilestone = new Finder<Long, LifeCycleMilestone>(LifeCycleMilestone.class);
 
-    public static Finder<Long, LifeCycleMilestoneInstance> findLifeCycleMilestoneInstance = new Finder<>(Long.class, LifeCycleMilestoneInstance.class);
+    public static Finder<Long, LifeCycleMilestoneInstance> findLifeCycleMilestoneInstance = new Finder<>(LifeCycleMilestoneInstance.class);
 
-    public static Finder<Long, LifeCycleMilestoneInstanceApprover> findLifeCycleMilestoneInstanceApprover = new Finder<>(Long.class,
+    public static Finder<Long, LifeCycleMilestoneInstanceApprover> findLifeCycleMilestoneInstanceApprover = new Finder<>(
             LifeCycleMilestoneInstanceApprover.class);
 
-    public static Finder<Long, LifeCycleMilestoneInstanceStatusType> findLifeCycleMilestoneInstanceStatusType = new Finder<>(Long.class,
+    public static Finder<Long, LifeCycleMilestoneInstanceStatusType> findLifeCycleMilestoneInstanceStatusType = new Finder<>(
             LifeCycleMilestoneInstanceStatusType.class);
 
-    public static Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>(Long.class, LifeCyclePhase.class);
+    public static Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>( LifeCyclePhase.class);
 
     /**
      * Default constructor.

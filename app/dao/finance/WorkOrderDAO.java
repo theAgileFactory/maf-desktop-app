@@ -32,7 +32,7 @@ public abstract class WorkOrderDAO {
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, WorkOrder> findWorkOrder = new Finder<>(Long.class, WorkOrder.class);
+    public static Finder<Long, WorkOrder> findWorkOrder = new Finder<>(WorkOrder.class);
 
     /**
      * Default constructor.

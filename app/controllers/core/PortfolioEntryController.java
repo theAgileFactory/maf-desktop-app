@@ -130,7 +130,7 @@ public class PortfolioEntryController extends Controller {
      * Form to create a new portfolio entry.
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
-    public static Result createStep1() {
+    public Result createStep1() {
 
         if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
@@ -148,7 +148,7 @@ public class PortfolioEntryController extends Controller {
      * step 1: standard attributes
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
-    public static Result processCreateStep1() {
+    public Result processCreateStep1() {
 
         if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
@@ -302,7 +302,7 @@ public class PortfolioEntryController extends Controller {
      * step 1: custom attributes
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
-    public static Result processCreateStep2() {
+    public Result processCreateStep2() {
 
         if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
@@ -375,7 +375,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
-    public static Result overview(Long id) {
+    public Result overview(Long id) {
 
         // if the user is not permitted to see the details of the PE, then
         // redirect him to the view page
@@ -414,7 +414,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
-    public static Result view(Long id, Integer attachmentPage) {
+    public Result view(Long id, Integer attachmentPage) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -487,7 +487,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -506,7 +506,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result editCustomAttr(Long id) {
+    public Result editCustomAttr(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -525,7 +525,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEdit() {
+    public Result processEdit() {
 
         // bind the form
         Form<PortfolioEntryEditFormData> boundForm = portfolioEntryEditFormData.bindFromRequest();
@@ -560,7 +560,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEditCustomAttr() {
+    public Result processEditCustomAttr() {
 
         // bind the form
         Form<EmptyEditFormData> boundForm = emptyFormTemplate.bindFromRequest();
@@ -591,7 +591,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result pluginConfig(Long id) {
+    public Result pluginConfig(Long id) {
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
@@ -610,7 +610,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION)
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -634,7 +634,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result editPortfolios(Long id) {
+    public Result editPortfolios(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -653,7 +653,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEditPortfolios() {
+    public Result processEditPortfolios() {
 
         // bind the form
         Form<PortfolioEntryPortfoliosFormData> boundForm = portfoliosFormTemplate.bindFromRequest();
@@ -690,7 +690,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result createAttachment(Long id) {
+    public Result createAttachment(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -706,7 +706,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processCreateAttachment() {
+    public Result processCreateAttachment() {
 
         Form<AttachmentFormData> boundForm = attachmentFormTemplate.bindFromRequest();
 
@@ -741,7 +741,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteAttachment(Long id, Long attachmentId) {
+    public Result deleteAttachment(Long id, Long attachmentId) {
 
         // get the attachment
         Attachment attachment = Attachment.getAttachmentFromId(attachmentId);
@@ -769,7 +769,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result addDependency(Long id) {
+    public Result addDependency(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -782,7 +782,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processAddDependency() {
+    public Result processAddDependency() {
 
         // bind the form
         Form<PortfolioEntryDependencyFormData> boundForm = portfolioEntryDependencyFormTemplate.bindFromRequest();
@@ -833,7 +833,7 @@ public class PortfolioEntryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteDependency(Long id, Long peDepSourceId, Long peDepDestinationId, Long peDepTypeId) {
+    public Result deleteDependency(Long id, Long peDepSourceId, Long peDepDestinationId, Long peDepTypeId) {
 
         PortfolioEntryDependency dependency = PortfolioEntryDao.getPEDependencyById(peDepSourceId, peDepDestinationId, peDepTypeId);
 
@@ -853,7 +853,7 @@ public class PortfolioEntryController extends Controller {
      * Search from portfolio entries.
      */
     @SubjectPresent
-    public static Result search() {
+    public Result search() {
 
         try {
 

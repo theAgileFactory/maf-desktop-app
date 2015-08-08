@@ -76,7 +76,7 @@ public class RootApiController extends ApiController {
      * Get the status of the instance.
      **/
     @ApiAuthentication(onlyRootKey = true)
-    public static Result instanceStatus() {
+    public Result instanceStatus() {
 
         try {
 
@@ -96,7 +96,7 @@ public class RootApiController extends ApiController {
      * Return some information regarding the memory status of the instance.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result instanceMemoryStatus() {
+    public Result instanceMemoryStatus() {
 
         try {
 
@@ -130,7 +130,7 @@ public class RootApiController extends ApiController {
      * Trigger the resync of the user accounts.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result userResync() {
+    public Result userResync() {
 
         try {
 
@@ -157,7 +157,7 @@ public class RootApiController extends ApiController {
      * Flush the user account cache.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result userFlushCache() {
+    public Result userFlushCache() {
 
         try {
 
@@ -184,7 +184,7 @@ public class RootApiController extends ApiController {
      * Flush the i18n cache.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result i18nFlushCache() {
+    public Result i18nFlushCache() {
 
         try {
 
@@ -206,7 +206,7 @@ public class RootApiController extends ApiController {
      * Flush the tables cache.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result tableFlushCache() {
+    public Result tableFlushCache() {
 
         try {
 
@@ -259,7 +259,7 @@ public class RootApiController extends ApiController {
      * Flush the filters cache.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result filterFlushCache() {
+    public Result filterFlushCache() {
 
         try {
 
@@ -295,7 +295,7 @@ public class RootApiController extends ApiController {
      * Flush the adPanel cache.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result adPanelFlushCache() {
+    public Result adPanelFlushCache() {
 
         try {
 
@@ -317,7 +317,7 @@ public class RootApiController extends ApiController {
      * Reload the report definitions (jasper).
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result reportReload() {
+    public Result reportReload() {
 
         try {
 
@@ -338,7 +338,7 @@ public class RootApiController extends ApiController {
      * Reload the KPI definitions.
      */
     @ApiAuthentication(onlyRootKey = true)
-    public static Result kpiReload() {
+    public Result kpiReload() {
 
         try {
 

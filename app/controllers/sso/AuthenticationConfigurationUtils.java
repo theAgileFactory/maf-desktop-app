@@ -140,7 +140,7 @@ public abstract class AuthenticationConfigurationUtils {
         log.info(">>>>>>>>>>>>>>>> Initialize CAS SSO");
         String casLoginUrl = play.Configuration.root().getString("cas.login.url");
         String casCallbackUrl = Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
-                + controllers.sso.routes.Authenticator.callback().url();
+                + controllers.sso.routes.Authenticator.customCallback().url();
         final CasClient casClient = new CasClient();
         casClient.setLogoutHandler(new PlayLogoutHandler());
         casClient.setCasProtocol(CasClient.CasProtocol.SAML);
@@ -196,13 +196,13 @@ public abstract class AuthenticationConfigurationUtils {
 
 //            final Clients clients = new Clients(
 //                    publicUrl + controllers.sso.routes.AlternativeFederatedCallbackController.callback().url() + SAML_CLIENT_ID_EXTENTION, saml2Client);
-            final Clients clients = new Clients(publicUrl+controllers.sso.routes.Authenticator.callback().url(),saml2Client);
+            final Clients clients = new Clients(publicUrl+controllers.sso.routes.Authenticator.customCallback().url(),saml2Client);
             clients.init();
             Config.setClients(clients);
             if (cfg.containsKey("maf.saml.logout.url")) {
                 Config.setDefaultLogoutUrl(cfg.getString("maf.saml.logout.url"));
             } else {
-                Config.setDefaultLogoutUrl(controllers.sso.routes.Authenticator.logoutFederated().url());
+                Config.setDefaultLogoutUrl(controllers.sso.routes.Authenticator.customLogoutFederated().url());
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to initialize the FEDERATED SSO", e);
@@ -216,7 +216,7 @@ public abstract class AuthenticationConfigurationUtils {
     private static void initStandaloneAuthentication() {
         log.info(">>>>>>>>>>>>>>>> Initialize Standalone Authentication mode");
         String casCallbackUrl = Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
-                + controllers.sso.routes.Authenticator.callback().url();
+                + controllers.sso.routes.Authenticator.customCallback().url();
         final FormClient formClient = new FormClient(controllers.sso.routes.StandaloneAuthenticationController.displayLoginForm().url(),
                 new LightAuthenticationUserPasswordAuthenticator(),new UsernameProfileCreator());
         formClient.setUsernameParameter("uid");

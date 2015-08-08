@@ -50,13 +50,13 @@ import framework.utils.Pagination;
  */
 public abstract class PortfolioEntryDao {
 
-    public static Finder<Long, PortfolioEntry> findPortfolioEntry = new Finder<>(Long.class, PortfolioEntry.class);
+    public static Finder<Long, PortfolioEntry> findPortfolioEntry = new Finder<>(PortfolioEntry.class);
 
-    public static Finder<Long, PortfolioEntryType> findPortfolioEntryType = new Finder<>(Long.class, PortfolioEntryType.class);
+    public static Finder<Long, PortfolioEntryType> findPortfolioEntryType = new Finder<>(PortfolioEntryType.class);
 
-    public static Finder<Long, PortfolioEntryDependencyType> findPortfolioEntryDependencyType = new Finder<>(Long.class, PortfolioEntryDependencyType.class);
+    public static Finder<Long, PortfolioEntryDependencyType> findPortfolioEntryDependencyType = new Finder<>(PortfolioEntryDependencyType.class);
 
-    public static Finder<Long, PortfolioEntryDependency> findPortfolioEntryDependency = new Finder<>(Long.class, PortfolioEntryDependency.class);
+    public static Finder<Long, PortfolioEntryDependency> findPortfolioEntryDependency = new Finder<>(PortfolioEntryDependency.class);
 
     /**
      * Default constructor.

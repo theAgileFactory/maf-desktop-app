@@ -47,7 +47,7 @@ public class ReportingCategoryController extends Controller {
     /**
      * Action that manages a category.
      */
-    public static Result manage() {
+    public Result manage() {
 
         try {
 
@@ -79,7 +79,7 @@ public class ReportingCategoryController extends Controller {
     /**
      * Action that loads the children of a category.
      */
-    public static Result loadChildren() {
+    public Result loadChildren() {
 
         try {
 
@@ -101,7 +101,7 @@ public class ReportingCategoryController extends Controller {
     /**
      * Search categories thanks a key word.
      */
-    public static Result search() {
+    public Result search() {
 
         String query = request().queryString().get("query") != null ? request().queryString().get("query")[0] : null;
         String value = request().queryString().get("value") != null ? request().queryString().get("value")[0] : null;

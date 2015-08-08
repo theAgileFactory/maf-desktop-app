@@ -122,7 +122,7 @@ public class PortfolioEntryApiController extends ApiController {
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntriesList(@ApiParam(value = "managerId", required = false) @QueryParam("managerId") Long managerId,
+    public Result getPortfolioEntriesList(@ApiParam(value = "managerId", required = false) @QueryParam("managerId") Long managerId,
             @ApiParam(value = "sponsoringUnitId", required = false) @QueryParam("sponsoringUnitId") Long sponsoringUnitId,
             @ApiParam(value = "deliveryUnitId", required = false) @QueryParam("deliveryUnitId") Long deliveryUnitId,
             @ApiParam(value = "portfolioId", required = false) @QueryParam("portfolioId") Long portfolioId,
@@ -171,7 +171,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryById(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryById(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -194,7 +194,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 201, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public static Result createPortfolioEntry() {
+    public Result createPortfolioEntry() {
         try {
 
             if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
@@ -268,7 +268,7 @@ public class PortfolioEntryApiController extends ApiController {
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public static Result updatePortfolioEntry(@ApiParam(value = "An portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result updatePortfolioEntry(@ApiParam(value = "An portfolio entry id", required = true) @PathParam("id") Long id) {
         try {
 
             // check if p-e exist
@@ -331,7 +331,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryEventsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryEventsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -357,7 +357,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryPlanningPackagesList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryPlanningPackagesList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -383,7 +383,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryReportsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryReportsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -412,7 +412,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryRisksList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive,
+    public Result getPortfolioEntryRisksList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive,
             @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
@@ -439,7 +439,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getRequirementsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getRequirementsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -465,7 +465,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getIterationsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getIterationsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -491,7 +491,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getBudgetLinesOfPortfolioEntriesList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getBudgetLinesOfPortfolioEntriesList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -518,7 +518,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryResourcePlanAllocatedOrgUnitsList(
+    public Result getPortfolioEntryResourcePlanAllocatedOrgUnitsList(
             @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -544,7 +544,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryResourcePlanAllocatedActorsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryResourcePlanAllocatedActorsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The portfolio entry with the specified id is not found"));
@@ -569,7 +569,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryResourcePlanAllocatedCompetenciesList(
+    public Result getPortfolioEntryResourcePlanAllocatedCompetenciesList(
             @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
@@ -594,7 +594,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getWorkOrdersList(@ApiParam(value = "portfolioEntryId", required = true) @PathParam("id") Long id) {
+    public Result getWorkOrdersList(@ApiParam(value = "portfolioEntryId", required = true) @PathParam("id") Long id) {
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The portfolio entry with the specified id is not found"));
@@ -621,7 +621,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getWorkOrderIsEngaged(@ApiParam(value = "The portfolio entry ID", required = true) @PathParam("id") Long id,
+    public Result getWorkOrderIsEngaged(@ApiParam(value = "The portfolio entry ID", required = true) @PathParam("id") Long id,
             @ApiParam(value = "The work order ID", required = true) @PathParam("workOrderId") Long workOrderId) {
         try {
 
@@ -661,7 +661,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getWorkOrderAmount(@ApiParam(value = "The portfolio entry ID", required = true) @PathParam("id") Long id,
+    public Result getWorkOrderAmount(@ApiParam(value = "The portfolio entry ID", required = true) @PathParam("id") Long id,
             @ApiParam(value = "The work order ID", required = true) @PathParam("workOrderId") Long workOrderId) {
         try {
 
@@ -701,7 +701,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getWorkOrderAmountReceived(@ApiParam(value = "The portfolio entry ID", required = true) @PathParam("id") Long id,
+    public Result getWorkOrderAmountReceived(@ApiParam(value = "The portfolio entry ID", required = true) @PathParam("id") Long id,
             @ApiParam(value = "The work order ID", required = true) @PathParam("workOrderId") Long workOrderId) {
         try {
 

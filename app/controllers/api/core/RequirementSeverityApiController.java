@@ -49,7 +49,7 @@ public class RequirementSeverityApiController extends ApiController {
     @ApiOperation(value = "list the Requirement Severities", notes = "Return the list of Requirement Severities in the system",
             response = RequirementSeverity.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getRequirementSeveritiesList() {
+    public Result getRequirementSeveritiesList() {
         try {
             return getJsonSuccessResponse(RequirementDAO.getRequirementSeverityAsList());
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class RequirementSeverityApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getRequirementSeverityById(@ApiParam(value = "Requirement Severity id", required = true) @PathParam("id") Long id) {
+    public Result getRequirementSeverityById(@ApiParam(value = "Requirement Severity id", required = true) @PathParam("id") Long id) {
 
         try {
             if (RequirementDAO.getRequirementSeverityById(id) == null) {

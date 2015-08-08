@@ -55,7 +55,7 @@ public class StakeholderTypeApiController extends ApiController {
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getStakeholderTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getStakeholderTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(StakeholderDao.getStakeholderTypeAsListByFilter(selectable));
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class StakeholderTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getStakeholderTypeById(@ApiParam(value = "stakeholder type id", required = true) @PathParam("id") Long id) {
+    public Result getStakeholderTypeById(@ApiParam(value = "stakeholder type id", required = true) @PathParam("id") Long id) {
 
         try {
             if (StakeholderDao.getStakeholderTypeById(id) == null) {

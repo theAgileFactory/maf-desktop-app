@@ -59,7 +59,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
-    public static Result index(Long id) {
+    public Result index(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -109,7 +109,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result manage(Long id, Long stakeholderId) {
+    public Result manage(Long id, Long stakeholderId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -137,7 +137,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManage() {
+    public Result processManage() {
 
         // bind the form
         Form<StakeholderFormData> boundForm = formTemplate.bindFromRequest();
@@ -198,7 +198,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result delete(Long id, Long stakeholderId) {
+    public Result delete(Long id, Long stakeholderId) {
 
         // get the stakeholder
         Stakeholder stakeholder = StakeholderDao.getStakeholderById(stakeholderId);

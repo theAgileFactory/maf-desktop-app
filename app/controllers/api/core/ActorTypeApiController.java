@@ -55,7 +55,7 @@ public class ActorTypeApiController extends ApiController {
     @ApiOperation(value = "list Actor Types", notes = "Return the list of Actor Types in the system", response = ActorType.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getActorTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getActorTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(ActorDao.getActorTypeAsListByFilter(selectable));
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class ActorTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getActorTypeById(@ApiParam(value = "actor type id", required = true) @PathParam("id") Long id) {
+    public Result getActorTypeById(@ApiParam(value = "actor type id", required = true) @PathParam("id") Long id) {
 
         try {
             if (ActorDao.getActorTypeById(id) == null) {

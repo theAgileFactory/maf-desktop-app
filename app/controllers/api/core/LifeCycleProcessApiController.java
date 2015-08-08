@@ -50,7 +50,7 @@ public class LifeCycleProcessApiController extends ApiController {
     @ApiOperation(value = "list Life Cycle Processes", notes = "Return the list of Life Cycle Processes in the system", response = LifeCycleProcess.class,
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getLifeCycleProcessesList() {
+    public Result getLifeCycleProcessesList() {
         try {
             return getJsonSuccessResponse(LifeCycleProcessDao.getLCProcessAsList());
         } catch (Exception e) {
@@ -70,7 +70,7 @@ public class LifeCycleProcessApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request"),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getLifeCycleProcessById(@ApiParam(value = "life cycle process id", required = true) @PathParam("id") Long id) {
+    public Result getLifeCycleProcessById(@ApiParam(value = "life cycle process id", required = true) @PathParam("id") Long id) {
         try {
             if (LifeCycleProcessDao.getLCProcessById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The Life Cycle Process with the specified id is not found"));

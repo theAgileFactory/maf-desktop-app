@@ -55,7 +55,7 @@ public class PortfolioTypeApiController extends ApiController {
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getPortfolioTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(PortfolioDao.getPortfolioTypeAsListByFilter(selectable));
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class PortfolioTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioTypeById(@ApiParam(value = "portfolio type id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioTypeById(@ApiParam(value = "portfolio type id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioDao.getPortfolioTypeById(id) == null) {

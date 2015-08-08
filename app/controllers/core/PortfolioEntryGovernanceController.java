@@ -100,7 +100,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result index(Long id) {
+    public Result index(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -136,7 +136,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result viewMilestone(Long id, Long milestoneId) {
+    public Result viewMilestone(Long id, Long milestoneId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -277,7 +277,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result requestMilestone(Long id, Long milestoneId) {
+    public Result requestMilestone(Long id, Long milestoneId) {
 
         // if there is already a pending milestone instance, then this is not
         // possible to do a new request
@@ -321,7 +321,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processRequestMilestone() {
+    public Result processRequestMilestone() {
 
         Form<RequestMilestoneFormData> boundForm = requestMilestoneFormTemplate.bindFromRequest();
 
@@ -487,7 +487,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result editPlanning(Long id) {
+    public Result editPlanning(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -510,7 +510,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEditPlanning() {
+    public Result processEditPlanning() {
 
         // bind the form
         Form<PlannedDatesFormData> boundForm = plannedDatesFormTemplate.bindFromRequest();
@@ -557,7 +557,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result changeLifeCycleProcess(Long id) {
+    public Result changeLifeCycleProcess(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -571,7 +571,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processChangeLifeCycleProcess() {
+    public Result processChangeLifeCycleProcess() {
 
         // bind the form
         Form<ChangeLifeCycleProcessFormData> boundForm = changeProcessFormTemplate.bindFromRequest();

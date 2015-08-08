@@ -38,9 +38,9 @@ import framework.utils.Pagination;
  */
 public abstract class PortfolioEntryRiskDao {
 
-    public static Finder<Long, PortfolioEntryRisk> findPortfolioEntryRisk = new Finder<>(Long.class, PortfolioEntryRisk.class);
+    public static Finder<Long, PortfolioEntryRisk> findPortfolioEntryRisk = new Finder<>(PortfolioEntryRisk.class);
 
-    public static Finder<Long, PortfolioEntryRiskType> findPortfolioEntryRiskType = new Finder<>(Long.class, PortfolioEntryRiskType.class);
+    public static Finder<Long, PortfolioEntryRiskType> findPortfolioEntryRiskType = new Finder<>(PortfolioEntryRiskType.class);
 
     /**
      * Default constructor.

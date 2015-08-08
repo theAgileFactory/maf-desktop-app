@@ -76,7 +76,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      * @param dataTypeName
      *            the name of the selected data type
      */
-    public static Result list(String dataTypeName) {
+    public Result list(String dataTypeName) {
 
         DataType dataType = DataType.getDataType(dataTypeName);
         if (dataType == null || !dataType.isCustomAttribute()) {
@@ -107,7 +107,7 @@ public class ConfigurationCustomAttributeController extends Controller {
     /**
      * Switch to another data type for the custom attributes' list.
      */
-    public static Result changeDataType() {
+    public Result changeDataType() {
 
         Form<DataTypeForm> boundForm = dataTypeFormTemplate.bindFromRequest();
 
@@ -126,7 +126,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      * @param isDecrement
      *            if true then we decrement the order, else we increment it.
      */
-    public static Result changeOrder(Long id, Boolean isDecrement) {
+    public Result changeOrder(Long id, Boolean isDecrement) {
 
         CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
 
@@ -170,7 +170,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      * @param id
      *            the custom attribute definition id (0 for create case)
      */
-    public static Result manage(String objectType, Long id) {
+    public Result manage(String objectType, Long id) {
 
         DataType dataType = DataType.getDataTypeFromClassName(objectType);
         if (dataType == null || !dataType.isCustomAttribute()) {
@@ -194,7 +194,7 @@ public class ConfigurationCustomAttributeController extends Controller {
     /**
      * Process the form to create/edit a custom attribute.
      */
-    public static Result processManage() {
+    public Result processManage() {
 
         // bind the form
         Form<CustomAttributeDefinitionFormData> boundForm = customAttributeFormTemplate.bindFromRequest();
@@ -264,7 +264,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      * @param id
      *            the custom attribute definition id
      */
-    public static Result items(Long id) {
+    public Result items(Long id) {
 
         CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
 
@@ -300,7 +300,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      *            if true then we decrement the order, else we increment it.
      * @return
      */
-    public static Result changeItemOrder(Long id, Long itemId, Boolean isDecrement) {
+    public Result changeItemOrder(Long id, Long itemId, Boolean isDecrement) {
 
         CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
 
@@ -366,7 +366,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      * @param itemId
      *            the item id (0 for create)
      */
-    public static Result manageItem(Long id, Long itemId) {
+    public Result manageItem(Long id, Long itemId) {
 
         CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
 
@@ -398,7 +398,7 @@ public class ConfigurationCustomAttributeController extends Controller {
     /**
      * Process the form to create/edit an item.
      */
-    public static Result processManageItem() {
+    public Result processManageItem() {
 
         // bind the form
         Form<CustomAttributeItemFormData> boundForm = itemFormTemplate.bindFromRequest();
@@ -489,7 +489,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      * @param itemId
      *            the item id
      */
-    public static Result deleteItem(Long id, Long itemId) {
+    public Result deleteItem(Long id, Long itemId) {
 
         CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
 
@@ -520,7 +520,7 @@ public class ConfigurationCustomAttributeController extends Controller {
      * @param id
      *            the custom attribute definition id
      */
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
 
         CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
 

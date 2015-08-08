@@ -98,7 +98,7 @@ public class MyPersonalStorage extends Controller {
      * 
      * @return a help page
      */
-    public static Result index() {
+    public Result index() {
         try {
             IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
             String currentUserUid = userSessionManagerPlugin.getUserSessionId(ctx());
@@ -120,7 +120,7 @@ public class MyPersonalStorage extends Controller {
      * @param id
      *            the file id to download
      */
-    public static Promise<Result> download(final String id) {
+    public Promise<Result> download(final String id) {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -146,7 +146,7 @@ public class MyPersonalStorage extends Controller {
      * @param id
      *            the entry id to delete
      */
-    public static Promise<Result> delete(final String id) {
+    public Promise<Result> delete(final String id) {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {

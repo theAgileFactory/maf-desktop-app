@@ -74,7 +74,7 @@ public class PortfolioApiController extends ApiController {
     @ApiOperation(value = "list the Portfolios", notes = "Return the list of Portfolios in the system", response = Portfolio.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfoliosList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
+    public Result getPortfoliosList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
             value = "managerId", required = false) @QueryParam("managerId") Long managerId,
             @ApiParam(value = "portfolioEntryId", required = false) @QueryParam("portfolioEntryId") Long portfolioEntryId, @ApiParam(
                     value = "portfolioTypeId", required = false) @QueryParam("portfolioTypeId") Long portfolioTypeId) {
@@ -116,8 +116,7 @@ public class PortfolioApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static
-            Result getPortfolioById(@ApiParam(value = "Id of the portfolio", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioById(@ApiParam(value = "Id of the portfolio", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioDao.getPortfolioById(id) == null) {

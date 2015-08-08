@@ -73,7 +73,7 @@ public class StakeholderApiController extends ApiController {
     @ApiOperation(value = "list the Stakeholders", notes = "Return the list of Stakeholders in the system", response = Stakeholder.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getStakeholdersList(@ApiParam(value = "actorId", required = false) @QueryParam("actorId") Long actorId, @ApiParam(
+    public Result getStakeholdersList(@ApiParam(value = "actorId", required = false) @QueryParam("actorId") Long actorId, @ApiParam(
             value = "portfolioId", required = false) @QueryParam("portfolioId") Long portfolioId,
             @ApiParam(value = "portfolioEntryId", required = false) @QueryParam("portfolioEntryId") Long portfolioEntryId, @ApiParam(
                     value = "stakeholderTypeId", required = false) @QueryParam("stakeholderTypeId") Long stakeholderTypeId) {
@@ -115,7 +115,7 @@ public class StakeholderApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getStakeholderById(@ApiParam(value = "stakeholder id", required = true) @PathParam("id") Long id) {
+    public Result getStakeholderById(@ApiParam(value = "stakeholder id", required = true) @PathParam("id") Long id) {
 
         try {
             if (StakeholderDao.getStakeholderById(id) == null) {

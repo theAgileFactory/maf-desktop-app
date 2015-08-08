@@ -56,7 +56,7 @@ public class OrgUnitTypeApiController extends ApiController {
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getOrgUnitTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getOrgUnitTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(OrgUnitDao.getOrgUnitTypeAsListByFilter(selectable));
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class OrgUnitTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getOrgUnitTypeById(@ApiParam(value = "org unit id", required = true) @PathParam("id") Long id) {
+    public Result getOrgUnitTypeById(@ApiParam(value = "org unit id", required = true) @PathParam("id") Long id) {
         try {
             if (OrgUnitDao.getOrgUnitTypeById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The Org Unit Type with the specified id is not found"));

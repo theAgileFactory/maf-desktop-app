@@ -71,7 +71,7 @@ public class KpiApiController extends ApiController {
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public static Result addKpiData(@ApiParam(value = "KPI uid", required = true) @PathParam("uid") String uid) {
+    public Result addKpiData(@ApiParam(value = "KPI uid", required = true) @PathParam("uid") String uid) {
         try {
 
             uid = uid.trim();

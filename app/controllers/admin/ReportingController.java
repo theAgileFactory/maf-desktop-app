@@ -48,7 +48,7 @@ public class ReportingController extends Controller {
     /**
      * The reporting administration page.
      */
-    public static Result index() {
+    public Result index() {
 
         List<ReportingCategory> roots = ReportingDao.getReportingCategoryRootsAsList();
         Long categoryId = null;
@@ -65,14 +65,14 @@ public class ReportingController extends Controller {
      * @param categoryId
      *            the category id
      */
-    public static Result indexForCategory(Long categoryId) {
+    public Result indexForCategory(Long categoryId) {
         return ok(views.html.admin.reporting.index.render(categoryId));
     }
 
     /**
      * Display the list of reports for a category.
      */
-    public static Result listFragment() {
+    public Result listFragment() {
 
         if (request().getQueryString("categoryId") != null) {
 
@@ -104,7 +104,7 @@ public class ReportingController extends Controller {
      * @param id
      *            the report id
      */
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
 
         Reporting report = ReportingDao.getReportingById(id);
 
@@ -116,7 +116,7 @@ public class ReportingController extends Controller {
     /**
      * Save the configuration of a report.
      */
-    public static Result save() {
+    public Result save() {
 
         // bind the form
         Form<ReportingFormData> boundForm = formTemplate.bindFromRequest();

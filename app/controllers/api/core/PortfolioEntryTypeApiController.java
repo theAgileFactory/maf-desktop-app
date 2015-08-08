@@ -55,7 +55,7 @@ public class PortfolioEntryTypeApiController extends ApiController {
             response = PortfolioEntryType.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getPortfolioEntryTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(PortfolioEntryDao.getPETypeAsListByFilter(selectable));
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class PortfolioEntryTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryTypeById(@ApiParam(value = "portfolio entry type id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryTypeById(@ApiParam(value = "portfolio entry type id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPETypeById(id) == null) {

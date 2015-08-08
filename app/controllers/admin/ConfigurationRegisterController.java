@@ -61,7 +61,7 @@ public class ConfigurationRegisterController extends Controller {
     /**
      * Display the lists of data.
      */
-    public static Result list() {
+    public Result list() {
 
         // risk types
         List<PortfolioEntryRiskType> portfolioEntryRiskTypes = PortfolioEntryRiskDao.getPERiskTypeAsList();
@@ -106,7 +106,7 @@ public class ConfigurationRegisterController extends Controller {
      * @param riskTypeId
      *            the risk type id (set 0 for create case)
      */
-    public static Result manageRiskType(Long riskTypeId) {
+    public Result manageRiskType(Long riskTypeId) {
 
         // initiate the form with the template
         Form<PortfolioEntryRiskTypeFormData> riskTypeForm = riskTypeFormTemplate;
@@ -127,7 +127,7 @@ public class ConfigurationRegisterController extends Controller {
     /**
      * Process the edit/create form of a risk type.
      */
-    public static Result processManageRiskType() {
+    public Result processManageRiskType() {
 
         // bind the form
         Form<PortfolioEntryRiskTypeFormData> boundForm = riskTypeFormTemplate.bindFromRequest();
@@ -173,7 +173,7 @@ public class ConfigurationRegisterController extends Controller {
      * @param riskTypeId
      *            the risk type id
      */
-    public static Result deleteRiskType(Long riskTypeId) {
+    public Result deleteRiskType(Long riskTypeId) {
 
         PortfolioEntryRiskType riskType = PortfolioEntryRiskDao.getPERiskTypeById(riskTypeId);
 
@@ -193,7 +193,7 @@ public class ConfigurationRegisterController extends Controller {
      * @param reportStatusTypeId
      *            the report status type id (set 0 for create case)
      */
-    public static Result manageReportStatusType(Long reportStatusTypeId) {
+    public Result manageReportStatusType(Long reportStatusTypeId) {
 
         Form<PortfolioEntryReportStatusTypeFormData> reportStatusTypeForm = reportStatusTypeFormTemplate;
 
@@ -214,7 +214,7 @@ public class ConfigurationRegisterController extends Controller {
     /**
      * Process the edit/create form of a report status type.
      */
-    public static Result processManageReportStatusType() {
+    public Result processManageReportStatusType() {
 
         // bind the form
         Form<PortfolioEntryReportStatusTypeFormData> boundForm = reportStatusTypeFormTemplate.bindFromRequest();
@@ -260,7 +260,7 @@ public class ConfigurationRegisterController extends Controller {
      * @param reportStatusTypeId
      *            the report status type id
      */
-    public static Result deleteReportStatusType(Long reportStatusTypeId) {
+    public Result deleteReportStatusType(Long reportStatusTypeId) {
 
         PortfolioEntryReportStatusType reportStatusType = PortfolioEntryReportDao.getPEReportStatusTypeById(reportStatusTypeId);
 
@@ -279,7 +279,7 @@ public class ConfigurationRegisterController extends Controller {
      * @param eventTypeId
      *            the event type id (set 0 for create case)
      */
-    public static Result manageEventType(Long eventTypeId) {
+    public Result manageEventType(Long eventTypeId) {
 
         Form<PortfolioEntryEventTypeFormData> eventTypeForm = eventTypeFormTemplate;
 
@@ -298,7 +298,7 @@ public class ConfigurationRegisterController extends Controller {
     /**
      * Process the edit/create form of an event type.
      */
-    public static Result processManageEventType() {
+    public Result processManageEventType() {
 
         // bind the form
         Form<PortfolioEntryEventTypeFormData> boundForm = eventTypeFormTemplate.bindFromRequest();
@@ -343,7 +343,7 @@ public class ConfigurationRegisterController extends Controller {
      * @param eventTypeId
      *            the event type id
      */
-    public static Result deleteEventType(Long eventTypeId) {
+    public Result deleteEventType(Long eventTypeId) {
 
         PortfolioEntryEventType eventType = PortfolioEntryEventDao.getPEEventTypeById(eventTypeId);
 

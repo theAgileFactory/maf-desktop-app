@@ -111,7 +111,7 @@ public class ReleaseController extends Controller {
      *            define if the filter must be reseted
      */
     @Restrict({ @Group(IMafConstants.RELEASE_VIEW_ALL_PERMISSION), @Group(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION) })
-    public static Result list(Boolean reset) {
+    public Result list(Boolean reset) {
 
         try {
 
@@ -159,7 +159,7 @@ public class ReleaseController extends Controller {
      * Export the content of the current list of releases as Excel.
      */
     @Restrict({ @Group(IMafConstants.RELEASE_VIEW_ALL_PERMISSION), @Group(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION) })
-    public static Promise<Result> exportListAsExcel() {
+    public Promise<Result> exportListAsExcel() {
 
         return Promise.promise(new Function0<Result>() {
             @Override
@@ -229,7 +229,7 @@ public class ReleaseController extends Controller {
      * Filter the releases list.
      */
     @Restrict({ @Group(IMafConstants.RELEASE_VIEW_ALL_PERMISSION), @Group(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION) })
-    public static Result listFilter() {
+    public Result listFilter() {
 
         try {
 
@@ -259,7 +259,7 @@ public class ReleaseController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.RELEASE_VIEW_ALL_PERMISSION), @Group(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION) })
-    public static Result planning() {
+    public Result planning() {
 
         try {
             FilterConfig<ReleaseListView> filterConfig = null;
@@ -414,7 +414,7 @@ public class ReleaseController extends Controller {
      */
     @With(CheckReleaseExists.class)
     @Dynamic(DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION)
-    public static Result view(Long id, Integer page) {
+    public Result view(Long id, Integer page) {
 
         Release release = ReleaseDAO.getReleaseById(id);
 
@@ -447,7 +447,7 @@ public class ReleaseController extends Controller {
      */
     @With(CheckReleaseExists.class)
     @Dynamic(DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION)
-    public static Result viewInitiative(Long id, Long portfolioEntryId) {
+    public Result viewInitiative(Long id, Long portfolioEntryId) {
 
         // get the association
         ReleasePortfolioEntry releasePortfolioEntry = ReleaseDAO.getReleaseByIdAndPE(id, portfolioEntryId);
@@ -475,7 +475,7 @@ public class ReleaseController extends Controller {
      * Display the form to create a new release.
      */
     @Restrict({ @Group(IMafConstants.RELEASE_EDIT_ALL_PERMISSION) })
-    public static Result create() {
+    public Result create() {
 
         IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
         Actor actor = ActorDao.getActorByUid(userSessionManagerPlugin.getUserSessionId(ctx()));
@@ -492,7 +492,7 @@ public class ReleaseController extends Controller {
      * Process the form to create a new release.
      */
     @Restrict({ @Group(IMafConstants.RELEASE_EDIT_ALL_PERMISSION) })
-    public static Result saveCreate() {
+    public Result saveCreate() {
 
         // bind the form
         Form<ReleaseFormData> boundForm = formTemplate.bindFromRequest();
@@ -524,7 +524,7 @@ public class ReleaseController extends Controller {
      */
     @With(CheckReleaseExists.class)
     @Dynamic(DefaultDynamicResourceHandler.RELEASE_EDIT_DYNAMIC_PERMISSION)
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
 
         // get the release
         Release release = ReleaseDAO.getReleaseById(id);
@@ -543,7 +543,7 @@ public class ReleaseController extends Controller {
      */
     @With(CheckReleaseExists.class)
     @Dynamic(DefaultDynamicResourceHandler.RELEASE_EDIT_DYNAMIC_PERMISSION)
-    public static Result saveEdit() {
+    public Result saveEdit() {
 
         // bind the form
         Form<ReleaseFormData> boundForm = formTemplate.bindFromRequest();
@@ -578,7 +578,7 @@ public class ReleaseController extends Controller {
      */
     @With(CheckReleaseExists.class)
     @Dynamic(DefaultDynamicResourceHandler.RELEASE_EDIT_DYNAMIC_PERMISSION)
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
 
         // get the release
         Release release = ReleaseDAO.getReleaseById(id);

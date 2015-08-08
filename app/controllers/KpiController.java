@@ -35,7 +35,7 @@ public class KpiController extends Controller {
     /**
      * Display the trend of a KPI.
      */
-    public static Result trend() {
+    public Result trend() {
         return ServiceManager.getService(IKpiService.NAME, IKpiService.class).trend(Context.current());
     }
 }

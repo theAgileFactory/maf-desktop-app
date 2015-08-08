@@ -33,7 +33,7 @@ public class Redirector extends Controller {
      * Project management tool (redmine) redirector.
      */
     @SubjectPresent
-    public static Result pm() {
+    public Result pm() {
         return redirect("/redmine");
     }
 
@@ -42,7 +42,7 @@ public class Redirector extends Controller {
      * 
      */
     @SubjectPresent
-    public static Result ci() {
+    public Result ci() {
         return redirect("/");
     }
 
@@ -50,7 +50,7 @@ public class Redirector extends Controller {
      * Governance redirector.
      */
     @SubjectPresent
-    public static Result governance() {
+    public Result governance() {
         return redirect("/");
     }
 
@@ -58,7 +58,7 @@ public class Redirector extends Controller {
      * SVN redirector.
      */
     @SubjectPresent
-    public static Result scm() {
+    public Result scm() {
         return redirect("/svn");
     }
 
@@ -66,7 +66,7 @@ public class Redirector extends Controller {
      * Reporting tool redirector.
      */
     @SubjectPresent
-    public static Result reporting() {
+    public Result reporting() {
         return redirect("/maf-reporting");
     }
 }

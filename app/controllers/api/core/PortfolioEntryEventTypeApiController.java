@@ -56,7 +56,7 @@ public class PortfolioEntryEventTypeApiController extends ApiController {
             response = PortfolioEntryEventType.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryEventTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getPortfolioEntryEventTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(PortfolioEntryEventDao.getPEEventTypeAsListByFilter(selectable));
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class PortfolioEntryEventTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryEventTypeById(@ApiParam(value = "portfolio entry event type id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryEventTypeById(@ApiParam(value = "portfolio entry event type id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryEventDao.getPEEventTypeById(id) == null) {

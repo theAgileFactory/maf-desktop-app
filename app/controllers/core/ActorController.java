@@ -116,7 +116,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @SubjectPresent
-    public static Result view(Long id) {
+    public Result view(Long id) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -163,7 +163,7 @@ public class ActorController extends Controller {
      * Form to create a new actor (available from Admin menu).
      */
     @Restrict({ @Group(IMafConstants.ACTOR_EDIT_ALL_PERMISSION) })
-    public static Result create() {
+    public Result create() {
 
         // construct the form
         Form<ActorFormData> actorForm = formTemplate;
@@ -182,7 +182,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -200,7 +200,7 @@ public class ActorController extends Controller {
      * Process the save of an actor (create and edit cases).
      */
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result save() {
+    public Result save() {
 
         // bind the form
         Form<ActorFormData> boundForm = formTemplate.bindFromRequest();
@@ -271,7 +271,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_DELETE_DYNAMIC_PERMISSION)
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -293,7 +293,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result editCompetencies(Long id) {
+    public Result editCompetencies(Long id) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -310,7 +310,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEditCompetencies() {
+    public Result processEditCompetencies() {
 
         // bind the form
         Form<ActorCompetenciesFormData> boundForm = competenciesFormTemplate.bindFromRequest();
@@ -354,7 +354,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result processEditDefaultCompetency() {
+    public Result processEditDefaultCompetency() {
 
         // bind the form
         Form<ActorDefaultCompetencyFormData> boundForm = defaultCompetencyFormTemplate.bindFromRequest();
@@ -385,7 +385,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
-    public static Result listPortfolioEntries(Long id, Integer page) {
+    public Result listPortfolioEntries(Long id, Integer page) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -415,7 +415,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
-    public static Result listPortfolios(Long id, Integer page) {
+    public Result listPortfolios(Long id, Integer page) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -441,7 +441,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
-    public static Result allocation(Long id) {
+    public Result allocation(Long id) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -579,7 +579,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
-    public static Result allocationDetails(Long id, Integer pagePortfolioEntry, Integer pageActivity, Boolean viewAllActivities) {
+    public Result allocationDetails(Long id, Integer pagePortfolioEntry, Integer pageActivity, Boolean viewAllActivities) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -645,7 +645,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageAllocatedActivity(Long id, Long allocatedActivityId) {
+    public Result manageAllocatedActivity(Long id, Long allocatedActivityId) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);
@@ -680,7 +680,7 @@ public class ActorController extends Controller {
      * Get the activities of a type.
      */
     @SubjectPresent
-    public static Result getActivities() {
+    public Result getActivities() {
 
         JsonNode json = request().body().asJson();
         Long activityTypeId = json.findPath("activityTypeId").asLong();
@@ -702,7 +702,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageAllocatedActivity() {
+    public Result processManageAllocatedActivity() {
 
         // bind the form
         Form<TimesheetActivityAllocatedActorFormData> boundForm = allocatedActivityFormTemplate.bindFromRequest();
@@ -761,7 +761,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteAllocatedActivity(Long id, Long allocatedActivityId) {
+    public Result deleteAllocatedActivity(Long id, Long allocatedActivityId) {
 
         // get the allocated activity
         TimesheetActivityAllocatedActor allocatedActivity = TimesheetDao.getTimesheetActivityAllocatedActorById(allocatedActivityId);
@@ -791,7 +791,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
-    public static Result capacity(Long id, Integer year) {
+    public Result capacity(Long id, Integer year) {
 
         if (year.equals(0)) {
             year = Calendar.getInstance().get(Calendar.YEAR);
@@ -813,7 +813,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
-    public static Result saveCapacity() {
+    public Result saveCapacity() {
 
         // bind the form
         Form<ActorCapacityFormData> boundForm = capacityFormTemplate.bindFromRequest();
@@ -851,7 +851,7 @@ public class ActorController extends Controller {
      */
     @With(CheckActorExists.class)
     @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
-    public static Result viewWeeklyTimesheet(Long id, String stringDate) {
+    public Result viewWeeklyTimesheet(Long id, String stringDate) {
 
         // get the actor
         Actor actor = ActorDao.getActorById(id);

@@ -59,7 +59,7 @@ public class ConfigurationPortfolioController extends Controller {
     /**
      * Display the lists of data.
      */
-    public static Result list() {
+    public Result list() {
 
         // portfolio entry types
         List<PortfolioEntryType> portfolioEntryTypes = PortfolioEntryDao.getPETypeAsList();
@@ -102,7 +102,7 @@ public class ConfigurationPortfolioController extends Controller {
      * @param portfolioEntryTypeId
      *            the portfolio entry type id (set 0 for create case)
      */
-    public static Result managePortfolioEntryType(Long portfolioEntryTypeId) {
+    public Result managePortfolioEntryType(Long portfolioEntryTypeId) {
 
         // initiate the form with the template
         Form<PortfolioEntryTypeFormData> portfolioEntryTypeForm = portfolioEntryTypeFormTemplate;
@@ -122,7 +122,7 @@ public class ConfigurationPortfolioController extends Controller {
     /**
      * Process the edit/create form of a portfolio entry type.
      */
-    public static Result savePortfolioEntryType() {
+    public Result savePortfolioEntryType() {
 
         // bind the form
         Form<PortfolioEntryTypeFormData> boundForm = portfolioEntryTypeFormTemplate.bindFromRequest();
@@ -168,7 +168,7 @@ public class ConfigurationPortfolioController extends Controller {
      * @param portfolioEntryTypeId
      *            the portfolio entry type id
      */
-    public static Result deletePortfolioEntryType(Long portfolioEntryTypeId) {
+    public Result deletePortfolioEntryType(Long portfolioEntryTypeId) {
 
         PortfolioEntryType portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryTypeId);
 
@@ -187,7 +187,7 @@ public class ConfigurationPortfolioController extends Controller {
      * @param portfolioEntryDependencyTypeId
      *            the portfolio entry dependency type id (set 0 for create case)
      */
-    public static Result managePortfolioEntryDependencyType(Long portfolioEntryDependencyTypeId) {
+    public Result managePortfolioEntryDependencyType(Long portfolioEntryDependencyTypeId) {
 
         // initiate the form with the template
         Form<PortfolioEntryDependencyTypeFormData> portfolioEntryDependencyTypeForm = portfolioEntryDependencyTypeFormTemplate;
@@ -208,7 +208,7 @@ public class ConfigurationPortfolioController extends Controller {
     /**
      * Process the edit/create form of a portfolio entry dependency type.
      */
-    public static Result savePortfolioEntryDependencyType() {
+    public Result savePortfolioEntryDependencyType() {
 
         // bind the form
         Form<PortfolioEntryDependencyTypeFormData> boundForm = portfolioEntryDependencyTypeFormTemplate.bindFromRequest();
@@ -253,7 +253,7 @@ public class ConfigurationPortfolioController extends Controller {
      * @param portfolioEntryDependencyTypeId
      *            the portfolio entry dependency type id
      */
-    public static Result deletePortfolioEntryDependencyType(Long portfolioEntryDependencyTypeId) {
+    public Result deletePortfolioEntryDependencyType(Long portfolioEntryDependencyTypeId) {
 
         PortfolioEntryDependencyType portfolioEntryDependencyType = PortfolioEntryDao.getPEDependencyTypeById(portfolioEntryDependencyTypeId);
 
@@ -270,7 +270,7 @@ public class ConfigurationPortfolioController extends Controller {
      * @param portfolioTypeId
      *            the portfolio type id (set 0 for create case)
      */
-    public static Result managePortfolioType(Long portfolioTypeId) {
+    public Result managePortfolioType(Long portfolioTypeId) {
 
         // initiate the form with the template
         Form<PortfolioTypeFormData> portfolioTypeForm = portfolioTypeFormTemplate;
@@ -291,7 +291,7 @@ public class ConfigurationPortfolioController extends Controller {
     /**
      * Process the edit/create form of a portfolio type.
      */
-    public static Result savePortfolioType() {
+    public Result savePortfolioType() {
 
         // bind the form
         Form<PortfolioTypeFormData> boundForm = portfolioTypeFormTemplate.bindFromRequest();
@@ -337,7 +337,7 @@ public class ConfigurationPortfolioController extends Controller {
      * @param portfolioTypeId
      *            the portfolio type id
      */
-    public static Result deletePortfolioType(Long portfolioTypeId) {
+    public Result deletePortfolioType(Long portfolioTypeId) {
 
         PortfolioType portfolioType = PortfolioDao.getPortfolioTypeById(portfolioTypeId);
 

@@ -32,7 +32,7 @@ import framework.utils.ISelectableValueHolderCollection;
  */
 public abstract class LifeCycleProcessDao {
 
-    public static Finder<Long, LifeCycleProcess> findLifeCycleProcess = new Finder<>(Long.class, LifeCycleProcess.class);
+    public static Finder<Long, LifeCycleProcess> findLifeCycleProcess = new Finder<>(LifeCycleProcess.class);
 
     /**
      * Default constructor.

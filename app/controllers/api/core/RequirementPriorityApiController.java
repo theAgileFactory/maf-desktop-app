@@ -49,7 +49,7 @@ public class RequirementPriorityApiController extends ApiController {
     @ApiOperation(value = "list the Requirement Priorities", notes = "Return the list of Requirement Priorities in the system",
             response = RequirementPriority.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getRequirementPrioritiesList() {
+    public Result getRequirementPrioritiesList() {
         try {
             return getJsonSuccessResponse(RequirementDAO.getRequirementPriorityAsList());
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class RequirementPriorityApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getRequirementPriorityById(@ApiParam(value = "Requirement Priority id", required = true) @PathParam("id") Long id) {
+    public Result getRequirementPriorityById(@ApiParam(value = "Requirement Priority id", required = true) @PathParam("id") Long id) {
         try {
             if (RequirementDAO.getRequirementPriorityById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The Requirement Priority with the specified id is not found"));

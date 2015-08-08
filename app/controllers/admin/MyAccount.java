@@ -58,7 +58,7 @@ public class MyAccount extends Controller {
      * Display the user account information.
      */
     @SubjectPresent
-    public static Result display() {
+    public Result display() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             IUserAccount account = getCurrentUserAccount(accountManagerPlugin);
@@ -73,7 +73,7 @@ public class MyAccount extends Controller {
      * Display the form to update the basic account information.
      */
     @SubjectPresent
-    public static Result editBasicData() {
+    public Result editBasicData() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             IUserAccount account = getCurrentUserAccount(accountManagerPlugin);
@@ -89,7 +89,7 @@ public class MyAccount extends Controller {
      * Display the form to edit the e-mail address.
      */
     @SubjectPresent
-    public static Result editEmail() {
+    public Result editEmail() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             if (!accountManagerPlugin.isSelfMailUpdateAllowed()) {
@@ -108,7 +108,7 @@ public class MyAccount extends Controller {
      * Display the form to edit the password.
      */
     @SubjectPresent
-    public static Result editPassword() {
+    public Result editPassword() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
@@ -126,7 +126,7 @@ public class MyAccount extends Controller {
      * Save the basic data information.
      */
     @SubjectPresent
-    public static Result saveBasicData() {
+    public Result saveBasicData() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             Form<UserAccountFormData> boundForm = basicDataUpdateForm.bindFromRequest();
@@ -150,7 +150,7 @@ public class MyAccount extends Controller {
      * e-mail update validation.
      */
     @SubjectPresent
-    public static Result saveEmail() {
+    public Result saveEmail() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             if (!accountManagerPlugin.isSelfMailUpdateAllowed()) {
@@ -202,7 +202,7 @@ public class MyAccount extends Controller {
      *            the key for the email validation
      */
     @SubjectPresent
-    public static Result validateEmailUpdate(String validationKey) {
+    public Result validateEmailUpdate(String validationKey) {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             if (!accountManagerPlugin.isSelfMailUpdateAllowed()) {
@@ -226,7 +226,7 @@ public class MyAccount extends Controller {
      * Update the password.
      */
     @SubjectPresent
-    public static Result savePassword() {
+    public Result savePassword() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
@@ -279,7 +279,7 @@ public class MyAccount extends Controller {
      * @return a user account instance
      * @throws AccountManagementException
      */
-    private static IUserAccount getCurrentUserAccount(IAccountManagerPlugin accountManagerPlugin) throws AccountManagementException {
+    private IUserAccount getCurrentUserAccount(IAccountManagerPlugin accountManagerPlugin) throws AccountManagementException {
         IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
         return accountManagerPlugin.getUserAccountFromUid(userSessionPlugin.getUserSessionId(ctx()));
     }

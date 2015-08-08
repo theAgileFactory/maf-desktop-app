@@ -118,7 +118,7 @@ public class SharedStorageManagerController extends Controller {
      * 
      * @return a help page
      */
-    public static Result index() {
+    public Result index() {
         try {
             ISharedStorageService sharedStorageService = ServiceManager.getService(ISharedStorageService.NAME, ISharedStorageService.class);
             Table<SharedStorageFile> loadedInputFileTable = getSharedStorageFiles(sharedStorageService, IMafConstants.INPUT_FOLDER_NAME);
@@ -159,7 +159,7 @@ public class SharedStorageManagerController extends Controller {
      * @param id
      *            the file id to download
      */
-    public static Promise<Result> download(final String id) {
+    public Promise<Result> download(final String id) {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -182,7 +182,7 @@ public class SharedStorageManagerController extends Controller {
      * @param id
      *            the entry id to delete
      */
-    public static Promise<Result> delete(final String id) {
+    public Promise<Result> delete(final String id) {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -207,7 +207,7 @@ public class SharedStorageManagerController extends Controller {
      * @param isInput
      *            settled to true for input, to false for ouput
      */
-    public static Result uploadForm(String folderName, Boolean isInput) {
+    public Result uploadForm(String folderName, Boolean isInput) {
         return ok(views.html.admin.plugin.sharedstorage_upload.render(folderName, isInput,
                 Play.application().configuration().getInt("maf.sftp.store.maxfilenumber")));
     }
@@ -222,7 +222,7 @@ public class SharedStorageManagerController extends Controller {
      * @return
      */
     @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = MAX_FILE_SIZE)
-    public static Promise<Result> upload(final boolean isInput) {
+    public Promise<Result> upload(final boolean isInput) {
         final String folderName = isInput ? IFrameworkConstants.INPUT_FOLDER_NAME : IFrameworkConstants.OUTPUT_FOLDER_NAME;
         final ISharedStorageService sharedStorageService = ServiceManager.getService(ISharedStorageService.NAME, ISharedStorageService.class);
 
@@ -270,7 +270,7 @@ public class SharedStorageManagerController extends Controller {
      * @param message
      *            a flash message to be displayed as an error (if not null)
      */
-    private static Promise<Result> redirectToIndexAsPromiseWithErrorMessage(final String message) {
+    private Promise<Result> redirectToIndexAsPromiseWithErrorMessage(final String message) {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {

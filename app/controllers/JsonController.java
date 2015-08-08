@@ -38,42 +38,42 @@ public class JsonController extends Controller {
     /**
      * Search from actors.
      */
-    public static Result manager() {
+    public Result manager() {
         return ok(Utilities.marshallAsJson(ActorDao.getActorAsVHByKeywords(request().getQueryString("query")).getValues()));
     }
 
     /**
      * Search from sponsoring units.
      */
-    public static Result sponsoringUnit() {
+    public Result sponsoringUnit() {
         return ok(Utilities.marshallAsJson(OrgUnitDao.getOrgUnitActiveCanSponsorAsVHByKeywords(request().getQueryString("query")).getValues()));
     }
 
     /**
      * Search from delivery units.
      */
-    public static Result deliveryUnit() {
+    public Result deliveryUnit() {
         return ok(Utilities.marshallAsJson(OrgUnitDao.getOrgUnitActiveCanDeliverAsVHByKeywords(request().getQueryString("query")).getValues()));
     }
 
     /**
      * Search from portfolios.
      */
-    public static Result portfolio() {
+    public Result portfolio() {
         return ok(Utilities.marshallAsJson(PortfolioDao.getPortfolioAsVHByKeywords(request().getQueryString("query")).getValues()));
     }
 
     /**
      * Search from purchase orders.
      */
-    public static Result purchaseOrder() {
+    public Result purchaseOrder() {
         return ok(Utilities.marshallAsJson(PurchaseOrderDAO.getPurchaseOrderActiveAsVHByRefIdLike(request().getQueryString("query")).getValues()));
     }
 
     /**
      * Search from application blocks.
      */
-    public static Result applicationBlock() {
+    public Result applicationBlock() {
         return ok(Utilities.marshallAsJson(ArchitectureDao.getApplicationBlockAsVHByKeywords(request().getQueryString("query")).getValues()));
     }
 }

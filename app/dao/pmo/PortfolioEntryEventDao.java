@@ -37,9 +37,9 @@ import framework.utils.Pagination;
  */
 public abstract class PortfolioEntryEventDao {
 
-    public static Finder<Long, PortfolioEntryEvent> findPortfolioEntryEvent = new Finder<>(Long.class, PortfolioEntryEvent.class);
+    public static Finder<Long, PortfolioEntryEvent> findPortfolioEntryEvent = new Finder<>(PortfolioEntryEvent.class);
 
-    public static Finder<Long, PortfolioEntryEventType> findPortfolioEntryEventType = new Finder<>(Long.class, PortfolioEntryEventType.class);
+    public static Finder<Long, PortfolioEntryEventType> findPortfolioEntryEventType = new Finder<>(PortfolioEntryEventType.class);
 
     /**
      * Default constructor.

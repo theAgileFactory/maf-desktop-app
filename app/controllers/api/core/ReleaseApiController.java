@@ -70,7 +70,7 @@ public class ReleaseApiController extends ApiController {
     @ApiOperation(value = "list the Releases", notes = "Return the list of the Releases in the system", response = Release.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getReleasesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
+    public Result getReleasesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
             value = "managerId", required = false) @QueryParam("managerId") Long managerId,
             @ApiParam(value = "portfolioEntryId", required = false) @QueryParam("portfolioEntryId") Long portfolioEntryId) {
 
@@ -110,7 +110,7 @@ public class ReleaseApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getReleaseById(@ApiParam(value = "Release  id", required = true) @PathParam("id") Long id) {
+    public Result getReleaseById(@ApiParam(value = "Release  id", required = true) @PathParam("id") Long id) {
 
         try {
             if (ReleaseDAO.getReleaseById(id) == null) {

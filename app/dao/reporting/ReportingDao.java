@@ -38,11 +38,11 @@ import play.mvc.Http;
  */
 public abstract class ReportingDao {
 
-    public static Finder<Long, Reporting> findReporting = new Finder<>(Long.class, Reporting.class);
+    public static Finder<Long, Reporting> findReporting = new Finder<>(Reporting.class);
 
-    public static Finder<Long, ReportingAuthorization> findReportingAuthorization = new Finder<>(Long.class, ReportingAuthorization.class);
+    public static Finder<Long, ReportingAuthorization> findReportingAuthorization = new Finder<>(ReportingAuthorization.class);
 
-    public static Finder<Long, ReportingCategory> findReportingCategory = new Finder<>(Long.class, ReportingCategory.class);
+    public static Finder<Long, ReportingCategory> findReportingCategory = new Finder<>(ReportingCategory.class);
 
     /**
      * Default constructor.

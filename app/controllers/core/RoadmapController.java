@@ -132,7 +132,7 @@ public class RoadmapController extends Controller {
      * @param reset
      *            define if the filter must be reseted
      */
-    public static Result index(Boolean reset) {
+    public Result index(Boolean reset) {
 
         try {
 
@@ -179,7 +179,7 @@ public class RoadmapController extends Controller {
      * Filter the portfolio entry table (this action is called when the user
      * update the table selector/filter).
      */
-    public static Result indexFilter() {
+    public Result indexFilter() {
 
         try {
 
@@ -206,7 +206,7 @@ public class RoadmapController extends Controller {
     /**
      * Export the content of the current table as Excel.
      */
-    public static Promise<Result> exportAsExcel() {
+    public Promise<Result> exportAsExcel() {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -286,7 +286,7 @@ public class RoadmapController extends Controller {
      * -we display one interval (bar) by phase according to the computed start
      * and end dates (see just above)
      */
-    public static Result viewPlanning() {
+    public Result viewPlanning() {
 
         try {
 
@@ -437,7 +437,7 @@ public class RoadmapController extends Controller {
     /**
      * Get all portfolio entries id according to the current filter.
      */
-    public static Result getAllIds() {
+    public Result getAllIds() {
 
         try {
 
@@ -470,7 +470,7 @@ public class RoadmapController extends Controller {
      * Return the HTML fragment of the KPIs for "scenario simulator".
      */
     @Restrict({ @Group(IMafConstants.ROADMAP_SIMULATOR_PERMISSION) })
-    public static Result simulatorKpisFragment() {
+    public Result simulatorKpisFragment() {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
 
@@ -546,7 +546,7 @@ public class RoadmapController extends Controller {
      * The capacity forecast table.
      */
     @Restrict({ @Group(IMafConstants.ROADMAP_SIMULATOR_PERMISSION) })
-    public static Result simulatorCapacityForecast() {
+    public Result simulatorCapacityForecast() {
 
         try {
 
@@ -770,7 +770,7 @@ public class RoadmapController extends Controller {
      * @param month
      *            the month
      */
-    public static Result simulatorCapacityForecastCellDetailsFragment(String objectType, Long objectId, Integer year, Integer month) {
+    public Result simulatorCapacityForecastCellDetailsFragment(String objectType, Long objectId, Integer year, Integer month) {
 
         try {
 

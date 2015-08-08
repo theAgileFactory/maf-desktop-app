@@ -53,7 +53,7 @@ public class MessagingController extends Controller {
      * The messaging page (list of all message, form to send a message).
      */
     @SubjectPresent
-    public static Result index() {
+    public Result index() {
 
         String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
         Table<Notification> messagesTables =
@@ -68,7 +68,7 @@ public class MessagingController extends Controller {
     /**
      * Send a notification message.
      */
-    public static Result sendMessage() {
+    public Result sendMessage() {
 
         String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
         Table<Notification> messagesTables =

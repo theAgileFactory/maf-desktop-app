@@ -41,8 +41,8 @@ import framework.utils.Pagination;
  */
 public abstract class ReleaseDAO {
 
-    public static Finder<Long, Release> findRelease = new Finder<>(Long.class, Release.class);
-    public static Finder<Long, ReleasePortfolioEntry> findReleasePortfolioEntry = new Finder<>(Long.class, ReleasePortfolioEntry.class);
+    public static Finder<Long, Release> findRelease = new Finder<>(Release.class);
+    public static Finder<Long, ReleasePortfolioEntry> findReleasePortfolioEntry = new Finder<>(ReleasePortfolioEntry.class);
 
     /**
      * Default constructor.

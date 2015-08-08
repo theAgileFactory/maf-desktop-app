@@ -112,7 +112,7 @@ public class AuditableController extends Controller {
     /**
      * Display a list of Auditable.
      */
-    public static Result listAuditable() {
+    public Result listAuditable() {
         try {
             Table<Auditable> table = tableTemplate.fill(AuditLoggerUtilities.getInstance().getAllActiveAuditable());
             return ok(views.html.admin.audit.auditable_table.render(Messages.get("admin.auditable.list.title"), table));
@@ -127,7 +127,7 @@ public class AuditableController extends Controller {
      * @param objectClass
      *            an Auditable objectClasst
      */
-    public static Result deleteAuditable(String objectClass) {
+    public Result deleteAuditable(String objectClass) {
         try {
             AuditLoggerUtilities.getInstance().deleteAuditable(objectClass);
             Utilities.sendSuccessFlashMessage(Messages.get("admin.auditable.delete.success"));
@@ -144,7 +144,7 @@ public class AuditableController extends Controller {
      * @param objectClass
      *            an Auditable objectClass
      */
-    public static Result editAuditable(String objectClass) {
+    public Result editAuditable(String objectClass) {
         try {
             Auditable auditable = AuditLoggerUtilities.getInstance().getAuditableFromObjectClass(objectClass);
             if (auditable != null) {
@@ -162,7 +162,7 @@ public class AuditableController extends Controller {
     /**
      * Display an edition form for a new Auditable.
      */
-    public static Result createAuditable() {
+    public Result createAuditable() {
         try {
             Auditable auditable = new Auditable();
             Form<Auditable> loadedForm = auditableForm.fill(auditable);
@@ -175,7 +175,7 @@ public class AuditableController extends Controller {
     /**
      * Save the Auditable submitted by an edition form.
      */
-    public static Result saveAuditable() {
+    public Result saveAuditable() {
         try {
             Form<Auditable> boundForm = auditableForm.bindFromRequest();
             if (boundForm.hasErrors()) {
@@ -193,7 +193,7 @@ public class AuditableController extends Controller {
     /**
      * Generate an excel representation of all the Auditable objects.
      */
-    public static Promise<Result> excelAuditable() {
+    public Promise<Result> excelAuditable() {
         final List<Auditable> listOfauditable = AuditLoggerUtilities.getInstance().getAllActiveAuditable();
         return Promise.promise(new Function0<Result>() {
             @Override
@@ -222,7 +222,7 @@ public class AuditableController extends Controller {
      * Creates an archive of all the audit logs files and set it into the
      * personal space of the current user.
      */
-    public static Promise<Result> exportAuditLogs() {
+    public Promise<Result> exportAuditLogs() {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -321,17 +321,16 @@ public class AuditableController extends Controller {
      objectClass                                   
      --------------------------------------------------------------------------------*/
 
-    public static PickerHandler<String> singleValuePickerObjectClass = new PickerHandler<String>(String.class, new Handle<String>() {
-        @Override
-        public ISelectableValueHolderCollection<String> getInitialValueHolders(List<String> values, Map<String, String> context) {
-            return AuditableController.getSelectableValuesListForObjectClass(context.get("currentObjectClass"));
-        }
-    });
-
     /**
      * Return a JSON representation of the picker values.
      */
-    public static Result singleValuePickerObjectClassValues() {
+    public Result singleValuePickerObjectClassValues() {
+        PickerHandler<String> singleValuePickerObjectClass = new PickerHandler<String>(String.class, new Handle<String>() {
+            @Override
+            public ISelectableValueHolderCollection<String> getInitialValueHolders(List<String> values, Map<String, String> context) {
+                return AuditableController.getSelectableValuesListForObjectClass(context.get("currentObjectClass"));
+            }
+        });
         return singleValuePickerObjectClass.handle(request());
     }
 

@@ -116,7 +116,7 @@ public class UserManager extends Controller {
     /**
      * Display the form to be used to search a user to be later modified.
      */
-    public static Result displayUserSearchForm() {
+    public Result displayUserSearchForm() {
         Form<UserSeachFormData> userSearchFormLoaded = userSearchForm.fill(new UserSeachFormData());
         return ok(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), userSearchFormLoaded));
     }
@@ -125,7 +125,7 @@ public class UserManager extends Controller {
      * Find a user using either a UID or a mail address.<br/>
      * The option is provided as a parameter of the form.
      */
-    public static Result findUser() {
+    public Result findUser() {
         Form<UserSeachFormData> boundForm = userSearchForm.bindFromRequest();
         if (boundForm.hasErrors()) {
             return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
@@ -228,7 +228,7 @@ public class UserManager extends Controller {
      * @param uid
      *            a unique user id
      */
-    public static Result displayUser(String uid) {
+    public Result displayUser(String uid) {
         IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
         IUserAccount userAccount = null;
         try {
@@ -251,7 +251,7 @@ public class UserManager extends Controller {
      * @param uid
      *            a unique user id
      */
-    public static Result editBasicData(String uid) {
+    public Result editBasicData(String uid) {
         try {
 
             IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
@@ -274,7 +274,7 @@ public class UserManager extends Controller {
      * @param uid
      *            a unique user id
      */
-    public static Result editUserAccountType(String uid) {
+    public Result editUserAccountType(String uid) {
         try {
             IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
@@ -293,7 +293,7 @@ public class UserManager extends Controller {
     /**
      * Save the modified user account type.
      */
-    public static Result saveUserAccountType() {
+    public Result saveUserAccountType() {
         try {
             IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             Form<UserAccountFormData> boundForm = changeAccountTypeForm.bindFromRequest();
@@ -316,7 +316,7 @@ public class UserManager extends Controller {
     /**
      * Save the modified basic data.
      */
-    public static Result saveBasicData() {
+    public Result saveBasicData() {
         try {
             IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             Form<UserAccountFormData> boundForm = basicDataUpdateForm.bindFromRequest();
@@ -340,7 +340,7 @@ public class UserManager extends Controller {
      * @param uid
      *            a unique user id
      */
-    public static Result editMail(String uid) {
+    public Result editMail(String uid) {
         try {
             IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
@@ -358,7 +358,7 @@ public class UserManager extends Controller {
     /**
      * Save the new e-mail address.
      */
-    public static Result saveMail() {
+    public Result saveMail() {
         try {
             IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             Form<UserAccountFormData> boundForm = mailUpdateForm.bindFromRequest();
@@ -390,7 +390,7 @@ public class UserManager extends Controller {
      * @param uid
      *            the unique id for a user
      */
-    public static Result resetPassword(String uid) {
+    public Result resetPassword(String uid) {
         try {
             resetUserPasswordFromUid(uid, true);
             return redirect(controllers.admin.routes.UserManager.displayUser(uid));
@@ -502,7 +502,7 @@ public class UserManager extends Controller {
      * @param uid
      *            the unique ID of the user to edit
      */
-    public static Result editRoles(String uid) {
+    public Result editRoles(String uid) {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
@@ -517,7 +517,7 @@ public class UserManager extends Controller {
     /**
      * Update the user account with the roles specified by the administrator.
      */
-    public static Result saveRoles() {
+    public Result saveRoles() {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             Form<UserAccountFormData> boundForm = rolesUpdateForm.bindFromRequest();
@@ -546,7 +546,7 @@ public class UserManager extends Controller {
      * @param activationStatus
      *            the status (true to unlock, false to lock)
      */
-    public static Result changeActivationStatus(String uid, boolean activationStatus) {
+    public Result changeActivationStatus(String uid, boolean activationStatus) {
 
         IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
 
@@ -586,7 +586,7 @@ public class UserManager extends Controller {
     /**
      * Display the creation form for a new user.
      */
-    public static Result displayUserCreationForm() {
+    public Result displayUserCreationForm() {
 
         if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreateUser()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_user"));
@@ -600,7 +600,7 @@ public class UserManager extends Controller {
     /**
      * Create the new user from the data provided in the creation form.
      */
-    public static Result saveNewUser() {
+    public Result saveNewUser() {
 
         if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreateUser()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_user"));
@@ -678,7 +678,7 @@ public class UserManager extends Controller {
     /**
      * Create a actor from the user data.
      */
-    public static Result createActorFromUser() {
+    public Result createActorFromUser() {
 
         // get the uid
         DynamicForm requestData = Form.form().bindFromRequest();
@@ -718,7 +718,7 @@ public class UserManager extends Controller {
     /**
      * Associate an existing actor to a user.
      */
-    public static Result selectActorForUser() {
+    public Result selectActorForUser() {
 
         // bind the form
         Form<SelectActorForUserFormData> boundForm = selectActorForUserFormData.bindFromRequest();
@@ -745,7 +745,7 @@ public class UserManager extends Controller {
     /**
      * Export as excel the list of MAF users.
      */
-    public static Result exportAsExcel() {
+    public Result exportAsExcel() {
 
         IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
 
@@ -840,7 +840,7 @@ public class UserManager extends Controller {
      * @param uid
      *            a unique user id
      */
-    public static Result deleteUser(String uid) {
+    public Result deleteUser(String uid) {
         IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
         try {
             accountManagerPlugin.deleteAccount(uid);

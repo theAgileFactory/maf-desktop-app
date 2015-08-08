@@ -77,7 +77,7 @@ public class KpiManagerController extends Controller {
     /**
      * List of all KPI definitions sorted by object type.
      */
-    public static Result index() {
+    public Result index() {
 
         List<KpiDefinition> kpiDefinitions = KpiDefinition.getAll();
 
@@ -111,7 +111,7 @@ public class KpiManagerController extends Controller {
      * @param kpiDefinitionId
      *            the KPI definition id
      */
-    public static Result view(Long kpiDefinitionId) {
+    public Result view(Long kpiDefinitionId) {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
@@ -145,7 +145,7 @@ public class KpiManagerController extends Controller {
      * @param isDecrement
      *            if true then we decrement the order, else we increment it
      */
-    public static Result changeOrder(Long kpiDefinitionId, Boolean isDecrement) {
+    public Result changeOrder(Long kpiDefinitionId, Boolean isDecrement) {
 
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
 
@@ -177,7 +177,7 @@ public class KpiManagerController extends Controller {
      * @param kpiDefinitionId
      *            the KPI definition id
      */
-    public static Result edit(Long kpiDefinitionId) {
+    public Result edit(Long kpiDefinitionId) {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
@@ -193,7 +193,7 @@ public class KpiManagerController extends Controller {
      * 
      * @return
      */
-    public static Result save() {
+    public Result save() {
 
         // bind the form
         Form<KpiDefinitionFormData> boundForm = kpiDefinitionFormTemplate.bindFromRequest();
@@ -227,7 +227,7 @@ public class KpiManagerController extends Controller {
      * @param valueType
      *            the value type (main, additional1, additional2)
      */
-    public static Result editValue(Long kpiValueDefinitionId, String valueType) {
+    public Result editValue(Long kpiValueDefinitionId, String valueType) {
 
         // get the KPI value
         KpiValueDefinition kpiValueDefinition = KpiValueDefinition.getById(kpiValueDefinitionId);
@@ -250,7 +250,7 @@ public class KpiManagerController extends Controller {
     /**
      * Process the edit form of a KPI value definition.
      */
-    public static Result saveValue() {
+    public Result saveValue() {
 
         // get the KPI value
         Long kpiValueDefinitionId = Long.valueOf(request().body().asFormUrlEncoded().get("id")[0]);
@@ -308,7 +308,7 @@ public class KpiManagerController extends Controller {
      * @param isDecrement
      *            if true then we decrement the order, else we increment it
      */
-    public static Result changeRuleOrder(Long kpiColorRuleId, Boolean isDecrement) {
+    public Result changeRuleOrder(Long kpiColorRuleId, Boolean isDecrement) {
 
         KpiColorRule kpiColorRule = KpiColorRule.getById(kpiColorRuleId);
 
@@ -345,7 +345,7 @@ public class KpiManagerController extends Controller {
      * @param kpiColorRuleId
      *            the KPI color rule id, set 0 for the add case
      */
-    public static Result manageRule(Long kpiDefinitionId, Long kpiColorRuleId) {
+    public Result manageRule(Long kpiDefinitionId, Long kpiColorRuleId) {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
@@ -370,7 +370,7 @@ public class KpiManagerController extends Controller {
     /**
      * Process the manage form of a KPI color rule.
      */
-    public static Result saveRule() {
+    public Result saveRule() {
 
         // bind the form
         Form<KpiColorRuleFormData> boundForm = kpiColorRuleFormTemplate.bindFromRequest();
@@ -425,7 +425,7 @@ public class KpiManagerController extends Controller {
      * @param kpiColorRuleId
      *            the KPI color rule id
      */
-    public static Result deleteRule(Long kpiColorRuleId) {
+    public Result deleteRule(Long kpiColorRuleId) {
 
         KpiColorRule kpiColorRule = KpiColorRule.getById(kpiColorRuleId);
 
@@ -444,7 +444,7 @@ public class KpiManagerController extends Controller {
      * @param kpiDefinitionId
      *            the KPI definition id
      */
-    public static Result deleteScheduler(Long kpiDefinitionId) {
+    public Result deleteScheduler(Long kpiDefinitionId) {
 
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
 
@@ -468,7 +468,7 @@ public class KpiManagerController extends Controller {
      * @param kpiDefinitionId
      *            the KPI definition id
      */
-    public static Result editScheduler(Long kpiDefinitionId) {
+    public Result editScheduler(Long kpiDefinitionId) {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
@@ -482,7 +482,7 @@ public class KpiManagerController extends Controller {
     /**
      * Process the edit form of the scheduler of a KPI definition.
      */
-    public static Result saveScheduler() {
+    public Result saveScheduler() {
 
         // bind the form
         Form<KpiSchedulerFormData> boundForm = kpiSchedulerFormTemplate.bindFromRequest();
@@ -515,7 +515,7 @@ public class KpiManagerController extends Controller {
      * @param kpiDefinitionId
      *            the KPI definition id
      */
-    public static Result triggerScheduler(final Long kpiDefinitionId) {
+    public Result triggerScheduler(final Long kpiDefinitionId) {
 
         SysAdminUtils.scheduleOnce(false, "KpiManager", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
             @Override
@@ -543,14 +543,14 @@ public class KpiManagerController extends Controller {
      * @param objectType
      *            the object type
      */
-    public static Result create(String objectType) {
+    public Result create(String objectType) {
         return ok(views.html.admin.kpi.create.render(objectType, customExternalKpiFormTemplate));
     }
 
     /**
      * Process the form to create a new custom and external KPI.
      */
-    public static Result processCreate() {
+    public Result processCreate() {
 
         // bind the form
         Form<CustomExternalKpiFormData> boundForm = customExternalKpiFormTemplate.bindFromRequest();
@@ -588,7 +588,7 @@ public class KpiManagerController extends Controller {
      * @param kpiDefinitionId
      *            the KPI definition id
      */
-    public static Result delete(Long kpiDefinitionId) {
+    public Result delete(Long kpiDefinitionId) {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);

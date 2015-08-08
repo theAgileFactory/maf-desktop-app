@@ -31,7 +31,7 @@ import com.avaje.ebean.ExpressionList;
  */
 public abstract class IterationDAO {
 
-    public static Finder<Long, Iteration> find = new Finder<>(Long.class, Iteration.class);
+    public static Finder<Long, Iteration> find = new Finder<>(Iteration.class);
 
     /**
      * Default constructor.

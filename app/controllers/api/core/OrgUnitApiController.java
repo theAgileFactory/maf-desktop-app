@@ -82,7 +82,7 @@ public class OrgUnitApiController extends ApiController {
     @ApiOperation(value = "list the Org Units", notes = "Return the list of Org Units in the system", response = OrgUnit.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getOrgUnitsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
+    public Result getOrgUnitsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
             value = "managerId", required = false) @QueryParam("managerId") Long managerId,
             @ApiParam(value = "parentId", required = false) @QueryParam("parentId") Long parentId,
             @ApiParam(value = "orgUnitTypeId", required = false) @QueryParam("orgUnitTypeId") Long orgUnitTypeId, @ApiParam(value = "canSponsor",
@@ -125,7 +125,7 @@ public class OrgUnitApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getOrgUnitById(@ApiParam(value = "Id of the org unit", required = true) @PathParam("id") Long id) {
+    public Result getOrgUnitById(@ApiParam(value = "Id of the org unit", required = true) @PathParam("id") Long id) {
 
         try {
             if (OrgUnitDao.getOrgUnitById(id) == null) {
@@ -147,7 +147,7 @@ public class OrgUnitApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 201, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public static Result createOrgUnit() {
+    public Result createOrgUnit() {
         try {
 
             // Json to object
@@ -209,7 +209,7 @@ public class OrgUnitApiController extends ApiController {
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public static Result updateOrgUnit(@ApiParam(value = "id", required = true) @PathParam("id") Long id) {
+    public Result updateOrgUnit(@ApiParam(value = "id", required = true) @PathParam("id") Long id) {
         try {
 
             // check if orgunit exist

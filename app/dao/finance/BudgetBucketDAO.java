@@ -42,11 +42,11 @@ import framework.utils.Pagination;
  */
 public abstract class BudgetBucketDAO {
 
-    public static Finder<Long, BudgetBucket> findBudgetBucket = new Finder<>(Long.class, BudgetBucket.class);
+    public static Finder<Long, BudgetBucket> findBudgetBucket = new Finder<>(BudgetBucket.class);
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, BudgetBucketLine> findBudgetBucketLine = new Finder<>(Long.class, BudgetBucketLine.class);
+    public static Finder<Long, BudgetBucketLine> findBudgetBucketLine = new Finder<>(BudgetBucketLine.class);
 
     /**
      * Default constructor.

@@ -105,7 +105,7 @@ public class MilestoneApprovalController extends Controller {
      * Display the milestones' planning.
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_OVERVIEW_PERMISSION) })
-    public static Result overview() {
+    public Result overview() {
 
         List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceActiveAndPublicPEAsList();
 
@@ -133,7 +133,7 @@ public class MilestoneApprovalController extends Controller {
      *            the milestone instance id
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_OVERVIEW_PERMISSION) })
-    public static Result overviewModal(Long milestoneInstanceId) {
+    public Result overviewModal(Long milestoneInstanceId) {
 
         // get the milestone instance
         LifeCycleMilestoneInstance milestoneInstance = LifeCycleMilestoneDao.getLCMilestoneInstanceById(milestoneInstanceId);
@@ -156,7 +156,7 @@ public class MilestoneApprovalController extends Controller {
      *            the current page
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_APPROVAL_PERMISSION), @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
-    public static Result list(Integer page) {
+    public Result list(Integer page) {
 
         // get the current user
         IUserAccount userAccount;
@@ -207,7 +207,7 @@ public class MilestoneApprovalController extends Controller {
      *            the milestone instance id
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_APPROVAL_PERMISSION), @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
-    public static Result process(Long milestoneInstanceId) {
+    public Result process(Long milestoneInstanceId) {
 
         // get the milestone instance
         LifeCycleMilestoneInstance milestoneInstance = LifeCycleMilestoneDao.getLCMilestoneInstanceById(milestoneInstanceId);
@@ -308,7 +308,7 @@ public class MilestoneApprovalController extends Controller {
      * Process a vote for a milestone instance.
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_APPROVAL_PERMISSION), @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
-    public static Result vote() {
+    public Result vote() {
 
         Form<ProcessMilestoneApprovalFormData> boundForm = processMilestoneApprovalFormTemplate.bindFromRequest();
 
@@ -362,7 +362,7 @@ public class MilestoneApprovalController extends Controller {
      * Process a decision.
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
-    public static Result decide() {
+    public Result decide() {
 
         Form<ProcessMilestoneDecisionFormData> boundForm = processMilestoneDecisionFormTemplate.bindFromRequest();
 

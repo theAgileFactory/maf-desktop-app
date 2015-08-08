@@ -93,7 +93,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
-    public static Result details(Long id) {
+    public Result details(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -236,7 +236,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
-    public static Result status(Long id) {
+    public Result status(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -287,7 +287,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
-    public static Result viewBudgetLine(Long id, Long budgetLineId) {
+    public Result viewBudgetLine(Long id, Long budgetLineId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -308,7 +308,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageBudgetLine(Long id, Long budgetLineId) {
+    public Result manageBudgetLine(Long id, Long budgetLineId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -344,7 +344,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageBudgetLine() {
+    public Result processManageBudgetLine() {
 
         // bind the form
         Form<PortfolioEntryBudgetLineFormData> boundForm = budgetLineFormTemplate.bindFromRequest();
@@ -410,7 +410,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteBudgetLine(Long id, Long budgetLineId) {
+    public Result deleteBudgetLine(Long id, Long budgetLineId) {
 
         // get the budget line
         PortfolioEntryBudgetLine budgetLine = PortfolioEntryBudgetDAO.getPEBudgetLineById(budgetLineId);
@@ -442,7 +442,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
-    public static Result viewWorkOrder(Long id, Long workOrderId) {
+    public Result viewWorkOrder(Long id, Long workOrderId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -463,7 +463,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageWorkOrder(Long id, Long workOrderId) {
+    public Result manageWorkOrder(Long id, Long workOrderId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -502,7 +502,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageWorkOrder() {
+    public Result processManageWorkOrder() {
 
         // bind the form
         Form<WorkOrderFormData> boundForm = workOrderFormTemplate.bindFromRequest();
@@ -572,7 +572,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteWorkOrder(Long id, Long workOrderId) {
+    public Result deleteWorkOrder(Long id, Long workOrderId) {
 
         // get the work order
         WorkOrder workOrder = WorkOrderDAO.getWorkOrderById(workOrderId);
@@ -603,7 +603,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result engageWorkOrderStep1(Long id, Long workOrderId) {
+    public Result engageWorkOrderStep1(Long id, Long workOrderId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -628,7 +628,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result engageWorkOrderStep2() {
+    public Result engageWorkOrderStep2() {
 
         // bind the form
         Form<EngageWorkOrderAmountSelectorFormData> boundForm = engageWorkOrderAmountSelectorFormTemplate.bindFromRequest();
@@ -676,7 +676,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result selectWorkOrderLineItemStep1(Long id, Long workOrderId) {
+    public Result selectWorkOrderLineItemStep1(Long id, Long workOrderId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -699,7 +699,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result selectWorkOrderLineItemStep2() {
+    public Result selectWorkOrderLineItemStep2() {
 
         // bind the form
         Form<PurchaseOrderSelectorFormData> boundForm = purchaseOrderSelectorFormTemplate.bindFromRequest();
@@ -810,7 +810,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result selectWorkOrderLineItemStep3(Long id, Long workOrderId, Long lineItemId) {
+    public Result selectWorkOrderLineItemStep3(Long id, Long workOrderId, Long lineItemId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -842,7 +842,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result selectWorkOrderLineItemStep4() {
+    public Result selectWorkOrderLineItemStep4() {
 
         // bind the form
         Form<PurchaseOrderLineItemAmountSelectorFormData> boundForm = lineItemAmountSelectorFormTemplate.bindFromRequest();
@@ -924,7 +924,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result workOrderReportBalance(Long id, Long workOrderId, Double amount) {
+    public Result workOrderReportBalance(Long id, Long workOrderId, Double amount) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -947,7 +947,7 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
-    public static Result workOrderReportBalanceSave(Long id, Long workOrderId, Double amount) {
+    public Result workOrderReportBalanceSave(Long id, Long workOrderId, Double amount) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);

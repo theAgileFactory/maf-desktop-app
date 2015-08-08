@@ -44,16 +44,16 @@ public abstract class PurchaseOrderDAO {
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, PurchaseOrder> findPurchaseOrder = new Finder<>(Long.class, PurchaseOrder.class);
+    public static Finder<Long, PurchaseOrder> findPurchaseOrder = new Finder<>(PurchaseOrder.class);
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, PurchaseOrderLineItem> findPurchaseOrderLineItem = new Finder<>(Long.class, PurchaseOrderLineItem.class);
+    public static Finder<Long, PurchaseOrderLineItem> findPurchaseOrderLineItem = new Finder<>(PurchaseOrderLineItem.class);
     /**
      * Default finder for the entity class.
      */
     public static Finder<Long, PurchaseOrderLineShipmentStatusType> findPurchaseOrderLineShipmentStatusType =
-            new Finder<Long, PurchaseOrderLineShipmentStatusType>(Long.class, PurchaseOrderLineShipmentStatusType.class);
+            new Finder<Long, PurchaseOrderLineShipmentStatusType>(PurchaseOrderLineShipmentStatusType.class);
 
     /**
      * Default constructor.

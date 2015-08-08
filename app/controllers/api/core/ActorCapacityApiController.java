@@ -68,7 +68,7 @@ public class ActorCapacityApiController extends ApiController {
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getActorCapacitiesList(@ApiParam(value = "actorId", required = false) @QueryParam("actorId") Long actorId, @ApiParam(value = "year",
+    public Result getActorCapacitiesList(@ApiParam(value = "actorId", required = false) @QueryParam("actorId") Long actorId, @ApiParam(value = "year",
             required = false) @QueryParam("year") Integer year) {
 
         try {

@@ -31,7 +31,7 @@ import framework.utils.Pagination;
  */
 public abstract class ProcessTransitionRequestDao {
 
-    public static Finder<Long, ProcessTransitionRequest> findProcessTransitionRequest = new Finder<>(Long.class, ProcessTransitionRequest.class);
+    public static Finder<Long, ProcessTransitionRequest> findProcessTransitionRequest = new Finder<>(ProcessTransitionRequest.class);
 
     /**
      * Default constructor.

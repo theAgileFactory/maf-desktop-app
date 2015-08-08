@@ -1,4 +1,4 @@
-package pl.matisoft.swagger
+package controllers.api.doc
 
 import java.net.URL
 import javax.inject.{Inject, Provider}

@@ -61,7 +61,7 @@ public class BudgetBucketApiController extends ApiController {
             httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getBudgetBucketsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
+    public Result getBudgetBucketsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
             value = "isApproved", required = false) @QueryParam("isApproved") Boolean isApproved) {
         try {
             return getJsonSuccessResponse(BudgetBucketDAO.getBudgetBucketAsListByActiveAndApproved(isActive, isApproved));
@@ -82,7 +82,7 @@ public class BudgetBucketApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getBudgetBucketById(@ApiParam(value = "budgetBucket's id", required = true) @PathParam("id") Long id) {
+    public Result getBudgetBucketById(@ApiParam(value = "budgetBucket's id", required = true) @PathParam("id") Long id) {
 
         try {
             if (BudgetBucketDAO.getBudgetBucketById(id) == null) {
@@ -108,7 +108,7 @@ public class BudgetBucketApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getBudgetBucketLinesList(@ApiParam(value = "budgetBucketId", required = true) @PathParam("id") Long budgetBucketId) {
+    public Result getBudgetBucketLinesList(@ApiParam(value = "budgetBucketId", required = true) @PathParam("id") Long budgetBucketId) {
         try {
             if (BudgetBucketDAO.getBudgetBucketById(budgetBucketId) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The budget bucket with the specified id is not found"));
@@ -132,7 +132,7 @@ public class BudgetBucketApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getBudgetLinesOfBudgetBucketsList(@ApiParam(value = "budgetBucketId", required = true) @PathParam("id") Long budgetBucketId) {
+    public Result getBudgetLinesOfBudgetBucketsList(@ApiParam(value = "budgetBucketId", required = true) @PathParam("id") Long budgetBucketId) {
         try {
             if (BudgetBucketDAO.getBudgetBucketById(budgetBucketId) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The budget bucket with the specified id is not found"));

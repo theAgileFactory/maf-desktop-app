@@ -55,7 +55,7 @@ public class ConfigurationPlanningPackageController extends Controller {
     /**
      * Display the list of package groups.
      */
-    public static Result list() {
+    public Result list() {
 
         List<PortfolioEntryPlanningPackageGroup> packageGroups = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupAsList();
 
@@ -76,7 +76,7 @@ public class ConfigurationPlanningPackageController extends Controller {
      * @param packageGroupId
      *            the package group id
      */
-    public static Result viewPackageGroup(Long packageGroupId) {
+    public Result viewPackageGroup(Long packageGroupId) {
 
         PortfolioEntryPlanningPackageGroup packageGroup = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupById(packageGroupId);
 
@@ -101,7 +101,7 @@ public class ConfigurationPlanningPackageController extends Controller {
      * @param packageGroupId
      *            the package group id (0 for create case)
      */
-    public static Result managePackageGroup(Long packageGroupId) {
+    public Result managePackageGroup(Long packageGroupId) {
 
         // initiate the form with the template
         Form<PortfolioEntryPlanningPackageGroupFormData> packageGroupForm = packageGroupFormTemplate;
@@ -121,7 +121,7 @@ public class ConfigurationPlanningPackageController extends Controller {
     /**
      * Process the form to create/edit a package group.
      */
-    public static Result processManagePackageGroup() {
+    public Result processManagePackageGroup() {
 
         // bind the form
         Form<PortfolioEntryPlanningPackageGroupFormData> boundForm = packageGroupFormTemplate.bindFromRequest();
@@ -168,7 +168,7 @@ public class ConfigurationPlanningPackageController extends Controller {
      * @param packageGroupId
      *            the package group id
      */
-    public static Result deletePackageGroup(Long packageGroupId) {
+    public Result deletePackageGroup(Long packageGroupId) {
 
         PortfolioEntryPlanningPackageGroup packageGroup = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupById(packageGroupId);
 
@@ -187,7 +187,7 @@ public class ConfigurationPlanningPackageController extends Controller {
      * @param isDecrement
      *            set to true to decrease the order, to false to increase it
      */
-    public static Result changePackagePatternOrder(Long packagePatternId, Boolean isDecrement) {
+    public Result changePackagePatternOrder(Long packagePatternId, Boolean isDecrement) {
 
         PortfolioEntryPlanningPackagePattern packagePattern = PortfolioEntryPlanningPackageDao.getPEPlanningPackagePatternById(packagePatternId);
 
@@ -227,7 +227,7 @@ public class ConfigurationPlanningPackageController extends Controller {
      * @param packagePatternId
      *            the package pattern id
      */
-    public static Result managePackagePattern(Long packageGroupId, Long packagePatternId) {
+    public Result managePackagePattern(Long packageGroupId, Long packagePatternId) {
 
         // get the package group
         PortfolioEntryPlanningPackageGroup packageGroup = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupById(packageGroupId);
@@ -251,7 +251,7 @@ public class ConfigurationPlanningPackageController extends Controller {
     /**
      * Process the form to create/edit a package pattern.
      */
-    public static Result processManagePackagePattern() {
+    public Result processManagePackagePattern() {
 
         // bind the form
         Form<PortfolioEntryPlanningPackagePatternFormData> boundForm = packagePatternFormTemplate.bindFromRequest();
@@ -301,7 +301,7 @@ public class ConfigurationPlanningPackageController extends Controller {
      * @param packagePatternId
      *            the package pattern id
      */
-    public static Result deletePackagePattern(Long packagePatternId) {
+    public Result deletePackagePattern(Long packagePatternId) {
 
         PortfolioEntryPlanningPackagePattern packagePattern = PortfolioEntryPlanningPackageDao.getPEPlanningPackagePatternById(packagePatternId);
 

@@ -54,7 +54,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
     /**
      * Reference data: timesheet activities.
      */
-    public static Result list() {
+    public Result list() {
 
         List<TimesheetActivityType> activityTypes = TimesheetDao.getTimesheetActivityTypeAsList();
 
@@ -83,7 +83,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
      * @param timesheetActivityTypeId
      *            the timesheet activity type id (set 0 for create case)
      */
-    public static Result manageTimesheetActivityType(Long timesheetActivityTypeId) {
+    public Result manageTimesheetActivityType(Long timesheetActivityTypeId) {
 
         // initiate the form with the template
         Form<TimesheetActivityTypeFormData> timesheetActivityTypeForm = timesheetActivityTypeFormTemplate;
@@ -104,7 +104,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
     /**
      * Process the edit/create form of a timesheet activity type.
      */
-    public static Result saveTimesheetActivityType() {
+    public Result saveTimesheetActivityType() {
 
         // bind the form
         Form<TimesheetActivityTypeFormData> boundForm = timesheetActivityTypeFormTemplate.bindFromRequest();
@@ -151,7 +151,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
      * @param timesheetActivityTypeId
      *            the timesheet activity type id
      */
-    public static Result deleteTimesheetActivityType(Long timesheetActivityTypeId) {
+    public Result deleteTimesheetActivityType(Long timesheetActivityTypeId) {
 
         TimesheetActivityType timesheetActivityType = TimesheetDao.getTimesheetActivityTypeById(timesheetActivityTypeId);
 
@@ -171,7 +171,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
      * @param timesheetActivityId
      *            the timesheet activity id (set 0 for create case)
      */
-    public static Result manageTimesheetActivity(Long timesheetActivityId) {
+    public Result manageTimesheetActivity(Long timesheetActivityId) {
 
         // initiate the form with the template
         Form<TimesheetActivityFormData> timesheetActivityForm = timesheetActivityFormTemplate;
@@ -193,7 +193,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
     /**
      * Process the edit/create form of a timesheet activity.
      */
-    public static Result saveTimesheetActivity() {
+    public Result saveTimesheetActivity() {
 
         // bind the form
         Form<TimesheetActivityFormData> boundForm = timesheetActivityFormTemplate.bindFromRequest();
@@ -241,7 +241,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
      * @param timesheetActivityId
      *            the timesheet activity id
      */
-    public static Result deleteTimesheetActivity(Long timesheetActivityId) {
+    public Result deleteTimesheetActivity(Long timesheetActivityId) {
 
         TimesheetActivity timesheetActivity = TimesheetDao.getTimesheetActivityById(timesheetActivityId);
 

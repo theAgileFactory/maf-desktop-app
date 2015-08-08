@@ -55,7 +55,7 @@ public class PortfolioEntryRiskTypeApiController extends ApiController {
             response = PortfolioEntryRiskType.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryRiskTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getPortfolioEntryRiskTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
             return getJsonSuccessResponse(PortfolioEntryRiskDao.getPERiskTypeAsListByFilter(selectable));
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class PortfolioEntryRiskTypeApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getPortfolioEntryRiskTypeById(@ApiParam(value = "portfolio entry risk type id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryRiskTypeById(@ApiParam(value = "portfolio entry risk type id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryRiskDao.getPERiskTypeById(id) == null) {

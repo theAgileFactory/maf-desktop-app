@@ -61,7 +61,7 @@ public class PasswordReset extends Controller {
      * @param validationKey
      *            the validation key for this password reset
      */
-    public static Result displayPasswordResetForm(String uid, String validationKey) {
+    public Result displayPasswordResetForm(String uid, String validationKey) {
         try {
             IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
             if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
@@ -85,7 +85,7 @@ public class PasswordReset extends Controller {
     /**
      * Update the password associated with the specified uid.
      */
-    public static Result savePassword() {
+    public Result savePassword() {
         try {
             if (!session().containsKey(CURRENT_USER_UID)) {
                 throw new Exception("Attempt to save a password without a valid session");

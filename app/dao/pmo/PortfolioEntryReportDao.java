@@ -40,9 +40,9 @@ import framework.utils.Pagination;
  */
 public abstract class PortfolioEntryReportDao {
 
-    public static Finder<Long, PortfolioEntryReport> findPortfolioEntryReport = new Finder<>(Long.class, PortfolioEntryReport.class);
+    public static Finder<Long, PortfolioEntryReport> findPortfolioEntryReport = new Finder<>(PortfolioEntryReport.class);
 
-    public static Finder<Long, PortfolioEntryReportStatusType> findPortfolioEntryReportStatusType = new Finder<>(Long.class,
+    public static Finder<Long, PortfolioEntryReportStatusType> findPortfolioEntryReportStatusType = new Finder<>(
             PortfolioEntryReportStatusType.class);
 
     /**

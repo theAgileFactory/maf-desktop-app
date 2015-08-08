@@ -96,7 +96,7 @@ public class Application extends Controller {
      *            the notification id
      */
     @SubjectPresent
-    public static Result redirectForNotification(Long id) {
+    public Result redirectForNotification(Long id) {
         Notification notification = Notification.find.where().eq("deleted", false).eq("id", id).findUnique();
         notification.isRead = true;
         notification.save();
@@ -113,7 +113,7 @@ public class Application extends Controller {
      * @return
      */
     @SubjectPresent
-    public static Result displayNotifications() {
+    public Result displayNotifications() {
 
         try {
 
@@ -132,7 +132,7 @@ public class Application extends Controller {
      * Filter the notifications.
      */
     @SubjectPresent
-    public static Result filterNotifications() {
+    public Result filterNotifications() {
 
         try {
 
@@ -190,7 +190,7 @@ public class Application extends Controller {
      * Delete the selected notifications.
      */
     @SubjectPresent
-    public static Result deleteNotifications() {
+    public Result deleteNotifications() {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
 
@@ -210,7 +210,7 @@ public class Application extends Controller {
      * Get all notifications ids according to the current filter configuration.
      */
     @SubjectPresent
-    public static Result getAllNotificationIds() {
+    public Result getAllNotificationIds() {
 
         try {
 
@@ -248,7 +248,7 @@ public class Application extends Controller {
      * @return
      */
     @SubjectPresent
-    public static Result deleteNotification(Long id) {
+    public Result deleteNotification(Long id) {
         String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
         Notification notification = Notification.find.where().eq("deleted", false).eq("id", id).findUnique();
         if (ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class).deleteNotificationsForUid(loggedUser, id)) {
@@ -271,7 +271,7 @@ public class Application extends Controller {
      * @return
      */
     @SubjectPresent
-    public static Result markNotificationAsRead(Long id) {
+    public Result markNotificationAsRead(Long id) {
         Notification notification = Notification.find.where().eq("deleted", false).eq("id", id).findUnique();
         notification.isRead = true;
         notification.save();
@@ -288,7 +288,7 @@ public class Application extends Controller {
      * @return a list of {@link ThirdPartySystem}
      */
     @SubjectPresent(forceBeforeAuthCheck = true)
-    public static Result index() {
+    public Result index() {
 
         // check if the user has an actor
         boolean hasActor = false;
@@ -348,7 +348,7 @@ public class Application extends Controller {
      *            the file attachment id
      */
     @SubjectPresent
-    public static Result downloadFileAttachment(Long attachmentId) {
+    public Result downloadFileAttachment(Long attachmentId) {
         return FileAttachmentHelper.downloadFileAttachment(attachmentId);
     }
 
@@ -360,7 +360,7 @@ public class Application extends Controller {
      * @return
      */
     @SubjectPresent
-    public static Result deleteFileAttachment(Long attachmentId) {
+    public Result deleteFileAttachment(Long attachmentId) {
         return FileAttachmentHelper.deleteFileAttachment(attachmentId);
     }
 
@@ -388,7 +388,7 @@ public class Application extends Controller {
      * </p>
      */
     @SubjectPresent(forceBeforeAuthCheck = true)
-    public static Result idzone() {
+    public Result idzone() {
         IDZoneData idZoneData = getIDZoneData();
         ObjectNode result = Json.newObject();
         try {
@@ -432,7 +432,7 @@ public class Application extends Controller {
      * The API which deal with the {@link DynamicSingleItemCustomAttributeValue}
      * (see corresponding documentation).
      */
-    public static Result dynamicSingleCustomAttributeApi() {
+    public Result dynamicSingleCustomAttributeApi() {
         return DynamicSingleItemCustomAttributeValue.jsonQueryApi();
     }
 
@@ -443,7 +443,7 @@ public class Application extends Controller {
      *            the current route
      */
     @SubjectPresent
-    public static Result help(String route) {
+    public Result help(String route) {
 
         // set the language in the url, if english then set nothing (because
         // this is the default language of the wiki)
@@ -474,7 +474,7 @@ public class Application extends Controller {
      * Provide the HTML fragment that displays the shortcuts in the top menu.
      */
     @SubjectPresent
-    public static Result viewShortcuts() {
+    public Result viewShortcuts() {
 
         try {
 
@@ -499,7 +499,7 @@ public class Application extends Controller {
      * Add a new shortcut.
      */
     @SubjectPresent
-    public static Result addShortcut() {
+    public Result addShortcut() {
 
         JsonNode json = request().body().asJson();
 
@@ -561,7 +561,7 @@ public class Application extends Controller {
      * Delete an existing shortcut.
      */
     @SubjectPresent
-    public static Result deleteShortcut() {
+    public Result deleteShortcut() {
 
         JsonNode json = request().body().asJson();
 
@@ -623,7 +623,7 @@ public class Application extends Controller {
      * @param tourUid
      *            the tour uid
      */
-    public static Result endTour(String tourUid) {
+    public Result endTour(String tourUid) {
         TourUtils.markTourAsRead(tourUid);
         return ok();
     }
@@ -634,7 +634,7 @@ public class Application extends Controller {
      * @param page
      *            a page
      */
-    public static Promise<Result> getAdPanelContent(String page) {
+    public Promise<Result> getAdPanelContent(String page) {
         IAdPanelManagerService adPanelManagerService = ServiceManager.getService(IAdPanelManagerService.NAME, IAdPanelManagerService.class);
         return adPanelManagerService.getRemotePanel(page);
     }
@@ -677,7 +677,7 @@ public class Application extends Controller {
                         }
                     }
 
-                    idZoneData.logoutUrl = controllers.sso.routes.Authenticator.logout().url();
+                    idZoneData.logoutUrl = controllers.sso.routes.Authenticator.customLogout().url();
                     return idZoneData;
                 }
                 return null;

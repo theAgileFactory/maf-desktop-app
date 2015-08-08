@@ -51,13 +51,13 @@ import framework.utils.Pagination;
  */
 public abstract class PortfolioEntryResourcePlanDAO {
 
-    public static Finder<Long, PortfolioEntryResourcePlanAllocatedActor> findPEResourcePlanAllocatedActor = new Finder<>(Long.class,
+    public static Finder<Long, PortfolioEntryResourcePlanAllocatedActor> findPEResourcePlanAllocatedActor = new Finder<>(
             PortfolioEntryResourcePlanAllocatedActor.class);
 
-    public static Finder<Long, PortfolioEntryResourcePlanAllocatedCompetency> findPEResourcePlanAllocatedCompetency = new Finder<>(Long.class,
+    public static Finder<Long, PortfolioEntryResourcePlanAllocatedCompetency> findPEResourcePlanAllocatedCompetency = new Finder<>(
             PortfolioEntryResourcePlanAllocatedCompetency.class);
 
-    public static Finder<Long, PortfolioEntryResourcePlanAllocatedOrgUnit> findPEResourcePlanAllocatedOrgUnit = new Finder<>(Long.class,
+    public static Finder<Long, PortfolioEntryResourcePlanAllocatedOrgUnit> findPEResourcePlanAllocatedOrgUnit = new Finder<>(
             PortfolioEntryResourcePlanAllocatedOrgUnit.class);
 
     /**

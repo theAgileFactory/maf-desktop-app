@@ -68,7 +68,7 @@ public class CompetencyApiController extends ApiController {
     @ApiOperation(value = "list the Competencies", notes = "Return the list of Competencies in the system", response = Competency.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getCompetenciesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
+    public Result getCompetenciesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
             value = "actorId", required = false) @QueryParam("actorId") Long actorId) {
 
         try {
@@ -108,7 +108,7 @@ public class CompetencyApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getCompetencyById(@ApiParam(value = "competency id", required = true) @PathParam("id") Long id) {
+    public Result getCompetencyById(@ApiParam(value = "competency id", required = true) @PathParam("id") Long id) {
 
         try {
             if (ActorDao.getCompetencyById(id) == null) {

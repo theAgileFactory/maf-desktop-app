@@ -57,7 +57,7 @@ public class SystemApiController extends ApiController {
             response = TimeHolder.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = ApiController.SUCCESS_API_RESPONSE_CODE, message = ApiController.SUCCESS_API_RESPONSE_NAME),
             @ApiResponse(code = ApiController.ERROR_API_RESPONSE_CODE, message = ApiController.ERROR_API_RESPONSE_NAME, response = ApiError.class) })
-    public static Result getSystemCurrentTime() {
+    public Result getSystemCurrentTime() {
         return getJsonSuccessResponse(new TimeHolder(System.currentTimeMillis(), new Date().toString()));
     }
 

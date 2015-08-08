@@ -35,7 +35,7 @@ import com.avaje.ebean.Model.Finder;
  */
 public abstract class ArchitectureDao {
 
-    public static Finder<Long, ApplicationBlock> findApplicationBlock = new Finder<>(Long.class, ApplicationBlock.class);
+    public static Finder<Long, ApplicationBlock> findApplicationBlock = new Finder<>(ApplicationBlock.class);
 
     /**
      * Default constructor.

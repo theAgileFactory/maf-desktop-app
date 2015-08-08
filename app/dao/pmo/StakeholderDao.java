@@ -36,9 +36,9 @@ import framework.utils.Pagination;
  */
 public abstract class StakeholderDao {
 
-    public static Finder<Long, Stakeholder> findStakeholder = new Finder<>(Long.class, Stakeholder.class);
+    public static Finder<Long, Stakeholder> findStakeholder = new Finder<>(Stakeholder.class);
 
-    public static Finder<Long, StakeholderType> findStakeholderType = new Finder<>(Long.class, StakeholderType.class);
+    public static Finder<Long, StakeholderType> findStakeholderType = new Finder<>(StakeholderType.class);
 
     /**
      * Default constructor.

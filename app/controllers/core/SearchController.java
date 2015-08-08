@@ -114,14 +114,14 @@ public class SearchController extends Controller {
     /**
      * Display the search form.
      */
-    public static Result index() {
+    public Result index() {
         return ok(views.html.core.search.index.render(formTemplate, getObjectTypes(), null));
     }
 
     /**
      * Perform the search.
      */
-    public static Result search() {
+    public Result search() {
 
         // bind the form
         Form<SearchFormData> boundForm = formTemplate.bindFromRequest();

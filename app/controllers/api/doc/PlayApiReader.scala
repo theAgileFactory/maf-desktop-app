@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.matisoft.swagger
+package controllers.api.doc
 
 import com.wordnik.swagger.annotations._
 import com.wordnik.swagger.config._

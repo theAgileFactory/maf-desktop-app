@@ -34,7 +34,7 @@ public abstract class SupplierDAO {
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, Supplier> findSupplier = new Finder<>(Long.class, Supplier.class);
+    public static Finder<Long, Supplier> findSupplier = new Finder<>(Supplier.class);
 
     /**
      * Default constructor.

@@ -241,7 +241,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Promise<Result> image(String identifier, boolean isBigImage) {
+    public Promise<Result> image(String identifier, boolean isBigImage) {
         IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
         InputStream inStream = null;
         if (isBigImage) {
@@ -267,7 +267,7 @@ public class PluginManagerController extends Controller {
      * It consists in a list of plugins with their status (started/stopped).
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result index() {
+    public Result index() {
 
         if (!DefaultDeadboltHandler.isAllowed(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
             return redirect(controllers.admin.routes.ApiManagerController.index());
@@ -299,7 +299,7 @@ public class PluginManagerController extends Controller {
      * at non registration.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result registration() {
+    public Result registration() {
         IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
 
         // Identify already registered plugin definitions
@@ -327,7 +327,7 @@ public class PluginManagerController extends Controller {
      *            a plugin definition identifier (the template for the plugin)
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result displayRegistrationForm(String pluginDefinitionIdentifier) {
+    public Result displayRegistrationForm(String pluginDefinitionIdentifier) {
         PluginRegistrationFormObject pluginRegistrationFormObject = new PluginRegistrationFormObject();
         IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
         IStaticPluginRunnerDescriptor pluginRunnerDescriptor = pluginManagerService.getAvailablePluginDescriptor(pluginDefinitionIdentifier);
@@ -346,7 +346,7 @@ public class PluginManagerController extends Controller {
      * Create the {@link PluginConfiguration} instance and register the plugin.
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result registerPlugin() {
+    public Result registerPlugin() {
         Form<PluginRegistrationFormObject> boundForm = registrationFormTemplate.bindFromRequest();
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.plugin.pluginmanager_registration_form.render(boundForm));
@@ -386,7 +386,7 @@ public class PluginManagerController extends Controller {
      *            the plugin configuration id
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result unregisterPlugin(Long pluginConfigurationId) {
+    public Result unregisterPlugin(Long pluginConfigurationId) {
 
         PluginConfiguration configuration = PluginConfiguration.getPluginById(pluginConfigurationId);
 
@@ -438,7 +438,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result pluginDefinitionDetails(String pluginDefinitionIdentifier) {
+    public Result pluginDefinitionDetails(String pluginDefinitionIdentifier) {
         IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
         IStaticPluginRunnerDescriptor pluginRunnerDescriptor = pluginManagerService.getPluginDescriptor(pluginDefinitionIdentifier);
         if (pluginRunnerDescriptor == null) {
@@ -460,7 +460,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result pluginConfigurationDetails(Long pluginConfigurationId) {
+    public Result pluginConfigurationDetails(Long pluginConfigurationId) {
         IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
         IPluginInfo pluginInfo = pluginManagerService.getRegisteredPluginDescriptors().get(pluginConfigurationId);
 
@@ -501,7 +501,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result filterPluginLogs(Long pluginConfigurationId) {
+    public Result filterPluginLogs(Long pluginConfigurationId) {
 
         JsonNode json = request().body().asJson();
 
@@ -534,7 +534,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result startPlugin(Long pluginConfigurationId) {
+    public Result startPlugin(Long pluginConfigurationId) {
         PluginConfiguration configuration = PluginConfiguration.getAvailablePluginById(pluginConfigurationId);
         if (configuration == null) {
             return badRequest();
@@ -557,7 +557,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result stopPlugin(Long pluginConfigurationId) {
+    public Result stopPlugin(Long pluginConfigurationId) {
         PluginConfiguration configuration = PluginConfiguration.getAvailablePluginById(pluginConfigurationId);
         if (configuration == null) {
             return badRequest();
@@ -576,7 +576,7 @@ public class PluginManagerController extends Controller {
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result flushLogs(Long pluginConfigurationId) {
+    public Result flushLogs(Long pluginConfigurationId) {
         PluginLog.flushPluginLog(pluginConfigurationId);
         Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.log.flush.success"));
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
@@ -592,7 +592,7 @@ public class PluginManagerController extends Controller {
      *            the plugin configuration block identifier
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result editConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
+    public Result editConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
         IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = getPluginConfigurationBlockDescriptor(pluginConfigurationId,
                 pluginConfigurationBlockIdentifier);
         if (pluginConfigurationBlockDescriptor == null) {
@@ -668,7 +668,7 @@ public class PluginManagerController extends Controller {
      *            the plugin configuration block identifier
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result updateConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
+    public Result updateConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
         IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = getPluginConfigurationBlockDescriptor(pluginConfigurationId,
                 pluginConfigurationBlockIdentifier);
         if (pluginConfigurationBlockDescriptor == null) {
@@ -716,7 +716,7 @@ public class PluginManagerController extends Controller {
      *            the plugin configuration block identifier
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result getDefaultConfigurationBlockValue(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
+    public Result getDefaultConfigurationBlockValue(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
         IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = getPluginConfigurationBlockDescriptor(pluginConfigurationId,
                 pluginConfigurationBlockIdentifier);
         if (pluginConfigurationBlockDescriptor == null) {
@@ -734,7 +734,7 @@ public class PluginManagerController extends Controller {
      *            the action identifier
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
-    public static Result postAdminActionToPlugin(Long pluginConfigurationId, String pluginActionIdentifier) {
+    public Result postAdminActionToPlugin(Long pluginConfigurationId, String pluginActionIdentifier) {
         try {
             IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
             IPluginInfo pluginInfo = pluginManagerService.getRegisteredPluginDescriptors().get(pluginConfigurationId);

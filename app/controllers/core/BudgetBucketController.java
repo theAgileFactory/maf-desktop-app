@@ -72,7 +72,7 @@ public class BudgetBucketController extends Controller {
      */
     @With(CheckBudgetBucketExists.class)
     @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_VIEW_DYNAMIC_PERMISSION)
-    public static Result view(Long id, Integer budgetTablePage, Integer initiativeBudgetTablePage) {
+    public Result view(Long id, Integer budgetTablePage, Integer initiativeBudgetTablePage) {
 
         // get the budget bucket
         BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
@@ -142,7 +142,7 @@ public class BudgetBucketController extends Controller {
      * Form to create a new budget bucket.
      */
     @Restrict({ @Group(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION) })
-    public static Result create() {
+    public Result create() {
 
         // load the form
         Form<BudgetBucketFormData> form = formTemplate;
@@ -157,7 +157,7 @@ public class BudgetBucketController extends Controller {
      * Process the creation of a budget bucket.
      */
     @Restrict({ @Group(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION) })
-    public static Result createSubmit() {
+    public Result createSubmit() {
 
         // bind the form
         Form<BudgetBucketFormData> boundForm = formTemplate.bindFromRequest();
@@ -188,7 +188,7 @@ public class BudgetBucketController extends Controller {
      */
     @With(CheckBudgetBucketExists.class)
     @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
-    public static Result edit(Long id) {
+    public Result edit(Long id) {
 
         // get the budget bucket
         BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
@@ -210,7 +210,7 @@ public class BudgetBucketController extends Controller {
      */
     @With(CheckBudgetBucketExists.class)
     @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
-    public static Result delete(Long id) {
+    public Result delete(Long id) {
 
         // get the budget bucket
         BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
@@ -228,7 +228,7 @@ public class BudgetBucketController extends Controller {
      */
     @With(CheckBudgetBucketExists.class)
     @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
-    public static Result save() {
+    public Result save() {
 
         // bind the form
         Form<BudgetBucketFormData> boundForm = formTemplate.bindFromRequest();
@@ -264,7 +264,7 @@ public class BudgetBucketController extends Controller {
      */
     @With(CheckBudgetBucketExists.class)
     @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageLine(Long id, Long lineId) {
+    public Result manageLine(Long id, Long lineId) {
 
         // get the budget bucket
         BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
@@ -293,7 +293,7 @@ public class BudgetBucketController extends Controller {
      */
     @With(CheckBudgetBucketExists.class)
     @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
-    public static Result saveLine() {
+    public Result saveLine() {
 
         // bind the form
         Form<BudgetBucketLineFormData> boundForm = lineFormTemplate.bindFromRequest();
@@ -346,7 +346,7 @@ public class BudgetBucketController extends Controller {
      */
     @With(CheckBudgetBucketExists.class)
     @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteLine(Long id, Long lineId) {
+    public Result deleteLine(Long id, Long lineId) {
 
         // get the budget bucket line
         BudgetBucketLine line = BudgetBucketDAO.getBudgetBucketLineById(lineId);

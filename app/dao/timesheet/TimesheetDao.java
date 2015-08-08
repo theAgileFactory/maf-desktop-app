@@ -61,18 +61,18 @@ import framework.utils.Pagination;
  */
 public abstract class TimesheetDao {
 
-    public static Finder<Long, TimesheetActivity> findTimesheetActivity = new Finder<>(Long.class, TimesheetActivity.class);
+    public static Finder<Long, TimesheetActivity> findTimesheetActivity = new Finder<>(TimesheetActivity.class);
 
-    public static Finder<Long, TimesheetActivityAllocatedActor> findTimesheetActivityAllocatedActor = new Finder<>(Long.class,
+    public static Finder<Long, TimesheetActivityAllocatedActor> findTimesheetActivityAllocatedActor = new Finder<>(
             TimesheetActivityAllocatedActor.class);
 
-    public static Finder<Long, TimesheetActivityType> findTimesheetActivityType = new Finder<>(Long.class, TimesheetActivityType.class);
+    public static Finder<Long, TimesheetActivityType> findTimesheetActivityType = new Finder<>(TimesheetActivityType.class);
 
-    public static Finder<Long, TimesheetEntry> findTimesheetEntry = new Finder<>(Long.class, TimesheetEntry.class);
+    public static Finder<Long, TimesheetEntry> findTimesheetEntry = new Finder<>(TimesheetEntry.class);
 
-    public static Finder<Long, TimesheetLog> findTimesheetLog = new Finder<>(Long.class, TimesheetLog.class);
+    public static Finder<Long, TimesheetLog> findTimesheetLog = new Finder<>(TimesheetLog.class);
 
-    public static Finder<Long, TimesheetReport> findTimesheetReport = new Finder<>(Long.class, TimesheetReport.class);
+    public static Finder<Long, TimesheetReport> findTimesheetReport = new Finder<>(TimesheetReport.class);
 
     /**
      * Default constructor.

@@ -67,7 +67,7 @@ public class ConfigurationGovernanceController extends Controller {
      * Display the lists of data (LifeCycleProcess,
      * LifeCycleMilestoneInstanceStatusType).
      */
-    public static Result list() {
+    public Result list() {
 
         // life cycle processes
         List<LifeCycleProcess> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessAsList();
@@ -99,7 +99,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param lifeCycleProcessId
      *            the life cycle process id
      */
-    public static Result viewLifeCycleProcess(Long lifeCycleProcessId) {
+    public Result viewLifeCycleProcess(Long lifeCycleProcessId) {
 
         LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId);
 
@@ -133,7 +133,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param lifeCycleProcessId
      *            the life cycle process id (set 0 for create case)
      */
-    public static Result manageLifeCycleProcess(Long lifeCycleProcessId) {
+    public Result manageLifeCycleProcess(Long lifeCycleProcessId) {
 
         // initiate the form with the template
         Form<LifeCycleProcessFormData> lifeCycleProcessForm = lifeCycleProcessFormTemplate;
@@ -154,7 +154,7 @@ public class ConfigurationGovernanceController extends Controller {
     /**
      * Process the edit/create form of a life cycle process.
      */
-    public static Result processManageLifeCycleProcess() {
+    public Result processManageLifeCycleProcess() {
 
         // bind the form
         Form<LifeCycleProcessFormData> boundForm = lifeCycleProcessFormTemplate.bindFromRequest();
@@ -202,7 +202,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param lifeCycleProcessId
      *            the life cycle process id
      */
-    public static Result deleteLifeCycleProcess(Long lifeCycleProcessId) {
+    public Result deleteLifeCycleProcess(Long lifeCycleProcessId) {
 
         LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId);
 
@@ -224,7 +224,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param statusTypeId
      *            the status type id (set 0 for create case)
      */
-    public static Result manageStatusType(Long statusTypeId) {
+    public Result manageStatusType(Long statusTypeId) {
 
         // initiate the form with the template
         Form<LifeCycleMilestoneInstanceStatusTypeFormData> statusTypeForm = statusTypeFormTemplate;
@@ -246,7 +246,7 @@ public class ConfigurationGovernanceController extends Controller {
      * Process the edit/create form of a life cycle milestone instance status
      * type.
      */
-    public static Result processManageStatusType() {
+    public Result processManageStatusType() {
 
         // bind the form
         Form<LifeCycleMilestoneInstanceStatusTypeFormData> boundForm = statusTypeFormTemplate.bindFromRequest();
@@ -293,7 +293,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param statusTypeId
      *            the status type id
      */
-    public static Result deleteStatusType(Long statusTypeId) {
+    public Result deleteStatusType(Long statusTypeId) {
 
         LifeCycleMilestoneInstanceStatusType statusType = LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeById(statusTypeId);
 
@@ -318,7 +318,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param isDecrement
      *            if true then we decrement the order, else we increment it.
      */
-    public static Result changeMilestoneOrder(Long milestoneId, Boolean isDecrement) {
+    public Result changeMilestoneOrder(Long milestoneId, Boolean isDecrement) {
 
         LifeCycleMilestone lifeCycleMilestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
 
@@ -355,7 +355,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param isDecrement
      *            if true then we decrement the order, else we increment it.
      */
-    public static Result changePhaseOrder(Long phaseId, Boolean isDecrement) {
+    public Result changePhaseOrder(Long phaseId, Boolean isDecrement) {
 
         LifeCyclePhase lifeCyclePhase = LifeCycleMilestoneDao.getLCPhaseById(phaseId);
 
@@ -390,7 +390,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param milestoneId
      *            the milestone id (set 0 for create case)
      */
-    public static Result manageMilestone(Long lifeCycleProcessId, Long milestoneId) {
+    public Result manageMilestone(Long lifeCycleProcessId, Long milestoneId) {
 
         // get the process
         LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId);
@@ -415,7 +415,7 @@ public class ConfigurationGovernanceController extends Controller {
     /**
      * Process the edit/create form of a life cycle milestone.
      */
-    public static Result processManageMilestone() {
+    public Result processManageMilestone() {
 
         // bind the form
         Form<LifeCycleMilestoneFormData> boundForm = lifeCycleMilestoneFormTemplate.bindFromRequest();
@@ -482,7 +482,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param milestoneId
      *            the milestone id (set 0 for create case)
      */
-    public static Result deleteMilestone(Long milestoneId) {
+    public Result deleteMilestone(Long milestoneId) {
 
         LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
 
@@ -515,7 +515,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param phaseId
      *            the phase id (set 0 for create case)
      */
-    public static Result managePhase(Long lifeCycleProcessId, Long phaseId) {
+    public Result managePhase(Long lifeCycleProcessId, Long phaseId) {
 
         // get the process
         LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId);
@@ -539,7 +539,7 @@ public class ConfigurationGovernanceController extends Controller {
     /**
      * Process the edit/create form of a life cycle phase.
      */
-    public static Result processManagePhase() {
+    public Result processManagePhase() {
 
         // bind the form
         Form<LifeCyclePhaseFormData> boundForm = lifeCyclePhaseFormTemplate.bindFromRequest();
@@ -592,7 +592,7 @@ public class ConfigurationGovernanceController extends Controller {
      * @param phaseId
      *            the phase id (set 0 for create case)
      */
-    public static Result deletePhase(Long phaseId) {
+    public Result deletePhase(Long phaseId) {
 
         LifeCyclePhase phase = LifeCycleMilestoneDao.getLCPhaseById(phaseId);
 

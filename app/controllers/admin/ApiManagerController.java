@@ -111,7 +111,7 @@ public class ApiManagerController extends Controller {
      * Display a table with the list of registered applications.
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result index() throws ApiSignatureException {
+    public Result index() throws ApiSignatureException {
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         Table<IApiApplicationConfiguration> filledTable = tableTemplate.fill(apiSignatureService.listAuthorizedApplications());
         return ok(views.html.admin.api.index.render(filledTable));
@@ -124,7 +124,7 @@ public class ApiManagerController extends Controller {
      *            the name of the application
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result displayApiRegistration(String applicationName) {
+    public Result displayApiRegistration(String applicationName) {
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
             IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
@@ -144,7 +144,7 @@ public class ApiManagerController extends Controller {
      *            the name of the application
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result resetApiRegistrationKeys(String applicationName) {
+    public Result resetApiRegistrationKeys(String applicationName) {
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
             apiSignatureService.resetApplicationConfigurationKeys(applicationName);
@@ -163,7 +163,7 @@ public class ApiManagerController extends Controller {
      *            the name of the application
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result deleteApiRegistration(String applicationName) {
+    public Result deleteApiRegistration(String applicationName) {
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
             apiSignatureService.deleteApplicationConfiguration(applicationName);
@@ -183,7 +183,7 @@ public class ApiManagerController extends Controller {
      *            the name of the application
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result displayResetApiRegistrationKeysForm(String applicationName) {
+    public Result displayResetApiRegistrationKeysForm(String applicationName) {
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
             IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
@@ -203,7 +203,7 @@ public class ApiManagerController extends Controller {
      *            the name of the application
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result displayDeleteApiRegistrationForm(String applicationName) {
+    public Result displayDeleteApiRegistrationForm(String applicationName) {
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
             IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
@@ -219,7 +219,7 @@ public class ApiManagerController extends Controller {
      * Display the form to add an API registration.
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result displayApiRegistrationCreationForm() {
+    public Result displayApiRegistrationCreationForm() {
         ApiRegistrationObject apiRegistrationObject = new ApiRegistrationObject();
         Form<ApiRegistrationObject> loadedForm = apiRegistrationForm.fill(apiRegistrationObject);
         return ok(views.html.admin.api.create.render(loadedForm));
@@ -234,7 +234,7 @@ public class ApiManagerController extends Controller {
      *            the name of the application
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Result displayApiRegistrationUpdateForm(String applicationName) {
+    public Result displayApiRegistrationUpdateForm(String applicationName) {
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
             IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
@@ -252,7 +252,7 @@ public class ApiManagerController extends Controller {
      * Creates a new API registration.
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Promise<Result> saveRegistration() {
+    public Promise<Result> saveRegistration() {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -297,7 +297,7 @@ public class ApiManagerController extends Controller {
      *            the name of the application
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
-    public static Promise<Result> updateRegistration(final String originalApplicationName) {
+    public Promise<Result> updateRegistration(final String originalApplicationName) {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -345,7 +345,7 @@ public class ApiManagerController extends Controller {
      * Display the page which gives access to the API browser.
      */
     @Restrict({ @Group(IMafConstants.API_TESTER_PERMISSION) })
-    public static Result displayBrowser() {
+    public Result displayBrowser() {
         return ok(views.html.admin.api.browse.render());
     }
 
@@ -356,7 +356,7 @@ public class ApiManagerController extends Controller {
      *            the name of an application to test
      */
     @Restrict({ @Group(IMafConstants.API_TESTER_PERMISSION) })
-    public static Result openBrowser(String applicationName) {
+    public Result openBrowser(String applicationName) {
         String applicationKey = null;
         IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         if (!StringUtils.isBlank(applicationName)) {

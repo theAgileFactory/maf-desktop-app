@@ -85,7 +85,7 @@ public class SystemOwnerController extends Controller {
      * 
      * @return
      */
-    public static Result info() {
+    public Result info() {
         // Find system owners
         List<String> systemOwners = new ArrayList<String>();
         List<Principal> systemOnwerPrincipals = Principal.getPrincipalsWithPermission(IMafConstants.ADMIN_SYSTEM_OWNER_PERMISSION);

@@ -162,7 +162,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result overview(Long id) {
+    public Result overview(Long id) {
 
         // load the overview configuration from the user preference
         OverviewConfiguration conf = OverviewConfiguration.load();
@@ -460,7 +460,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result overviewChangeConf(Long id) {
+    public Result overviewChangeConf(Long id) {
 
         Form<OverviewConfiguration> boundForm = overviewConfigurationFormTemplate.bindFromRequest();
 
@@ -481,7 +481,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result packages(Long id, Boolean reset) {
+    public Result packages(Long id, Boolean reset) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -588,7 +588,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result packagesFilter(Long id) {
+    public Result packagesFilter(Long id) {
 
         try {
 
@@ -658,7 +658,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result viewPackage(Long id, Long planningPackageId) {
+    public Result viewPackage(Long id, Long planningPackageId) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -717,7 +717,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result managePackage(Long id, Long planningPackageId) {
+    public Result managePackage(Long id, Long planningPackageId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -755,7 +755,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManagePackage() {
+    public Result processManagePackage() {
 
         // bind the form
         Form<PortfolioEntryPlanningPackageFormData> boundForm = planningPackageFormTemplate.bindFromRequest();
@@ -901,7 +901,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result addPackageGroups(Long id) {
+    public Result addPackageGroups(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -920,7 +920,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processAddPackageGroups() {
+    public Result processAddPackageGroups() {
 
         // bind the form
         Form<PortfolioEntryPlanningPackageGroupsFormData> boundForm = planningPackageGroupsFormTemplate.bindFromRequest();
@@ -973,7 +973,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deletePackage(Long id, Long planningPackageId) {
+    public Result deletePackage(Long id, Long planningPackageId) {
 
         // get the planning package
         PortfolioEntryPlanningPackage planningPackage = PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(planningPackageId);
@@ -1002,7 +1002,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result createPackageAttachment(Long id, Long planningPackageId) {
+    public Result createPackageAttachment(Long id, Long planningPackageId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1022,7 +1022,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processCreatePackageAttachment() {
+    public Result processCreatePackageAttachment() {
 
         Form<AttachmentFormData> boundForm = attachmentFormTemplate.bindFromRequest();
 
@@ -1063,7 +1063,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deletePackageAttachment(Long id, Long planningPackageId, Long attachmentId) {
+    public Result deletePackageAttachment(Long id, Long planningPackageId, Long attachmentId) {
 
         // get the package
         PortfolioEntryPlanningPackage planningPackage = PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(planningPackageId);
@@ -1095,7 +1095,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public static Result resources(Long id) {
+    public Result resources(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1181,7 +1181,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageAllocatedActor(Long id, Long allocatedActorId) {
+    public Result manageAllocatedActor(Long id, Long allocatedActorId) {
 
         // for create case, check there is at least one actor that can be
         // allocated (represented by the stakeholders of the portfolio entry)
@@ -1227,7 +1227,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageAllocatedActor() {
+    public Result processManageAllocatedActor() {
 
         // bind the form
         Form<PortfolioEntryResourcePlanAllocatedActorFormData> boundForm = allocatedActorFormTemplate.bindFromRequest();
@@ -1305,7 +1305,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteAllocatedActor(Long id, Long allocatedActorId) {
+    public Result deleteAllocatedActor(Long id, Long allocatedActorId) {
 
         // get the allocated actor
         PortfolioEntryResourcePlanAllocatedActor allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(allocatedActorId);
@@ -1337,7 +1337,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
+    public Result manageAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
 
         // for create case, check there is at least one delivery unit that can
         // be allocated (represented by the delivery units of the portfolio
@@ -1385,7 +1385,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageAllocatedOrgUnit() {
+    public Result processManageAllocatedOrgUnit() {
 
         // bind the form
         Form<PortfolioEntryResourcePlanAllocatedOrgUnitFormData> boundForm = allocatedOrgUnitFormTemplate.bindFromRequest();
@@ -1452,7 +1452,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
+    public Result deleteAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
 
         // get the allocated org unit
         PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitById(allocatedOrgUnitId);
@@ -1480,7 +1480,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result manageAllocatedCompetency(Long id, Long allocatedCompetencyId) {
+    public Result manageAllocatedCompetency(Long id, Long allocatedCompetencyId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1517,7 +1517,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processManageAllocatedCompetency() {
+    public Result processManageAllocatedCompetency() {
 
         // bind the form
         Form<PortfolioEntryResourcePlanAllocatedCompetencyFormData> boundForm = allocatedCompetencyFormTemplate.bindFromRequest();
@@ -1584,7 +1584,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result deleteAllocatedCompetency(Long id, Long allocatedCompetencyId) {
+    public Result deleteAllocatedCompetency(Long id, Long allocatedCompetencyId) {
 
         // get the allocated competency
         PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency = PortfolioEntryResourcePlanDAO
@@ -1614,7 +1614,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result reallocateOrgUnit(Long id, Long allocatedOrgUnitId) {
+    public Result reallocateOrgUnit(Long id, Long allocatedOrgUnitId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1642,7 +1642,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processReallocateOrgUnit() {
+    public Result processReallocateOrgUnit() {
 
         // bind the form
         Form<PortfolioEntryResourcePlanAllocatedActorFormData> boundForm = reallocateOrgUnitFormTemplate.bindFromRequest();
@@ -1711,7 +1711,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result reallocateOrgUnitReportBalance(Long id, Long allocatedOrgUnitId, Double days) {
+    public Result reallocateOrgUnitReportBalance(Long id, Long allocatedOrgUnitId, Double days) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1735,7 +1735,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processReallocateOrgUnitReportBalance(Long id, Long allocatedOrgUnitId, Double days) {
+    public Result processReallocateOrgUnitReportBalance(Long id, Long allocatedOrgUnitId, Double days) {
 
         // get the deleted allocated org unit
         PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = PortfolioEntryResourcePlanDAO
@@ -1761,7 +1761,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result reallocateCompetency(Long id, Long allocatedCompetencyId) {
+    public Result reallocateCompetency(Long id, Long allocatedCompetencyId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1790,7 +1790,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processReallocateCompetency() {
+    public Result processReallocateCompetency() {
 
         // bind the form
         Form<PortfolioEntryResourcePlanAllocatedActorFormData> boundForm = reallocateCompetencyFormTemplate.bindFromRequest();
@@ -1861,7 +1861,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result reallocateCompetencyReportBalance(Long id, Long allocatedCompetencyId, Double days) {
+    public Result reallocateCompetencyReportBalance(Long id, Long allocatedCompetencyId, Double days) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1885,7 +1885,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public static Result processReallocateCompetencyReportBalance(Long id, Long allocatedCompetencyId, Double days) {
+    public Result processReallocateCompetencyReportBalance(Long id, Long allocatedCompetencyId, Double days) {
 
         // get the deleted allocated competency
         PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency = PortfolioEntryResourcePlanDAO

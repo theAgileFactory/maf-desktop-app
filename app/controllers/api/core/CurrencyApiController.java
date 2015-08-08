@@ -54,7 +54,7 @@ public class CurrencyApiController extends ApiController {
     @ApiOperation(value = "list the Currencies", notes = "Return the list of Currencies in the system", response = Currency.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getCurrenciesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive) {
+    public Result getCurrenciesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive) {
 
         try {
             return getJsonSuccessResponse(CurrencyDAO.getCurrencyAsListByActive(isActive));
@@ -74,7 +74,7 @@ public class CurrencyApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public static Result getCurrencyByCode(@ApiParam(value = "code", required = true) @PathParam("code") String code) {
+    public Result getCurrencyByCode(@ApiParam(value = "code", required = true) @PathParam("code") String code) {
         try {
             if (CurrencyDAO.getCurrencyByCode(code) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The currency with the specified code is not found"));

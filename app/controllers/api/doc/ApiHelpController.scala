@@ -1,4 +1,4 @@
-package pl.matisoft.swagger
+package controllers.api.doc
 
 /**
  * Copyright 2014 Reverb Technologies, Inc.
