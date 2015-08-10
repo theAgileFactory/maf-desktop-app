@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-03-03T09:06:52 -->
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-08-10T09:36:00 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="roadmap_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="f91d336a-85be-4c71-928a-badef9f49bf4">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\ST.xml"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
