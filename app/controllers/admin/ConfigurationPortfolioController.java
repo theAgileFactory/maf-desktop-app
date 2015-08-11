@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.pmo.PortfolioEntryDependencyType;
 import models.pmo.PortfolioEntryType;
 import models.pmo.PortfolioType;
@@ -38,6 +40,7 @@ import constants.IMafConstants;
 import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -56,6 +59,9 @@ public class ConfigurationPortfolioController extends Controller {
             .form(PortfolioEntryDependencyTypeFormData.class);
     private static Form<PortfolioTypeFormData> portfolioTypeFormTemplate = Form.form(PortfolioTypeFormData.class);
 
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    
     /**
      * Display the lists of data.
      */
@@ -112,7 +118,7 @@ public class ConfigurationPortfolioController extends Controller {
 
             PortfolioEntryType portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryTypeId);
 
-            portfolioEntryTypeForm = portfolioEntryTypeFormTemplate.fill(new PortfolioEntryTypeFormData(portfolioEntryType));
+            portfolioEntryTypeForm = portfolioEntryTypeFormTemplate.fill(new PortfolioEntryTypeFormData(portfolioEntryType, getI18nMessagesPlugin()));
 
         }
 
@@ -154,8 +160,8 @@ public class ConfigurationPortfolioController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.portfolioentrytype.edit.successful"));
         }
 
-        portfolioEntryTypeFormData.description.persist();
-        portfolioEntryTypeFormData.name.persist();
+        portfolioEntryTypeFormData.description.persist(getI18nMessagesPlugin());
+        portfolioEntryTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -198,7 +204,7 @@ public class ConfigurationPortfolioController extends Controller {
             PortfolioEntryDependencyType portfolioEntryDependencyType = PortfolioEntryDao.getPEDependencyTypeById(portfolioEntryDependencyTypeId);
 
             portfolioEntryDependencyTypeForm =
-                    portfolioEntryDependencyTypeFormTemplate.fill(new PortfolioEntryDependencyTypeFormData(portfolioEntryDependencyType));
+                    portfolioEntryDependencyTypeFormTemplate.fill(new PortfolioEntryDependencyTypeFormData(portfolioEntryDependencyType, getI18nMessagesPlugin()));
 
         }
 
@@ -240,9 +246,9 @@ public class ConfigurationPortfolioController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.portfolioentrydependencytype.edit.successful"));
         }
 
-        portfolioEntryDependencyTypeFormData.description.persist();
-        portfolioEntryDependencyTypeFormData.name.persist();
-        portfolioEntryDependencyTypeFormData.contrary.persist();
+        portfolioEntryDependencyTypeFormData.description.persist(getI18nMessagesPlugin());
+        portfolioEntryDependencyTypeFormData.name.persist(getI18nMessagesPlugin());
+        portfolioEntryDependencyTypeFormData.contrary.persist(getI18nMessagesPlugin());
 
         return redirect(controllers.admin.routes.ConfigurationPortfolioController.list());
     }
@@ -280,7 +286,7 @@ public class ConfigurationPortfolioController extends Controller {
 
             PortfolioType portfolioType = PortfolioDao.getPortfolioTypeById(portfolioTypeId);
 
-            portfolioTypeForm = portfolioTypeFormTemplate.fill(new PortfolioTypeFormData(portfolioType));
+            portfolioTypeForm = portfolioTypeFormTemplate.fill(new PortfolioTypeFormData(portfolioType, getI18nMessagesPlugin()));
 
         }
 
@@ -323,8 +329,8 @@ public class ConfigurationPortfolioController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.portfoliotype.edit.successful"));
         }
 
-        portfolioTypeFormData.description.persist();
-        portfolioTypeFormData.name.persist();
+        portfolioTypeFormData.description.persist(getI18nMessagesPlugin());
+        portfolioTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -348,6 +354,10 @@ public class ConfigurationPortfolioController extends Controller {
         RootApiController.flushFilters();
 
         return redirect(controllers.admin.routes.ConfigurationPortfolioController.list());
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

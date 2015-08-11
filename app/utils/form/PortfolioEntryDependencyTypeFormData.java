@@ -20,6 +20,7 @@ package utils.form;
 import models.pmo.PortfolioEntryDependencyType;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -56,14 +57,16 @@ public class PortfolioEntryDependencyTypeFormData {
      * 
      * @param portfolioEntryDependencyType
      *            the portfolio entry dependency type in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public PortfolioEntryDependencyTypeFormData(PortfolioEntryDependencyType portfolioEntryDependencyType) {
+    public PortfolioEntryDependencyTypeFormData(PortfolioEntryDependencyType portfolioEntryDependencyType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = portfolioEntryDependencyType.id;
         this.isActive = portfolioEntryDependencyType.isActive;
-        this.name = MultiLanguagesString.getByKey(portfolioEntryDependencyType.name);
-        this.contrary = MultiLanguagesString.getByKey(portfolioEntryDependencyType.contrary);
-        this.description = MultiLanguagesString.getByKey(portfolioEntryDependencyType.description);
+        this.name = MultiLanguagesString.getByKey(portfolioEntryDependencyType.name, i18nMessagesPlugin);
+        this.contrary = MultiLanguagesString.getByKey(portfolioEntryDependencyType.contrary, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(portfolioEntryDependencyType.description, i18nMessagesPlugin);
 
     }
 

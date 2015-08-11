@@ -44,6 +44,7 @@ import framework.commons.message.SystemLevelRoleTypeEventMessage;
 import framework.security.SecurityUtils;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.plugins.IPluginManagerService;
 import framework.utils.Msg;
 import framework.utils.PreferenceFormAndDisplayHandler;
@@ -64,6 +65,8 @@ public class ConfigurationController extends Controller {
     private IPluginManagerService pluginManagerService;
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
 
     private static Logger.ALogger log = Logger.of(ConfigurationController.class);
 
@@ -258,7 +261,7 @@ public class ConfigurationController extends Controller {
 
             SystemLevelRoleType role = SystemLevelRoleType.getActiveRoleFromId(roleTypeId);
 
-            roleForm = roleFormTemplate.fill(new RoleFormData(role));
+            roleForm = roleFormTemplate.fill(new RoleFormData(role, getI18nMessagesPlugin()));
 
         }
 
@@ -340,7 +343,7 @@ public class ConfigurationController extends Controller {
             getPluginManagerService().postOutMessage(eventMessage);
         }
 
-        roleFormData.description.persist();
+        roleFormData.description.persist(getI18nMessagesPlugin());
 
         // clean the cache
         try {
@@ -403,5 +406,9 @@ public class ConfigurationController extends Controller {
 
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 }

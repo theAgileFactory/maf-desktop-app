@@ -20,6 +20,7 @@ package utils.form;
 import models.pmo.PortfolioEntryReportStatusType;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -55,13 +56,15 @@ public class PortfolioEntryReportStatusTypeFormData {
      * 
      * @param portfolioEntryReportStatusType
      *            the portfolio entry report status type in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public PortfolioEntryReportStatusTypeFormData(PortfolioEntryReportStatusType portfolioEntryReportStatusType) {
+    public PortfolioEntryReportStatusTypeFormData(PortfolioEntryReportStatusType portfolioEntryReportStatusType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = portfolioEntryReportStatusType.id;
         this.selectable = portfolioEntryReportStatusType.selectable;
-        this.name = MultiLanguagesString.getByKey(portfolioEntryReportStatusType.name);
-        this.description = MultiLanguagesString.getByKey(portfolioEntryReportStatusType.description);
+        this.name = MultiLanguagesString.getByKey(portfolioEntryReportStatusType.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(portfolioEntryReportStatusType.description, i18nMessagesPlugin);
         this.cssClass = portfolioEntryReportStatusType.cssClass;
 
     }

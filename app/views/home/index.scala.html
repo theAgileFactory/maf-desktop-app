@@ -122,7 +122,7 @@
                                 <tr>
                                     <th class="col-md-4">
                                         @parts.Msg("object.user_account.preferred_language.label")</th>
-                                    <td>@if(userAccount.getPreferredLanguage() != null) { @framework.utils.LanguageUtil.getLanguageByCode(userAccount.getPreferredLanguage).getName }</td>
+                                    <td>@if(userAccount.getPreferredLanguage() != null) { @framework.services.ServiceStaticAccessor.getMessagesPlugin().getLanguageByCode(userAccount.getPreferredLanguage).getName }</td>
                                 </tr>
                                 <tr>
                                     <th class="col-md-4">

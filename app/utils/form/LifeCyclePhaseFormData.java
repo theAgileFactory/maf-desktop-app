@@ -21,6 +21,7 @@ import models.governance.LifeCyclePhase;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 import dao.governance.LifeCycleMilestoneDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -65,11 +66,13 @@ public class LifeCyclePhaseFormData {
      * 
      * @param lifeCyclePhase
      *            the life cycle phase in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public LifeCyclePhaseFormData(LifeCyclePhase lifeCyclePhase) {
+    public LifeCyclePhaseFormData(LifeCyclePhase lifeCyclePhase, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = lifeCyclePhase.id;
-        this.name = MultiLanguagesString.getByKey(lifeCyclePhase.name);
+        this.name = MultiLanguagesString.getByKey(lifeCyclePhase.name, i18nMessagesPlugin);
         this.startMilestone = lifeCyclePhase.startLifeCycleMilestone.id;
         this.endMilestone = lifeCyclePhase.endLifeCycleMilestone.id;
         this.gapDaysStart = lifeCyclePhase.gapDaysStart;

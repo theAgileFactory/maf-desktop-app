@@ -49,6 +49,7 @@ import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
 import dao.reporting.ReportingDao;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -58,7 +59,6 @@ import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FileAttachmentHelper;
 import framework.utils.FilterConfig;
-import framework.utils.LanguageUtil;
 import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
@@ -115,6 +115,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private IReportingUtils reportingUtils;
     @Inject
     private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryStatusReportingController.class);
 
@@ -139,7 +141,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Map<String, Object> reportParameters = new HashMap<String, Object>();
         reportParameters.put("REPORT_" + getReportStatusTemplateName().toUpperCase() + "_PORTFOLIO_ENTRY", id);
 
-        getReportingUtils().generate(ctx(), report, LanguageUtil.getCurrent().getCode(), Format.PDF, reportParameters);
+        getReportingUtils().generate(ctx(), report, getI18nMessagesPlugin().getCurrentLanguage().getCode(), Format.PDF, reportParameters);
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
 
@@ -1109,6 +1111,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

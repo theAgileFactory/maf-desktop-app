@@ -20,7 +20,7 @@ package utils.form;
 import models.reporting.Reporting;
 import models.reporting.Reporting.Format;
 import play.data.validation.Constraints.Required;
-import framework.utils.LanguageUtil;
+import framework.services.ServiceStaticAccessor;
 
 /**
  * An reporting params form data is used to configure the parameters of a report
@@ -50,10 +50,9 @@ public class ReportingParamsFormData {
      * @param report
      *            a reporting
      */
-    public ReportingParamsFormData(Reporting report) {
-
+    public ReportingParamsFormData(Reporting report, String language) {
         this.id = report.id;
-        this.language = LanguageUtil.getCurrent().getCode();
+        this.language = language;
         this.format = Format.PDF.name();
 
     }

@@ -20,6 +20,7 @@ package utils.form;
 import models.pmo.PortfolioEntryType;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -52,13 +53,15 @@ public class PortfolioEntryTypeFormData {
      * 
      * @param portfolioEntryType
      *            the portfolio entry type in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public PortfolioEntryTypeFormData(PortfolioEntryType portfolioEntryType) {
+    public PortfolioEntryTypeFormData(PortfolioEntryType portfolioEntryType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = portfolioEntryType.id;
         this.selectable = portfolioEntryType.selectable;
-        this.name = MultiLanguagesString.getByKey(portfolioEntryType.name);
-        this.description = MultiLanguagesString.getByKey(portfolioEntryType.description);
+        this.name = MultiLanguagesString.getByKey(portfolioEntryType.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(portfolioEntryType.description, i18nMessagesPlugin);
 
     }
 

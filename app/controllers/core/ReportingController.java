@@ -51,6 +51,7 @@ import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.reporting.ReportingDao;
 import framework.services.account.AccountManagementException;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.taftree.TafTreeHelper;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
@@ -65,6 +66,8 @@ import framework.utils.Utilities;
 public class ReportingController extends Controller {
     @Inject
     private IReportingUtils reportingUtils;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
 
     private static Logger.ALogger log = Logger.of(ReportingController.class);
 
@@ -169,7 +172,7 @@ public class ReportingController extends Controller {
         Reporting report = ReportingDao.getReportingById(id);
 
         // load the form
-        Form<ReportingParamsFormData> form = formTemplate.fill(new ReportingParamsFormData(report));
+        Form<ReportingParamsFormData> form = formTemplate.fill(new ReportingParamsFormData(report, getI18nMessagesPlugin().getCurrentLanguage().getCode()));
 
         return ok(views.html.core.reporting.parametrize.render(report, form));
     }
@@ -218,5 +221,9 @@ public class ReportingController extends Controller {
 
     private IReportingUtils getReportingUtils() {
         return reportingUtils;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 }

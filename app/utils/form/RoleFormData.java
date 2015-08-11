@@ -25,6 +25,7 @@ import models.framework_models.account.SystemPermission;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 
 /**
@@ -55,12 +56,14 @@ public class RoleFormData {
      * 
      * @param systemLevelRoleType
      *            the role in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public RoleFormData(SystemLevelRoleType systemLevelRoleType) {
+    public RoleFormData(SystemLevelRoleType systemLevelRoleType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = systemLevelRoleType.id;
         this.name = systemLevelRoleType.name;
-        this.description = MultiLanguagesString.getByKey(systemLevelRoleType.description);
+        this.description = MultiLanguagesString.getByKey(systemLevelRoleType.description, i18nMessagesPlugin);
 
         if (systemLevelRoleType.systemPermissions != null) {
             for (SystemPermission permission : systemLevelRoleType.systemPermissions) {

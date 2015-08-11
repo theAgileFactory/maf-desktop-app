@@ -22,6 +22,8 @@ import models.pmo.ActorType;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.ServiceStaticAccessor;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -58,14 +60,15 @@ public class ActorTypeFormData {
      * 
      * @param actorType
      *            the actor type in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public ActorTypeFormData(ActorType actorType) {
-
+    public ActorTypeFormData(ActorType actorType, II18nMessagesPlugin i18nMessagesPlugin) {
         this.id = actorType.id;
         this.selectable = actorType.selectable;
         this.refId = actorType.refId;
-        this.name = MultiLanguagesString.getByKey(actorType.name);
-        this.description = MultiLanguagesString.getByKey(actorType.description);
+        this.name = MultiLanguagesString.getByKey(actorType.name,i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(actorType.description,i18nMessagesPlugin);
 
     }
 

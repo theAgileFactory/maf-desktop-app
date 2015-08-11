@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.pmo.ActorType;
 import models.pmo.Competency;
 import models.pmo.OrgUnitType;
@@ -42,6 +44,7 @@ import controllers.api.core.RootApiController;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.StakeholderDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -64,6 +67,9 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
     private static Form<CompetencyFormData> competencyFormTemplate = Form.form(CompetencyFormData.class);
 
     private static Form<StakeholderTypeFormData> stakeholderTypeFormTemplate = Form.form(StakeholderTypeFormData.class);
+    
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
 
     /**
      * Display the lists of data.
@@ -129,7 +135,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
             ActorType actorType = ActorDao.getActorTypeById(actorTypeId);
 
-            actorTypeForm = actorTypeFormTemplate.fill(new ActorTypeFormData(actorType));
+            actorTypeForm = actorTypeFormTemplate.fill(new ActorTypeFormData(actorType, getI18nMessagesPlugin()));
 
         }
 
@@ -186,8 +192,8 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.actortype.edit.successful"));
         }
 
-        actorTypeFormData.description.persist();
-        actorTypeFormData.name.persist();
+        actorTypeFormData.description.persist(getI18nMessagesPlugin());
+        actorTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -228,7 +234,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
             OrgUnitType orgUnitType = OrgUnitDao.getOrgUnitTypeById(orgUnitTypeId);
 
-            orgUnitTypeForm = orgUnitTypeFormTemplate.fill(new OrgUnitTypeFormData(orgUnitType));
+            orgUnitTypeForm = orgUnitTypeFormTemplate.fill(new OrgUnitTypeFormData(orgUnitType, getI18nMessagesPlugin()));
 
         }
 
@@ -270,8 +276,8 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.orgunittype.edit.successful"));
         }
 
-        orgUnitTypeFormData.description.persist();
-        orgUnitTypeFormData.name.persist();
+        orgUnitTypeFormData.description.persist(getI18nMessagesPlugin());
+        orgUnitTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -312,7 +318,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
             Competency competency = ActorDao.getCompetencyById(competencyId);
 
-            competencyForm = competencyFormTemplate.fill(new CompetencyFormData(competency));
+            competencyForm = competencyFormTemplate.fill(new CompetencyFormData(competency, getI18nMessagesPlugin()));
 
         }
 
@@ -354,8 +360,8 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.competency.edit.successful"));
         }
 
-        competencyFormData.description.persist();
-        competencyFormData.name.persist();
+        competencyFormData.description.persist(getI18nMessagesPlugin());
+        competencyFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -397,7 +403,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
             StakeholderType stakeholderType = StakeholderDao.getStakeholderTypeById(stakeholderTypeId);
 
-            stakeholderTypeForm = stakeholderTypeFormTemplate.fill(new StakeholderTypeFormData(stakeholderType));
+            stakeholderTypeForm = stakeholderTypeFormTemplate.fill(new StakeholderTypeFormData(stakeholderType, getI18nMessagesPlugin()));
 
         }
 
@@ -439,11 +445,8 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.stakeholdertype.edit.successful"));
         }
 
-        stakeholderTypeFormData.description.persist();
-        stakeholderTypeFormData.name.persist();
-
-        // stakeholderType.saveManyToManyAssociations("portfolioTypes");
-        // stakeholderType.saveManyToManyAssociations("portfolioEntryTypes");
+        stakeholderTypeFormData.description.persist(getI18nMessagesPlugin());
+        stakeholderTypeFormData.name.persist(getI18nMessagesPlugin());
         stakeholderType.save();
 
         RootApiController.flushFilters();
@@ -468,6 +471,10 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         RootApiController.flushFilters();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

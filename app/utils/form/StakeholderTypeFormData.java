@@ -27,6 +27,7 @@ import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -63,13 +64,15 @@ public class StakeholderTypeFormData {
      * 
      * @param stakeholderType
      *            the stakeholder type in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public StakeholderTypeFormData(StakeholderType stakeholderType) {
+    public StakeholderTypeFormData(StakeholderType stakeholderType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = stakeholderType.id;
         this.selectable = stakeholderType.selectable;
-        this.name = MultiLanguagesString.getByKey(stakeholderType.name);
-        this.description = MultiLanguagesString.getByKey(stakeholderType.description);
+        this.name = MultiLanguagesString.getByKey(stakeholderType.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(stakeholderType.description, i18nMessagesPlugin);
         if (stakeholderType.portfolioTypes != null) {
             for (PortfolioType portfolioType : stakeholderType.portfolioTypes) {
                 this.portfolioTypes.add(portfolioType.id);

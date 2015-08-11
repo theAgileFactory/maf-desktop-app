@@ -26,6 +26,7 @@ import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -71,13 +72,15 @@ public class LifeCycleMilestoneFormData {
      * 
      * @param lifeCycleMilestone
      *            the life cycle milestone in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public LifeCycleMilestoneFormData(LifeCycleMilestone lifeCycleMilestone) {
+    public LifeCycleMilestoneFormData(LifeCycleMilestone lifeCycleMilestone, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = lifeCycleMilestone.id;
-        this.shortName = MultiLanguagesString.getByKey(lifeCycleMilestone.shortName);
-        this.name = MultiLanguagesString.getByKey(lifeCycleMilestone.name);
-        this.description = MultiLanguagesString.getByKey(lifeCycleMilestone.description);
+        this.shortName = MultiLanguagesString.getByKey(lifeCycleMilestone.shortName,i18nMessagesPlugin);
+        this.name = MultiLanguagesString.getByKey(lifeCycleMilestone.name,i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(lifeCycleMilestone.description,i18nMessagesPlugin);
         this.isReviewRequired = lifeCycleMilestone.isReviewRequired;
         this.defaultStatusType = lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType.id;
         this.isActive = lifeCycleMilestone.isActive;

@@ -42,7 +42,7 @@
             @helper.inputText(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label"))
             @helper.inputText(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
             @helper.inputText(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
-            @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.utils.LanguageUtil.getValidLanguagesAsValueHolderCollection, null, false)
+            @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguagesAsValueHolderCollection, null, false)
             @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes,null,false)
             <div id="rolesSelector">
             <legend>@parts.Msg("object.user_account.roles.label")</legend>

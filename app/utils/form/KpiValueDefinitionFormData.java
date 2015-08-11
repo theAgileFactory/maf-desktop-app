@@ -17,6 +17,7 @@
  */
 package utils.form;
 
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 import models.framework_models.kpi.KpiValueDefinition;
@@ -58,11 +59,13 @@ public class KpiValueDefinitionFormData {
      * 
      * @param kpiValueDefinition
      *            the KPI value definition in the DB
+     * @param i18nMessagesPlugin   
+     *            the i18n manager 
      */
-    public KpiValueDefinitionFormData(KpiValueDefinition kpiValueDefinition) {
+    public KpiValueDefinitionFormData(KpiValueDefinition kpiValueDefinition, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = kpiValueDefinition.id;
-        this.name = MultiLanguagesString.getByKey(kpiValueDefinition.name);
+        this.name = MultiLanguagesString.getByKey(kpiValueDefinition.name, i18nMessagesPlugin);
         this.renderType = kpiValueDefinition.renderType.name();
         this.renderPattern = kpiValueDefinition.renderPattern;
 

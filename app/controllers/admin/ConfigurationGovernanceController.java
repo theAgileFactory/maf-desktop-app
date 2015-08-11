@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.governance.LifeCycleInstance;
 import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCycleMilestone;
@@ -43,6 +45,7 @@ import controllers.api.core.RootApiController;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
 import dao.governance.LifeCycleProcessDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -63,6 +66,9 @@ public class ConfigurationGovernanceController extends Controller {
     private static Form<LifeCycleMilestoneFormData> lifeCycleMilestoneFormTemplate = Form.form(LifeCycleMilestoneFormData.class);
     private static Form<LifeCyclePhaseFormData> lifeCyclePhaseFormTemplate = Form.form(LifeCyclePhaseFormData.class);
 
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    
     /**
      * Display the lists of data (LifeCycleProcess,
      * LifeCycleMilestoneInstanceStatusType).
@@ -143,7 +149,7 @@ public class ConfigurationGovernanceController extends Controller {
 
             LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId);
 
-            lifeCycleProcessForm = lifeCycleProcessFormTemplate.fill(new LifeCycleProcessFormData(lifeCycleProcess));
+            lifeCycleProcessForm = lifeCycleProcessFormTemplate.fill(new LifeCycleProcessFormData(lifeCycleProcess, getI18nMessagesPlugin()));
 
         }
 
@@ -186,9 +192,9 @@ public class ConfigurationGovernanceController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_process.edit.successful"));
         }
 
-        lifeCycleProcessFormData.description.persist();
-        lifeCycleProcessFormData.name.persist();
-        lifeCycleProcessFormData.shortName.persist();
+        lifeCycleProcessFormData.description.persist(getI18nMessagesPlugin());
+        lifeCycleProcessFormData.name.persist(getI18nMessagesPlugin());
+        lifeCycleProcessFormData.shortName.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -234,7 +240,7 @@ public class ConfigurationGovernanceController extends Controller {
 
             LifeCycleMilestoneInstanceStatusType statusType = LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeById(statusTypeId);
 
-            statusTypeForm = statusTypeFormTemplate.fill(new LifeCycleMilestoneInstanceStatusTypeFormData(statusType));
+            statusTypeForm = statusTypeFormTemplate.fill(new LifeCycleMilestoneInstanceStatusTypeFormData(statusType, getI18nMessagesPlugin()));
 
         }
 
@@ -278,8 +284,8 @@ public class ConfigurationGovernanceController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_milestone_instance_status_type.edit.successful"));
         }
 
-        statusTypeFormData.description.persist();
-        statusTypeFormData.name.persist();
+        statusTypeFormData.description.persist(getI18nMessagesPlugin());
+        statusTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -403,7 +409,7 @@ public class ConfigurationGovernanceController extends Controller {
 
             LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
 
-            milestoneTypeForm = lifeCycleMilestoneFormTemplate.fill(new LifeCycleMilestoneFormData(milestone));
+            milestoneTypeForm = lifeCycleMilestoneFormTemplate.fill(new LifeCycleMilestoneFormData(milestone, getI18nMessagesPlugin()));
 
         }
 
@@ -466,9 +472,9 @@ public class ConfigurationGovernanceController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_milestone.edit.successful"));
         }
 
-        milestoneFormData.description.persist();
-        milestoneFormData.name.persist();
-        milestoneFormData.shortName.persist();
+        milestoneFormData.description.persist(getI18nMessagesPlugin());
+        milestoneFormData.name.persist(getI18nMessagesPlugin());
+        milestoneFormData.shortName.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -528,7 +534,7 @@ public class ConfigurationGovernanceController extends Controller {
 
             LifeCyclePhase phase = LifeCycleMilestoneDao.getLCPhaseById(phaseId);
 
-            phaseTypeForm = lifeCyclePhaseFormTemplate.fill(new LifeCyclePhaseFormData(phase));
+            phaseTypeForm = lifeCyclePhaseFormTemplate.fill(new LifeCyclePhaseFormData(phase, getI18nMessagesPlugin()));
 
         }
 
@@ -578,7 +584,7 @@ public class ConfigurationGovernanceController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_phase.edit.successful"));
         }
 
-        phaseFormData.name.persist();
+        phaseFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -603,6 +609,10 @@ public class ConfigurationGovernanceController extends Controller {
         RootApiController.flushFilters();
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(phase.lifeCycleProcess.id));
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

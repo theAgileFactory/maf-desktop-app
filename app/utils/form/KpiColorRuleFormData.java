@@ -19,6 +19,7 @@ package utils.form;
 
 import models.framework_models.kpi.KpiColorRule;
 import play.data.validation.Constraints.Required;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 
 /**
@@ -52,14 +53,16 @@ public class KpiColorRuleFormData {
      * 
      * @param kpiColorRule
      *            the KPI color rule in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public KpiColorRuleFormData(KpiColorRule kpiColorRule) {
+    public KpiColorRuleFormData(KpiColorRule kpiColorRule,II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.kpiDefinitionId = kpiColorRule.kpiDefinition.id;
         this.kpiColorRuleId = kpiColorRule.id;
         this.rule = kpiColorRule.rule;
         this.cssColor = kpiColorRule.cssColor;
-        this.renderLabel = MultiLanguagesString.getByKey(kpiColorRule.renderLabel);
+        this.renderLabel = MultiLanguagesString.getByKey(kpiColorRule.renderLabel,i18nMessagesPlugin);
 
     }
 

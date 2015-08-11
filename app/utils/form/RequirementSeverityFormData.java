@@ -20,6 +20,7 @@ package utils.form;
 import models.delivery.RequirementSeverity;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -52,12 +53,14 @@ public class RequirementSeverityFormData {
      * 
      * @param requirementSeverity
      *            the requirement severity in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public RequirementSeverityFormData(RequirementSeverity requirementSeverity) {
+    public RequirementSeverityFormData(RequirementSeverity requirementSeverity, II18nMessagesPlugin i18nMessagesPlugin) {
         this.id = requirementSeverity.id;
         this.isBlocker = requirementSeverity.isBlocker;
-        this.name = MultiLanguagesString.getByKey(requirementSeverity.name);
-        this.description = MultiLanguagesString.getByKey(requirementSeverity.description);
+        this.name = MultiLanguagesString.getByKey(requirementSeverity.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(requirementSeverity.description, i18nMessagesPlugin);
     }
 
     /**

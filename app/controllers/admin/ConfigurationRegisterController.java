@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.pmo.PortfolioEntryEventType;
 import models.pmo.PortfolioEntryReportStatusType;
 import models.pmo.PortfolioEntryRiskType;
@@ -39,6 +41,7 @@ import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.Glyphicon;
 import framework.utils.Msg;
@@ -58,6 +61,9 @@ public class ConfigurationRegisterController extends Controller {
     private static Form<PortfolioEntryReportStatusTypeFormData> reportStatusTypeFormTemplate = Form.form(PortfolioEntryReportStatusTypeFormData.class);
     private static Form<PortfolioEntryEventTypeFormData> eventTypeFormTemplate = Form.form(PortfolioEntryEventTypeFormData.class);
 
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    
     /**
      * Display the lists of data.
      */
@@ -116,7 +122,7 @@ public class ConfigurationRegisterController extends Controller {
 
             PortfolioEntryRiskType riskType = PortfolioEntryRiskDao.getPERiskTypeById(riskTypeId);
 
-            riskTypeForm = riskTypeFormTemplate.fill(new PortfolioEntryRiskTypeFormData(riskType));
+            riskTypeForm = riskTypeFormTemplate.fill(new PortfolioEntryRiskTypeFormData(riskType, getI18nMessagesPlugin()));
 
         }
 
@@ -159,8 +165,8 @@ public class ConfigurationRegisterController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.risktype.edit.successful"));
         }
 
-        riskTypeFormData.description.persist();
-        riskTypeFormData.name.persist();
+        riskTypeFormData.description.persist(getI18nMessagesPlugin());
+        riskTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -202,7 +208,7 @@ public class ConfigurationRegisterController extends Controller {
 
             PortfolioEntryReportStatusType reportStatusType = PortfolioEntryReportDao.getPEReportStatusTypeById(reportStatusTypeId);
 
-            reportStatusTypeForm = reportStatusTypeFormTemplate.fill(new PortfolioEntryReportStatusTypeFormData(reportStatusType));
+            reportStatusTypeForm = reportStatusTypeFormTemplate.fill(new PortfolioEntryReportStatusTypeFormData(reportStatusType,getI18nMessagesPlugin()));
 
         }
 
@@ -246,8 +252,8 @@ public class ConfigurationRegisterController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.report_status_type.edit.successful"));
         }
 
-        reportStatusTypeFormData.description.persist();
-        reportStatusTypeFormData.name.persist();
+        reportStatusTypeFormData.description.persist(getI18nMessagesPlugin());
+        reportStatusTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -288,7 +294,7 @@ public class ConfigurationRegisterController extends Controller {
 
             PortfolioEntryEventType eventType = PortfolioEntryEventDao.getPEEventTypeById(eventTypeId);
 
-            eventTypeForm = eventTypeFormTemplate.fill(new PortfolioEntryEventTypeFormData(eventType));
+            eventTypeForm = eventTypeFormTemplate.fill(new PortfolioEntryEventTypeFormData(eventType, getI18nMessagesPlugin()));
 
         }
 
@@ -330,7 +336,7 @@ public class ConfigurationRegisterController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.event_type.edit.successful"));
         }
 
-        eventTypeFormData.name.persist();
+        eventTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -354,6 +360,10 @@ public class ConfigurationRegisterController extends Controller {
         RootApiController.flushFilters();
 
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

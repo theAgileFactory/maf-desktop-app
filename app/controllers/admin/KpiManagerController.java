@@ -29,6 +29,7 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.services.kpi.Kpi;
 import framework.services.kpi.Kpi.DataType;
@@ -69,6 +70,8 @@ public class KpiManagerController extends Controller {
     private IKpiService kpiService;
     @Inject
     private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
     
     public static Form<KpiDefinitionFormData> kpiDefinitionFormTemplate = Form.form(KpiDefinitionFormData.class);
     public static Form<KpiValueDefinitionFormData> standardKpiValueDefinitionFormTemplate = Form.form(KpiValueDefinitionFormData.class,
@@ -244,9 +247,9 @@ public class KpiManagerController extends Controller {
         Form<KpiValueDefinitionFormData> form = null;
 
         if (kpiDefinition.isStandard) {
-            form = standardKpiValueDefinitionFormTemplate.fill(new KpiValueDefinitionFormData(kpiValueDefinition));
+            form = standardKpiValueDefinitionFormTemplate.fill(new KpiValueDefinitionFormData(kpiValueDefinition, getI18nMessagesPlugin()));
         } else {
-            form = customKpiValueDefinitionFormTemplate.fill(new KpiValueDefinitionFormData(kpiValueDefinition));
+            form = customKpiValueDefinitionFormTemplate.fill(new KpiValueDefinitionFormData(kpiValueDefinition, getI18nMessagesPlugin()));
         }
 
         return ok(views.html.admin.kpi.editValue.render(kpiDefinition, kpi, kpiValueDefinition, valueType, form, getRenderTypesAsValueHolderCollection()));
@@ -294,7 +297,7 @@ public class KpiManagerController extends Controller {
         kpiValueDefinition.update();
 
         if (!kpiDefinition.isStandard) {
-            kpiValueDefinitionFormData.name.persist();
+            kpiValueDefinitionFormData.name.persist(getI18nMessagesPlugin());
         }
 
         reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
@@ -365,7 +368,7 @@ public class KpiManagerController extends Controller {
             // get the KPI color rule
             KpiColorRule kpiColorRule = KpiColorRule.getById(kpiColorRuleId);
 
-            form = kpiColorRuleFormTemplate.fill(new KpiColorRuleFormData(kpiColorRule));
+            form = kpiColorRuleFormTemplate.fill(new KpiColorRuleFormData(kpiColorRule, getI18nMessagesPlugin()));
 
         }
 
@@ -417,7 +420,7 @@ public class KpiManagerController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.rule.edit.successful"));
         }
 
-        kpiColorRuleFormData.renderLabel.persist();
+        kpiColorRuleFormData.renderLabel.persist(getI18nMessagesPlugin());
 
         reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
@@ -576,9 +579,9 @@ public class KpiManagerController extends Controller {
         kpiDefinition.additional2KpiValueDefinition.save();
         kpiDefinition.save();
 
-        customExternalKpiFormData.mainName.persist();
-        customExternalKpiFormData.additional1Name.persist();
-        customExternalKpiFormData.additional2Name.persist();
+        customExternalKpiFormData.mainName.persist(getI18nMessagesPlugin());
+        customExternalKpiFormData.additional1Name.persist(getI18nMessagesPlugin());
+        customExternalKpiFormData.additional2Name.persist(getI18nMessagesPlugin());
 
         reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
@@ -676,6 +679,10 @@ public class KpiManagerController extends Controller {
 
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

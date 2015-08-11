@@ -20,6 +20,7 @@ package utils.form;
 import models.governance.LifeCycleProcess;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -56,13 +57,15 @@ public class LifeCycleProcessFormData {
      * 
      * @param lifeCycleProcess
      *            the life cycle process in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public LifeCycleProcessFormData(LifeCycleProcess lifeCycleProcess) {
+    public LifeCycleProcessFormData(LifeCycleProcess lifeCycleProcess, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = lifeCycleProcess.id;
-        this.shortName = MultiLanguagesString.getByKey(lifeCycleProcess.shortName);
-        this.name = MultiLanguagesString.getByKey(lifeCycleProcess.name);
-        this.description = MultiLanguagesString.getByKey(lifeCycleProcess.description);
+        this.shortName = MultiLanguagesString.getByKey(lifeCycleProcess.shortName,i18nMessagesPlugin);
+        this.name = MultiLanguagesString.getByKey(lifeCycleProcess.name,i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(lifeCycleProcess.description,i18nMessagesPlugin);
         this.isActive = lifeCycleProcess.isActive;
 
     }

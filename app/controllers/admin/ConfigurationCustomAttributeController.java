@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.framework_models.common.CustomAttributeDefinition;
 import models.framework_models.common.CustomAttributeItemOption;
 import models.framework_models.common.CustomAttributeMultiItemOption;
@@ -43,6 +45,7 @@ import constants.IMafConstants;
 import controllers.ControllersUtils;
 import controllers.api.core.RootApiController;
 import framework.commons.DataType;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolder;
@@ -69,6 +72,9 @@ public class ConfigurationCustomAttributeController extends Controller {
     private static Form<CustomAttributeDefinitionFormData> customAttributeFormTemplate = Form.form(CustomAttributeDefinitionFormData.class);
     private static Form<CustomAttributeItemFormData> itemFormTemplate = Form.form(CustomAttributeItemFormData.class);
 
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    
     /**
      * Display the list of custom attributes for a data type. It's possible to
      * switch to another data type.
@@ -184,7 +190,7 @@ public class ConfigurationCustomAttributeController extends Controller {
 
             CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
 
-            customAttributeForm = customAttributeFormTemplate.fill(new CustomAttributeDefinitionFormData(customAttribute));
+            customAttributeForm = customAttributeFormTemplate.fill(new CustomAttributeDefinitionFormData(customAttribute, getI18nMessagesPlugin()));
 
         }
 
@@ -245,8 +251,8 @@ public class ConfigurationCustomAttributeController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.edit.successful"));
         }
 
-        customAttributeDefinitionFormData.name.persist();
-        customAttributeDefinitionFormData.description.persist();
+        customAttributeDefinitionFormData.name.persist(getI18nMessagesPlugin());
+        customAttributeDefinitionFormData.description.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
         RootApiController.flushTables();
@@ -377,7 +383,7 @@ public class ConfigurationCustomAttributeController extends Controller {
             // edit case: inject values
             if (!itemId.equals(Long.valueOf(0))) {
                 CustomAttributeItemOption item = CustomAttributeItemOption.getCustomAttributeItemOptionById(itemId);
-                itemForm = itemFormTemplate.fill(new CustomAttributeItemFormData(item));
+                itemForm = itemFormTemplate.fill(new CustomAttributeItemFormData(item, getI18nMessagesPlugin()));
             }
 
         } else if (customAttribute.attributeType.equals("MULTI_ITEM")) {
@@ -385,7 +391,7 @@ public class ConfigurationCustomAttributeController extends Controller {
             // edit case: inject values
             if (!itemId.equals(Long.valueOf(0))) {
                 CustomAttributeMultiItemOption item = CustomAttributeMultiItemOption.getCustomAttributeMultiItemOptionById(itemId);
-                itemForm = itemFormTemplate.fill(new CustomAttributeItemFormData(item));
+                itemForm = itemFormTemplate.fill(new CustomAttributeItemFormData(item, getI18nMessagesPlugin()));
             }
 
         }
@@ -441,8 +447,8 @@ public class ConfigurationCustomAttributeController extends Controller {
                 Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.item.edit.successful"));
             }
 
-            itemFormData.name.persist();
-            itemFormData.description.persist();
+            itemFormData.name.persist(getI18nMessagesPlugin());
+            itemFormData.description.persist(getI18nMessagesPlugin());
 
         } else if (customAttribute.attributeType.equals("MULTI_ITEM")) {
 
@@ -469,8 +475,8 @@ public class ConfigurationCustomAttributeController extends Controller {
                 Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.item.edit.successful"));
             }
 
-            itemFormData.name.persist();
-            itemFormData.description.persist();
+            itemFormData.name.persist(getI18nMessagesPlugin());
+            itemFormData.description.persist(getI18nMessagesPlugin());
 
         }
 
@@ -592,6 +598,10 @@ public class ConfigurationCustomAttributeController extends Controller {
             this.dataTypeClassName = selected.getDataTypeClassName();
         }
 
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

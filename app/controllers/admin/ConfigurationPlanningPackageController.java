@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.pmo.PortfolioEntryPlanningPackageGroup;
 import models.pmo.PortfolioEntryPlanningPackagePattern;
 import play.data.Form;
@@ -34,6 +36,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -51,6 +54,9 @@ public class ConfigurationPlanningPackageController extends Controller {
     private static Form<PortfolioEntryPlanningPackageGroupFormData> packageGroupFormTemplate = Form.form(PortfolioEntryPlanningPackageGroupFormData.class);
     private static Form<PortfolioEntryPlanningPackagePatternFormData> packagePatternFormTemplate = Form
             .form(PortfolioEntryPlanningPackagePatternFormData.class);
+    
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
 
     /**
      * Display the list of package groups.
@@ -111,7 +117,7 @@ public class ConfigurationPlanningPackageController extends Controller {
 
             PortfolioEntryPlanningPackageGroup packageGroup = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupById(packageGroupId);
 
-            packageGroupForm = packageGroupFormTemplate.fill(new PortfolioEntryPlanningPackageGroupFormData(packageGroup));
+            packageGroupForm = packageGroupFormTemplate.fill(new PortfolioEntryPlanningPackageGroupFormData(packageGroup, getI18nMessagesPlugin()));
 
         }
 
@@ -153,8 +159,8 @@ public class ConfigurationPlanningPackageController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_group.edit.successful"));
         }
 
-        packageGroupFormData.description.persist();
-        packageGroupFormData.name.persist();
+        packageGroupFormData.description.persist(getI18nMessagesPlugin());
+        packageGroupFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -313,6 +319,10 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         return redirect(controllers.admin.routes.ConfigurationPlanningPackageController
                 .viewPackageGroup(packagePattern.portfolioEntryPlanningPackageGroup.id));
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

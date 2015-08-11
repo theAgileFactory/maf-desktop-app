@@ -20,6 +20,7 @@ package utils.form;
 import models.framework_models.common.CustomAttributeDefinition;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -59,8 +60,10 @@ public class CustomAttributeDefinitionFormData {
      * 
      * @param customAttribute
      *            the custom attribute definition in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public CustomAttributeDefinitionFormData(CustomAttributeDefinition customAttribute) {
+    public CustomAttributeDefinitionFormData(CustomAttributeDefinition customAttribute, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = customAttribute.id;
         this.objectType = customAttribute.objectType;
@@ -68,8 +71,8 @@ public class CustomAttributeDefinitionFormData {
 
         this.configuration = customAttribute.configuration != null ? new String(customAttribute.configuration) : null;
         this.attributeType = customAttribute.attributeType;
-        this.name = MultiLanguagesString.getByKey(customAttribute.name);
-        this.description = MultiLanguagesString.getByKey(customAttribute.description);
+        this.name = MultiLanguagesString.getByKey(customAttribute.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(customAttribute.description, i18nMessagesPlugin);
         this.isDisplayed = customAttribute.isDisplayed;
 
     }

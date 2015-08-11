@@ -20,6 +20,7 @@ package utils.form;
 import models.pmo.OrgUnitType;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -52,13 +53,15 @@ public class OrgUnitTypeFormData {
      * 
      * @param orgUnitType
      *            the org unit type in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public OrgUnitTypeFormData(OrgUnitType orgUnitType) {
+    public OrgUnitTypeFormData(OrgUnitType orgUnitType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = orgUnitType.id;
         this.selectable = orgUnitType.selectable;
-        this.name = MultiLanguagesString.getByKey(orgUnitType.name);
-        this.description = MultiLanguagesString.getByKey(orgUnitType.description);
+        this.name = MultiLanguagesString.getByKey(orgUnitType.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(orgUnitType.description, i18nMessagesPlugin);
 
     }
 

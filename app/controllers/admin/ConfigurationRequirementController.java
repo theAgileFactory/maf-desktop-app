@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
 import models.delivery.RequirementStatus;
@@ -38,6 +40,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
 import dao.delivery.RequirementDAO;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -58,6 +61,9 @@ public class ConfigurationRequirementController extends Controller {
     private static Form<RequirementPriorityFormData> priorityFormTemplate = Form.form(RequirementPriorityFormData.class);
     private static Form<RequirementSeverityFormData> severityFormTemplate = Form.form(RequirementSeverityFormData.class);
 
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    
     /**
      * Display the lists of data.
      */
@@ -113,7 +119,7 @@ public class ConfigurationRequirementController extends Controller {
 
             RequirementStatus status = RequirementDAO.getRequirementStatusById(statusId);
 
-            statusForm = statusFormTemplate.fill(new RequirementStatusFormData(status));
+            statusForm = statusFormTemplate.fill(new RequirementStatusFormData(status, getI18nMessagesPlugin()));
 
         }
 
@@ -155,8 +161,8 @@ public class ConfigurationRequirementController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.requirementstatus.edit.successful"));
         }
 
-        statusFormData.description.persist();
-        statusFormData.name.persist();
+        statusFormData.description.persist(getI18nMessagesPlugin());
+        statusFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -196,7 +202,7 @@ public class ConfigurationRequirementController extends Controller {
 
             RequirementPriority priority = RequirementDAO.getRequirementPriorityById(priorityId);
 
-            priorityForm = priorityFormTemplate.fill(new RequirementPriorityFormData(priority));
+            priorityForm = priorityFormTemplate.fill(new RequirementPriorityFormData(priority, getI18nMessagesPlugin()));
 
         }
 
@@ -237,8 +243,8 @@ public class ConfigurationRequirementController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.requirementpriority.edit.successful"));
         }
 
-        priorityFormData.description.persist();
-        priorityFormData.name.persist();
+        priorityFormData.description.persist(getI18nMessagesPlugin());
+        priorityFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -278,7 +284,7 @@ public class ConfigurationRequirementController extends Controller {
 
             RequirementSeverity severity = RequirementDAO.getRequirementSeverityById(severityId);
 
-            severityForm = severityFormTemplate.fill(new RequirementSeverityFormData(severity));
+            severityForm = severityFormTemplate.fill(new RequirementSeverityFormData(severity, getI18nMessagesPlugin()));
 
         }
 
@@ -319,8 +325,8 @@ public class ConfigurationRequirementController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.requirementseverity.edit.successful"));
         }
 
-        severityFormData.description.persist();
-        severityFormData.name.persist();
+        severityFormData.description.persist(getI18nMessagesPlugin());
+        severityFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -354,6 +360,10 @@ public class ConfigurationRequirementController extends Controller {
             statusTypes.add(new DefaultSelectableValueHolder<String>(type.name(), Msg.get("object.requirement_status.type." + type.name() + ".label")));
         }
         return statusTypes;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

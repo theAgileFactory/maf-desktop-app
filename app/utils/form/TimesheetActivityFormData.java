@@ -21,6 +21,7 @@ import models.timesheet.TimesheetActivity;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 import dao.timesheet.TimesheetDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -54,13 +55,15 @@ public class TimesheetActivityFormData {
      * 
      * @param timesheetActivity
      *            the timesheet activity in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public TimesheetActivityFormData(TimesheetActivity timesheetActivity) {
+    public TimesheetActivityFormData(TimesheetActivity timesheetActivity, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = timesheetActivity.id;
         this.type = timesheetActivity.timesheetActivityType.id;
-        this.name = MultiLanguagesString.getByKey(timesheetActivity.name);
-        this.description = MultiLanguagesString.getByKey(timesheetActivity.description);
+        this.name = MultiLanguagesString.getByKey(timesheetActivity.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(timesheetActivity.description, i18nMessagesPlugin);
 
     }
 

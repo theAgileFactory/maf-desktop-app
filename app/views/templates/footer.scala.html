@@ -44,9 +44,9 @@ function removeURLParameter(url, parameter) {
     <div class="pull-left">&copy; <a href="http://www.the-agile-factory.com/">The Agile Factory</a></div>
     <div class="pull-right">
         <div class="btn-group dropup" id="lang-selector">
-        <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button">@framework.utils.LanguageUtil.getCurrent.getName <span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button">@framework.services.ServiceStaticAccessor.getMessagesPlugin().getCurrentLanguage().getName <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right">
-            @for((language, index) <- framework.utils.LanguageUtil.VALID_LANGUAGES_LIST.zipWithIndex) {
+            @for((language, index) <- framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguageList().zipWithIndex) {
                 <li>
                     <a id="lang-@index" href="#">@language.getName</a>
                     <script>

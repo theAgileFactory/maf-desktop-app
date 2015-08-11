@@ -20,6 +20,7 @@ package utils.form;
 import models.governance.LifeCycleMilestoneInstanceStatusType;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -54,12 +55,14 @@ public class LifeCycleMilestoneInstanceStatusTypeFormData {
      * 
      * @param statusType
      *            the life cycle milestone instance status type in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public LifeCycleMilestoneInstanceStatusTypeFormData(LifeCycleMilestoneInstanceStatusType statusType) {
+    public LifeCycleMilestoneInstanceStatusTypeFormData(LifeCycleMilestoneInstanceStatusType statusType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = statusType.id;
-        this.name = MultiLanguagesString.getByKey(statusType.name);
-        this.description = MultiLanguagesString.getByKey(statusType.description);
+        this.name = MultiLanguagesString.getByKey(statusType.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(statusType.description, i18nMessagesPlugin);
         this.selectable = statusType.selectable;
         this.isApproved = statusType.isApproved;
 

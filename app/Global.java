@@ -61,6 +61,7 @@ import framework.services.actor.IActorSystemPlugin;
 import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
 import framework.services.api.ClassSchemaDocumentationConverter;
+import framework.services.configuration.Language;
 import framework.services.ext.IExtensionManagerService;
 import framework.services.job.IJobDescriptor;
 import framework.services.job.IJobsService;
@@ -69,7 +70,6 @@ import framework.services.plugins.IPluginManagerService;
 import framework.services.router.ICustomRouterNotificationService;
 import framework.services.router.ICustomRouterService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Language;
 import framework.utils.Utilities;
 
 /**
@@ -87,7 +87,7 @@ public class Global extends GlobalSettings {
 
         final Language language = new Language(request.getQueryString("lang"));
 
-        if (language.isValid()) {
+        if (ServiceStaticAccessor.getMessagesPlugin().isLanguageValid(language.getCode())) {
 
             Logger.debug("change language to: " + language.getCode());
 
@@ -181,32 +181,5 @@ public class Global extends GlobalSettings {
 
         });
 
-    }
-
-    /**
-     * Shutdown database connections.
-     */
-    @SuppressWarnings("deprecation")
-    private void shutdownDbResources() {
-        log.info(">>>>>>>>>>>>>>>> Shutting down the database resources...");
-        try {
-            // Unregister the JDBC drivers
-            Enumeration<Driver> drivers = DriverManager.getDrivers();
-            while (drivers.hasMoreElements()) {
-                Driver driver = drivers.nextElement();
-                DriverManager.deregisterDriver(driver);
-            }
-            // Kill the JDBC cleanup thread
-            AbandonedConnectionCleanupThread.shutdown();
-            // Kill the remaining Timer threads
-            for (Thread t : Thread.getAllStackTraces().keySet()) {
-                if (t.getName().startsWith("Timer-")) {
-                    t.stop();
-                }
-            }
-        } catch (Exception e) {
-            log.debug("Exception while shutting down the database connections", e);
-        }
-        log.info(">>>>>>>>>>>>>>>> database resources closed");
     }
 }

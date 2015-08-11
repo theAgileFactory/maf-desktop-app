@@ -20,6 +20,7 @@ package utils.form;
 import models.pmo.Competency;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -52,13 +53,15 @@ public class CompetencyFormData {
      * 
      * @param competency
      *            the competency in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public CompetencyFormData(Competency competency) {
+    public CompetencyFormData(Competency competency, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = competency.id;
         this.isActive = competency.isActive;
-        this.name = MultiLanguagesString.getByKey(competency.name);
-        this.description = MultiLanguagesString.getByKey(competency.description);
+        this.name = MultiLanguagesString.getByKey(competency.name,i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(competency.description,i18nMessagesPlugin);
 
     }
 

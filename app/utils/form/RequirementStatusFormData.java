@@ -20,6 +20,7 @@ package utils.form;
 import models.delivery.RequirementStatus;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -53,12 +54,14 @@ public class RequirementStatusFormData {
      * 
      * @param requirementStatus
      *            the requirement status in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public RequirementStatusFormData(RequirementStatus requirementStatus) {
+    public RequirementStatusFormData(RequirementStatus requirementStatus, II18nMessagesPlugin i18nMessagesPlugin) {
         this.id = requirementStatus.id;
         this.type = requirementStatus.type.name();
-        this.name = MultiLanguagesString.getByKey(requirementStatus.name);
-        this.description = MultiLanguagesString.getByKey(requirementStatus.description);
+        this.name = MultiLanguagesString.getByKey(requirementStatus.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(requirementStatus.description, i18nMessagesPlugin);
     }
 
     /**

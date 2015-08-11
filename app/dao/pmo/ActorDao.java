@@ -45,10 +45,10 @@ import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.Language;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Language;
 import framework.utils.Msg;
 
 /**
@@ -466,7 +466,7 @@ public abstract class ActorDao {
             // construct the title and the message
             String message = null;
             String title = null;
-            if (language.isValid()) {
+            if (ServiceStaticAccessor.getMessagesPlugin().isLanguageValid(language.getCode())) {
                 message = Msg.get(language.getLang(), messageKey, args);
                 title = Msg.get(language.getLang(), titleKey);
             } else {

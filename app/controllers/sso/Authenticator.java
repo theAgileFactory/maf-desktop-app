@@ -56,8 +56,9 @@ import framework.services.account.IAuthenticationAccountReaderPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.account.LightAuthenticationUserPasswordAuthenticator;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.configuration.Language;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Language;
 import framework.utils.Utilities;
 
 /**
@@ -87,6 +88,7 @@ public class Authenticator extends SecureController {
     private AuthenticationMode authenticationMode;
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     private IAuthenticationAccountReaderPlugin authenticationAccountReader;
+    private II18nMessagesPlugin i18nMessagesPlugin;
     
     /**
      * Creates a new Authenticator controller
@@ -96,6 +98,7 @@ public class Authenticator extends SecureController {
      * @param authenticationAccountReader
      * @param licensesManagementService
      * @param preferenceManagerPlugin
+     * @param i18nMessagesPlugin
      * @param authenticationMode
      */
     @Inject
@@ -106,6 +109,7 @@ public class Authenticator extends SecureController {
             IAuthenticationAccountReaderPlugin authenticationAccountReader,
             ILicensesManagementService licensesManagementService,
             IPreferenceManagerPlugin preferenceManagerPlugin,
+            II18nMessagesPlugin i18nMessagesPlugin,
             @Named("AuthenticatonMode") AuthenticationMode authenticationMode) {
         super();
         this.configuration=configuration;
@@ -115,6 +119,7 @@ public class Authenticator extends SecureController {
         this.authenticationAccountReader=authenticationAccountReader;
         this.licensesManagementService = licensesManagementService;
         this.preferenceManagerPlugin=preferenceManagerPlugin;
+        this.i18nMessagesPlugin=i18nMessagesPlugin;
         log.info("Initialization based on authentication model "+authenticationMode);
         init(authenticationMode);
     }
@@ -253,7 +258,7 @@ public class Authenticator extends SecureController {
             Language language = new Language(userAccount.getPreferredLanguage());
 
             // verify the language is valid
-            if (language.isValid()) {
+            if (getI18nMessagesPlugin().isLanguageValid(language.getCode())) {
                 Logger.debug("change language to: " + language.getCode());
                 ctx().changeLang(language.getCode());
                 Utilities.setSsoLanguage(ctx(), language.getCode());
@@ -440,13 +445,7 @@ public class Authenticator extends SecureController {
      */
     private void initStandaloneAuthentication() {
         log.info(">>>>>>>>>>>>>>>> Initialize Standalone Authentication mode");
-        try{
         getPreferenceManagerPlugin().getPreferenceValueAsString(IFrameworkConstants.PUBLIC_URL_PREFERENCE);
-        }catch(Exception e){
-            e.printStackTrace();
-            System.exit(0);
-        }
-        log.info(">>>>>>>>>>>>>>>> Après");
         String casCallbackUrl = Utilities.getPreferenceElseConfigurationValue(getConfiguration(),IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
                 + controllers.sso.routes.Authenticator.customCallback().url();
         final FormClient formClient = new FormClient(controllers.sso.routes.StandaloneAuthenticationController.displayLoginForm().url(),
@@ -486,5 +485,9 @@ public class Authenticator extends SecureController {
 
     private IAuthenticationAccountReaderPlugin getAuthenticationAccountReader() {
         return authenticationAccountReader;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 }

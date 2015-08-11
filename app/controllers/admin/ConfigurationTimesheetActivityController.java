@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.timesheet.TimesheetActivity;
 import models.timesheet.TimesheetActivityType;
 import play.data.Form;
@@ -34,6 +36,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
 import dao.timesheet.TimesheetDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -51,6 +54,9 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
     private static Form<TimesheetActivityTypeFormData> timesheetActivityTypeFormTemplate = Form.form(TimesheetActivityTypeFormData.class);
 
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    
     /**
      * Reference data: timesheet activities.
      */
@@ -93,7 +99,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
             TimesheetActivityType timesheetActivityType = TimesheetDao.getTimesheetActivityTypeById(timesheetActivityTypeId);
 
-            timesheetActivityTypeForm = timesheetActivityTypeFormTemplate.fill(new TimesheetActivityTypeFormData(timesheetActivityType));
+            timesheetActivityTypeForm = timesheetActivityTypeFormTemplate.fill(new TimesheetActivityTypeFormData(timesheetActivityType, getI18nMessagesPlugin()));
 
         }
 
@@ -136,8 +142,8 @@ public class ConfigurationTimesheetActivityController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.timesheetactivitytype.edit.successful"));
         }
 
-        timesheetActivityTypeFormData.description.persist();
-        timesheetActivityTypeFormData.name.persist();
+        timesheetActivityTypeFormData.description.persist(getI18nMessagesPlugin());
+        timesheetActivityTypeFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -181,7 +187,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
             TimesheetActivity timesheetActivity = TimesheetDao.getTimesheetActivityById(timesheetActivityId);
 
-            timesheetActivityForm = timesheetActivityFormTemplate.fill(new TimesheetActivityFormData(timesheetActivity));
+            timesheetActivityForm = timesheetActivityFormTemplate.fill(new TimesheetActivityFormData(timesheetActivity, getI18nMessagesPlugin()));
 
         }
 
@@ -226,8 +232,8 @@ public class ConfigurationTimesheetActivityController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.timesheetactivity.edit.successful"));
         }
 
-        timesheetActivityFormData.description.persist();
-        timesheetActivityFormData.name.persist();
+        timesheetActivityFormData.description.persist(getI18nMessagesPlugin());
+        timesheetActivityFormData.name.persist(getI18nMessagesPlugin());
 
         RootApiController.flushFilters();
 
@@ -253,6 +259,10 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
         return redirect(controllers.admin.routes.ConfigurationTimesheetActivityController.list());
 
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

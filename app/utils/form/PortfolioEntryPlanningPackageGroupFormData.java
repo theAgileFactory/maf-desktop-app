@@ -20,6 +20,7 @@ package utils.form;
 import models.pmo.PortfolioEntryPlanningPackageGroup;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
 
@@ -52,12 +53,14 @@ public class PortfolioEntryPlanningPackageGroupFormData {
      * 
      * @param packageGroup
      *            the package group in the DB
+     * @param i18nMessagesPlugin 
+     *            the i18n manager
      */
-    public PortfolioEntryPlanningPackageGroupFormData(PortfolioEntryPlanningPackageGroup packageGroup) {
+    public PortfolioEntryPlanningPackageGroupFormData(PortfolioEntryPlanningPackageGroup packageGroup, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = packageGroup.id;
-        this.name = MultiLanguagesString.getByKey(packageGroup.name);
-        this.description = MultiLanguagesString.getByKey(packageGroup.description);
+        this.name = MultiLanguagesString.getByKey(packageGroup.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(packageGroup.description, i18nMessagesPlugin);
         this.isActive = packageGroup.isActive;
 
     }
