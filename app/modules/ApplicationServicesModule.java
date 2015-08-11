@@ -1,0 +1,275 @@
+package modules;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import models.CustomBeanPersistController;
+import models.framework_models.account.SystemPermission;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import play.Configuration;
+import play.Environment;
+import play.Logger;
+import play.api.db.evolutions.DynamicEvolutions;
+import play.db.ebean.DefaultEbeanConfig;
+import play.db.ebean.EbeanConfig;
+import play.db.ebean.EbeanDynamicEvolutions;
+import security.DefaultHandlerCache;
+import services.configuration.ImplementationDefinedObjectImpl;
+import services.job.JobDescriptors;
+import services.licensesmanagement.ILicensesManagementService;
+import services.licensesmanagement.LicensesManagementServiceImpl;
+import utils.reporting.IReportingUtils;
+import utils.reporting.ReportingUtilsImpl;
+import be.objectify.deadbolt.java.cache.HandlerCache;
+
+import com.avaje.ebean.EbeanServerFactory;
+import com.google.inject.name.Names;
+
+import constants.IMafConstants;
+import constants.MafDataType;
+import controllers.api.ApiAuthenticationBizdockCheck;
+import framework.commons.IFrameworkConstants;
+import framework.modules.FrameworkModule;
+import framework.patcher.IPatchLog;
+import framework.patcher.PatchManager;
+import framework.patcher.PatcherException;
+import framework.services.account.AccountManagerPluginImpl;
+import framework.services.account.DefaultAuthenticationAccountReaderPlugin;
+import framework.services.account.DefaultAuthenticationAccountWriterPlugin;
+import framework.services.account.DefaultPreferenceManagementPlugin;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IAuthenticationAccountReaderPlugin;
+import framework.services.account.IAuthenticationAccountWriterPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.account.LightAuthenticationAccountReaderPlugin;
+import framework.services.account.LightAuthenticationAccountWriterPlugin;
+import framework.services.actor.ActorSystemPluginImpl;
+import framework.services.actor.IActorSystemPlugin;
+import framework.services.api.server.ApiSignatureServiceImpl;
+import framework.services.api.server.IApiSignatureService;
+import framework.services.audit.AuditLoggerServiceImpl;
+import framework.services.audit.IAuditLoggerService;
+import framework.services.configuration.I18nMessagesPluginImpl;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.configuration.IImplementationDefinedObjectService;
+import framework.services.database.DatabaseDependencyServiceImpl;
+import framework.services.database.IDatabaseDependencyService;
+import framework.services.ext.ExtensionManagerServiceImpl;
+import framework.services.ext.IExtensionManagerService;
+import framework.services.job.IJobDescriptor;
+import framework.services.job.IJobsService;
+import framework.services.job.JobsServiceImpl;
+import framework.services.job.JobInitialConfig;
+import framework.services.kpi.IKpiService;
+import framework.services.kpi.KpiServiceImpl;
+import framework.services.notification.DefaultNotificationManagerPlugin;
+import framework.services.notification.INotificationManagerPlugin;
+import framework.services.plugins.IPluginManagerService;
+import framework.services.plugins.PluginManagerServiceImpl;
+import framework.services.remote.AdPanelServiceImpl;
+import framework.services.remote.IAdPanelManagerService;
+import framework.services.router.CustomRouterServiceImpl;
+import framework.services.router.ICustomRouterNotificationService;
+import framework.services.router.ICustomRouterService;
+import framework.services.session.CookieUserSessionManagerPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.DefaultAttachmentManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
+import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.storage.ISharedStorageService;
+import framework.services.storage.PersonalStoragePluginImpl;
+import framework.services.storage.SharedStorageServiceImpl;
+import framework.services.system.ISysAdminUtils;
+import framework.services.system.SysAdminUtilsImpl;
+
+/**
+ * The module which configure the dependency injection for the application
+ * @author Pierre-Yves Cloux
+ */
+public class ApplicationServicesModule extends FrameworkModule {
+    private static Logger.ALogger log = Logger.of(ApplicationServicesModule.class);
+    
+    private final Environment environment;
+    private final Configuration configuration;
+
+    public ApplicationServicesModule(
+          Environment environment,
+          Configuration configuration) {
+        this.environment = environment;
+        this.configuration = configuration;
+    }
+    
+    /**
+     * The method deals with the initializations
+     * required for the application to run
+     */
+    protected void beforeInjection() {
+        super.beforeInjection();
+        initDataTypes();
+        //initPermissions();
+    }
+
+    @Override
+    protected void configure() {
+        beforeInjection();
+        
+        //runPatchBeforeStart();       
+        super.configure();
+        log.info(">>> Desktop static dependency injected start...");
+        requestStaticInjection(CustomBeanPersistController.class);
+        requestStaticInjection(ApiAuthenticationBizdockCheck.class);
+        requestStaticInjection(StaticAccessor.class);
+        log.info("...Desktop static dependency injected end");
+        
+        log.info(">>> Standard dependency injection start...");
+        bind(IDatabaseDependencyService.class).to(DatabaseDependencyServiceImpl.class).asEagerSingleton();
+        bind(IImplementationDefinedObjectService.class).to(ImplementationDefinedObjectImpl.class).asEagerSingleton();
+        bind(HandlerCache.class).to(DefaultHandlerCache.class).asEagerSingleton();
+        bind(IExtensionManagerService.class).to(ExtensionManagerServiceImpl.class).asEagerSingleton();
+        bind(II18nMessagesPlugin.class).to(I18nMessagesPluginImpl.class).asEagerSingleton();
+        bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
+        bind(IPreferenceManagerPlugin.class).to(DefaultPreferenceManagementPlugin.class).asEagerSingleton();
+        bind(IPersonalStoragePlugin.class).to(PersonalStoragePluginImpl.class).asEagerSingleton();
+        bind(ISharedStorageService.class).to(SharedStorageServiceImpl.class).asEagerSingleton();
+        bind(IAdPanelManagerService.class).to(AdPanelServiceImpl.class).asEagerSingleton();
+        bind(IAttachmentManagerPlugin.class).to(DefaultAttachmentManagerPlugin.class).asEagerSingleton();
+        bind(INotificationManagerPlugin.class).to(DefaultNotificationManagerPlugin.class).asEagerSingleton();
+        bind(IPluginManagerService.class).to(PluginManagerServiceImpl.class).asEagerSingleton();
+        bind(IActorSystemPlugin.class).to(ActorSystemPluginImpl.class).asEagerSingleton();
+        
+        //Get the default currency
+        //bind(String.class).annotatedWith(Names.named("defaultCurrencyCode")).toInstance(CurrencyDAO.getCurrencyDefaultAsCode());
+        bind(IKpiService.class).to(KpiServiceImpl.class).asEagerSingleton();
+        
+        //Initialize with a defined list of jobs
+        List<Pair<IJobDescriptor,Boolean>> jobs = new ArrayList<>();
+        jobs.add(Pair.of(new JobDescriptors.UpdateConsumedLicensesJobDescriptor(),true));
+        bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
+        bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
+        
+        bind(ICustomRouterService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
+        bind(ICustomRouterNotificationService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
+        
+        bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
+        bind(ILicensesManagementService.class).to(LicensesManagementServiceImpl.class).asEagerSingleton();
+        
+        //Configure the authentication system
+        //IFrameworkConstants.AuthenticationMode authenticationMode = Utilities.getAuthenticationMode();
+        IFrameworkConstants.AuthenticationMode authenticationMode = IFrameworkConstants.AuthenticationMode.STANDALONE;
+        bind(IFrameworkConstants.AuthenticationMode.class).annotatedWith(Names.named("AuthenticatonMode")).toInstance(authenticationMode);
+        log.warn("AUTHENTICATION MODE [" + authenticationMode + "]");
+        Boolean ldapMasterMode=getConfiguration().getBoolean("maf.ic_ldap_master");
+        switch(authenticationMode){
+        case CAS_MASTER:
+            bind(IAuthenticationAccountReaderPlugin.class).to(DefaultAuthenticationAccountReaderPlugin.class).asEagerSingleton();
+            bind(IAuthenticationAccountWriterPlugin.class).to(DefaultAuthenticationAccountWriterPlugin.class).asEagerSingleton();
+            bind(String.class).annotatedWith(Names.named("UserAccountClassName")).toInstance("framework.services.account.DefaultUserAccount");
+            bind(Boolean.class).annotatedWith(Names.named("AuthenticationRepositoryMasterMode")).toInstance(ldapMasterMode);
+            bind(IAccountManagerPlugin.class).to(AccountManagerPluginImpl.class).asEagerSingleton();
+            break;
+        case CAS_SLAVE:
+            bind(IAuthenticationAccountReaderPlugin.class).to(LightAuthenticationAccountReaderPlugin.class).asEagerSingleton();
+            bind(IAuthenticationAccountWriterPlugin.class).to(LightAuthenticationAccountWriterPlugin.class).asEagerSingleton();
+            bind(String.class).annotatedWith(Names.named("UserAccountClassName")).toInstance("framework.services.account.LightUserAccount");
+            bind(Boolean.class).annotatedWith(Names.named("AuthenticationRepositoryMasterMode")).toInstance(false);
+            bind(IAccountManagerPlugin.class).to(AccountManagerPluginImpl.class).asEagerSingleton();
+            break;
+        case FEDERATED:
+            bind(IAuthenticationAccountReaderPlugin.class).to(LightAuthenticationAccountReaderPlugin.class).asEagerSingleton();
+            bind(IAuthenticationAccountWriterPlugin.class).to(LightAuthenticationAccountWriterPlugin.class).asEagerSingleton();
+            bind(String.class).annotatedWith(Names.named("UserAccountClassName")).toInstance("framework.services.account.LightUserAccount");
+            bind(Boolean.class).annotatedWith(Names.named("AuthenticationRepositoryMasterMode")).toInstance(false);
+            bind(IAccountManagerPlugin.class).to(AccountManagerPluginImpl.class).asEagerSingleton();
+            break;
+        case STANDALONE:
+            bind(IAuthenticationAccountReaderPlugin.class).to(LightAuthenticationAccountReaderPlugin.class).asEagerSingleton();
+            bind(IAuthenticationAccountWriterPlugin.class).to(LightAuthenticationAccountWriterPlugin.class).asEagerSingleton();
+            bind(String.class).annotatedWith(Names.named("UserAccountClassName")).toInstance("framework.services.account.LightUserAccount");
+            bind(Boolean.class).annotatedWith(Names.named("AuthenticationRepositoryMasterMode")).toInstance(ldapMasterMode);
+            bind(IAccountManagerPlugin.class).to(AccountManagerPluginImpl.class).asEagerSingleton();
+            break;
+        }
+        
+        bind(IAuditLoggerService.class).to(AuditLoggerServiceImpl.class).asEagerSingleton();;
+        bind(IReportingUtils.class).to(ReportingUtilsImpl.class).asEagerSingleton();
+        bind(ISysAdminUtils.class).to(SysAdminUtilsImpl.class).asEagerSingleton();
+        log.info(">>> Standard dependency injection end");
+    }
+    
+    /**
+     * Register the data types to be used in various place of the application
+     */
+    private void initDataTypes() {
+        MafDataType.add(IMafConstants.Actor, "models.pmo.Actor", true, true);
+        MafDataType.add(IMafConstants.BudgetBucket, "models.finance.BudgetBucket", false, true);
+        MafDataType.add(IMafConstants.BudgetBucketLine, "models.finance.BudgetBucketLine", false, false);
+        MafDataType.add(IMafConstants.CostCenter, "models.finance.CostCenter", false, false);
+        MafDataType.add(IMafConstants.Iteration, "models.delivery.Iteration", false, true);
+        MafDataType.add(IMafConstants.OrgUnit, "models.pmo.OrgUnit", true, true);
+        MafDataType.add(IMafConstants.PortfolioEntryBudget, "models.finance.PortfolioEntryBudget", false, false);
+        MafDataType.add(IMafConstants.PortfolioEntryBudgetLine, "models.finance.PortfolioEntryBudgetLine", true, true);
+        MafDataType.add(IMafConstants.PortfolioEntryEvent, "models.pmo.PortfolioEntryEvent", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntry, "models.pmo.PortfolioEntry", true, true);
+        MafDataType.add(IMafConstants.PortfolioEntryPlanningPackage, "models.pmo.PortfolioEntryPlanningPackage", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntryReport, "models.pmo.PortfolioEntryReport", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedActor, "models.finance.PortfolioEntryResourcePlanAllocatedActor", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedOrgUnit, "models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedCompetency, "models.finance.PortfolioEntryResourcePlanAllocatedCompetency", false,
+                true);
+        MafDataType.add(IMafConstants.PortfolioEntryRisk, "models.pmo.PortfolioEntryRisk", false, true);
+        MafDataType.add(IMafConstants.Portfolio, "models.pmo.Portfolio", true, true);
+        MafDataType.add(IMafConstants.Stakeholder, "models.pmo.Stakeholder", true, false);
+        MafDataType.add(IMafConstants.PurchaseOrderLineItem, "models.finance.PurchaseOrderLineItem", true, false);
+        MafDataType.add(IMafConstants.PurchaseOrder, "models.finance.PurchaseOrder", true, false);
+        MafDataType.add(IMafConstants.Release, "models.delivery.Release", false, true);
+        MafDataType.add(IMafConstants.Requirement, "models.delivery.Requirement", false, true);
+        MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true);
+        MafDataType.add(IMafConstants.WorkOrder, "models.finance.WorkOrder", false, true);
+    }
+    
+    /**
+     * Check permissions (=check the consistency between the code and the
+     * database content).
+     */
+    private void initPermissions() {
+        log.info(">>>>>>>>>>>>>>>> Check permissions consistency");
+        if (!SystemPermission.checkPermissions(IMafConstants.class)) {
+            log.error("WARNING: permissions in code are not consistent with permissions in database");
+        }
+        log.info(">>>>>>>>>>>>>>>> Check permissions consistency (end)");
+    }
+    
+    /**
+     * Execute the patches.
+     */
+    private void runPatchBeforeStart() {
+        try {
+            PatchManager patchManager = new PatchManager("com.agifac.maf.desktop.patcher", "before_start_status.log", new IPatchLog() {
+                @Override
+                public void warn(String message) {
+                    log.warn("PATCH - " + message);
+                }
+
+                @Override
+                public void info(String message) {
+                    log.info("PATCH - " + message);
+                }
+            });
+            patchManager.execute();
+        } catch (PatcherException e) {
+            // Halt the execution of the application startup
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Environment getEnvironment() {
+        return environment;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
+    }
+
+}
