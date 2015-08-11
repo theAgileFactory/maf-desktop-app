@@ -866,7 +866,7 @@ GET     /api-docs/api/core/actor-type                                     contro
 GET     /api-docs/api/core/competency                                     controllers.api.doc.ApiHelpController.getResource(path = "/api/core/competency")
 
 GET     /api-docs/api/core/org-unit                                       controllers.api.doc.ApiHelpController.getResource(path = "/api/core/org-unit")
-GET     /api-docs/api/core/org-unit-tcontrollers.api.doc.ype              controllers.api.doc.ApiHelpController.getResource(path = "/api/core/org-unit-type")
+GET     /api-docs/api/core/org-unit-type                                  controllers.api.doc.ApiHelpController.getResource(path = "/api/core/org-unit-type")
 
 GET     /api-docs/api/core/portfolio                                      controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio")
 GET     /api-docs/api/core/portfolio-type                                 controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-type")
