@@ -1,5 +1,9 @@
 package modules;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +16,7 @@ import play.Configuration;
 import play.Environment;
 import play.Logger;
 import play.api.db.evolutions.DynamicEvolutions;
+import play.db.DBApi;
 import play.db.ebean.DefaultEbeanConfig;
 import play.db.ebean.EbeanConfig;
 import play.db.ebean.EbeanDynamicEvolutions;
@@ -31,6 +36,7 @@ import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.api.ApiAuthenticationBizdockCheck;
 import framework.commons.IFrameworkConstants;
+import framework.commons.IFrameworkConstants.AuthenticationMode;
 import framework.modules.FrameworkModule;
 import framework.patcher.IPatchLog;
 import framework.patcher.PatchManager;
@@ -157,8 +163,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(ILicensesManagementService.class).to(LicensesManagementServiceImpl.class).asEagerSingleton();
         
         //Configure the authentication system
-        //IFrameworkConstants.AuthenticationMode authenticationMode = Utilities.getAuthenticationMode();
-        IFrameworkConstants.AuthenticationMode authenticationMode = IFrameworkConstants.AuthenticationMode.STANDALONE;
+        IFrameworkConstants.AuthenticationMode authenticationMode = getConfiguredAuthenticationMode();
         bind(IFrameworkConstants.AuthenticationMode.class).annotatedWith(Names.named("AuthenticatonMode")).toInstance(authenticationMode);
         log.warn("AUTHENTICATION MODE [" + authenticationMode + "]");
         Boolean ldapMasterMode=getConfiguration().getBoolean("maf.ic_ldap_master");
@@ -273,4 +278,41 @@ public class ApplicationServicesModule extends FrameworkModule {
         return configuration;
     }
 
+    /**
+     * The authentication mode is either:
+     * <ul>
+     * <li>read from the database (if a record exists)</li>
+     * <li>read from the configuration file (default option)</li>
+     * </ul>
+     * @return
+     */
+    public AuthenticationMode getConfiguredAuthenticationMode(){
+        Connection connection=null;
+        try{
+            String driver=getConfiguration().getString("db.default.driver");
+            String url=getConfiguration().getString("db.default.url");
+            String username=getConfiguration().getString("db.default.username");
+            String password=getConfiguration().getString("db.default.password");
+            Class.forName(driver);
+            connection=DriverManager.getConnection(url,username, password);
+            String sql="select scav.value from string_custom_attribute_value as scav "+
+            "join custom_attribute_definition as cad on scav.custom_attribute_definition_id=cad.id "+
+            "join preference as pref on pref.uuid=cad.uuid "+
+            "where pref.uuid='AUTHENTICATION_MODE_PREFERENCE'";
+            Statement stmt=connection.createStatement();
+            ResultSet rs=stmt.executeQuery(sql);
+            if(rs.first()){
+                return AuthenticationMode.valueOf(rs.getString("value"));
+            }
+            return AuthenticationMode.valueOf(getConfiguration().getString("maf.authentication.mode"));
+        }catch(Exception e){
+            throw new IllegalArgumentException("Unable to read the authentication mode from the database",e);
+        }finally{
+            try{
+                if(connection!=null){
+                    connection.close();
+                }
+            }catch(Exception e){}
+        }
+    }
 }
