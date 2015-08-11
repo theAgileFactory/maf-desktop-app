@@ -28,7 +28,6 @@ import com.avaje.ebean.OrderBy;
 
 import constants.IMafConstants;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -36,6 +35,7 @@ import framework.services.session.IUserSessionManagerPlugin;
 import framework.security.SecurityUtils;
 import framework.security.SecurityUtils;
 import framework.utils.Utilities;
+import framework.services.ServiceStaticAccessor;
 
 /**
  * Provides all method to compute the dynamic permissions for a report.
@@ -56,8 +56,8 @@ public class ReportingDynamicHelper {
      */
     public static ExpressionList<Reporting> getReportsViewAllowedAsQuery(Expression expression, OrderBy<Reporting> orderBy) throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
         IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
         String raw = "(";

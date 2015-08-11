@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.framework_models.common.CustomAttributeDefinition;
 import models.framework_models.common.ICustomAttributeValue;
 import models.reporting.Reporting;
@@ -37,7 +39,7 @@ import security.CheckReportingExists;
 import security.DefaultDynamicResourceHandler;
 import security.dynamic.ReportingDynamicHelper;
 import utils.form.ReportingParamsFormData;
-import utils.reporting.JasperUtils;
+import utils.reporting.IReportingUtils;
 import utils.table.ReportingListView;
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
@@ -61,6 +63,8 @@ import framework.utils.Utilities;
  * @author Johann Kohler
  */
 public class ReportingController extends Controller {
+    @Inject
+    private IReportingUtils reportingUtils;
 
     private static Logger.ALogger log = Logger.of(ReportingController.class);
 
@@ -205,10 +209,14 @@ public class ReportingController extends Controller {
             }
         }
 
-        JasperUtils.generate(ctx(), report, reportingParamsFormData.language, Reporting.Format.valueOf(reportingParamsFormData.format), reportParameters);
+        getReportingUtils().generate(ctx(), report, reportingParamsFormData.language, Reporting.Format.valueOf(reportingParamsFormData.format), reportParameters);
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
 
         return redirect(controllers.core.routes.ReportingController.indexForCategory(report.reportingCategory.id));
+    }
+
+    private IReportingUtils getReportingUtils() {
+        return reportingUtils;
     }
 }

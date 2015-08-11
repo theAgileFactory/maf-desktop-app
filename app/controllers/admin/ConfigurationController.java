@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.account.SystemPermission;
 import play.Logger;
@@ -39,7 +41,7 @@ import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants;
 import framework.commons.message.EventMessage;
 import framework.commons.message.SystemLevelRoleTypeEventMessage;
-import framework.services.ServiceManager;
+import framework.security.SecurityUtils;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.plugins.IPluginManagerService;
@@ -58,6 +60,10 @@ import be.objectify.deadbolt.java.actions.Restrict;
  * 
  */
 public class ConfigurationController extends Controller {
+    @Inject
+    private IPluginManagerService pluginManagerService;
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(ConfigurationController.class);
 
@@ -98,11 +104,11 @@ public class ConfigurationController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION), @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) })
     public Result index() {
 
-        if (DefaultDeadboltHandler.isAllowed(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
+        if (SecurityUtils.isAllowed(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationController.systemPreferences());
         }
 
-        if (DefaultDeadboltHandler.isAllowed(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION)) {
+        if (SecurityUtils.isAllowed(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.list(IMafConstants.PortfolioEntry));
         }
 
@@ -326,21 +332,19 @@ public class ConfigurationController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.roles.edit.successful"));
 
             // Notify of the role update
-            IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
             SystemLevelRoleTypeEventMessage eventMessage = new SystemLevelRoleTypeEventMessage(roleFormData.id, MafDataType.getSystemLevelRoleType(),
                     EventMessage.MessageType.OBJECT_UPDATED);
             SystemLevelRoleTypeEventMessage.PayLoad payload = new SystemLevelRoleTypeEventMessage.PayLoad();
             payload.setPreviousPermissionNames(previousPermissionNames);
             eventMessage.setPayload(payload);
-            pluginManagerService.postOutMessage(eventMessage);
+            getPluginManagerService().postOutMessage(eventMessage);
         }
 
         roleFormData.description.persist();
 
         // clean the cache
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
         try {
-            accountManagerPlugin.invalidateAllUserAccountsCache();
+            getAccountManagerPlugin().invalidateAllUserAccountsCache();
         } catch (AccountManagementException e) {
             log.error("Unable to flush the user cache after roles modifications", e);
         }
@@ -366,9 +370,8 @@ public class ConfigurationController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.roles.delete.successful"));
 
         // clean the cache
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
         try {
-            accountManagerPlugin.invalidateAllUserAccountsCache();
+            getAccountManagerPlugin().invalidateAllUserAccountsCache();
         } catch (AccountManagementException e) {
             log.error("Unable to flush the user cache after roles modifications", e);
         }
@@ -392,5 +395,13 @@ public class ConfigurationController extends Controller {
      * @author Pierre-Yves Cloux
      */
     public static class PrefsData {
+    }
+
+    private IPluginManagerService getPluginManagerService() {
+        return pluginManagerService;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
     }
 }

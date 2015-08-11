@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.IOUtils;
@@ -38,18 +40,17 @@ import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.pmo.ActorDao;
 import framework.commons.IFrameworkConstants;
-import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.system.ISysAdminUtils;
 import framework.utils.EmailUtils;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolder;
 import framework.utils.Msg;
-import framework.utils.SysAdminUtils;
 import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.TableExcelRenderer;
@@ -60,6 +61,7 @@ import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.Actor;
 import play.Logger;
+import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.validation.Constraints.MaxLength;
@@ -69,6 +71,7 @@ import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
+import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 
 /**
@@ -80,7 +83,19 @@ import services.licensesmanagement.LicensesManagementServiceImpl;
  */
 @Restrict({ @Group(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION) })
 public class UserManager extends Controller {
-
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private ILicensesManagementService licensesManagementService ;
+    @Inject
+    private INotificationManagerPlugin notificationManagerPlugin ;
+    @Inject
+    private IPersonalStoragePlugin personalStoragePlugin;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin ;
+    @Inject
+    private ISysAdminUtils sysAdminUtils;
+    
     private static Logger.ALogger log = Logger.of(UserManager.class);
     private static Form<UserSeachFormData> userSearchForm = Form.form(UserSeachFormData.class);
     private static Form<UserAccountFormData> basicDataUpdateForm = Form.form(UserAccountFormData.class, UserAccountFormData.BasicDataChangeGroup.class);
@@ -130,7 +145,7 @@ public class UserManager extends Controller {
         if (boundForm.hasErrors()) {
             return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
         }
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        
         UserSeachFormData searchFormData = boundForm.get();
 
         // Reject if search by UID but no uid
@@ -158,7 +173,7 @@ public class UserManager extends Controller {
                 if (log.isDebugEnabled()) {
                     log.debug("Search user by uid with " + searchFormData.uid);
                 }
-                IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(searchFormData.uid);
+                IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromUid(searchFormData.uid);
                 if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                     boundForm.reject("uid", Msg.get("admin.user_manager.search.not_found", searchFormData.uid));
                     return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
@@ -174,7 +189,7 @@ public class UserManager extends Controller {
                 if (log.isDebugEnabled()) {
                     log.debug("Search user by mail with " + searchFormData.mail);
                 }
-                IUserAccount userAccount = accountManagerPlugin.getUserAccountFromEmail(searchFormData.mail);
+                IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromEmail(searchFormData.mail);
                 if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                     boundForm.reject("mail", Msg.get("admin.user_manager.search.not_found", searchFormData.mail));
                     return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
@@ -190,7 +205,7 @@ public class UserManager extends Controller {
                 if (log.isDebugEnabled()) {
                     log.debug("Search user by name with " + searchFormData.fullName);
                 }
-                List<IUserAccount> userAccounts = accountManagerPlugin.getUserAccountsFromName(searchFormData.fullName);
+                List<IUserAccount> userAccounts = getAccountManagerPlugin().getUserAccountsFromName(searchFormData.fullName);
                 if (userAccounts == null || userAccounts.size() == 0) {
                     boundForm.reject("fullName", Msg.get("admin.user_manager.search.not_found", searchFormData.fullName));
                     return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
@@ -219,7 +234,7 @@ public class UserManager extends Controller {
             }
         }
         return ok(views.html.admin.usermanager.usermanager_display.render(Msg.get("admin.user_manager.sidebar.search"),
-                accountManagerPlugin.isAuthenticationRepositoryMasterMode(), foundUser));
+                getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), foundUser));
     }
 
     /**
@@ -229,10 +244,10 @@ public class UserManager extends Controller {
      *            a unique user id
      */
     public Result displayUser(String uid) {
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        
         IUserAccount userAccount = null;
         try {
-            userAccount = accountManagerPlugin.getUserAccountFromUid(uid);
+            userAccount = getAccountManagerPlugin().getUserAccountFromUid(uid);
             // Do not display the users marked for deletion
             if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.user_manager.unknown_user"));
@@ -242,7 +257,7 @@ public class UserManager extends Controller {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
         return ok(views.html.admin.usermanager.usermanager_display.render(Msg.get("admin.user_manager.sidebar.search"),
-                accountManagerPlugin.isAuthenticationRepositoryMasterMode(), userAccount));
+                getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), userAccount));
     }
 
     /**
@@ -253,9 +268,7 @@ public class UserManager extends Controller {
      */
     public Result editBasicData(String uid) {
         try {
-
-            IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
-            IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
+            IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             if (account == null || account.isMarkedForDeletion() || !account.isDisplayed()) {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.user_manager.unknown_user"));
                 return displayUserSearchForm();
@@ -276,8 +289,7 @@ public class UserManager extends Controller {
      */
     public Result editUserAccountType(String uid) {
         try {
-            IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
-            IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
+            IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             if (account == null || account.isMarkedForDeletion() || !account.isDisplayed()) {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.user_manager.unknown_user"));
                 return displayUserSearchForm();
@@ -295,16 +307,15 @@ public class UserManager extends Controller {
      */
     public Result saveUserAccountType() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             Form<UserAccountFormData> boundForm = changeAccountTypeForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.usermanager.usermanager_editaccounttype.render(Msg.get("admin.user_manager.edit_basic_data.title"),
                         IUserAccount.AccountType.getValueHolder(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
-            accountManagerPlugin.updateUserAccountType(accountDataForm.uid, IUserAccount.AccountType.valueOf(accountDataForm.accountType));
+            getAccountManagerPlugin().updateUserAccountType(accountDataForm.uid, IUserAccount.AccountType.valueOf(accountDataForm.accountType));
 
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedUsers();
+            getLicensesManagementService().updateConsumedUsers();
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
@@ -318,15 +329,14 @@ public class UserManager extends Controller {
      */
     public Result saveBasicData() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             Form<UserAccountFormData> boundForm = basicDataUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(
                         views.html.admin.usermanager.usermanager_editbasicdata.render(Msg.get("admin.user_manager.edit_basic_data.title"), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
-            accountManagerPlugin.updateBasicUserData(accountDataForm.uid, accountDataForm.firstName, accountDataForm.lastName);
-            accountManagerPlugin.updatePreferredLanguage(accountDataForm.uid, accountDataForm.preferredLanguage);
+            getAccountManagerPlugin().updateBasicUserData(accountDataForm.uid, accountDataForm.firstName, accountDataForm.lastName);
+            getAccountManagerPlugin().updatePreferredLanguage(accountDataForm.uid, accountDataForm.preferredLanguage);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
         } catch (Exception e) {
@@ -342,8 +352,7 @@ public class UserManager extends Controller {
      */
     public Result editMail(String uid) {
         try {
-            IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
-            IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
+            IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             if (account == null || account.isMarkedForDeletion() || !account.isDisplayed()) {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.user_manager.unknown_user"));
                 return displayUserSearchForm();
@@ -360,7 +369,6 @@ public class UserManager extends Controller {
      */
     public Result saveMail() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             Form<UserAccountFormData> boundForm = mailUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_email.title"), boundForm));
@@ -368,15 +376,15 @@ public class UserManager extends Controller {
 
             UserAccountFormData accountDataForm = boundForm.get();
 
-            if (accountManagerPlugin.isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
-                IUserAccount userAccount = accountManagerPlugin.getUserAccountFromEmail(accountDataForm.mail);
+            if (getAccountManagerPlugin().isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
+                IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromEmail(accountDataForm.mail);
                 if (userAccount == null || !userAccount.getUid().equals(accountDataForm.uid)) {
                     boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
                     return badRequest(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_email.title"), boundForm));
                 }
             }
 
-            accountManagerPlugin.updateMail(accountDataForm.uid, accountDataForm.mail);
+            getAccountManagerPlugin().updateMail(accountDataForm.uid, accountDataForm.mail);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
         } catch (Exception e) {
@@ -392,7 +400,7 @@ public class UserManager extends Controller {
      */
     public Result resetPassword(String uid) {
         try {
-            resetUserPasswordFromUid(uid, true);
+            resetUserPasswordFromUid(getAccountManagerPlugin(),uid, true);
             return redirect(controllers.admin.routes.UserManager.displayUser(uid));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -403,6 +411,7 @@ public class UserManager extends Controller {
      * The method to trigger a password reset for the specified uid.<br/>
      * This sends an e-mail to the user with a validation key.
      * 
+     * @param accountManagerPlugin a user account manager reference
      * @param uid
      *            a unique user id
      * @param eraseCurrentPassword
@@ -411,8 +420,7 @@ public class UserManager extends Controller {
      * @throws Exception
      * @throws AccountManagementException
      */
-    public static void resetUserPasswordFromUid(String uid, boolean eraseCurrentPassword) throws Exception, AccountManagementException {
-        IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
+    public static void resetUserPasswordFromUid(IAccountManagerPlugin accountManagerPlugin,String uid, boolean eraseCurrentPassword) throws Exception, AccountManagementException {
         if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
             return;
         }
@@ -428,6 +436,7 @@ public class UserManager extends Controller {
      * The method to trigger a password reset for the specified mail.<br/>
      * This sends an e-mail to the user with a validation key.
      * 
+     * @param accountManagerPlugin a user account manager reference
      * @param mail
      *            a user e-mail
      * @param eraseCurrentPassword
@@ -437,9 +446,8 @@ public class UserManager extends Controller {
      * @throws AccountManagementException
      * @return a boolean (false if the e-mail does not exists)
      */
-    public static boolean resetUserPasswordFromEmail(String mail, boolean eraseCurrentPassword) {
+    public static boolean resetUserPasswordFromEmail(IAccountManagerPlugin accountManagerPlugin,String mail, boolean eraseCurrentPassword) {
         try {
-            IAccountManagerPlugin accountManagerPlugin = getAccountManagerPluginForUpdate();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromEmail(mail);
             if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                 return false;
@@ -474,25 +482,12 @@ public class UserManager extends Controller {
         }
 
         // Send an e-mail for reseting password
-        String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
+        String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
                 + controllers.admin.routes.PasswordReset.displayPasswordResetForm(userAccount.getUid(), validationKey).url();
         EmailUtils.sendEmail(Msg.get("admin.user_manager.reset_password.mail.subject"), play.Configuration.root().getString("maf.email.from"),
                 Utilities.renderViewI18n("views.html.mail.account_password_reset_html", play.Configuration.root().getString("maf.platformName"),
                         userAccount.getFirstName() + " " + userAccount.getLastName(), resetPasswordUrl).body(),
                 userAccount.getMail());
-    }
-
-    /**
-     * Return an {@link IAccountManagerPlugin} if the master mode is not
-     * activated.<br/>
-     * If the master mode is activated then throws an exception.
-     * 
-     * @return an account manager plugin
-     * @throws Exception
-     */
-    private static IAccountManagerPlugin getAccountManagerPluginForUpdate() throws Exception {
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-        return accountManagerPlugin;
     }
 
     /**
@@ -504,8 +499,8 @@ public class UserManager extends Controller {
      */
     public Result editRoles(String uid) {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
+            
+            IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             Form<UserAccountFormData> userAccountFormLoaded = rolesUpdateForm.fill(new UserAccountFormData(account));
             return ok(views.html.admin.usermanager.usermanager_editroles.render(Msg.get("admin.user_manager.edit_roles.title"),
                     SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), userAccountFormLoaded));
@@ -519,7 +514,7 @@ public class UserManager extends Controller {
      */
     public Result saveRoles() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            
             Form<UserAccountFormData> boundForm = rolesUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_roles.title"), boundForm));
@@ -529,7 +524,7 @@ public class UserManager extends Controller {
             // Remove the null values which may be present in the list (see the
             // view to understand)
             accountDataForm.systemLevelRoleTypes.removeAll(Collections.singleton(null));
-            accountManagerPlugin.overwriteSystemLevelRoleTypes(accountDataForm.uid, accountDataForm.systemLevelRoleTypes);
+            getAccountManagerPlugin().overwriteSystemLevelRoleTypes(accountDataForm.uid, accountDataForm.systemLevelRoleTypes);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
@@ -548,11 +543,11 @@ public class UserManager extends Controller {
      */
     public Result changeActivationStatus(String uid, boolean activationStatus) {
 
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        
 
         IUserAccount userAccount = null;
         try {
-            userAccount = accountManagerPlugin.getUserAccountFromUid(uid);
+            userAccount = getAccountManagerPlugin().getUserAccountFromUid(uid);
             if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.user_manager.unknown_user"));
                 return displayUserSearchForm();
@@ -562,7 +557,7 @@ public class UserManager extends Controller {
         }
 
         try {
-            accountManagerPlugin.updateActivationStatus(uid, activationStatus);
+            getAccountManagerPlugin().updateActivationStatus(uid, activationStatus);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.change_status.success", uid));
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -588,7 +583,7 @@ public class UserManager extends Controller {
      */
     public Result displayUserCreationForm() {
 
-        if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreateUser()) {
+        if (!getLicensesManagementService().canCreateUser()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_user"));
         }
 
@@ -602,13 +597,13 @@ public class UserManager extends Controller {
      */
     public Result saveNewUser() {
 
-        if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreateUser()) {
+        if (!getLicensesManagementService().canCreateUser()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_user"));
             return redirect(controllers.admin.routes.UserManager.displayUserCreationForm());
         }
 
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            
             Form<UserAccountFormData> boundForm = creationForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
@@ -617,7 +612,7 @@ public class UserManager extends Controller {
             UserAccountFormData accountDataForm = boundForm.get();
 
             // Check if the user already exists
-            IUserAccount account = accountManagerPlugin.getUserAccountFromUid(accountDataForm.uid);
+            IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(accountDataForm.uid);
             if (account != null) {
                 boundForm.reject("uid", Msg.get("object.user_account.uid.already_exists"));
                 return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
@@ -625,7 +620,7 @@ public class UserManager extends Controller {
             }
 
             // Check if the mail already exists in the backend
-            if (accountManagerPlugin.isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
+            if (getAccountManagerPlugin().isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
                 boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
                 return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
                         SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm));
@@ -636,28 +631,28 @@ public class UserManager extends Controller {
             accountDataForm.systemLevelRoleTypes.removeAll(Collections.singleton(null));
 
             // Create a new user
-            accountManagerPlugin.createNewUserAccount(accountDataForm.uid, IUserAccount.AccountType.valueOf(accountDataForm.accountType),
+            getAccountManagerPlugin().createNewUserAccount(accountDataForm.uid, IUserAccount.AccountType.valueOf(accountDataForm.accountType),
                     accountDataForm.firstName, accountDataForm.lastName, accountDataForm.mail, accountDataForm.systemLevelRoleTypes);
 
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedUsers();
+            getLicensesManagementService().updateConsumedUsers();
 
             // update the preferred language
-            accountManagerPlugin.updatePreferredLanguage(accountDataForm.uid, accountDataForm.preferredLanguage);
+            getAccountManagerPlugin().updatePreferredLanguage(accountDataForm.uid, accountDataForm.preferredLanguage);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.create.success"));
 
             // If in master mode, the password is managed by the system
-            if (accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
+            if (getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
                 // Generate a random password
                 String password = RandomStringUtils.randomAlphanumeric(12);
-                String validationKey = accountManagerPlugin.getValidationKey(accountDataForm.uid, password);
-                accountManagerPlugin.updatePassword(accountDataForm.uid, password);
+                String validationKey = getAccountManagerPlugin().getValidationKey(accountDataForm.uid, password);
+                getAccountManagerPlugin().updatePassword(accountDataForm.uid, password);
 
                 // Notify account creation & password setup
-                String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
+                String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
                         + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
                 EmailUtils.sendEmail(Msg.get("admin.user_manager.create.mail.subject"), play.Configuration.root().getString("maf.email.from"),
-                        Utilities.renderViewI18n("views.html.mail.account_creation_html", accountManagerPlugin.isAuthenticationRepositoryMasterMode(),
+                        Utilities.renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
                                 play.Configuration.root().getString("maf.platformName"), accountDataForm.firstName + " " + accountDataForm.lastName,
                                 resetPasswordUrl, accountDataForm.uid).body(),
                         accountDataForm.mail);
@@ -691,8 +686,8 @@ public class UserManager extends Controller {
 
         try {
 
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            IUserAccount account = accountManagerPlugin.getUserAccountFromUid(uid);
+            
+            IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             if (account == null || account.isMarkedForDeletion() || !account.isDisplayed()) {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.user_manager.unknown_user"));
                 return displayUserSearchForm();
@@ -746,10 +741,7 @@ public class UserManager extends Controller {
      * Export as excel the list of MAF users.
      */
     public Result exportAsExcel() {
-
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-
-        final String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+        final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
         final String fileName = String.format("users_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
 
@@ -766,15 +758,9 @@ public class UserManager extends Controller {
         final String rolesLabel = Msg.get("object.user_account.roles.label");
         final String permissionsLabel = Msg.get("object.user_account.permissions.label");
 
-        SysAdminUtils.scheduleOnce(false, "UserManager Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+        getSysAdminUtils().scheduleOnce(false, "UserManager Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
             @Override
             public void run() {
-
-                IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-                IPersonalStoragePlugin personalStorage = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
-                INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
-                        INotificationManagerPlugin.class);
-
                 Table<IUserAccount> exportTemplate = new Table<IUserAccount>() {
                     {
                         this.addColumn("uid", "uid", uidLabel, SorterType.NONE);
@@ -807,20 +793,20 @@ public class UserManager extends Controller {
 
                 try {
 
-                    Table<IUserAccount> exportTable = exportTemplate.fill(accountManagerPlugin.getUserAccountsFromName("*"));
+                    Table<IUserAccount> exportTable = exportTemplate.fill(getAccountManagerPlugin().getUserAccountsFromName("*"));
                     byte[] excelFile = TableExcelRenderer.renderFormatted(exportTable);
 
-                    OutputStream out = personalStorage.createNewFile(uid, fileName);
+                    OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                     IOUtils.copy(new ByteArrayInputStream(excelFile), out);
 
-                    notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
+                    getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
                             controllers.my.routes.MyPersonalStorage.index().url());
 
                 } catch (Exception e) {
 
                     log.error("Unable to export the users excel file", e);
 
-                    notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                    getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
                             controllers.admin.routes.UserManager.displayUserSearchForm().url());
 
                 }
@@ -841,17 +827,15 @@ public class UserManager extends Controller {
      *            a unique user id
      */
     public Result deleteUser(String uid) {
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        
         try {
-            accountManagerPlugin.deleteAccount(uid);
+            getAccountManagerPlugin().deleteAccount(uid);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.delete.success", uid));
 
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedUsers();
+            getLicensesManagementService().updateConsumedUsers();
 
-            INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
-                    INotificationManagerPlugin.class);
-            notificationManagerPlugin.sendNotificationWithPermission(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
+            getNotificationManagerPlugin().sendNotificationWithPermission(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
                     NotificationCategory.getByCode(Code.USER_MANAGEMENT), Msg.get("admin.user_manager.delete.notification.title"),
                     Msg.get("admin.user_manager.delete.notification.message", uid, new Date().toString()),
                     controllers.admin.routes.UserManager.displayUserSearchForm().url());
@@ -859,6 +843,26 @@ public class UserManager extends Controller {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
         return redirect(routes.UserManager.displayUserSearchForm());
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
+    }
+
+    private ILicensesManagementService getLicensesManagementService() {
+        return licensesManagementService;
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 
     /**
@@ -1110,5 +1114,9 @@ public class UserManager extends Controller {
      */
     public static enum MenuItemType {
         NONE, SEARCH, CREATE;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
     }
 }

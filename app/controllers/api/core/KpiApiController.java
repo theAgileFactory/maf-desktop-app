@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.ws.rs.PathParam;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,7 +36,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import controllers.api.ApiAuthenticationBizdockCheck;
 import controllers.api.ApiController;
 import controllers.api.request.post.KpiDataRequest;
-import framework.services.ServiceManager;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
 import framework.services.kpi.IKpiService;
@@ -54,7 +54,8 @@ import play.mvc.Result;
  */
 @Api(value = "/api/core/kpi", description = "Operations on KPIs")
 public class KpiApiController extends ApiController {
-
+    @Inject
+    private IKpiService kpiService;
     public static Form<KpiDataRequest> kpiDataRequestFormTemplate = Form.form(KpiDataRequest.class);
 
     /**
@@ -81,7 +82,7 @@ public class KpiApiController extends ApiController {
                 return getJsonErrorResponse(new ApiError(404, "The KPI with the specified uid is not found"));
             }
 
-            Kpi kpi = ServiceManager.getService(IKpiService.NAME, IKpiService.class).getKpi(uid);
+            Kpi kpi = getKpiService().getKpi(uid);
             if (kpi == null) {
                 return getJsonErrorResponse(new ApiError(400, "Impossible to add a data for an inactive KPI"));
             }
@@ -149,6 +150,10 @@ public class KpiApiController extends ApiController {
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "Unexpected error", e));
         }
+    }
+
+    private IKpiService getKpiService() {
+        return kpiService;
     }
 
 }

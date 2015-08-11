@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 
@@ -49,12 +51,13 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import framework.commons.DataType;
-import framework.services.ServiceManager;
-import framework.services.audit.AuditLoggerUtilities;
+import framework.services.ServiceStaticAccessor;
 import framework.services.audit.Auditable;
+import framework.services.audit.IAuditLoggerService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.system.ISysAdminUtils;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolder;
@@ -62,7 +65,6 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.PickerHandler;
 import framework.utils.PickerHandler.Handle;
-import framework.utils.SysAdminUtils;
 import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.TableExcelRenderer;
@@ -75,6 +77,16 @@ import framework.utils.Utilities;
  */
 @Restrict({ @Group(IMafConstants.ADMIN_AUDIT_LOG_PERMISSION) })
 public class AuditableController extends Controller {
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private INotificationManagerPlugin notificationManagerPlugin;
+    @Inject
+    private IPersonalStoragePlugin personalStoragePlugin;
+    @Inject
+    private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private IAuditLoggerService auditLoggerService;
 
     // Set to true for activating the search box
     public static final boolean PICKER_OBJECTCLASS_SEARCH = false;
@@ -114,7 +126,7 @@ public class AuditableController extends Controller {
      */
     public Result listAuditable() {
         try {
-            Table<Auditable> table = tableTemplate.fill(AuditLoggerUtilities.getInstance().getAllActiveAuditable());
+            Table<Auditable> table = tableTemplate.fill(getAuditLoggerService().getAllActiveAuditable());
             return ok(views.html.admin.audit.auditable_table.render(Messages.get("admin.auditable.list.title"), table));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -129,7 +141,7 @@ public class AuditableController extends Controller {
      */
     public Result deleteAuditable(String objectClass) {
         try {
-            AuditLoggerUtilities.getInstance().deleteAuditable(objectClass);
+            getAuditLoggerService().deleteAuditable(objectClass);
             Utilities.sendSuccessFlashMessage(Messages.get("admin.auditable.delete.success"));
             return redirect(routes.AuditableController.listAuditable());
         } catch (Exception e) {
@@ -146,7 +158,7 @@ public class AuditableController extends Controller {
      */
     public Result editAuditable(String objectClass) {
         try {
-            Auditable auditable = AuditLoggerUtilities.getInstance().getAuditableFromObjectClass(objectClass);
+            Auditable auditable = getAuditLoggerService().getAuditableFromObjectClass(objectClass);
             if (auditable != null) {
                 Form<Auditable> loadedForm = auditableForm.fill(auditable);
                 return ok(views.html.admin.audit.auditable_form.render(Messages.get("admin.auditable.manage.title"), loadedForm));
@@ -182,7 +194,7 @@ public class AuditableController extends Controller {
                 return ok(views.html.admin.audit.auditable_form.render(Messages.get("admin.auditable.manage.title"), boundForm));
             }
             Auditable auditable = boundForm.get();
-            AuditLoggerUtilities.getInstance().saveAuditable(auditable);
+            getAuditLoggerService().saveAuditable(auditable);
             Utilities.sendSuccessFlashMessage(Messages.get("admin.auditable.manage.success", auditable));
             return redirect(routes.AuditableController.listAuditable());
         } catch (Exception e) {
@@ -194,7 +206,7 @@ public class AuditableController extends Controller {
      * Generate an excel representation of all the Auditable objects.
      */
     public Promise<Result> excelAuditable() {
-        final List<Auditable> listOfauditable = AuditLoggerUtilities.getInstance().getAllActiveAuditable();
+        final List<Auditable> listOfauditable = getAuditLoggerService().getAllActiveAuditable();
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -227,9 +239,7 @@ public class AuditableController extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                            IUserSessionManagerPlugin.class);
-                    final String currentUserId = userSessionManagerPlugin.getUserSessionId(ctx());
+                    final String currentUserId = getUserSessionManagerPlugin().getUserSessionId(ctx());
                     final String errorMessage = Msg.get("admin.auditable.export.notification.error.message");
                     final String successTitle = Msg.get("admin.auditable.export.notification.success.title");
                     final String successMessage = Msg.get("admin.auditable.export.notification.success.message");
@@ -242,7 +252,7 @@ public class AuditableController extends Controller {
                     }
 
                     // Execute asynchronously
-                    SysAdminUtils.scheduleOnce(false, "AUDITABLE", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                    getSysAdminUtils().scheduleOnce(false, "AUDITABLE", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
                         @Override
                         public void run() {
                             // Find the files to be archived
@@ -269,20 +279,16 @@ public class AuditableController extends Controller {
                                 }
                             });
 
-                            INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
-                                    INotificationManagerPlugin.class);
                             if (filesToArchive.length != 0) {
                                 if (log.isDebugEnabled()) {
                                     log.debug("Audit log export : zipping the " + filesToArchive.length + " archive files");
                                 }
 
                                 // Write to the user personal space
-                                IPersonalStoragePlugin personalStoragePlugin = ServiceManager.getService(IPersonalStoragePlugin.NAME,
-                                        IPersonalStoragePlugin.class);
                                 final String fileName = String.format("auditExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.zip", new Date());
                                 ZipOutputStream out = null;
                                 try {
-                                    OutputStream personalOut = personalStoragePlugin.createNewFile(currentUserId, fileName);
+                                    OutputStream personalOut = getPersonalStoragePlugin().createNewFile(currentUserId, fileName);
                                     out = new ZipOutputStream(personalOut);
                                     for (File fileToArchive : filesToArchive) {
                                         ZipEntry e = new ZipEntry(fileToArchive.getName());
@@ -291,19 +297,19 @@ public class AuditableController extends Controller {
                                         out.write(data, 0, data.length);
                                         out.closeEntry();
                                     }
-                                    notificationManagerPlugin.sendNotification(currentUserId, NotificationCategory.getByCode(Code.AUDIT), successTitle,
+                                    getNotificationManagerPlugin().sendNotification(currentUserId, NotificationCategory.getByCode(Code.AUDIT), successTitle,
                                             successMessage, controllers.my.routes.MyPersonalStorage.index().url());
 
                                 } catch (Exception e) {
                                     log.error("Fail to export the audit archives", e);
-                                    notificationManagerPlugin.sendNotification(currentUserId, NotificationCategory.getByCode(Code.ISSUE), errorTitle,
+                                    getNotificationManagerPlugin().sendNotification(currentUserId, NotificationCategory.getByCode(Code.ISSUE), errorTitle,
                                             errorMessage, controllers.admin.routes.AuditableController.listAuditable().url());
                                 } finally {
                                     IOUtils.closeQuietly(out);
                                 }
                             } else {
                                 log.error("No audit archive found in the folder");
-                                notificationManagerPlugin.sendNotification(currentUserId, NotificationCategory.getByCode(Code.ISSUE), errorTitle,
+                                getNotificationManagerPlugin().sendNotification(currentUserId, NotificationCategory.getByCode(Code.ISSUE), errorTitle,
                                         notFoundMessage, controllers.admin.routes.AuditableController.listAuditable().url());
                             }
                         }
@@ -348,7 +354,7 @@ public class AuditableController extends Controller {
             selectableObjects.add(new DefaultSelectableValueHolder<String>(dataType.getDataTypeClassName(), dataType.getLabel()));
         }
         // Remove the previously selected entities
-        List<Auditable> auditables = AuditLoggerUtilities.getInstance().getAllActiveAuditable();
+        List<Auditable> auditables = ServiceStaticAccessor.getAuditLoggerService().getAllActiveAuditable();
         for (Auditable auditable : auditables) {
             selectableObjects.remove(auditable.objectClass);
         }
@@ -369,5 +375,25 @@ public class AuditableController extends Controller {
      */
     public static ISelectableValueHolder<String> getSelectedValueForObjectClass(Auditable object) {
         return new DefaultSelectableValueHolder<String>(object.objectClass, DataType.getDataTypeFromClassName(object.objectClass).getLabel());
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
+    }
+
+    private IAuditLoggerService getAuditLoggerService() {
+        return auditLoggerService;
     }
 }

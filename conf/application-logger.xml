@@ -45,14 +45,13 @@
 	<logger name="play" level="INFO" />
 	<logger name="application" level="INFO" />
 	<logger name="logger.tools" level="INFO" />
-	<logger name="controllers.sso" level="DEBUG" />
-	<logger name="security" level="DEBUG" />
-	<logger name="org.pac4j" level="DEBUG" />
+	<logger name="framework.services.ext" level="DEBUG" />
+	<logger name="framework.services.plugins" level="DEBUG" />
 	
-	<logger name="framework.services.audit.AuditLoggerUtilities" level="INFO">
+	<logger name="framework.services.audit.AuditLoggerServiceImpl" level="INFO">
 		<appender-ref ref="FILE_AUDIT" />
 	</logger>
-    <logger name="framework.utils.SysAdminUtils" level="INFO">
+    <logger name="framework.services.system.SysAdminUtilsImpl" level="INFO">
         <appender-ref ref="SYSTEM_AUDIT" />
     </logger>
 

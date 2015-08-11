@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.Notification;
 import models.framework_models.account.Principal;
 import models.framework_models.account.Shortcut;
@@ -58,7 +60,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -87,6 +89,21 @@ import framework.utils.Utilities;
  * @author Pierre-Yves Cloux
  */
 public class Application extends Controller {
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+    
+    @Inject
+    private INotificationManagerPlugin notificationManagerPlugin;
+    
+    @Inject
+    private IPluginManagerService pluginManagerService;
+    
+    @Inject
+    private IAdPanelManagerService adPanelManagerService;
+    
     private static Logger.ALogger log = Logger.of(Application.class);
 
     /**
@@ -158,13 +175,12 @@ public class Application extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<NotificationListView>, Pagination<Notification>> getNotificationsTable(FilterConfig<NotificationListView> filterConfig)
+    private Pair<Table<NotificationListView>, Pagination<Notification>> getNotificationsTable(FilterConfig<NotificationListView> filterConfig)
             throws AccountManagementException {
 
-        String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-        ExpressionList<Notification> expressionList = filterConfig.updateWithSearchExpression(ServiceManager.getService(INotificationManagerPlugin.NAME,
-                INotificationManagerPlugin.class).getNotificationsForUidAsExpr(loggedUser));
+        ExpressionList<Notification> expressionList = filterConfig.updateWithSearchExpression(getNotificationManagerPlugin().getNotificationsForUidAsExpr(loggedUser));
         filterConfig.updateWithSortExpression(expressionList);
 
         Pagination<Notification> pagination = new Pagination<Notification>(expressionList);
@@ -194,11 +210,11 @@ public class Application extends Controller {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
 
-        String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
         for (String idString : ids) {
             Long id = Long.parseLong(idString);
-            ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class).deleteNotificationsForUid(loggedUser, id);
+            getNotificationManagerPlugin().deleteNotificationsForUid(loggedUser, id);
         }
 
         Utilities.sendSuccessFlashMessage(Msg.get("notifications.action.delete.successful.message"));
@@ -220,10 +236,9 @@ public class Application extends Controller {
             // fill the filter config
             FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.parseResponse(json);
 
-            String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+            String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-            ExpressionList<Notification> expressionList = filterConfig.updateWithSearchExpression(ServiceManager.getService(INotificationManagerPlugin.NAME,
-                    INotificationManagerPlugin.class).getNotificationsForUidAsExpr(loggedUser));
+            ExpressionList<Notification> expressionList = filterConfig.updateWithSearchExpression(getNotificationManagerPlugin().getNotificationsForUidAsExpr(loggedUser));
 
             List<String> ids = new ArrayList<>();
             for (Notification notification : expressionList.findList()) {
@@ -249,9 +264,9 @@ public class Application extends Controller {
      */
     @SubjectPresent
     public Result deleteNotification(Long id) {
-        String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
         Notification notification = Notification.find.where().eq("deleted", false).eq("id", id).findUnique();
-        if (ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class).deleteNotificationsForUid(loggedUser, id)) {
+        if (getNotificationManagerPlugin().deleteNotificationsForUid(loggedUser, id)) {
             if (notification.isMessage) {
                 Utilities.sendSuccessFlashMessage(Msg.get("messaging.list.success.deleted"));
                 return redirect(routes.MessagingController.index());
@@ -281,7 +296,7 @@ public class Application extends Controller {
             return redirect(routes.Application.displayNotifications());
         }
     }
-
+    
     /**
      * Display the home page.
      * 
@@ -289,12 +304,10 @@ public class Application extends Controller {
      */
     @SubjectPresent(forceBeforeAuthCheck = true)
     public Result index() {
-
         // check if the user has an actor
         boolean hasActor = false;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             if (actor != null && actor.id != null) {
                 hasActor = true;
@@ -307,11 +320,10 @@ public class Application extends Controller {
         Set<String> hideColumnsForNotifications = new HashSet<String>();
         hideColumnsForNotifications.add("deleteActionLink");
         hideColumnsForNotifications.add("isRead");
-        String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
         List<NotificationListView> notificationListViews = new ArrayList<NotificationListView>();
-        for (Notification notification : ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                .getNotReadNotificationsForUid(loggedUser)) {
+        for (Notification notification : getNotificationManagerPlugin().getNotReadNotificationsForUid(loggedUser)) {
             notificationListViews.add(new NotificationListView(notification));
         }
 
@@ -331,9 +343,7 @@ public class Application extends Controller {
         // get the profile info
         IUserAccount account = null;
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            account = accountManagerPlugin.getUserAccountFromUid(userSessionPlugin.getUserSessionId(ctx()));
+            account = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -477,9 +487,7 @@ public class Application extends Controller {
     public Result viewShortcuts() {
 
         try {
-
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Principal principal = Principal.getPrincipalFromUid(uid);
 
             List<Shortcut> shortcuts = Shortcut.getByPrincipal(principal.id);
@@ -513,10 +521,7 @@ public class Application extends Controller {
                 try {
 
                     String message = "";
-
-                    IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                            IUserSessionManagerPlugin.class);
-                    String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                    String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                     Principal principal = Principal.getPrincipalFromUid(uid);
 
                     // check the shortcut is not already existing
@@ -575,10 +580,7 @@ public class Application extends Controller {
             if (shortcut != null) {
 
                 try {
-
-                    IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                            IUserSessionManagerPlugin.class);
-                    String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                    String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                     Principal principal = Principal.getPrincipalFromUid(uid);
 
                     // check the shortcut belongs to the current user
@@ -635,8 +637,7 @@ public class Application extends Controller {
      *            a page
      */
     public Promise<Result> getAdPanelContent(String page) {
-        IAdPanelManagerService adPanelManagerService = ServiceManager.getService(IAdPanelManagerService.NAME, IAdPanelManagerService.class);
-        return adPanelManagerService.getRemotePanel(page);
+        return getAdPanelManagerService().getRemotePanel(page);
     }
 
     /**
@@ -645,30 +646,24 @@ public class Application extends Controller {
      * @return an IDZone instance if the user is logged or null otherwise
      */
     public static IDZoneData getIDZoneData() {
-        String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+        String loggedUser = ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx());
         try {
             if (!StringUtils.isBlank(loggedUser)) {
-                IUserAccount userAccount = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class).getUserAccountFromUid(loggedUser);
+                IUserAccount userAccount = ServiceStaticAccessor.getAccountManagerPlugin().getUserAccountFromUid(loggedUser);
+                INotificationManagerPlugin notificationManagerPlugin=ServiceStaticAccessor.getNotificationManagerPlugin();
                 if (userAccount != null) {
                     IDZoneData idZoneData = new IDZoneData();
                     idZoneData.isAuthorized = userAccount.isActive();
-                    idZoneData.hasNotifications = ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                            .hasNotifications(loggedUser);
-                    idZoneData.nbNotReadNotifications = ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                            .nbNotReadNotifications(loggedUser);
-                    idZoneData.notifications = ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                            .getNotReadNotificationsForUid(loggedUser);
-                    idZoneData.hasMessages = ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class).hasMessages(
+                    idZoneData.hasNotifications = notificationManagerPlugin.hasNotifications(loggedUser);
+                    idZoneData.nbNotReadNotifications = notificationManagerPlugin.nbNotReadNotifications(loggedUser);
+                    idZoneData.notifications = notificationManagerPlugin.getNotReadNotificationsForUid(loggedUser);
+                    idZoneData.hasMessages = notificationManagerPlugin.hasMessages(
                             loggedUser);
-                    idZoneData.nbNotReadMessages = ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                            .nbNotReadMessages(loggedUser);
-                    idZoneData.messages = ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                            .getNotReadMessagesForUid(loggedUser);
+                    idZoneData.nbNotReadMessages =notificationManagerPlugin.nbNotReadMessages(loggedUser);
+                    idZoneData.messages = notificationManagerPlugin.getNotReadMessagesForUid(loggedUser);
                     idZoneData.login = userAccount.getFirstName() + " " + userAccount.getLastName();
-
-                    IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
                     idZoneData.pluginMenuDesriptors = new HashMap<Long, Pair<String, IPluginMenuDescriptor>>();
-                    Map<Long, IPluginInfo> pluginInfos = pluginManagerService.getRegisteredPluginDescriptors();
+                    Map<Long, IPluginInfo> pluginInfos = ServiceStaticAccessor.getPluginManagerService().getRegisteredPluginDescriptors();
                     for (Long pluginConfigirationId : pluginInfos.keySet()) {
                         if (pluginInfos.get(pluginConfigirationId).getStaticDescriptor().getMenuDescriptor() != null) {
                             IPluginInfo pluginInfo = pluginInfos.get(pluginConfigirationId);
@@ -676,7 +671,6 @@ public class Application extends Controller {
                                     pluginInfo.getStaticDescriptor().getPluginDefinitionIdentifier(), pluginInfo.getStaticDescriptor().getMenuDescriptor()));
                         }
                     }
-
                     idZoneData.logoutUrl = controllers.sso.routes.Authenticator.customLogout().url();
                     return idZoneData;
                 }
@@ -729,5 +723,25 @@ public class Application extends Controller {
             this.name = shortcut.getName();
             this.route = shortcut.route;
         }
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
+    }
+
+    private IPluginManagerService getPluginManagerService() {
+        return pluginManagerService;
+    }
+
+    private IAdPanelManagerService getAdPanelManagerService() {
+        return adPanelManagerService;
     }
 }

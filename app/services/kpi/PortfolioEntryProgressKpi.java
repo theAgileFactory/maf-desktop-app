@@ -26,7 +26,7 @@ import constants.IMafConstants;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
@@ -128,7 +128,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
      */
     private BigDecimal getOnGoingRate() {
         Integer percentage =
-                ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsInteger(
+                ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(
                         IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE);
         return new BigDecimal(percentage / 100.0);
     }

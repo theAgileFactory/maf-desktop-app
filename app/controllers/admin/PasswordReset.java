@@ -17,6 +17,7 @@
  */
 package controllers.admin;
 
+import javax.inject.Inject;
 import javax.persistence.Transient;
 
 import play.Logger;
@@ -26,7 +27,6 @@ import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
 import controllers.ControllersUtils;
-import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.utils.Msg;
 import framework.utils.Utilities;
@@ -48,7 +48,8 @@ import framework.utils.Utilities;
  * @author Pierre-Yves Cloux
  */
 public class PasswordReset extends Controller {
-
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
     private static Logger.ALogger log = Logger.of(PasswordReset.class);
     public static final String CURRENT_USER_UID = "MAF_USER_ID";
     private static Form<PasswordFormData> passwordUpdateForm = Form.form(PasswordFormData.class);
@@ -63,11 +64,10 @@ public class PasswordReset extends Controller {
      */
     public Result displayPasswordResetForm(String uid, String validationKey) {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
+            if (!getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
                 throw new Exception("Not allowed to update password in slave mode");
             }
-            String validationData = accountManagerPlugin.checkValidationKey(uid, validationKey);
+            String validationData = getAccountManagerPlugin().checkValidationKey(uid, validationKey);
             // Set the uid to update in session
             session().put(CURRENT_USER_UID, uid);
             if (validationData == null) {
@@ -91,8 +91,7 @@ public class PasswordReset extends Controller {
                 throw new Exception("Attempt to save a password without a valid session");
             }
             String uid = session().get(CURRENT_USER_UID);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
+            if (!getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
                 throw new Exception("Not allowed to update the password if the system is not in master mode");
             }
             Form<PasswordFormData> boundForm = passwordUpdateForm.bindFromRequest();
@@ -108,8 +107,8 @@ public class PasswordReset extends Controller {
                 boundForm.reject("password", Msg.get("form.input.password.error.insufficient_strength"));
                 return badRequest(views.html.admin.passwordreset.passwordreset_form.render(Messages.get("my.my_profile.sidebar.update_data"), boundForm));
             }
-            accountManagerPlugin.updatePassword(uid, passwordFormData.password);
-            accountManagerPlugin.resetValidationKey(uid);
+            getAccountManagerPlugin().updatePassword(uid, passwordFormData.password);
+            getAccountManagerPlugin().resetValidationKey(uid);
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_password.successful"));
             session().clear();
             return redirect(controllers.routes.Application.index());
@@ -132,5 +131,9 @@ public class PasswordReset extends Controller {
         @Required(message = "form.input.password.invalid")
         @Transient
         public String passwordCheck;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
     }
 }

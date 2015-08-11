@@ -19,17 +19,17 @@ package security;
 
 import java.util.Optional;
 
+import controllers.sso.Authenticator;
 import play.libs.F.Promise;
 import play.mvc.Http;
 import play.mvc.Result;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
-import controllers.sso.AuthenticationConfigurationUtils;
 import framework.security.CommonDeadboltHandler;
-import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Msg;
+import framework.services.ServiceStaticAccessor;
 
 /**
  * The handler for the authorization mechanism based on Deadbold.<br/>
@@ -40,11 +40,21 @@ import framework.utils.Msg;
  * @author Pierre-Yves Cloux
  */
 public class DefaultDeadboltHandler extends CommonDeadboltHandler {
-    private DefaultDynamicResourceHandler dynamicResourceHandler = new DefaultDynamicResourceHandler();
+    private DefaultDynamicResourceHandler dynamicResourceHandler;
+    private Authenticator authenticator;
+    
+    public DefaultDeadboltHandler(
+            IUserSessionManagerPlugin userSessionManagerPlugin, 
+            IAccountManagerPlugin accountManagerPlugin,
+            Authenticator authenticator) {
+        super(userSessionManagerPlugin, accountManagerPlugin);
+        this.authenticator=authenticator;
+        this.dynamicResourceHandler = new DefaultDynamicResourceHandler(userSessionManagerPlugin, accountManagerPlugin);
+    }
 
     @Override
     public Result redirectToLoginPage(String redirectUrl) {
-        return AuthenticationConfigurationUtils.redirectToLoginPage(redirectUrl);
+        return getAuthenticator().redirectToLoginPage(redirectUrl);
     }
 
     @Override
@@ -58,24 +68,11 @@ public class DefaultDeadboltHandler extends CommonDeadboltHandler {
         return Promise.promise(() -> Optional.of(getDynamicResourceHandler()));
     }
 
-    /**
-     * Return true if the sign-in user is allowed for the given permission.
-     * 
-     * @param permission
-     *            the permission
-     */
-    public static boolean isAllowed(String permission) {
-        try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
-            return userAccount.getSystemPermissionNames().contains(permission);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private DefaultDynamicResourceHandler getDynamicResourceHandler() {
         return dynamicResourceHandler;
+    }
+
+    private Authenticator getAuthenticator() {
+        return authenticator;
     }
 }

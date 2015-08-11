@@ -19,6 +19,7 @@ package utils.table;
 
 import models.framework_models.kpi.KpiDefinition;
 import constants.IMafConstants;
+import framework.services.ServiceStaticAccessor;
 import framework.services.kpi.Kpi;
 import framework.services.kpi.Kpi.DataType;
 import framework.utils.IColumnFormatter;
@@ -101,7 +102,7 @@ public class KpiDefinitionListView {
      */
     public KpiDefinitionListView(KpiDefinition kpiDefinition) {
 
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition, ServiceStaticAccessor.getKpiService());
 
         this.id = kpiDefinition.id;
         this.mainValueName = Msg.get(kpi.getValueName(DataType.MAIN));

@@ -17,8 +17,10 @@
  */
 package services.job;
 
-import framework.services.ServiceManager;
+import modules.StaticAccessor;
+import framework.services.ServiceStaticAccessor;
 import framework.services.job.IJobDescriptor;
+import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 
 /**
@@ -68,10 +70,10 @@ public interface JobDescriptors {
 
         @Override
         public void trigger() {
-
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedPortfolioEntries();
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedUsers();
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedStorage();
+            ILicensesManagementService licensesManagementService=StaticAccessor.getLicensesManagementService();
+            licensesManagementService.updateConsumedPortfolioEntries();
+            licensesManagementService.updateConsumedUsers();
+            licensesManagementService.updateConsumedStorage();
 
         }
 

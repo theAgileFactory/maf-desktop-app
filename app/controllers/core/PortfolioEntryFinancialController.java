@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.finance.PortfolioEntryBudget;
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PurchaseOrder;
@@ -57,7 +59,6 @@ import dao.finance.WorkOrderDAO;
 import dao.pmo.PortfolioEntryDao;
 import framework.highcharts.pattern.BasicBar;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -74,7 +75,11 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioEntryFinancialController extends Controller {
-
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+    
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
     public static Form<PortfolioEntryBudgetLineFormData> budgetLineFormTemplate = Form.form(PortfolioEntryBudgetLineFormData.class);
@@ -208,9 +213,7 @@ public class PortfolioEntryFinancialController extends Controller {
             // get the current user
             IUserAccount userAccount;
             try {
-                IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-                userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(ctx()));
+                userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
             } catch (Exception e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
             }
@@ -977,5 +980,13 @@ public class PortfolioEntryFinancialController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.report_balance.successful"));
 
         return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
     }
 }

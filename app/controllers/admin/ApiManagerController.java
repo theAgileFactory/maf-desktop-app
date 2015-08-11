@@ -17,6 +17,8 @@
  */
 package controllers.admin;
 
+import javax.inject.Inject;
+
 import models.framework_models.parent.IModelConstants;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +35,6 @@ import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import framework.services.ServiceManager;
 import framework.services.api.commons.ApiSignatureException;
 import framework.services.api.server.IApiApplicationConfiguration;
 import framework.services.api.server.IApiSignatureService;
@@ -56,6 +57,9 @@ public class ApiManagerController extends Controller {
 
     private static Logger.ALogger log = Logger.of(ApiManagerController.class);
     private static Form<ApiRegistrationObject> apiRegistrationForm = Form.form(ApiRegistrationObject.class);
+    
+    @Inject
+    private IApiSignatureService apiSignatureService;
 
     private static Table<IApiApplicationConfiguration> tableTemplate = new Table<IApiApplicationConfiguration>() {
         {
@@ -112,8 +116,7 @@ public class ApiManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result index() throws ApiSignatureException {
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
-        Table<IApiApplicationConfiguration> filledTable = tableTemplate.fill(apiSignatureService.listAuthorizedApplications());
+        Table<IApiApplicationConfiguration> filledTable = tableTemplate.fill(getApiSignatureService().listAuthorizedApplications());
         return ok(views.html.admin.api.index.render(filledTable));
     }
 
@@ -125,9 +128,8 @@ public class ApiManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result displayApiRegistration(String applicationName) {
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
-            IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
+            IApiApplicationConfiguration appConfig = getApiSignatureService().getApplicationConfigurationFromApplicationName(applicationName);
             return ok(views.html.admin.api.display.render(appConfig));
         } catch (Exception e) {
             log.error("Error while displaying application", e);
@@ -145,9 +147,8 @@ public class ApiManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result resetApiRegistrationKeys(String applicationName) {
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
-            apiSignatureService.resetApplicationConfigurationKeys(applicationName);
+            getApiSignatureService().resetApplicationConfigurationKeys(applicationName);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.api_manager.keys.reseted.message", applicationName));
         } catch (Exception e) {
             log.error("Error while resetting application keys", e);
@@ -164,9 +165,8 @@ public class ApiManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result deleteApiRegistration(String applicationName) {
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
-            apiSignatureService.deleteApplicationConfiguration(applicationName);
+            getApiSignatureService().deleteApplicationConfiguration(applicationName);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.api_manager.registration.deleted.message", applicationName));
         } catch (Exception e) {
             log.error("Error while deleting the application", e);
@@ -184,9 +184,8 @@ public class ApiManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result displayResetApiRegistrationKeysForm(String applicationName) {
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
-            IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
+            IApiApplicationConfiguration appConfig = getApiSignatureService().getApplicationConfigurationFromApplicationName(applicationName);
             return ok(views.html.admin.api.keyreset_validation.render(appConfig));
         } catch (Exception e) {
             log.error("Error while displaying the application keys reset form", e);
@@ -204,9 +203,8 @@ public class ApiManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result displayDeleteApiRegistrationForm(String applicationName) {
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
-            IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
+            IApiApplicationConfiguration appConfig = getApiSignatureService().getApplicationConfigurationFromApplicationName(applicationName);
             return ok(views.html.admin.api.delete_validation.render(appConfig));
         } catch (Exception e) {
             log.error("Error while displaying the application delete form", e);
@@ -235,9 +233,8 @@ public class ApiManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result displayApiRegistrationUpdateForm(String applicationName) {
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         try {
-            IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
+            IApiApplicationConfiguration appConfig = getApiSignatureService().getApplicationConfigurationFromApplicationName(applicationName);
             ApiRegistrationObject apiRegistrationObject = new ApiRegistrationObject(appConfig);
             Form<ApiRegistrationObject> loadedForm = apiRegistrationForm.fill(apiRegistrationObject);
             return ok(views.html.admin.api.edit.render(loadedForm, applicationName));
@@ -262,10 +259,9 @@ public class ApiManagerController extends Controller {
                     return badRequest(views.html.admin.api.create.render(boundForm));
                 }
                 ApiRegistrationObject apiRegistrationObject = boundForm.get();
-                IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
 
                 // Check if the application already exists
-                if (apiSignatureService.isApplicationNameExists(apiRegistrationObject.applicationName)) {
+                if (getApiSignatureService().isApplicationNameExists(apiRegistrationObject.applicationName)) {
                     boundForm.reject("applicationName",
                             Msg.get("admin.api_manager.registration.name.alreadyexists.message", apiRegistrationObject.applicationName));
                     return badRequest(views.html.admin.api.create.render(boundForm));
@@ -277,7 +273,7 @@ public class ApiManagerController extends Controller {
                     if (log.isDebugEnabled()) {
                         log.debug("Request to create an application registration with " + apiRegistrationObject);
                     }
-                    apiSignatureService.setApplicationConfiguration(apiRegistrationObject.applicationName, apiRegistrationObject.description,
+                    getApiSignatureService().setApplicationConfiguration(apiRegistrationObject.applicationName, apiRegistrationObject.description,
                             apiRegistrationObject.testable, apiRegistrationObject.authorizations);
                     Utilities.sendSuccessFlashMessage(Msg.get("admin.api_manager.registration.created.message", apiRegistrationObject.applicationName));
                     return redirect(controllers.admin.routes.ApiManagerController.index());
@@ -306,14 +302,13 @@ public class ApiManagerController extends Controller {
                     return badRequest(views.html.admin.api.edit.render(boundForm, originalApplicationName));
                 }
                 ApiRegistrationObject apiRegistrationObject = boundForm.get();
-                IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
 
                 if (log.isDebugEnabled()) {
                     log.debug("Request to update the application registration for " + originalApplicationName + " with " + apiRegistrationObject);
                 }
 
                 // Check if the application already exists
-                if (apiSignatureService.isApplicationNameExists(apiRegistrationObject.applicationName)) {
+                if (getApiSignatureService().isApplicationNameExists(apiRegistrationObject.applicationName)) {
                     boundForm.reject("applicationName",
                             Msg.get("admin.api_manager.registration.name.alreadyexists.message", apiRegistrationObject.applicationName));
                     return badRequest(views.html.admin.api.edit.render(boundForm, originalApplicationName));
@@ -321,13 +316,13 @@ public class ApiManagerController extends Controller {
 
                 if (!apiRegistrationObject.applicationName.equals(originalApplicationName)) {
                     // Application name changed
-                    apiSignatureService.changeApplicationConfigurationName(originalApplicationName, apiRegistrationObject.applicationName);
+                    getApiSignatureService().changeApplicationConfigurationName(originalApplicationName, apiRegistrationObject.applicationName);
                 }
 
                 // Attempt to update the application (we assume that the
                 // exception is related to the authorizations parsing)
                 try {
-                    apiSignatureService.setApplicationConfiguration(apiRegistrationObject.applicationName, apiRegistrationObject.description,
+                    getApiSignatureService().setApplicationConfiguration(apiRegistrationObject.applicationName, apiRegistrationObject.description,
                             apiRegistrationObject.testable, apiRegistrationObject.authorizations);
                 } catch (Exception e) {
                     log.error("Error while updating the application", e);
@@ -358,11 +353,10 @@ public class ApiManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.API_TESTER_PERMISSION) })
     public Result openBrowser(String applicationName) {
         String applicationKey = null;
-        IApiSignatureService apiSignatureService = ServiceManager.getService(IApiSignatureService.NAME, IApiSignatureService.class);
         if (!StringUtils.isBlank(applicationName)) {
             try {
                 // Get the tested application key if any
-                IApiApplicationConfiguration appConfig = apiSignatureService.getApplicationConfigurationFromApplicationName(applicationName);
+                IApiApplicationConfiguration appConfig = getApiSignatureService().getApplicationConfigurationFromApplicationName(applicationName);
                 applicationKey = appConfig.getSignatureGenerator().getApplicationKey();
             } catch (Exception e) {
                 log.error("Error while searching for the specified application", e);
@@ -370,11 +364,15 @@ public class ApiManagerController extends Controller {
             }
         }
         try {
-            return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName, apiSignatureService.listAuthorizedAndTestableApplications()));
+            return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName, getApiSignatureService().listAuthorizedAndTestableApplications()));
         } catch (Exception e) {
             log.error("Unable to findRelease the list of testable applications", e);
         }
         return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName, null));
+    }
+
+    private IApiSignatureService getApiSignatureService() {
+        return apiSignatureService;
     }
 
     /**

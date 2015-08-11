@@ -19,10 +19,12 @@ package models;
 
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import com.avaje.ebean.event.BeanPersistController;
 import com.avaje.ebean.event.BeanPersistRequest;
 
-import framework.services.audit.AuditLoggerUtilities;
+import framework.services.audit.IAuditLoggerService;
 
 /**
  * Class which acts as a listener of the Ebean server.<br/>
@@ -32,7 +34,9 @@ import framework.services.audit.AuditLoggerUtilities;
  * @author Pierre-Yves Cloux
  */
 public class CustomBeanPersistController implements BeanPersistController {
-
+    @Inject
+    private static IAuditLoggerService auditLoggerService;
+    
     /**
      * Default constructor.
      */
@@ -55,17 +59,23 @@ public class CustomBeanPersistController implements BeanPersistController {
 
     @Override
     public void postInsert(BeanPersistRequest<?> beanPersistRequest) {
-        AuditLoggerUtilities.getInstance().logCreate(beanPersistRequest.getBean());
+        if(getAuditLoggerService()!=null){
+            getAuditLoggerService().logCreate(beanPersistRequest.getBean());
+        }
     }
 
     @Override
     public void postDelete(BeanPersistRequest<?> beanPersistRequest) {
-        AuditLoggerUtilities.getInstance().logDelete(beanPersistRequest.getBean());
+        if(getAuditLoggerService()!=null){
+            getAuditLoggerService().logDelete(beanPersistRequest.getBean());
+        }
     }
 
     @Override
     public void postUpdate(BeanPersistRequest<?> beanPersistRequest) {
-        AuditLoggerUtilities.getInstance().logUpdate(beanPersistRequest.getBean());
+        if(getAuditLoggerService()!=null){
+            getAuditLoggerService().logUpdate(beanPersistRequest.getBean());
+        }
     }
 
     @Override
@@ -81,5 +91,9 @@ public class CustomBeanPersistController implements BeanPersistController {
     @Override
     public boolean preDelete(BeanPersistRequest<?> beanPersistRequest) {
         return true;
+    }
+
+    private static IAuditLoggerService getAuditLoggerService() {
+        return auditLoggerService;
     }
 }

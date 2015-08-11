@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.framework_models.plugin.PluginConfiguration;
 import models.framework_models.plugin.PluginConfigurationBlock;
 import models.framework_models.plugin.PluginDefinition;
@@ -53,7 +55,6 @@ import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants.Syntax;
 import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
-import framework.services.ServiceManager;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.IPluginManagerService.PluginStatus;
@@ -69,6 +70,7 @@ import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.Utilities;
+import framework.security.SecurityUtils;
 
 /**
  * The GUI for managing the plugins.
@@ -86,6 +88,9 @@ import framework.utils.Utilities;
  * @author Pierre-Yves Cloux
  */
 public class PluginManagerController extends Controller {
+    @Inject
+    private IPluginManagerService pluginManagerService;
+    
     private static Logger.ALogger log = Logger.of(PluginManagerController.class);
 
     /**
@@ -242,12 +247,12 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Promise<Result> image(String identifier, boolean isBigImage) {
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
+        
         InputStream inStream = null;
         if (isBigImage) {
-            inStream = pluginManagerService.getPluginBigImageSrc(identifier);
+            inStream = getPluginManagerService().getPluginBigImageSrc(identifier);
         } else {
-            inStream = pluginManagerService.getPluginSmallImageSrc(identifier);
+            inStream = getPluginManagerService().getPluginSmallImageSrc(identifier);
         }
         if (inStream == null) {
             if(log.isDebugEnabled()){
@@ -269,13 +274,13 @@ public class PluginManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION) })
     public Result index() {
 
-        if (!DefaultDeadboltHandler.isAllowed(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
+        if (!SecurityUtils.isAllowed(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
             return redirect(controllers.admin.routes.ApiManagerController.index());
         }
 
         List<PluginConfigurationDescriptionTableObject> pluginConfigurations = new ArrayList<PluginConfigurationDescriptionTableObject>();
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        Map<Long, IPluginInfo> registeredPlugins = pluginManagerService.getRegisteredPluginDescriptors();
+        
+        Map<Long, IPluginInfo> registeredPlugins = getPluginManagerService().getRegisteredPluginDescriptors();
         for (Long pluginConfigurationId : registeredPlugins.keySet()) {
             PluginConfigurationDescriptionTableObject tableObject = new PluginConfigurationDescriptionTableObject();
             tableObject.id = pluginConfigurationId;
@@ -300,14 +305,14 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result registration() {
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
+        
 
         // Identify already registered plugin definitions
-        Set<String> registeredDefinitions = getAlreadyRegisteredPlugins(pluginManagerService);
+        Set<String> registeredDefinitions = getAlreadyRegisteredPlugins(getPluginManagerService());
 
         // Select the definitions to be displayed (remove the mono instance
         // plugins which are already registered)
-        Map<Pair<String, Boolean>, IStaticPluginRunnerDescriptor> pluginDescriptors = pluginManagerService.getAllPluginDescriptors();
+        Map<Pair<String, Boolean>, IStaticPluginRunnerDescriptor> pluginDescriptors = getPluginManagerService().getAllPluginDescriptors();
         List<Pair<Boolean, IStaticPluginRunnerDescriptor>> plugins = new ArrayList<>();
         for (Pair<String, Boolean> key : pluginDescriptors.keySet()) {
             IStaticPluginRunnerDescriptor pluginDescriptor = pluginDescriptors.get(key);
@@ -329,10 +334,10 @@ public class PluginManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result displayRegistrationForm(String pluginDefinitionIdentifier) {
         PluginRegistrationFormObject pluginRegistrationFormObject = new PluginRegistrationFormObject();
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        IStaticPluginRunnerDescriptor pluginRunnerDescriptor = pluginManagerService.getAvailablePluginDescriptor(pluginDefinitionIdentifier);
+        
+        IStaticPluginRunnerDescriptor pluginRunnerDescriptor = getPluginManagerService().getAvailablePluginDescriptor(pluginDefinitionIdentifier);
         if (pluginRunnerDescriptor == null
-                || (!pluginRunnerDescriptor.multiInstanceAllowed() && getAlreadyRegisteredPlugins(pluginManagerService).contains(pluginDefinitionIdentifier))) {
+                || (!pluginRunnerDescriptor.multiInstanceAllowed() && getAlreadyRegisteredPlugins(getPluginManagerService()).contains(pluginDefinitionIdentifier))) {
             return badRequest();
         }
         String definitionName = Msg.get(pluginRunnerDescriptor.getName());
@@ -367,9 +372,9 @@ public class PluginManagerController extends Controller {
         pluginConfiguration.save();
 
         // Trigger the registration
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
+        
         try {
-            pluginManagerService.registerPlugin(pluginConfiguration.id);
+            getPluginManagerService().registerPlugin(pluginConfiguration.id);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.new.success", pluginConfiguration.name));
         } catch (PluginException e) {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.new.error", pluginConfiguration.name));
@@ -413,8 +418,8 @@ public class PluginManagerController extends Controller {
             configuration.delete();
 
             // Unregister the plugin
-            IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-            pluginManagerService.unregisterPlugin(pluginConfigurationId);
+            
+            getPluginManagerService().unregisterPlugin(pluginConfigurationId);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.success", configuration.name));
 
@@ -439,14 +444,14 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result pluginDefinitionDetails(String pluginDefinitionIdentifier) {
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        IStaticPluginRunnerDescriptor pluginRunnerDescriptor = pluginManagerService.getPluginDescriptor(pluginDefinitionIdentifier);
+        
+        IStaticPluginRunnerDescriptor pluginRunnerDescriptor = getPluginManagerService().getPluginDescriptor(pluginDefinitionIdentifier);
         if (pluginRunnerDescriptor == null) {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.definition.view.not_exists", pluginDefinitionIdentifier));
             return redirect(routes.PluginManagerController.registration());
         }
         return ok(views.html.admin.plugin.pluginmanager_definition_details.render(pluginRunnerDescriptor,
-                pluginManagerService.isPluginAvailable(pluginRunnerDescriptor.getPluginDefinitionIdentifier())));
+                getPluginManagerService().isPluginAvailable(pluginRunnerDescriptor.getPluginDefinitionIdentifier())));
     }
 
     /**
@@ -461,8 +466,8 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result pluginConfigurationDetails(Long pluginConfigurationId) {
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        IPluginInfo pluginInfo = pluginManagerService.getRegisteredPluginDescriptors().get(pluginConfigurationId);
+        
+        IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
 
         if (pluginInfo == null) {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.not_exists", pluginConfigurationId));
@@ -539,9 +544,9 @@ public class PluginManagerController extends Controller {
         if (configuration == null) {
             return badRequest();
         }
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
+        
         try {
-            pluginManagerService.startPlugin(pluginConfigurationId);
+            getPluginManagerService().startPlugin(pluginConfigurationId);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", configuration.name));
         } catch (PluginException e) {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.error", configuration.name));
@@ -562,8 +567,8 @@ public class PluginManagerController extends Controller {
         if (configuration == null) {
             return badRequest();
         }
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        pluginManagerService.stopPlugin(pluginConfigurationId);
+        
+        getPluginManagerService().stopPlugin(pluginConfigurationId);
         Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", configuration.name));
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }
@@ -622,10 +627,10 @@ public class PluginManagerController extends Controller {
      *            a configration block identifier
      * @return
      */
-    private static IPluginConfigurationBlockDescriptor getPluginConfigurationBlockDescriptor(Long pluginConfigurationId,
+    private IPluginConfigurationBlockDescriptor getPluginConfigurationBlockDescriptor(Long pluginConfigurationId,
             String pluginConfigurationBlockIdentifier) {
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        IPluginInfo pluginInfo = pluginManagerService.getRegisteredPluginDescriptors().get(pluginConfigurationId);
+        
+        IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
         if (pluginInfo == null || pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors() == null
                 || !pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors().containsKey(pluginConfigurationBlockIdentifier)) {
             return null;
@@ -643,7 +648,7 @@ public class PluginManagerController extends Controller {
      *            an edition type
      * @return a syntax
      */
-    private static Syntax getSyntaxFromConfigurationBlockEditionType(ConfigurationBlockEditionType configurationBlockEditionType) {
+    private Syntax getSyntaxFromConfigurationBlockEditionType(ConfigurationBlockEditionType configurationBlockEditionType) {
         switch (configurationBlockEditionType) {
         case XML:
             return Syntax.XML;
@@ -736,8 +741,8 @@ public class PluginManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result postAdminActionToPlugin(Long pluginConfigurationId, String pluginActionIdentifier) {
         try {
-            IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-            IPluginInfo pluginInfo = pluginManagerService.getRegisteredPluginDescriptors().get(pluginConfigurationId);
+            
+            IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
             if (pluginInfo == null || !pluginInfo.getStaticDescriptor().getActionDescriptors().containsKey(pluginActionIdentifier)) {
                 return badRequest();
             }
@@ -750,7 +755,7 @@ public class PluginManagerController extends Controller {
             eventMessage.setPluginConfigurationId(pluginConfigurationId);
             eventMessage.setMessageType(MessageType.CUSTOM);
             eventMessage.setPayload(pluginActionDescriptor.getPayLoad(null));
-            pluginManagerService.postOutMessage(eventMessage);
+            getPluginManagerService().postOutMessage(eventMessage);
 
             log.info(String.format("Admin message for plugin %d posted with transaction id %s", pluginConfigurationId, eventMessage.getTransactionId()));
         } catch (Exception e) {
@@ -789,13 +794,17 @@ public class PluginManagerController extends Controller {
      * @param pluginManagerService
      *            the plugin manager service
      */
-    private static Set<String> getAlreadyRegisteredPlugins(IPluginManagerService pluginManagerService) {
+    private Set<String> getAlreadyRegisteredPlugins(IPluginManagerService pluginManagerService) {
         Collection<IPluginInfo> pluginInfos = pluginManagerService.getRegisteredPluginDescriptors().values();
         Set<String> registeredDefinitions = new HashSet<String>();
         for (IPluginInfo pluginInfo : pluginInfos) {
             registeredDefinitions.add(pluginInfo.getStaticDescriptor().getPluginDefinitionIdentifier());
         }
         return registeredDefinitions;
+    }
+
+    private IPluginManagerService getPluginManagerService() {
+        return pluginManagerService;
     }
 
     /**

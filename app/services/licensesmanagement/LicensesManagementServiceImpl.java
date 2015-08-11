@@ -20,14 +20,19 @@ package services.licensesmanagement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import models.framework_models.account.Principal;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import play.Configuration;
 import play.Logger;
 import play.Play;
+import play.inject.ApplicationLifecycle;
 import play.libs.F.Function;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
@@ -41,8 +46,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.ServiceManager;
+import framework.services.account.AccountManagerPluginImpl;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.database.IDatabaseDependencyService;
 import framework.services.ext.IExtensionManagerService;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -54,11 +60,17 @@ import framework.services.storage.ISharedStorageService;
  * @author Johann Kohler
  * 
  */
+@Singleton
 public class LicensesManagementServiceImpl implements ILicensesManagementService {
-
+    private static Logger.ALogger log = Logger.of(LicensesManagementServiceImpl.class);
     private boolean isActive;
     private String echannelApiUrl;
     private String apiSecretKey;
+    private ISharedStorageService sharedStorageService;
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
+    private IExtensionManagerService extensionManagerService;
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
+    private IPersonalStoragePlugin personalStoragePlugin;
 
     private static final String ACTION_PATTERN = "/{domain}/{action}";
 
@@ -74,13 +86,52 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
 
     private static final String HTTP_HEADER_API_KEY = "X-echannel-API-Key";
 
+    public enum Config {
+        LICENSE_MANAGEMENT_ACTIVE("maf.licenses_management.is_active"), ECHANNEL_API_URL("maf.licenses_management.echannel_api.url");
+        private String configurationKey;
+
+        private Config(String configurationKey) {
+            this.configurationKey = configurationKey;
+        }
+
+        public String getConfigurationKey() {
+            return configurationKey;
+        }
+    }
+
     /**
      * Initialize the plugin.
+     * 
+     * @param lifecycle
+     *            the play application lifecycle listener
+     * @param configuration
+     *            the play application configuration
+     * @param sharedStorageService
+     * @param attachmentManagerPlugin
+     * @param extensionManagerService
+     * @param preferenceManagerPlugin
+     * @param personalStoragePlugin
+     * @param databaseDependencyService 
      */
-    public LicensesManagementServiceImpl() {
-        this.isActive = Play.application().configuration().getBoolean("maf.licenses_management.is_active");
-        this.echannelApiUrl = Play.application().configuration().getString("maf.licenses_management.echannel_api.url");
+    @Inject
+    public LicensesManagementServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, ISharedStorageService sharedStorageService,
+            IAttachmentManagerPlugin attachmentManagerPlugin, IExtensionManagerService extensionManagerService, IPreferenceManagerPlugin preferenceManagerPlugin, 
+            IPersonalStoragePlugin personalStoragePlugin, IDatabaseDependencyService databaseDependencyService) {
+        log.info("SERVICE>>> LicensesManagementServiceImpl starting...");
+        this.isActive = configuration.getBoolean(Config.LICENSE_MANAGEMENT_ACTIVE.getConfigurationKey());
+        this.echannelApiUrl = configuration.getString(Config.ECHANNEL_API_URL.getConfigurationKey());
         this.apiSecretKey = null;
+        this.sharedStorageService=sharedStorageService;
+        this.attachmentManagerPlugin=attachmentManagerPlugin;
+        this.extensionManagerService=extensionManagerService;
+        this.preferenceManagerPlugin=preferenceManagerPlugin;
+        this.personalStoragePlugin=personalStoragePlugin;
+        lifecycle.addStopHook(() -> {
+            log.info("SERVICE>>> LicensesManagementServiceImpl stopping...");
+            log.info("SERVICE>>> LicensesManagementServiceImpl stopped");
+            return Promise.pure(null);
+        });
+        log.info("SERVICE>>> LicensesManagementServiceImpl started");
     }
 
     @Override
@@ -185,19 +236,19 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
             if (this.isActive) {
 
                 // shared storage
-                long sharedStorage = ServiceManager.getService(ISharedStorageService.NAME, ISharedStorageService.class).getSize();
+                long sharedStorage = getSharedStorageService().getSize();
                 Logger.debug("sharedStorage (B): " + sharedStorage);
 
                 // personal storage
-                long personalStorage = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class).getSize();
+                long personalStorage = getPersonalStoragePlugin().getSize();
                 Logger.debug("personalStorage (B): " + personalStorage);
 
                 // attachments
-                long attachments = ServiceManager.getService(IAttachmentManagerPlugin.NAME, IAttachmentManagerPlugin.class).getSize();
+                long attachments = getAttachmentManagerPlugin().getSize();
                 Logger.debug("attachments (B): " + attachments);
 
                 // extensions
-                long extensions = ServiceManager.getService(IExtensionManagerService.NAME, IExtensionManagerService.class).getSize();
+                long extensions = getExtensionManagerService().getSize();
                 Logger.debug("extensions (B): " + extensions);
 
                 int storage = (int) (sharedStorage + personalStorage + attachments + extensions) / (1024 * 1024 * 1024);
@@ -246,9 +297,8 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
      */
     private String getActionUrl(String action) {
 
-        String domain =
-                ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsString(
-                        IMafConstants.LICENSE_INSTANCE_DOMAIN_PREFERENCE);
+        String domain = getPreferenceManagerPlugin().getPreferenceValueAsString(
+                IMafConstants.LICENSE_INSTANCE_DOMAIN_PREFERENCE);
 
         String url = ACTION_PATTERN.replace("{domain}", domain);
         url = url.replace("{action}", action);
@@ -261,9 +311,8 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
      */
     private String getApiSecretKey() {
         if (this.apiSecretKey == null) {
-            this.apiSecretKey =
-                    ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsString(
-                            IMafConstants.LICENSE_ECHANNEL_API_SECRET_KEY_PREFERENCE);
+            this.apiSecretKey = getPreferenceManagerPlugin().getPreferenceValueAsString(
+                    IMafConstants.LICENSE_ECHANNEL_API_SECRET_KEY_PREFERENCE);
         }
         return this.apiSecretKey;
     }
@@ -342,5 +391,25 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
      */
     private static enum HttpMethod {
         GET, POST, PUT;
+    }
+
+    private ISharedStorageService getSharedStorageService() {
+        return sharedStorageService;
+    }
+
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
+    }
+
+    private IExtensionManagerService getExtensionManagerService() {
+        return extensionManagerService;
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
     }
 }

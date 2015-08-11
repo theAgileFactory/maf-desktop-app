@@ -31,7 +31,6 @@ import constants.IMafConstants;
 import dao.delivery.ReleaseDAO;
 import dao.pmo.ActorDao;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -39,6 +38,7 @@ import framework.services.session.IUserSessionManagerPlugin;
 import framework.security.SecurityUtils;
 import framework.security.SecurityUtils;
 import framework.utils.Utilities;
+import framework.services.ServiceStaticAccessor;
 
 /**
  * Provides all method to compute the dynamic permissions for a release.
@@ -59,8 +59,8 @@ public class ReleaseDynamicHelper {
      */
     public static ExpressionList<Release> getReleasesViewAllowedAsQuery(Expression expression, OrderBy<Release> orderBy) throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
         IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
         String raw = "(";
@@ -124,8 +124,8 @@ public class ReleaseDynamicHelper {
     public static boolean isReleaseEditAllowed(Release release) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission RELEASE_EDIT_ALL_PERMISSION OR

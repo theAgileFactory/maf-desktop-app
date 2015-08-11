@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.finance.PortfolioEntryBudget;
 import models.finance.PortfolioEntryResourcePlan;
 import models.framework_models.account.NotificationCategory;
@@ -54,6 +56,7 @@ import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import security.DefaultDynamicResourceHandler;
 import security.dynamic.PortfolioEntryDynamicHelper;
+import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 import utils.MilestonesTrend;
 import utils.form.AttachmentFormData;
@@ -80,7 +83,6 @@ import dao.governance.LifeCycleProcessDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
@@ -98,7 +100,6 @@ import framework.utils.Pagination;
 import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
-
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
@@ -113,6 +114,12 @@ import framework.security.SecurityUtils;
  */
 
 public class PortfolioEntryController extends Controller {
+    @Inject
+    private ILicensesManagementService licensesManagementService;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private IPluginManagerService pluginManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -132,12 +139,11 @@ public class PortfolioEntryController extends Controller {
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
     public Result createStep1() {
 
-        if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
+        if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
         }
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(userSessionManagerPlugin.getUserSessionId(ctx()));
+        Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormDataStep1.fill(new PortfolioEntryCreateFormData(actor.id));
         return ok(views.html.core.portfolioentry.portfolio_entry_create_step1.render(filledForm));
     }
@@ -150,7 +156,7 @@ public class PortfolioEntryController extends Controller {
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
     public Result processCreateStep1() {
 
-        if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
+        if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
             return redirect(controllers.core.routes.PortfolioEntryController.createStep1());
         }
@@ -304,7 +310,7 @@ public class PortfolioEntryController extends Controller {
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
     public Result processCreateStep2() {
 
-        if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
+        if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
             return redirect(controllers.core.routes.PortfolioEntryController.createStep1());
         }
@@ -334,13 +340,13 @@ public class PortfolioEntryController extends Controller {
      * @param portfolioEntry
      *            the created portfolio entry
      */
-    private static Result finalizeCreateProcess(PortfolioEntry portfolioEntry) {
+    private Result finalizeCreateProcess(PortfolioEntry portfolioEntry) {
 
         // we set the deleted flag to false
         portfolioEntry.deleted = false;
         portfolioEntry.save();
 
-        ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedPortfolioEntries();
+        getLicensesManagementService().updateConsumedPortfolioEntries();
 
         // send a notification to the portfolio manager (if it exists)
         if (portfolioEntry.portfolios != null && portfolioEntry.portfolios.size() > 0) {
@@ -354,8 +360,7 @@ public class PortfolioEntryController extends Controller {
 
         // send a notification to the initiative manager (if he is not the
         // current one)
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        Actor actor = ActorDao.getActorByUid(userSessionManagerPlugin.getUserSessionId(ctx()));
+        Actor actor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         if (!actor.id.equals(portfolioEntry.manager.id)) {
             ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                     controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), "core.portfolio_entry.create.notification.title",
@@ -548,7 +553,7 @@ public class PortfolioEntryController extends Controller {
 
         // update the licenses number (because the flag is archived is used for
         // the computation and could be modified)
-        ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedPortfolioEntries();
+        getLicensesManagementService().updateConsumedPortfolioEntries();
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.edit.successful"));
 
@@ -596,8 +601,7 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // get the plugins which are registered for portfolio entry
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        List<Triple<Long, String, IPluginInfo>> pluginInfos = pluginManagerService.getPluginSupportingRegistrationForDataType(MafDataType.getPortfolioEntry());
+        List<Triple<Long, String, IPluginInfo>> pluginInfos = getPluginManagerService().getPluginSupportingRegistrationForDataType(MafDataType.getPortfolioEntry());
 
         return ok(views.html.core.portfolioentry.portfolio_entry_plugin_config.render(portfolioEntry, pluginInfos));
     }
@@ -621,7 +625,7 @@ public class PortfolioEntryController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.delete.successful", portfolioEntry.portfolioEntryType.getName().toLowerCase()));
 
         // update the licenses number
-        ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedPortfolioEntries();
+        getLicensesManagementService().updateConsumedPortfolioEntries();
 
         return redirect(controllers.core.routes.RoadmapController.index(false));
     }
@@ -997,6 +1001,18 @@ public class PortfolioEntryController extends Controller {
      */
     public static enum MenuItemType {
         OVERVIEW, VIEW, FINANCIAL, STAKEHOLDERS, GOVERNANCE, PLANNING, DELIVERY, REPORTING, PLUGINCONFIG;
+    }
+
+    private ILicensesManagementService getLicensesManagementService() {
+        return licensesManagementService;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IPluginManagerService getPluginManagerService() {
+        return pluginManagerService;
     }
 
 }

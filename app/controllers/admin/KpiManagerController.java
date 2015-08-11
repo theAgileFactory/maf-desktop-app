@@ -23,20 +23,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
-import framework.services.ServiceManager;
 import framework.services.kpi.IKpiService;
 import framework.services.kpi.Kpi;
 import framework.services.kpi.Kpi.DataType;
+import framework.services.system.ISysAdminUtils;
 import framework.utils.Color;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
-import framework.utils.SysAdminUtils;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.framework_models.kpi.KpiColorRule;
@@ -64,7 +65,11 @@ import utils.table.KpiValueDefinitionListView;
  */
 @Restrict({ @Group(IMafConstants.ADMIN_KPI_MANAGER_PERMISSION) })
 public class KpiManagerController extends Controller {
-
+    @Inject
+    private IKpiService kpiService;
+    @Inject
+    private ISysAdminUtils sysAdminUtils;
+    
     public static Form<KpiDefinitionFormData> kpiDefinitionFormTemplate = Form.form(KpiDefinitionFormData.class);
     public static Form<KpiValueDefinitionFormData> standardKpiValueDefinitionFormTemplate = Form.form(KpiValueDefinitionFormData.class,
             KpiValueDefinitionFormData.StandardGroup.class);
@@ -115,7 +120,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         // create the table values
         List<KpiValueDefinitionListView> kpiValueDefinitionListView = new ArrayList<KpiValueDefinitionListView>();
@@ -181,7 +186,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         Form<KpiDefinitionFormData> form = kpiDefinitionFormTemplate.fill(new KpiDefinitionFormData(kpiDefinition));
 
@@ -201,7 +206,7 @@ public class KpiManagerController extends Controller {
         // get the KPI
         Long kpiDefinitionId = Long.valueOf(boundForm.data().get("id"));
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.kpi.edit.render(kpiDefinition, kpi, boundForm));
@@ -212,7 +217,7 @@ public class KpiManagerController extends Controller {
         kpiDefinitionFormData.fill(kpiDefinition);
         kpiDefinition.update();
 
-        reloadKpiDefinition(kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.edit.successful"));
 
@@ -234,7 +239,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiValueDefinition.getKpiDefinition().id);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         Form<KpiValueDefinitionFormData> form = null;
 
@@ -258,7 +263,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiValueDefinition.getKpiDefinition().id);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         // bind the form
         Form<KpiValueDefinitionFormData> boundForm = null;
@@ -292,7 +297,7 @@ public class KpiManagerController extends Controller {
             kpiValueDefinitionFormData.name.persist();
         }
 
-        reloadKpiDefinition(kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.value.edit.successful"));
 
@@ -329,7 +334,7 @@ public class KpiManagerController extends Controller {
             kpiColorRule.order = newOrder;
             kpiColorRule.save();
 
-            reloadKpiDefinition(kpiColorRule.kpiDefinition.uid);
+            reloadKpiDefinition(getKpiService(),kpiColorRule.kpiDefinition.uid);
 
         }
 
@@ -349,7 +354,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         // initiate the form with the template
         Form<KpiColorRuleFormData> form = kpiColorRuleFormTemplate;
@@ -378,7 +383,7 @@ public class KpiManagerController extends Controller {
         // get the KPI
         Long kpiDefinitionId = Long.valueOf(boundForm.data().get("kpiDefinitionId"));
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.kpi.manageRule.render(kpiDefinition, kpi, boundForm, Color.getColorsAsValueHolderCollection()));
@@ -414,7 +419,7 @@ public class KpiManagerController extends Controller {
 
         kpiColorRuleFormData.renderLabel.persist();
 
-        reloadKpiDefinition(kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
         return redirect(controllers.admin.routes.KpiManagerController.view(kpiDefinition.id));
     }
@@ -431,7 +436,7 @@ public class KpiManagerController extends Controller {
 
         kpiColorRule.doDelete();
 
-        reloadKpiDefinition(kpiColorRule.kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(),kpiColorRule.kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.rule.delete"));
 
@@ -453,7 +458,7 @@ public class KpiManagerController extends Controller {
         kpiDefinition.schedulerStartTime = null;
         kpiDefinition.save();
 
-        reloadKpiDefinition(kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.scheduler.delete"));
 
@@ -472,7 +477,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         Form<KpiSchedulerFormData> form = kpiSchedulerFormTemplate.fill(new KpiSchedulerFormData(kpiDefinition));
 
@@ -490,7 +495,7 @@ public class KpiManagerController extends Controller {
         // get the KPI
         Long kpiDefinitionId = Long.valueOf(boundForm.data().get("id"));
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.kpi.editScheduler.render(kpiDefinition, kpi, boundForm));
@@ -501,7 +506,7 @@ public class KpiManagerController extends Controller {
         kpiSchedulerFormData.fill(kpiDefinition);
         kpiDefinition.update();
 
-        reloadKpiDefinition(kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.editscheduler.successful"));
 
@@ -517,13 +522,13 @@ public class KpiManagerController extends Controller {
      */
     public Result triggerScheduler(final Long kpiDefinitionId) {
 
-        SysAdminUtils.scheduleOnce(false, "KpiManager", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+        getSysAdminUtils().scheduleOnce(false, "KpiManager", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
             @Override
             public void run() {
 
                 KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
 
-                Kpi kpi = ServiceManager.getService(IKpiService.NAME, IKpiService.class).getKpi(kpiDefinition.uid);
+                Kpi kpi = getKpiService().getKpi(kpiDefinition.uid);
 
                 if (kpi != null && kpi.hasScheduler()) {
                     kpi.storeValues();
@@ -575,7 +580,7 @@ public class KpiManagerController extends Controller {
         customExternalKpiFormData.additional1Name.persist();
         customExternalKpiFormData.additional2Name.persist();
 
-        reloadKpiDefinition(kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.create.successful"));
 
@@ -592,7 +597,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition);
+        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         if (!kpiDefinition.isStandard) {
 
@@ -647,8 +652,8 @@ public class KpiManagerController extends Controller {
      * @param uid
      *            the KPI definition uid
      */
-    private static void reloadKpiDefinition(String uid) {
-        ServiceManager.getService(IKpiService.NAME, IKpiService.class).reloadKpi(uid);
+    private static void reloadKpiDefinition(IKpiService kpiService, String uid) {
+        kpiService.reloadKpi(uid);
         RootApiController.flushTables();
         RootApiController.flushFilters();
     }
@@ -663,6 +668,14 @@ public class KpiManagerController extends Controller {
                     Msg.get("object.kpi_value_definition.render_type." + renderType.name() + ".label")));
         }
         return renderTypes;
+    }
+
+    private IKpiService getKpiService() {
+        return kpiService;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
     }
 
 }

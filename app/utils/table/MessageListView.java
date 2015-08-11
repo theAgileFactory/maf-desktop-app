@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 
 import models.framework_models.account.Notification;
 import constants.IMafConstants;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -58,7 +58,7 @@ public class MessageListView {
             setJavaColumnFormatter("senderPrincipal", new IColumnFormatter<Notification>() {
                 @Override
                 public String apply(Notification notification, Object value) {
-                    IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+                    IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
                     try {
                         IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(notification.senderPrincipal.uid);
                         return strongify(notification, userAccount.getFirstName() + " " + userAccount.getLastName());

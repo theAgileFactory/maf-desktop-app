@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
@@ -69,7 +71,6 @@ import dao.governance.LifeCyclePlanningDao;
 import dao.governance.LifeCycleProcessDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.ServiceManager;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FileAttachmentHelper;
@@ -84,7 +85,11 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioEntryGovernanceController extends Controller {
-
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
+    
     private static Logger.ALogger log = Logger.of(PortfolioEntryGovernanceController.class);
 
     private static Form<PlannedDatesFormData> plannedDatesFormTemplate = Form.form(PlannedDatesFormData.class);
@@ -359,9 +364,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             // get the current actor
             Actor actor = null;
             try {
-                IUserSessionManagerPlugin userSessionManagerPlugin =
-                        ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 actor = ActorDao.getActorByUid(uid);
             } catch (Exception e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -378,8 +381,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
             // store the request details
             try {
-                IAttachmentManagerPlugin attachmentPlugin = ServiceManager.getService(IAttachmentManagerPlugin.NAME, IAttachmentManagerPlugin.class);
-                attachmentPlugin.addStructuredDocumentAttachment(requestMilestoneFormData, "application/xml", "Milestone request",
+                getAttachmentManagerPlugin().addStructuredDocumentAttachment(requestMilestoneFormData, "application/xml", "Milestone request",
                         ProcessTransitionRequest.class, processTransitionRequest.id);
             } catch (Exception e) {
                 processTransitionRequest.doDelete();
@@ -693,6 +695,14 @@ public class PortfolioEntryGovernanceController extends Controller {
         @Required
         public Long lifeCycleProcess;
 
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
     }
 
 }

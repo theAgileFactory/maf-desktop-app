@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.delivery.Iteration;
 import models.delivery.Release;
 import models.delivery.ReleasePortfolioEntry;
@@ -63,7 +65,6 @@ import dao.pmo.PortfolioEntryDao;
 import framework.highcharts.pattern.BasicBar;
 import framework.highcharts.pattern.DistributedDonut;
 import framework.highcharts.pattern.RangeLine;
-import framework.services.ServiceManager;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
@@ -82,6 +83,8 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioEntryDeliveryController extends Controller {
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -857,9 +860,8 @@ public class PortfolioEntryDeliveryController extends Controller {
      * @param preferenceName
      *            the preference name
      */
-    private static void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        preferenceManagerPlugin.updatePreferenceValue(preferenceName, filterConfigAsJson);
+    private void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
+        getPreferenceManagerPlugin().updatePreferenceValue(preferenceName, filterConfigAsJson);
     }
 
     /**
@@ -868,9 +870,8 @@ public class PortfolioEntryDeliveryController extends Controller {
      * @param preferenceName
      *            the preference name
      */
-    private static String getFilterConfigurationFromPreferences(String preferenceName) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        return preferenceManagerPlugin.getPreferenceValueAsString(preferenceName);
+    private String getFilterConfigurationFromPreferences(String preferenceName) {
+        return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
     }
 
     /**
@@ -882,6 +883,10 @@ public class PortfolioEntryDeliveryController extends Controller {
             types.add(new DefaultSelectableValueHolder<String>(type.name(), type.getLabel()));
         }
         return types;
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
     }
 
 }

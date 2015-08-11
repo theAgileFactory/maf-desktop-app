@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
@@ -35,7 +37,6 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
-import framework.services.ServiceManager;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.utils.IColumnFormatter;
@@ -57,7 +58,11 @@ import framework.utils.formats.StringFormatFormatter.Hook;
  */
 @Restrict({ @Group(IMafConstants.PERSONAL_SPACE_READ_PERMISSION) })
 public class MyPersonalStorage extends Controller {
-
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private IPersonalStoragePlugin personalStoragePlugin;
+    
     private static Logger.ALogger log = Logger.of(MyPersonalStorage.class);
 
     private static Table<PersonalStorageFile> tableFileTemplate = new Table<PersonalStorageFile>() {
@@ -100,11 +105,9 @@ public class MyPersonalStorage extends Controller {
      */
     public Result index() {
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String currentUserUid = userSessionManagerPlugin.getUserSessionId(ctx());
-            IPersonalStoragePlugin personalStoragePlugin = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
+            String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             List<PersonalStorageFile> files = new ArrayList<PersonalStorageFile>();
-            for (File file : personalStoragePlugin.getContentView(currentUserUid)) {
+            for (File file : getPersonalStoragePlugin().getContentView(currentUserUid)) {
                 files.add(new PersonalStorageFile(file));
             }
             Table<PersonalStorageFile> loadedTable = tableFileTemplate.fill(files);
@@ -125,14 +128,11 @@ public class MyPersonalStorage extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    IUserSessionManagerPlugin userSessionManagerPlugin =
-                            ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                    String currentUserUid = userSessionManagerPlugin.getUserSessionId(ctx());
-                    IPersonalStoragePlugin personalStoragePlugin = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
+                    String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                     String fileName = new String(Base64.decodeBase64(id));
                     response().setContentType("application/x-download");
                     response().setHeader("Content-disposition", "attachment; filename=" + fileName);
-                    return ok(personalStoragePlugin.readFile(currentUserUid, fileName));
+                    return ok(getPersonalStoragePlugin().readFile(currentUserUid, fileName));
                 } catch (Exception e) {
                     return ControllersUtils.logAndReturnUnexpectedError(e, log);
                 }
@@ -151,12 +151,11 @@ public class MyPersonalStorage extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    IUserSessionManagerPlugin userSessionManagerPlugin =
-                            ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                    String currentUserUid = userSessionManagerPlugin.getUserSessionId(ctx());
-                    IPersonalStoragePlugin personalStoragePlugin = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
+                    
+                    String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+                    
                     String fileName = new String(Base64.decodeBase64(id));
-                    personalStoragePlugin.deleteFile(currentUserUid, fileName);
+                    getPersonalStoragePlugin().deleteFile(currentUserUid, fileName);
                     return redirect(routes.MyPersonalStorage.index());
                 } catch (Exception e) {
                     return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -225,5 +224,13 @@ public class MyPersonalStorage extends Controller {
         private File getFile() {
             return file;
         }
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
     }
 }

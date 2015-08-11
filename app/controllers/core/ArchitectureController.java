@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -38,17 +40,16 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.architecture.ArchitectureDao;
-import framework.services.ServiceManager;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.system.ISysAdminUtils;
 import framework.taftree.TafTreeHelper;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.FilterConfig;
 import framework.utils.Msg;
 import framework.utils.Pagination;
-import framework.utils.SysAdminUtils;
 import framework.utils.Table;
 import framework.utils.TableExcelRenderer;
 import models.architecture.ApplicationBlock;
@@ -72,6 +73,16 @@ import utils.table.ApplicationBlockListView;
  * @author Johann Kohler
  */
 public class ArchitectureController extends Controller {
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private IPersonalStoragePlugin personalStoragePlugin;
+    @Inject
+    private INotificationManagerPlugin notificationManagerPlugin;
+    @Inject
+    private ISysAdminUtils sysAdminUtils;
 
     private static Logger.ALogger log = Logger.of(ArchitectureController.class);
 
@@ -186,17 +197,15 @@ public class ArchitectureController extends Controller {
      * @param filterConfigAsJson
      *            the filter configuration as a json string
      */
-    private static void storeFilterConfigFromPreferences(String filterConfigAsJson) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        preferenceManagerPlugin.updatePreferenceValue(IMafConstants.APPLICATION_BLOCK_FILTER_STORAGE_PREFERENCE, filterConfigAsJson);
+    private void storeFilterConfigFromPreferences(String filterConfigAsJson) {
+        getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.APPLICATION_BLOCK_FILTER_STORAGE_PREFERENCE, filterConfigAsJson);
     }
 
     /**
      * Retrieve the filter configuration from the user preferences.
      */
-    private static String getFilterConfigurationFromPreferences() {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        return preferenceManagerPlugin.getPreferenceValueAsString(IMafConstants.APPLICATION_BLOCK_FILTER_STORAGE_PREFERENCE);
+    private String getFilterConfigurationFromPreferences() {
+        return getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.APPLICATION_BLOCK_FILTER_STORAGE_PREFERENCE);
     }
 
     /**
@@ -212,9 +221,7 @@ public class ArchitectureController extends Controller {
                 try {
 
                     // Get the current user
-                    IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                            IUserSessionManagerPlugin.class);
-                    final String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                    final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
                     JsonNode json = request().body().asJson();
@@ -240,20 +247,17 @@ public class ArchitectureController extends Controller {
                     final String failureMessage = Msg.get("excel.export.failure.message", "application blocks");
 
                     // Execute asynchronously
-                    SysAdminUtils.scheduleOnce(false, "Application blocks Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                    getSysAdminUtils().scheduleOnce(false, "Application blocks Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
                         @Override
                         public void run() {
-                            IPersonalStoragePlugin personalStorage = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
-                            INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
-                                    INotificationManagerPlugin.class);
                             try {
-                                OutputStream out = personalStorage.createNewFile(uid, fileName);
+                                OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                                 IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
                                         controllers.my.routes.MyPersonalStorage.index().url());
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
-                                notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
                                         controllers.core.routes.ArchitectureController.index(null).url());
                             }
                         }
@@ -459,5 +463,25 @@ public class ArchitectureController extends Controller {
         } catch (IllegalArgumentException e) {
             return badRequest();
         }
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
     }
 }

@@ -24,12 +24,12 @@ import javax.persistence.PersistenceException;
 import models.finance.PurchaseOrder;
 import models.finance.PurchaseOrderLineItem;
 import models.finance.PurchaseOrderLineShipmentStatusType;
-import com.avaje.ebean.Model.Finder;
 
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.ExpressionList;
 
 import constants.IMafConstants;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 
@@ -65,7 +65,7 @@ public abstract class PurchaseOrderDAO {
      * Define if the system is configured to use the purchase orders.
      */
     public static boolean isSystemPreferenceUsePurchaseOrder() {
-        return ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsBoolean(
+        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsBoolean(
                 IMafConstants.FINANCIAL_USE_PURCHASE_ORDER_PREFERENCE);
     }
 

@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -51,7 +53,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Color;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
@@ -121,7 +123,9 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioEntryPlanningController extends Controller {
-
+    @Inject 
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
+    
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
     public static Form<OverviewConfiguration> overviewConfigurationFormTemplate = Form.form(OverviewConfiguration.class);
@@ -1921,9 +1925,8 @@ public class PortfolioEntryPlanningController extends Controller {
      * @param preferenceName
      *            the name of the preference
      */
-    private static void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        preferenceManagerPlugin.updatePreferenceValue(preferenceName, filterConfigAsJson);
+    private void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
+        getPreferenceManagerPlugin().updatePreferenceValue(preferenceName, filterConfigAsJson);
     }
 
     /**
@@ -1932,9 +1935,8 @@ public class PortfolioEntryPlanningController extends Controller {
      * @param preferenceName
      *            the name of the preference
      */
-    private static String getFilterConfigurationFromPreferences(String preferenceName) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        return preferenceManagerPlugin.getPreferenceValueAsString(preferenceName);
+    private String getFilterConfigurationFromPreferences(String preferenceName) {
+        return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
     }
 
     /**
@@ -1975,8 +1977,7 @@ public class PortfolioEntryPlanningController extends Controller {
          * Load the configuration from a user preference.
          */
         public static OverviewConfiguration load() {
-            IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-            String overviewPreferenceAsJson = preferenceManagerPlugin.getPreferenceValueAsString(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE);
+            String overviewPreferenceAsJson = ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE);
             if (overviewPreferenceAsJson == null || overviewPreferenceAsJson.equals("")) {
                 OverviewConfiguration conf = new OverviewConfiguration(true);
                 store(conf);
@@ -2007,10 +2008,13 @@ public class PortfolioEntryPlanningController extends Controller {
             } catch (JsonProcessingException e) {
                 Logger.error("impossible to jsonify the OverviewConfiguration", e);
             }
-            IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-            preferenceManagerPlugin.updatePreferenceValue(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE, json);
+            ServiceStaticAccessor.getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE, json);
         }
 
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
     }
 
 }

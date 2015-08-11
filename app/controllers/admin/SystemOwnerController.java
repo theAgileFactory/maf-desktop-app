@@ -20,6 +20,8 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.Principal;
 import play.Logger;
 import play.Play;
@@ -28,7 +30,6 @@ import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.plugins.IPluginManagerService;
@@ -47,6 +48,11 @@ import framework.utils.Table.ColumnDef.SorterType;
  */
 @Restrict({ @Group(IMafConstants.ADMIN_SYSTEM_OWNER_PERMISSION) })
 public class SystemOwnerController extends Controller {
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private IPluginManagerService pluginManagerService;
+    
     private static Logger.ALogger log = Logger.of(SystemOwnerController.class);
     /**
      * Table listing the various plugin definitions.
@@ -89,11 +95,10 @@ public class SystemOwnerController extends Controller {
         // Find system owners
         List<String> systemOwners = new ArrayList<String>();
         List<Principal> systemOnwerPrincipals = Principal.getPrincipalsWithPermission(IMafConstants.ADMIN_SYSTEM_OWNER_PERMISSION);
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
         for (Principal principal : systemOnwerPrincipals) {
             IUserAccount userAccount;
             try {
-                userAccount = accountManagerPlugin.getUserAccountFromUid(principal.uid);
+                userAccount = getAccountManagerPlugin().getUserAccountFromUid(principal.uid);
                 if (userAccount != null) {
                     systemOwners.add(String.format("%s %s (%s)", userAccount.getFirstName(), userAccount.getLastName(), userAccount.getMail()));
                 }
@@ -114,8 +119,8 @@ public class SystemOwnerController extends Controller {
 
         // List of available plugins
         List<PluginDefinitionTableObject> pluginDescriptions = new ArrayList<PluginDefinitionTableObject>();
-        IPluginManagerService pluginManagerService = ServiceManager.getService(IPluginManagerService.NAME, IPluginManagerService.class);
-        for (IStaticPluginRunnerDescriptor pluginDescriptor : pluginManagerService.getAllPluginDescriptors().values()) {
+        
+        for (IStaticPluginRunnerDescriptor pluginDescriptor : getPluginManagerService().getAllPluginDescriptors().values()) {
             PluginDefinitionTableObject tableObject = new PluginDefinitionTableObject();
             tableObject.identifier = pluginDescriptor.getPluginDefinitionIdentifier();
             tableObject.name = Msg.get(pluginDescriptor.getName());
@@ -123,6 +128,14 @@ public class SystemOwnerController extends Controller {
             pluginDescriptions.add(tableObject);
         }
         return ok(views.html.admin.systemowner.info.render(systemInfo, pluginDefinitionsTableTemplate.fill(pluginDescriptions)));
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
+    }
+
+    private IPluginManagerService getPluginManagerService() {
+        return pluginManagerService;
     }
 
     /**
@@ -138,7 +151,7 @@ public class SystemOwnerController extends Controller {
         private String systemSizing;
         private String remainingStorageSpace;
         private String authenticationMode;
-
+    
         /**
          * Constructor.
          * 
@@ -168,35 +181,35 @@ public class SystemOwnerController extends Controller {
             this.remainingStorageSpace = remainingStorageSpace;
             this.authenticationMode = authenticationMode;
         }
-
+    
         /**
          * Get the number of active users.
          */
         public int getNumberOfActiveUsers() {
             return numberOfActiveUsers;
         }
-
+    
         /**
          * Get the number of registered users.
          */
         public int getNumberOfRegisteredUsers() {
             return numberOfRegisteredUsers;
         }
-
+    
         /**
          * Get the system owners.
          */
         public List<String> getSystemOwners() {
             return systemOwners;
         }
-
+    
         /**
          * Get the BizDock version.
          */
         public String getBizDockVersion() {
             return bizDockVersion;
         }
-
+    
         /**
          * Get the system sizing.
          * 
@@ -205,14 +218,14 @@ public class SystemOwnerController extends Controller {
         public String getSystemSizing() {
             return systemSizing;
         }
-
+    
         /**
          * Get the remaining storage space.
          */
         public String getRemainingStorageSpace() {
             return remainingStorageSpace;
         }
-
+    
         /**
          * Get the the authentication mode.
          */

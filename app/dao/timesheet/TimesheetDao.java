@@ -35,8 +35,8 @@ import models.timesheet.TimesheetReport.Status;
 import models.timesheet.TimesheetReport.Type;
 import play.Logger;
 import play.Play;
-import com.avaje.ebean.Model.Finder;
 
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
@@ -45,7 +45,7 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
 import constants.IMafConstants;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -498,7 +498,7 @@ public abstract class TimesheetDao {
      * Return true if the timesheets should be approved by the managers.
      */
     public static boolean getTimesheetReportMustApprove() {
-        return ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsBoolean(
+        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsBoolean(
                 IMafConstants.TIMESHEET_MUST_APPROVE_PREFERENCE);
     }
 
@@ -506,7 +506,7 @@ public abstract class TimesheetDao {
      * Return the reminder limit (number of reports of the past for an actor).
      */
     public static Integer getTimesheetReportReminderLimit() {
-        return ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsInteger(
+        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(
                 IMafConstants.TIMESHEET_REMINDER_LIMIT_PREFERENCE);
     }
 
@@ -514,7 +514,7 @@ public abstract class TimesheetDao {
      * Return the expected number of hours for a day.
      */
     public static BigDecimal getTimesheetReportHoursPerDay() {
-        return ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsDecimal(
+        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsDecimal(
                 IMafConstants.TIMESHEET_HOURS_PER_DAY);
     }
 

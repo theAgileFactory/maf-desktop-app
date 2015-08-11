@@ -32,7 +32,7 @@ import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -91,8 +91,8 @@ public class PortfolioEntryDynamicHelper {
     public static ExpressionList<PortfolioEntry> getPortfolioEntriesViewAllowedAsQuery(Expression expression, OrderBy<PortfolioEntry> orderBy)
             throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
         IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
         String raw = "(";
@@ -192,8 +192,8 @@ public class PortfolioEntryDynamicHelper {
     public static boolean isPortfolioEntryDetailsAllowed(PortfolioEntry portfolioEntry) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION
@@ -262,11 +262,11 @@ public class PortfolioEntryDynamicHelper {
     public static boolean isPortfolioEntryEditAllowed(PortfolioEntry portfolioEntry) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
-            boolean canManageArchived = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class).getPreferenceValueAsBoolean(
+            boolean canManageArchived = ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsBoolean(
                     IMafConstants.LICENSE_CAN_MANAGE_ARCHIVED_PORTFOLIO_ENTRY_PREFERENCE);
 
             // the preference
@@ -323,8 +323,8 @@ public class PortfolioEntryDynamicHelper {
     public static boolean isPortfolioEntryDeleteAllowed(PortfolioEntry portfolioEntry) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission PORTFOLIO_ENTRY_DELETE_ALL_PERMISSION
@@ -349,8 +349,8 @@ public class PortfolioEntryDynamicHelper {
     public static boolean isPortfolioEntryViewFinancialAllowed(PortfolioEntry portfolioEntry) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission
@@ -421,8 +421,8 @@ public class PortfolioEntryDynamicHelper {
     public static boolean isPortfolioEntryEditFinancialAllowed(PortfolioEntry portfolioEntry) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission
@@ -460,8 +460,8 @@ public class PortfolioEntryDynamicHelper {
     public static boolean isPortfolioEntryReviewRequestAllowed(PortfolioEntry portfolioEntry) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION

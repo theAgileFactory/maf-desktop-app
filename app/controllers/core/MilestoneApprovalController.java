@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.account.Principal;
@@ -54,7 +56,6 @@ import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -85,6 +86,10 @@ import framework.utils.Utilities;
  * @author Johann Kohler
  */
 public class MilestoneApprovalController extends Controller {
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -161,9 +166,7 @@ public class MilestoneApprovalController extends Controller {
         // get the current user
         IUserAccount userAccount;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(ctx()));
+            userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -221,9 +224,7 @@ public class MilestoneApprovalController extends Controller {
         // get the current user
         IUserAccount userAccount;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(ctx()));
+            userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -391,8 +392,8 @@ public class MilestoneApprovalController extends Controller {
             milestoneInstance.save();
 
             // set the current actor as approver (if exists)
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            Actor actor = ActorDao.getActorByUid(userSessionManagerPlugin.getUserSessionId(ctx()));
+            
+            Actor actor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
             if (actor != null) {
                 milestoneInstance.approver = actor;
                 milestoneInstance.save();
@@ -521,6 +522,14 @@ public class MilestoneApprovalController extends Controller {
 
         }
 
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
     }
 
 }

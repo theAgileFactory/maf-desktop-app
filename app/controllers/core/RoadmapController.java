@@ -18,6 +18,7 @@
 package controllers.core;
 
 import java.io.ByteArrayInputStream;
+import framework.security.SecurityUtils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -31,6 +32,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,12 +58,13 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.highcharts.pattern.BasicBar;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.system.ISysAdminUtils;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FilterConfig;
@@ -68,7 +72,6 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.JqueryGantt;
 import framework.utils.Msg;
 import framework.utils.Pagination;
-import framework.utils.SysAdminUtils;
 import framework.utils.Table;
 import framework.utils.TableExcelRenderer;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
@@ -110,7 +113,17 @@ import utils.table.PortfolioEntryListView;
  */
 @Restrict({ @Group(IMafConstants.ROADMAP_DISPLAY_PERMISSION) })
 public class RoadmapController extends Controller {
-
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject 
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private INotificationManagerPlugin notificationManagerPlugin;
+    @Inject
+    private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private IPersonalStoragePlugin personalStoragePlugin;
+    
     private static Logger.ALogger log = Logger.of(RoadmapController.class);
 
     private static Form<CapacityForecastForm> capacityForecastFormTemplate = Form.form(CapacityForecastForm.class);
@@ -214,9 +227,7 @@ public class RoadmapController extends Controller {
                 try {
 
                     // Get the current user
-                    IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                            IUserSessionManagerPlugin.class);
-                    final String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                    final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
                     JsonNode json = request().body().asJson();
@@ -243,20 +254,17 @@ public class RoadmapController extends Controller {
                     final String failureMessage = Msg.get("excel.export.failure.message", "roadmap");
 
                     // Execute asynchronously
-                    SysAdminUtils.scheduleOnce(false, "Roadmap Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                    getSysAdminUtils().scheduleOnce(false, "Roadmap Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
                         @Override
                         public void run() {
-                            IPersonalStoragePlugin personalStorage = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
-                            INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
-                                    INotificationManagerPlugin.class);
                             try {
-                                OutputStream out = personalStorage.createNewFile(uid, fileName);
+                                OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                                 IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
                                         controllers.my.routes.MyPersonalStorage.index().url());
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
-                                notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
                                         controllers.core.routes.RoadmapController.index(false).url());
                             }
                         }
@@ -513,7 +521,7 @@ public class RoadmapController extends Controller {
             allocationConfirmed = allocationConfirmed.add(entryAllocationDaysConfirmed);
             allocationNotConfirmed = allocationNotConfirmed.add(entryAllocationDaysNotConfirmed);
 
-            if (DefaultDeadboltHandler.isAllowed(IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (SecurityUtils.isAllowed(IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
 
                 // budget
                 Double entryBudgetCapex = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false);
@@ -956,17 +964,15 @@ public class RoadmapController extends Controller {
      * @param filterConfigAsJson
      *            the filter configuration as a json string
      */
-    private static void storeFilterConfigFromPreferences(String filterConfigAsJson) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        preferenceManagerPlugin.updatePreferenceValue(IMafConstants.ROADMAP_FILTER_STORAGE_PREFERENCE, filterConfigAsJson);
+    private void storeFilterConfigFromPreferences(String filterConfigAsJson) {
+        getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.ROADMAP_FILTER_STORAGE_PREFERENCE, filterConfigAsJson);
     }
 
     /**
      * Retrieve the filter configuration from the user preferences.
      */
-    private static String getFilterConfigurationFromPreferences() {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        return preferenceManagerPlugin.getPreferenceValueAsString(IMafConstants.ROADMAP_FILTER_STORAGE_PREFERENCE);
+    private String getFilterConfigurationFromPreferences() {
+        return getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.ROADMAP_FILTER_STORAGE_PREFERENCE);
     }
 
     /**
@@ -995,7 +1001,7 @@ public class RoadmapController extends Controller {
         Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fillForFilterConfig(portfolioEntryListView,
                 getColumnsToHide(filterConfig));
 
-        if (DefaultDeadboltHandler.isAllowed(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
+        if (SecurityUtils.isAllowed(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
 
             table.addAjaxRowAction(Msg.get("core.roadmap.simulator.capacity_kpis"), controllers.core.routes.RoadmapController.simulatorKpisFragment().url(),
                     "simulator-kpis");
@@ -1321,8 +1327,7 @@ public class RoadmapController extends Controller {
          */
         public String getBootstrapBackground() {
 
-            Integer percentage = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class)
-                    .getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
+            Integer percentage = ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
             if (this.getAvailable() >= this.getPlanned() - 0.01) {
                 return "success";
@@ -1523,6 +1528,26 @@ public class RoadmapController extends Controller {
         public void addAvailable(double available) {
             this.available += available;
         }
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
     }
 
 }

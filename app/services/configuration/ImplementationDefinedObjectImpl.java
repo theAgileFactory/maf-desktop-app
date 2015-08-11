@@ -1,3 +1,4 @@
+package services.configuration;
 
 /*! LICENSE
  *
@@ -16,27 +17,41 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+import javax.inject.Inject;
+import framework.services.database.IDatabaseDependencyService;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import com.avaje.ebean.EbeanServer;
+
 import constants.IMafConstants;
 import controllers.Assets.Asset;
+import dao.finance.CurrencyDAO;
 import framework.commons.DataType;
 import framework.security.SecurityUtils;
 import framework.services.configuration.IImplementationDefinedObjectService;
+import framework.services.kpi.KpiServiceImpl;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
 import framework.utils.Menu.SeparatorMenuItem;
 import framework.utils.TopMenuBar;
 import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
+import play.Configuration;
+import play.Logger;
+import play.db.ebean.EbeanConfig;
+import play.inject.ApplicationLifecycle;
+import play.libs.F.Promise;
 import play.mvc.Call;
-import framework.security.SecurityUtils;
 
 /**
  * Define the objects which can only be defined in the implementation.
  * 
  * @author Pierre-Yves Cloux
  */
+@Singleton
 public class ImplementationDefinedObjectImpl implements IImplementationDefinedObjectService {
-
+    private static Logger.ALogger log = Logger.of(ImplementationDefinedObjectImpl.class);
     private static final String DEVDOCK_PERSPECTIVE_KEY = "devdock";
 
     /**
@@ -60,10 +75,38 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
     /**
      * Default constructor.
+     * @param lifecycle
+     *            the play application lifecycle listener
+     * @param configuration
+     *            the play application configuratio
+     * @param databaseDependencyService
+     *            the service which ensures that the database is available
      */
-    public ImplementationDefinedObjectImpl() {
+    @Inject
+    public ImplementationDefinedObjectImpl(
+            ApplicationLifecycle lifecycle, 
+            Configuration configuration,
+            IDatabaseDependencyService databaseDependencyService) {
+        log.info("SERVICE>>> ImplementationDefinedObjectImpl starting...");
+        resetTopMenuBar();
+        lifecycle.addStopHook(() -> {
+            log.info("SERVICE>>> ImplementationDefinedObjectImpl stopping...");
+            log.info("SERVICE>>> ImplementationDefinedObjectImpl stopped");
+            return Promise.pure(null);
+        });
+        log.info("SERVICE>>> ImplementationDefinedObjectImpl started");
     }
-
+   
+    /**
+     * Return the default currency for the system
+     * 
+     * @return
+     */
+    @Override
+    public String getDefaultCurrencyCode(){
+        return CurrencyDAO.getCurrencyDefaultAsCode();
+    }
+    
     @Override
     public Call getRouteForAjaxWaitImage() {
         return controllers.routes.Assets.versioned(new Asset("images/ajax-loader.gif"));

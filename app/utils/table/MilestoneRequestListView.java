@@ -30,7 +30,7 @@ import play.Logger;
 import utils.form.RequestMilestoneFormData;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
@@ -131,7 +131,7 @@ public class MilestoneRequestListView {
         this.milestone = null;
         if (request.requestType.equals(ProcessTransitionRequest.RequestType.MILESTONE_APPROVAL.name())) {
 
-            IAttachmentManagerPlugin attachmentPlugin = ServiceManager.getService(IAttachmentManagerPlugin.NAME, IAttachmentManagerPlugin.class);
+            IAttachmentManagerPlugin attachmentPlugin = ServiceStaticAccessor.getAttachmentManagerPlugin();
             List<Attachment> structuredDocumentAttachments =
                     attachmentPlugin.getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class, request.id, true);
             if (structuredDocumentAttachments != null && structuredDocumentAttachments.size() > 0) {

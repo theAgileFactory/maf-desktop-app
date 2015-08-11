@@ -17,9 +17,11 @@
  */
 package controllers.admin;
 
+import javax.inject.Inject;
 import javax.persistence.Transient;
 
 import play.Logger;
+import play.Play;
 import play.data.Form;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
@@ -31,7 +33,6 @@ import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants;
-import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IAuthenticationAccountReaderPlugin;
@@ -48,7 +49,13 @@ import framework.utils.Utilities;
  * 
  */
 public class MyAccount extends Controller {
-
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject 
+    private IAuthenticationAccountReaderPlugin authenticationReader;
+    
     private static Logger.ALogger log = Logger.of(MyAccount.class);
     private static Form<UserAccountFormData> basicDataUpdateForm = Form.form(UserAccountFormData.class, UserAccountFormData.BasicDataChangeGroup.class);
     private static Form<UserAccountFormData> passwordUpdateForm = Form.form(UserAccountFormData.class, UserAccountFormData.PasswordChangeGroup.class);
@@ -60,10 +67,10 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result display() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            IUserAccount account = getCurrentUserAccount(accountManagerPlugin);
+            
+            IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
             return ok(views.html.admin.myaccount.myaccount_display.render(Messages.get("my.my_profile.sidebar.details"),
-                    accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), account));
+                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), account));
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -75,11 +82,11 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result editBasicData() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            IUserAccount account = getCurrentUserAccount(accountManagerPlugin);
+            
+            IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
             Form<UserAccountFormData> userAccountFormLoaded = basicDataUpdateForm.fill(new UserAccountFormData(account));
             return ok(views.html.admin.myaccount.myaccount_editbasicdata.render(Messages.get("my.my_profile.sidebar.update_data"),
-                    accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), userAccountFormLoaded));
+                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -91,14 +98,14 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result editEmail() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            if (!accountManagerPlugin.isSelfMailUpdateAllowed()) {
+            
+            if (!getAccountManagerPlugin().isSelfMailUpdateAllowed()) {
                 throw new Exception("Not allowed to update email (either master mode or self mail update not allowed)");
             }
-            IUserAccount account = getCurrentUserAccount(accountManagerPlugin);
+            IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
             Form<UserAccountFormData> userAccountFormLoaded = mailUpdateForm.fill(new UserAccountFormData(account));
             return ok(views.html.admin.myaccount.myaccount_editmail.render(Msg.get("my.my_profile.sidebar.update_email"),
-                    accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), userAccountFormLoaded));
+                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -110,13 +117,13 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result editPassword() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
+            
+            if (!getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
                 throw new Exception("Not allowed to update password if the system is not in master mode");
             }
             Form<UserAccountFormData> userAccountFormLoaded = passwordUpdateForm.fill(new UserAccountFormData());
             return ok(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_password"),
-                    accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), userAccountFormLoaded));
+                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -128,16 +135,16 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result saveBasicData() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            
             Form<UserAccountFormData> boundForm = basicDataUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.myaccount.myaccount_editbasicdata.render(Messages.get("my.my_profile.sidebar.update_data"),
-                        accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), boundForm));
+                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
-            IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            accountManagerPlugin.updatePreferredLanguage(userSessionPlugin.getUserSessionId(ctx()), accountDataForm.preferredLanguage);
-            accountManagerPlugin.updateBasicUserData(userSessionPlugin.getUserSessionId(ctx()), accountDataForm.firstName, accountDataForm.lastName);
+            
+            getAccountManagerPlugin().updatePreferredLanguage(getUserSessionManagerPlugin().getUserSessionId(ctx()), accountDataForm.preferredLanguage);
+            getAccountManagerPlugin().updateBasicUserData(getUserSessionManagerPlugin().getUserSessionId(ctx()), accountDataForm.firstName, accountDataForm.lastName);
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_data.successful"));
             return redirect(controllers.admin.routes.MyAccount.display());
         } catch (Exception e) {
@@ -152,27 +159,27 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result saveEmail() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            if (!accountManagerPlugin.isSelfMailUpdateAllowed()) {
+            
+            if (!getAccountManagerPlugin().isSelfMailUpdateAllowed()) {
                 throw new Exception("Not allowed to update email (either master mode or self mail update not allowed)");
             }
             Form<UserAccountFormData> boundForm = mailUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.myaccount.myaccount_editmail.render(Messages.get("my.my_profile.sidebar.update_email"),
-                        accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), boundForm));
+                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
-            IUserAccount account = getCurrentUserAccount(accountManagerPlugin);
-            String validationKey = accountManagerPlugin.getValidationKey(account.getUid(), accountDataForm.mail);
+            IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
+            String validationKey = getAccountManagerPlugin().getValidationKey(account.getUid(), accountDataForm.mail);
 
-            if (accountManagerPlugin.isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
-                IUserAccount userAccount = accountManagerPlugin.getUserAccountFromEmail(accountDataForm.mail);
-                IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                String currentUserUid = userSessionPlugin.getUserSessionId(ctx());
+            if (getAccountManagerPlugin().isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
+                IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromEmail(accountDataForm.mail);
+                
+                String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 if (!userAccount.getUid().equals(currentUserUid)) {
                     boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
                     return badRequest(views.html.admin.myaccount.myaccount_editmail.render(Messages.get("my.my_profile.sidebar.update_email"),
-                            accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), boundForm));
+                            getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
                 }
             }
 
@@ -184,7 +191,7 @@ public class MyAccount extends Controller {
                             "views.html.mail.account_email_update_html",
                             play.Configuration.root().getString("maf.platformName"),
                             account.getFirstName() + " " + account.getLastName(),
-                            Utilities.getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
+                            Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
                                     + controllers.admin.routes.MyAccount.validateEmailUpdate(validationKey).url()).body(), accountDataForm.mail);
 
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_email.successful"));
@@ -204,15 +211,15 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result validateEmailUpdate(String validationKey) {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            if (!accountManagerPlugin.isSelfMailUpdateAllowed()) {
+            
+            if (!getAccountManagerPlugin().isSelfMailUpdateAllowed()) {
                 throw new Exception("Not allowed to update email (either master mode or self mail update not allowed)");
             }
-            IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String currentUserUid = userSessionPlugin.getUserSessionId(ctx());
-            String newEmailAddress = accountManagerPlugin.checkValidationKey(currentUserUid, validationKey);
+            
+            String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            String newEmailAddress = getAccountManagerPlugin().checkValidationKey(currentUserUid, validationKey);
             if (newEmailAddress != null) {
-                accountManagerPlugin.updateMail(currentUserUid, newEmailAddress);
+                getAccountManagerPlugin().updateMail(currentUserUid, newEmailAddress);
                 return ok(views.html.admin.myaccount.myaccount_emailvalidation.render(Messages.get("my.my_profile.update_email.validation.title"), true));
             } else {
                 return ok(views.html.admin.myaccount.myaccount_emailvalidation.render(Messages.get("my.my_profile.update_email.validation.title"), false));
@@ -228,41 +235,39 @@ public class MyAccount extends Controller {
     @SubjectPresent
     public Result savePassword() {
         try {
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
+            
+            if (!getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
                 throw new Exception("Not allowed to update the password if the system is not in master mode");
             }
             Form<UserAccountFormData> boundForm = passwordUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
-                        accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), boundForm));
+                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
             // Authenticate the user against the old password
-            IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAuthenticationAccountReaderPlugin authenticationReader =
-                    ServiceManager.getService(IAuthenticationAccountReaderPlugin.NAME, IAuthenticationAccountReaderPlugin.class);
+            
             if (accountDataForm.oldPasswordCheck == null
-                    || !authenticationReader.checkPassword(userSessionPlugin.getUserSessionId(ctx()), accountDataForm.oldPasswordCheck)) {
+                    || !getAuthenticationReader().checkPassword(getUserSessionManagerPlugin().getUserSessionId(ctx()), accountDataForm.oldPasswordCheck)) {
                 boundForm.reject("oldPasswordCheck", Msg.get("form.input.oldpassword.invalid"));
                 return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
-                        accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), boundForm));
+                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
             // New password does not match check
             if (!accountDataForm.password.equals(accountDataForm.passwordCheck)) {
                 boundForm.reject("password", Msg.get("form.input.confirmationpassword.invalid"));
                 return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
-                        accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), boundForm));
+                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
             if (Utilities.getPasswordStrength(accountDataForm.password) < 1) {
                 boundForm.reject("password", Msg.get("form.input.password.error.insufficient_strength"));
                 return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
-                        accountManagerPlugin.isAuthenticationRepositoryMasterMode(), accountManagerPlugin.isSelfMailUpdateAllowed(), boundForm));
+                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
-            accountManagerPlugin.updatePassword(userSessionPlugin.getUserSessionId(ctx()), accountDataForm.password);
+            getAccountManagerPlugin().updatePassword(getUserSessionManagerPlugin().getUserSessionId(ctx()), accountDataForm.password);
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_password.successful"));
             return redirect(controllers.admin.routes.MyAccount.display());
         } catch (Exception e) {
@@ -280,8 +285,8 @@ public class MyAccount extends Controller {
      * @throws AccountManagementException
      */
     private IUserAccount getCurrentUserAccount(IAccountManagerPlugin accountManagerPlugin) throws AccountManagementException {
-        IUserSessionManagerPlugin userSessionPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        return accountManagerPlugin.getUserAccountFromUid(userSessionPlugin.getUserSessionId(ctx()));
+        
+        return accountManagerPlugin.getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
     }
 
     /**
@@ -374,6 +379,18 @@ public class MyAccount extends Controller {
      */
     public static enum MenuItemType {
         VIEW, EDIT_DATA, EDIT_PASSWORD, EDIT_MAIL;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IAuthenticationAccountReaderPlugin getAuthenticationReader() {
+        return authenticationReader;
     }
 
 }

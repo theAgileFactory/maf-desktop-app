@@ -20,6 +20,8 @@ package controllers.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.finance.BudgetBucket;
 import models.finance.PurchaseOrder;
 import models.pmo.Actor;
@@ -52,7 +54,7 @@ import dao.finance.PurchaseOrderDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -69,8 +71,7 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 @Restrict({ @Group(IMafConstants.SEARCH_PERMISSION) })
-public class SearchController extends Controller {
-
+public class SearchController extends Controller {   
     private static Form<SearchFormData> formTemplate = Form.form(SearchFormData.class);
     private static Logger.ALogger log = Logger.of(SearchController.class);
 
@@ -82,9 +83,7 @@ public class SearchController extends Controller {
         // get the current user
         IUserAccount userAccount = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(ctx()));
+            userAccount = ServiceStaticAccessor.getAccountManagerPlugin().getUserAccountFromUid(ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx()));
         } catch (Exception e) {
             Logger.error("impossible to findRelease the user account");
         }

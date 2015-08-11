@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import play.Logger;
-import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -33,6 +32,7 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.PickerHandler;
 import framework.utils.PickerHandler.Handle;
 import framework.utils.PickerHandler.Parameters;
+import framework.services.ServiceStaticAccessor;
 
 /**
  * The pickers for the principals.
@@ -71,7 +71,7 @@ public class PrincipalPicker {
         if (searchString == null) {
             searchString = "*";
         }
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
         ISelectableValueHolderCollection<String> selectableValues = new DefaultSelectableValueHolderCollection<String>();
         if (StringUtils.isNotBlank(searchString)) {
             if (!searchString.equals("*")) {

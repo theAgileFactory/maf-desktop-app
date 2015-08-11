@@ -24,10 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import controllers.api.ApiController;
-import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.api.ApiError;
@@ -38,7 +39,7 @@ import framework.services.remote.IAdPanelManagerService;
 import play.Play;
 import play.libs.Json;
 import play.mvc.Result;
-import utils.reporting.JasperUtils;
+import utils.reporting.IReportingUtils;
 import utils.table.ActorListView;
 import utils.table.AttachmentListView;
 import utils.table.BudgetBucketLineListView;
@@ -71,7 +72,17 @@ import utils.table.WorkOrderListView;
  * @author Johann Kohler
  */
 public class RootApiController extends ApiController {
-
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i8nMessagesPlugin;
+    @Inject
+    private IAdPanelManagerService adPanelManagerService ;
+    @Inject
+    private IKpiService kpiService;
+    @Inject
+    private IReportingUtils reportingUtils;
+    
     /**
      * Get the status of the instance.
      **/
@@ -137,10 +148,9 @@ public class RootApiController extends ApiController {
             RootResponse response = new RootResponse();
 
             response.attributes = new HashMap<String, JsonNode>();
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            List<IUserAccount> userAccounts = accountManagerPlugin.getUserAccountsFromName("*");
+            List<IUserAccount> userAccounts = getAccountManagerPlugin().getUserAccountsFromName("*");
             for (IUserAccount userAccount : userAccounts) {
-                accountManagerPlugin.resync(userAccount.getUid());
+                getAccountManagerPlugin().resync(userAccount.getUid());
                 response.attributes.put(userAccount.getMail(), Json.toJson("Resync requested"));
             }
 
@@ -164,10 +174,9 @@ public class RootApiController extends ApiController {
             RootResponse response = new RootResponse();
 
             response.attributes = new HashMap<String, JsonNode>();
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            List<IUserAccount> userAccounts = accountManagerPlugin.getUserAccountsFromName("*");
+            List<IUserAccount> userAccounts = getAccountManagerPlugin().getUserAccountsFromName("*");
             for (IUserAccount userAccount : userAccounts) {
-                accountManagerPlugin.invalidateUserAccountCache(userAccount.getUid());
+                getAccountManagerPlugin().invalidateUserAccountCache(userAccount.getUid());
                 response.attributes.put(userAccount.getUid(), Json.toJson("flushed"));
             }
 
@@ -187,9 +196,7 @@ public class RootApiController extends ApiController {
     public Result i18nFlushCache() {
 
         try {
-
-            II18nMessagesPlugin i18nMessagesPlugin = ServiceManager.getService(II18nMessagesPlugin.NAME, II18nMessagesPlugin.class);
-            i18nMessagesPlugin.reload(true);
+            getI8nMessagesPlugin().reload(true);
 
             RootResponse response = new RootResponse();
 
@@ -299,8 +306,7 @@ public class RootApiController extends ApiController {
 
         try {
 
-            IAdPanelManagerService adPanelManagerService = ServiceManager.getService(IAdPanelManagerService.NAME, IAdPanelManagerService.class);
-            adPanelManagerService.clearCache();
+            getAdPanelManagerService().clearCache();
 
             RootResponse response = new RootResponse();
 
@@ -321,7 +327,7 @@ public class RootApiController extends ApiController {
 
         try {
 
-            JasperUtils.loadDefinitions();
+            getReportingUtils().loadDefinitions();
 
             RootResponse response = new RootResponse();
 
@@ -342,8 +348,7 @@ public class RootApiController extends ApiController {
 
         try {
 
-            ServiceManager.getService(IKpiService.NAME, IKpiService.class).cancel();
-            ServiceManager.getService(IKpiService.NAME, IKpiService.class).init();
+            getKpiService().reload();
 
             RootResponse response = new RootResponse();
 
@@ -364,6 +369,26 @@ public class RootApiController extends ApiController {
      */
     public static class RootResponse {
         public Map<String, JsonNode> attributes;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getI8nMessagesPlugin() {
+        return i8nMessagesPlugin;
+    }
+
+    private IAdPanelManagerService getAdPanelManagerService() {
+        return adPanelManagerService;
+    }
+
+    private IKpiService getKpiService() {
+        return kpiService;
+    }
+
+    private IReportingUtils getReportingUtils() {
+        return reportingUtils;
     }
 
 }

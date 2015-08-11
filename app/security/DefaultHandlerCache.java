@@ -1,7 +1,11 @@
 package security;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import controllers.sso.Authenticator;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
 import be.objectify.deadbolt.java.DeadboltHandler;
 import be.objectify.deadbolt.java.cache.HandlerCache;
 
@@ -11,9 +15,14 @@ import be.objectify.deadbolt.java.cache.HandlerCache;
  */
 @Singleton
 public class DefaultHandlerCache implements HandlerCache {
-    private final DeadboltHandler defaultHandler = new DefaultDeadboltHandler();
+    private final DeadboltHandler defaultHandler;
 
-    public DefaultHandlerCache() {
+    @Inject
+    public DefaultHandlerCache(
+            IUserSessionManagerPlugin userSessionManagerPlugin, 
+            IAccountManagerPlugin accountManagerPlugin,
+            Authenticator authenticator) {
+        this.defaultHandler = new DefaultDeadboltHandler(userSessionManagerPlugin, accountManagerPlugin, authenticator);
     }
 
     @Override

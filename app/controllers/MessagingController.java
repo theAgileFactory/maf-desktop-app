@@ -20,6 +20,8 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.Notification;
 import models.framework_models.account.Principal;
 import models.framework_models.parent.IModelConstants;
@@ -32,7 +34,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.table.MessageListView;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
-import framework.services.ServiceManager;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Table;
@@ -45,7 +46,11 @@ import framework.utils.Utilities;
  */
 @SubjectPresent
 public class MessagingController extends Controller {
-
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private INotificationManagerPlugin notificationManagerPlugin;
+    
     private static Logger.ALogger log = Logger.of(MessagingController.class);
     private static Form<NotificationMessage> notificationMessageForm = Form.form(NotificationMessage.class);
 
@@ -55,10 +60,9 @@ public class MessagingController extends Controller {
     @SubjectPresent
     public Result index() {
 
-        String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
         Table<Notification> messagesTables =
-                MessageListView.templateTable.fill(ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                        .getMessagesForUid(loggedUser));
+                MessageListView.templateTable.fill(getNotificationManagerPlugin().getMessagesForUid(loggedUser));
 
         NotificationMessage notificationMessage = createEmptyNotificationMessage();
 
@@ -70,21 +74,17 @@ public class MessagingController extends Controller {
      */
     public Result sendMessage() {
 
-        String loggedUser = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class).getUserSessionId(ctx());
+        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
         Table<Notification> messagesTables =
-                MessageListView.templateTable.fill(ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class)
-                        .getMessagesForUid(loggedUser));
+                MessageListView.templateTable.fill(getNotificationManagerPlugin().getMessagesForUid(loggedUser));
 
         try {
             Form<NotificationMessage> boundForm = notificationMessageForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return ok(views.html.messaging.index.render(messagesTables, boundForm));
             }
-            IUserSessionManagerPlugin userSessionManager = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
             NotificationMessage notificationMessage = boundForm.get();
-            INotificationManagerPlugin notificationManagerPlugin =
-                    ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class);
-            notificationManagerPlugin.sendMessage(userSessionManager.getUserSessionId(ctx()), notificationMessage.principalUids, notificationMessage.title,
+            getNotificationManagerPlugin().sendMessage(getUserSessionManagerPlugin().getUserSessionId(ctx()), notificationMessage.principalUids, notificationMessage.title,
                     notificationMessage.message);
             Utilities.sendSuccessFlashMessage(Messages.get("messaging.send.success", notificationMessage.title));
             return redirect(routes.MessagingController.index());
@@ -127,5 +127,13 @@ public class MessagingController extends Controller {
 
         @Required
         public List<String> principalUids;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
     }
 }

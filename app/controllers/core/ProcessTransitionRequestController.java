@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
@@ -53,7 +55,6 @@ import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.ProcessTransitionRequestDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.ServiceManager;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FileAttachmentHelper;
@@ -75,7 +76,10 @@ import framework.utils.Utilities;
  * @author Johann Kohler
  */
 public class ProcessTransitionRequestController extends Controller {
-
+    @Inject
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
     private static Form<ProcessMilestoneRequestFormData> processMilestoneRequestFormTemplate = Form.form(ProcessMilestoneRequestFormData.class);
@@ -137,9 +141,8 @@ public class ProcessTransitionRequestController extends Controller {
         // get the structured document (RequestMilestoneFormData)
         RequestMilestoneFormData requestMilestoneFormData = null;
         try {
-            IAttachmentManagerPlugin attachmentPlugin = ServiceManager.getService(IAttachmentManagerPlugin.NAME, IAttachmentManagerPlugin.class);
             List<Attachment> structuredDocumentAttachments =
-                    attachmentPlugin.getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class, request.id, true);
+                    getAttachmentManagerPlugin().getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class, request.id, true);
 
             requestMilestoneFormData = (RequestMilestoneFormData) Utilities.unmarshallObject(structuredDocumentAttachments.get(0).structuredDocument.content);
 
@@ -255,9 +258,7 @@ public class ProcessTransitionRequestController extends Controller {
                 lifeCycleMilestoneInstance = LifeCycleMilestoneDao.doPassed(lifeCycleMilestoneInstance.id);
 
                 // set the current actor as approver (if exists)
-                IUserSessionManagerPlugin userSessionManagerPlugin =
-                        ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                Actor actor = ActorDao.getActorByUid(userSessionManagerPlugin.getUserSessionId(ctx()));
+                Actor actor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
                 if (actor != null) {
                     lifeCycleMilestoneInstance.approver = actor;
                     lifeCycleMilestoneInstance.save();
@@ -335,5 +336,13 @@ public class ProcessTransitionRequestController extends Controller {
 
         return redirect(controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0));
 
+    }
+
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 }

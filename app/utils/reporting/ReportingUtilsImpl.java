@@ -29,15 +29,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import dao.finance.CurrencyDAO;
 import dao.finance.PurchaseOrderDAO;
 import dao.reporting.ReportingDao;
-import framework.services.ServiceManager;
+import framework.services.database.IDatabaseDependencyService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.system.ISysAdminUtils;
 import framework.utils.Msg;
-import framework.utils.SysAdminUtils;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.reporting.Reporting;
@@ -63,8 +67,12 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+import play.Configuration;
+import play.Environment;
 import play.Logger;
 import play.Play;
+import play.inject.ApplicationLifecycle;
+import play.libs.F.Promise;
 import play.mvc.Http.Context;
 import scala.concurrent.duration.Duration;
 
@@ -73,17 +81,62 @@ import scala.concurrent.duration.Duration;
  * 
  * @author Johann Kohler
  */
-public class JasperUtils {
+@Singleton
+public class ReportingUtilsImpl implements IReportingUtils {
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    private IPersonalStoragePlugin personalStoragePlugin;
+    private INotificationManagerPlugin notificationManagerPlugin;
+    private ISysAdminUtils sysAdminUtils;
+    private Configuration configuration;
+    private Environment environment;
+    
+    private static Logger.ALogger log = Logger.of(ReportingUtilsImpl.class);
 
-    private static Logger.ALogger log = Logger.of(JasperUtils.class);
-
-    public static Map<String, JasperReport> jasperReports = null;
+    public Map<String, JasperReport> jasperReports = null;
 
     private static final String EXCEL_FILE_NAME = "report_%s_%s_%s.xlsx";
     private static final String PDF_FILE_NAME = "report_%s_%s_%s.pdf";
     private static final String CSV_FILE_NAME = "report_%s_%s_%s.csv";
     private static final String WORD_FILE_NAME = "report_%s_%s_%s.docx";
     private static final String POWER_POINT_FILE_NAME = "report_%s_%s_%s.pptx";
+
+    /**
+     * Creates a new ReportingUtilsImpl
+     * @param lifecycle
+     *            the play application lifecycle listener
+     * @param configuration
+     *            the play application configuration
+     * @param environment 
+     *            the play environment
+     * @param userSessionManagerPlugin the user session manager
+     * @param personalStoragePlugin the personal storage manager
+     * @param notificationManagerPlugin the notification manager
+     * @param sysAdminUtils the sysadmin utilities
+     * @param databaseDependencyService
+     */
+    @Inject
+    public ReportingUtilsImpl(ApplicationLifecycle lifecycle, Configuration configuration,Environment environment,
+            IUserSessionManagerPlugin userSessionManagerPlugin,
+            IPersonalStoragePlugin personalStoragePlugin,
+            INotificationManagerPlugin notificationManagerPlugin,
+            ISysAdminUtils sysAdminUtils,
+            IDatabaseDependencyService databaseDependencyService) {
+        log.info("SERVICE>>> ReportingUtilsImpl starting...");
+        this.configuration=configuration;
+        this.environment=environment;
+        this.userSessionManagerPlugin=userSessionManagerPlugin;
+        this.personalStoragePlugin=personalStoragePlugin;
+        this.notificationManagerPlugin=notificationManagerPlugin;
+        this.sysAdminUtils=sysAdminUtils;
+        loadDefinitions();
+        lifecycle.addStopHook(() -> {
+            log.info("SERVICE>>> ReportingUtilsImpl stopping...");
+            shutdown();
+            log.info("SERVICE>>> ReportingUtilsImpl stopped");
+            return Promise.pure(null);
+        });
+        log.info("SERVICE>>> ReportingUtilsImpl started");
+    }
 
     /**
      * Generate a jasper a report and place the file in the personal space.
@@ -99,11 +152,11 @@ public class JasperUtils {
      * @param reportParameters
      *            the report parameters
      */
-    public static void generate(Context context, final Reporting report, final String language, final Format format, Map<String, Object> reportParameters) {
+    @Override
+    public void generate(Context context, final Reporting report, final String language, final Format format, Map<String, Object> reportParameters) {
 
         // get the user id
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        final String uid = userSessionManagerPlugin.getUserSessionId(context);
+        final String uid = getUserSessionManagerPlugin().getUserSessionId(context);
 
         /**
          * parameters.
@@ -140,13 +193,12 @@ public class JasperUtils {
         final String failureTitle = Msg.get("core.reporting.generate.process.failure.title");
         final String failureMessage = Msg.get("core.reporting.generate.process.failure.message");
 
-        SysAdminUtils.scheduleOnce(false, "ReportGeneration " + report.getName(), Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+        getSysAdminUtils().scheduleOnce(false, "ReportGeneration " + report.getName(), Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
             @Override
             public void run() {
 
-                IPersonalStoragePlugin personalStorage = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
-                INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
-                        INotificationManagerPlugin.class);
+                IPersonalStoragePlugin personalStorage = getPersonalStoragePlugin();
+                INotificationManagerPlugin notificationManagerPlugin = getNotificationManagerPlugin();
 
                 OutputStream out = null;
                 String fileName = null;
@@ -241,12 +293,13 @@ public class JasperUtils {
     /**
      * Get the data adapter (DB connection).
      */
-    public static Connection getDataAdapter() {
+    @Override
+    public Connection getDataAdapter() {
         try {
             return DriverManager.getConnection(
-                    play.Configuration.root().getString("db.default.url"), 
-                    play.Configuration.root().getString("db.default.username"),
-                    play.Configuration.root().getString("db.default.password"));
+                    getConfiguration().getString("db.default.url"), 
+                    getConfiguration().getString("db.default.username"),
+                    getConfiguration().getString("db.default.password"));
         } catch (SQLException e) {
             log.error("Unable to initialize the access to the database for the reports",e);
         }
@@ -256,7 +309,8 @@ public class JasperUtils {
     /**
      * Load the report definitions.
      */
-    public static void loadDefinitions() {
+    @Override
+    public void loadDefinitions() {
 
         jasperReports = new HashMap<String, JasperReport>();
 
@@ -284,7 +338,7 @@ public class JasperUtils {
     /**
      * Clean the reports.
      */
-    public static void shutdown() {
+    private void shutdown() {
         jasperReports = null;
     }
 
@@ -294,11 +348,11 @@ public class JasperUtils {
      * @param report
      *            the report
      */
-    private static File getReportFolder(Reporting report) {
+    private File getReportFolder(Reporting report) {
         if (report.isStandard) {
-            return Play.application().getFile("conf/jasper/" + report.template);
+            return getEnvironment().getFile("conf/jasper/" + report.template);
         } else {
-            return new File(play.Configuration.root().getString("maf.report.custom.root") + "/" + report.template);
+            return new File(getConfiguration().getString("maf.report.custom.root") + "/" + report.template);
         }
     }
 
@@ -308,12 +362,36 @@ public class JasperUtils {
      * @param report
      *            the report
      */
-    private static File getReportPath(Reporting report) {
+    private File getReportPath(Reporting report) {
         String filePath = report.template + "/" + report.template + "_main.jrxml";
         if (report.isStandard) {
-            return Play.application().getFile("conf/jasper/" + filePath);
+            return getEnvironment().getFile("conf/jasper/" + filePath);
         } else {
-            return new File(play.Configuration.root().getString("maf.report.custom.root") + "/" + filePath);
+            return new File(getConfiguration().getString("maf.report.custom.root") + "/" + filePath);
         }
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
+    }
+
+    private Environment getEnvironment() {
+        return environment;
     }
 }

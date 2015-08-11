@@ -19,6 +19,8 @@ package controllers.sso;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.Credential;
 import models.framework_models.parent.IModelConstants;
 
@@ -34,12 +36,13 @@ import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 import services.licensesmanagement.LoginEventRequest.ErrorCode;
 import views.html.sso.login;
 import views.html.sso.reset_password;
 import controllers.admin.UserManager;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.LightAuthenticationLockedAccountException;
 import framework.utils.CaptchaManager;
 import framework.utils.Msg;
@@ -52,6 +55,8 @@ import framework.utils.Utilities;
  * @author Pierre-Yves Cloux
  */
 public class StandaloneAuthenticationController extends Controller {
+    @Inject 
+    private ILicensesManagementService licensesManagementService;
     public static final String ERROR_PARAMETER = "error";
     private static Form<ResetPasswordRequest> passwordResetRequestForm = Form.form(ResetPasswordRequest.class);
 
@@ -72,7 +77,7 @@ public class StandaloneAuthenticationController extends Controller {
         if (!StringUtils.isBlank(errorParameter)) {
 
             // event: wrong credential / STANDALONE
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).addLoginEvent(
+            getLicensesManagementService().addLoginEvent(
                     request().getQueryString(formClient.getUsernameParameter()), false, ErrorCode.WRONG_CREDENTIAL, errorParameter);
 
             hasError = true;
@@ -127,7 +132,7 @@ public class StandaloneAuthenticationController extends Controller {
             boundForm.reject("captchaText", Msg.get("captcha.error.wrong_word"));
             return badRequest(reset_password.render(uuid, boundForm));
         }
-        if (!UserManager.resetUserPasswordFromEmail(resetPasswordRequest.mail, false)) {
+        if (!UserManager.resetUserPasswordFromEmail(ServiceStaticAccessor.getAccountManagerPlugin(),resetPasswordRequest.mail, false)) {
             boundForm.reject("mail", Msg.get("authentication.standalone.reset.mail.unknown.message"));
             return badRequest(reset_password.render(uuid, boundForm));
         }
@@ -146,5 +151,9 @@ public class StandaloneAuthenticationController extends Controller {
         public String mail;
         @Required(message = "captcha.error.wrong_word")
         public String captchaText;
+    }
+
+    private ILicensesManagementService getLicensesManagementService() {
+        return licensesManagementService;
     }
 }

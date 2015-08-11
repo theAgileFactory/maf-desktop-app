@@ -32,7 +32,6 @@ import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -40,6 +39,7 @@ import framework.services.session.IUserSessionManagerPlugin;
 import framework.security.SecurityUtils;
 import framework.security.SecurityUtils;
 import framework.utils.Utilities;
+import framework.services.ServiceStaticAccessor;
 
 
 /**
@@ -61,8 +61,8 @@ public class OrgUnitDynamicHelper {
      */
     public static ExpressionList<OrgUnit> getOrgUnitsViewAllowedAsQuery(Expression expression, OrderBy<OrgUnit> orderBy) throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
         IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
         String raw = "(";

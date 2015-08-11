@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
@@ -54,7 +55,6 @@ import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
-import framework.services.ServiceManager;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
 import models.delivery.Iteration;
@@ -74,6 +74,7 @@ import play.data.Form;
 import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 
 /**
@@ -83,7 +84,8 @@ import services.licensesmanagement.LicensesManagementServiceImpl;
  */
 @Api(value = "/api/core/portfolio-entry", description = "Operations on Portfolio Entries")
 public class PortfolioEntryApiController extends ApiController {
-
+    @Inject
+    private ILicensesManagementService licensesManagementService;
     public static Form<PortfolioEntryListRequest> portfolioEntryListRequestFormTemplate = Form.form(PortfolioEntryListRequest.class);
     public static Form<PortfolioEntryRequestPost> portfolioEntryRequestPostFormTemplate = Form.form(PortfolioEntryRequestPost.class);
     public static Form<PortfolioEntryRequestPut> portfolioEntryRequestPutFormTemplate = Form.form(PortfolioEntryRequestPut.class);
@@ -197,7 +199,7 @@ public class PortfolioEntryApiController extends ApiController {
     public Result createPortfolioEntry() {
         try {
 
-            if (!ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).canCreatePortfolioEntry()) {
+            if (!getLicensesManagementService().canCreatePortfolioEntry()) {
                 return getJsonErrorResponse(new ApiError(403, "No available license."));
             }
 
@@ -238,7 +240,7 @@ public class PortfolioEntryApiController extends ApiController {
             LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(portfolioEntryRequest.lifeCycleProcessId);
             PortfolioEntryController.createLifeCycleProcessTree(lifeCycleProcess, portfolioEntry);
 
-            ServiceManager.getService(LicensesManagementServiceImpl.NAME, LicensesManagementServiceImpl.class).updateConsumedPortfolioEntries();
+            getLicensesManagementService().updateConsumedPortfolioEntries();
 
             // return json success
             return getJsonSuccessCreatedResponse(portfolioEntry);
@@ -724,6 +726,10 @@ public class PortfolioEntryApiController extends ApiController {
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
         }
+    }
+
+    private ILicensesManagementService getLicensesManagementService() {
+        return licensesManagementService;
     }
 
 }

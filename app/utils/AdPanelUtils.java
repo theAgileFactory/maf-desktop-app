@@ -18,8 +18,7 @@
 package utils;
 
 import play.twirl.api.Html;
-import framework.services.ServiceManager;
-import framework.services.remote.IAdPanelManagerService;
+import framework.services.ServiceStaticAccessor;
 
 /**
  * Provide the methods to manage the ad panel.
@@ -41,7 +40,6 @@ public class AdPanelUtils {
      *            the current route without query parameters
      */
     public static Html display(String route) {
-        IAdPanelManagerService adPanelManagerService = ServiceManager.getService(IAdPanelManagerService.NAME, IAdPanelManagerService.class);
-        return adPanelManagerService.getPanel(route);
+        return ServiceStaticAccessor.getAdPanelManagerService().getPanel(route);
     }
 }

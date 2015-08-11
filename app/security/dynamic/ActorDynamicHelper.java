@@ -30,14 +30,15 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.security.SecurityUtils;
-import framework.security.SecurityUtils;
 import framework.utils.Utilities;
+import framework.services.ServiceStaticAccessor;
+
 
 /**
  * Provides all method to compute the dynamic permissions for an actor.
@@ -57,9 +58,9 @@ public class ActorDynamicHelper {
      *            the ebean order by
      */
     public static ExpressionList<Actor> getActorsViewAllowedAsQuery(Expression expression, OrderBy<Actor> orderBy) throws AccountManagementException {
-
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-        IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+        
+        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
         IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
         String raw = "(";
@@ -137,8 +138,8 @@ public class ActorDynamicHelper {
     public static boolean isActorEditAllowed(Actor actor) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
@@ -171,8 +172,8 @@ public class ActorDynamicHelper {
     public static boolean isActorDeleteAllowed(Actor actor) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
+            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
 
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR

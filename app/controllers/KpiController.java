@@ -17,11 +17,12 @@
  */
 package controllers;
 
+import javax.inject.Inject;
+
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
-import framework.services.ServiceManager;
 import framework.services.kpi.IKpiService;
 
 /**
@@ -31,11 +32,17 @@ import framework.services.kpi.IKpiService;
  */
 @SubjectPresent
 public class KpiController extends Controller {
-
+    @Inject
+    private IKpiService kpiService;
+    
     /**
      * Display the trend of a KPI.
      */
     public Result trend() {
-        return ServiceManager.getService(IKpiService.NAME, IKpiService.class).trend(Context.current());
+        return getKpiService().trend(Context.current());
+    }
+
+    private IKpiService getKpiService() {
+        return kpiService;
     }
 }

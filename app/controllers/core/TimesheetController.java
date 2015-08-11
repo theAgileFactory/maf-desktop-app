@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.pmo.Actor;
@@ -72,7 +74,9 @@ import framework.utils.Utilities;
  * @author Johann Kohler
  */
 public class TimesheetController extends Controller {
-
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    
     private static Logger.ALogger log = Logger.of(TimesheetController.class);
 
     private static Form<TimesheetReportApprovalFormData> timesheetReportApprovalFormTemplate = Form.form(TimesheetReportApprovalFormData.class);
@@ -596,13 +600,11 @@ public class TimesheetController extends Controller {
     /**
      * Get the current actor.
      */
-    private static Actor getCurrentActor() {
+    private Actor getCurrentActor() {
 
         try {
 
-            IUserSessionManagerPlugin userSessionManagerPlugin = framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                    IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             return ActorDao.getActorByUid(uid);
 
         } catch (Exception e) {
@@ -636,5 +638,9 @@ public class TimesheetController extends Controller {
             this.value = value;
             this.text = text;
         }
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 }

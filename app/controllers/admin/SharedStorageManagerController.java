@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -43,7 +45,6 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants;
-import framework.services.ServiceManager;
 import framework.services.storage.ISharedStorageService;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -63,6 +64,9 @@ import framework.utils.formats.StringFormatFormatter.Hook;
  */
 @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
 public class SharedStorageManagerController extends Controller {
+    @Inject
+    private ISharedStorageService sharedStorageService;
+    
     public static final int MAX_FILE_SIZE = 2 * 1024 * 1024;
 
     /**
@@ -120,9 +124,9 @@ public class SharedStorageManagerController extends Controller {
      */
     public Result index() {
         try {
-            ISharedStorageService sharedStorageService = ServiceManager.getService(ISharedStorageService.NAME, ISharedStorageService.class);
-            Table<SharedStorageFile> loadedInputFileTable = getSharedStorageFiles(sharedStorageService, IMafConstants.INPUT_FOLDER_NAME);
-            Table<SharedStorageFile> loadedOutputFileTable = getSharedStorageFiles(sharedStorageService, IMafConstants.OUTPUT_FOLDER_NAME);
+            
+            Table<SharedStorageFile> loadedInputFileTable = getSharedStorageFiles(getSharedStorageService(), IMafConstants.INPUT_FOLDER_NAME);
+            Table<SharedStorageFile> loadedOutputFileTable = getSharedStorageFiles(getSharedStorageService(), IMafConstants.OUTPUT_FOLDER_NAME);
             return ok(views.html.admin.plugin.sharedstorage_display.render(Msg.get("admin.plugin_manager.sidebar.shared_storage"), loadedInputFileTable,
                     loadedOutputFileTable));
         } catch (Exception e) {
@@ -164,11 +168,11 @@ public class SharedStorageManagerController extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    ISharedStorageService sharedStorageService = ServiceManager.getService(ISharedStorageService.NAME, ISharedStorageService.class);
+                    
                     String fileName = new String(Base64.decodeBase64(id));
                     response().setContentType("application/x-download");
-                    response().setHeader("Content-disposition", "attachment; filename=" + sharedStorageService.getFile(fileName).getName());
-                    return ok(sharedStorageService.getFileAsStream(fileName));
+                    response().setHeader("Content-disposition", "attachment; filename=" + getSharedStorageService().getFile(fileName).getName());
+                    return ok(getSharedStorageService().getFileAsStream(fileName));
                 } catch (Exception e) {
                     return ControllersUtils.logAndReturnUnexpectedError(e, log);
                 }
@@ -187,9 +191,9 @@ public class SharedStorageManagerController extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    ISharedStorageService sharedStorageService = ServiceManager.getService(ISharedStorageService.NAME, ISharedStorageService.class);
+                    
                     String fileName = new String(Base64.decodeBase64(id));
-                    sharedStorageService.deleteFile(fileName);
+                    getSharedStorageService().deleteFile(fileName);
                     Utilities.sendSuccessFlashMessage(Msg.get("admin.shared_storage.delete.success"));
                     return redirect(routes.SharedStorageManagerController.index());
                 } catch (Exception e) {
@@ -224,12 +228,12 @@ public class SharedStorageManagerController extends Controller {
     @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = MAX_FILE_SIZE)
     public Promise<Result> upload(final boolean isInput) {
         final String folderName = isInput ? IFrameworkConstants.INPUT_FOLDER_NAME : IFrameworkConstants.OUTPUT_FOLDER_NAME;
-        final ISharedStorageService sharedStorageService = ServiceManager.getService(ISharedStorageService.NAME, ISharedStorageService.class);
+        final 
 
         // Test if the max number of files is not exceeded
         String[] files;
         try {
-            files = sharedStorageService.getFileList("/" + folderName);
+            files = getSharedStorageService().getFileList("/" + folderName);
         } catch (IOException e1) {
             return redirectToIndexAsPromiseWithErrorMessage(null);
         }
@@ -247,7 +251,7 @@ public class SharedStorageManagerController extends Controller {
                     FilePart filePart = body.getFile(folderName);
                     if (filePart != null) {
                         IOUtils.copy(new FileInputStream(filePart.getFile()),
-                                sharedStorageService.writeFile("/" + folderName + "/" + filePart.getFilename(), true));
+                                getSharedStorageService().writeFile("/" + folderName + "/" + filePart.getFilename(), true));
                         Utilities.sendSuccessFlashMessage(Msg.get("admin.shared_storage.upload.success"));
                     } else {
                         Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.no_file"));
@@ -354,5 +358,9 @@ public class SharedStorageManagerController extends Controller {
         private File getFile() {
             return this.file;
         }
+    }
+
+    private ISharedStorageService getSharedStorageService() {
+        return sharedStorageService;
     }
 }

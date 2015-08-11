@@ -20,7 +20,8 @@ package utils.tour;
 import play.twirl.api.Html;
 import security.DefaultDeadboltHandler;
 import constants.IMafConstants;
-import framework.services.ServiceManager;
+import framework.security.SecurityUtils;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Msg;
 
@@ -80,8 +81,8 @@ public class TourUtils {
 
         } else {
 
-            IPreferenceManagerPlugin preferenceService = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-            boolean isAdmin = DefaultDeadboltHandler.isAllowed(IMafConstants.ADMIN_CONFIGURATION_PERMISSION);
+            IPreferenceManagerPlugin preferenceService = ServiceStaticAccessor.getPreferenceManagerPlugin();
+            boolean isAdmin = SecurityUtils.isAllowed(IMafConstants.ADMIN_CONFIGURATION_PERMISSION);
 
             for (TourUid tourUid : TourUid.values()) {
                 if (preferenceService.getPreferenceValueAsBoolean(tourUid.name())) {
@@ -158,7 +159,7 @@ public class TourUtils {
      *            the tour uid
      */
     public static void markTourAsRead(String tourUidString) {
-        IPreferenceManagerPlugin preferenceService = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
+        IPreferenceManagerPlugin preferenceService = ServiceStaticAccessor.getPreferenceManagerPlugin();
         preferenceService.updatePreferenceValue(tourUidString, false);
     }
 }

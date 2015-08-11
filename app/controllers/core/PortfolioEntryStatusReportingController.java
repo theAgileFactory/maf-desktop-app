@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -46,11 +48,11 @@ import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
 import dao.reporting.ReportingDao;
-import framework.services.ServiceManager;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.system.ISysAdminUtils;
 import framework.utils.CssValueForValueHolder;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolderCollection;
@@ -59,7 +61,6 @@ import framework.utils.FilterConfig;
 import framework.utils.LanguageUtil;
 import framework.utils.Msg;
 import framework.utils.Pagination;
-import framework.utils.SysAdminUtils;
 import framework.utils.Table;
 import framework.utils.TableExcelRenderer;
 import framework.utils.Utilities;
@@ -88,7 +89,7 @@ import utils.form.AttachmentFormData;
 import utils.form.PortfolioEntryEventFormData;
 import utils.form.PortfolioEntryReportFormData;
 import utils.form.PortfolioEntryRiskFormData;
-import utils.reporting.JasperUtils;
+import utils.reporting.IReportingUtils;
 import utils.table.AttachmentListView;
 import utils.table.PortfolioEntryEventListView;
 import utils.table.PortfolioEntryReportListView;
@@ -102,7 +103,19 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioEntryStatusReportingController extends Controller {
-
+    @Inject
+    private INotificationManagerPlugin notificationManagerPlugin;
+    @Inject
+    private IPersonalStoragePlugin personalStoragePlugin;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject 
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private IReportingUtils reportingUtils;
+    @Inject
+    private ISysAdminUtils sysAdminUtils;
+    
     private static Logger.ALogger log = Logger.of(PortfolioEntryStatusReportingController.class);
 
     public static Form<PortfolioEntryReportFormData> reportFormTemplate = Form.form(PortfolioEntryReportFormData.class);
@@ -126,7 +139,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Map<String, Object> reportParameters = new HashMap<String, Object>();
         reportParameters.put("REPORT_" + getReportStatusTemplateName().toUpperCase() + "_PORTFOLIO_ENTRY", id);
 
-        JasperUtils.generate(ctx(), report, LanguageUtil.getCurrent().getCode(), Format.PDF, reportParameters);
+        getReportingUtils().generate(ctx(), report, LanguageUtil.getCurrent().getCode(), Format.PDF, reportParameters);
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
 
@@ -335,9 +348,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                 try {
 
                     // Get the current user
-                    IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                            IUserSessionManagerPlugin.class);
-                    final String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                    final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
                     JsonNode json = request().body().asJson();
@@ -364,20 +375,18 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     final String failureMessage = Msg.get("excel.export.failure.message", "events");
 
                     // Execute asynchronously
-                    SysAdminUtils.scheduleOnce(false, "Events Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                    getSysAdminUtils().scheduleOnce(false, "Events Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
                         @Override
                         public void run() {
-                            IPersonalStoragePlugin personalStorage = ServiceManager.getService(IPersonalStoragePlugin.NAME, IPersonalStoragePlugin.class);
-                            INotificationManagerPlugin notificationManagerPlugin = ServiceManager.getService(INotificationManagerPlugin.NAME,
-                                    INotificationManagerPlugin.class);
+                            
                             try {
-                                OutputStream out = personalStorage.createNewFile(uid, fileName);
+                                OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                                 IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
                                         controllers.my.routes.MyPersonalStorage.index().url());
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
-                                notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
                                         controllers.core.routes.PortfolioEntryStatusReportingController.events(id, false).url());
                             }
                         }
@@ -563,8 +572,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
             portfolioEntryReport.publicationDate = portfolioEntryReport.creationDate;
 
             // get the current actor
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             if (actor == null) {
                 return redirect(controllers.routes.Application.index());
@@ -976,9 +984,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
             // try to get the current actor
             try {
-                IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME,
-                        IUserSessionManagerPlugin.class);
-                String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                
+                String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 portfolioEntryEvent.actor = ActorDao.getActorByUid(uid);
             } catch (Exception e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -1048,9 +1055,9 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * @param preferenceName
      *            the name of the preference
      */
-    private static void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        preferenceManagerPlugin.updatePreferenceValue(preferenceName, filterConfigAsJson);
+    private void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
+        
+        getPreferenceManagerPlugin().updatePreferenceValue(preferenceName, filterConfigAsJson);
     }
 
     /**
@@ -1059,9 +1066,9 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * @param preferenceName
      *            the name of the preference
      */
-    private static String getFilterConfigurationFromPreferences(String preferenceName) {
-        IPreferenceManagerPlugin preferenceManagerPlugin = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class);
-        return preferenceManagerPlugin.getPreferenceValueAsString(preferenceName);
+    private String getFilterConfigurationFromPreferences(String preferenceName) {
+       
+        return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
     }
 
     /**
@@ -1070,14 +1077,38 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * It is represented by the standard report if the corresponding preference
      * is empty, or a custom report else.
      */
-    private static String getReportStatusTemplateName() {
-        String customTemplateName = ServiceManager.getService(IPreferenceManagerPlugin.NAME, IPreferenceManagerPlugin.class)
+    private String getReportStatusTemplateName() {
+        String customTemplateName = getPreferenceManagerPlugin()
                 .getPreferenceValueAsString(IMafConstants.CUSTOM_REPORT_TEMPLATE_FOR_STATUS_REPORT_PREFERENCE);
         if (customTemplateName == null || customTemplateName.equals("")) {
             return "status_report";
         } else {
             return customTemplateName;
         }
+    }
+
+    private INotificationManagerPlugin getNotificationManagerPlugin() {
+        return notificationManagerPlugin;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
+    }
+
+    private IReportingUtils getReportingUtils() {
+        return reportingUtils;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
     }
 
 }

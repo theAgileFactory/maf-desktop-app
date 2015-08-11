@@ -36,7 +36,6 @@ import dao.pmo.PortfolioEntryDao;
 import dao.reporting.ReportingDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.SecurityUtils;
-import framework.services.ServiceManager;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -61,6 +60,8 @@ import security.dynamic.PortfolioEntryDynamicHelper;
 import security.dynamic.ReleaseDynamicHelper;
 import security.dynamic.ReportingDynamicHelper;
 import security.dynamic.TimesheetReportDynamicHelper;
+import framework.services.ServiceStaticAccessor;
+
 
 /**
  * The deadbolt dynamic resource handler.
@@ -72,6 +73,8 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
 
     private static final Map<String, DynamicResourceHandler> HANDLERS = new HashMap<String, DynamicResourceHandler>();
 
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    private IAccountManagerPlugin accountManagerPlugin;
     private static final Integer CACHE_TTL = 300;
 
     public static final String PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION = "PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION";
@@ -370,15 +373,19 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
         });
 
     }
+    
+    public DefaultDynamicResourceHandler(IUserSessionManagerPlugin userSessionManagerPlugin, IAccountManagerPlugin accountManagerPlugin) {
+        super();
+        this.userSessionManagerPlugin = userSessionManagerPlugin;
+        this.accountManagerPlugin = accountManagerPlugin;
+    }
 
     @Override
     public Promise<Boolean> checkPermission(String permissionValue, DeadboltHandler deadboltHandler, Context ctx) {
         boolean permissionOk = false;
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(ctx));
+            IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx));
 
             if (userAccount != null) {
                 List<? extends Permission> permissions = userAccount.getPermissions();
@@ -432,7 +439,6 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
      *            the object id
      */
     public static boolean isStaticAllowedWithObject(String name, String meta, Long id) {
-
         String cacheKey = getCacheKey(name, id);
         Boolean isAllowed = (Boolean) Cache.get(cacheKey);
         if (isAllowed != null) {
@@ -532,7 +538,7 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
      *            the object id
      */
     private static String getCacheKey(String name, Long id) {
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
+        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
         String cacheKey = IMafConstants.DYNAMIC_PERMISSION_CACHE_PREFIX + userSessionManagerPlugin.getUserSessionId(Http.Context.current()) + "." + name + "."
                 + String.valueOf(id);
         return cacheKey;
@@ -578,5 +584,13 @@ public class DefaultDynamicResourceHandler implements DynamicResourceHandler {
 
         return id;
 
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
     }
 }

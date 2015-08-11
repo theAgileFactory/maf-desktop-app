@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.delivery.Release;
 import models.finance.BudgetBucket;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
@@ -76,6 +78,8 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
+import framework.security.SecurityUtils;
+import framework.services.ServiceStaticAccessor;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -94,7 +98,9 @@ import framework.utils.Table;
  */
 @Restrict({ @Group(IMafConstants.COCKPIT_DISPLAY_PERMISSION) })
 public class CockpitController extends Controller {
-
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+    
     private static Logger.ALogger log = Logger.of(CockpitController.class);
 
     /**
@@ -116,9 +122,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -184,9 +188,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -244,9 +246,8 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -282,9 +283,8 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -424,9 +424,8 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -464,9 +463,7 @@ public class CockpitController extends Controller {
              */
             Long actorId = null;
             try {
-                IUserSessionManagerPlugin userSessionManagerPlugin =
-                        framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 Actor actor = ActorDao.getActorByUid(uid);
                 actorId = actor.id;
             } catch (Exception e) {
@@ -509,9 +506,8 @@ public class CockpitController extends Controller {
                     PortfolioEntryResourcePlanAllocatedActorListView.filterConfig.parseResponse(json);
 
             // get the current actor
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
             ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList =
@@ -540,9 +536,8 @@ public class CockpitController extends Controller {
         try {
 
             // get the current actor
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
             List<String> ids = FilterConfig.getIdsFromRequest(request());
@@ -586,9 +581,7 @@ public class CockpitController extends Controller {
              */
             Long actorId = null;
             try {
-                IUserSessionManagerPlugin userSessionManagerPlugin =
-                        framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-                String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+                String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 Actor actor = ActorDao.getActorByUid(uid);
                 actorId = actor.id;
             } catch (Exception e) {
@@ -624,9 +617,8 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -691,9 +683,8 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -744,9 +735,8 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -802,7 +792,7 @@ public class CockpitController extends Controller {
      * @param ownerIdExpression
      *            the filter expression on the owner
      */
-    private static Pagination<BudgetBucket> getBudgetBucketPagination(Integer page, Expression ownerIdExpression) {
+    private Pagination<BudgetBucket> getBudgetBucketPagination(Integer page, Expression ownerIdExpression) {
 
         ExpressionList<BudgetBucket> query = null;
         try {
@@ -826,7 +816,7 @@ public class CockpitController extends Controller {
      * @param hideColumns
      *            the columns to hid
      */
-    private static Table<BudgetBucketListView> getBudgetBucketTable(Pagination<BudgetBucket> pagination, Set<String> hideColumns) {
+    private Table<BudgetBucketListView> getBudgetBucketTable(Pagination<BudgetBucket> pagination, Set<String> hideColumns) {
 
         List<BudgetBucketListView> budgetBucketListView = new ArrayList<BudgetBucketListView>();
         for (BudgetBucket budgetBucket : pagination.getListOfObjects()) {
@@ -859,9 +849,8 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
@@ -935,22 +924,21 @@ public class CockpitController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.org_units", controllers.core.routes.CockpitController.orgUnits(0, false),
                 "glyphicons glyphicons-building", currentType.equals(MenuItemType.MY_ORG_UNITS)));
 
-        if (DefaultDeadboltHandler.isAllowed(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
-                || DefaultDeadboltHandler.isAllowed(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
+        if (SecurityUtils.isAllowed(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
+                || SecurityUtils.isAllowed(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.budget_buckets", controllers.core.routes.CockpitController.budgetBuckets(0, 0,
                     false, false), "glyphicons glyphicons-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
         }
 
-        if (DefaultDeadboltHandler.isAllowed(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
-                || DefaultDeadboltHandler.isAllowed(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
+        if (SecurityUtils.isAllowed(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
+                || SecurityUtils.isAllowed(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.releases", controllers.core.routes.CockpitController.releases(0, false),
                     "glyphicons glyphicons-git-branch", currentType.equals(MenuItemType.MY_RELEASES)));
         }
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin =
-                    framework.services.ServiceManager.getService(IUserSessionManagerPlugin.NAME, IUserSessionManagerPlugin.class);
-            String uid = userSessionManagerPlugin.getUserSessionId(ctx());
+            
+            String uid = ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
             ClickableMenuItem myEmployeeCardMenu =
@@ -975,7 +963,7 @@ public class CockpitController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>>
+    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>>
             getPortfolioEntryAllocationsTable(Long actorId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList =
@@ -1022,7 +1010,7 @@ public class CockpitController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> getActivityAllocationsTable(
+    private Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> getActivityAllocationsTable(
             Long actorId, FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig) {
 
         ExpressionList<TimesheetActivityAllocatedActor> expressionList =
@@ -1063,5 +1051,9 @@ public class CockpitController extends Controller {
      */
     public static enum MenuItemType {
         MY_INITIATIVES, MY_PORTFOLIOS, MY_EMPLOYEES, MY_ORG_UNITS, MY_BUDGET_BUCKETS, MY_RELEASES, MY_EMPLOYEE_CARD;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 }

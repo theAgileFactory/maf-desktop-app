@@ -33,15 +33,15 @@ import models.pmo.Competency;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
-import com.avaje.ebean.Model.Finder;
 
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.SqlUpdate;
 
-import framework.services.ServiceManager;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -418,7 +418,7 @@ public abstract class ActorDao {
                 actor.deleted = false;
                 actor.save();
             } else {
-                IAccountManagerPlugin accountManagerPlugin = ServiceManager.getService(IAccountManagerPlugin.NAME, IAccountManagerPlugin.class);
+                IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
                 try {
                     IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(uid);
                     if (userAccount != null) {
@@ -474,9 +474,7 @@ public abstract class ActorDao {
                 title = Msg.get(titleKey);
             }
 
-            INotificationManagerPlugin notificationManagerPlugin =
-                    ServiceManager.getService(INotificationManagerPlugin.NAME, INotificationManagerPlugin.class);
-            notificationManagerPlugin.sendNotification(recipient, category, title, message, url);
+            ServiceStaticAccessor.getNotificationManagerPlugin().sendNotification(recipient, category, title, message, url);
         }
     }
 
