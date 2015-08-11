@@ -124,6 +124,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         log.info("...Desktop static dependency injected end");
         
         log.info(">>> Standard dependency injection start...");
+        bind(EbeanConfig.class).toProvider(DefaultEbeanConfig.EbeanConfigParser.class).asEagerSingleton();
         bind(IDatabaseDependencyService.class).to(DatabaseDependencyServiceImpl.class).asEagerSingleton();
         bind(IImplementationDefinedObjectService.class).to(ImplementationDefinedObjectImpl.class).asEagerSingleton();
         bind(HandlerCache.class).to(DefaultHandlerCache.class).asEagerSingleton();
