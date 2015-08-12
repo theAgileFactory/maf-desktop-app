@@ -2827,13 +2827,20 @@ admin.configuration.custom_attribute.item.edit.successful=L''option a été mise
 admin.configuration.custom_attribute.item.delete.successful=L''option a été supprimée.
 
 #----------------------
-# plugin manager
+# integration
 #----------------------
 
 #helper
-admin.plugin_manager.sidebar.active_plugins=Plugins actifs
-admin.plugin_manager.sidebar.available_plugins=Plugins disponibles
-admin.plugin_manager.sidebar.shared_storage=Espace d''échange de données
+admin.integration.sidebar.plugins=Plugins
+admin.integration.sidebar.plugins.active_plugins=Plugins actifs
+admin.integration.sidebar.plugins.available_plugins=Plugins disponibles
+admin.integration.sidebar.data_syndication=Syndication de partenaires
+admin.integration.sidebar.data_syndication.master_agreements=Accords sortants
+admin.integration.sidebar.data_syndication.consumer_agreements=Accords entrants
+admin.integration.sidebar.api=API
+admin.integration.sidebar.api.keys=Clefs d''API
+admin.integration.sidebar.api.browser=Explorateur d''API
+admin.integration.sidebar.shared_storage=Espace d''échange de données
 
 #active plugins
 admin.plugin_manager.active_plugins.header=La table ci-dessous contient la liste des plugins actuellement disponibles dans le système.
@@ -2900,12 +2907,7 @@ admin.shared_storage.upload.success=Chargement réussi
 #shared storage: delete file
 admin.shared_storage.delete.success=Fichier supprimé
 
-#----------------------
-# API manager
-#----------------------
-
-admin.api_manager.menu.keys.label=Clefs d''API
-admin.api_manager.menu.browser.label=API browser
+#api manager
 admin.api_manager.title=Configuration des APIs
 admin.api_manager.table.title=Applications enregistrées
 admin.api_manager.unknown.application.message=Application inconnue : {0}

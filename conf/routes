@@ -670,6 +670,10 @@ GET     /admin/sharedstorage/delete/:id        controllers.admin.SharedStorageMa
 GET     /admin/sharedstorage/upload            controllers.admin.SharedStorageManagerController.uploadForm(folderName: String, isInput: Boolean)
 POST    /admin/sharedstorage/upload/:flag      controllers.admin.SharedStorageManagerController.upload(flag: Boolean)
 
+#Data syndication
+GET     /admin/data-syndication/master-agreements          controllers.admin.DataSyndicationController.viewMasterAgreements()
+GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
+
 #Configurators routes
 GET    /plugin/custcfg/:actionId/get/:id                      framework.services.plugins.PluginConfiguratorController.doGetForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)
 POST   /plugin/custcfg/:actionId/post/:id                     framework.services.plugins.PluginConfiguratorController.doPostForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)

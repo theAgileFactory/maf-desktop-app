@@ -2811,13 +2811,20 @@ admin.configuration.custom_attribute.item.edit.successful=The option has been up
 admin.configuration.custom_attribute.item.delete.successful=The option has been removed.
 
 #----------------------
-# plugin manager
+# integration
 #----------------------
 
 #helper
-admin.plugin_manager.sidebar.active_plugins=Active plugins
-admin.plugin_manager.sidebar.available_plugins=Available plugins
-admin.plugin_manager.sidebar.shared_storage=Data exchange storage
+admin.integration.sidebar.plugins=Plugins
+admin.integration.sidebar.plugins.active_plugins=Active plugins
+admin.integration.sidebar.plugins.available_plugins=Available plugins
+admin.integration.sidebar.data_syndication=Partner syndication
+admin.integration.sidebar.data_syndication.master_agreements=Master agreements
+admin.integration.sidebar.data_syndication.consumer_agreements=Consumer agreements
+admin.integration.sidebar.api=API
+admin.integration.sidebar.api.keys=API keys
+admin.integration.sidebar.api.browser=API browser
+admin.integration.sidebar.shared_storage=Data exchange storage
 
 #active plugins
 admin.plugin_manager.active_plugins.header=The table below contains the plugins which are currenty registered within the system.
@@ -2884,12 +2891,7 @@ admin.shared_storage.upload.success=File succesfully upoaded
 #shared storage: delete file
 admin.shared_storage.delete.success=File deleted
 
-#----------------------
-# API manager
-#----------------------
-
-admin.api_manager.menu.keys.label=API keys
-admin.api_manager.menu.browser.label=API browser
+#api manager
 admin.api_manager.title=API configuration manager
 admin.api_manager.table.title=Registered applications
 admin.api_manager.unknown.application.message=Unknown application name : {0}

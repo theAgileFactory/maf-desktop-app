@@ -2823,13 +2823,20 @@ admin.configuration.custom_attribute.item.edit.successful=Option aktualisiert.
 admin.configuration.custom_attribute.item.delete.successful=Option entfernt.
 
 #----------------------
-# plugin manager
+# integration
 #----------------------
 
 #helper
-admin.plugin_manager.sidebar.active_plugins=Active Plugin
-admin.plugin_manager.sidebar.available_plugins=Verfügbare Plugin
-admin.plugin_manager.sidebar.shared_storage=Daten Austausch Speicher
+admin.integration.sidebar.plugins=Plugins
+admin.integration.sidebar.plugins.active_plugins=Active Plugin
+admin.integration.sidebar.plugins.available_plugins=Verfügbare Plugin
+admin.integration.sidebar.data_syndication=de: Partner syndication
+admin.integration.sidebar.data_syndication.master_agreements=de: Master agreements
+admin.integration.sidebar.data_syndication.consumer_agreements=de: Consumer agreements
+admin.integration.sidebar.api=API
+admin.integration.sidebar.api.keys=API Schlüssel
+admin.integration.sidebar.api.browser=API Browser
+admin.integration.sidebar.shared_storage=Daten Austausch Speicher
 
 #active plugins
 admin.plugin_manager.active_plugins.header=Folgende Plugins sind zur Zeit in Ihrem System registriert.
@@ -2895,12 +2902,7 @@ admin.shared_storage.upload.success=Datei hochgeladen
 #shared storage: delete file
 admin.shared_storage.delete.success=Datei gelöscht
 
-#----------------------
-# API manager
-#----------------------
-
-admin.api_manager.menu.keys.label=API Schlüssel
-admin.api_manager.menu.browser.label=API Browser
+#api manager
 admin.api_manager.title=API Konfiguration
 admin.api_manager.table.title=Registrierte Anwendungen
 admin.api_manager.unknown.application.message=Anwendungsname unbekannt: {0}
