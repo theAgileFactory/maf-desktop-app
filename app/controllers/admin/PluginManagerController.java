@@ -92,6 +92,7 @@ import play.mvc.Result;
  * @author Pierre-Yves Cloux
  */
 public class PluginManagerController extends Controller {
+
     @Inject
     private IPluginManagerService pluginManagerService;
 
@@ -907,14 +908,12 @@ public class PluginManagerController extends Controller {
      * Construct the integration icons bar depending of the sign-in user
      * permissions.
      * 
+     * @param isDataSyndicationActive
+     *            true if the data syndication is active (conf)
      * @param currentType
      *            the current menu item type, useful to select the correct item
      */
-    public static SideBar getIconsBar(MenuItemType currentType) {
-
-        // TODO icons
-
-        // TODO use maf.data_syndication.is_active
+    public static SideBar getIconsBar(Boolean isDataSyndicationActive, MenuItemType currentType) {
 
         SideBar sideBar = new SideBar();
 
@@ -929,16 +928,20 @@ public class PluginManagerController extends Controller {
         pluginsMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.plugins.available_plugins",
                 controllers.admin.routes.PluginManagerController.registration(), "glyphicons glyphicons-shopping-bag", false));
 
-        HeaderMenuItem dataSyndicationMenu = new HeaderMenuItem("admin.integration.sidebar.data_syndication", "glyphicons glyphicons-share-alt",
-                currentType.equals(MenuItemType.DATA_SYNDICATION));
-        dataSyndicationMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PARTNER_SYNDICATION_PERMISSION));
-        sideBar.addMenuItem(dataSyndicationMenu);
+        if (isDataSyndicationActive) {
 
-        dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.master_agreements",
-                controllers.admin.routes.DataSyndicationController.viewMasterAgreements(), "glyphicons glyphicons-queen", false));
+            HeaderMenuItem dataSyndicationMenu = new HeaderMenuItem("admin.integration.sidebar.data_syndication", "glyphicons glyphicons-share-alt",
+                    currentType.equals(MenuItemType.DATA_SYNDICATION));
+            dataSyndicationMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PARTNER_SYNDICATION_PERMISSION));
+            sideBar.addMenuItem(dataSyndicationMenu);
 
-        dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.consumer_agreements",
-                controllers.admin.routes.DataSyndicationController.viewConsumerAgreements(), "glyphicons glyphicons-pawn", false));
+            dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.master_agreements",
+                    controllers.admin.routes.DataSyndicationController.viewMasterAgreements(), "glyphicons glyphicons-queen", false));
+
+            dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.consumer_agreements",
+                    controllers.admin.routes.DataSyndicationController.viewConsumerAgreements(), "glyphicons glyphicons-pawn", false));
+
+        }
 
         HeaderMenuItem apiMenu = new HeaderMenuItem("admin.integration.sidebar.api", "glyphicons glyphicons-transfer", currentType.equals(MenuItemType.API));
         apiMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
