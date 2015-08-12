@@ -23,22 +23,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import models.framework_models.account.Principal;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-
-import play.Configuration;
-import play.Logger;
-import play.Play;
-import play.inject.ApplicationLifecycle;
-import play.libs.F.Function;
-import play.libs.F.Promise;
-import play.libs.ws.WS;
-import play.libs.ws.WSRequest;
-import play.libs.ws.WSResponse;
-import services.licensesmanagement.LoginEventRequest.ErrorCode;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,13 +33,22 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.account.AccountManagerPluginImpl;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.database.IDatabaseDependencyService;
 import framework.services.ext.IExtensionManagerService;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.storage.ISharedStorageService;
+import models.framework_models.account.Principal;
+import play.Configuration;
+import play.Logger;
+import play.inject.ApplicationLifecycle;
+import play.libs.F.Function;
+import play.libs.F.Promise;
+import play.libs.ws.WS;
+import play.libs.ws.WSRequest;
+import play.libs.ws.WSResponse;
+import services.licensesmanagement.LoginEventRequest.ErrorCode;
 
 /**
  * The licenses management plugin.
@@ -87,7 +83,7 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     private static final String HTTP_HEADER_API_KEY = "X-echannel-API-Key";
 
     public enum Config {
-        LICENSE_MANAGEMENT_ACTIVE("maf.licenses_management.is_active"), ECHANNEL_API_URL("maf.licenses_management.echannel_api.url");
+        LICENSE_MANAGEMENT_ACTIVE("maf.licenses_management.is_active"), ECHANNEL_API_URL("maf.echannel_api.url");
         private String configurationKey;
 
         private Config(String configurationKey) {
@@ -111,21 +107,22 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
      * @param extensionManagerService
      * @param preferenceManagerPlugin
      * @param personalStoragePlugin
-     * @param databaseDependencyService 
+     * @param databaseDependencyService
      */
     @Inject
     public LicensesManagementServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, ISharedStorageService sharedStorageService,
-            IAttachmentManagerPlugin attachmentManagerPlugin, IExtensionManagerService extensionManagerService, IPreferenceManagerPlugin preferenceManagerPlugin, 
-            IPersonalStoragePlugin personalStoragePlugin, IDatabaseDependencyService databaseDependencyService) {
+            IAttachmentManagerPlugin attachmentManagerPlugin, IExtensionManagerService extensionManagerService,
+            IPreferenceManagerPlugin preferenceManagerPlugin, IPersonalStoragePlugin personalStoragePlugin,
+            IDatabaseDependencyService databaseDependencyService) {
         log.info("SERVICE>>> LicensesManagementServiceImpl starting...");
         this.isActive = configuration.getBoolean(Config.LICENSE_MANAGEMENT_ACTIVE.getConfigurationKey());
         this.echannelApiUrl = configuration.getString(Config.ECHANNEL_API_URL.getConfigurationKey());
         this.apiSecretKey = null;
-        this.sharedStorageService=sharedStorageService;
-        this.attachmentManagerPlugin=attachmentManagerPlugin;
-        this.extensionManagerService=extensionManagerService;
-        this.preferenceManagerPlugin=preferenceManagerPlugin;
-        this.personalStoragePlugin=personalStoragePlugin;
+        this.sharedStorageService = sharedStorageService;
+        this.attachmentManagerPlugin = attachmentManagerPlugin;
+        this.extensionManagerService = extensionManagerService;
+        this.preferenceManagerPlugin = preferenceManagerPlugin;
+        this.personalStoragePlugin = personalStoragePlugin;
         lifecycle.addStopHook(() -> {
             log.info("SERVICE>>> LicensesManagementServiceImpl stopping...");
             log.info("SERVICE>>> LicensesManagementServiceImpl stopped");
@@ -297,8 +294,7 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
      */
     private String getActionUrl(String action) {
 
-        String domain = getPreferenceManagerPlugin().getPreferenceValueAsString(
-                IMafConstants.LICENSE_INSTANCE_DOMAIN_PREFERENCE);
+        String domain = getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.LICENSE_INSTANCE_DOMAIN_PREFERENCE);
 
         String url = ACTION_PATTERN.replace("{domain}", domain);
         url = url.replace("{action}", action);
@@ -311,8 +307,7 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
      */
     private String getApiSecretKey() {
         if (this.apiSecretKey == null) {
-            this.apiSecretKey = getPreferenceManagerPlugin().getPreferenceValueAsString(
-                    IMafConstants.LICENSE_ECHANNEL_API_SECRET_KEY_PREFERENCE);
+            this.apiSecretKey = getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.LICENSE_ECHANNEL_API_SECRET_KEY_PREFERENCE);
         }
         return this.apiSecretKey;
     }

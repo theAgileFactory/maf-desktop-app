@@ -592,6 +592,7 @@ permission.roadmap_simulator_permission.description=Simulation der Kapazitäten-
 permission.admin_custom_attribute_permission.description=Zusatzfelder konfigurieren
 permission.architecture_permission.description=Um die Architektur-Modul verwenden (DevDock).
 permission.application_block_edit_all_permission.description=Um die Applikationsblöcke zu verwalten (DevDock).
+permission.partner_syndication_permission.description=de: Permission which allows a user to manage the data syndication with partners.
 
 #----------------------
 # preferences

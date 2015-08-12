@@ -580,6 +580,7 @@ permission.roadmap_simulator_permission.description=Permission which allows a us
 permission.admin_custom_attribute_permission.description=Permission which allows a user to manage the custom attributes.
 permission.architecture_permission.description=Permission which allows a user to use the architecture module (DevDock).
 permission.application_block_edit_all_permission.description=Permission which allows a user to manage the application blocks (DevDock).
+permission.partner_syndication_permission.description=Permission which allows a user to manage the data syndication with partners.
 
 #----------------------
 # preferences
