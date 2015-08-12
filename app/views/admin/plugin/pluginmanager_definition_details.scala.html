@@ -21,7 +21,7 @@
 @import bootstrap3._
 @import framework_views.parts
 
-@pluginmanager_template(false, 2, parts.Msg.asString(pluginDescriptor.getName())){
+@pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.PLUGINS, parts.Msg.asString(pluginDescriptor.getName())){
 }{
     <div class="row">
         <div class="col-md-12">

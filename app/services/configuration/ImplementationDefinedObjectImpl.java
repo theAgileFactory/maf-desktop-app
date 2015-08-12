@@ -18,11 +18,7 @@ package services.configuration;
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 import javax.inject.Inject;
-import framework.services.database.IDatabaseDependencyService;
-import javax.inject.Named;
 import javax.inject.Singleton;
-
-import com.avaje.ebean.EbeanServer;
 
 import constants.IMafConstants;
 import controllers.Assets.Asset;
@@ -30,7 +26,7 @@ import dao.finance.CurrencyDAO;
 import framework.commons.DataType;
 import framework.security.SecurityUtils;
 import framework.services.configuration.IImplementationDefinedObjectService;
-import framework.services.kpi.KpiServiceImpl;
+import framework.services.database.IDatabaseDependencyService;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
 import framework.utils.Menu.SeparatorMenuItem;
@@ -39,7 +35,6 @@ import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
 import play.Configuration;
 import play.Logger;
-import play.db.ebean.EbeanConfig;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 import play.mvc.Call;
@@ -75,6 +70,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
     /**
      * Default constructor.
+     * 
      * @param lifecycle
      *            the play application lifecycle listener
      * @param configuration
@@ -83,9 +79,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      *            the service which ensures that the database is available
      */
     @Inject
-    public ImplementationDefinedObjectImpl(
-            ApplicationLifecycle lifecycle, 
-            Configuration configuration,
+    public ImplementationDefinedObjectImpl(ApplicationLifecycle lifecycle, Configuration configuration,
             IDatabaseDependencyService databaseDependencyService) {
         log.info("SERVICE>>> ImplementationDefinedObjectImpl starting...");
         resetTopMenuBar();
@@ -96,17 +90,17 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         });
         log.info("SERVICE>>> ImplementationDefinedObjectImpl started");
     }
-   
+
     /**
      * Return the default currency for the system
      * 
      * @return
      */
     @Override
-    public String getDefaultCurrencyCode(){
+    public String getDefaultCurrencyCode() {
         return CurrencyDAO.getCurrencyDefaultAsCode();
     }
-    
+
     @Override
     public Call getRouteForAjaxWaitImage() {
         return controllers.routes.Assets.versioned(new Asset("images/ajax-loader.gif"));
@@ -241,12 +235,12 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         systemPreferenceMenuItem.setAuthorizedPermissions(
                 SecurityUtils.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
 
-        // Plugin manager
+        // Integration
         ClickableMenuItem pluginManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(3), "topmenubar.admin.integration.menu.label",
                 controllers.admin.routes.PluginManagerController.index());
         adminMenuItem.addSubMenuItem(pluginManagerMenuItem);
-        pluginManagerMenuItem
-                .setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION, IMafConstants.API_MANAGER_PERMISSION));
+        pluginManagerMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION,
+                IMafConstants.API_MANAGER_PERMISSION, IMafConstants.PARTNER_SYNDICATION_PERMISSION));
 
         // KPI manager
         ClickableMenuItem kpiManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(4), "topmenubar.admin.kpimanager.menu.label",

@@ -23,7 +23,7 @@
 @import bootstrap3._
 @import framework_views.parts
 
-@pluginmanager_template(false, 2, parts.Msg.asString("admin.plugin_manager.sidebar.available_plugins")){
+@pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.PLUGINS, parts.Msg.asString("admin.integration.sidebar.plugins.available_plugins")){
 
 }{
 

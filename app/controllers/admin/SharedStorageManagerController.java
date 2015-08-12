@@ -31,19 +31,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import play.Logger;
-import play.Play;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
-import play.mvc.BodyParser;
-import play.mvc.Controller;
-import play.mvc.Http.MultipartFormData;
-import play.mvc.Http.MultipartFormData.FilePart;
-import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
+import controllers.admin.SharedStorageManagerController.SharedStorageFile;
 import framework.commons.IFrameworkConstants;
 import framework.services.storage.ISharedStorageService;
 import framework.utils.IColumnFormatter;
@@ -54,6 +46,15 @@ import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import framework.utils.formats.StringFormatFormatter.Hook;
+import play.Logger;
+import play.Play;
+import play.libs.F.Function0;
+import play.libs.F.Promise;
+import play.mvc.BodyParser;
+import play.mvc.Controller;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
+import play.mvc.Result;
 
 /**
  * The controller which is managing the access to the shared storage.<br/>
@@ -66,7 +67,7 @@ import framework.utils.formats.StringFormatFormatter.Hook;
 public class SharedStorageManagerController extends Controller {
     @Inject
     private ISharedStorageService sharedStorageService;
-    
+
     public static final int MAX_FILE_SIZE = 2 * 1024 * 1024;
 
     /**
@@ -90,13 +91,13 @@ public class SharedStorageManagerController extends Controller {
             this.setColumnCssClass("length", IMafConstants.BOOTSTRAP_COLUMN_3);
 
             this.addColumn("downloadActionLink", "id", "", SorterType.NONE);
-            this.setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<SharedStorageFile>(IMafConstants.DISPLAY_URL_FORMAT,
-                    new Hook<SharedStorageFile>() {
-                        @Override
-                        public String convert(SharedStorageFile value) {
-                            return routes.SharedStorageManagerController.download(value.getId()).url();
-                        }
-                    }));
+            this.setJavaColumnFormatter("downloadActionLink",
+                    new StringFormatFormatter<SharedStorageFile>(IMafConstants.DISPLAY_URL_FORMAT, new Hook<SharedStorageFile>() {
+                @Override
+                public String convert(SharedStorageFile value) {
+                    return routes.SharedStorageManagerController.download(value.getId()).url();
+                }
+            }));
             this.setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
             this.setColumnValueCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
@@ -104,8 +105,8 @@ public class SharedStorageManagerController extends Controller {
             setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<SharedStorageFile>() {
                 @Override
                 public String apply(SharedStorageFile sharedStorageFile, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
                     String url = routes.SharedStorageManagerController.delete(sharedStorageFile.getId()).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 }
@@ -124,10 +125,10 @@ public class SharedStorageManagerController extends Controller {
      */
     public Result index() {
         try {
-            
+
             Table<SharedStorageFile> loadedInputFileTable = getSharedStorageFiles(getSharedStorageService(), IMafConstants.INPUT_FOLDER_NAME);
             Table<SharedStorageFile> loadedOutputFileTable = getSharedStorageFiles(getSharedStorageService(), IMafConstants.OUTPUT_FOLDER_NAME);
-            return ok(views.html.admin.plugin.sharedstorage_display.render(Msg.get("admin.plugin_manager.sidebar.shared_storage"), loadedInputFileTable,
+            return ok(views.html.admin.plugin.sharedstorage_display.render(Msg.get("admin.integration.sidebar.shared_storage"), loadedInputFileTable,
                     loadedOutputFileTable));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -168,7 +169,7 @@ public class SharedStorageManagerController extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    
+
                     String fileName = new String(Base64.decodeBase64(id));
                     response().setContentType("application/x-download");
                     response().setHeader("Content-disposition", "attachment; filename=" + getSharedStorageService().getFile(fileName).getName());
@@ -191,7 +192,7 @@ public class SharedStorageManagerController extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    
+
                     String fileName = new String(Base64.decodeBase64(id));
                     getSharedStorageService().deleteFile(fileName);
                     Utilities.sendSuccessFlashMessage(Msg.get("admin.shared_storage.delete.success"));
@@ -228,7 +229,7 @@ public class SharedStorageManagerController extends Controller {
     @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = MAX_FILE_SIZE)
     public Promise<Result> upload(final boolean isInput) {
         final String folderName = isInput ? IFrameworkConstants.INPUT_FOLDER_NAME : IFrameworkConstants.OUTPUT_FOLDER_NAME;
-        final 
+        final
 
         // Test if the max number of files is not exceeded
         String[] files;
@@ -242,7 +243,7 @@ public class SharedStorageManagerController extends Controller {
             return redirectToIndexAsPromiseWithErrorMessage(Msg.get("admin.shared_storage.upload.error.max_number"));
         }
 
-        // Perform the upload       
+        // Perform the upload
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
@@ -257,8 +258,8 @@ public class SharedStorageManagerController extends Controller {
                         Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.no_file"));
                     }
                 } catch (Exception e) {
-                    Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.file.size.invalid",
-                            FileUtils.byteCountToDisplaySize(MAX_FILE_SIZE)));
+                    Utilities
+                            .sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.file.size.invalid", FileUtils.byteCountToDisplaySize(MAX_FILE_SIZE)));
                     String message = String.format("Failure while uploading a new file in %s", folderName);
                     log.error(message);
                     throw new IOException(message, e);

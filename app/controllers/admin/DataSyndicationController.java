@@ -1,4 +1,4 @@
-@* LICENSE
+/*! LICENSE
  *
  * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
  * reserved.
@@ -14,22 +14,28 @@
  *
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
- *@
-@(table: framework.utils.Table[controllers.admin.PluginManagerController.PluginConfigurationDescriptionTableObject])
+ */
+package controllers.admin;
 
-@import helper._
-@import bootstrap3._
-@import framework_views.parts
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import play.mvc.Controller;
+import play.mvc.Result;
 
-@pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.PLUGINS, parts.Msg.asString("admin.integration.sidebar.plugins.active_plugins")){
+/**
+ * The constroller for the data syndication.
+ * 
+ * @author Johann Kohler
+ */
+@Restrict({ @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
+public class DataSyndicationController extends Controller {
 
-}{
-<div class="row">
-    <div class="col-md-12"> 
-        <blockquote>
-        @parts.Msg("admin.plugin_manager.active_plugins.header")
-        </blockquote>
-        @parts.table.tableview(table)
-    </div>
-</div>
+    public Result viewMasterAgreements() {
+        return TODO;
+    }
+
+    public Result viewConsumerAgreements() {
+        return TODO;
+    }
 }
