@@ -354,6 +354,12 @@ POST   /portfolio-entry/event/manage              controllers.core.PortfolioEntr
 GET    /portfolio-entry/event/delete              controllers.core.PortfolioEntryStatusReportingController.deleteEvent(id: Long, eventId: Long ?= 0)
 
 #-------------------
+# Core: PortfolioEntryDataSyndication
+#-------------------
+
+GET    /portfolio-entry/data-syndication          controllers.core.PortfolioEntryDataSyndicationController.index(id: Long)
+
+#-------------------
 # Core: Timesheet
 #-------------------
 
