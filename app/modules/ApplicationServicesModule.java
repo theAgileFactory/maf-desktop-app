@@ -78,6 +78,8 @@ import play.db.ebean.DefaultEbeanConfig;
 import play.db.ebean.EbeanConfig;
 import security.DefaultHandlerCache;
 import services.configuration.ImplementationDefinedObjectImpl;
+import services.datasyndication.DataSyndicationServiceImpl;
+import services.datasyndication.IDataSyndicationService;
 import services.echannel.EchannelServiceImpl;
 import services.echannel.IEchannelService;
 import services.job.JobDescriptors;
@@ -158,6 +160,7 @@ public class ApplicationServicesModule extends FrameworkModule {
 
         bind(IEchannelService.class).to(EchannelServiceImpl.class).asEagerSingleton();
         bind(ILicensesManagementService.class).to(LicensesManagementServiceImpl.class).asEagerSingleton();
+        bind(IDataSyndicationService.class).to(DataSyndicationServiceImpl.class).asEagerSingleton();
 
         // Configure the authentication system
         IFrameworkConstants.AuthenticationMode authenticationMode = getConfiguredAuthenticationMode();
