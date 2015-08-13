@@ -21,7 +21,7 @@
 
 @templates.main_bc_iconsbar(
     portfolioEntry.getName,
-    controllers.core.PortfolioEntryController.getIconsBar(play.Play.application().configuration().getBoolean("maf.data_syndication.is_active"), portfolioEntry.id, menuItemType),
+    controllers.core.PortfolioEntryController.getIconsBar(utils.Tpl.getDataSyndicationService.isActive, portfolioEntry.id, menuItemType),
     breadcrump
 ){
 }{

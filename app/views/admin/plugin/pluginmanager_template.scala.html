@@ -34,7 +34,7 @@
 
 @templates.main_bc_iconsbar(
     pageTitleI18nCode,
-    controllers.admin.PluginManagerController.getIconsBar(play.Play.application().configuration().getBoolean("maf.data_syndication.is_active"), menuItemType),
+    controllers.admin.PluginManagerController.getIconsBar(utils.Tpl.getDataSyndicationService.isActive, menuItemType),
     breadcrump
 ){
 @header
