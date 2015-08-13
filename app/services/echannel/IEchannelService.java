@@ -20,7 +20,6 @@ package services.echannel;
 import java.util.Date;
 import java.util.List;
 
-import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
@@ -97,19 +96,15 @@ public interface IEchannelService {
     void addLoginEvent(String uid, Boolean result, ErrorCode errorCode, String errorMessage);
 
     /**
-     * Get all partners that are eligible for the slave instance of an
-     * agreement.
-     */
-    List<DataSyndicationPartner> getSlavePartners();
-
-    /**
-     * Get partners, filtered by keywords, that are eligible for the slave
-     * instance of an agreement.
+     * Find the available partners for an agreement with filter.
      * 
+     * @param eligibleAsSlave
+     *            true to return the instances that are eligible to be the slave
+     *            of an agreement, false to return all
      * @param keywords
-     *            the keywords
+     *            the keywords, null to get all
      */
-    List<DataSyndicationPartner> searchFromSlavePartners(String keywords);
+    List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords);
 
     /**
      * Create a new master agreement.
@@ -190,8 +185,8 @@ public interface IEchannelService {
     /**
      * Create a new agreement link (call by a master instance).
      * 
-     * @param agreement
-     *            the corresponding agreement
+     * @param agreementId
+     *            the corresponding agreement id
      * @param agreementItems
      *            the authorized items
      * @param dataType
@@ -201,8 +196,7 @@ public interface IEchannelService {
      * @param permissions
      *            the permissions used to notify the slave instance
      */
-    void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId,
-            String permissions);
+    void submitAgreementLink(Long agreementId, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId, String permissions);
 
     /**
      * Accept a pending agreement link (call by a slave instance).
@@ -265,9 +259,9 @@ public interface IEchannelService {
      * 
      * @param dataType
      *            the data type
-     * @param masterObjectId
+     * @param slaveObjectId
      *            the slave object id
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId);
+    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId);
 
 }

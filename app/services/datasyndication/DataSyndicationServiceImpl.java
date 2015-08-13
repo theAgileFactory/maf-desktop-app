@@ -127,12 +127,12 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
     @Override
     public List<DataSyndicationPartner> getSlavePartners() {
-        return echannelService.getSlavePartners();
+        return echannelService.findPartners(true, null);
     }
 
     @Override
     public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) {
-        return echannelService.searchFromSlavePartners(keywords);
+        return echannelService.findPartners(true, keywords);
     }
 
     @Override
@@ -236,7 +236,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
             throw new DataSyndicationException("The current instance should be the master of the agreement");
         }
 
-        echannelService.submitAgreementLink(agreement, agreementItems, dataType, masterObjectId, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+        echannelService.submitAgreementLink(agreement.id, agreementItems, dataType, masterObjectId, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
 
     }
 

@@ -42,13 +42,18 @@ import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
-import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
 import services.datasyndication.models.DataSyndicationPartner;
+import services.echannel.request.AcceptDataSyndicationAgreementLinkRequest;
+import services.echannel.request.AcceptDataSyndicationAgreementRequest;
 import services.echannel.request.LoginEventRequest;
 import services.echannel.request.LoginEventRequest.ErrorCode;
+import services.echannel.request.PatchDataSyndicationAgreementLinkRequest;
+import services.echannel.request.PatchDataSyndicationAgreementRequest;
+import services.echannel.request.SubmitDataSyndicationAgreementLinkRequest;
+import services.echannel.request.SubmitDataSyndicationAgreementRequest;
 import services.echannel.request.UpdateConsumedPortfolioEntriesRequest;
 import services.echannel.request.UpdateConsumedStorageRequest;
 import services.echannel.request.UpdateConsumedUsersRequest;
@@ -76,6 +81,10 @@ public class EchannelServiceImpl implements IEchannelService {
     private static final String CONSUMED_PORTFOLIO_ENTRIES_ACTION = "consumed-portfolio-entries";
     private static final String CONSUMED_STORAGE_ACTION = "consumed-storage";
     private static final String LOGIN_EVENT_ACTION = "login-event";
+
+    private static final String DATA_SYNDICATION_PARTNER_ACTION = "data-syndication-partner";
+    private static final String DATA_SYNDICATION_AGREEMENT_ACTION = "data-syndication-agreement";
+    private static final String DATA_SYNDICATION_AGREEMENT_LINK_ACTION = "data-syndication-agreement-link";
 
     private static final long WS_TIMEOUT = 2000;
 
@@ -255,101 +264,222 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public List<DataSyndicationPartner> getSlavePartners() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords) {
 
-    @Override
-    public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) {
-        // TODO Auto-generated method stub
-        return null;
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair("eligibleAsSlave", String.valueOf(eligibleAsSlave)));
+        queryParams.add(new BasicNameValuePair("keywords", keywords));
+
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_PARTNER_ACTION + "/find", queryParams, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationPartner> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationPartner.class));
+        }
+
+        return r;
     }
 
     @Override
     public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems,
             String slaveDomain, String permissions) {
-        // TODO Auto-generated method stub
+
+        SubmitDataSyndicationAgreementRequest submitAgreementRequest = new SubmitDataSyndicationAgreementRequest();
+        submitAgreementRequest.refId = refId;
+        submitAgreementRequest.name = name;
+        submitAgreementRequest.startDate = startDate;
+        submitAgreementRequest.endDate = endDate;
+        submitAgreementRequest.agreementItemIds = new ArrayList<>();
+        for (DataSyndicationAgreementItem agreementItem : agreementItems) {
+            submitAgreementRequest.agreementItemIds.add(agreementItem.id);
+        }
+        submitAgreementRequest.slaveDomain = slaveDomain;
+        submitAgreementRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(submitAgreementRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/submit", null, content);
 
     }
 
     @Override
     public void acceptAgreement(Long id, DataSyndicationApiKey apiKey, String permissions) {
-        // TODO Auto-generated method stub
+
+        AcceptDataSyndicationAgreementRequest acceptAgreementRequest = new AcceptDataSyndicationAgreementRequest();
+        acceptAgreementRequest.apiName = apiKey.name;
+        acceptAgreementRequest.apiSecretKey = apiKey.secretKey;
+        acceptAgreementRequest.apiSecretKey = apiKey.applicationKey;
+        acceptAgreementRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(acceptAgreementRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/accept", null, content);
 
     }
 
     @Override
     public void rejectAgreement(Long id, String permissions) {
-        // TODO Auto-generated method stub
+
+        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
+        patchAgreementRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(patchAgreementRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/reject", null, content);
 
     }
 
     @Override
     public void cancelAgreement(Long id, String permissions) {
-        // TODO Auto-generated method stub
+
+        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
+        patchAgreementRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(patchAgreementRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/cancel", null, content);
 
     }
 
     @Override
     public void suspendAgreement(Long id, String permissions) {
-        // TODO Auto-generated method stub
+
+        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
+        patchAgreementRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(patchAgreementRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/suspend", null, content);
 
     }
 
     @Override
     public void restartAgreement(Long id, String permissions) {
-        // TODO Auto-generated method stub
+
+        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
+        patchAgreementRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(patchAgreementRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/restart", null, content);
 
     }
 
     @Override
-    public void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType,
-            Long masterObjectId, String permissions) {
-        // TODO Auto-generated method stub
+    public void submitAgreementLink(Long agreementId, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId,
+            String permissions) {
+
+        SubmitDataSyndicationAgreementLinkRequest submitAgreementLinkRequest = new SubmitDataSyndicationAgreementLinkRequest();
+        submitAgreementLinkRequest.agreementId = agreementId;
+        submitAgreementLinkRequest.agreementItemIds = new ArrayList<>();
+        for (DataSyndicationAgreementItem agreementItem : agreementItems) {
+            submitAgreementLinkRequest.agreementItemIds.add(agreementItem.id);
+        }
+        submitAgreementLinkRequest.dataType = dataType;
+        submitAgreementLinkRequest.masterObjectId = masterObjectId;
+        submitAgreementLinkRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(submitAgreementLinkRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/submit", null, content);
 
     }
 
     @Override
     public void acceptAgreementLink(Long id, Long slaveObjectId, String permissions) {
-        // TODO Auto-generated method stub
+
+        AcceptDataSyndicationAgreementLinkRequest acceptAgreementLinkRequest = new AcceptDataSyndicationAgreementLinkRequest();
+        acceptAgreementLinkRequest.slaveObjectId = slaveObjectId;
+        acceptAgreementLinkRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(acceptAgreementLinkRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/accept", null, content);
 
     }
 
     @Override
     public void rejectAgreementLink(Long id, String permissions) {
-        // TODO Auto-generated method stub
+
+        PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
+        patchAgreementLinkRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(patchAgreementLinkRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/reject", null, content);
 
     }
 
     @Override
     public void cancelAgreementLink(Long id, String permissions) {
-        // TODO Auto-generated method stub
+
+        PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
+        patchAgreementLinkRequest.permissions = permissions;
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(patchAgreementLinkRequest);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/cancel", null, content);
 
     }
 
     @Override
     public DataSyndicationAgreementLink getAgreementLink(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id, null, null);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.convertValue(response, DataSyndicationAgreementLink.class);
     }
 
     @Override
     public List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() {
-        // TODO Auto-generated method stub
-        return null;
+
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/find/to-synchronize", null, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationAgreementLink> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+        }
+
+        return r;
+
     }
 
     @Override
     public List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) {
-        // TODO Auto-generated method stub
-        return null;
+
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair("dataType", dataType));
+        queryParams.add(new BasicNameValuePair("masterObjectId", String.valueOf(masterObjectId)));
+
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/find/as-master", queryParams, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationAgreementLink> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+        }
+
+        return r;
+
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId) {
+
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair("dataType", dataType));
+        queryParams.add(new BasicNameValuePair("slaveObjectId", String.valueOf(slaveObjectId)));
+
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/find/as-slave", queryParams, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationAgreementLink> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+        }
+
+        return r;
     }
 
     /**
