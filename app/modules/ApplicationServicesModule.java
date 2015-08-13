@@ -7,31 +7,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.CustomBeanPersistController;
-import models.framework_models.account.SystemPermission;
-
 import org.apache.commons.lang3.tuple.Pair;
 
-import play.Configuration;
-import play.Environment;
-import play.Logger;
-import play.api.db.evolutions.DynamicEvolutions;
-import play.db.DBApi;
-import play.db.ebean.DefaultEbeanConfig;
-import play.db.ebean.EbeanConfig;
-import play.db.ebean.EbeanDynamicEvolutions;
-import security.DefaultHandlerCache;
-import services.configuration.ImplementationDefinedObjectImpl;
-import services.job.JobDescriptors;
-import services.licensesmanagement.ILicensesManagementService;
-import services.licensesmanagement.LicensesManagementServiceImpl;
-import utils.reporting.IReportingUtils;
-import utils.reporting.ReportingUtilsImpl;
-import be.objectify.deadbolt.java.cache.HandlerCache;
-
-import com.avaje.ebean.EbeanServerFactory;
 import com.google.inject.name.Names;
 
+import be.objectify.deadbolt.java.cache.HandlerCache;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.api.ApiAuthenticationBizdockCheck;
@@ -66,8 +46,8 @@ import framework.services.ext.ExtensionManagerServiceImpl;
 import framework.services.ext.IExtensionManagerService;
 import framework.services.job.IJobDescriptor;
 import framework.services.job.IJobsService;
-import framework.services.job.JobsServiceImpl;
 import framework.services.job.JobInitialConfig;
+import framework.services.job.JobsServiceImpl;
 import framework.services.kpi.IKpiService;
 import framework.services.kpi.KpiServiceImpl;
 import framework.services.notification.DefaultNotificationManagerPlugin;
@@ -89,46 +69,61 @@ import framework.services.storage.PersonalStoragePluginImpl;
 import framework.services.storage.SharedStorageServiceImpl;
 import framework.services.system.ISysAdminUtils;
 import framework.services.system.SysAdminUtilsImpl;
+import models.CustomBeanPersistController;
+import models.framework_models.account.SystemPermission;
+import play.Configuration;
+import play.Environment;
+import play.Logger;
+import play.db.ebean.DefaultEbeanConfig;
+import play.db.ebean.EbeanConfig;
+import security.DefaultHandlerCache;
+import services.configuration.ImplementationDefinedObjectImpl;
+import services.echannel.EchannelServiceImpl;
+import services.echannel.IEchannelService;
+import services.job.JobDescriptors;
+import services.licensesmanagement.ILicensesManagementService;
+import services.licensesmanagement.LicensesManagementServiceImpl;
+import utils.reporting.IReportingUtils;
+import utils.reporting.ReportingUtilsImpl;
 
 /**
  * The module which configure the dependency injection for the application
+ * 
  * @author Pierre-Yves Cloux
  */
 public class ApplicationServicesModule extends FrameworkModule {
     private static Logger.ALogger log = Logger.of(ApplicationServicesModule.class);
-    
+
     private final Environment environment;
     private final Configuration configuration;
 
-    public ApplicationServicesModule(
-          Environment environment,
-          Configuration configuration) {
+    public ApplicationServicesModule(Environment environment, Configuration configuration) {
         this.environment = environment;
         this.configuration = configuration;
     }
-    
+
     /**
-     * The method deals with the initializations
-     * required for the application to run
+     * The method deals with the initializations required for the application to
+     * run
      */
     protected void beforeInjection() {
         super.beforeInjection();
         initDataTypes();
-        //initPermissions();
+        // initPermissions();
     }
 
     @Override
     protected void configure() {
         beforeInjection();
-        
-        //runPatchBeforeStart();       
+
+        // runPatchBeforeStart();
         super.configure();
         log.info(">>> Desktop static dependency injected start...");
         requestStaticInjection(CustomBeanPersistController.class);
         requestStaticInjection(ApiAuthenticationBizdockCheck.class);
         requestStaticInjection(StaticAccessor.class);
         log.info("...Desktop static dependency injected end");
-        
+
         log.info(">>> Standard dependency injection start...");
         bind(EbeanConfig.class).toProvider(DefaultEbeanConfig.EbeanConfigParser.class).asEagerSingleton();
         bind(IDatabaseDependencyService.class).to(DatabaseDependencyServiceImpl.class).asEagerSingleton();
@@ -145,29 +140,31 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(INotificationManagerPlugin.class).to(DefaultNotificationManagerPlugin.class).asEagerSingleton();
         bind(IPluginManagerService.class).to(PluginManagerServiceImpl.class).asEagerSingleton();
         bind(IActorSystemPlugin.class).to(ActorSystemPluginImpl.class).asEagerSingleton();
-        
-        //Get the default currency
-        //bind(String.class).annotatedWith(Names.named("defaultCurrencyCode")).toInstance(CurrencyDAO.getCurrencyDefaultAsCode());
+
+        // Get the default currency
+        // bind(String.class).annotatedWith(Names.named("defaultCurrencyCode")).toInstance(CurrencyDAO.getCurrencyDefaultAsCode());
         bind(IKpiService.class).to(KpiServiceImpl.class).asEagerSingleton();
-        
-        //Initialize with a defined list of jobs
-        List<Pair<IJobDescriptor,Boolean>> jobs = new ArrayList<>();
-        jobs.add(Pair.of(new JobDescriptors.UpdateConsumedLicensesJobDescriptor(),true));
+
+        // Initialize with a defined list of jobs
+        List<Pair<IJobDescriptor, Boolean>> jobs = new ArrayList<>();
+        jobs.add(Pair.of(new JobDescriptors.UpdateConsumedLicensesJobDescriptor(), true));
         bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
         bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
-        
+
         bind(ICustomRouterService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
         bind(ICustomRouterNotificationService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
-        
+
         bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
+
+        bind(IEchannelService.class).to(EchannelServiceImpl.class).asEagerSingleton();
         bind(ILicensesManagementService.class).to(LicensesManagementServiceImpl.class).asEagerSingleton();
-        
-        //Configure the authentication system
+
+        // Configure the authentication system
         IFrameworkConstants.AuthenticationMode authenticationMode = getConfiguredAuthenticationMode();
         bind(IFrameworkConstants.AuthenticationMode.class).annotatedWith(Names.named("AuthenticatonMode")).toInstance(authenticationMode);
         log.warn("AUTHENTICATION MODE [" + authenticationMode + "]");
-        Boolean ldapMasterMode=getConfiguration().getBoolean("maf.ic_ldap_master");
-        switch(authenticationMode){
+        Boolean ldapMasterMode = getConfiguration().getBoolean("maf.ic_ldap_master");
+        switch (authenticationMode) {
         case CAS_MASTER:
             bind(IAuthenticationAccountReaderPlugin.class).to(DefaultAuthenticationAccountReaderPlugin.class).asEagerSingleton();
             bind(IAuthenticationAccountWriterPlugin.class).to(DefaultAuthenticationAccountWriterPlugin.class).asEagerSingleton();
@@ -197,13 +194,14 @@ public class ApplicationServicesModule extends FrameworkModule {
             bind(IAccountManagerPlugin.class).to(AccountManagerPluginImpl.class).asEagerSingleton();
             break;
         }
-        
-        bind(IAuditLoggerService.class).to(AuditLoggerServiceImpl.class).asEagerSingleton();;
+
+        bind(IAuditLoggerService.class).to(AuditLoggerServiceImpl.class).asEagerSingleton();
+        ;
         bind(IReportingUtils.class).to(ReportingUtilsImpl.class).asEagerSingleton();
         bind(ISysAdminUtils.class).to(SysAdminUtilsImpl.class).asEagerSingleton();
         log.info(">>> Standard dependency injection end");
     }
-    
+
     /**
      * Register the data types to be used in various place of the application
      */
@@ -234,7 +232,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true);
         MafDataType.add(IMafConstants.WorkOrder, "models.finance.WorkOrder", false, true);
     }
-    
+
     /**
      * Check permissions (=check the consistency between the code and the
      * database content).
@@ -246,7 +244,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         }
         log.info(">>>>>>>>>>>>>>>> Check permissions consistency (end)");
     }
-    
+
     /**
      * Execute the patches.
      */
@@ -284,35 +282,36 @@ public class ApplicationServicesModule extends FrameworkModule {
      * <li>read from the database (if a record exists)</li>
      * <li>read from the configuration file (default option)</li>
      * </ul>
+     * 
      * @return
      */
-    public AuthenticationMode getConfiguredAuthenticationMode(){
-        Connection connection=null;
-        try{
-            String driver=getConfiguration().getString("db.default.driver");
-            String url=getConfiguration().getString("db.default.url");
-            String username=getConfiguration().getString("db.default.username");
-            String password=getConfiguration().getString("db.default.password");
+    public AuthenticationMode getConfiguredAuthenticationMode() {
+        Connection connection = null;
+        try {
+            String driver = getConfiguration().getString("db.default.driver");
+            String url = getConfiguration().getString("db.default.url");
+            String username = getConfiguration().getString("db.default.username");
+            String password = getConfiguration().getString("db.default.password");
             Class.forName(driver);
-            connection=DriverManager.getConnection(url,username, password);
-            String sql="select scav.value from string_custom_attribute_value as scav "+
-            "join custom_attribute_definition as cad on scav.custom_attribute_definition_id=cad.id "+
-            "join preference as pref on pref.uuid=cad.uuid "+
-            "where pref.uuid='AUTHENTICATION_MODE_PREFERENCE'";
-            Statement stmt=connection.createStatement();
-            ResultSet rs=stmt.executeQuery(sql);
-            if(rs.first()){
+            connection = DriverManager.getConnection(url, username, password);
+            String sql = "select scav.value from string_custom_attribute_value as scav "
+                    + "join custom_attribute_definition as cad on scav.custom_attribute_definition_id=cad.id "
+                    + "join preference as pref on pref.uuid=cad.uuid " + "where pref.uuid='AUTHENTICATION_MODE_PREFERENCE'";
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.first()) {
                 return AuthenticationMode.valueOf(rs.getString("value"));
             }
             return AuthenticationMode.valueOf(getConfiguration().getString("maf.authentication.mode"));
-        }catch(Exception e){
-            throw new IllegalArgumentException("Unable to read the authentication mode from the database",e);
-        }finally{
-            try{
-                if(connection!=null){
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to read the authentication mode from the database", e);
+        } finally {
+            try {
+                if (connection != null) {
                     connection.close();
                 }
-            }catch(Exception e){}
+            } catch (Exception e) {
+            }
         }
     }
 }

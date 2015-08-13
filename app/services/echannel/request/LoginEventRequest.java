@@ -15,22 +15,37 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package services.echannel.request;
 
 /**
- * The content for the updateConsumedUsers request.
+ * The content for the loginEvent request.
  * 
  * @author Johann Kohler
  * 
  */
-public class UpdateConsumedUsersRequest {
+public class LoginEventRequest {
 
-    public Integer consumedUsers;
+    public String uid;
+
+    public Boolean result;
+
+    public ErrorCode errorCode;
+
+    public String errorMessage;
 
     /**
      * Default constructor.
      */
-    public UpdateConsumedUsersRequest() {
+    public LoginEventRequest() {
+    }
+
+    /**
+     * The error codes.
+     * 
+     * @author Johann Kohler
+     */
+    public static enum ErrorCode {
+        WRONG_CREDENTIAL, IS_NOT_ACCESSIBLE;
     }
 
 }

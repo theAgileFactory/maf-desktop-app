@@ -15,37 +15,23 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package services.echannel.request;
+
 
 /**
- * The content for the loginEvent request.
+ * The content for the updateConsumedStorage request.
  * 
  * @author Johann Kohler
  * 
  */
-public class LoginEventRequest {
+public class UpdateConsumedStorageRequest {
 
-    public String uid;
-
-    public Boolean result;
-
-    public ErrorCode errorCode;
-
-    public String errorMessage;
+    public Integer consumedStorage;
 
     /**
      * Default constructor.
      */
-    public LoginEventRequest() {
-    }
-
-    /**
-     * The error codes.
-     * 
-     * @author Johann Kohler
-     */
-    public static enum ErrorCode {
-        WRONG_CREDENTIAL, IS_NOT_ACCESSIBLE;
+    public UpdateConsumedStorageRequest() {
     }
 
 }

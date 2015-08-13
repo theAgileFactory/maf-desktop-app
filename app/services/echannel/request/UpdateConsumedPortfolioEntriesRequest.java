@@ -15,23 +15,22 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
-
+package services.echannel.request;
 
 /**
- * The content for the updateConsumedStorage request.
+ * The content for the updateConsumedPortfolioEntries request.
  * 
  * @author Johann Kohler
  * 
  */
-public class UpdateConsumedStorageRequest {
+public class UpdateConsumedPortfolioEntriesRequest {
 
-    public Integer consumedStorage;
+    public Integer consumedPortfolioEntries;
 
     /**
      * Default constructor.
      */
-    public UpdateConsumedStorageRequest() {
+    public UpdateConsumedPortfolioEntriesRequest() {
     }
 
 }

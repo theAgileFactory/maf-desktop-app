@@ -15,22 +15,22 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package services.echannel.request;
 
 /**
- * The content for the updateConsumedPortfolioEntries request.
+ * The content for the updateConsumedUsers request.
  * 
  * @author Johann Kohler
  * 
  */
-public class UpdateConsumedPortfolioEntriesRequest {
+public class UpdateConsumedUsersRequest {
 
-    public Integer consumedPortfolioEntries;
+    public Integer consumedUsers;
 
     /**
      * Default constructor.
      */
-    public UpdateConsumedPortfolioEntriesRequest() {
+    public UpdateConsumedUsersRequest() {
     }
 
 }

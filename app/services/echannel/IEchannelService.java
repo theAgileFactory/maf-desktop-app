@@ -15,19 +15,19 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package services.echannel;
 
 import services.echannel.request.LoginEventRequest.ErrorCode;
 
 /**
- * The licenses management service.
+ * The echannel service.
  * 
  * @author Johann Kohler
  * 
  */
-public interface ILicensesManagementService {
+public interface IEchannelService {
 
-    String NAME = "licensesManagementService";
+    String NAME = "echannelService";
 
     /**
      * Return true if this is possible to create a new user.
