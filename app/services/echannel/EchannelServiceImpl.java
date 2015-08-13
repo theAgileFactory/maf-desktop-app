@@ -18,6 +18,7 @@
 package services.echannel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,6 +34,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import constants.IMafConstants;
 import framework.services.account.IPreferenceManagerPlugin;
+import models.framework_models.api.ApiRegistration;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -46,6 +48,10 @@ import services.echannel.request.LoginEventRequest.ErrorCode;
 import services.echannel.request.UpdateConsumedPortfolioEntriesRequest;
 import services.echannel.request.UpdateConsumedStorageRequest;
 import services.echannel.request.UpdateConsumedUsersRequest;
+import services.echannel.response.DataSyndicationAgreement;
+import services.echannel.response.DataSyndicationAgreementItem;
+import services.echannel.response.DataSyndicationAgreementLink;
+import services.echannel.response.DataSyndicationPartner;
 
 /**
  * The eChannel service.
@@ -246,6 +252,104 @@ public class EchannelServiceImpl implements IEchannelService {
             Logger.error("eChannel service unexpected error / addLoginEvent", e);
         }
 
+    }
+
+    @Override
+    public List<DataSyndicationPartner> getSlavePartners() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems,
+            String slaveDomain, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void acceptAgreement(Long id, ApiRegistration apiKey, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void rejectAgreement(Long id, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void cancelAgreement(Long id, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void suspendAgreement(Long id, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void restartAgreement(Long id, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType,
+            Long masterObjectId, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void acceptAgreementLink(Long id, Long slaveObjectId, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void rejectAgreementLink(Long id, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void cancelAgreementLink(Long id, String permissions) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public DataSyndicationAgreementLink getAgreementLink(Long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**

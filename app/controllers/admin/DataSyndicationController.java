@@ -31,10 +31,16 @@ import play.mvc.Result;
 @Restrict({ @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
 public class DataSyndicationController extends Controller {
 
+    /**
+     * Display the list of master agreements.
+     */
     public Result viewMasterAgreements() {
         return TODO;
     }
 
+    /**
+     * Display the list of consumer agreements.
+     */
     public Result viewConsumerAgreements() {
         return TODO;
     }

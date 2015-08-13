@@ -17,14 +17,27 @@
  */
 package services.datasyndication;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import constants.IMafConstants;
+import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.api.commons.ApiSignatureException;
+import framework.services.api.server.IApiApplicationConfiguration;
+import framework.services.api.server.IApiSignatureService;
+import models.framework_models.api.ApiRegistration;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 import services.echannel.IEchannelService;
+import services.echannel.response.DataSyndicationAgreement;
+import services.echannel.response.DataSyndicationAgreementItem;
+import services.echannel.response.DataSyndicationAgreementLink;
+import services.echannel.response.DataSyndicationPartner;
 
 /**
  * The data syndication service.
@@ -37,7 +50,9 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
     private boolean isActive;
 
+    private IApiSignatureService apiSignatureService;
     private IEchannelService echannelService;
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     /**
      * Configurations of the the service.
@@ -78,15 +93,22 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
      *            the Play configuration service
      * @param echannelService
      *            the eChannel service
+     * @param apiSignatureService
+     *            the API signature service
+     * @param preferenceManagerPlugin
+     *            the preference service
      */
     @Inject
-    public DataSyndicationServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IEchannelService echannelService) {
+    public DataSyndicationServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IEchannelService echannelService,
+            IApiSignatureService apiSignatureService, IPreferenceManagerPlugin preferenceManagerPlugin) {
 
         Logger.info("SERVICE>>> DataSyndicationServiceImpl starting...");
 
         this.isActive = configuration.getBoolean(Config.DATA_SYNDICATION_ACTIVE.getConfigurationKey());
 
         this.echannelService = echannelService;
+        this.apiSignatureService = apiSignatureService;
+        this.preferenceManagerPlugin = preferenceManagerPlugin;
 
         lifecycle.addStopHook(() -> {
             Logger.info("SERVICE>>> DataSyndicationServiceImpl stopping...");
@@ -100,6 +122,194 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public boolean isActive() {
         return this.isActive;
+    }
+
+    @Override
+    public List<DataSyndicationPartner> getSlavePartners() {
+        return echannelService.getSlavePartners();
+    }
+
+    @Override
+    public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) {
+        return echannelService.searchFromSlavePartners(keywords);
+    }
+
+    @Override
+    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems,
+            String slaveDomain) {
+        echannelService.submitAgreement(refId, name, startDate, endDate, agreementItems, slaveDomain, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+    }
+
+    @Override
+    public void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException {
+
+        if (!agreement.status.equals(DataSyndicationAgreement.Status.PENDING)) {
+            throw new DataSyndicationException("Impossible to accept a non-pending agreement");
+        }
+
+        if (!agreement.slaveDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the slave of the agreement");
+        }
+
+        // TODO add a flag isDisplayed in api_registration
+        // TODO add method to get the application and signature keys
+
+        // create an API key
+
+        // TODO unique name
+        IApiApplicationConfiguration key = apiSignatureService.setApplicationConfiguration("TODO unique name", "Data syndication key", false, "* (.*)");
+
+        // TODO assign the key
+        ApiRegistration apiKey = null;
+
+        echannelService.acceptAgreement(agreement.id, apiKey, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public void rejectAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
+
+        if (!agreement.status.equals(DataSyndicationAgreement.Status.PENDING)) {
+            throw new DataSyndicationException("Impossible to reject a non-pending agreement");
+        }
+
+        if (!agreement.slaveDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the slave of the agreement");
+        }
+
+        echannelService.rejectAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+    }
+
+    @Override
+    public void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException {
+
+        if (!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)) {
+            throw new DataSyndicationException("Impossible to cancel a non-ongoing agreement");
+        }
+
+        if (!agreement.slaveDomain.equals(this.getCurrentDomain()) && !agreement.masterDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the master or the slave of the agreement");
+        }
+
+        // Remove the API key
+        apiSignatureService.deleteApplicationConfiguration(agreement.apiKey.name);
+
+        echannelService.cancelAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public void suspendAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
+
+        if (!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)) {
+            throw new DataSyndicationException("Impossible to suspend a non-ongoing agreement");
+        }
+
+        if (!agreement.masterDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the master of the agreement");
+        }
+
+        echannelService.suspendAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
+
+        if (!agreement.status.equals(DataSyndicationAgreement.Status.SUSPENDED)) {
+            throw new DataSyndicationException("Impossible to restart a non-suspended agreement");
+        }
+
+        if (!agreement.masterDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the master of the agreement");
+        }
+
+        echannelService.restartAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType,
+            Long masterObjectId) throws DataSyndicationException {
+
+        if (!agreement.masterDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the master of the agreement");
+        }
+
+        echannelService.submitAgreementLink(agreement, agreementItems, dataType, masterObjectId, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws DataSyndicationException {
+
+        if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.PENDING)) {
+            throw new DataSyndicationException("Impossible to accept a non-pending agreement link");
+        }
+
+        if (!agreementLink.agreement.slaveDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the slave of the agreement");
+        }
+
+        echannelService.acceptAgreementLink(agreementLink.id, slaveObjectId, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
+
+        if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.PENDING)) {
+            throw new DataSyndicationException("Impossible to reject a non-pending agreement link");
+        }
+
+        if (!agreementLink.agreement.slaveDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the slave of the agreement");
+        }
+
+        echannelService.rejectAgreementLink(agreementLink.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
+
+        if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.ONGOING)) {
+            throw new DataSyndicationException("Impossible to cancel a non-ongoing agreement link");
+        }
+
+        if (!agreementLink.agreement.slaveDomain.equals(this.getCurrentDomain()) && !agreementLink.agreement.masterDomain.equals(this.getCurrentDomain())) {
+            throw new DataSyndicationException("The current instance should be the master or the slave of the agreement");
+        }
+
+        echannelService.cancelAgreement(agreementLink.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+    }
+
+    @Override
+    public DataSyndicationAgreementLink getAgreementLink(DataSyndicationAgreementLink agreementLink) {
+        return echannelService.getAgreementLink(agreementLink.id);
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() {
+        return echannelService.getAgreementLinksToSynchronize();
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) {
+        return echannelService.getAgreementLinksOfMasterObject(dataType, masterObjectId);
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) {
+        return echannelService.getAgreementLinksOfSlaveObject(dataType, masterObjectId);
+    }
+
+    /**
+     * Get the domain of the current instance.
+     */
+    private String getCurrentDomain() {
+        return preferenceManagerPlugin.getPreferenceValueAsString(IMafConstants.LICENSE_INSTANCE_DOMAIN_PREFERENCE);
     }
 
 }

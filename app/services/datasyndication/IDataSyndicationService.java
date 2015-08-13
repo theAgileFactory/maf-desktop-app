@@ -17,6 +17,15 @@
  */
 package services.datasyndication;
 
+import java.util.Date;
+import java.util.List;
+
+import framework.services.api.commons.ApiSignatureException;
+import services.echannel.response.DataSyndicationAgreement;
+import services.echannel.response.DataSyndicationAgreementItem;
+import services.echannel.response.DataSyndicationAgreementLink;
+import services.echannel.response.DataSyndicationPartner;
+
 /**
  * The data syndication service.
  * 
@@ -31,5 +40,179 @@ public interface IDataSyndicationService {
      * Return true if the data syndication system is active.
      */
     boolean isActive();
+
+    /**
+     * Get all partners that are eligible for the slave instance of an
+     * agreement.
+     * 
+     * Note: the current instance should be manually subtracted of the list.
+     */
+    List<DataSyndicationPartner> getSlavePartners();
+
+    /**
+     * Get partners, filtered by keywords, that are eligible for the slave
+     * instance of an agreement.
+     * 
+     * Note: the current instance should be manually subtracted of the list.
+     * 
+     * @param keywords
+     *            the keywords
+     */
+    List<DataSyndicationPartner> searchFromSlavePartners(String keywords);
+
+    /**
+     * Create a new master agreement.
+     * 
+     * The agreement should then be accepted by the slave instance.
+     * 
+     * @param refId
+     *            the refId
+     * @param name
+     *            the name
+     * @param startDate
+     *            the start date
+     * @param endDate
+     *            the end date
+     * @param agreementItems
+     *            the authorized items
+     * @param slaveDomain
+     *            the domain of the slave instance
+     */
+    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems, String slaveDomain);
+
+    /**
+     * Accept a pending agreement (call by a slave instance).
+     * 
+     * @param agreement
+     *            the agreement
+     */
+    void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException;
+
+    /**
+     * Reject a pending agreement (call by a slave instance).
+     * 
+     * @param agreement
+     *            the agreement
+     */
+    void rejectAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
+
+    /**
+     * Cancel an ongoing agreement.
+     * 
+     * @param agreement
+     *            the agreement
+     */
+    void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException;
+
+    /**
+     * Suspend an ongoing agreement (call by a master instance).
+     * 
+     * @param agreement
+     *            the agreement
+     */
+    void suspendAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
+
+    /**
+     * Restart a suspended agreement (call by a master instance).
+     * 
+     * @param agreement
+     *            the agreement
+     */
+    void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
+
+    /**
+     * Create a new agreement link (call by a master instance).
+     * 
+     * @param agreement
+     *            the corresponding agreement
+     * @param agreementItems
+     *            the authorized items
+     * @param dataType
+     *            the data type
+     * @param masterObjectId
+     *            the id of the master object
+     */
+    void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId)
+            throws DataSyndicationException;
+
+    /**
+     * Accept a pending agreement link (call by a slave instance).
+     * 
+     * @param agreementLink
+     *            the agreement link
+     * @param slaveObjectId
+     *            the associated slave object id
+     */
+    void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws DataSyndicationException;
+
+    /**
+     * Reject a pending agreement link (call by a slave instance).
+     * 
+     * @param agreementLink
+     *            the agreement link
+     */
+    void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
+
+    /**
+     * Cancel an ongoing agreement link.
+     * 
+     * @param agreementLink
+     *            the agreement link
+     */
+    void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
+
+    /**
+     * Get an agreement link by id.
+     * 
+     * @param agreementLink
+     *            the agreement link
+     */
+    DataSyndicationAgreementLink getAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
+
+    /**
+     * Get the ongoing agreement links.
+     */
+    List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() throws DataSyndicationException;
+
+    /**
+     * Get the agreement links for a master object.
+     * 
+     * @param dataType
+     *            the data type
+     * @param masterObjectId
+     *            the master object id
+     */
+    List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) throws DataSyndicationException;
+
+    /**
+     * Get the agreement links for a slave object.
+     * 
+     * @param dataType
+     *            the data type
+     * @param masterObjectId
+     *            the slave object id
+     */
+    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws DataSyndicationException;
+
+    /**
+     * The data syndication exception.
+     * 
+     * @author Johann Kohler
+     *
+     */
+    public static class DataSyndicationException extends Exception {
+        private static final long serialVersionUID = 456423132897542L;
+
+        /**
+         * Construct with message.
+         * 
+         * @param message
+         *            the exception message
+         */
+        public DataSyndicationException(String message) {
+            super(message);
+        }
+
+    }
 
 }
