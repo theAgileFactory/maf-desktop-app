@@ -31,13 +31,19 @@ public interface IEchannelService {
 
     /**
      * Return true if this is possible to create a new user.
+     * 
+     * @param consumedUsers
+     *            the current number of consumed users
      */
-    boolean canCreateUser();
+    boolean canCreateUser(int consumedUsers);
 
     /**
      * Return true if this is possible to create a new portfolio entry.
+     * 
+     * @param consumedPortfolioEntries
+     *            the current number of consumed portfolio entries
      */
-    boolean canCreatePortfolioEntry();
+    boolean canCreatePortfolioEntry(int consumedPortfolioEntries);
 
     /**
      * Return true if the instance is accessible.
@@ -46,18 +52,27 @@ public interface IEchannelService {
 
     /**
      * Update the number of consumed users.
+     * 
+     * @param consumedUsers
+     *            the current number of consumed users
      */
-    void updateConsumedUsers();
+    void updateConsumedUsers(int consumedUsers);
 
     /**
      * Update the number of consumed portfolio entries.
+     * 
+     * @param consumedPortfolioEntries
+     *            the current number of consumed portfolio entries
      */
-    void updateConsumedPortfolioEntries();
+    void updateConsumedPortfolioEntries(int consumedPortfolioEntries);
 
     /**
      * Update the number of consumed storage.
+     * 
+     * @param consumedStorage
+     *            the current number of consumed storage
      */
-    void updateConsumedStorage();
+    void updateConsumedStorage(int consumedStorage);
 
     /**
      * Add a login event.

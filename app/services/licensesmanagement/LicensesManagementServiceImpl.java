@@ -20,6 +20,12 @@ package services.licensesmanagement;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dao.pmo.PortfolioEntryDao;
+import framework.services.ext.IExtensionManagerService;
+import framework.services.storage.IAttachmentManagerPlugin;
+import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.storage.ISharedStorageService;
+import models.framework_models.account.Principal;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -39,6 +45,10 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     private boolean isActive;
 
     private IEchannelService echannelService;
+    private ISharedStorageService sharedStorageService;
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
+    private IExtensionManagerService extensionManagerService;
+    private IPersonalStoragePlugin personalStoragePlugin;
 
     /**
      * Configurations of the the service.
@@ -79,15 +89,29 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
      *            the Play configuration service
      * @param echannelService
      *            the eChannel service
+     * @param sharedStorageService
+     *            the shared storage service
+     * @param attachmentManagerPlugin
+     *            the attachment manager service
+     * @param extensionManagerService
+     *            the extension manager service
+     * @param personalStoragePlugin
+     *            the personal storage service
      */
     @Inject
-    public LicensesManagementServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IEchannelService echannelService) {
+    public LicensesManagementServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IEchannelService echannelService,
+            ISharedStorageService sharedStorageService, IAttachmentManagerPlugin attachmentManagerPlugin, IExtensionManagerService extensionManagerService,
+            IPersonalStoragePlugin personalStoragePlugin) {
 
         Logger.info("SERVICE>>> LicensesManagementServiceImpl starting...");
 
         this.isActive = configuration.getBoolean(Config.LICENSE_MANAGEMENT_ACTIVE.getConfigurationKey());
 
         this.echannelService = echannelService;
+        this.sharedStorageService = sharedStorageService;
+        this.attachmentManagerPlugin = attachmentManagerPlugin;
+        this.extensionManagerService = extensionManagerService;
+        this.personalStoragePlugin = personalStoragePlugin;
 
         lifecycle.addStopHook(() -> {
             Logger.info("SERVICE>>> LicensesManagementServiceImpl stopping...");
@@ -101,7 +125,7 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     @Override
     public boolean canCreateUser() {
         if (this.isActive) {
-            return echannelService.canCreateUser();
+            return echannelService.canCreateUser(Principal.getConsumedUsers());
         } else {
             return true;
         }
@@ -110,7 +134,7 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     @Override
     public boolean canCreatePortfolioEntry() {
         if (this.isActive) {
-            return echannelService.canCreatePortfolioEntry();
+            return echannelService.canCreatePortfolioEntry(PortfolioEntryDao.getPEAsExpr(false).findRowCount());
         } else {
             return true;
         }
@@ -128,21 +152,49 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     @Override
     public void updateConsumedUsers() {
         if (this.isActive) {
-            echannelService.updateConsumedUsers();
+            echannelService.updateConsumedUsers(Principal.getConsumedUsers());
         }
     }
 
     @Override
     public void updateConsumedPortfolioEntries() {
         if (this.isActive) {
-            echannelService.updateConsumedPortfolioEntries();
+            echannelService.updateConsumedPortfolioEntries(PortfolioEntryDao.getPEAsExpr(false).findRowCount());
         }
     }
 
     @Override
     public void updateConsumedStorage() {
+
         if (this.isActive) {
-            echannelService.updateConsumedStorage();
+
+            try {
+
+                // shared storage
+                long sharedStorage = getSharedStorageService().getSize();
+                Logger.debug("sharedStorage (B): " + sharedStorage);
+
+                // personal storage
+                long personalStorage = getPersonalStoragePlugin().getSize();
+                Logger.debug("personalStorage (B): " + personalStorage);
+
+                // attachments
+                long attachments = getAttachmentManagerPlugin().getSize();
+                Logger.debug("attachments (B): " + attachments);
+
+                // extensions
+                long extensions = getExtensionManagerService().getSize();
+                Logger.debug("extensions (B): " + extensions);
+
+                int storage = (int) (sharedStorage + personalStorage + attachments + extensions) / (1024 * 1024 * 1024);
+                Logger.debug("storage (GB): " + storage);
+
+                echannelService.updateConsumedStorage(storage);
+
+            } catch (Exception e) {
+                Logger.error("License management service unexpected error / updateConsumedStorage", e);
+            }
+
         }
     }
 
@@ -151,6 +203,34 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
         if (this.isActive) {
             echannelService.addLoginEvent(uid, result, errorCode, errorMessage);
         }
+    }
+
+    /**
+     * Get the shared storage service.
+     */
+    private ISharedStorageService getSharedStorageService() {
+        return sharedStorageService;
+    }
+
+    /**
+     * Get the attachment manager service.
+     */
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
+    }
+
+    /**
+     * Get the extension manager service.
+     */
+    private IExtensionManagerService getExtensionManagerService() {
+        return extensionManagerService;
+    }
+
+    /**
+     * Get the personal storage service.
+     */
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
     }
 
 }

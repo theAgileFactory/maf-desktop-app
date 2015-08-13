@@ -32,13 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import constants.IMafConstants;
-import dao.pmo.PortfolioEntryDao;
 import framework.services.account.IPreferenceManagerPlugin;
-import framework.services.ext.IExtensionManagerService;
-import framework.services.storage.IAttachmentManagerPlugin;
-import framework.services.storage.IPersonalStoragePlugin;
-import framework.services.storage.ISharedStorageService;
-import models.framework_models.account.Principal;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -65,11 +59,7 @@ public class EchannelServiceImpl implements IEchannelService {
     private String echannelApiUrl;
     private String apiSecretKey;
 
-    private ISharedStorageService sharedStorageService;
-    private IAttachmentManagerPlugin attachmentManagerPlugin;
-    private IExtensionManagerService extensionManagerService;
     private IPreferenceManagerPlugin preferenceManagerPlugin;
-    private IPersonalStoragePlugin personalStoragePlugin;
 
     private static final String ACTION_PATTERN = "/{domain}/{action}";
 
@@ -122,32 +112,18 @@ public class EchannelServiceImpl implements IEchannelService {
      *            the Play life cycle service
      * @param configuration
      *            the Play configuration service
-     * @param sharedStorageService
-     *            the shared storage service
-     * @param attachmentManagerPlugin
-     *            the attachment manager service
-     * @param extensionManagerService
-     *            the extension manager service
      * @param preferenceManagerPlugin
      *            the preference service
-     * @param personalStoragePlugin
-     *            the personal storage service
      */
 
     @Inject
-    public EchannelServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, ISharedStorageService sharedStorageService,
-            IAttachmentManagerPlugin attachmentManagerPlugin, IExtensionManagerService extensionManagerService,
-            IPreferenceManagerPlugin preferenceManagerPlugin, IPersonalStoragePlugin personalStoragePlugin) {
+    public EchannelServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IPreferenceManagerPlugin preferenceManagerPlugin) {
         Logger.info("SERVICE>>> EchannelServiceImpl starting...");
 
         this.echannelApiUrl = configuration.getString(Config.ECHANNEL_API_URL.getConfigurationKey());
         this.apiSecretKey = null;
 
-        this.sharedStorageService = sharedStorageService;
-        this.attachmentManagerPlugin = attachmentManagerPlugin;
-        this.extensionManagerService = extensionManagerService;
         this.preferenceManagerPlugin = preferenceManagerPlugin;
-        this.personalStoragePlugin = personalStoragePlugin;
 
         lifecycle.addStopHook(() -> {
             Logger.info("SERVICE>>> EchannelServiceImpl stopping...");
@@ -159,11 +135,11 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public boolean canCreateUser() {
+    public boolean canCreateUser(int consumedUsers) {
 
         try {
             List<NameValuePair> queryParams = new ArrayList<>();
-            queryParams.add(new BasicNameValuePair("consumedUsers", String.valueOf(Principal.getConsumedUsers())));
+            queryParams.add(new BasicNameValuePair("consumedUsers", String.valueOf(consumedUsers)));
 
             JsonNode response = this.call(HttpMethod.GET, CAN_CREATE_USER_ACTION, queryParams, null);
             if (response != null) {
@@ -177,11 +153,11 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public boolean canCreatePortfolioEntry() {
+    public boolean canCreatePortfolioEntry(int consumedPortfolioEntries) {
 
         try {
             List<NameValuePair> queryParams = new ArrayList<>();
-            queryParams.add(new BasicNameValuePair("consumedPortfolioEntries", String.valueOf(PortfolioEntryDao.getPEAsExpr(false).findRowCount())));
+            queryParams.add(new BasicNameValuePair("consumedPortfolioEntries", String.valueOf(consumedPortfolioEntries)));
 
             JsonNode response = this.call(HttpMethod.GET, CAN_CREATE_PORTOLIO_ENTRY_ACTION, queryParams, null);
             if (response != null) {
@@ -210,11 +186,11 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void updateConsumedUsers() {
+    public void updateConsumedUsers(int consumedUsers) {
 
         try {
             UpdateConsumedUsersRequest updateConsumedUsersRequest = new UpdateConsumedUsersRequest();
-            updateConsumedUsersRequest.consumedUsers = Principal.getConsumedUsers();
+            updateConsumedUsersRequest.consumedUsers = consumedUsers;
             ObjectMapper mapper = new ObjectMapper();
             JsonNode content = mapper.valueToTree(updateConsumedUsersRequest);
             this.call(HttpMethod.PUT, CONSUMED_USERS_ACTION, null, content);
@@ -225,11 +201,11 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void updateConsumedPortfolioEntries() {
+    public void updateConsumedPortfolioEntries(int consumedPortfolioEntries) {
 
         try {
             UpdateConsumedPortfolioEntriesRequest updateConsumedPortfolioEntriesRequest = new UpdateConsumedPortfolioEntriesRequest();
-            updateConsumedPortfolioEntriesRequest.consumedPortfolioEntries = PortfolioEntryDao.getPEAsExpr(false).findRowCount();
+            updateConsumedPortfolioEntriesRequest.consumedPortfolioEntries = consumedPortfolioEntries;
             ObjectMapper mapper = new ObjectMapper();
             JsonNode content = mapper.valueToTree(updateConsumedPortfolioEntriesRequest);
             this.call(HttpMethod.PUT, CONSUMED_PORTFOLIO_ENTRIES_ACTION, null, content);
@@ -240,30 +216,11 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void updateConsumedStorage() {
+    public void updateConsumedStorage(int consumedStorage) {
 
         try {
-            // shared storage
-            long sharedStorage = getSharedStorageService().getSize();
-            Logger.debug("sharedStorage (B): " + sharedStorage);
-
-            // personal storage
-            long personalStorage = getPersonalStoragePlugin().getSize();
-            Logger.debug("personalStorage (B): " + personalStorage);
-
-            // attachments
-            long attachments = getAttachmentManagerPlugin().getSize();
-            Logger.debug("attachments (B): " + attachments);
-
-            // extensions
-            long extensions = getExtensionManagerService().getSize();
-            Logger.debug("extensions (B): " + extensions);
-
-            int storage = (int) (sharedStorage + personalStorage + attachments + extensions) / (1024 * 1024 * 1024);
-            Logger.debug("storage (GB): " + storage);
-
             UpdateConsumedStorageRequest updateConsumedStorageRequest = new UpdateConsumedStorageRequest();
-            updateConsumedStorageRequest.consumedStorage = storage;
+            updateConsumedStorageRequest.consumedStorage = consumedStorage;
             ObjectMapper mapper = new ObjectMapper();
             JsonNode content = mapper.valueToTree(updateConsumedStorageRequest);
             this.call(HttpMethod.PUT, CONSUMED_STORAGE_ACTION, null, content);
@@ -394,37 +351,10 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     /**
-     * Get the shared storage service.
-     */
-    private ISharedStorageService getSharedStorageService() {
-        return sharedStorageService;
-    }
-
-    /**
-     * Get the attachment manager service.
-     */
-    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
-        return attachmentManagerPlugin;
-    }
-
-    /**
-     * Get the extension manager service.
-     */
-    private IExtensionManagerService getExtensionManagerService() {
-        return extensionManagerService;
-    }
-
-    /**
      * Get the preference manager service.
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
     }
 
-    /**
-     * Get the personal storage service.
-     */
-    private IPersonalStoragePlugin getPersonalStoragePlugin() {
-        return personalStoragePlugin;
-    }
 }
