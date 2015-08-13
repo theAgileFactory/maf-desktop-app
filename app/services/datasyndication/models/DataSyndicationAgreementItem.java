@@ -1,4 +1,4 @@
-package services.echannel.response;
+package services.datasyndication.models;
 
 /**
  * Define an item for a data type that could by synchronized (for data

@@ -1,4 +1,4 @@
-package services.echannel.response;
+package services.datasyndication.models;
 
 import java.util.Date;
 import java.util.List;

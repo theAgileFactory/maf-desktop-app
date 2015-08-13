@@ -1,4 +1,4 @@
-package services.echannel.response;
+package services.datasyndication.models;
 
 /**
  * Define a partner for data syndication.

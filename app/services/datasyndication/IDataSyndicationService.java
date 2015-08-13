@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 import framework.services.api.commons.ApiSignatureException;
-import services.echannel.response.DataSyndicationAgreement;
-import services.echannel.response.DataSyndicationAgreementItem;
-import services.echannel.response.DataSyndicationAgreementLink;
-import services.echannel.response.DataSyndicationPartner;
+import services.datasyndication.models.DataSyndicationAgreement;
+import services.datasyndication.models.DataSyndicationAgreementItem;
+import services.datasyndication.models.DataSyndicationAgreementLink;
+import services.datasyndication.models.DataSyndicationPartner;
 
 /**
  * The data syndication service.

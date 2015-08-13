@@ -33,12 +33,12 @@ import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
+import services.datasyndication.models.DataSyndicationAgreement;
+import services.datasyndication.models.DataSyndicationAgreementItem;
+import services.datasyndication.models.DataSyndicationAgreementLink;
+import services.datasyndication.models.DataSyndicationApiKey;
+import services.datasyndication.models.DataSyndicationPartner;
 import services.echannel.IEchannelService;
-import services.echannel.response.DataSyndicationAgreement;
-import services.echannel.response.DataSyndicationAgreementItem;
-import services.echannel.response.DataSyndicationAgreementLink;
-import services.echannel.response.DataSyndicationApiKey;
-import services.echannel.response.DataSyndicationPartner;
 
 /**
  * The data syndication service.

@@ -42,16 +42,16 @@ import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
+import services.datasyndication.models.DataSyndicationAgreement;
+import services.datasyndication.models.DataSyndicationAgreementItem;
+import services.datasyndication.models.DataSyndicationAgreementLink;
+import services.datasyndication.models.DataSyndicationApiKey;
+import services.datasyndication.models.DataSyndicationPartner;
 import services.echannel.request.LoginEventRequest;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 import services.echannel.request.UpdateConsumedPortfolioEntriesRequest;
 import services.echannel.request.UpdateConsumedStorageRequest;
 import services.echannel.request.UpdateConsumedUsersRequest;
-import services.echannel.response.DataSyndicationAgreement;
-import services.echannel.response.DataSyndicationAgreementItem;
-import services.echannel.response.DataSyndicationAgreementLink;
-import services.echannel.response.DataSyndicationApiKey;
-import services.echannel.response.DataSyndicationPartner;
 
 /**
  * The eChannel service.
