@@ -20,11 +20,11 @@ package services.echannel;
 import java.util.Date;
 import java.util.List;
 
-import models.framework_models.api.ApiRegistration;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 import services.echannel.response.DataSyndicationAgreement;
 import services.echannel.response.DataSyndicationAgreementItem;
 import services.echannel.response.DataSyndicationAgreementLink;
+import services.echannel.response.DataSyndicationApiKey;
 import services.echannel.response.DataSyndicationPartner;
 
 /**
@@ -144,7 +144,7 @@ public interface IEchannelService {
      * @param permissions
      *            the permissions used to notify the master instance
      */
-    void acceptAgreement(Long id, ApiRegistration apiKey, String permissions);
+    void acceptAgreement(Long id, DataSyndicationApiKey apiKey, String permissions);
 
     /**
      * Reject a pending agreement (call by a slave instance).

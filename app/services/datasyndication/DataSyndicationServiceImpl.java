@@ -19,6 +19,7 @@ package services.datasyndication;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,7 +29,6 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.api.commons.ApiSignatureException;
 import framework.services.api.server.IApiApplicationConfiguration;
 import framework.services.api.server.IApiSignatureService;
-import models.framework_models.api.ApiRegistration;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -37,6 +37,7 @@ import services.echannel.IEchannelService;
 import services.echannel.response.DataSyndicationAgreement;
 import services.echannel.response.DataSyndicationAgreementItem;
 import services.echannel.response.DataSyndicationAgreementLink;
+import services.echannel.response.DataSyndicationApiKey;
 import services.echannel.response.DataSyndicationPartner;
 
 /**
@@ -151,16 +152,15 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
             throw new DataSyndicationException("The current instance should be the slave of the agreement");
         }
 
-        // TODO add a flag isDisplayed in api_registration
-        // TODO add method to get the application and signature keys
+        // create an application API key
+        IApiApplicationConfiguration applicationConfiguration = apiSignatureService.setApplicationConfiguration(UUID.randomUUID().toString(),
+                "Data syndication key for the instance " + agreement.masterDomain, false, false, "GET (.*)\nPOST (.*)\nPUT (.*)\nDELETE (.*)");
 
-        // create an API key
-
-        // TODO unique name
-        IApiApplicationConfiguration key = apiSignatureService.setApplicationConfiguration("TODO unique name", "Data syndication key", false, "* (.*)");
-
-        // TODO assign the key
-        ApiRegistration apiKey = null;
+        // Assign the key
+        DataSyndicationApiKey apiKey = new DataSyndicationApiKey();
+        apiKey.name = applicationConfiguration.getApplicationName();
+        apiKey.secretKey = applicationConfiguration.getSignatureGenerator().getSharedSecret();
+        apiKey.applicationKey = applicationConfiguration.getSignatureGenerator().getApplicationKey();
 
         echannelService.acceptAgreement(agreement.id, apiKey, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
 

@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import constants.IMafConstants;
 import framework.services.account.IPreferenceManagerPlugin;
-import models.framework_models.api.ApiRegistration;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -51,6 +50,7 @@ import services.echannel.request.UpdateConsumedUsersRequest;
 import services.echannel.response.DataSyndicationAgreement;
 import services.echannel.response.DataSyndicationAgreementItem;
 import services.echannel.response.DataSyndicationAgreementLink;
+import services.echannel.response.DataSyndicationApiKey;
 import services.echannel.response.DataSyndicationPartner;
 
 /**
@@ -274,7 +274,7 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void acceptAgreement(Long id, ApiRegistration apiKey, String permissions) {
+    public void acceptAgreement(Long id, DataSyndicationApiKey apiKey, String permissions) {
         // TODO Auto-generated method stub
 
     }
