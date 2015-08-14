@@ -171,7 +171,7 @@ public class DataSyndicationAgreementListView {
                 this.setLineAction(new IColumnFormatter<DataSyndicationAgreementListView>() {
                     @Override
                     public String apply(DataSyndicationAgreementListView dataSyndicationAgreementListView, Object value) {
-                        return controllers.admin.routes.DataSyndicationController.viewAgreement(dataSyndicationAgreementListView.id).url();
+                        return controllers.admin.routes.DataSyndicationController.viewAgreement(dataSyndicationAgreementListView.id, true).url();
                     }
                 });
 

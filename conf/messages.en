@@ -1519,6 +1519,15 @@ object.application_block.parent.label=Parent
 object.application_block.table.empty=There is no application block.
 
 #----------------------
+# dataSyndicationAgreementItem
+#----------------------
+
+#portfolio entry
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label=Initiative
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Report status
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Planning package
+
+#----------------------
 # dataSyndicationAgreement
 #----------------------
 
@@ -1540,6 +1549,22 @@ object.data_syndication_agreement.process.label=Process the decision
 object.data_syndication_agreement.suspend.confirm=Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
 object.data_syndication_agreement.cancel.confirm=Are you sure you want to cancel this agreement? This action is definitive and couldn''t be reverted.
 object.data_syndication_agreement.table.empty=There is no agreement
+
+#----------------------
+# dataSyndicationAgreementLink
+#----------------------
+
+object.data_syndication_agreement_link.data_type.label=Data type
+object.data_syndication_agreement_link.object.label=Object
+object.data_syndication_agreement_link.items.label=Synchronized items
+object.data_syndication_agreement_link.status.label=Status
+object.data_syndication_agreement_link.status.PENDING.label=Pending
+object.data_syndication_agreement_link.status.ONGOING.label=Ongoing
+object.data_syndication_agreement_link.status.REJECTED.label=Rejected
+object.data_syndication_agreement_link.status.CANCELLED.label=Cancelled
+object.data_syndication_agreement_link.process.label=Process the decision
+object.data_syndication_agreement_link.cancel.confirm=Are you sure you want to cancel this agreement link? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement_link.table.empty=There is no agreement link
 
 ########################
 # Error pages

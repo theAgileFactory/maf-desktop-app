@@ -136,9 +136,22 @@ public class DataSyndicationController extends Controller {
      * 
      * @param agreementId
      *            the agreement id
+     * @param onlyActiveLink
+     *            if true then display only PENDING and ONGOING links, else all
      */
-    public Result viewAgreement(Long agreementId) {
-        return TODO;
+    public Result viewAgreement(Long agreementId, Boolean onlyActiveLink) {
+
+        if (dataSyndicationService.isActive()) {
+
+            // details of the agreement, including items
+
+            // list of link (only active with link to all)
+
+            return TODO;
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
     }
 
     /**
@@ -213,6 +226,45 @@ public class DataSyndicationController extends Controller {
      *            the agreement id
      */
     public Result cancelAgreement(Long agreementId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Page to accept or reject an agreement link.
+     * 
+     * @param agreementLinkId
+     *            the agreement link id
+     */
+    public Result processAgreementLink(Long agreementLinkId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Accept an agreement link.
+     * 
+     * @param agreementLinkId
+     *            the agreement link id
+     */
+    public Result acceptAgreementLink(Long agreementLinkId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Reject an agreement link.
+     * 
+     * @param agreementLinkId
+     *            the agreement link id
+     */
+    public Result rejectAgreementLink(Long agreementLinkId) {
 
         // TODO check here the right
 

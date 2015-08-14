@@ -3,9 +3,6 @@ package services.datasyndication.models;
 import java.util.Date;
 import java.util.List;
 
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import models.framework_models.api.ApiRegistration;
 
@@ -57,17 +54,6 @@ public class DataSyndicationAgreement {
                     + "</span>";
         }
 
-        /**
-         * Get all statuses.
-         */
-        public static ISelectableValueHolderCollection<String> getAllAsVH() {
-            ISelectableValueHolderCollection<String> r = new DefaultSelectableValueHolderCollection<String>();
-            for (Status status : Status.values()) {
-                r.add(new DefaultSelectableValueHolder<String>(status.name(),
-                        Msg.get("object.data_syndication_agreement.status." + status.name() + ".label")));
-            }
-            return r;
-        }
     }
 
 }

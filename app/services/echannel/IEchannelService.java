@@ -194,6 +194,26 @@ public interface IEchannelService {
     void restartAgreement(Long id, String permissions);
 
     /**
+     * Get an agreement by id.
+     * 
+     * The instance should be the master or the slave of the agreement.
+     * 
+     * @param id
+     *            the agreement id
+     */
+    DataSyndicationAgreement getAgreement(Long id);
+
+    /**
+     * Delete an agreement.
+     * 
+     * The instance should be the master or the slave of the agreement.
+     * 
+     * @param id
+     *            the agreement id
+     */
+    void deleteAgreement(Long id);
+
+    /**
      * Get the master agreements of the instance.
      */
     List<DataSyndicationAgreement> getMasterAgreements();

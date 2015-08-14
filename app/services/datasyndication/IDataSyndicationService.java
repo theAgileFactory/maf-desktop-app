@@ -111,6 +111,22 @@ public interface IDataSyndicationService {
     void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
 
     /**
+     * Get an agreement by id.
+     * 
+     * @param id
+     *            the agreement id
+     */
+    DataSyndicationAgreement getAgreement(Long id);
+
+    /**
+     * Delete an agreement.
+     * 
+     * @param id
+     *            the agreement id
+     */
+    void deleteAgreement(Long id);
+
+    /**
      * Get the master agreements of the instance.
      */
     List<DataSyndicationAgreement> getMasterAgreements();

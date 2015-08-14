@@ -1531,6 +1531,15 @@ object.application_block.parent.label=Parent
 object.application_block.table.empty=Aucun bloc applicatif
 
 #----------------------
+# dataSyndicationAgreementItem
+#----------------------
+
+#portfolio entry
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label=Initiative
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Rapport d''état
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Livrable
+
+#----------------------
 # dataSyndicationAgreement
 #----------------------
 
@@ -1552,6 +1561,22 @@ object.data_syndication_agreement.process.label=Traiter la décision
 object.data_syndication_agreement.suspend.confirm=Etes-vous sûr(e) de vouloir suspendre cet agrément? Toutes les synchronisations correspondantes seront également suspendues.
 object.data_syndication_agreement.cancel.confirm=Etes-vous sûr(e) de vouloir annuler cet agrément? Cette action est définitive.
 object.data_syndication_agreement.table.empty=Aucun agrément.
+
+#----------------------
+# dataSyndicationAgreementLink
+#----------------------
+
+object.data_syndication_agreement_link.data_type.label=Type de donnée
+object.data_syndication_agreement_link.object.label=Objet
+object.data_syndication_agreement_link.items.label=Eléments synchronisés
+object.data_syndication_agreement_link.status.label=Statut
+object.data_syndication_agreement_link.status.PENDING.label=En attente
+object.data_syndication_agreement_link.status.ONGOING.label=En cours
+object.data_syndication_agreement_link.status.REJECTED.label=Rejeté
+object.data_syndication_agreement_link.status.CANCELLED.label=Annulé
+object.data_syndication_agreement_link.process.label=Traiter la décision
+object.data_syndication_agreement_link.cancel.confirm=Etes-vous sûr(e) de vouloir annuler ce lien d''agrément? Cette action est définitive.
+object.data_syndication_agreement_link.table.empty=Aucun lien d''agrément
 
 ########################
 # Error pages

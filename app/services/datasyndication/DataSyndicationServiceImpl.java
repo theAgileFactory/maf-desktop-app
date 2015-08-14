@@ -221,6 +221,24 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
+    public DataSyndicationAgreement getAgreement(Long id) {
+
+        // TODO The current instance should be the master or the slave of the
+        // agreement
+
+        return echannelService.getAgreement(id);
+    }
+
+    @Override
+    public void deleteAgreement(Long id) {
+
+        // TODO The current instance should be the master or the slave of the
+        // agreement
+
+        echannelService.deleteAgreement(id);
+    }
+
+    @Override
     public List<DataSyndicationAgreement> getMasterAgreements() {
         return echannelService.getMasterAgreements();
     }

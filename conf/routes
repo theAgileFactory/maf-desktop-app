@@ -681,13 +681,16 @@ GET     /admin/data-syndication/master-agreements          controllers.admin.Dat
 GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
 GET     /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.submitAgreement()
 POST    /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.processSubmitAgreement()
-GET     /admin/data-syndication/agreement/view             controllers.admin.DataSyndicationController.viewAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/view             controllers.admin.DataSyndicationController.viewAgreement(agreementId: Long, onlyActiveLink: Boolean)
 GET     /admin/data-syndication/agreement/process          controllers.admin.DataSyndicationController.processAgreement(agreementId: Long)
 GET     /admin/data-syndication/agreement/accept           controllers.admin.DataSyndicationController.acceptAgreement(agreementId: Long)
 GET     /admin/data-syndication/agreement/reject           controllers.admin.DataSyndicationController.rejectAgreement(agreementId: Long)
 GET     /admin/data-syndication/agreement/suspend          controllers.admin.DataSyndicationController.suspendAgreement(agreementId: Long)
 GET     /admin/data-syndication/agreement/restart          controllers.admin.DataSyndicationController.restartAgreement(agreementId: Long)
 GET     /admin/data-syndication/agreement/cancel           controllers.admin.DataSyndicationController.cancelAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/link/process     controllers.admin.DataSyndicationController.processAgreementLink(agreementLinkId: Long)
+GET     /admin/data-syndication/agreement/link/accept      controllers.admin.DataSyndicationController.acceptAgreementLink(agreementLinkId: Long)
+GET     /admin/data-syndication/agreement/link/reject      controllers.admin.DataSyndicationController.rejectAgreementLink(agreementLinkId: Long)
 
 #Configurators routes
 GET    /plugin/custcfg/:actionId/get/:id                      framework.services.plugins.PluginConfiguratorController.doGetForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)

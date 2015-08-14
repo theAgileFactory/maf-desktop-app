@@ -368,6 +368,18 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
+    public DataSyndicationAgreement getAgreement(Long id) {
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id, null, null);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.convertValue(response, DataSyndicationAgreement.class);
+    }
+
+    @Override
+    public void deleteAgreement(Long id) {
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/delete", null, null);
+    }
+
+    @Override
     public List<DataSyndicationAgreement> getMasterAgreements() {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/find/as-master", null, null);
