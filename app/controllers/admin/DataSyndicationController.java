@@ -35,6 +35,7 @@ import play.mvc.Result;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementLink;
+import services.datasyndication.models.DataSyndicationPartner;
 import utils.table.DataSyndicationAgreementLinkListView;
 import utils.table.DataSyndicationAgreementListView;
 
@@ -138,13 +139,62 @@ public class DataSyndicationController extends Controller {
      * Process the form to search a partner.
      */
     public Result processSearchPartner() {
-        return TODO;
+
+        if (dataSyndicationService.isActive()) {
+
+            // bind the form
+            Form<SearchPartnerForm> boundForm = searchPartnerFormTemplate.bindFromRequest();
+
+            if (boundForm.hasErrors()) {
+                return ok(views.html.admin.datasyndication.search_partner.render(searchPartnerFormTemplate));
+            }
+
+            SearchPartnerForm searchPartnerForm = boundForm.get();
+
+            // clean the keywords
+            String keywords = searchPartnerForm.keywords.replaceAll("\\*", "%").trim();
+
+            // perform the search
+            List<DataSyndicationPartner> partners = null;
+            try {
+                partners = dataSyndicationService.searchFromSlavePartners(keywords);
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // remove current domain
+            if (partners != null) {
+                for (DataSyndicationPartner partner : partners) {
+                    if (partner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+                        partners.remove(partner);
+                        break;
+                    }
+                }
+            }
+
+            if (partners == null || partners.size() == 0) {
+                // TODO(jkohler) refs #1565
+                return TODO;
+            } else {
+
+                // TODO render as a standard table...
+
+                return ok(views.html.admin.datasyndication.search_partner_result.render(partners));
+            }
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
     }
 
     /**
      * Form to submit a new master agreement.
+     * 
+     * @param domain
+     *            the domain of the slave instance
      */
-    public Result submitAgreement() {
+    public Result submitAgreement(String domain) {
         return TODO;
     }
 

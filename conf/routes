@@ -681,7 +681,7 @@ GET     /admin/data-syndication/master-agreements          controllers.admin.Dat
 GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
 GET     /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.searchPartner()
 POST    /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.processSearchPartner()
-GET     /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.submitAgreement()
+GET     /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.submitAgreement(domain: String)
 POST    /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.processSubmitAgreement()
 GET     /admin/data-syndication/agreement/view             controllers.admin.DataSyndicationController.viewAgreement(agreementId: Long, viewAllLinks: Boolean ?= false)
 GET     /admin/data-syndication/agreement/process          controllers.admin.DataSyndicationController.processAgreement(agreementId: Long)

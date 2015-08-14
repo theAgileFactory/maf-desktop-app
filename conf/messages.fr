@@ -3001,7 +3001,10 @@ admin.data_syndication.view_agreement.links=Liens
 
 admin.data_syndication.search_partner.title=Rechercher un partenaire
 admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
-admin.data_syndication.search_partner.keywords.placeholder=Nom de partenaire
+admin.data_syndication.search_partner.keywords.placeholder=Nom du partenaire
+admin.data_syndication.search_partner_result.title=Résultats de la recherche
+admin.data_syndication.search_partner_result.website.label=Site Internet
+admin.data_syndication.search_partner_result.submit_agreement.label=Proposer un agrément
 
 #----------------------
 # KPI manager

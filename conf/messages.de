@@ -2996,7 +2996,10 @@ admin.data_syndication.view_agreement.links=de: Links
 
 admin.data_syndication.search_partner.title=de: Search a partner
 admin.data_syndication.search_partner.error=de: Please enter a partner
-admin.data_syndication.search_partner.keywords.placeholder=Partner name
+admin.data_syndication.search_partner.keywords.placeholder=de: Partner name
+admin.data_syndication.search_partner_result.title=de: Search results
+admin.data_syndication.search_partner_result.website.label=de: Corporate website
+admin.data_syndication.search_partner_result.submit_agreement.label=de: Propose an agreement
 
 #----------------------
 # KPI manager

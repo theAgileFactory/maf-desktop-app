@@ -16,7 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    searchForm: Form[controllers.admin.DataSyndicationController.SearchPartnerForm]
+    partners: List[services.datasyndication.models.DataSyndicationPartner]
 )
 
 @import framework_views.parts.formats._
@@ -28,31 +28,29 @@
 @views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.DATA_SYNDICATION,parts.Msg.asString("admin.integration.sidebar.data_syndication.master_agreements")){
 }{ 
 
-    @if(searchForm.hasErrors()){
-        <div class="alert alert-danger">
-            <strong>@parts.Msg("admin.data_syndication.search_partner.error")</strong><br/>
-        </div>
-    }
-    
     <div class="panel panel-primary">
         <div class="panel-heading ">
-            @parts.Msg("admin.data_syndication.search_partner.title")
+            @parts.Msg("admin.data_syndication.search_partner_result.title")
         </div>
         <div class="panel-body">
         
-            @helper.form(action = controllers.admin.routes.DataSyndicationController.processSearchPartner(), 'class -> "form-inline") {
-                <fieldset>
-                    <div class="form-group">
-                        <input type="text" name='@searchForm("keywords").name' value='@searchForm("keywords").value' id='@searchForm("keywords").id' class="form-control" 
-                            placeholder='@parts.Msg("admin.data_syndication.search_partner.keywords.placeholder")' autofocus="autofocus">
-                        <span class="help-block text-muted"></span>
+            @for(partner <-partners) {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row ">
+                            <div class="col-md-3 h4">@partner.customerName<br> TODO logo</div>
+                            <div class="col-md-3 h4">@partner.customerDescription</div>
+                            <div class="col-md-3 text-center h4">@display_url(partner.customerWebsite, "admin.data_syndication.search_partner_result.website.label", true)</div>
+                            <div class="col-md-3 text-right">
+                                <a href="@controllers.admin.routes.DataSyndicationController.submitAgreement(partner.domain)" class="btn btn-lg btn-primary">
+                                    <span class="glyphicons glyphicons-share-alt"></span> @parts.Msg("admin.data_syndication.search_partner_result.submit_agreement.label")
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-default">@parts.Msg("button.search")</button>
-                        <span class="help-block text-muted"></span>
-                    </div>
-                </fieldset>
+                </div>
             }
+            
         </div>
     </div>
    

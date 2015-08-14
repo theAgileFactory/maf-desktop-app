@@ -12,7 +12,7 @@ public class DataSyndicationPartner {
     public String domain;
 
     // from customer
-    public String customerLogo;
+    public Byte[] customerLogo;
     public String customerName;
     public String customerDescription;
     public String customerWebsite;
