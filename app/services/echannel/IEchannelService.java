@@ -224,6 +224,16 @@ public interface IEchannelService {
     List<DataSyndicationAgreement> getSlaveAgreements();
 
     /**
+     * Get the agreement links of an agreement.
+     * 
+     * The instance should be the master or the slave of the agreement.
+     * 
+     * @param id
+     *            the agreement id
+     */
+    List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id);
+
+    /**
      * Create a new agreement link for a master agreement of the instance.
      * 
      * The agreement link should be then accepted by the slave instance.

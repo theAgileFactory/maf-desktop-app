@@ -30,24 +30,19 @@
 
     <blockquote>@parts.Msg("admin.data_syndication.master_agreements.header")</blockquote>
     
-    @if(agreementsTable != null) {
-
-        <div class="panel panel-default">
-                
-            <div class="panel-heading">
-                @parts.Msg("admin.data_syndication.master_agreements.partner_contract")
-                <div class="pull-right">
-                    <a href="@controllers.admin.routes.DataSyndicationController.submitAgreement()"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
-                </div>
-            </div>
-    
-            <div class="panel-body">
-                @parts.table.tableview(agreementsTable)
-            </div>
+    <div class="panel panel-default">
             
-       </div>
+        <div class="panel-heading">
+            @parts.Msg("admin.data_syndication.master_agreements.partner_contract")
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.DataSyndicationController.submitAgreement()"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            @parts.table.tableview(agreementsTable)
+        </div>
+        
+    </div>
    
-    } else {
-        <div class="alert alert-warning">@parts.Msg("admin.data_syndication.communication_error")</div>
-    }
 }

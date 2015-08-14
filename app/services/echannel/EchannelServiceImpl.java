@@ -307,6 +307,10 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public void acceptAgreement(Long id, DataSyndicationApiKey apiKey, String permissions) {
 
+        // TODO to check in echannel
+        // Impossible to accept a non-pending agreement
+        // The current instance should be the slave of the agreement
+
         AcceptDataSyndicationAgreementRequest acceptAgreementRequest = new AcceptDataSyndicationAgreementRequest();
         acceptAgreementRequest.apiName = apiKey.name;
         acceptAgreementRequest.apiSecretKey = apiKey.secretKey;
@@ -322,6 +326,10 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public void rejectAgreement(Long id, String permissions) {
 
+        // TODO to check in echannel
+        // Impossible to reject a non-pending agreement
+        // The current instance should be the slave of the agreement
+
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
 
@@ -333,6 +341,10 @@ public class EchannelServiceImpl implements IEchannelService {
 
     @Override
     public void cancelAgreement(Long id, String permissions) {
+
+        // TODO to check in echannel
+        // The current instance should be the master or the slave of the
+        // agreement
 
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
@@ -346,6 +358,10 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public void suspendAgreement(Long id, String permissions) {
 
+        // TODO to check in echannel
+        // Impossible to suspend a non-ongoing agreement
+        // The current instance should be the master of the agreement
+
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
 
@@ -358,6 +374,10 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public void restartAgreement(Long id, String permissions) {
 
+        // TODO to check in echannel
+        // Impossible to restart a non-suspended agreement
+        // The current instance should be the master of the agreement
+
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
 
@@ -369,6 +389,10 @@ public class EchannelServiceImpl implements IEchannelService {
 
     @Override
     public DataSyndicationAgreement getAgreement(Long id) {
+
+        // TODO The current instance should be the master or the slave of the
+        // agreement
+
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id, null, null);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(response, DataSyndicationAgreement.class);
@@ -376,6 +400,10 @@ public class EchannelServiceImpl implements IEchannelService {
 
     @Override
     public void deleteAgreement(Long id) {
+
+        // TODO The current instance should be the master or the slave of the
+        // agreement
+
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/delete", null, null);
     }
 
@@ -408,8 +436,28 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
+    public List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id) {
+
+        // TODO The current instance should be the master or the slave of the
+        // agreement
+
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/link/find", null, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationAgreementLink> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+        }
+
+        return r;
+    }
+
+    @Override
     public void submitAgreementLink(Long agreementId, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId,
             String permissions) {
+
+        // TODO to check in echannel
+        // The current instance should be the master of the agreement
 
         SubmitDataSyndicationAgreementLinkRequest submitAgreementLinkRequest = new SubmitDataSyndicationAgreementLinkRequest();
         submitAgreementLinkRequest.agreementId = agreementId;
@@ -430,6 +478,10 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public void acceptAgreementLink(Long id, Long slaveObjectId, String permissions) {
 
+        // TODO to check in echannel
+        // Impossible to accept a non-pending agreement link
+        // The current instance should be the slave of the agreement
+
         AcceptDataSyndicationAgreementLinkRequest acceptAgreementLinkRequest = new AcceptDataSyndicationAgreementLinkRequest();
         acceptAgreementLinkRequest.slaveObjectId = slaveObjectId;
         acceptAgreementLinkRequest.permissions = permissions;
@@ -443,6 +495,10 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public void rejectAgreementLink(Long id, String permissions) {
 
+        // TODO to check in echannel
+        // Impossible to accept a non-pending agreement link
+        // The current instance should be the slave of the agreement
+
         PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
         patchAgreementLinkRequest.permissions = permissions;
 
@@ -455,6 +511,10 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public void cancelAgreementLink(Long id, String permissions) {
 
+        // TODO to check in echannel
+        // The current instance should be the master or the slave of the
+        // agreement
+
         PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
         patchAgreementLinkRequest.permissions = permissions;
 
@@ -466,6 +526,10 @@ public class EchannelServiceImpl implements IEchannelService {
 
     @Override
     public DataSyndicationAgreementLink getAgreementLink(Long id) {
+
+        // TODO The current instance should be the master or the slave of the
+        // agreement
+
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id, null, null);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(response, DataSyndicationAgreementLink.class);

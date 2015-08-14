@@ -1545,6 +1545,7 @@ object.data_syndication_agreement.status.REJECTED.label=Rejected
 object.data_syndication_agreement.status.FINISHED.label=Finished
 object.data_syndication_agreement.status.SUSPENDED.label=Suspended
 object.data_syndication_agreement.status.CANCELLED.label=Cancelled
+object.data_syndication_agreement.items.label=Authorized items
 object.data_syndication_agreement.process.label=Process the decision
 object.data_syndication_agreement.suspend.confirm=Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
 object.data_syndication_agreement.cancel.confirm=Are you sure you want to cancel this agreement? This action is definitive and couldn''t be reverted.
@@ -2978,6 +2979,9 @@ admin.data_syndication.master_agreements.partner_contract=Partner contracts
 
 admin.data_syndication.consumer_agreements.header=A consumer agreement is a contract with one of your partners in order to load his BizDock data in your instance.
 admin.data_syndication.consumer_agreements.partner_contract=Partner contracts
+
+admin.data_syndication.view_agreement.details=Details
+admin.data_syndication.view_agreement.links=Links
 
 #----------------------
 # KPI manager

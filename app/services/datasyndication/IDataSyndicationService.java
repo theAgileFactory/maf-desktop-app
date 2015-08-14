@@ -37,6 +37,11 @@ public interface IDataSyndicationService {
     String NAME = "dataSyndicationService";
 
     /**
+     * Get the domain of the current instance.
+     */
+    String getCurrentDomain();
+
+    /**
      * Return true if the data syndication system is active.
      */
     boolean isActive();
@@ -135,6 +140,14 @@ public interface IDataSyndicationService {
      * Get the slave agreements of the instance.
      */
     List<DataSyndicationAgreement> getSlaveAgreements();
+
+    /**
+     * Get the agreement links of an agreement.
+     * 
+     * @param id
+     *            the agreement id
+     */
+    List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id);
 
     /**
      * Create a new agreement link for a master agreement of the instance.

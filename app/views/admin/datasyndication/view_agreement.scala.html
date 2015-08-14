@@ -1,0 +1,146 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    isMasterAgreement: Boolean,
+    agreement: services.datasyndication.models.DataSyndicationAgreement,
+    agreementLinksTable: framework.utils.Table[utils.table.DataSyndicationAgreementLinkListView],
+    viewAllLinks: Boolean
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@titleKey=@{
+    if(isMasterAgreement) {
+        "admin.integration.sidebar.data_syndication.master_agreements"
+    } else {
+        "admin.integration.sidebar.data_syndication.consumer_agreements"
+    }
+}
+
+@partner=@{
+    if(isMasterAgreement) {
+        agreement.masterPartner
+    } else {
+        agreement.slavePartner
+    }
+}
+
+@backLink=@{
+    if(isMasterAgreement) {
+        controllers.admin.routes.DataSyndicationController.viewMasterAgreements().url
+    } else {
+        controllers.admin.routes.DataSyndicationController.viewConsumerAgreements().url
+    }
+}
+
+
+@views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.DATA_SYNDICATION,parts.Msg.asString(titleKey)){
+}{ 
+
+    <div class="row">
+    
+        <div class="col-md-4">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("admin.data_syndication.view_agreement.details")
+                </div>
+
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-4">
+                             <col class="col-md-8">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.name.label")</th>
+                                <td>@display_object(agreement.name)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.ref_id.label")</th>
+                                <td>@display_object(agreement.refId)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
+                                <td>@display_object(partner.customerName)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.contact_name.label")</th>
+                                <td>@display_object(partner.contactName)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.contact_email.label")</th>
+                                <td>@display_object(partner.contactEmail)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.start_date.label")</th>
+                                <td>@display_date(agreement.startDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.end_date.label")</th>
+                                <td>@display_date(agreement.endDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.status.label")</th>
+                                <td>@Html(agreement.status.render)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.items.label")</th>
+                                <td>@display_list_of_values(agreement.items)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        
+        </div>
+        
+        <div class="col-md-8">
+        
+            <div class="panel panel-default">
+                    
+                <div class="panel-heading">
+                    @parts.Msg("admin.data_syndication.view_agreement.links")
+                    <div class="pull-right">
+                        @if(!viewAllLinks) {
+                            <a href="@controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, true).url"><span class="glyphicons glyphicons-resize-full glyphicons-panel"></span></a>
+                        } else {
+                            <a href="@controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
+                        }
+                    </div>
+                </div>
+        
+                <div class="panel-body">
+                    @parts.table.tableview(agreementLinksTable)
+                </div>
+                
+            </div>
+    
+        </div>
+    
+    </div>
+    
+    <a class="btn btn-default" href="@backLink">@parts.Msg("button.back")</a>
+}

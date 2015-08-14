@@ -17,7 +17,6 @@
  */
 package utils.table;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import constants.IMafConstants;
@@ -26,7 +25,6 @@ import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.ListOfValuesFormatter;
-import framework.utils.formats.ObjectFormatter;
 import models.pmo.PortfolioEntry;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
@@ -50,7 +48,12 @@ public class DataSyndicationAgreementLinkListView {
                 setIdFieldName("id");
 
                 addColumn("dataType", "dataType", "object.data_syndication_agreement_link.data_type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("dataType", new ObjectFormatter<>());
+                setJavaColumnFormatter("dataType", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
+                    @Override
+                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+                        return Msg.get("object.data_syndication_agreement_item." + dataSyndicationAgreementLinkListView.dataType + ".label");
+                    }
+                });
 
                 addColumn("objectId", "objectId", "object.data_syndication_agreement_link.object.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("objectId", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
@@ -76,8 +79,8 @@ public class DataSyndicationAgreementLinkListView {
                 addColumn("status", "status", "object.data_syndication_agreement_link.status.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("status", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
                     @Override
-                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementListView, Object value) {
-                        return dataSyndicationAgreementListView.status.render();
+                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+                        return dataSyndicationAgreementLinkListView.status.render();
                     }
                 });
 
@@ -123,7 +126,7 @@ public class DataSyndicationAgreementLinkListView {
     public String dataType;
     public Long objectId;
 
-    public List<String> items;
+    public List<DataSyndicationAgreementItem> items;
 
     public DataSyndicationAgreementLink.Status status;
 
@@ -139,7 +142,6 @@ public class DataSyndicationAgreementLinkListView {
 
         this.id = dataSyndicationAgreementLink.id;
 
-        // TODO(jkohler) improve dataType in order to display a nice name
         this.dataType = dataSyndicationAgreementLink.dataType;
         if (dataSyndicationAgreementLink.agreement.masterPartner.domain.equals(currentDomain)) {
             this.objectId = dataSyndicationAgreementLink.masterObjectId;
@@ -147,13 +149,9 @@ public class DataSyndicationAgreementLinkListView {
             this.objectId = dataSyndicationAgreementLink.slaveObjectId;
         }
 
-        this.items = new ArrayList<>();
-        for (DataSyndicationAgreementItem item : dataSyndicationAgreementLink.items) {
-            // TODO(jkohler) improve items in order to display a nice name
-            items.add(item.descriptor);
-        }
+        this.items = dataSyndicationAgreementLink.items;
 
-        dataSyndicationAgreementLink.status = dataSyndicationAgreementLink.status;
+        this.status = dataSyndicationAgreementLink.status;
 
     }
 

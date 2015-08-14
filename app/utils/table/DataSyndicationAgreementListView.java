@@ -47,6 +47,12 @@ public class DataSyndicationAgreementListView {
             {
                 setIdFieldName("id");
 
+                addColumn("name", "name", "object.data_syndication_agreement.name.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("name", new ObjectFormatter<DataSyndicationAgreementListView>());
+
+                addColumn("refId", "refId", "object.data_syndication_agreement.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("refId", new ObjectFormatter<DataSyndicationAgreementListView>());
+
                 addColumn("masterCustomerName", "masterCustomerName", "object.data_syndication_agreement.partner.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("masterCustomerName", new ObjectFormatter<DataSyndicationAgreementListView>());
                 addColumn("masterContactName", "masterContactName", "object.data_syndication_agreement.contact_name.label", Table.ColumnDef.SorterType.NONE);
@@ -61,12 +67,6 @@ public class DataSyndicationAgreementListView {
                 setJavaColumnFormatter("slaveContactName", new ObjectFormatter<DataSyndicationAgreementListView>());
                 addColumn("slaveContactEmail", "slaveContactEmail", "object.data_syndication_agreement.contact_email.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("slaveContactEmail", new MailFormatter<DataSyndicationAgreementListView>());
-
-                addColumn("name", "name", "object.data_syndication_agreement.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<DataSyndicationAgreementListView>());
-
-                addColumn("refId", "refId", "object.data_syndication_agreement.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<DataSyndicationAgreementListView>());
 
                 addColumn("startDate", "startDate", "object.data_syndication_agreement.start_date.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("startDate", new DateFormatter<DataSyndicationAgreementListView>());
@@ -171,7 +171,7 @@ public class DataSyndicationAgreementListView {
                 this.setLineAction(new IColumnFormatter<DataSyndicationAgreementListView>() {
                     @Override
                     public String apply(DataSyndicationAgreementListView dataSyndicationAgreementListView, Object value) {
-                        return controllers.admin.routes.DataSyndicationController.viewAgreement(dataSyndicationAgreementListView.id, true).url();
+                        return controllers.admin.routes.DataSyndicationController.viewAgreement(dataSyndicationAgreementListView.id, false).url();
                     }
                 });
 

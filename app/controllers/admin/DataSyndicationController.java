@@ -32,6 +32,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreement;
+import services.datasyndication.models.DataSyndicationAgreementLink;
+import utils.table.DataSyndicationAgreementLinkListView;
 import utils.table.DataSyndicationAgreementListView;
 
 /**
@@ -58,7 +60,7 @@ public class DataSyndicationController extends Controller {
             try {
                 masterAgreements = dataSyndicationService.getMasterAgreements();
             } catch (Exception e) {
-                return ok(views.html.admin.datasyndication.master_agreements.render(null));
+                return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
             Set<String> columnsToHide = new HashSet<>();
@@ -94,7 +96,7 @@ public class DataSyndicationController extends Controller {
             try {
                 slaveAgreements = dataSyndicationService.getSlaveAgreements();
             } catch (Exception e) {
-                return ok(views.html.admin.datasyndication.consumer_agreements.render(null));
+                return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
             Set<String> columnsToHide = new HashSet<>();
@@ -136,18 +138,51 @@ public class DataSyndicationController extends Controller {
      * 
      * @param agreementId
      *            the agreement id
-     * @param onlyActiveLink
-     *            if true then display only PENDING and ONGOING links, else all
+     * @param viewAllLinks
+     *            if true then display all links of the agreement, else display
+     *            only PENDING and ONGOING links
      */
-    public Result viewAgreement(Long agreementId, Boolean onlyActiveLink) {
+    public Result viewAgreement(Long agreementId, Boolean viewAllLinks) {
 
         if (dataSyndicationService.isActive()) {
 
-            // details of the agreement, including items
+            // get the agreement
+            DataSyndicationAgreement agreement = null;
+            try {
+                agreement = dataSyndicationService.getAgreement(agreementId);
+                if (agreement == null) {
+                    return notFound(views.html.error.not_found.render(""));
+                }
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
 
-            // list of link (only active with link to all)
+            // define if the instance is the master or slave of the agreement
+            Boolean isMasterAgreement = agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain());
 
-            return TODO;
+            // get the links
+            List<DataSyndicationAgreementLink> links = null;
+            try {
+                links = dataSyndicationService.getLinksOfAgreement(agreementId);
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // construct the links table
+            Set<String> columnsToHide = new HashSet<>();
+            if (!isMasterAgreement) {
+                columnsToHide.add("processActionLink");
+            }
+            List<DataSyndicationAgreementLinkListView> linkRows = new ArrayList<DataSyndicationAgreementLinkListView>();
+            for (DataSyndicationAgreementLink link : links) {
+                if (viewAllLinks || link.status.equals(DataSyndicationAgreementLink.Status.PENDING)
+                        || link.status.equals(DataSyndicationAgreementLink.Status.ONGOING)) {
+                    linkRows.add(new DataSyndicationAgreementLinkListView(link, dataSyndicationService.getCurrentDomain()));
+                }
+            }
+            Table<DataSyndicationAgreementLinkListView> linksTable = DataSyndicationAgreementLinkListView.templateTable.fill(linkRows, columnsToHide);
+
+            return ok(views.html.admin.datasyndication.view_agreement.render(isMasterAgreement, agreement, linksTable, viewAllLinks));
 
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));

@@ -1557,6 +1557,7 @@ object.data_syndication_agreement.status.REJECTED.label=Rejeté
 object.data_syndication_agreement.status.FINISHED.label=Terminé
 object.data_syndication_agreement.status.SUSPENDED.label=Suspendu
 object.data_syndication_agreement.status.CANCELLED.label=Annulé
+object.data_syndication_agreement.items.label=Eléments autorisés
 object.data_syndication_agreement.process.label=Traiter la décision
 object.data_syndication_agreement.suspend.confirm=Etes-vous sûr(e) de vouloir suspendre cet agrément? Toutes les synchronisations correspondantes seront également suspendues.
 object.data_syndication_agreement.cancel.confirm=Etes-vous sûr(e) de vouloir annuler cet agrément? Cette action est définitive.
@@ -2994,6 +2995,9 @@ admin.data_syndication.master_agreements.partner_contract=Contrats avec vos part
 
 admin.data_syndication.consumer_agreements.header=Un agrément de consommation est un contrat avec l''un de vos partenaire afin de charger ses données BizDock dans votre instance.
 admin.data_syndication.consumer_agreements.partner_contract=Contrats avec vos partenaires
+
+admin.data_syndication.view_agreement.details=Détails
+admin.data_syndication.view_agreement.links=Liens
 
 #----------------------
 # KPI manager

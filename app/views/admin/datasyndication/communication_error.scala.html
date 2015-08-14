@@ -15,9 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(
-    agreementsTable: framework.utils.Table[utils.table.DataSyndicationAgreementListView]
-)
+@()
 
 @import framework_views.parts.formats._
 @import be.objectify.deadbolt.java.views.html._
@@ -25,20 +23,7 @@
 @import framework_views.parts
 @import views.html.modelsparts._
 
-@views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.DATA_SYNDICATION,parts.Msg.asString("admin.integration.sidebar.data_syndication.consumer_agreements")){
-}{ 
-
-    <blockquote>@parts.Msg("admin.data_syndication.consumer_agreements.header")</blockquote>
-    
-    <div class="panel panel-default">
-            
-        <div class="panel-heading">
-            @parts.Msg("admin.data_syndication.consumer_agreements.partner_contract")
-        </div>
-
-        <div class="panel-body">
-            @parts.table.tableview(agreementsTable)
-        </div>
-        
-    </div>
+@views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.DATA_SYNDICATION,parts.Msg.asString("admin.integration.sidebar.data_syndication")){
+}{
+    <div class="alert alert-warning">@parts.Msg("admin.data_syndication.communication_error")</div>
 }
