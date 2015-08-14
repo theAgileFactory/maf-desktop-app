@@ -1525,7 +1525,7 @@ object.application_block.table.empty=There is no application block.
 object.data_syndication_agreement.partner.label=Partner
 object.data_syndication_agreement.contact_name.label=Contact
 object.data_syndication_agreement.contact_email.label=E-mail
-object.data_syndication_agreement.name.label=Name
+object.data_syndication_agreement.name.label=Agreement name
 object.data_syndication_agreement.ref_id.label=Ref ID
 object.data_syndication_agreement.start_date.label=Start date
 object.data_syndication_agreement.end_date.label=End date
@@ -2943,6 +2943,16 @@ This interface describes all the available APIs and allow to test each API (simu
 admin.api_manager.apibrowser.explanation=The documentation below contains all the APIs.<br/>\
 However please note that some APIs requires some specific authorizations which may prevent you from testing the API.
 admin.api_manager.apibrowser.simulator.application.select.label=Tested application
+
+#data syndication
+admin.data_syndication.communication_error=A communication error with the server has occurred. Please contact your administrator for more information.
+
+admin.data_syndication.master_agreements.header=A master agreement is a contract with one of your partners in order to share BizDock data with him. \
+By creating a new agreement, no data are directly shared, you need to specifically define them just after.
+admin.data_syndication.master_agreements.partner_contract=Partner contracts
+
+admin.data_syndication.consumer_agreements.header=A consumer agreement is a contract with one of your partners in order to load his BizDock data in your instance.
+admin.data_syndication.consumer_agreements.partner_contract=Partner contracts
 
 #----------------------
 # KPI manager

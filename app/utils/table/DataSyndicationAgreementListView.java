@@ -21,13 +21,9 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 import constants.IMafConstants;
-import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
-import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
-import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.MailFormatter;
 import framework.utils.formats.ObjectFormatter;
@@ -40,49 +36,6 @@ import services.datasyndication.models.DataSyndicationAgreement;
  * @author Johann Kohler
  */
 public class DataSyndicationAgreementListView {
-
-    public static FilterConfig<DataSyndicationAgreementListView> filterConfig = getFilterConfig();
-
-    /**
-     * Get the filter config.
-     */
-    public static FilterConfig<DataSyndicationAgreementListView> getFilterConfig() {
-        return new FilterConfig<DataSyndicationAgreementListView>() {
-            {
-
-                addColumnConfiguration("masterCustomerName", "masterCustomerName", "object.data_syndication_agreement.partner.label",
-                        new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-                addColumnConfiguration("masterContactName", "masterContactName", "object.data_syndication_agreement.contact_name.label",
-                        new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-                addColumnConfiguration("masterContactEmail", "masterContactEmail", "object.data_syndication_agreement.contact_email.label",
-                        new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-
-                addColumnConfiguration("slaveCustomerName", "slaveCustomerName", "object.data_syndication_agreement.partner.label",
-                        new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-                addColumnConfiguration("slaveContactName", "slaveContactName", "object.data_syndication_agreement.contact_name.label",
-                        new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-                addColumnConfiguration("slaveContactEmail", "slaveContactEmail", "object.data_syndication_agreement.contact_email.label",
-                        new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-
-                addColumnConfiguration("name", "name", "object.data_syndication_agreement.name.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
-
-                addColumnConfiguration("refId", "refId", "object.data_syndication_agreement.ref_id.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
-
-                addColumnConfiguration("startDate", "startDate", "object.data_syndication_agreement.start_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
-
-                addColumnConfiguration("endDate", "endDate", "object.data_syndication_agreement.end_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
-
-                ISelectableValueHolderCollection<String> statuses = DataSyndicationAgreement.Status.getAllAsVH();
-                addColumnConfiguration("status", "status.id", "object.portfolio_entry.status.label",
-                        new SelectFilterComponent(statuses.getValues().iterator().next().getValue(), statuses), true, false, SortStatusType.NONE);
-
-            }
-        };
-    }
 
     public static Table<DataSyndicationAgreementListView> templateTable = getTable();
 
@@ -129,66 +82,87 @@ public class DataSyndicationAgreementListView {
                     }
                 });
 
+                // only for slave
                 addColumn("processActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("processActionLink", new IColumnFormatter<DataSyndicationAgreementListView>() {
                     @Override
                     public String apply(DataSyndicationAgreementListView dataSyndicationAgreementListView, Object value) {
 
-                        String content = "<a title=\"" + Msg.get("object.data_syndication_agreement.process.label")
-                                + "\" href=\"%s\"><span class=\"glyphicons glyphicons-thumbs-up\"></span></a>";
+                        if (dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.PENDING)) {
 
-                        String url = controllers.admin.routes.DataSyndicationController.processAgreement(dataSyndicationAgreementListView.id).url();
+                            String content = "<a title=\"" + Msg.get("object.data_syndication_agreement.process.label")
+                                    + "\" href=\"%s\"><span class=\"glyphicons glyphicons-thumbs-up\"></span></a>";
 
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+                            String url = controllers.admin.routes.DataSyndicationController.processAgreement(dataSyndicationAgreementListView.id).url();
+
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+
+                        } else {
+                            return "";
+                        }
                     }
                 });
                 setColumnCssClass("processActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("processActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-                addColumn("suspendActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("suspendActionLink", new IColumnFormatter<DataSyndicationAgreementListView>() {
+                // only for master
+                addColumn("stateActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("stateActionLink", new IColumnFormatter<DataSyndicationAgreementListView>() {
                     @Override
                     public String apply(DataSyndicationAgreementListView dataSyndicationAgreementListView, Object value) {
 
-                        String content = MessageFormat.format(
-                                "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"glyphicons glyphicons-pause\"></span></a>",
-                                Msg.get("object.data_syndication_agreement.suspend.confirm"));
+                        String content = null;
+                        String url = null;
 
-                        String url = controllers.admin.routes.DataSyndicationController.suspendAgreement(dataSyndicationAgreementListView.id).url();
+                        switch (dataSyndicationAgreementListView.status) {
 
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+                        case ONGOING:
+                            content = MessageFormat.format(
+                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"glyphicons glyphicons-pause\"></span></a>",
+                                    Msg.get("object.data_syndication_agreement.suspend.confirm"));
+
+                            url = controllers.admin.routes.DataSyndicationController.suspendAgreement(dataSyndicationAgreementListView.id).url();
+
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+
+                        case SUSPENDED:
+                            content = "<a href=\"%s\"><span class=\"glyphicons glyphicons-play\"></span></a>";
+
+                            url = controllers.admin.routes.DataSyndicationController.restartAgreement(dataSyndicationAgreementListView.id).url();
+
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+
+                        default:
+                            return "";
+
+                        }
+
                     }
                 });
-                setColumnCssClass("suspendActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("suspendActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                addColumn("restartActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("restartActionLink", new IColumnFormatter<DataSyndicationAgreementListView>() {
-                    @Override
-                    public String apply(DataSyndicationAgreementListView dataSyndicationAgreementListView, Object value) {
-
-                        String content = "<a href=\"%s\"><span class=\"glyphicons glyphicons-play\"></span></a>";
-
-                        String url = controllers.admin.routes.DataSyndicationController.restartAgreement(dataSyndicationAgreementListView.id).url();
-
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
-                    }
-                });
-                setColumnCssClass("restartActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("restartActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                setColumnCssClass("stateActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                setColumnValueCssClass("stateActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                 addColumn("cancelActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("cancelActionLink", new IColumnFormatter<DataSyndicationAgreementListView>() {
                     @Override
                     public String apply(DataSyndicationAgreementListView dataSyndicationAgreementListView, Object value) {
 
-                        String content = MessageFormat.format(
-                                "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"glyphicons glyphicons-ban\"></span></a>",
-                                Msg.get("object.data_syndication_agreement.cancel.confirm"));
+                        if (dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.ONGOING)
+                                || dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.PENDING)
+                                || dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.SUSPENDED)) {
 
-                        String url = controllers.admin.routes.DataSyndicationController.cancelAgreement(dataSyndicationAgreementListView.id).url();
+                            String content = MessageFormat.format(
+                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"glyphicons glyphicons-ban\"></span></a>",
+                                    Msg.get("object.data_syndication_agreement.cancel.confirm"));
 
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+                            String url = controllers.admin.routes.DataSyndicationController.cancelAgreement(dataSyndicationAgreementListView.id).url();
+
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+
+                        } else {
+
+                            return "";
+                        }
                     }
                 });
                 setColumnCssClass("cancelActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
