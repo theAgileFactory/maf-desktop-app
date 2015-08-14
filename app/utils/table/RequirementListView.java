@@ -17,17 +17,9 @@
  */
 package utils.table;
 
-import models.delivery.Iteration;
-import models.delivery.Release;
-import models.delivery.Requirement;
-import models.delivery.RequirementPriority;
-import models.delivery.RequirementSeverity;
-import models.delivery.RequirementStatus;
-import models.pmo.Actor;
 import constants.IMafConstants;
 import dao.delivery.RequirementDAO;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -35,6 +27,13 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.delivery.Iteration;
+import models.delivery.Release;
+import models.delivery.Requirement;
+import models.delivery.RequirementPriority;
+import models.delivery.RequirementSeverity;
+import models.delivery.RequirementStatus;
+import models.pmo.Actor;
 
 /**
  * A requirement list view is used to display an portfolio entry row in a table.

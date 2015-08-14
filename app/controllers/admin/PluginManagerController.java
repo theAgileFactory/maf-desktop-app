@@ -42,7 +42,6 @@ import play.data.validation.Constraints.Required;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.DefaultDeadboltHandler;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 

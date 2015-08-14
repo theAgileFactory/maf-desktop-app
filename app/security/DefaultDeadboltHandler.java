@@ -26,10 +26,8 @@ import play.mvc.Result;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
 import framework.security.CommonDeadboltHandler;
 import framework.services.account.IAccountManagerPlugin;
-import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Msg;
-import framework.services.ServiceStaticAccessor;
 
 /**
  * The handler for the authorization mechanism based on Deadbold.<br/>

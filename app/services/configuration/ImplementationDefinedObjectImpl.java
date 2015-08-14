@@ -19,10 +19,7 @@ package services.configuration;
  */
 import javax.inject.Inject;
 import framework.services.database.IDatabaseDependencyService;
-import javax.inject.Named;
 import javax.inject.Singleton;
-
-import com.avaje.ebean.EbeanServer;
 
 import constants.IMafConstants;
 import controllers.Assets.Asset;
@@ -30,7 +27,6 @@ import dao.finance.CurrencyDAO;
 import framework.commons.DataType;
 import framework.security.SecurityUtils;
 import framework.services.configuration.IImplementationDefinedObjectService;
-import framework.services.kpi.KpiServiceImpl;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
 import framework.utils.Menu.SeparatorMenuItem;
@@ -39,7 +35,6 @@ import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
 import play.Configuration;
 import play.Logger;
-import play.db.ebean.EbeanConfig;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 import play.mvc.Call;

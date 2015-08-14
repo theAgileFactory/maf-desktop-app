@@ -75,7 +75,6 @@ import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import services.licensesmanagement.ILicensesManagementService;
-import services.licensesmanagement.LicensesManagementServiceImpl;
 
 /**
  * The API controller for the {@link PortfolioEntry}.

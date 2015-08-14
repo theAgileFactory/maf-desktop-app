@@ -41,7 +41,6 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;

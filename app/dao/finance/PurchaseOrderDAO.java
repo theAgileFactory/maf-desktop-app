@@ -30,7 +30,6 @@ import com.avaje.ebean.ExpressionList;
 
 import constants.IMafConstants;
 import framework.services.ServiceStaticAccessor;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 
 /**

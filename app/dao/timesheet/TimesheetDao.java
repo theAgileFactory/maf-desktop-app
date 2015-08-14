@@ -46,7 +46,6 @@ import com.avaje.ebean.RawSqlBuilder;
 
 import constants.IMafConstants;
 import framework.services.ServiceStaticAccessor;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;

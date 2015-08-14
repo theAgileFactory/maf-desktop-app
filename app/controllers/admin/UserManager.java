@@ -72,7 +72,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
 import services.licensesmanagement.ILicensesManagementService;
-import services.licensesmanagement.LicensesManagementServiceImpl;
 
 /**
  * The administration interface which is to be used to create, update, delete

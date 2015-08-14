@@ -29,7 +29,6 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;

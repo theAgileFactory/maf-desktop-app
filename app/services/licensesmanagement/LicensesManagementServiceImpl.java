@@ -31,7 +31,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import play.Configuration;
 import play.Logger;
-import play.Play;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Function;
 import play.libs.F.Promise;
@@ -46,7 +45,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.account.AccountManagerPluginImpl;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.database.IDatabaseDependencyService;
 import framework.services.ext.IExtensionManagerService;

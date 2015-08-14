@@ -17,15 +17,14 @@
  */
 package utils.form;
 
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.MultiLanguagesString;
+import framework.utils.MultiLanguagesStringValidator;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.ActorType;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
-import framework.services.ServiceStaticAccessor;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
 
 /**
  * An actor type form data is used to manage the fields when adding/editing an

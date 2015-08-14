@@ -66,7 +66,6 @@ import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the financial part of a portfolio

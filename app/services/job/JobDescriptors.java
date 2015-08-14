@@ -18,10 +18,8 @@
 package services.job;
 
 import modules.StaticAccessor;
-import framework.services.ServiceStaticAccessor;
 import framework.services.job.IJobDescriptor;
 import services.licensesmanagement.ILicensesManagementService;
-import services.licensesmanagement.LicensesManagementServiceImpl;
 
 /**
  * All available job descriptors.

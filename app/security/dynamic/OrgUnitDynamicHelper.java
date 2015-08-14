@@ -17,12 +17,6 @@
  */
 package security.dynamic;
 
-import models.pmo.Actor;
-import models.pmo.OrgUnit;
-import models.sql.ActorHierarchy;
-import play.Logger;
-import play.mvc.Http;
-
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionList;
@@ -32,14 +26,17 @@ import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import framework.security.SecurityUtils;
+import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.security.SecurityUtils;
-import framework.security.SecurityUtils;
 import framework.utils.Utilities;
-import framework.services.ServiceStaticAccessor;
+import models.pmo.Actor;
+import models.pmo.OrgUnit;
+import models.sql.ActorHierarchy;
+import play.Logger;
+import play.mvc.Http;
 
 
 /**

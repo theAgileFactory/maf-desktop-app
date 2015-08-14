@@ -15,11 +15,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import play.Configuration;
 import play.Environment;
 import play.Logger;
-import play.api.db.evolutions.DynamicEvolutions;
-import play.db.DBApi;
 import play.db.ebean.DefaultEbeanConfig;
 import play.db.ebean.EbeanConfig;
-import play.db.ebean.EbeanDynamicEvolutions;
 import security.DefaultHandlerCache;
 import services.configuration.ImplementationDefinedObjectImpl;
 import services.job.JobDescriptors;
@@ -29,7 +26,6 @@ import utils.reporting.IReportingUtils;
 import utils.reporting.ReportingUtilsImpl;
 import be.objectify.deadbolt.java.cache.HandlerCache;
 
-import com.avaje.ebean.EbeanServerFactory;
 import com.google.inject.name.Names;
 
 import constants.IMafConstants;

@@ -17,13 +17,12 @@
  */
 package utils.tour;
 
-import play.twirl.api.Html;
-import security.DefaultDeadboltHandler;
 import constants.IMafConstants;
 import framework.security.SecurityUtils;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Msg;
+import play.twirl.api.Html;
 
 /**
  * Provide the methods to manage the help tour.

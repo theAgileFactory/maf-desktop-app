@@ -20,7 +20,6 @@ package utils.form;
 import models.reporting.Reporting;
 import models.reporting.Reporting.Format;
 import play.data.validation.Constraints.Required;
-import framework.services.ServiceStaticAccessor;
 
 /**
  * An reporting params form data is used to configure the parameters of a report

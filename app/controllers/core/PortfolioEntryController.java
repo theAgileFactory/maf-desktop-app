@@ -57,7 +57,6 @@ import security.CheckPortfolioEntryExists;
 import security.DefaultDynamicResourceHandler;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import services.licensesmanagement.ILicensesManagementService;
-import services.licensesmanagement.LicensesManagementServiceImpl;
 import utils.MilestonesTrend;
 import utils.form.AttachmentFormData;
 import utils.form.EmptyEditFormData;

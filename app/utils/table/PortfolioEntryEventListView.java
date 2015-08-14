@@ -26,7 +26,6 @@ import models.pmo.PortfolioEntryEventType;
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryEventDao;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;

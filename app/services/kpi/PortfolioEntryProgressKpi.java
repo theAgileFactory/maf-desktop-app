@@ -27,7 +27,6 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.services.ServiceStaticAccessor;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 

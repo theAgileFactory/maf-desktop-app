@@ -46,7 +46,6 @@ import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.Language;
-import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;

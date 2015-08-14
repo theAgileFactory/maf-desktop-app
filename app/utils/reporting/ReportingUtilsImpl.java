@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dao.finance.CurrencyDAO;
@@ -70,7 +69,6 @@ import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import play.Configuration;
 import play.Environment;
 import play.Logger;
-import play.Play;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 import play.mvc.Http.Context;

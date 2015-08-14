@@ -20,8 +20,6 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import models.reporting.Reporting;
 import models.reporting.ReportingCategory;
 import play.data.Form;
@@ -31,7 +29,6 @@ import utils.form.ReportingFormData;
 import utils.table.ReportingListView;
 import constants.IMafConstants;
 import dao.reporting.ReportingDao;
-import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;

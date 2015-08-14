@@ -65,7 +65,6 @@ import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.notification.INotificationManagerPlugin;
-import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.api.IPluginMenuDescriptor;
 import framework.services.remote.IAdPanelManagerService;
@@ -97,9 +96,6 @@ public class Application extends Controller {
     
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
-    
-    @Inject
-    private IPluginManagerService pluginManagerService;
     
     @Inject
     private IAdPanelManagerService adPanelManagerService;
@@ -735,10 +731,6 @@ public class Application extends Controller {
 
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
-    }
-
-    private IPluginManagerService getPluginManagerService() {
-        return pluginManagerService;
     }
 
     private IAdPanelManagerService getAdPanelManagerService() {
