@@ -42,6 +42,7 @@ import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
+import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
@@ -364,6 +365,34 @@ public class EchannelServiceImpl implements IEchannelService {
         JsonNode content = mapper.valueToTree(patchAgreementRequest);
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/restart", null, content);
 
+    }
+
+    @Override
+    public List<DataSyndicationAgreement> getMasterAgreements() {
+
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/find/as-master", null, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationAgreement> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationAgreement.class));
+        }
+
+        return r;
+    }
+
+    @Override
+    public List<DataSyndicationAgreement> getSlaveAgreements() {
+
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/find/as-slave", null, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationAgreement> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationAgreement.class));
+        }
+
+        return r;
     }
 
     @Override

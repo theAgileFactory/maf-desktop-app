@@ -8,10 +8,17 @@ package services.datasyndication.models;
  */
 public class DataSyndicationPartner {
 
-    public String logo;
-    public String name;
-    public String description;
-    public String website;
+    // from instance
     public String domain;
+
+    // from customer
+    public String customerLogo;
+    public String customerName;
+    public String customerDescription;
+    public String customerWebsite;
+
+    // from contact
+    public String contactName;
+    public String contactEmail;
 
 }

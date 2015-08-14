@@ -679,6 +679,13 @@ POST    /admin/sharedstorage/upload/:flag      controllers.admin.SharedStorageMa
 #Data syndication
 GET     /admin/data-syndication/master-agreements          controllers.admin.DataSyndicationController.viewMasterAgreements()
 GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
+GET     /admin/data-syndication/agreement/view             controllers.admin.DataSyndicationController.viewAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/process          controllers.admin.DataSyndicationController.processAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/accept           controllers.admin.DataSyndicationController.acceptAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/reject           controllers.admin.DataSyndicationController.rejectAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/suspend          controllers.admin.DataSyndicationController.suspendAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/restart          controllers.admin.DataSyndicationController.restartAgreement(agreementId: Long)
+GET     /admin/data-syndication/agreement/cancel           controllers.admin.DataSyndicationController.cancelAgreement(agreementId: Long)
 
 #Configurators routes
 GET    /plugin/custcfg/:actionId/get/:id                      framework.services.plugins.PluginConfiguratorController.doGetForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)

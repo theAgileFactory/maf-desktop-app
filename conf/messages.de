@@ -1531,6 +1531,29 @@ object.application_block.description.label=Beschreibung
 object.application_block.parent.label=Elternteil
 object.application_block.table.empty=Kein Eintrag
 
+#----------------------
+# dataSyndicationAgreement
+#----------------------
+
+object.data_syndication_agreement.partner.label=Partner
+object.data_syndication_agreement.contact_name.label=Kontakt
+object.data_syndication_agreement.contact_email.label=E-Mail
+object.data_syndication_agreement.name.label=Name
+object.data_syndication_agreement.ref_id.label=ID
+object.data_syndication_agreement.start_date.label=Begin Zeitraum
+object.data_syndication_agreement.end_date.label=Ende Zeitraum
+object.data_syndication_agreement.status.label=Status
+object.data_syndication_agreement.status.PENDING.label=Anstehend
+object.data_syndication_agreement.status.ONGOING.label=Laufend
+object.data_syndication_agreement.status.REJECTED.label=Abgelehnt
+object.data_syndication_agreement.status.FINISHED.label=Abgeschlossen
+object.data_syndication_agreement.status.SUSPENDED.label=Suspendiert
+object.data_syndication_agreement.status.CANCELLED.label=Abgesagt
+object.data_syndication_agreement.process.label=de: Process the decision
+object.data_syndication_agreement.suspend.confirm=de: Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
+object.data_syndication_agreement.cancel.confirm=de: Are you sure you want to cancel this agreement? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement.table.empty=Kein Eintrag
+
 ########################
 # Error pages
 ########################

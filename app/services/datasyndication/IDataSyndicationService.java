@@ -42,15 +42,7 @@ public interface IDataSyndicationService {
     boolean isActive();
 
     /**
-     * Get all partners that are eligible for the slave instance of an
-     * agreement.
-     * 
-     * Note: the current instance should be manually subtracted of the list.
-     */
-    List<DataSyndicationPartner> getSlavePartners();
-
-    /**
-     * Get partners, filtered by keywords, that are eligible for the slave
+     * Get partners, filtered by keywords, that are eligible to be the slave
      * instance of an agreement.
      * 
      * Note: the current instance should be manually subtracted of the list.
@@ -61,9 +53,7 @@ public interface IDataSyndicationService {
     List<DataSyndicationPartner> searchFromSlavePartners(String keywords);
 
     /**
-     * Create a new master agreement.
-     * 
-     * The agreement should then be accepted by the slave instance.
+     * Create a new master agreement for the instance.
      * 
      * @param refId
      *            the refId
@@ -81,7 +71,7 @@ public interface IDataSyndicationService {
     void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems, String slaveDomain);
 
     /**
-     * Accept a pending agreement (call by a slave instance).
+     * Accept a pending agreement.
      * 
      * @param agreement
      *            the agreement
@@ -89,7 +79,7 @@ public interface IDataSyndicationService {
     void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException;
 
     /**
-     * Reject a pending agreement (call by a slave instance).
+     * Reject a pending agreement.
      * 
      * @param agreement
      *            the agreement
@@ -97,7 +87,7 @@ public interface IDataSyndicationService {
     void rejectAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
 
     /**
-     * Cancel an ongoing agreement.
+     * Cancel an agreement.
      * 
      * @param agreement
      *            the agreement
@@ -105,7 +95,7 @@ public interface IDataSyndicationService {
     void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException;
 
     /**
-     * Suspend an ongoing agreement (call by a master instance).
+     * Suspend an ongoing agreement.
      * 
      * @param agreement
      *            the agreement
@@ -113,7 +103,7 @@ public interface IDataSyndicationService {
     void suspendAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
 
     /**
-     * Restart a suspended agreement (call by a master instance).
+     * Restart a suspended agreement.
      * 
      * @param agreement
      *            the agreement
@@ -121,7 +111,17 @@ public interface IDataSyndicationService {
     void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
 
     /**
-     * Create a new agreement link (call by a master instance).
+     * Get the master agreements of the instance.
+     */
+    List<DataSyndicationAgreement> getMasterAgreements();
+
+    /**
+     * Get the slave agreements of the instance.
+     */
+    List<DataSyndicationAgreement> getSlaveAgreements();
+
+    /**
+     * Create a new agreement link for a master agreement of the instance.
      * 
      * @param agreement
      *            the corresponding agreement
@@ -136,7 +136,7 @@ public interface IDataSyndicationService {
             throws DataSyndicationException;
 
     /**
-     * Accept a pending agreement link (call by a slave instance).
+     * Accept a pending agreement link.
      * 
      * @param agreementLink
      *            the agreement link
@@ -146,7 +146,7 @@ public interface IDataSyndicationService {
     void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws DataSyndicationException;
 
     /**
-     * Reject a pending agreement link (call by a slave instance).
+     * Reject a pending agreement link.
      * 
      * @param agreementLink
      *            the agreement link
@@ -154,7 +154,7 @@ public interface IDataSyndicationService {
     void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
 
     /**
-     * Cancel an ongoing agreement link.
+     * Cancel an agreement link.
      * 
      * @param agreementLink
      *            the agreement link
@@ -170,7 +170,7 @@ public interface IDataSyndicationService {
     DataSyndicationAgreementLink getAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
 
     /**
-     * Get the ongoing agreement links.
+     * Get the ongoing agreement links of the instance.
      */
     List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() throws DataSyndicationException;
 

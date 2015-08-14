@@ -126,11 +126,6 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public List<DataSyndicationPartner> getSlavePartners() {
-        return echannelService.findPartners(true, null);
-    }
-
-    @Override
     public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) {
         return echannelService.findPartners(true, keywords);
     }
@@ -144,17 +139,17 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException {
 
+        // TODO should be moved in echannel service
         if (!agreement.status.equals(DataSyndicationAgreement.Status.PENDING)) {
             throw new DataSyndicationException("Impossible to accept a non-pending agreement");
         }
-
-        if (!agreement.slaveDomain.equals(this.getCurrentDomain())) {
+        if (!agreement.slavePartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the slave of the agreement");
         }
 
         // create an application API key
         IApiApplicationConfiguration applicationConfiguration = apiSignatureService.setApplicationConfiguration(UUID.randomUUID().toString(),
-                "Data syndication key for the instance " + agreement.masterDomain, false, false, "GET (.*)\nPOST (.*)\nPUT (.*)\nDELETE (.*)");
+                "Data syndication key for the instance " + agreement.masterPartner.domain, false, false, "GET (.*)\nPOST (.*)\nPUT (.*)\nDELETE (.*)");
 
         // Assign the key
         DataSyndicationApiKey apiKey = new DataSyndicationApiKey();
@@ -169,11 +164,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void rejectAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
 
+        // TODO should be moved in echannel service
         if (!agreement.status.equals(DataSyndicationAgreement.Status.PENDING)) {
             throw new DataSyndicationException("Impossible to reject a non-pending agreement");
         }
-
-        if (!agreement.slaveDomain.equals(this.getCurrentDomain())) {
+        if (!agreement.slavePartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the slave of the agreement");
         }
 
@@ -183,11 +178,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException {
 
-        if (!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)) {
-            throw new DataSyndicationException("Impossible to cancel a non-ongoing agreement");
-        }
-
-        if (!agreement.slaveDomain.equals(this.getCurrentDomain()) && !agreement.masterDomain.equals(this.getCurrentDomain())) {
+        // TODO should be moved in echannel service
+        if (!agreement.slavePartner.domain.equals(this.getCurrentDomain()) && !agreement.masterPartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the master or the slave of the agreement");
         }
 
@@ -201,11 +193,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void suspendAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
 
+        // TODO should be moved in echannel service
         if (!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)) {
             throw new DataSyndicationException("Impossible to suspend a non-ongoing agreement");
         }
-
-        if (!agreement.masterDomain.equals(this.getCurrentDomain())) {
+        if (!agreement.masterPartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the master of the agreement");
         }
 
@@ -216,11 +208,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
 
+        // TODO should be moved in echannel service
         if (!agreement.status.equals(DataSyndicationAgreement.Status.SUSPENDED)) {
             throw new DataSyndicationException("Impossible to restart a non-suspended agreement");
         }
-
-        if (!agreement.masterDomain.equals(this.getCurrentDomain())) {
+        if (!agreement.masterPartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the master of the agreement");
         }
 
@@ -229,10 +221,21 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
+    public List<DataSyndicationAgreement> getMasterAgreements() {
+        return echannelService.getMasterAgreements();
+    }
+
+    @Override
+    public List<DataSyndicationAgreement> getSlaveAgreements() {
+        return echannelService.getSlaveAgreements();
+    }
+
+    @Override
     public void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType,
             Long masterObjectId) throws DataSyndicationException {
 
-        if (!agreement.masterDomain.equals(this.getCurrentDomain())) {
+        // TODO should be moved in echannel service
+        if (!agreement.masterPartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the master of the agreement");
         }
 
@@ -243,11 +246,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws DataSyndicationException {
 
+        // TODO should be moved in echannel service
         if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.PENDING)) {
             throw new DataSyndicationException("Impossible to accept a non-pending agreement link");
         }
-
-        if (!agreementLink.agreement.slaveDomain.equals(this.getCurrentDomain())) {
+        if (!agreementLink.agreement.slavePartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the slave of the agreement");
         }
 
@@ -258,11 +261,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
 
+        // TODO should be moved in echannel service
         if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.PENDING)) {
             throw new DataSyndicationException("Impossible to reject a non-pending agreement link");
         }
-
-        if (!agreementLink.agreement.slaveDomain.equals(this.getCurrentDomain())) {
+        if (!agreementLink.agreement.slavePartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the slave of the agreement");
         }
 
@@ -273,11 +276,9 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
 
-        if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.ONGOING)) {
-            throw new DataSyndicationException("Impossible to cancel a non-ongoing agreement link");
-        }
-
-        if (!agreementLink.agreement.slaveDomain.equals(this.getCurrentDomain()) && !agreementLink.agreement.masterDomain.equals(this.getCurrentDomain())) {
+        // TODO should be moved in echannel service
+        if (!agreementLink.agreement.slavePartner.domain.equals(this.getCurrentDomain())
+                && !agreementLink.agreement.masterPartner.domain.equals(this.getCurrentDomain())) {
             throw new DataSyndicationException("The current instance should be the master or the slave of the agreement");
         }
 

@@ -20,6 +20,7 @@ package services.echannel;
 import java.util.Date;
 import java.util.List;
 
+import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
@@ -96,7 +97,7 @@ public interface IEchannelService {
     void addLoginEvent(String uid, Boolean result, ErrorCode errorCode, String errorMessage);
 
     /**
-     * Find the available partners for an agreement with filter.
+     * Find the available partners for an agreement with filter capabilities.
      * 
      * @param eligibleAsSlave
      *            true to return the instances that are eligible to be the slave
@@ -107,9 +108,9 @@ public interface IEchannelService {
     List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords);
 
     /**
-     * Create a new master agreement.
+     * Create a new master agreement for the instance.
      * 
-     * The agreement should then be accepted by the slave instance.
+     * The agreement should be then accepted by the slave instance.
      * 
      * @param refId
      *            the refId
@@ -130,7 +131,9 @@ public interface IEchannelService {
             String permissions);
 
     /**
-     * Accept a pending agreement (call by a slave instance).
+     * Accept a pending agreement.
+     * 
+     * The instance should be the slave of the agreement.
      * 
      * @param id
      *            the agreement id
@@ -142,7 +145,9 @@ public interface IEchannelService {
     void acceptAgreement(Long id, DataSyndicationApiKey apiKey, String permissions);
 
     /**
-     * Reject a pending agreement (call by a slave instance).
+     * Reject a pending agreement.
+     * 
+     * The instance should be the slave of the agreement.
      * 
      * @param id
      *            the agreement id
@@ -152,7 +157,9 @@ public interface IEchannelService {
     void rejectAgreement(Long id, String permissions);
 
     /**
-     * Cancel an ongoing agreement.
+     * Cancel an agreement.
+     * 
+     * The instance should the master or the slave of the agreement.
      * 
      * @param id
      *            the agreement id
@@ -163,7 +170,9 @@ public interface IEchannelService {
     void cancelAgreement(Long id, String permissions);
 
     /**
-     * Suspend an ongoing agreement (call by a master instance).
+     * Suspend an ongoing agreement.
+     * 
+     * The instance should be the slave of the agreement.
      * 
      * @param id
      *            the agreement id
@@ -173,7 +182,9 @@ public interface IEchannelService {
     void suspendAgreement(Long id, String permissions);
 
     /**
-     * Restart a suspended agreement (call by a master instance).
+     * Restart a suspended agreement.
+     * 
+     * The instance should be the slave of the agreement.
      * 
      * @param id
      *            the agreement id
@@ -183,7 +194,19 @@ public interface IEchannelService {
     void restartAgreement(Long id, String permissions);
 
     /**
-     * Create a new agreement link (call by a master instance).
+     * Get the master agreements of the instance.
+     */
+    List<DataSyndicationAgreement> getMasterAgreements();
+
+    /**
+     * Get the slave agreements of the instance.
+     */
+    List<DataSyndicationAgreement> getSlaveAgreements();
+
+    /**
+     * Create a new agreement link for a master agreement of the instance.
+     * 
+     * The agreement link should be then accepted by the slave instance.
      * 
      * @param agreementId
      *            the corresponding agreement id
@@ -199,7 +222,9 @@ public interface IEchannelService {
     void submitAgreementLink(Long agreementId, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId, String permissions);
 
     /**
-     * Accept a pending agreement link (call by a slave instance).
+     * Accept a pending agreement link.
+     * 
+     * The instance should be the slave of the corresponding agreement.
      * 
      * @param id
      *            the agreement link id
@@ -211,7 +236,9 @@ public interface IEchannelService {
     void acceptAgreementLink(Long id, Long slaveObjectId, String permissions);
 
     /**
-     * Reject a pending agreement link (call by a slave instance).
+     * Reject a pending agreement link.
+     * 
+     * The instance should be the slave of the corresponding agreement.
      * 
      * @param id
      *            the agreement link id
@@ -221,7 +248,10 @@ public interface IEchannelService {
     void rejectAgreementLink(Long id, String permissions);
 
     /**
-     * Cancel an ongoing agreement link.
+     * Cancel an agreement link.
+     * 
+     * The instance should be the master or the slave of the corresponding
+     * agreement.
      * 
      * @param id
      *            the agreement link id
@@ -234,18 +264,27 @@ public interface IEchannelService {
     /**
      * Get an agreement link by id.
      * 
+     * The instance should be the master or the slave of the corresponding
+     * agreement.
+     * 
      * @param id
      *            the agreement link id
      */
     DataSyndicationAgreementLink getAgreementLink(Long id);
 
     /**
-     * Get the ongoing agreement links.
+     * Get the ongoing agreement links of the instance.
+     * 
+     * The corresponding agreement should be also ongoing.
      */
     List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize();
 
     /**
-     * Get the agreement links for a master object.
+     * Get the agreement links of a master object.
+     * 
+     * This means:<br/>
+     * -The instance is the master of the corresponding agreement<br/>
+     * -The given masterObjectId corresponds to the master object id of the link
      * 
      * @param dataType
      *            the data type
@@ -255,7 +294,11 @@ public interface IEchannelService {
     List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId);
 
     /**
-     * Get the agreement links for a slave object.
+     * Get the agreement links of a slave object.
+     * 
+     * This means:<br/>
+     * -The instance is the slave of the corresponding agreement<br/>
+     * -The given slaveObjectId corresponds to the slave object id of the link
      * 
      * @param dataType
      *            the data type

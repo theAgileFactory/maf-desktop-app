@@ -17,11 +17,17 @@
  */
 package controllers.admin;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.datasyndication.IDataSyndicationService;
+import services.datasyndication.models.DataSyndicationAgreement;
 
 /**
  * The constroller for the data syndication.
@@ -31,10 +37,16 @@ import play.mvc.Result;
 @Restrict({ @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
 public class DataSyndicationController extends Controller {
 
+    @Inject
+    private IDataSyndicationService dataSyndicationService;
+
     /**
      * Display the list of master agreements.
      */
     public Result viewMasterAgreements() {
+
+        List<DataSyndicationAgreement> masterAgreements = dataSyndicationService.getMasterAgreements();
+
         return TODO;
     }
 
@@ -42,6 +54,94 @@ public class DataSyndicationController extends Controller {
      * Display the list of consumer agreements.
      */
     public Result viewConsumerAgreements() {
+        return TODO;
+    }
+
+    /**
+     * Display the details of an agreement.
+     * 
+     * @param agreementId
+     *            the agreement id
+     */
+    public Result viewAgreement(Long agreementId) {
+        return TODO;
+    }
+
+    /**
+     * Page to accept or reject an agreement.
+     * 
+     * @param agreementId
+     *            the agreement id
+     */
+    public Result processAgreement(Long agreementId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Accept an agreement.
+     * 
+     * @param agreementId
+     *            the agreement id
+     */
+    public Result acceptAgreement(Long agreementId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Reject an agreement.
+     * 
+     * @param agreementId
+     *            the agreement id
+     */
+    public Result rejectAgreement(Long agreementId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Suspend an agreement.
+     * 
+     * @param agreementId
+     *            the agreement id
+     */
+    public Result suspendAgreement(Long agreementId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Restart an agreement.
+     * 
+     * @param agreementId
+     *            the agreement id
+     */
+    public Result restartAgreement(Long agreementId) {
+
+        // TODO check here the right
+
+        return TODO;
+    }
+
+    /**
+     * Cancel an agreement.
+     * 
+     * @param agreementId
+     *            the agreement id
+     */
+    public Result cancelAgreement(Long agreementId) {
+
+        // TODO check here the right
+
         return TODO;
     }
 }
