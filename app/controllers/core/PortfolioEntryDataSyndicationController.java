@@ -15,37 +15,33 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package controllers.core;
+
+import be.objectify.deadbolt.java.actions.Dynamic;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import security.CheckPortfolioEntryExists;
+import security.DefaultDynamicResourceHandler;
 
 /**
- * The content for the loginEvent request.
+ * The controller which allows to manage the data syndication for a portfolio
+ * entry.
  * 
  * @author Johann Kohler
- * 
  */
-public class LoginEventRequest {
-
-    public String uid;
-
-    public Boolean result;
-
-    public ErrorCode errorCode;
-
-    public String errorMessage;
+public class PortfolioEntryDataSyndicationController extends Controller {
 
     /**
-     * Default constructor.
-     */
-    public LoginEventRequest() {
-    }
-
-    /**
-     * The error codes.
+     * Display the data syndication agreements.
      * 
-     * @author Johann Kohler
+     * @param id
+     *            the portfolio entry id
      */
-    public static enum ErrorCode {
-        WRONG_CREDENTIAL, IS_NOT_ACCESSIBLE;
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result index(Long id) {
+        return TODO;
     }
 
 }

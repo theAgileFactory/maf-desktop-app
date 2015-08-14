@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(overview: Boolean, selectedOption: Integer, pageTitleI18nCode: String)(header: Html)(content: Html)
+@(menuItemType: controllers.admin.PluginManagerController.MenuItemType, pageTitleI18nCode: String)(header: Html)(content: Html)
 
 @import framework_views.parts.formats._
 @import be.objectify.deadbolt.java.views.html._
@@ -24,51 +24,6 @@
 @import views.html.modelsparts._
 @import framework.utils.SideBar
 @import framework.utils.Menu.ClickableMenuItem
-
-@sidebarInstance=@{
-    val sidebarInstance=new SideBar()
-    val activePluginsItem = new ClickableMenuItem(
-        "admin.plugin_manager.sidebar.active_plugins",
-        controllers.admin.routes.PluginManagerController.index().url,
-        "glyphicons glyphicons-remote-control",
-        selectedOption==1)
-    activePluginsItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) :: Nil);
-    sidebarInstance.addMenuItem(activePluginsItem)
-    
-    val availablePluginsItem = new ClickableMenuItem(
-        "admin.plugin_manager.sidebar.available_plugins",
-        controllers.admin.routes.PluginManagerController.registration().url,
-        "glyphicons glyphicons-shopping-bag",
-        selectedOption==2)
-    availablePluginsItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) :: Nil);
-    sidebarInstance.addMenuItem(availablePluginsItem)
-    
-    val sharedStorageItem = new ClickableMenuItem(
-        "admin.plugin_manager.sidebar.shared_storage",
-        controllers.admin.routes.SharedStorageManagerController.index().url,
-        "glyphicons glyphicons-inbox-in",
-        selectedOption==3)
-    sharedStorageItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) :: Nil);
-    sidebarInstance.addMenuItem(sharedStorageItem)
-    
-    val apiKeysItem = new ClickableMenuItem(
-        "admin.api_manager.menu.keys.label",
-        controllers.admin.routes.ApiManagerController.index().url,
-        "glyphicons glyphicons-keys",
-        selectedOption==4)
-    apiKeysItem.setAuthorizedPermissions(Array(constants.IMafConstants.API_MANAGER_PERMISSION) :: Nil);
-    sidebarInstance.addMenuItem(apiKeysItem)
-    
-    val apiBrowserItem = new ClickableMenuItem(
-        "admin.api_manager.menu.browser.label",
-        controllers.admin.routes.ApiManagerController.displayBrowser().url,
-        "glyphicons glyphicons-global",
-        selectedOption==5)
-    apiBrowserItem.setAuthorizedPermissions(Array(constants.IMafConstants.API_TESTER_PERMISSION) :: Nil);
-    sidebarInstance.addMenuItem(apiBrowserItem)
-    
-    sidebarInstance
-}
 
 @breadcrump=@{
     Seq(
@@ -79,7 +34,7 @@
 
 @templates.main_bc_iconsbar(
     pageTitleI18nCode,
-    sidebarInstance,
+    controllers.admin.PluginManagerController.getIconsBar(utils.Tpl.getDataSyndicationService.isActive, menuItemType),
     breadcrump
 ){
 @header

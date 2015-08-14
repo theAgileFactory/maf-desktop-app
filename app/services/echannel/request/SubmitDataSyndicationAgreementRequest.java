@@ -15,23 +15,31 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package services.echannel.request;
 
+import java.util.Date;
+import java.util.List;
 
 /**
- * The content for the updateConsumedStorage request.
+ * The content for the submit agreement request.
  * 
  * @author Johann Kohler
  * 
  */
-public class UpdateConsumedStorageRequest {
+public class SubmitDataSyndicationAgreementRequest {
 
-    public Integer consumedStorage;
+    public String refId;
+    public String name;
+    public Date startDate;
+    public Date endDate;
+    public List<Long> agreementItemIds;
+    public String slaveDomain;
+    public String permissions;
 
     /**
      * Default constructor.
      */
-    public UpdateConsumedStorageRequest() {
+    public SubmitDataSyndicationAgreementRequest() {
     }
 
 }

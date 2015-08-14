@@ -15,22 +15,25 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package services.echannel.request;
 
 /**
- * The content for the updateConsumedPortfolioEntries request.
+ * The content for accept agreement request.
  * 
  * @author Johann Kohler
  * 
  */
-public class UpdateConsumedPortfolioEntriesRequest {
+public class AcceptDataSyndicationAgreementRequest {
 
-    public Integer consumedPortfolioEntries;
+    public String apiName;
+    public String apiSecretKey;
+    public String apiApplicationKey;
+    public String permissions;
 
     /**
      * Default constructor.
      */
-    public UpdateConsumedPortfolioEntriesRequest() {
+    public AcceptDataSyndicationAgreementRequest() {
     }
 
 }

@@ -26,7 +26,7 @@ syntax: framework.commons.IFrameworkConstants.Syntax)
 
 @configurationBlockName=@{parts.Msg(configurationBlockDescriptor.getName())}
 
-@pluginmanager_template(true, 1, parts.Msg.asString("admin.plugin_manager.configuration_block.edit.title.label",configurationBlockName)){
+@pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.PLUGINS, parts.Msg.asString("admin.plugin_manager.configuration_block.edit.title.label",configurationBlockName)){
 @framework_views.parts.framework_code_editor_includes(routes.Assets.versioned("").url,syntax)
 }{
 <div class="row">

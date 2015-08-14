@@ -580,6 +580,7 @@ permission.roadmap_simulator_permission.description=Permission which allows a us
 permission.admin_custom_attribute_permission.description=Permission which allows a user to manage the custom attributes.
 permission.architecture_permission.description=Permission which allows a user to use the architecture module (DevDock).
 permission.application_block_edit_all_permission.description=Permission which allows a user to manage the application blocks (DevDock).
+permission.partner_syndication_permission.description=Permission which allows a user to manage the data syndication with partners.
 
 #----------------------
 # preferences
@@ -1517,6 +1518,54 @@ object.application_block.description.label=Description
 object.application_block.parent.label=Parent
 object.application_block.table.empty=There is no application block.
 
+#----------------------
+# dataSyndicationAgreementItem
+#----------------------
+
+#portfolio entry
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label=Initiative
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Report status
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Planning package
+
+#----------------------
+# dataSyndicationAgreement
+#----------------------
+
+object.data_syndication_agreement.partner.label=Partner
+object.data_syndication_agreement.contact_name.label=Contact
+object.data_syndication_agreement.contact_email.label=E-mail
+object.data_syndication_agreement.name.label=Agreement name
+object.data_syndication_agreement.ref_id.label=Ref ID
+object.data_syndication_agreement.start_date.label=Start date
+object.data_syndication_agreement.end_date.label=End date
+object.data_syndication_agreement.status.label=Status
+object.data_syndication_agreement.status.PENDING.label=Pending
+object.data_syndication_agreement.status.ONGOING.label=Ongoing
+object.data_syndication_agreement.status.REJECTED.label=Rejected
+object.data_syndication_agreement.status.FINISHED.label=Finished
+object.data_syndication_agreement.status.SUSPENDED.label=Suspended
+object.data_syndication_agreement.status.CANCELLED.label=Cancelled
+object.data_syndication_agreement.process.label=Process the decision
+object.data_syndication_agreement.suspend.confirm=Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
+object.data_syndication_agreement.cancel.confirm=Are you sure you want to cancel this agreement? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement.table.empty=There is no agreement
+
+#----------------------
+# dataSyndicationAgreementLink
+#----------------------
+
+object.data_syndication_agreement_link.data_type.label=Data type
+object.data_syndication_agreement_link.object.label=Object
+object.data_syndication_agreement_link.items.label=Synchronized items
+object.data_syndication_agreement_link.status.label=Status
+object.data_syndication_agreement_link.status.PENDING.label=Pending
+object.data_syndication_agreement_link.status.ONGOING.label=Ongoing
+object.data_syndication_agreement_link.status.REJECTED.label=Rejected
+object.data_syndication_agreement_link.status.CANCELLED.label=Cancelled
+object.data_syndication_agreement_link.process.label=Process the decision
+object.data_syndication_agreement_link.cancel.confirm=Are you sure you want to cancel this agreement link? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement_link.table.empty=There is no agreement link
+
 ########################
 # Error pages
 ########################
@@ -1966,7 +2015,9 @@ core.portfolio_entry.sidebar.planning.resources.label=Resources
 core.portfolio_entry.sidebar.status_reporting.label=Status reporting
 core.portfolio_entry.sidebar.status_reporting.registers.label=Status registers
 core.portfolio_entry.sidebar.status_reporting.events.label=Events
-core.portfolio_entry.sidebar.pluginconfig.label=Integration
+core.portfolio_entry.sidebar.integration.label=Integration
+core.portfolio_entry.sidebar.integration.plugins.label=Plugins
+core.portfolio_entry.sidebar.integration.partner_syndication.label=Partner syndication
 core.portfolio_entry.breadcrump.edit=Edit
 core.portfolio_entry.breadcrump.manage=Manage
 core.portfolio_entry.breadcrump.view=Details
@@ -2810,13 +2861,20 @@ admin.configuration.custom_attribute.item.edit.successful=The option has been up
 admin.configuration.custom_attribute.item.delete.successful=The option has been removed.
 
 #----------------------
-# plugin manager
+# integration
 #----------------------
 
 #helper
-admin.plugin_manager.sidebar.active_plugins=Active plugins
-admin.plugin_manager.sidebar.available_plugins=Available plugins
-admin.plugin_manager.sidebar.shared_storage=Data exchange storage
+admin.integration.sidebar.plugins=Plugins
+admin.integration.sidebar.plugins.active_plugins=Active plugins
+admin.integration.sidebar.plugins.available_plugins=Available plugins
+admin.integration.sidebar.data_syndication=Partner syndication
+admin.integration.sidebar.data_syndication.master_agreements=Master agreements
+admin.integration.sidebar.data_syndication.consumer_agreements=Consumer agreements
+admin.integration.sidebar.api=API
+admin.integration.sidebar.api.keys=API keys
+admin.integration.sidebar.api.browser=API browser
+admin.integration.sidebar.shared_storage=Data exchange storage
 
 #active plugins
 admin.plugin_manager.active_plugins.header=The table below contains the plugins which are currenty registered within the system.
@@ -2883,12 +2941,7 @@ admin.shared_storage.upload.success=File succesfully upoaded
 #shared storage: delete file
 admin.shared_storage.delete.success=File deleted
 
-#----------------------
-# API manager
-#----------------------
-
-admin.api_manager.menu.keys.label=API keys
-admin.api_manager.menu.browser.label=API browser
+#api manager
 admin.api_manager.title=API configuration manager
 admin.api_manager.table.title=Registered applications
 admin.api_manager.unknown.application.message=Unknown application name : {0}
@@ -2915,6 +2968,16 @@ This interface describes all the available APIs and allow to test each API (simu
 admin.api_manager.apibrowser.explanation=The documentation below contains all the APIs.<br/>\
 However please note that some APIs requires some specific authorizations which may prevent you from testing the API.
 admin.api_manager.apibrowser.simulator.application.select.label=Tested application
+
+#data syndication
+admin.data_syndication.communication_error=A communication error with the server has occurred. Please contact your administrator for more information.
+
+admin.data_syndication.master_agreements.header=A master agreement is a contract with one of your partners in order to share BizDock data with him. \
+By creating a new agreement, no data are directly shared, you need to specifically define them just after.
+admin.data_syndication.master_agreements.partner_contract=Partner contracts
+
+admin.data_syndication.consumer_agreements.header=A consumer agreement is a contract with one of your partners in order to load his BizDock data in your instance.
+admin.data_syndication.consumer_agreements.partner_contract=Partner contracts
 
 #----------------------
 # KPI manager

@@ -28,32 +28,24 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import models.framework_models.plugin.PluginConfiguration;
-import models.framework_models.plugin.PluginConfigurationBlock;
-import models.framework_models.plugin.PluginDefinition;
-import models.framework_models.plugin.PluginIdentificationLink;
-import models.framework_models.plugin.PluginLog;
-
 import org.apache.commons.lang3.tuple.Pair;
-
-import play.Logger;
-import play.data.Form;
-import play.data.validation.Constraints.Required;
-import play.libs.F.Promise;
-import play.mvc.Controller;
-import play.mvc.Result;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
+import controllers.admin.PluginManagerController.PluginConfigurationBlockObject;
+import controllers.admin.PluginManagerController.PluginConfigurationDescriptionTableObject;
+import controllers.admin.PluginManagerController.PluginRegistrationFormObject;
+import controllers.core.PortfolioEntryController.MenuItemType;
 import framework.commons.IFrameworkConstants.Syntax;
 import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
+import framework.security.SecurityUtils;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.IPluginManagerService.PluginStatus;
@@ -64,12 +56,25 @@ import framework.services.plugins.api.IStaticPluginRunnerDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
+import framework.utils.Menu.ClickableMenuItem;
+import framework.utils.Menu.HeaderMenuItem;
 import framework.utils.Msg;
 import framework.utils.Pagination;
+import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.Utilities;
-import framework.security.SecurityUtils;
+import models.framework_models.plugin.PluginConfiguration;
+import models.framework_models.plugin.PluginConfigurationBlock;
+import models.framework_models.plugin.PluginDefinition;
+import models.framework_models.plugin.PluginIdentificationLink;
+import models.framework_models.plugin.PluginLog;
+import play.Logger;
+import play.data.Form;
+import play.data.validation.Constraints.Required;
+import play.libs.F.Promise;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 /**
  * The GUI for managing the plugins.
@@ -87,9 +92,10 @@ import framework.security.SecurityUtils;
  * @author Pierre-Yves Cloux
  */
 public class PluginManagerController extends Controller {
+
     @Inject
     private IPluginManagerService pluginManagerService;
-    
+
     private static Logger.ALogger log = Logger.of(PluginManagerController.class);
 
     /**
@@ -148,8 +154,8 @@ public class PluginManagerController extends Controller {
             this.setLineAction(new IColumnFormatter<PluginConfigurationBlockObject>() {
                 @Override
                 public String apply(PluginConfigurationBlockObject object, Object value) {
-                    return routes.PluginManagerController.editConfigurationBlock(object.pluginConfigurationId,
-                            object.getPluginConfigurationBlockDescriptor().getIdentifier()).url();
+                    return routes.PluginManagerController
+                            .editConfigurationBlock(object.pluginConfigurationId, object.getPluginConfigurationBlockDescriptor().getIdentifier()).url();
                 }
             });
 
@@ -192,11 +198,12 @@ public class PluginManagerController extends Controller {
                     SortStatusType.DESC);
             addColumnConfiguration("isError", "isError", "object.plugin_log.is_error.label", new CheckboxFilterComponent(true), true, true,
                     SortStatusType.UNSORTED);
-            addColumnConfiguration("event", "event", "object.plugin_log.event.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+            addColumnConfiguration("event", "event", "object.plugin_log.event.label", new TextFieldFilterComponent("*"), true, false,
+                    SortStatusType.UNSORTED);
             addColumnConfiguration("logMessage", "logMessage", "object.plugin_log.log_message.label", new TextFieldFilterComponent("*"), true, false,
                     SortStatusType.UNSORTED);
-            addColumnConfiguration("transactionId", "transactionId", "object.plugin_log.transaction_id.label", new TextFieldFilterComponent("*"), false, false,
-                    SortStatusType.UNSORTED);
+            addColumnConfiguration("transactionId", "transactionId", "object.plugin_log.transaction_id.label", new TextFieldFilterComponent("*"), false,
+                    false, SortStatusType.UNSORTED);
             addColumnConfiguration("dataType", "dataType", "object.plugin_log.data_type.label", new TextFieldFilterComponent("*"), false, false,
                     SortStatusType.UNSORTED);
             addColumnConfiguration("internalId", "internalId", "object.plugin_log.internal_id.label", new TextFieldFilterComponent("*"), false, false,
@@ -244,9 +251,9 @@ public class PluginManagerController extends Controller {
      * 
      * @return
      */
-    @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION) })
+    @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Promise<Result> image(String identifier, boolean isBigImage) {
-        
+
         InputStream inStream = null;
         if (isBigImage) {
             inStream = getPluginManagerService().getPluginBigImageSrc(identifier);
@@ -254,31 +261,36 @@ public class PluginManagerController extends Controller {
             inStream = getPluginManagerService().getPluginSmallImageSrc(identifier);
         }
         if (inStream == null) {
-            if(log.isDebugEnabled()){
-                log.debug("Image ["+(isBigImage?"BIG":"SMALL")+"] not found for plugin "+identifier);
+            if (log.isDebugEnabled()) {
+                log.debug("Image [" + (isBigImage ? "BIG" : "SMALL") + "] not found for plugin " + identifier);
             }
             return Promise.promise(() -> notFound());
         }
-        if(log.isDebugEnabled()){
-            log.debug("Image ["+(isBigImage?"BIG":"SMALL")+"] was found for plugin "+identifier);
+        if (log.isDebugEnabled()) {
+            log.debug("Image [" + (isBigImage ? "BIG" : "SMALL") + "] was found for plugin " + identifier);
         }
         final InputStream finalInStream = inStream;
-        return Promise.promise(() ->ok(finalInStream));
+        return Promise.promise(() -> ok(finalInStream));
     }
 
     /**
      * Display the overview display for the plugins.<br/>
      * It consists in a list of plugins with their status (started/stopped).
      */
-    @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION) })
+    @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION),
+            @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
     public Result index() {
 
         if (!SecurityUtils.isAllowed(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
-            return redirect(controllers.admin.routes.ApiManagerController.index());
+            if (SecurityUtils.isAllowed(IMafConstants.API_MANAGER_PERMISSION)) {
+                return redirect(controllers.admin.routes.ApiManagerController.index());
+            } else {
+                return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
+            }
         }
 
         List<PluginConfigurationDescriptionTableObject> pluginConfigurations = new ArrayList<PluginConfigurationDescriptionTableObject>();
-        
+
         Map<Long, IPluginInfo> registeredPlugins = getPluginManagerService().getRegisteredPluginDescriptors();
         for (Long pluginConfigurationId : registeredPlugins.keySet()) {
             PluginConfigurationDescriptionTableObject tableObject = new PluginConfigurationDescriptionTableObject();
@@ -304,7 +316,6 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result registration() {
-        
 
         // Identify already registered plugin definitions
         Set<String> registeredDefinitions = getAlreadyRegisteredPlugins(getPluginManagerService());
@@ -333,10 +344,10 @@ public class PluginManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result displayRegistrationForm(String pluginDefinitionIdentifier) {
         PluginRegistrationFormObject pluginRegistrationFormObject = new PluginRegistrationFormObject();
-        
+
         IStaticPluginRunnerDescriptor pluginRunnerDescriptor = getPluginManagerService().getAvailablePluginDescriptor(pluginDefinitionIdentifier);
-        if (pluginRunnerDescriptor == null
-                || (!pluginRunnerDescriptor.multiInstanceAllowed() && getAlreadyRegisteredPlugins(getPluginManagerService()).contains(pluginDefinitionIdentifier))) {
+        if (pluginRunnerDescriptor == null || (!pluginRunnerDescriptor.multiInstanceAllowed()
+                && getAlreadyRegisteredPlugins(getPluginManagerService()).contains(pluginDefinitionIdentifier))) {
             return badRequest();
         }
         String definitionName = Msg.get(pluginRunnerDescriptor.getName());
@@ -371,7 +382,7 @@ public class PluginManagerController extends Controller {
         pluginConfiguration.save();
 
         // Trigger the registration
-        
+
         try {
             getPluginManagerService().registerPlugin(pluginConfiguration.id);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.new.success", pluginConfiguration.name));
@@ -417,7 +428,7 @@ public class PluginManagerController extends Controller {
             configuration.delete();
 
             // Unregister the plugin
-            
+
             getPluginManagerService().unregisterPlugin(pluginConfigurationId);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.success", configuration.name));
@@ -443,7 +454,7 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result pluginDefinitionDetails(String pluginDefinitionIdentifier) {
-        
+
         IStaticPluginRunnerDescriptor pluginRunnerDescriptor = getPluginManagerService().getPluginDescriptor(pluginDefinitionIdentifier);
         if (pluginRunnerDescriptor == null) {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.definition.view.not_exists", pluginDefinitionIdentifier));
@@ -465,7 +476,7 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result pluginConfigurationDetails(Long pluginConfigurationId) {
-        
+
         IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
 
         if (pluginInfo == null) {
@@ -486,8 +497,8 @@ public class PluginManagerController extends Controller {
         }
 
         // Plugin logs
-        ExpressionList<PluginLog> pluginLogExpressionList = pluginLogsFilterConfig.updateWithSearchExpression(PluginLog
-                .getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
+        ExpressionList<PluginLog> pluginLogExpressionList = pluginLogsFilterConfig
+                .updateWithSearchExpression(PluginLog.getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
         pluginLogsFilterConfig.updateWithSortExpression(pluginLogExpressionList);
         Pagination<PluginLog> pluginLogsPagination = new Pagination<PluginLog>(pluginLogExpressionList);
         pluginLogsPagination.setCurrentPage(pluginLogsFilterConfig.getCurrentPage());
@@ -513,8 +524,8 @@ public class PluginManagerController extends Controller {
 
             FilterConfig<PluginLog> filledFilterConfig = pluginLogsFilterConfig.parseResponse(json);
 
-            ExpressionList<PluginLog> pluginLogExpressionList = filledFilterConfig.updateWithSearchExpression(PluginLog
-                    .getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
+            ExpressionList<PluginLog> pluginLogExpressionList = filledFilterConfig
+                    .updateWithSearchExpression(PluginLog.getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
 
             filledFilterConfig.updateWithSortExpression(pluginLogExpressionList);
 
@@ -543,7 +554,7 @@ public class PluginManagerController extends Controller {
         if (configuration == null) {
             return badRequest();
         }
-        
+
         try {
             getPluginManagerService().startPlugin(pluginConfigurationId);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", configuration.name));
@@ -566,7 +577,7 @@ public class PluginManagerController extends Controller {
         if (configuration == null) {
             return badRequest();
         }
-        
+
         getPluginManagerService().stopPlugin(pluginConfigurationId);
         Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", configuration.name));
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
@@ -626,9 +637,8 @@ public class PluginManagerController extends Controller {
      *            a configration block identifier
      * @return
      */
-    private IPluginConfigurationBlockDescriptor getPluginConfigurationBlockDescriptor(Long pluginConfigurationId,
-            String pluginConfigurationBlockIdentifier) {
-        
+    private IPluginConfigurationBlockDescriptor getPluginConfigurationBlockDescriptor(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
+
         IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
         if (pluginInfo == null || pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors() == null
                 || !pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors().containsKey(pluginConfigurationBlockIdentifier)) {
@@ -699,14 +709,15 @@ public class PluginManagerController extends Controller {
         pluginConfigurationBlock.configuration = pluginConfigurationBlockObject.value != null ? pluginConfigurationBlockObject.value.getBytes() : null;
         pluginConfigurationBlock.save();
 
-        Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration_block.edit.success",
-                Msg.get(pluginConfigurationBlockDescriptor.getName())));
+        Utilities.sendSuccessFlashMessage(
+                Msg.get("admin.plugin_manager.configuration_block.edit.success", Msg.get(pluginConfigurationBlockDescriptor.getName())));
 
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }
 
     /**
-     * Return the default value for the plugin configuation block as "text".<br/>
+     * Return the default value for the plugin configuation block as "text".
+     * <br/>
      * Here are the parameters for this method:
      * <ul>
      * <li>pluginConfigurationId : the plugin configuration id</li>
@@ -740,7 +751,7 @@ public class PluginManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result postAdminActionToPlugin(Long pluginConfigurationId, String pluginActionIdentifier) {
         try {
-            
+
             IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
             if (pluginInfo == null || !pluginInfo.getStaticDescriptor().getActionDescriptors().containsKey(pluginActionIdentifier)) {
                 return badRequest();
@@ -891,5 +902,73 @@ public class PluginManagerController extends Controller {
         public String definitionProviderUrl;
         public String definitionVersion;
         public PluginStatus status;
+    }
+
+    /**
+     * Construct the integration icons bar depending of the sign-in user
+     * permissions.
+     * 
+     * @param isDataSyndicationActive
+     *            true if the data syndication is active (conf)
+     * @param currentType
+     *            the current menu item type, useful to select the correct item
+     */
+    public static SideBar getIconsBar(Boolean isDataSyndicationActive, MenuItemType currentType) {
+
+        SideBar sideBar = new SideBar();
+
+        HeaderMenuItem pluginsMenu = new HeaderMenuItem("admin.integration.sidebar.plugins", "glyphicons glyphicons-remote-control",
+                currentType.equals(MenuItemType.PLUGINS));
+        pluginsMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION));
+        sideBar.addMenuItem(pluginsMenu);
+
+        pluginsMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.plugins.active_plugins",
+                controllers.admin.routes.PluginManagerController.index(), "glyphicons glyphicons-electrical-plug", false));
+
+        pluginsMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.plugins.available_plugins",
+                controllers.admin.routes.PluginManagerController.registration(), "glyphicons glyphicons-shopping-bag", false));
+
+        if (isDataSyndicationActive) {
+
+            HeaderMenuItem dataSyndicationMenu = new HeaderMenuItem("admin.integration.sidebar.data_syndication", "glyphicons glyphicons-share-alt",
+                    currentType.equals(MenuItemType.DATA_SYNDICATION));
+            dataSyndicationMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PARTNER_SYNDICATION_PERMISSION));
+            sideBar.addMenuItem(dataSyndicationMenu);
+
+            dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.master_agreements",
+                    controllers.admin.routes.DataSyndicationController.viewMasterAgreements(), "glyphicons glyphicons-queen", false));
+
+            dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.consumer_agreements",
+                    controllers.admin.routes.DataSyndicationController.viewConsumerAgreements(), "glyphicons glyphicons-pawn", false));
+
+        }
+
+        HeaderMenuItem apiMenu = new HeaderMenuItem("admin.integration.sidebar.api", "glyphicons glyphicons-transfer", currentType.equals(MenuItemType.API));
+        apiMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
+        sideBar.addMenuItem(apiMenu);
+
+        apiMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.api.keys", controllers.admin.routes.ApiManagerController.index(),
+                "glyphicons glyphicons-keys", false));
+
+        apiMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.api.browser", controllers.admin.routes.ApiManagerController.displayBrowser(),
+                "glyphicons glyphicons-global", false));
+
+        ClickableMenuItem sharedStorageMenu = new ClickableMenuItem("admin.integration.sidebar.shared_storage",
+                controllers.admin.routes.SharedStorageManagerController.index(), "glyphicons glyphicons-inbox-in",
+                currentType.equals(MenuItemType.SHARED_STORAGE));
+        sharedStorageMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
+        sideBar.addMenuItem(sharedStorageMenu);
+
+        return sideBar;
+    }
+
+    /**
+     * The menu item type.
+     * 
+     * @author Johann Kohler
+     * 
+     */
+    public static enum MenuItemType {
+        PLUGINS, DATA_SYNDICATION, API, SHARED_STORAGE;
     }
 }

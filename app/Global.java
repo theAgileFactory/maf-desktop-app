@@ -1,3 +1,4 @@
+
 /*! LICENSE
  *
  * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
@@ -15,62 +16,19 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import java.lang.reflect.Method;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import models.framework_models.account.SystemPermission;
-import play.Application;
+import controllers.ControllersUtils;
+import controllers.api.ApiController;
+import framework.services.ServiceStaticAccessor;
+import framework.services.api.AbstractApiController;
+import framework.services.api.ApiError;
+import framework.services.router.ICustomRouterNotificationService;
 import play.GlobalSettings;
 import play.Logger;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
-import play.mvc.Action;
 import play.mvc.Controller;
-import play.mvc.Http.Context;
-import play.mvc.Http.Request;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
-import scala.concurrent.duration.Duration;
-import services.job.JobDescriptors.UpdateConsumedLicensesJobDescriptor;
-import utils.reporting.ReportingUtilsImpl;
-import akka.actor.Cancellable;
-
-import com.avaje.ebeaninternal.server.lib.ShutdownManager;
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
-import com.wordnik.swagger.config.ConfigFactory;
-import com.wordnik.swagger.converter.ModelConverters;
-import com.wordnik.swagger.model.ApiListing;
-
-import constants.IMafConstants;
-import constants.MafDataType;
-import controllers.ControllersUtils;
-import controllers.api.ApiController;
-import dao.finance.CurrencyDAO;
-import framework.commons.IFrameworkConstants;
-import framework.patcher.IPatchLog;
-import framework.patcher.PatchManager;
-import framework.patcher.PatcherException;
-import framework.services.ServiceStaticAccessor;
-import framework.services.actor.ActorSystemPluginException;
-import framework.services.actor.IActorSystemPlugin;
-import framework.services.api.AbstractApiController;
-import framework.services.api.ApiError;
-import framework.services.api.ClassSchemaDocumentationConverter;
-import framework.services.configuration.Language;
-import framework.services.ext.IExtensionManagerService;
-import framework.services.job.IJobDescriptor;
-import framework.services.job.IJobsService;
-import framework.services.kpi.IKpiService;
-import framework.services.plugins.IPluginManagerService;
-import framework.services.router.ICustomRouterNotificationService;
-import framework.services.router.ICustomRouterService;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Utilities;
 
 /**
  * Global object.<br/>
@@ -80,34 +38,6 @@ import framework.utils.Utilities;
  */
 public class Global extends GlobalSettings {
     private static Logger.ALogger log = Logger.of(Global.class);
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Action onRequest(Request request, Method actionMethod) {
-
-        final Language language = new Language(request.getQueryString("lang"));
-
-        if (ServiceStaticAccessor.getMessagesPlugin().isLanguageValid(language.getCode())) {
-
-            Logger.debug("change language to: " + language.getCode());
-
-            return new Action.Simple() {
-
-                @Override
-                public Promise<Result> call(Context ctx) throws Throwable {
-                    ctx.changeLang(language.getCode());
-                    // Update the CAS language cookie which is relying on Spring
-                    // framework (not really solid yet works)
-                    Utilities.setSsoLanguage(ctx, language.getCode());
-                    return delegate.call(ctx);
-                }
-
-            };
-
-        }
-
-        return super.onRequest(request, actionMethod);
-    }
 
     /**
      * Http code 500.

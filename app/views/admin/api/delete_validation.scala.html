@@ -21,7 +21,7 @@
 @import bootstrap3._
 @import framework_views.parts
 
-@views.html.admin.plugin.pluginmanager_template(false, 4, parts.Msg.asString("admin.api_manager.title")){
+@views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.API, parts.Msg.asString("admin.api_manager.title")){
 
 }{
     <div class="row">

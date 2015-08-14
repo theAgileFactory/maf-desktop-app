@@ -17,7 +17,7 @@
  */
 package services.licensesmanagement;
 
-import services.licensesmanagement.LoginEventRequest.ErrorCode;
+import services.echannel.request.LoginEventRequest.ErrorCode;
 
 /**
  * The licenses management service.

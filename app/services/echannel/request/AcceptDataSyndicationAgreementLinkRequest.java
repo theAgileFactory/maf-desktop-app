@@ -15,22 +15,23 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package services.licensesmanagement;
+package services.echannel.request;
 
 /**
- * The content for the updateConsumedUsers request.
+ * The content for accept agreement link request.
  * 
  * @author Johann Kohler
  * 
  */
-public class UpdateConsumedUsersRequest {
+public class AcceptDataSyndicationAgreementLinkRequest {
 
-    public Integer consumedUsers;
+    public Long slaveObjectId;
+    public String permissions;
 
     /**
      * Default constructor.
      */
-    public UpdateConsumedUsersRequest() {
+    public AcceptDataSyndicationAgreementLinkRequest() {
     }
 
 }

@@ -21,7 +21,7 @@
 
 @templates.main_bc_iconsbar(
     portfolioEntry.getName,
-    controllers.core.PortfolioEntryController.getIconsBar(portfolioEntry.id, menuItemType),
+    controllers.core.PortfolioEntryController.getIconsBar(utils.Tpl.getDataSyndicationService.isActive, portfolioEntry.id, menuItemType),
     breadcrump
 ){
 }{

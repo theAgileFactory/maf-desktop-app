@@ -17,40 +17,21 @@
  */
 package services.licensesmanagement;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import models.framework_models.account.Principal;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import play.Configuration;
-import play.Logger;
-import play.inject.ApplicationLifecycle;
-import play.libs.F.Function;
-import play.libs.F.Promise;
-import play.libs.ws.WS;
-import play.libs.ws.WSRequest;
-import play.libs.ws.WSResponse;
-import services.licensesmanagement.LoginEventRequest.ErrorCode;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-
-import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.account.IPreferenceManagerPlugin;
-import framework.services.database.IDatabaseDependencyService;
 import framework.services.ext.IExtensionManagerService;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.storage.ISharedStorageService;
+import models.framework_models.account.Principal;
+import play.Configuration;
+import play.Logger;
+import play.inject.ApplicationLifecycle;
+import play.libs.F.Promise;
+import services.echannel.IEchannelService;
+import services.echannel.request.LoginEventRequest.ErrorCode;
 
 /**
  * The licenses management plugin.
@@ -60,178 +41,134 @@ import framework.services.storage.ISharedStorageService;
  */
 @Singleton
 public class LicensesManagementServiceImpl implements ILicensesManagementService {
-    private static Logger.ALogger log = Logger.of(LicensesManagementServiceImpl.class);
+
     private boolean isActive;
-    private String echannelApiUrl;
-    private String apiSecretKey;
+
+    private IEchannelService echannelService;
     private ISharedStorageService sharedStorageService;
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     private IExtensionManagerService extensionManagerService;
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
     private IPersonalStoragePlugin personalStoragePlugin;
 
-    private static final String ACTION_PATTERN = "/{domain}/{action}";
-
-    private static final String CAN_CREATE_USER_ACTION = "can-create-user";
-    private static final String CAN_CREATE_PORTOLIO_ENTRY_ACTION = "can-create-portfolio-entry";
-    private static final String IS_ACCESSIBLE_ACTION = "is-accessible";
-    private static final String CONSUMED_USERS_ACTION = "consumed-users";
-    private static final String CONSUMED_PORTFOLIO_ENTRIES_ACTION = "consumed-portfolio-entries";
-    private static final String CONSUMED_STORAGE_ACTION = "consumed-storage";
-    private static final String LOGIN_EVENT_ACTION = "login-event";
-
-    private static final long WS_TIMEOUT = 2000;
-
-    private static final String HTTP_HEADER_API_KEY = "X-echannel-API-Key";
-
+    /**
+     * Configurations of the the service.
+     * 
+     * @author Johann Kohler
+     *
+     */
     public enum Config {
-        LICENSE_MANAGEMENT_ACTIVE("maf.licenses_management.is_active"), ECHANNEL_API_URL("maf.licenses_management.echannel_api.url");
+
+        LICENSE_MANAGEMENT_ACTIVE("maf.licenses_management.is_active");
+
         private String configurationKey;
 
+        /**
+         * Construct a configuration with its key.
+         * 
+         * @param configurationKey
+         *            the configuration key
+         */
         private Config(String configurationKey) {
             this.configurationKey = configurationKey;
         }
 
+        /**
+         * Get the configuration key.
+         */
         public String getConfigurationKey() {
             return configurationKey;
         }
     }
 
     /**
-     * Initialize the plugin.
+     * Initialize the service.
      * 
      * @param lifecycle
-     *            the play application lifecycle listener
+     *            the Play life cycle service
      * @param configuration
-     *            the play application configuration
+     *            the Play configuration service
+     * @param echannelService
+     *            the eChannel service
      * @param sharedStorageService
+     *            the shared storage service
      * @param attachmentManagerPlugin
+     *            the attachment manager service
      * @param extensionManagerService
-     * @param preferenceManagerPlugin
+     *            the extension manager service
      * @param personalStoragePlugin
-     * @param databaseDependencyService 
+     *            the personal storage service
      */
     @Inject
-    public LicensesManagementServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, ISharedStorageService sharedStorageService,
-            IAttachmentManagerPlugin attachmentManagerPlugin, IExtensionManagerService extensionManagerService, IPreferenceManagerPlugin preferenceManagerPlugin, 
-            IPersonalStoragePlugin personalStoragePlugin, IDatabaseDependencyService databaseDependencyService) {
-        log.info("SERVICE>>> LicensesManagementServiceImpl starting...");
+    public LicensesManagementServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IEchannelService echannelService,
+            ISharedStorageService sharedStorageService, IAttachmentManagerPlugin attachmentManagerPlugin, IExtensionManagerService extensionManagerService,
+            IPersonalStoragePlugin personalStoragePlugin) {
+
+        Logger.info("SERVICE>>> LicensesManagementServiceImpl starting...");
+
         this.isActive = configuration.getBoolean(Config.LICENSE_MANAGEMENT_ACTIVE.getConfigurationKey());
-        this.echannelApiUrl = configuration.getString(Config.ECHANNEL_API_URL.getConfigurationKey());
-        this.apiSecretKey = null;
-        this.sharedStorageService=sharedStorageService;
-        this.attachmentManagerPlugin=attachmentManagerPlugin;
-        this.extensionManagerService=extensionManagerService;
-        this.preferenceManagerPlugin=preferenceManagerPlugin;
-        this.personalStoragePlugin=personalStoragePlugin;
+
+        this.echannelService = echannelService;
+        this.sharedStorageService = sharedStorageService;
+        this.attachmentManagerPlugin = attachmentManagerPlugin;
+        this.extensionManagerService = extensionManagerService;
+        this.personalStoragePlugin = personalStoragePlugin;
+
         lifecycle.addStopHook(() -> {
-            log.info("SERVICE>>> LicensesManagementServiceImpl stopping...");
-            log.info("SERVICE>>> LicensesManagementServiceImpl stopped");
+            Logger.info("SERVICE>>> LicensesManagementServiceImpl stopping...");
+            Logger.info("SERVICE>>> LicensesManagementServiceImpl stopped");
             return Promise.pure(null);
         });
-        log.info("SERVICE>>> LicensesManagementServiceImpl started");
+
+        Logger.info("SERVICE>>> LicensesManagementServiceImpl started");
     }
 
     @Override
     public boolean canCreateUser() {
-
-        try {
-            if (this.isActive) {
-
-                List<NameValuePair> queryParams = new ArrayList<>();
-                queryParams.add(new BasicNameValuePair("consumedUsers", String.valueOf(Principal.getConsumedUsers())));
-
-                JsonNode response = this.call(HttpMethod.GET, CAN_CREATE_USER_ACTION, queryParams, null);
-                if (response != null) {
-                    return response.asBoolean();
-                }
-            }
-        } catch (Exception e) {
-            Logger.error("Licenses managament unexpected error / canCreateUser", e);
+        if (this.isActive) {
+            return echannelService.canCreateUser(Principal.getConsumedUsers());
+        } else {
+            return true;
         }
-
-        return true;
     }
 
     @Override
     public boolean canCreatePortfolioEntry() {
-
-        try {
-            if (this.isActive) {
-
-                List<NameValuePair> queryParams = new ArrayList<>();
-                queryParams.add(new BasicNameValuePair("consumedPortfolioEntries", String.valueOf(PortfolioEntryDao.getPEAsExpr(false).findRowCount())));
-
-                JsonNode response = this.call(HttpMethod.GET, CAN_CREATE_PORTOLIO_ENTRY_ACTION, queryParams, null);
-                if (response != null) {
-                    return response.asBoolean();
-                }
-            }
-        } catch (Exception e) {
-            Logger.error("Licenses managament unexpected error / canCreatePortfolioEntry", e);
+        if (this.isActive) {
+            return echannelService.canCreatePortfolioEntry(PortfolioEntryDao.getPEAsExpr(false).findRowCount());
+        } else {
+            return true;
         }
-
-        return true;
     }
 
     @Override
     public boolean isInstanceAccessible() {
-
-        try {
-            if (this.isActive) {
-                JsonNode response = this.call(HttpMethod.GET, IS_ACCESSIBLE_ACTION, null, null);
-                if (response != null) {
-                    return response.asBoolean();
-                }
-            }
-        } catch (Exception e) {
-            Logger.error("Licenses managament unexpected error / isInstanceAccessible", e);
+        if (this.isActive) {
+            return echannelService.isInstanceAccessible();
+        } else {
+            return true;
         }
-
-        return true;
     }
 
     @Override
     public void updateConsumedUsers() {
-
-        try {
-            if (this.isActive) {
-
-                UpdateConsumedUsersRequest updateConsumedUsersRequest = new UpdateConsumedUsersRequest();
-                updateConsumedUsersRequest.consumedUsers = Principal.getConsumedUsers();
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode content = mapper.valueToTree(updateConsumedUsersRequest);
-                this.call(HttpMethod.PUT, CONSUMED_USERS_ACTION, null, content);
-            }
-        } catch (Exception e) {
-            Logger.error("Licenses managament unexpected error / updateConsumedUsers", e);
+        if (this.isActive) {
+            echannelService.updateConsumedUsers(Principal.getConsumedUsers());
         }
-
     }
 
     @Override
     public void updateConsumedPortfolioEntries() {
-
-        try {
-            if (this.isActive) {
-
-                UpdateConsumedPortfolioEntriesRequest updateConsumedPortfolioEntriesRequest = new UpdateConsumedPortfolioEntriesRequest();
-                updateConsumedPortfolioEntriesRequest.consumedPortfolioEntries = PortfolioEntryDao.getPEAsExpr(false).findRowCount();
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode content = mapper.valueToTree(updateConsumedPortfolioEntriesRequest);
-                this.call(HttpMethod.PUT, CONSUMED_PORTFOLIO_ENTRIES_ACTION, null, content);
-            }
-        } catch (Exception e) {
-            Logger.error("Licenses managament unexpected error / updateConsumedPortfolioEntries", e);
+        if (this.isActive) {
+            echannelService.updateConsumedPortfolioEntries(PortfolioEntryDao.getPEAsExpr(false).findRowCount());
         }
-
     }
 
     @Override
     public void updateConsumedStorage() {
 
-        try {
-            if (this.isActive) {
+        if (this.isActive) {
+
+            try {
 
                 // shared storage
                 long sharedStorage = getSharedStorageService().getSize();
@@ -252,162 +189,48 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
                 int storage = (int) (sharedStorage + personalStorage + attachments + extensions) / (1024 * 1024 * 1024);
                 Logger.debug("storage (GB): " + storage);
 
-                UpdateConsumedStorageRequest updateConsumedStorageRequest = new UpdateConsumedStorageRequest();
-                updateConsumedStorageRequest.consumedStorage = storage;
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode content = mapper.valueToTree(updateConsumedStorageRequest);
-                this.call(HttpMethod.PUT, CONSUMED_STORAGE_ACTION, null, content);
+                echannelService.updateConsumedStorage(storage);
 
+            } catch (Exception e) {
+                Logger.error("License management service unexpected error / updateConsumedStorage", e);
             }
-        } catch (Exception e) {
-            Logger.error("Licenses managament unexpected error / updateConsumedStorage", e);
-        }
 
+        }
     }
 
     @Override
     public void addLoginEvent(String uid, Boolean result, ErrorCode errorCode, String errorMessage) {
-
-        try {
-            if (this.isActive) {
-
-                LoginEventRequest loginEventRequest = new LoginEventRequest();
-                loginEventRequest.errorCode = errorCode;
-                loginEventRequest.errorMessage = errorMessage;
-                loginEventRequest.result = result;
-                loginEventRequest.uid = uid;
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode content = mapper.valueToTree(loginEventRequest);
-                this.call(HttpMethod.POST, LOGIN_EVENT_ACTION, null, content);
-
-            }
-        } catch (Exception e) {
-            Logger.error("Licenses managament unexpected error / addLoginEvent", e);
+        if (this.isActive) {
+            echannelService.addLoginEvent(uid, result, errorCode, errorMessage);
         }
-
     }
 
     /**
-     * Get the URL for an action.
-     * 
-     * @param action
-     *            the action
+     * Get the shared storage service.
      */
-    private String getActionUrl(String action) {
-
-        String domain = getPreferenceManagerPlugin().getPreferenceValueAsString(
-                IMafConstants.LICENSE_INSTANCE_DOMAIN_PREFERENCE);
-
-        String url = ACTION_PATTERN.replace("{domain}", domain);
-        url = url.replace("{action}", action);
-
-        return echannelApiUrl + url;
-    }
-
-    /**
-     * Get the API secret key.
-     */
-    private String getApiSecretKey() {
-        if (this.apiSecretKey == null) {
-            this.apiSecretKey = getPreferenceManagerPlugin().getPreferenceValueAsString(
-                    IMafConstants.LICENSE_ECHANNEL_API_SECRET_KEY_PREFERENCE);
-        }
-        return this.apiSecretKey;
-    }
-
-    /**
-     * Perform a call.
-     * 
-     * @param httpMethod
-     *            the HTTP method (GET, POST...)
-     * @param action
-     *            the action name
-     * @param queryParams
-     *            the query parameters
-     * @param content
-     *            the request content (for POST)
-     */
-    private JsonNode call(HttpMethod httpMethod, String action, List<NameValuePair> queryParams, JsonNode content) {
-
-        String url = this.getActionUrl(action);
-
-        Logger.debug("URL: " + url);
-
-        WSRequest request = WS.url(url);
-        request.setHeader(HTTP_HEADER_API_KEY, this.getApiSecretKey());
-
-        if (queryParams != null) {
-            for (NameValuePair param : queryParams) {
-                request = request.setQueryParameter(param.getName(), param.getValue());
-            }
-        }
-
-        Promise<WSResponse> response = null;
-
-        switch (httpMethod) {
-        case GET:
-            response = request.get();
-            break;
-        case POST:
-            response = request.post(content);
-            break;
-        case PUT:
-            response = request.put(content);
-            break;
-        }
-
-        Promise<Pair<Integer, JsonNode>> jsonPromise = response.map(new Function<WSResponse, Pair<Integer, JsonNode>>() {
-            public Pair<Integer, JsonNode> apply(WSResponse response) {
-                try {
-                    return Pair.of(response.getStatus(), response.asJson());
-                } catch (Exception e) {
-                    JsonNode error = JsonNodeFactory.instance.textNode(e.getMessage());
-                    return Pair.of(response.getStatus(), error);
-                }
-            }
-        });
-
-        Pair<Integer, JsonNode> responseContent = jsonPromise.get(WS_TIMEOUT);
-
-        Logger.debug("STATUS CODE: " + responseContent.getLeft());
-
-        if (responseContent.getLeft().equals(200) || responseContent.getLeft().equals(204)) {
-            return responseContent.getRight();
-        } else {
-            Logger.error("Licenses managament call error / url: " + url + " / status: " + responseContent.getLeft() + " / errors: "
-                    + responseContent.getRight().toString());
-            return null;
-        }
-
-    }
-
-    /**
-     * The possible HTTP method.
-     * 
-     * @author Johann Kohler
-     * 
-     */
-    private static enum HttpMethod {
-        GET, POST, PUT;
-    }
-
     private ISharedStorageService getSharedStorageService() {
         return sharedStorageService;
     }
 
+    /**
+     * Get the attachment manager service.
+     */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
     }
 
+    /**
+     * Get the extension manager service.
+     */
     private IExtensionManagerService getExtensionManagerService() {
         return extensionManagerService;
     }
 
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
-    }
-
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
+
 }

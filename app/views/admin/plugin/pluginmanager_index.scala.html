@@ -21,7 +21,7 @@
 @import bootstrap3._
 @import framework_views.parts
 
-@pluginmanager_template(true, 1, parts.Msg.asString("admin.plugin_manager.sidebar.active_plugins")){
+@pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.PLUGINS, parts.Msg.asString("admin.integration.sidebar.plugins.active_plugins")){
 
 }{
 <div class="row">

@@ -592,6 +592,7 @@ permission.roadmap_simulator_permission.description=Simulation der Kapazitäten-
 permission.admin_custom_attribute_permission.description=Zusatzfelder konfigurieren
 permission.architecture_permission.description=Um die Architektur-Modul verwenden (DevDock).
 permission.application_block_edit_all_permission.description=Um die Applikationsblöcke zu verwalten (DevDock).
+permission.partner_syndication_permission.description=de: Permission which allows a user to manage the data syndication with partners.
 
 #----------------------
 # preferences
@@ -1530,6 +1531,54 @@ object.application_block.description.label=Beschreibung
 object.application_block.parent.label=Elternteil
 object.application_block.table.empty=Kein Eintrag
 
+#----------------------
+# dataSyndicationAgreementItem
+#----------------------
+
+#portfolio entry
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label=Initiative
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Statusbericht
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Planungspaket
+
+#----------------------
+# dataSyndicationAgreement
+#----------------------
+
+object.data_syndication_agreement.partner.label=Partner
+object.data_syndication_agreement.contact_name.label=Kontakt
+object.data_syndication_agreement.contact_email.label=E-Mail
+object.data_syndication_agreement.name.label=de: Agreement name
+object.data_syndication_agreement.ref_id.label=ID
+object.data_syndication_agreement.start_date.label=Begin Zeitraum
+object.data_syndication_agreement.end_date.label=Ende Zeitraum
+object.data_syndication_agreement.status.label=Status
+object.data_syndication_agreement.status.PENDING.label=Anstehend
+object.data_syndication_agreement.status.ONGOING.label=Laufend
+object.data_syndication_agreement.status.REJECTED.label=Abgelehnt
+object.data_syndication_agreement.status.FINISHED.label=Abgeschlossen
+object.data_syndication_agreement.status.SUSPENDED.label=Suspendiert
+object.data_syndication_agreement.status.CANCELLED.label=Abgesagt
+object.data_syndication_agreement.process.label=de: Process the decision
+object.data_syndication_agreement.suspend.confirm=de: Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
+object.data_syndication_agreement.cancel.confirm=de: Are you sure you want to cancel this agreement? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement.table.empty=Kein Eintrag
+
+#----------------------
+# dataSyndicationAgreementLink
+#----------------------
+
+object.data_syndication_agreement_link.data_type.label=de: Data type
+object.data_syndication_agreement_link.object.label=de: Object
+object.data_syndication_agreement_link.items.label=de: Synchronized items
+object.data_syndication_agreement_link.status.label=Status
+object.data_syndication_agreement_link.status.PENDING.label=Anstehend
+object.data_syndication_agreement_link.status.ONGOING.label=Laufend
+object.data_syndication_agreement_link.status.REJECTED.label=Abgelehnt
+object.data_syndication_agreement_link.status.CANCELLED.label=Abgesagt
+object.data_syndication_agreement_link.process.label=de: Process the decision
+object.data_syndication_agreement_link.cancel.confirm=de: Are you sure you want to cancel this agreement link? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement_link.table.empty=Kein Eintrag
+
 ########################
 # Error pages
 ########################
@@ -1978,7 +2027,9 @@ core.portfolio_entry.sidebar.planning.resources.label=Mittel
 core.portfolio_entry.sidebar.status_reporting.label=Berichterstattung
 core.portfolio_entry.sidebar.status_reporting.registers.label=Register
 core.portfolio_entry.sidebar.status_reporting.events.label=Ereignisse
-core.portfolio_entry.sidebar.pluginconfig.label=Integration
+core.portfolio_entry.sidebar.integration.label=Integration
+core.portfolio_entry.sidebar.integration.plugins.label=Plugins
+core.portfolio_entry.sidebar.integration.partner_syndication.label=de: Partner syndication
 core.portfolio_entry.breadcrump.manage=Verwalten
 core.portfolio_entry.breadcrump.view=Anzeigen
 core.portfolio_entry.breadcrump.new=Neu
@@ -2822,13 +2873,20 @@ admin.configuration.custom_attribute.item.edit.successful=Option aktualisiert.
 admin.configuration.custom_attribute.item.delete.successful=Option entfernt.
 
 #----------------------
-# plugin manager
+# integration
 #----------------------
 
 #helper
-admin.plugin_manager.sidebar.active_plugins=Active Plugin
-admin.plugin_manager.sidebar.available_plugins=Verfügbare Plugin
-admin.plugin_manager.sidebar.shared_storage=Daten Austausch Speicher
+admin.integration.sidebar.plugins=Plugins
+admin.integration.sidebar.plugins.active_plugins=Active Plugin
+admin.integration.sidebar.plugins.available_plugins=Verfügbare Plugin
+admin.integration.sidebar.data_syndication=de: Partner syndication
+admin.integration.sidebar.data_syndication.master_agreements=de: Master agreements
+admin.integration.sidebar.data_syndication.consumer_agreements=de: Consumer agreements
+admin.integration.sidebar.api=API
+admin.integration.sidebar.api.keys=API Schlüssel
+admin.integration.sidebar.api.browser=API Browser
+admin.integration.sidebar.shared_storage=Daten Austausch Speicher
 
 #active plugins
 admin.plugin_manager.active_plugins.header=Folgende Plugins sind zur Zeit in Ihrem System registriert.
@@ -2894,12 +2952,7 @@ admin.shared_storage.upload.success=Datei hochgeladen
 #shared storage: delete file
 admin.shared_storage.delete.success=Datei gelöscht
 
-#----------------------
-# API manager
-#----------------------
-
-admin.api_manager.menu.keys.label=API Schlüssel
-admin.api_manager.menu.browser.label=API Browser
+#api manager
 admin.api_manager.title=API Konfiguration
 admin.api_manager.table.title=Registrierte Anwendungen
 admin.api_manager.unknown.application.message=Anwendungsname unbekannt: {0}
@@ -2926,6 +2979,16 @@ Damit können Sie alle konfigurierten API einsehen und testen (dh. Andwendungsan
 admin.api_manager.apibrowser.explanation=Diese Dokumentation beinhaltet sämtliche BizDock API<br/>.\
 Einige API benötigen spezielle Berechtigungen und können dadurch nicht getestet werden.
 admin.api_manager.apibrowser.simulator.application.select.label=Anwendung getestet
+
+#data syndication
+admin.data_syndication.communication_error=de: A communication error with the server has occurred. Please contact your administrator for more information.
+
+admin.data_syndication.master_agreements.header=de: A master agreement is a contract with one of your partners in order to share BizDock data with him. \
+By creating a new agreement, no data are directly shared, you need to specifically define them just after.
+admin.data_syndication.master_agreements.partner_contract=de: Partner contracts
+
+admin.data_syndication.consumer_agreements.header=de: A consumer agreement is a contract with one of your partners in order to load his BizDock data in your instance.
+admin.data_syndication.consumer_agreements.partner_contract=de: Partner contracts
 
 #----------------------
 # KPI manager

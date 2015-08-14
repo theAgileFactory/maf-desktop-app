@@ -592,6 +592,7 @@ permission.roadmap_simulator_permission.description=Autorise un utilisateur de s
 permission.admin_custom_attribute_permission.description=Autorise un utilisateur à gérer les attributs personnalisés.
 permission.architecture_permission.description=Autorise un utilisateur à utiliser le module d''architecture (DevDock).
 permission.application_block_edit_all_permission.description=Autorise un utilisateur à gérer les blocs applicatifs (DevDock).
+permission.partner_syndication_permission.description=Autorise un utilisateur à gérer la syndication des données avec des partenaires.
 
 #----------------------
 # preferences
@@ -1529,6 +1530,54 @@ object.application_block.description.label=Description
 object.application_block.parent.label=Parent
 object.application_block.table.empty=Aucun bloc applicatif
 
+#----------------------
+# dataSyndicationAgreementItem
+#----------------------
+
+#portfolio entry
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label=Initiative
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Rapport d''état
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Livrable
+
+#----------------------
+# dataSyndicationAgreement
+#----------------------
+
+object.data_syndication_agreement.partner.label=Partenaire
+object.data_syndication_agreement.contact_name.label=Contact
+object.data_syndication_agreement.contact_email.label=E-mail
+object.data_syndication_agreement.name.label=Nom de l''agrément
+object.data_syndication_agreement.ref_id.label=Référence
+object.data_syndication_agreement.start_date.label=Date de début
+object.data_syndication_agreement.end_date.label=Date de fin
+object.data_syndication_agreement.status.label=Statut
+object.data_syndication_agreement.status.PENDING.label=En attente
+object.data_syndication_agreement.status.ONGOING.label=En cours
+object.data_syndication_agreement.status.REJECTED.label=Rejeté
+object.data_syndication_agreement.status.FINISHED.label=Terminé
+object.data_syndication_agreement.status.SUSPENDED.label=Suspendu
+object.data_syndication_agreement.status.CANCELLED.label=Annulé
+object.data_syndication_agreement.process.label=Traiter la décision
+object.data_syndication_agreement.suspend.confirm=Etes-vous sûr(e) de vouloir suspendre cet agrément? Toutes les synchronisations correspondantes seront également suspendues.
+object.data_syndication_agreement.cancel.confirm=Etes-vous sûr(e) de vouloir annuler cet agrément? Cette action est définitive.
+object.data_syndication_agreement.table.empty=Aucun agrément.
+
+#----------------------
+# dataSyndicationAgreementLink
+#----------------------
+
+object.data_syndication_agreement_link.data_type.label=Type de donnée
+object.data_syndication_agreement_link.object.label=Objet
+object.data_syndication_agreement_link.items.label=Eléments synchronisés
+object.data_syndication_agreement_link.status.label=Statut
+object.data_syndication_agreement_link.status.PENDING.label=En attente
+object.data_syndication_agreement_link.status.ONGOING.label=En cours
+object.data_syndication_agreement_link.status.REJECTED.label=Rejeté
+object.data_syndication_agreement_link.status.CANCELLED.label=Annulé
+object.data_syndication_agreement_link.process.label=Traiter la décision
+object.data_syndication_agreement_link.cancel.confirm=Etes-vous sûr(e) de vouloir annuler ce lien d''agrément? Cette action est définitive.
+object.data_syndication_agreement_link.table.empty=Aucun lien d''agrément
+
 ########################
 # Error pages
 ########################
@@ -1986,7 +2035,9 @@ core.portfolio_entry.sidebar.planning.resources.label=Ressources
 core.portfolio_entry.sidebar.status_reporting.label=Rapports d''état
 core.portfolio_entry.sidebar.status_reporting.registers.label=Registres d''état
 core.portfolio_entry.sidebar.status_reporting.events.label=Evènements
-core.portfolio_entry.sidebar.pluginconfig.label=Intégration
+core.portfolio_entry.sidebar.integration.label=Intégration
+core.portfolio_entry.sidebar.integration.plugins.label=Plugins
+core.portfolio_entry.sidebar.integration.partner_syndication.label=Syndication de partenaires
 core.portfolio_entry.breadcrump.edit=Mettre à jour
 core.portfolio_entry.breadcrump.manage=Gérer
 core.portfolio_entry.breadcrump.view=Détails
@@ -2826,13 +2877,20 @@ admin.configuration.custom_attribute.item.edit.successful=L''option a été mise
 admin.configuration.custom_attribute.item.delete.successful=L''option a été supprimée.
 
 #----------------------
-# plugin manager
+# integration
 #----------------------
 
 #helper
-admin.plugin_manager.sidebar.active_plugins=Plugins actifs
-admin.plugin_manager.sidebar.available_plugins=Plugins disponibles
-admin.plugin_manager.sidebar.shared_storage=Espace d''échange de données
+admin.integration.sidebar.plugins=Plugins
+admin.integration.sidebar.plugins.active_plugins=Plugins actifs
+admin.integration.sidebar.plugins.available_plugins=Plugins disponibles
+admin.integration.sidebar.data_syndication=Syndication de partenaires
+admin.integration.sidebar.data_syndication.master_agreements=Agréments de provisionnement
+admin.integration.sidebar.data_syndication.consumer_agreements=Agréments de consommation
+admin.integration.sidebar.api=API
+admin.integration.sidebar.api.keys=Clefs d''API
+admin.integration.sidebar.api.browser=Explorateur d''API
+admin.integration.sidebar.shared_storage=Espace d''échange de données
 
 #active plugins
 admin.plugin_manager.active_plugins.header=La table ci-dessous contient la liste des plugins actuellement disponibles dans le système.
@@ -2899,12 +2957,7 @@ admin.shared_storage.upload.success=Chargement réussi
 #shared storage: delete file
 admin.shared_storage.delete.success=Fichier supprimé
 
-#----------------------
-# API manager
-#----------------------
-
-admin.api_manager.menu.keys.label=Clefs d''API
-admin.api_manager.menu.browser.label=API browser
+#api manager
 admin.api_manager.title=Configuration des APIs
 admin.api_manager.table.title=Applications enregistrées
 admin.api_manager.unknown.application.message=Application inconnue : {0}
@@ -2931,6 +2984,16 @@ Cet outil permet d''accéder à la documentation de toutes les APIs et de les te
 admin.api_manager.apibrowser.explanation=La documentation ci-dessous décrit les APIs disponibles.<br/>\
 Notez cependant que certaines APIs requièrent des niveau d''autorizations spécifiques et pourraient vous interdire de tester ces APIs.
 admin.api_manager.apibrowser.simulator.application.select.label=Application testée
+
+#data syndication
+admin.data_syndication.communication_error=Une erreur de communication avec le serveur s''est produite. Veuillez contacter votre administrateur pour plus d''information.
+
+admin.data_syndication.master_agreements.header=Un agrément de provisionnement est un contrat avec l''un de vos partenaires afin de partager des données BizDock avec lui. \
+En créant un agrément de provisionnement, aucune donnée ne sera directement partagée, vous devrez les définir spécifiquement.
+admin.data_syndication.master_agreements.partner_contract=Contrats avec vos partenaires
+
+admin.data_syndication.consumer_agreements.header=Un agrément de consommation est un contrat avec l''un de vos partenaire afin de charger ses données BizDock dans votre instance.
+admin.data_syndication.consumer_agreements.partner_contract=Contrats avec vos partenaires
 
 #----------------------
 # KPI manager

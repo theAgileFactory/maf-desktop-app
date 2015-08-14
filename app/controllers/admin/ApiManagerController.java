@@ -19,19 +19,8 @@ package controllers.admin;
 
 import javax.inject.Inject;
 
-import models.framework_models.parent.IModelConstants;
-
 import org.apache.commons.lang3.StringUtils;
 
-import play.Logger;
-import play.data.Form;
-import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.MinLength;
-import play.data.validation.Constraints.Required;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
-import play.mvc.Controller;
-import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
@@ -45,6 +34,16 @@ import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.Utilities;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.framework_models.parent.IModelConstants;
+import play.Logger;
+import play.data.Form;
+import play.data.validation.Constraints.MaxLength;
+import play.data.validation.Constraints.MinLength;
+import play.data.validation.Constraints.Required;
+import play.libs.F.Function0;
+import play.libs.F.Promise;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 /**
  * The controller to manage the API configuration and testing.<br/>
@@ -57,7 +56,7 @@ public class ApiManagerController extends Controller {
 
     private static Logger.ALogger log = Logger.of(ApiManagerController.class);
     private static Form<ApiRegistrationObject> apiRegistrationForm = Form.form(ApiRegistrationObject.class);
-    
+
     @Inject
     private IApiSignatureService apiSignatureService;
 
@@ -274,7 +273,7 @@ public class ApiManagerController extends Controller {
                         log.debug("Request to create an application registration with " + apiRegistrationObject);
                     }
                     getApiSignatureService().setApplicationConfiguration(apiRegistrationObject.applicationName, apiRegistrationObject.description,
-                            apiRegistrationObject.testable, apiRegistrationObject.authorizations);
+                            apiRegistrationObject.testable, true, apiRegistrationObject.authorizations);
                     Utilities.sendSuccessFlashMessage(Msg.get("admin.api_manager.registration.created.message", apiRegistrationObject.applicationName));
                     return redirect(controllers.admin.routes.ApiManagerController.index());
                 } catch (Exception e) {
@@ -323,7 +322,7 @@ public class ApiManagerController extends Controller {
                 // exception is related to the authorizations parsing)
                 try {
                     getApiSignatureService().setApplicationConfiguration(apiRegistrationObject.applicationName, apiRegistrationObject.description,
-                            apiRegistrationObject.testable, apiRegistrationObject.authorizations);
+                            apiRegistrationObject.testable, true, apiRegistrationObject.authorizations);
                 } catch (Exception e) {
                     log.error("Error while updating the application", e);
                     boundForm.reject("authorizations", Msg.get("admin.api_manager.authorizations.invalid.message", e.getMessage()));
@@ -364,7 +363,8 @@ public class ApiManagerController extends Controller {
             }
         }
         try {
-            return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName, getApiSignatureService().listAuthorizedAndTestableApplications()));
+            return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName,
+                    getApiSignatureService().listAuthorizedAndTestableApplications()));
         } catch (Exception e) {
             log.error("Unable to findRelease the list of testable applications", e);
         }

@@ -21,7 +21,7 @@
 @import bootstrap3._
 @import framework_views.parts
 
-@pluginmanager_template(false, 2, parts.Msg.asString("admin.plugin_manager.configuration.new.title")){
+@pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.PLUGINS, parts.Msg.asString("admin.plugin_manager.configuration.new.title")){
 
 }{
 <div class="row">
