@@ -2994,6 +2994,10 @@ admin.data_syndication.consumer_agreements.partner_contract=de: Partner contract
 admin.data_syndication.view_agreement.details=Details
 admin.data_syndication.view_agreement.links=de: Links
 
+admin.data_syndication.search_partner.title=de: Search a partner
+admin.data_syndication.search_partner.error=de: Please enter a partner
+admin.data_syndication.search_partner.keywords.placeholder=Partner name
+
 #----------------------
 # KPI manager
 #----------------------

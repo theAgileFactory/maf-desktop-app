@@ -2983,6 +2983,10 @@ admin.data_syndication.consumer_agreements.partner_contract=Partner contracts
 admin.data_syndication.view_agreement.details=Details
 admin.data_syndication.view_agreement.links=Links
 
+admin.data_syndication.search_partner.title=Search a partner
+admin.data_syndication.search_partner.error=Please enter a partner
+admin.data_syndication.search_partner.keywords.placeholder=Partner name
+
 #----------------------
 # KPI manager
 #----------------------

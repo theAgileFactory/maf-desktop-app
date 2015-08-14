@@ -679,6 +679,8 @@ POST    /admin/sharedstorage/upload/:flag      controllers.admin.SharedStorageMa
 #Data syndication
 GET     /admin/data-syndication/master-agreements          controllers.admin.DataSyndicationController.viewMasterAgreements()
 GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
+GET     /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.searchPartner()
+POST    /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.processSearchPartner()
 GET     /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.submitAgreement()
 POST    /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.processSubmitAgreement()
 GET     /admin/data-syndication/agreement/view             controllers.admin.DataSyndicationController.viewAgreement(agreementId: Long, viewAllLinks: Boolean ?= false)

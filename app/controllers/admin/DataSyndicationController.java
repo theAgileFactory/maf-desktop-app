@@ -28,6 +28,8 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import framework.utils.Table;
+import play.data.Form;
+import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.datasyndication.IDataSyndicationService;
@@ -43,6 +45,8 @@ import utils.table.DataSyndicationAgreementListView;
  */
 @Restrict({ @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
 public class DataSyndicationController extends Controller {
+
+    private static Form<SearchPartnerForm> searchPartnerFormTemplate = Form.form(SearchPartnerForm.class);
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
@@ -117,6 +121,24 @@ public class DataSyndicationController extends Controller {
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
+    }
+
+    /**
+     * Form to search a partner.
+     */
+    public Result searchPartner() {
+        if (dataSyndicationService.isActive()) {
+            return ok(views.html.admin.datasyndication.search_partner.render(searchPartnerFormTemplate));
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+    }
+
+    /**
+     * Process the form to search a partner.
+     */
+    public Result processSearchPartner() {
+        return TODO;
     }
 
     /**
@@ -304,5 +326,24 @@ public class DataSyndicationController extends Controller {
         // TODO check here the right
 
         return TODO;
+    }
+
+    /**
+     * The form to search a partner.
+     * 
+     * @author Johann Kohler
+     */
+    public static class SearchPartnerForm {
+
+        /**
+         * Default constructor.
+         */
+        public SearchPartnerForm() {
+
+        }
+
+        @Required
+        public String keywords;
+
     }
 }

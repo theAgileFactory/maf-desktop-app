@@ -2999,6 +2999,10 @@ admin.data_syndication.consumer_agreements.partner_contract=Contrats avec vos pa
 admin.data_syndication.view_agreement.details=Détails
 admin.data_syndication.view_agreement.links=Liens
 
+admin.data_syndication.search_partner.title=Rechercher un partenaire
+admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
+admin.data_syndication.search_partner.keywords.placeholder=Nom de partenaire
+
 #----------------------
 # KPI manager
 #----------------------
