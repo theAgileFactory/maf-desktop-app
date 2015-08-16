@@ -127,6 +127,7 @@
 					<buildDist>true</buildDist>
 					<buildWar>false</buildWar>
 					<testFailureIgnore>true</testFailureIgnore>
+					<testLib>${project.build.directory}/providedlibs</testLib>
 				</configuration>
 			</plugin>
 
