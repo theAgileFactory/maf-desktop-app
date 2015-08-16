@@ -35,7 +35,6 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
-import controllers.admin.SharedStorageManagerController.SharedStorageFile;
 import framework.commons.IFrameworkConstants;
 import framework.services.storage.ISharedStorageService;
 import framework.utils.IColumnFormatter;
