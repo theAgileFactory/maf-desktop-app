@@ -3018,6 +3018,10 @@ admin.data_syndication.process_agreement.already=de: The agreement request has b
 admin.data_syndication.process_agreement.accept.success=de: The consumer agreement has been successfully approved.
 admin.data_syndication.process_agreement.reject.success=de: The consumer agreement has been successfully rejected.
 
+admin.data_syndication.suspend_agreement.success=de: The agreement has been successfully suspended.
+admin.data_syndication.restart_agreement.success=de: The agreement has been successfully restarted.
+admin.data_syndication.cancel_agreement.success=de: The agreement has been successfully cancelled.
+
 #----------------------
 # KPI manager
 #----------------------
