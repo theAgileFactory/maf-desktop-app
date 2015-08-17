@@ -17,6 +17,8 @@
  */
 package utils.form;
 
+import play.data.validation.Constraints.Required;
+
 /**
  * Form to accept a PE agreement link with an existing PE.
  * 
@@ -26,6 +28,7 @@ public class DataSyndicationAgreementLinkAcceptExistingPEFormData {
 
     public Long agreementLinkId;
 
+    @Required
     public Long portfolioEntryId;
 
     /**
