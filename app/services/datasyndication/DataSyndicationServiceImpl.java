@@ -136,6 +136,16 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
+    public DataSyndicationPartner getPartner(String domain) {
+        return echannelService.getPartner(domain);
+    }
+
+    @Override
+    public List<DataSyndicationAgreementItem> getDataAgreementItems() {
+        return echannelService.getDataAgreementItems();
+    }
+
+    @Override
     public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems,
             String slaveDomain) {
         echannelService.submitAgreement(refId, name, startDate, endDate, agreementItems, slaveDomain, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
@@ -244,5 +254,4 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) {
         return echannelService.getAgreementLinksOfSlaveObject(dataType, masterObjectId);
     }
-
 }

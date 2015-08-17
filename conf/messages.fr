@@ -3012,7 +3012,9 @@ admin.data_syndication.search_partner.title=Rechercher un partenaire dans le cat
 admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
 admin.data_syndication.search_partner.keywords.placeholder=Nom du partenaire
 admin.data_syndication.search_partner_result.title=Résultats de la recherche
-admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de soumettre une demande d'agrément.
+admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de soumettre une demande d''agrément.
+
+admin.data_syndication.submit_agreement.title=Soumettre un agrément de provisionnement
 
 #----------------------
 # KPI manager

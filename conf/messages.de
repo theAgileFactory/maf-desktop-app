@@ -3009,6 +3009,8 @@ admin.data_syndication.search_partner.keywords.placeholder=de: Partner name
 admin.data_syndication.search_partner_result.title=de: Search results
 admin.data_syndication.search_partner_result.header=de: Please click on the wished partner in order to submit a proposal agreement.
 
+admin.data_syndication.submit_agreement.title=de: Submit a master agreement
+
 #----------------------
 # KPI manager
 #----------------------

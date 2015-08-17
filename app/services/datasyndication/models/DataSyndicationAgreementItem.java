@@ -17,7 +17,22 @@ public class DataSyndicationAgreementItem {
 
     @Override
     public String toString() {
+        return this.getLabel();
+    }
+
+    /**
+     * Get the label of the item.
+     */
+    public String getLabel() {
         return Msg.get("object.data_syndication_agreement_item." + this.dataType + "." + this.descriptor + ".label");
+    }
+
+    /**
+     * Get the full label of the item.
+     */
+    public String getFullLabel() {
+        return Msg.get("object.data_syndication_agreement_item." + this.dataType + ".label") + " - "
+                + Msg.get("object.data_syndication_agreement_item." + this.dataType + "." + this.descriptor + ".label");
     }
 
 }

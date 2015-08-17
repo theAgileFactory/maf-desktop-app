@@ -108,6 +108,19 @@ public interface IEchannelService {
     List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords);
 
     /**
+     * Get a partner by domain.
+     * 
+     * @param domain
+     *            the partner domain
+     */
+    DataSyndicationPartner getPartner(String domain);
+
+    /**
+     * Get all available agreement items.
+     */
+    List<DataSyndicationAgreementItem> getDataAgreementItems();
+
+    /**
      * Create a new master agreement for the instance.
      * 
      * The agreement should be then accepted by the slave instance.

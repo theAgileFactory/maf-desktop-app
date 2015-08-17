@@ -2998,6 +2998,8 @@ admin.data_syndication.search_partner.keywords.placeholder=Partner name
 admin.data_syndication.search_partner_result.title=Search results
 admin.data_syndication.search_partner_result.header=Please click on the wished partner in order to submit a proposal agreement.
 
+admin.data_syndication.submit_agreement.title=Submit a master agreement
+
 #----------------------
 # KPI manager
 #----------------------

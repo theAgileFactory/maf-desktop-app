@@ -29,6 +29,9 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
 import play.cache.CacheApi;
 import play.data.Form;
@@ -37,8 +40,10 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreement;
+import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationPartner;
+import utils.form.DataSyndicationAgreementSubmitFormData;
 import utils.table.DataSyndicationAgreementLinkListView;
 import utils.table.DataSyndicationAgreementListView;
 import utils.table.DataSyndicationPartnerListView;
@@ -52,6 +57,8 @@ import utils.table.DataSyndicationPartnerListView;
 public class DataSyndicationController extends Controller {
 
     private static Form<SearchPartnerForm> searchPartnerFormTemplate = Form.form(SearchPartnerForm.class);
+    private static Form<DataSyndicationAgreementSubmitFormData> dataSyndicationAgreementSubmitFormTemplate = Form
+            .form(DataSyndicationAgreementSubmitFormData.class);
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
@@ -239,7 +246,36 @@ public class DataSyndicationController extends Controller {
      *            the domain of the slave instance
      */
     public Result submitAgreement(String domain) {
-        return TODO;
+
+        if (dataSyndicationService.isActive()) {
+
+            // get the partner
+            DataSyndicationPartner partner = null;
+            try {
+                partner = dataSyndicationService.getPartner(domain);
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // get all possible items
+            ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
+            try {
+                for (DataSyndicationAgreementItem item : dataSyndicationService.getDataAgreementItems()) {
+                    itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
+                }
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // initialize the form
+            Form<DataSyndicationAgreementSubmitFormData> form = dataSyndicationAgreementSubmitFormTemplate
+                    .fill(new DataSyndicationAgreementSubmitFormData(domain));
+
+            return ok(views.html.admin.datasyndication.submit_agreement.render(partner, itemsAsVH, form));
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
     }
 
     /**

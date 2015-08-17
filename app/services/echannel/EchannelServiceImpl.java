@@ -85,6 +85,7 @@ public class EchannelServiceImpl implements IEchannelService {
 
     private static final String DATA_SYNDICATION_PARTNER_ACTION = "data-syndication-partner";
     private static final String DATA_SYNDICATION_AGREEMENT_ACTION = "data-syndication-agreement";
+    private static final String DATA_SYNDICATION_AGREEMENT_ITEM_ACTION = "data-syndication-agreement-item";
     private static final String DATA_SYNDICATION_AGREEMENT_LINK_ACTION = "data-syndication-agreement-link";
 
     private static final long WS_TIMEOUT = 2000;
@@ -279,6 +280,24 @@ public class EchannelServiceImpl implements IEchannelService {
             r.add(mapper.convertValue(item, DataSyndicationPartner.class));
         }
 
+        return r;
+    }
+
+    @Override
+    public DataSyndicationPartner getPartner(String domain) {
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_PARTNER_ACTION + "/" + domain, null, null);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.convertValue(response, DataSyndicationPartner.class);
+    }
+
+    @Override
+    public List<DataSyndicationAgreementItem> getDataAgreementItems() {
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ITEM_ACTION + "/find", null, null);
+        ObjectMapper mapper = new ObjectMapper();
+        List<DataSyndicationAgreementItem> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, DataSyndicationAgreementItem.class));
+        }
         return r;
     }
 
