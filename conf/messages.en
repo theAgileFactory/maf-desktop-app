@@ -3002,6 +3002,9 @@ admin.data_syndication.search_partner_result.header=Please click on the wished p
 admin.data_syndication.submit_agreement.title=Submit a master agreement
 admin.data_syndication.submit_agreement.success=The agreement has been submitted. It should be now processed by the partner.
 
+admin.data_syndication.process_agreement.title=Process a consumer agreement request
+admin.data_syndication.process_agreement.already=The agreement request has been already processed.
+
 #----------------------
 # KPI manager
 #----------------------

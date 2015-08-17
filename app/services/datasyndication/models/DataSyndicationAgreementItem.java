@@ -17,7 +17,7 @@ public class DataSyndicationAgreementItem {
 
     @Override
     public String toString() {
-        return this.getLabel();
+        return this.getFullLabel();
     }
 
     /**
