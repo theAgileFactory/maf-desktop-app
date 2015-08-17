@@ -25,6 +25,7 @@ import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.ListOfValuesFormatter;
+import framework.utils.formats.ObjectFormatter;
 import models.pmo.PortfolioEntry;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
@@ -46,6 +47,9 @@ public class DataSyndicationAgreementLinkListView {
         return new Table<DataSyndicationAgreementLinkListView>() {
             {
                 setIdFieldName("id");
+
+                addColumn("name", "name", "object.data_syndication_agreement_link.name.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("name", new ObjectFormatter<>());
 
                 addColumn("dataType", "dataType", "object.data_syndication_agreement_link.data_type.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("dataType", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
@@ -123,6 +127,8 @@ public class DataSyndicationAgreementLinkListView {
 
     public Long id;
 
+    public String name;
+
     public String dataType;
     public Long objectId;
 
@@ -141,6 +147,8 @@ public class DataSyndicationAgreementLinkListView {
     public DataSyndicationAgreementLinkListView(DataSyndicationAgreementLink dataSyndicationAgreementLink, String currentDomain) {
 
         this.id = dataSyndicationAgreementLink.id;
+
+        this.name = dataSyndicationAgreementLink.name;
 
         this.dataType = dataSyndicationAgreementLink.dataType;
         if (dataSyndicationAgreementLink.agreement.masterPartner.domain.equals(currentDomain)) {

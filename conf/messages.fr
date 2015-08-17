@@ -1577,6 +1577,8 @@ object.data_syndication_agreement.table.empty=Aucun agrément.
 # dataSyndicationAgreementLink
 #----------------------
 
+object.data_syndication_agreement_link.agreement.label=Agrément
+object.data_syndication_agreement_link.name.label=Nom du lien
 object.data_syndication_agreement_link.data_type.label=Type de donnée
 object.data_syndication_agreement_link.object.label=Objet
 object.data_syndication_agreement_link.items.label=Eléments synchronisés
@@ -3019,13 +3021,23 @@ admin.data_syndication.submit_agreement.title=Soumettre un agrément de provisio
 admin.data_syndication.submit_agreement.success=L''agrément a été soumis. Il doit maintenant être validé par le partenaire.
 
 admin.data_syndication.process_agreement.title=Traiter une requête d''agrément de consommation
-admin.data_syndication.process_agreement.already=La requête d''agrément a déjà été traité.
+admin.data_syndication.process_agreement.already=La requête d''agrément a déjà été traitée.
 admin.data_syndication.process_agreement.accept.success=L''agrément de consommation a été appouvé.
 admin.data_syndication.process_agreement.reject.success=L''agrément de consommation a été rejeté.
 
 admin.data_syndication.suspend_agreement.success=L''agrément a été suspendu.
 admin.data_syndication.restart_agreement.success=L''agrément a été réactivé.
 admin.data_syndication.cancel_agreement.success=L''agrément a été annulé.
+
+admin.data_syndication.process_agreement_link.title=Traiter une requête de lien d''agrément
+admin.data_syndication.process_agreement_link.already=Le lien d''agrément a déjà été traité.
+admin.data_syndication.process_agreement_link.reject.title=Rejeter le lien
+admin.data_syndication.process_agreement_link.pe.accept.new.title=Approuver avec une nouvelle initative
+admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approuver avec une initative existante
+admin.data_syndication.process_agreement_link.accept.success=Le lien d''agrément a été appouvé.
+admin.data_syndication.process_agreement_link.reject.success=Le lien d''agrément a été rejeté.
+
+admin.data_syndication.cancel_agreement_link.success=Le lien d''agrément a été annulé.
 
 #----------------------
 # KPI manager

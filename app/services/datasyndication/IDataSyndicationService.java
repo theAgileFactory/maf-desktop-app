@@ -206,10 +206,10 @@ public interface IDataSyndicationService {
     /**
      * Get an agreement link by id.
      * 
-     * @param agreementLink
-     *            the agreement link
+     * @param agreementLinkId
+     *            the agreement link id
      */
-    DataSyndicationAgreementLink getAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
+    DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) throws DataSyndicationException;
 
     /**
      * Get the ongoing agreement links of the instance.

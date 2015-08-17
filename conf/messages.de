@@ -1578,6 +1578,8 @@ object.data_syndication_agreement.table.empty=Kein Eintrag
 # dataSyndicationAgreementLink
 #----------------------
 
+object.data_syndication_agreement_link.agreement.label=de: Agreement
+object.data_syndication_agreement_link.name.label=Link name
 object.data_syndication_agreement_link.data_type.label=de: Data type
 object.data_syndication_agreement_link.object.label=de: Object
 object.data_syndication_agreement_link.items.label=de: Synchronized items
@@ -3021,6 +3023,16 @@ admin.data_syndication.process_agreement.reject.success=de: The consumer agreeme
 admin.data_syndication.suspend_agreement.success=de: The agreement has been successfully suspended.
 admin.data_syndication.restart_agreement.success=de: The agreement has been successfully restarted.
 admin.data_syndication.cancel_agreement.success=de: The agreement has been successfully cancelled.
+
+admin.data_syndication.process_agreement_link.title=de: Process a consumer agreement link
+admin.data_syndication.process_agreement_link.already=de: The agreement link has been already processed.
+admin.data_syndication.process_agreement_link.reject.title=de: Reject the link
+admin.data_syndication.process_agreement_link.pe.accept.new.title=de: Approve with a new initiative
+admin.data_syndication.process_agreement_link.pe.accept.existing.title=de: Approve with an existing initiative
+admin.data_syndication.process_agreement_link.accept.success=de: The agreement link has been successfully approved.
+admin.data_syndication.process_agreement_link.reject.success=de: The agreement link has been successfully rejected.
+
+admin.data_syndication.cancel_agreement_link.success=de: The agreement link has been successfully cancelled.
 
 #----------------------
 # KPI manager

@@ -1565,6 +1565,8 @@ object.data_syndication_agreement.table.empty=There is no agreement
 # dataSyndicationAgreementLink
 #----------------------
 
+object.data_syndication_agreement_link.agreement.label=Agreement
+object.data_syndication_agreement_link.name.label=Link name
 object.data_syndication_agreement_link.data_type.label=Data type
 object.data_syndication_agreement_link.object.label=Object
 object.data_syndication_agreement_link.items.label=Synchronized items
@@ -3010,6 +3012,16 @@ admin.data_syndication.process_agreement.reject.success=The consumer agreement h
 admin.data_syndication.suspend_agreement.success=The agreement has been successfully suspended.
 admin.data_syndication.restart_agreement.success=The agreement has been successfully restarted.
 admin.data_syndication.cancel_agreement.success=The agreement has been successfully cancelled.
+
+admin.data_syndication.process_agreement_link.title=Process a consumer agreement link
+admin.data_syndication.process_agreement_link.already=The agreement link has been already processed.
+admin.data_syndication.process_agreement_link.reject.title=Reject the link
+admin.data_syndication.process_agreement_link.pe.accept.new.title=Approve with a new initiative
+admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approve with an existing initiative
+admin.data_syndication.process_agreement_link.accept.success=The agreement link has been successfully approved.
+admin.data_syndication.process_agreement_link.reject.success=The agreement link has been successfully rejected.
+
+admin.data_syndication.cancel_agreement_link.success=The agreement link has been successfully cancelled.
 
 #----------------------
 # KPI manager

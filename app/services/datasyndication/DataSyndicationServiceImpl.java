@@ -235,8 +235,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public DataSyndicationAgreementLink getAgreementLink(DataSyndicationAgreementLink agreementLink) {
-        return echannelService.getAgreementLink(agreementLink.id);
+    public DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) {
+        return echannelService.getAgreementLink(agreementLinkId);
     }
 
     @Override

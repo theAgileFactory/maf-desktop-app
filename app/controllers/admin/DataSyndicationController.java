@@ -665,18 +665,52 @@ public class DataSyndicationController extends Controller {
      */
     public Result processAgreementLink(Long agreementLinkId) {
 
+        if (dataSyndicationService.isActive()) {
+
+            // get the agreement link
+            DataSyndicationAgreementLink agreementLink = null;
+            try {
+                agreementLink = dataSyndicationService.getAgreementLink(agreementLinkId);
+                if (agreementLink == null) {
+                    return notFound(views.html.error.not_found.render(""));
+                }
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // check the instance is the slave
+            if (!agreementLink.agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+
+            // check the agreement is pending
+            if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.PENDING)) {
+                Utilities.sendInfoFlashMessage(Msg.get("admin.data_syndication.process_agreement_link.already"));
+                return redirect(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, false));
+            }
+
+            return ok(views.html.admin.datasyndication.process_agreement_link.render(agreementLink));
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+    }
+
+    /**
+     * Process the form to accept a PE agreement link with creating a new PE.
+     */
+    public Result acceptAgreementLinkNewPE() {
+
         // TODO check here the right
 
         return TODO;
     }
 
     /**
-     * Accept an agreement link.
-     * 
-     * @param agreementLinkId
-     *            the agreement link id
+     * Process the form to accept a PE agreement link with an existing PE.
      */
-    public Result acceptAgreementLink(Long agreementLinkId) {
+    public Result acceptAgreementLinkExistingPE() {
 
         // TODO check here the right
 

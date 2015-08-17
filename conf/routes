@@ -677,11 +677,11 @@ GET     /admin/sharedstorage/upload            controllers.admin.SharedStorageMa
 POST    /admin/sharedstorage/upload/:flag      controllers.admin.SharedStorageManagerController.upload(flag: Boolean)
 
 #Data syndication
-GET     /admin/data-syndication/partner/logo               controllers.admin.DataSyndicationController.partnerLogo(uuid: String)
 GET     /admin/data-syndication/master-agreements          controllers.admin.DataSyndicationController.viewMasterAgreements()
 GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
 GET     /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.searchPartner()
 POST    /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.processSearchPartner()
+GET     /admin/data-syndication/partner/logo               controllers.admin.DataSyndicationController.partnerLogo(uuid: String)
 GET     /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.submitAgreement(domain: String)
 POST    /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.processSubmitAgreement()
 GET     /admin/data-syndication/agreement/view             controllers.admin.DataSyndicationController.viewAgreement(agreementId: Long, viewAllLinks: Boolean ?= false)
@@ -692,7 +692,8 @@ GET     /admin/data-syndication/agreement/suspend          controllers.admin.Dat
 GET     /admin/data-syndication/agreement/restart          controllers.admin.DataSyndicationController.restartAgreement(agreementId: Long)
 GET     /admin/data-syndication/agreement/cancel           controllers.admin.DataSyndicationController.cancelAgreement(agreementId: Long)
 GET     /admin/data-syndication/agreement/link/process     controllers.admin.DataSyndicationController.processAgreementLink(agreementLinkId: Long)
-GET     /admin/data-syndication/agreement/link/accept      controllers.admin.DataSyndicationController.acceptAgreementLink(agreementLinkId: Long)
+POST    /admin/data-syndication/agreement/link/initiative/accept/new       controllers.admin.DataSyndicationController.acceptAgreementLinkNewPE()
+POST    /admin/data-syndication/agreement/link/initiative/accept/existing  controllers.admin.DataSyndicationController.acceptAgreementLinkExistingPE()
 GET     /admin/data-syndication/agreement/link/reject      controllers.admin.DataSyndicationController.rejectAgreementLink(agreementLinkId: Long)
 
 #Configurators routes
