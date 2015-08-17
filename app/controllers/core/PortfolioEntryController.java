@@ -1002,7 +1002,7 @@ public class PortfolioEntryController extends Controller {
                     controllers.core.routes.PortfolioEntryController.pluginConfig(portfolioEntryId), "glyphicons glyphicons-remote-control", false));
 
             if (isDataSyndicationActive) {
-                integrationMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.integration.partner_syndication.label",
+                integrationMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.integration.data_syndication.label",
                         controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntryId), "glyphicons glyphicons-share-alt", false));
             }
 
