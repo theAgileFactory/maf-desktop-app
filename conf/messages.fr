@@ -1579,6 +1579,7 @@ object.data_syndication_agreement.table.empty=Aucun agrément.
 
 object.data_syndication_agreement_link.agreement.label=Agrément
 object.data_syndication_agreement_link.name.label=Nom du lien
+object.data_syndication_agreement_link.description.label=Description
 object.data_syndication_agreement_link.data_type.label=Type de donnée
 object.data_syndication_agreement_link.object.label=Objet
 object.data_syndication_agreement_link.items.label=Eléments synchronisés
@@ -3031,10 +3032,15 @@ admin.data_syndication.cancel_agreement.success=L''agrément a été annulé.
 
 admin.data_syndication.process_agreement_link.title=Approuver une requête de lien d''agrément
 admin.data_syndication.process_agreement_link.already=Le lien d''agrément a déjà été traité.
-admin.data_syndication.process_agreement_link.reject.title=Rejeter le lien
 admin.data_syndication.process_agreement_link.pe.accept.new.title=Approuver avec une nouvelle initative
+admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=Nouvelle initiative avec syndication
+admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=Une nouvelle initiative vous a été assignée et est syndiquée avec une initiative d''un partenaire.
+admin.data_syndication.process_agreement_link.pe.accept.new.success=Le lien d''agrément a été appouvé avec une nouvelle initiative.
 admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approuver avec une initative existante
-admin.data_syndication.process_agreement_link.accept.success=Le lien d''agrément a été appouvé.
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=Une initiative a été syndiquée
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=Une de vos initiatives a été syndiquée avec une initiative d''un partenaire.
+admin.data_syndication.process_agreement_link.pe.accept.existing.success=Le lien d''agrément a été appouvé avec une initiative existante.
+admin.data_syndication.process_agreement_link.reject.title=Rejeter le lien
 admin.data_syndication.process_agreement_link.reject.success=Le lien d''agrément a été rejeté.
 
 admin.data_syndication.cancel_agreement_link.success=Le lien d''agrément a été annulé.

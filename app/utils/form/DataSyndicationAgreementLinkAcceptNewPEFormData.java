@@ -17,10 +17,15 @@
  */
 package utils.form;
 
-import models.framework_models.parent.IModelConstants;
+import java.util.Date;
+
+import com.avaje.ebean.Ebean;
+
+import controllers.core.PortfolioEntryController;
+import dao.governance.LifeCycleProcessDao;
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioEntryDao;
 import models.pmo.PortfolioEntry;
-import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 
@@ -32,15 +37,6 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
 public class DataSyndicationAgreementLinkAcceptNewPEFormData {
 
     public Long agreementLinkId;
-
-    @Required
-    @MinLength(value = 3)
-    @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    public String name;
-
-    @Required
-    @MaxLength(value = IModelConstants.XLARGE_STRING)
-    public String description;
 
     @Required
     public Long managerId;
@@ -58,24 +54,38 @@ public class DataSyndicationAgreementLinkAcceptNewPEFormData {
     }
 
     /**
-     * Construct with initial values.
+     * Create and return the corresponding portfolio entry in the DB.
      * 
      * @param agreementLink
      *            the agreement link
      */
-    public DataSyndicationAgreementLinkAcceptNewPEFormData(DataSyndicationAgreementLink agreementLink) {
-        this.agreementLinkId = agreementLink.id;
-        this.name = agreementLink.name;
-    }
+    public PortfolioEntry createPorfolioEntry(DataSyndicationAgreementLink agreementLink) {
 
-    /**
-     * Get the corresponding portfolio entry.
-     */
-    public PortfolioEntry getPorfolioEntry() {
-        PortfolioEntry portfolioEntry = new PortfolioEntry();
+        Ebean.beginTransaction();
+        try {
 
-        // TODO
+            PortfolioEntry portfolioEntry = new PortfolioEntry();
+            portfolioEntry.isSyndicated = true;
+            portfolioEntry.name = agreementLink.name;
+            portfolioEntry.description = agreementLink.description;
+            portfolioEntry.creationDate = new Date();
+            portfolioEntry.manager = ActorDao.getActorById(this.managerId);
+            portfolioEntry.isPublic = true;
+            portfolioEntry.portfolioEntryType = PortfolioEntryDao.getPETypeById(this.portfolioEntryTypeId);
+            Integer lastGovernanceId = PortfolioEntryDao.getPEAsLastGovernanceId();
+            portfolioEntry.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
+            portfolioEntry.save();
 
-        return portfolioEntry;
+            PortfolioEntryController.createLifeCycleProcessTree(LifeCycleProcessDao.getLCProcessById(this.lifeCycleProcessId), portfolioEntry);
+
+            Ebean.commitTransaction();
+
+            return portfolioEntry;
+
+        } catch (Exception e) {
+            Ebean.rollbackTransaction();
+            throw e;
+        }
+
     }
 }

@@ -134,7 +134,7 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     @Override
     public boolean canCreatePortfolioEntry() {
         if (this.isActive) {
-            return echannelService.canCreatePortfolioEntry(PortfolioEntryDao.getPEAsExpr(false).findRowCount());
+            return echannelService.canCreatePortfolioEntry(PortfolioEntryDao.getPEAsNumberConsumedLicenses());
         } else {
             return true;
         }
@@ -159,7 +159,7 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     @Override
     public void updateConsumedPortfolioEntries() {
         if (this.isActive) {
-            echannelService.updateConsumedPortfolioEntries(PortfolioEntryDao.getPEAsExpr(false).findRowCount());
+            echannelService.updateConsumedPortfolioEntries(PortfolioEntryDao.getPEAsNumberConsumedLicenses());
         }
     }
 

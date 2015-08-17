@@ -22,15 +22,9 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryDependency;
-import models.pmo.PortfolioEntryDependencyType;
-import models.pmo.PortfolioEntryType;
-import models.sql.TotalAmount;
-import com.avaje.ebean.Model.Finder;
-
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
@@ -42,6 +36,11 @@ import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Pagination;
+import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryDependency;
+import models.pmo.PortfolioEntryDependencyType;
+import models.pmo.PortfolioEntryType;
+import models.sql.TotalAmount;
 
 /**
  * DAO for the {@link PortfolioEntry} and {@link PortfolioEntryType} objects.
@@ -108,13 +107,12 @@ public abstract class PortfolioEntryDao {
      */
     public static Double getPEAsBudgetAmountByOpex(Long id, boolean isOpex) {
 
-        String sql =
-                "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl "
-                        + "JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id=peb.id "
-                        + "JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id "
-                        + "JOIN portfolio_entry pe ON lcip.life_cycle_instance_id = pe.active_life_cycle_instance_id "
-                        + "WHERE pebl.deleted=0 AND pebl.is_opex=" + isOpex + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' "
-                        + "AND peb.deleted=0 AND lcip.deleted=0 AND lcip.is_frozen=0 " + "AND pe.id=" + id;
+        String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl "
+                + "JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id=peb.id "
+                + "JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id "
+                + "JOIN portfolio_entry pe ON lcip.life_cycle_instance_id = pe.active_life_cycle_instance_id " + "WHERE pebl.deleted=0 AND pebl.is_opex="
+                + isOpex + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' "
+                + "AND peb.deleted=0 AND lcip.deleted=0 AND lcip.is_frozen=0 " + "AND pe.id=" + id;
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -141,8 +139,8 @@ public abstract class PortfolioEntryDao {
 
         String baseSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
-        String baseSqlCond =
-                " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pe.id=" + id;
+        String baseSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pe.id="
+                + id;
 
         List<String> sqls = new ArrayList<>();
 
@@ -190,8 +188,8 @@ public abstract class PortfolioEntryDao {
 
         String baseWOSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
-        String baseWOSqlCond =
-                " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pe.id=" + id;
+        String baseWOSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code
+                + "' AND pe.id=" + id;
 
         List<String> sqls = new ArrayList<>();
 
@@ -209,8 +207,7 @@ public abstract class PortfolioEntryDao {
             // or the purchase order lines assigned to an entry of the portfolio
             // but never engaged by a work order
             sqls.add("SELECT SUM(poli.amount) AS totalAmount FROM purchase_order_line_item poli " + "JOIN purchase_order po ON poli.purchase_order_id=po.id "
-                    + "JOIN portfolio_entry pe ON po.portfolio_entry_id = pe.id "
-                    + "LEFT OUTER JOIN work_order wo ON poli.id=wo.purchase_order_line_item_id "
+                    + "JOIN portfolio_entry pe ON po.portfolio_entry_id = pe.id " + "LEFT OUTER JOIN work_order wo ON poli.id=wo.purchase_order_line_item_id "
                     + "WHERE poli.deleted=0 AND poli.is_cancelled=0 AND poli.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND poli.is_opex="
                     + isOpex + " AND po.deleted=0 AND po.is_cancelled=0 AND pe.id=" + id + " AND wo.purchase_order_line_item_id IS NULL");
 
@@ -247,6 +244,13 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
+     * Get the number of consumed licenses of PE.
+     */
+    public static int getPEAsNumberConsumedLicenses() {
+        return findPortfolioEntry.where().eq("deleted", false).eq("archived", false).eq("isSyndicated", false).findRowCount();
+    }
+
+    /**
      * Define if an actor is the manager of at least one portfolio of a
      * portfolio entry.
      * 
@@ -256,8 +260,8 @@ public abstract class PortfolioEntryDao {
      *            the portfolio entry id
      */
     public static Boolean isPortfolioManagerOfPE(Long actorId, Long portfolioEntryId) {
-        return findPortfolioEntry.where().eq("deleted", false).eq("id", portfolioEntryId).eq("portfolios.deleted", false)
-                .eq("portfolios.manager.id", actorId).eq("portfolios.manager.deleted", false).findRowCount() > 0;
+        return findPortfolioEntry.where().eq("deleted", false).eq("id", portfolioEntryId).eq("portfolios.deleted", false).eq("portfolios.manager.id", actorId)
+                .eq("portfolios.manager.deleted", false).findRowCount() > 0;
     }
 
     /**
@@ -310,8 +314,8 @@ public abstract class PortfolioEntryDao {
      *            the actor id
      */
     public static Pagination<PortfolioEntry> getPEActiveAsPaginationByDirectStakeholder(Long actorId) {
-        return new Pagination<>(findPortfolioEntry.where().eq("deleted", false).eq("archived", false).eq("stakeholders.actor.id", actorId)
-                .eq("stakeholders.deleted", false));
+        return new Pagination<>(
+                findPortfolioEntry.where().eq("deleted", false).eq("archived", false).eq("stakeholders.actor.id", actorId).eq("stakeholders.deleted", false));
     }
 
     /**

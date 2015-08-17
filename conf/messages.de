@@ -1579,7 +1579,8 @@ object.data_syndication_agreement.table.empty=Kein Eintrag
 #----------------------
 
 object.data_syndication_agreement_link.agreement.label=de: Agreement
-object.data_syndication_agreement_link.name.label=Link name
+object.data_syndication_agreement_link.name.label=de: Link name
+object.data_syndication_agreement_link.description.label=Beschreibung
 object.data_syndication_agreement_link.data_type.label=de: Data type
 object.data_syndication_agreement_link.object.label=de: Object
 object.data_syndication_agreement_link.items.label=de: Synchronized items
@@ -3026,10 +3027,15 @@ admin.data_syndication.cancel_agreement.success=de: The agreement has been succe
 
 admin.data_syndication.process_agreement_link.title=de: Process a consumer agreement link
 admin.data_syndication.process_agreement_link.already=de: The agreement link has been already processed.
-admin.data_syndication.process_agreement_link.reject.title=de: Reject the link
 admin.data_syndication.process_agreement_link.pe.accept.new.title=de: Approve with a new initiative
+admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=de: New initiative with syndication
+admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=de: A new initiative has been assigned to you and is syndicated with a partner initiative.
+admin.data_syndication.process_agreement_link.pe.accept.new.success=de: The agreement link has been successfully approved with a new initiative.
 admin.data_syndication.process_agreement_link.pe.accept.existing.title=de: Approve with an existing initiative
-admin.data_syndication.process_agreement_link.accept.success=de: The agreement link has been successfully approved.
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=de: An initiative has been syndicated
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=de: One of your initiatives has been syndicated with a partner initiative.
+admin.data_syndication.process_agreement_link.pe.accept.existing.success=de: The agreement link has been successfully approved with an existing initiative.
+admin.data_syndication.process_agreement_link.reject.title=de: Reject the link
 admin.data_syndication.process_agreement_link.reject.success=de: The agreement link has been successfully rejected.
 
 admin.data_syndication.cancel_agreement_link.success=de: The agreement link has been successfully cancelled.

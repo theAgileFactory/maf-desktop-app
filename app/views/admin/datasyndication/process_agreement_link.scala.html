@@ -54,6 +54,10 @@
                         <td>@display_object(agreementLink.name)</td>
                     </tr>
                     <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement_link.description.label")</th>
+                        <td>@display_object(agreementLink.description)</td>
+                    </tr>
+                    <tr>
                         <th>@parts.Msg("object.data_syndication_agreement_link.data_type.label")</th>
                         <td>@parts.Msg("object.data_syndication_agreement_item." + agreementLink.dataType + ".label")</td>
                     </tr>
@@ -80,13 +84,9 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">@parts.Msg("admin.data_syndication.process_agreement_link.pe.accept.new.title")</div>
                     <div class="panel-body">
-                        @helper.form(action = controllers.admin.routes.DataSyndicationController.acceptAgreementLinkExistingPE()) {
+                        @helper.form(action = controllers.admin.routes.DataSyndicationController.acceptAgreementLinkNewPE()) {
                         
                             <input type="hidden" name="agreementLinkId" value="@agreementLink.id">
-                            
-                            @helper.inputText(agreementLinkAcceptNewPEForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
-                
-                            @helper.textarea(agreementLinkAcceptNewPEForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
 
                             @parts.dropdownlist(agreementLinkAcceptNewPEForm("portfolioEntryTypeId"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(), null, false)
                 
@@ -108,7 +108,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">@parts.Msg("admin.data_syndication.process_agreement_link.pe.accept.existing.title")</div>
                     <div class="panel-body">
-                        @helper.form(action = controllers.admin.routes.DataSyndicationController.acceptAgreementLinkNewPE()) {
+                        @helper.form(action = controllers.admin.routes.DataSyndicationController.acceptAgreementLinkExistingPE()) {
                         
                             <input type="hidden" name="agreementLinkId" value="@agreementLink.id">
                             

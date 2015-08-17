@@ -17,8 +17,6 @@
  */
 package utils.form;
 
-import services.datasyndication.models.DataSyndicationAgreementLink;
-
 /**
  * Form to accept a PE agreement link with an existing PE.
  * 
@@ -34,16 +32,6 @@ public class DataSyndicationAgreementLinkAcceptExistingPEFormData {
      * Default constructor.
      */
     public DataSyndicationAgreementLinkAcceptExistingPEFormData() {
-    }
-
-    /**
-     * Construct with initial values.
-     * 
-     * @param agreementLink
-     *            the agreement link
-     */
-    public DataSyndicationAgreementLinkAcceptExistingPEFormData(DataSyndicationAgreementLink agreementLink) {
-        this.agreementLinkId = agreementLink.id;
     }
 
 }

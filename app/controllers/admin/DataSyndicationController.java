@@ -29,12 +29,15 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
+import dao.pmo.ActorDao;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.framework_models.account.NotificationCategory;
+import models.framework_models.account.NotificationCategory.Code;
 import models.pmo.PortfolioEntry;
 import play.cache.CacheApi;
 import play.data.Form;
@@ -694,21 +697,8 @@ public class DataSyndicationController extends Controller {
                 return redirect(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, false));
             }
 
-            Form<DataSyndicationAgreementLinkAcceptNewPEFormData> agreementLinkAcceptNewPEForm = null;
-            Form<DataSyndicationAgreementLinkAcceptExistingPEFormData> agreementLinkAcceptExistingPEForm = null;
-
-            if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
-
-                // initialize the accept with new PE form
-                agreementLinkAcceptNewPEForm = agreementLinkAcceptNewPEFormTemplate.fill(new DataSyndicationAgreementLinkAcceptNewPEFormData(agreementLink));
-
-                // initialize the accept with existing PE form
-                agreementLinkAcceptExistingPEForm = agreementLinkAcceptExistingPEFormTemplate
-                        .fill(new DataSyndicationAgreementLinkAcceptExistingPEFormData(agreementLink));
-            }
-
-            return ok(views.html.admin.datasyndication.process_agreement_link.render(agreementLink, agreementLinkAcceptNewPEForm,
-                    agreementLinkAcceptExistingPEForm));
+            return ok(views.html.admin.datasyndication.process_agreement_link.render(agreementLink, agreementLinkAcceptNewPEFormTemplate,
+                    agreementLinkAcceptExistingPEFormTemplate));
 
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));
@@ -721,9 +711,55 @@ public class DataSyndicationController extends Controller {
      */
     public Result acceptAgreementLinkNewPE() {
 
-        // TODO check here the right
+        if (dataSyndicationService.isActive()) {
 
-        return TODO;
+            // bind the form
+            Form<DataSyndicationAgreementLinkAcceptNewPEFormData> boundForm = agreementLinkAcceptNewPEFormTemplate.bindFromRequest();
+
+            // get the agreement link id
+            Long agreementLinkId = Long.valueOf(boundForm.data().get("agreementLinkId"));
+
+            // get the agreement link
+            DataSyndicationAgreementLink agreementLink = null;
+            try {
+                agreementLink = dataSyndicationService.getAgreementLink(agreementLinkId);
+                if (agreementLink == null) {
+                    return notFound(views.html.error.not_found.render(""));
+                }
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            if (boundForm.hasErrors()) {
+                return ok(
+                        views.html.admin.datasyndication.process_agreement_link.render(agreementLink, boundForm, agreementLinkAcceptExistingPEFormTemplate));
+            }
+
+            DataSyndicationAgreementLinkAcceptNewPEFormData formData = boundForm.get();
+
+            PortfolioEntry portfolioEntry = formData.createPorfolioEntry(agreementLink);
+
+            // accept the agreement link
+            try {
+                dataSyndicationService.acceptAgreementLink(agreementLink, portfolioEntry.id);
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // send a notification to the initiative manager
+            ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
+                    "admin.data_syndication.process_agreement_link.pe.accept.new.notification.title",
+                    "admin.data_syndication.process_agreement_link.pe.accept.new.notification.message");
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.process_agreement_link.pe.accept.new.success"));
+
+            return redirect(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, false));
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
     }
 
     /**

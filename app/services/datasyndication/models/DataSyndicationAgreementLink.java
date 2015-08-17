@@ -16,6 +16,7 @@ public class DataSyndicationAgreementLink {
 
     public Long id;
     public String name;
+    public String description;
     public DataSyndicationAgreement agreement;
     public List<DataSyndicationAgreementItem> items;
     public String dataType;
