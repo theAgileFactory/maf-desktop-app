@@ -3020,7 +3020,7 @@ admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le part
 admin.data_syndication.submit_agreement.title=Soumettre un agrément de provisionnement
 admin.data_syndication.submit_agreement.success=L''agrément a été soumis. Il doit maintenant être validé par le partenaire.
 
-admin.data_syndication.process_agreement.title=Traiter une requête d''agrément de consommation
+admin.data_syndication.process_agreement.title=Approuver une requête d''agrément de consommation
 admin.data_syndication.process_agreement.already=La requête d''agrément a déjà été traitée.
 admin.data_syndication.process_agreement.accept.success=L''agrément de consommation a été appouvé.
 admin.data_syndication.process_agreement.reject.success=L''agrément de consommation a été rejeté.
@@ -3029,7 +3029,7 @@ admin.data_syndication.suspend_agreement.success=L''agrément a été suspendu.
 admin.data_syndication.restart_agreement.success=L''agrément a été réactivé.
 admin.data_syndication.cancel_agreement.success=L''agrément a été annulé.
 
-admin.data_syndication.process_agreement_link.title=Traiter une requête de lien d''agrément
+admin.data_syndication.process_agreement_link.title=Approuver une requête de lien d''agrément
 admin.data_syndication.process_agreement_link.already=Le lien d''agrément a déjà été traité.
 admin.data_syndication.process_agreement_link.reject.title=Rejeter le lien
 admin.data_syndication.process_agreement_link.pe.accept.new.title=Approuver avec une nouvelle initative

@@ -35,6 +35,7 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.pmo.PortfolioEntry;
 import play.cache.CacheApi;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -45,6 +46,8 @@ import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationPartner;
+import utils.form.DataSyndicationAgreementLinkAcceptExistingPEFormData;
+import utils.form.DataSyndicationAgreementLinkAcceptNewPEFormData;
 import utils.form.DataSyndicationAgreementSubmitFormData;
 import utils.table.DataSyndicationAgreementLinkListView;
 import utils.table.DataSyndicationAgreementListView;
@@ -59,8 +62,11 @@ import utils.table.DataSyndicationPartnerListView;
 public class DataSyndicationController extends Controller {
 
     private static Form<SearchPartnerForm> searchPartnerFormTemplate = Form.form(SearchPartnerForm.class);
-    private static Form<DataSyndicationAgreementSubmitFormData> dataSyndicationAgreementSubmitFormTemplate = Form
-            .form(DataSyndicationAgreementSubmitFormData.class);
+    private static Form<DataSyndicationAgreementSubmitFormData> agreementSubmitFormTemplate = Form.form(DataSyndicationAgreementSubmitFormData.class);
+    private static Form<DataSyndicationAgreementLinkAcceptNewPEFormData> agreementLinkAcceptNewPEFormTemplate = Form
+            .form(DataSyndicationAgreementLinkAcceptNewPEFormData.class);
+    private static Form<DataSyndicationAgreementLinkAcceptExistingPEFormData> agreementLinkAcceptExistingPEFormTemplate = Form
+            .form(DataSyndicationAgreementLinkAcceptExistingPEFormData.class);
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
@@ -270,8 +276,7 @@ public class DataSyndicationController extends Controller {
             }
 
             // initialize the form
-            Form<DataSyndicationAgreementSubmitFormData> form = dataSyndicationAgreementSubmitFormTemplate
-                    .fill(new DataSyndicationAgreementSubmitFormData(domain));
+            Form<DataSyndicationAgreementSubmitFormData> form = agreementSubmitFormTemplate.fill(new DataSyndicationAgreementSubmitFormData(domain));
 
             return ok(views.html.admin.datasyndication.submit_agreement.render(partner, itemsAsVH, form));
         } else {
@@ -288,7 +293,7 @@ public class DataSyndicationController extends Controller {
         if (dataSyndicationService.isActive()) {
 
             // bind the form
-            Form<DataSyndicationAgreementSubmitFormData> boundForm = dataSyndicationAgreementSubmitFormTemplate.bindFromRequest();
+            Form<DataSyndicationAgreementSubmitFormData> boundForm = agreementSubmitFormTemplate.bindFromRequest();
 
             // get the slave domain
             String slaveDomain = boundForm.data().get("slaveDomain");
@@ -689,7 +694,21 @@ public class DataSyndicationController extends Controller {
                 return redirect(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, false));
             }
 
-            return ok(views.html.admin.datasyndication.process_agreement_link.render(agreementLink));
+            Form<DataSyndicationAgreementLinkAcceptNewPEFormData> agreementLinkAcceptNewPEForm = null;
+            Form<DataSyndicationAgreementLinkAcceptExistingPEFormData> agreementLinkAcceptExistingPEForm = null;
+
+            if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
+
+                // initialize the accept with new PE form
+                agreementLinkAcceptNewPEForm = agreementLinkAcceptNewPEFormTemplate.fill(new DataSyndicationAgreementLinkAcceptNewPEFormData(agreementLink));
+
+                // initialize the accept with existing PE form
+                agreementLinkAcceptExistingPEForm = agreementLinkAcceptExistingPEFormTemplate
+                        .fill(new DataSyndicationAgreementLinkAcceptExistingPEFormData(agreementLink));
+            }
+
+            return ok(views.html.admin.datasyndication.process_agreement_link.render(agreementLink, agreementLinkAcceptNewPEForm,
+                    agreementLinkAcceptExistingPEForm));
 
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));

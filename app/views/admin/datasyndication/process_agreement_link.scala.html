@@ -16,9 +16,13 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    agreementLink: services.datasyndication.models.DataSyndicationAgreementLink
+    agreementLink: services.datasyndication.models.DataSyndicationAgreementLink,
+    agreementLinkAcceptNewPEForm: Form[utils.form.DataSyndicationAgreementLinkAcceptNewPEFormData],
+    agreementLinkAcceptExistingPEForm: Form[utils.form.DataSyndicationAgreementLinkAcceptExistingPEFormData]
 )
 
+@import helper._
+@import bootstrap3._
 @import framework_views.parts.formats._
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -77,8 +81,23 @@
                     <div class="panel-heading">@parts.Msg("admin.data_syndication.process_agreement_link.pe.accept.new.title")</div>
                     <div class="panel-body">
                         @helper.form(action = controllers.admin.routes.DataSyndicationController.acceptAgreementLinkExistingPE()) {
+                        
                             <input type="hidden" name="agreementLinkId" value="@agreementLink.id">
-                            TODO
+                            
+                            @helper.inputText(agreementLinkAcceptNewPEForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
+                
+                            @helper.textarea(agreementLinkAcceptNewPEForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
+
+                            @parts.dropdownlist(agreementLinkAcceptNewPEForm("portfolioEntryTypeId"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(), null, false)
+                
+                            @parts.dropdownlist(agreementLinkAcceptNewPEForm("lifeCycleProcessId"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH, null, false)
+                
+                            @parts.singlevalue_picker(
+                                agreementLinkAcceptNewPEForm("managerId"), 
+                                parts.Msg.asString("object.portfolio_entry.manager.label"),
+                                controllers.routes.PickerController.manager().url
+                            )
+
                             <input class="btn btn-success" type="submit" value="@parts.Msg("button.approve")">
                         }
                     </div>
@@ -90,8 +109,15 @@
                     <div class="panel-heading">@parts.Msg("admin.data_syndication.process_agreement_link.pe.accept.existing.title")</div>
                     <div class="panel-body">
                         @helper.form(action = controllers.admin.routes.DataSyndicationController.acceptAgreementLinkNewPE()) {
+                        
                             <input type="hidden" name="agreementLinkId" value="@agreementLink.id">
-                            TODO
+                            
+                            @parts.autocomplete(
+                                agreementLinkAcceptExistingPEForm("portfolioEntryId"),
+                                parts.Msg.asString("object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label"),
+                                controllers.core.routes.PortfolioEntryController.search().url
+                            )
+                            
                             <input class="btn btn-success" type="submit" value="@parts.Msg("button.approve")">
                         }
                     </div>
