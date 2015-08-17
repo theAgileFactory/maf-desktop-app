@@ -23,7 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 import framework.utils.Utilities;
+import play.Logger;
 import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
+import play.i18n.Messages;
 
 /**
  * Form to submit a data agreement from a master instance.
@@ -64,6 +67,27 @@ public class DataSyndicationAgreementSubmitFormData {
         this.slaveDomain = slaveDomain;
         this.startDate = Utilities.getDateFormat(null).format(new Date());
 
+    }
+
+    /**
+     * Validate the dates.
+     */
+    public List<ValidationError> validate() {
+
+        List<ValidationError> errors = new ArrayList<>();
+
+        try {
+
+            if (Utilities.getDateFormat(null).parse(this.startDate).after(Utilities.getDateFormat(null).parse(this.endDate))) {
+                // the end date should be after the start date
+                errors.add(new ValidationError("endDate", Messages.get("object.data_syndication_agreement.end_date.invalid")));
+            }
+
+        } catch (Exception e) {
+            Logger.warn("impossible to validate the dates");
+        }
+
+        return errors.isEmpty() ? null : errors;
     }
 
     /**

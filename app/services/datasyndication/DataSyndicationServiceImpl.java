@@ -146,9 +146,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems,
-            String slaveDomain) {
-        echannelService.submitAgreement(refId, name, startDate, endDate, agreementItems, slaveDomain, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain) {
+        echannelService.submitAgreement(refId, name, startDate, endDate, agreementItemIds, slaveDomain, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
     }
 
     @Override

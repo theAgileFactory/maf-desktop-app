@@ -133,15 +133,14 @@ public interface IEchannelService {
      *            the start date
      * @param endDate
      *            the end date
-     * @param agreementItems
-     *            the authorized items
+     * @param agreementItemIds
+     *            the ids of the authorized items
      * @param slaveDomain
      *            the domain of the slave instance
      * @param permissions
      *            the permissions used to notify the slave instance
      */
-    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems, String slaveDomain,
-            String permissions);
+    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain, String permissions);
 
     /**
      * Accept a pending agreement.

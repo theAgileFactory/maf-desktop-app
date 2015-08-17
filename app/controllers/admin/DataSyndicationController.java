@@ -32,7 +32,9 @@ import constants.IMafConstants;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Msg;
 import framework.utils.Table;
+import framework.utils.Utilities;
 import play.cache.CacheApi;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -282,7 +284,54 @@ public class DataSyndicationController extends Controller {
      * Process the form to submit a new master agreement.
      */
     public Result processSubmitAgreement() {
-        return TODO;
+
+        if (dataSyndicationService.isActive()) {
+
+            // bind the form
+            Form<DataSyndicationAgreementSubmitFormData> boundForm = dataSyndicationAgreementSubmitFormTemplate.bindFromRequest();
+
+            // get the slave domain
+            String slaveDomain = boundForm.data().get("slaveDomain");
+
+            if (boundForm.hasErrors()) {
+
+                // get the partner
+                DataSyndicationPartner partner = null;
+                try {
+                    partner = dataSyndicationService.getPartner(slaveDomain);
+                } catch (Exception e) {
+                    return ok(views.html.admin.datasyndication.communication_error.render());
+                }
+
+                // get all possible items
+                ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
+                try {
+                    for (DataSyndicationAgreementItem item : dataSyndicationService.getDataAgreementItems()) {
+                        itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
+                    }
+                } catch (Exception e) {
+                    return ok(views.html.admin.datasyndication.communication_error.render());
+                }
+
+                return ok(views.html.admin.datasyndication.submit_agreement.render(partner, itemsAsVH, boundForm));
+            }
+
+            DataSyndicationAgreementSubmitFormData formData = boundForm.get();
+
+            try {
+                dataSyndicationService.submitAgreement(formData.refId, formData.name, formData.getStartDateAsDate(), formData.getEndDateAsDate(),
+                        formData.itemIds, slaveDomain);
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.submit_agreement.success"));
+
+            return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
     }
 
     /**

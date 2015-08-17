@@ -1560,6 +1560,7 @@ object.data_syndication_agreement.name.label=de: Agreement name
 object.data_syndication_agreement.ref_id.label=ID
 object.data_syndication_agreement.start_date.label=Begin Zeitraum
 object.data_syndication_agreement.end_date.label=Ende Zeitraum
+object.data_syndication_agreement.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.data_syndication_agreement.status.label=Status
 object.data_syndication_agreement.status.PENDING.label=Anstehend
 object.data_syndication_agreement.status.ONGOING.label=Laufend
@@ -3010,6 +3011,7 @@ admin.data_syndication.search_partner_result.title=de: Search results
 admin.data_syndication.search_partner_result.header=de: Please click on the wished partner in order to submit a proposal agreement.
 
 admin.data_syndication.submit_agreement.title=de: Submit a master agreement
+admin.data_syndication.submit_agreement.success=de: The agreement has been submitted. It should be now processed by the partner.
 
 #----------------------
 # KPI manager

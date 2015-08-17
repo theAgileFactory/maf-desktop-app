@@ -1559,6 +1559,7 @@ object.data_syndication_agreement.name.label=Nom de l''agrément
 object.data_syndication_agreement.ref_id.label=Référence
 object.data_syndication_agreement.start_date.label=Date de début
 object.data_syndication_agreement.end_date.label=Date de fin
+object.data_syndication_agreement.end_date.invalid=La date de fin doit être ultérieure à la date de début.
 object.data_syndication_agreement.status.label=Statut
 object.data_syndication_agreement.status.PENDING.label=En attente
 object.data_syndication_agreement.status.ONGOING.label=En cours
@@ -3015,6 +3016,7 @@ admin.data_syndication.search_partner_result.title=Résultats de la recherche
 admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de soumettre une demande d''agrément.
 
 admin.data_syndication.submit_agreement.title=Soumettre un agrément de provisionnement
+admin.data_syndication.submit_agreement.success=L''agrément a été soumis. Il doit maintenant être validé par le partenaire.
 
 #----------------------
 # KPI manager

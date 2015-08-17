@@ -302,18 +302,17 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems,
-            String slaveDomain, String permissions) {
+    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain,
+            String permissions) {
+
+        // TODO check the slave could be a slave
 
         SubmitDataSyndicationAgreementRequest submitAgreementRequest = new SubmitDataSyndicationAgreementRequest();
         submitAgreementRequest.refId = refId;
         submitAgreementRequest.name = name;
         submitAgreementRequest.startDate = startDate;
         submitAgreementRequest.endDate = endDate;
-        submitAgreementRequest.agreementItemIds = new ArrayList<>();
-        for (DataSyndicationAgreementItem agreementItem : agreementItems) {
-            submitAgreementRequest.agreementItemIds.add(agreementItem.id);
-        }
+        submitAgreementRequest.agreementItemIds = agreementItemIds;
         submitAgreementRequest.slaveDomain = slaveDomain;
         submitAgreementRequest.permissions = permissions;
 

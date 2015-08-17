@@ -81,12 +81,12 @@ public interface IDataSyndicationService {
      *            the start date
      * @param endDate
      *            the end date
-     * @param agreementItems
-     *            the authorized items
+     * @param agreementItemIds
+     *            the ids of the authorized items
      * @param slaveDomain
      *            the domain of the slave instance
      */
-    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<DataSyndicationAgreementItem> agreementItems, String slaveDomain);
+    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain);
 
     /**
      * Accept a pending agreement.
