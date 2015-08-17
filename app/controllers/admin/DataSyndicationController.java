@@ -437,9 +437,45 @@ public class DataSyndicationController extends Controller {
      */
     public Result acceptAgreement(Long agreementId) {
 
-        // TODO check here the right
+        if (dataSyndicationService.isActive()) {
 
-        return TODO;
+            // get the agreement
+            DataSyndicationAgreement agreement = null;
+            try {
+                agreement = dataSyndicationService.getAgreement(agreementId);
+                if (agreement == null) {
+                    return notFound(views.html.error.not_found.render(""));
+                }
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // check the instance is the slave
+            if (!agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+
+            // check the agreement is pending
+            if (!agreement.status.equals(DataSyndicationAgreement.Status.PENDING)) {
+                Utilities.sendInfoFlashMessage(Msg.get("admin.data_syndication.process_agreement.already"));
+                return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+            }
+
+            // accept the agreement
+            try {
+                dataSyndicationService.acceptAgreement(agreement);
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.process_agreement.accept.success"));
+
+            return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
     }
 
     /**
@@ -450,9 +486,44 @@ public class DataSyndicationController extends Controller {
      */
     public Result rejectAgreement(Long agreementId) {
 
-        // TODO check here the right
+        if (dataSyndicationService.isActive()) {
 
-        return TODO;
+            // get the agreement
+            DataSyndicationAgreement agreement = null;
+            try {
+                agreement = dataSyndicationService.getAgreement(agreementId);
+                if (agreement == null) {
+                    return notFound(views.html.error.not_found.render(""));
+                }
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            // check the instance is the slave
+            if (!agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+
+            // check the agreement is pending
+            if (!agreement.status.equals(DataSyndicationAgreement.Status.PENDING)) {
+                Utilities.sendInfoFlashMessage(Msg.get("admin.data_syndication.process_agreement.already"));
+                return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+            }
+
+            // reject the agreement
+            try {
+                dataSyndicationService.rejectAgreement(agreement);
+            } catch (Exception e) {
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.process_agreement.reject.success"));
+
+            return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
     }
 
     /**

@@ -3020,6 +3020,8 @@ admin.data_syndication.submit_agreement.success=L''agrément a été soumis. Il 
 
 admin.data_syndication.process_agreement.title=Traiter une requête d''agrément de consommation
 admin.data_syndication.process_agreement.already=La requête d''agrément a déjà été traité.
+admin.data_syndication.process_agreement.accept.success=L''agrément de consommation a été appouvé.
+admin.data_syndication.process_agreement.reject.success=L''agrément de consommation a été rejeté.
 
 #----------------------
 # KPI manager
