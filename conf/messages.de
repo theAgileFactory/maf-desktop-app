@@ -1541,6 +1541,15 @@ object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=St
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Planungspaket
 
 #----------------------
+# dataSyndicationPartner
+#----------------------
+
+object.data_syndication_partner.customer_logo.label=de: Logo
+object.data_syndication_partner.customer_name.label=Name
+object.data_syndication_partner.customer_description.label=Beschreibung
+object.data_syndication_partner.customer_website.label=de: Corporate website
+
+#----------------------
 # dataSyndicationAgreement
 #----------------------
 
@@ -2994,12 +3003,11 @@ admin.data_syndication.consumer_agreements.partner_contract=de: Partner contract
 admin.data_syndication.view_agreement.details=Details
 admin.data_syndication.view_agreement.links=de: Links
 
-admin.data_syndication.search_partner.title=de: Search a partner
+admin.data_syndication.search_partner.title=de: Search for a partner into the BizDock catalog
 admin.data_syndication.search_partner.error=de: Please enter a partner
 admin.data_syndication.search_partner.keywords.placeholder=de: Partner name
 admin.data_syndication.search_partner_result.title=de: Search results
-admin.data_syndication.search_partner_result.website.label=de: Corporate website
-admin.data_syndication.search_partner_result.submit_agreement.label=de: Propose an agreement
+admin.data_syndication.search_partner_result.header=de: Please click on the wished partner in order to submit a proposal agreement.
 
 #----------------------
 # KPI manager

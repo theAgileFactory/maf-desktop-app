@@ -1540,6 +1540,15 @@ object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Ra
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Livrable
 
 #----------------------
+# dataSyndicationPartner
+#----------------------
+
+object.data_syndication_partner.customer_logo.label=Logo
+object.data_syndication_partner.customer_name.label=Nom
+object.data_syndication_partner.customer_description.label=Description
+object.data_syndication_partner.customer_website.label=Site Internet
+
+#----------------------
 # dataSyndicationAgreement
 #----------------------
 
@@ -2999,12 +3008,11 @@ admin.data_syndication.consumer_agreements.partner_contract=Contrats avec vos pa
 admin.data_syndication.view_agreement.details=Détails
 admin.data_syndication.view_agreement.links=Liens
 
-admin.data_syndication.search_partner.title=Rechercher un partenaire
+admin.data_syndication.search_partner.title=Rechercher un partenaire dans le catalogue BizDock
 admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
 admin.data_syndication.search_partner.keywords.placeholder=Nom du partenaire
 admin.data_syndication.search_partner_result.title=Résultats de la recherche
-admin.data_syndication.search_partner_result.website.label=Site Internet
-admin.data_syndication.search_partner_result.submit_agreement.label=Proposer un agrément
+admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de soumettre une demande d'agrément.
 
 #----------------------
 # KPI manager

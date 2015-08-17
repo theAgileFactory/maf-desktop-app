@@ -677,6 +677,7 @@ GET     /admin/sharedstorage/upload            controllers.admin.SharedStorageMa
 POST    /admin/sharedstorage/upload/:flag      controllers.admin.SharedStorageManagerController.upload(flag: Boolean)
 
 #Data syndication
+GET     /admin/data-syndication/partner/logo               controllers.admin.DataSyndicationController.partnerLogo(uuid: String)
 GET     /admin/data-syndication/master-agreements          controllers.admin.DataSyndicationController.viewMasterAgreements()
 GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
 GET     /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.searchPartner()

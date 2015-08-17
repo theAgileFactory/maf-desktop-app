@@ -18,9 +18,11 @@
 package controllers.admin;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -28,6 +30,7 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import framework.utils.Table;
+import play.cache.CacheApi;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
@@ -38,6 +41,7 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationPartner;
 import utils.table.DataSyndicationAgreementLinkListView;
 import utils.table.DataSyndicationAgreementListView;
+import utils.table.DataSyndicationPartnerListView;
 
 /**
  * The constroller for the data syndication.
@@ -51,6 +55,9 @@ public class DataSyndicationController extends Controller {
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
+
+    @Inject
+    private CacheApi cacheApi;
 
     /**
      * Display the list of master agreements.
@@ -177,15 +184,52 @@ public class DataSyndicationController extends Controller {
                 return TODO;
             } else {
 
-                // TODO render as a standard table...
+                List<DataSyndicationPartnerListView> dataSyndicationPartnerRows = new ArrayList<DataSyndicationPartnerListView>();
+                for (DataSyndicationPartner partner : partners) {
+                    dataSyndicationPartnerRows.add(new DataSyndicationPartnerListView(partner, storePartnerLogo(partner.customerLogo)));
+                }
+                Table<DataSyndicationPartnerListView> dataSyndicationPartnerTable = DataSyndicationPartnerListView.templateTable
+                        .fill(dataSyndicationPartnerRows);
 
-                return ok(views.html.admin.datasyndication.search_partner_result.render(partners));
+                return ok(views.html.admin.datasyndication.search_partner_result.render(dataSyndicationPartnerTable));
             }
 
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
+    }
+
+    private static final String PARTNER_LOGO_CACHE_PREFIX = "maf.cache.partner_logo.";
+    private static final int PARTNER_LOGO_CACHE_TTL = 60;
+
+    /**
+     * Decode (base64) and store in the cache the partner logo. Finally return
+     * the corresponding uuid.
+     * 
+     * @param imageBase64
+     *            the logo encode with base 64
+     */
+    private String storePartnerLogo(byte[] imageBase64) {
+        if (imageBase64 != null) {
+            UUID uuid = UUID.randomUUID();
+            byte[] image = Base64.getDecoder().decode(imageBase64);
+            cacheApi.set(PARTNER_LOGO_CACHE_PREFIX + uuid.toString(), image, PARTNER_LOGO_CACHE_TTL);
+            return uuid.toString();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get the partner logo for a uuid.
+     * 
+     * @param uuid
+     *            the uuid
+     */
+    public Result partnerLogo(String uuid) {
+        byte[] bytes = (byte[]) cacheApi.get(PARTNER_LOGO_CACHE_PREFIX + uuid);
+        return ok(bytes);
     }
 
     /**

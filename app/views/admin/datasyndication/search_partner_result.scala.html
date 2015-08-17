@@ -16,7 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    partners: List[services.datasyndication.models.DataSyndicationPartner]
+    partnersTable: framework.utils.Table[utils.table.DataSyndicationPartnerListView]
 )
 
 @import framework_views.parts.formats._
@@ -33,24 +33,9 @@
             @parts.Msg("admin.data_syndication.search_partner_result.title")
         </div>
         <div class="panel-body">
+            <p>@parts.Msg("admin.data_syndication.search_partner_result.header")</p>
         
-            @for(partner <-partners) {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="row ">
-                            <div class="col-md-3 h4">@partner.customerName<br> TODO logo</div>
-                            <div class="col-md-3 h4">@partner.customerDescription</div>
-                            <div class="col-md-3 text-center h4">@display_url(partner.customerWebsite, "admin.data_syndication.search_partner_result.website.label", true)</div>
-                            <div class="col-md-3 text-right">
-                                <a href="@controllers.admin.routes.DataSyndicationController.submitAgreement(partner.domain)" class="btn btn-lg btn-primary">
-                                    <span class="glyphicons glyphicons-share-alt"></span> @parts.Msg("admin.data_syndication.search_partner_result.submit_agreement.label")
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-            
+            @parts.table.tableview(partnersTable)
         </div>
     </div>
    
