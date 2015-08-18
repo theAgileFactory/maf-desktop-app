@@ -4,10 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import framework.utils.Msg;
-import models.framework_models.api.ApiRegistration;
 
 /**
- * The API key of a slave instance.
+ * An agreement for data syndication.
  * 
  * @author Johann Kohler
  *
@@ -23,7 +22,7 @@ public class DataSyndicationAgreement {
     public Status status;
     public DataSyndicationPartner masterPartner;
     public DataSyndicationPartner slavePartner;
-    public ApiRegistration apiKey;
+    public DataSyndicationApiKey apiKey;
 
     /**
      * The possible status.

@@ -268,6 +268,8 @@ public class EchannelServiceImpl implements IEchannelService {
     @Override
     public List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords) {
 
+        // TODO flag: is_slave_syndicable
+
         List<NameValuePair> queryParams = new ArrayList<>();
         queryParams.add(new BasicNameValuePair("eligibleAsSlave", String.valueOf(eligibleAsSlave)));
         queryParams.add(new BasicNameValuePair("keywords", keywords));
@@ -305,7 +307,7 @@ public class EchannelServiceImpl implements IEchannelService {
     public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain,
             String permissions) {
 
-        // TODO check the slave could be a slave
+        // TODO check the slave could be a slave (flag: is_slave_syndicable)
         // create a notificationEvent for the slave instance (containing the
         // link to decide it)
 
