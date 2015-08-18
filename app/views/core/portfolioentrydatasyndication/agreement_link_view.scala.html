@@ -1,0 +1,108 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    agreementLink: services.datasyndication.models.DataSyndicationAgreementLink
+)
+
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.integration.data_syndication.label", controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntry.id).url),
+        (agreementLink.name, null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.INTEGRATION, breadcrump){
+
+        <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            @parts.Msg("core.portfolio_entry_data_syndication.link.view.title")
+            <div class="pull-right">
+                <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.cancelAgreementLink(portfolioEntry.id, agreementLink.id)"><span class="glyphicons glyphicons-ban glyphicons-panel"></span></a>
+                <script type="text/javascript">
+                    function maf_confirmDelete(){
+                        return window.confirm("@parts.Msg("object.data_syndication_agreement_link.cancel.confirm")");
+                    }
+                </script>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <table class="table table-condensed table-hover">
+                <colgroup>
+                     <col class="col-md-3">
+                     <col class="col-md-9">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement_link.agreement.label")</th>
+                        <td>
+                            @restrictOr(la(as(constants.IMafConstants.PARTNER_SYNDICATION_PERMISSION))) {
+                                @display_url(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id).url, agreementLink.agreement.name)
+                            }{
+                                @agreementLink.agreement.name
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement_link.name.label")</th>
+                        <td>@display_object(agreementLink.name)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement_link.description.label")</th>
+                        <td>@display_object(agreementLink.description)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement.start_date.label")</th>
+                        <td>@display_date(agreementLink.agreement.startDate)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement.end_date.label")</th>
+                        <td>@display_date(agreementLink.agreement.endDate)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement_link.data_type.label")</th>
+                        <td>@parts.Msg("object.data_syndication_agreement_item." + agreementLink.dataType + ".label")</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement_link.items.label")</th>
+                        <td>@display_list_of_values(agreementLink.items)</td>
+                    </tr>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement_link.status.label")</th>
+                        <td>@Html(agreementLink.status.render)</td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntry.id).url">@parts.Msg("button.back")</a>
+
+
+}

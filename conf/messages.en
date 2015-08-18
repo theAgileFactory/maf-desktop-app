@@ -1567,7 +1567,7 @@ object.data_syndication_agreement.table.empty=There is no agreement
 #----------------------
 
 object.data_syndication_agreement_link.agreement.label=Agreement
-object.data_syndication_agreement_link.name.label=Link name
+object.data_syndication_agreement_link.name.label=Relation name
 object.data_syndication_agreement_link.description.label=de: Description
 object.data_syndication_agreement_link.data_type.label=Data type
 object.data_syndication_agreement_link.object.label=Object
@@ -1578,8 +1578,8 @@ object.data_syndication_agreement_link.status.ONGOING.label=Ongoing
 object.data_syndication_agreement_link.status.REJECTED.label=Rejected
 object.data_syndication_agreement_link.status.CANCELLED.label=Cancelled
 object.data_syndication_agreement_link.process.label=Process the request
-object.data_syndication_agreement_link.cancel.confirm=Are you sure you want to cancel this agreement link? This action is definitive and couldn''t be reverted.
-object.data_syndication_agreement_link.table.empty=There is no agreement link
+object.data_syndication_agreement_link.cancel.confirm=Are you sure you want to cancel this agreement relation? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement_link.table.empty=There is no agreement relation
 
 ########################
 # Error pages
@@ -2405,6 +2405,10 @@ core.portfolio_entry_data_syndication.index.with_link.master.title=Provide to
 core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" does not provide data to another BizDock instance.
 core.portfolio_entry_data_syndication.index.legend.label=Legend
 
+core.portfolio_entry_data_syndication.link.view.title=Details
+
+core.portfolio_entry_data_syndication.link.cancel.success=The relation has been successfully cancelled.
+
 #----------------------
 # purchase order
 #----------------------
@@ -3008,7 +3012,7 @@ admin.data_syndication.consumer_agreements.header=A consumer agreement is a cont
 admin.data_syndication.consumer_agreements.partner_contract=Partner contracts
 
 admin.data_syndication.view_agreement.details=Details
-admin.data_syndication.view_agreement.links=Links
+admin.data_syndication.view_agreement.links=Relations
 
 admin.data_syndication.search_partner.title=Search for a partner into the BizDock catalog
 admin.data_syndication.search_partner.error=Please enter a partner name
@@ -3028,20 +3032,18 @@ admin.data_syndication.suspend_agreement.success=The agreement has been successf
 admin.data_syndication.restart_agreement.success=The agreement has been successfully restarted.
 admin.data_syndication.cancel_agreement.success=The agreement has been successfully cancelled.
 
-admin.data_syndication.process_agreement_link.title=Process a consumer agreement link
-admin.data_syndication.process_agreement_link.already=The agreement link has been already processed.
+admin.data_syndication.process_agreement_link.title=Process a consumer agreement relation
+admin.data_syndication.process_agreement_link.already=The agreement relation has been already processed.
 admin.data_syndication.process_agreement_link.pe.accept.new.title=Approve with a new initiative
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=New initiative with syndication
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=A new initiative has been assigned to you and is syndicated with a partner initiative.
-admin.data_syndication.process_agreement_link.pe.accept.new.success=The agreement link has been successfully approved with a new initiative.
+admin.data_syndication.process_agreement_link.pe.accept.new.success=The agreement relation has been successfully approved with a new initiative.
 admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approve with an existing initiative
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=An initiative has been syndicated
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=One of your initiatives has been syndicated with a partner initiative.
-admin.data_syndication.process_agreement_link.pe.accept.existing.success=The agreement link has been successfully approved with an existing initiative.
-admin.data_syndication.process_agreement_link.reject.title=Reject the link
-admin.data_syndication.process_agreement_link.reject.success=The agreement link has been successfully rejected.
-
-admin.data_syndication.cancel_agreement_link.success=The agreement link has been successfully cancelled.
+admin.data_syndication.process_agreement_link.pe.accept.existing.success=The agreement relation has been successfully approved with an existing initiative.
+admin.data_syndication.process_agreement_link.reject.title=Reject the relation
+admin.data_syndication.process_agreement_link.reject.success=The agreement relation has been successfully rejected.
 
 #----------------------
 # KPI manager

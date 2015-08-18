@@ -1579,7 +1579,7 @@ object.data_syndication_agreement.table.empty=Aucun agrément.
 #----------------------
 
 object.data_syndication_agreement_link.agreement.label=Agrément
-object.data_syndication_agreement_link.name.label=Nom du lien
+object.data_syndication_agreement_link.name.label=Nom de la relation
 object.data_syndication_agreement_link.description.label=Description
 object.data_syndication_agreement_link.data_type.label=Type de donnée
 object.data_syndication_agreement_link.object.label=Objet
@@ -1590,8 +1590,8 @@ object.data_syndication_agreement_link.status.ONGOING.label=En cours
 object.data_syndication_agreement_link.status.REJECTED.label=Rejeté
 object.data_syndication_agreement_link.status.CANCELLED.label=Annulé
 object.data_syndication_agreement_link.process.label=Traiter la requête
-object.data_syndication_agreement_link.cancel.confirm=Etes-vous sûr(e) de vouloir annuler ce lien d''agrément? Cette action est définitive.
-object.data_syndication_agreement_link.table.empty=Aucun lien d''agrément
+object.data_syndication_agreement_link.cancel.confirm=Etes-vous sûr(e) de vouloir annuler cette relation d''agrément? Cette action est définitive.
+object.data_syndication_agreement_link.table.empty=Aucune relation d''agrément
 
 ########################
 # Error pages
@@ -2425,6 +2425,10 @@ core.portfolio_entry_data_syndication.index.with_link.master.title=Fournit à
 core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" ne provisionne pas une autre instance BizDock.
 core.portfolio_entry_data_syndication.index.legend.label=Légende
 
+core.portfolio_entry_data_syndication.link.view.title=Détails
+
+core.portfolio_entry_data_syndication.link.cancel.success=La relation a été annulée.
+
 #----------------------
 # purchase order
 #----------------------
@@ -3024,7 +3028,7 @@ admin.data_syndication.consumer_agreements.header=Un agrément de consommation e
 admin.data_syndication.consumer_agreements.partner_contract=Contrats avec vos partenaires
 
 admin.data_syndication.view_agreement.details=Détails
-admin.data_syndication.view_agreement.links=Liens
+admin.data_syndication.view_agreement.links=Relations
 
 admin.data_syndication.search_partner.title=Rechercher un partenaire dans le catalogue BizDock
 admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
@@ -3044,20 +3048,18 @@ admin.data_syndication.suspend_agreement.success=L''agrément a été suspendu.
 admin.data_syndication.restart_agreement.success=L''agrément a été réactivé.
 admin.data_syndication.cancel_agreement.success=L''agrément a été annulé.
 
-admin.data_syndication.process_agreement_link.title=Approuver un lien d''agrément
-admin.data_syndication.process_agreement_link.already=Le lien d''agrément a déjà été traité.
+admin.data_syndication.process_agreement_link.title=Approuver une relation d''agrément
+admin.data_syndication.process_agreement_link.already=La relation d''agrément a déjà été traitée.
 admin.data_syndication.process_agreement_link.pe.accept.new.title=Approuver avec une nouvelle initative
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=Nouvelle initiative avec syndication
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=Une nouvelle initiative vous a été assignée et est syndiquée avec une initiative d''un partenaire.
-admin.data_syndication.process_agreement_link.pe.accept.new.success=Le lien d''agrément a été appouvé avec une nouvelle initiative.
+admin.data_syndication.process_agreement_link.pe.accept.new.success=La relation d''agrément a été appouvée avec une nouvelle initiative.
 admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approuver avec une initative existante
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=Une initiative a été syndiquée
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=Une de vos initiatives a été syndiquée avec une initiative d''un partenaire.
-admin.data_syndication.process_agreement_link.pe.accept.existing.success=Le lien d''agrément a été appouvé avec une initiative existante.
-admin.data_syndication.process_agreement_link.reject.title=Rejeter le lien
-admin.data_syndication.process_agreement_link.reject.success=Le lien d''agrément a été rejeté.
-
-admin.data_syndication.cancel_agreement_link.success=Le lien d''agrément a été annulé.
+admin.data_syndication.process_agreement_link.pe.accept.existing.success=La relation d''agrément a été appouvée avec une initiative existante.
+admin.data_syndication.process_agreement_link.reject.title=Rejeter la relation
+admin.data_syndication.process_agreement_link.reject.success=La relation d''agrément a été rejetée.
 
 #----------------------
 # KPI manager

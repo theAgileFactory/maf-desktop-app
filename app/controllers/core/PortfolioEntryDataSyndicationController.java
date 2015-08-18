@@ -23,6 +23,8 @@ import javax.inject.Inject;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import dao.pmo.PortfolioEntryDao;
+import framework.utils.Msg;
+import framework.utils.Utilities;
 import models.pmo.PortfolioEntry;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -110,8 +112,61 @@ public class PortfolioEntryDataSyndicationController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result viewAgreementLink(Long id, Long agreementLinkId) {
-        // TODO check right
-        return TODO;
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the agreement link
+        DataSyndicationAgreementLink agreementLink = null;
+        try {
+            agreementLink = dataSyndicationService.getAgreementLink(agreementLinkId);
+            if (agreementLink == null) {
+                return notFound(views.html.error.not_found.render(""));
+            }
+        } catch (Exception e) {
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+        }
+
+        return ok(views.html.core.portfolioentrydatasyndication.agreement_link_view.render(portfolioEntry, agreementLink));
+
+    }
+
+    /**
+     * Cancel an agreement link.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param agreementLinkId
+     *            the agreement link id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result cancelAgreementLink(Long id, Long agreementLinkId) {
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the agreement link
+        DataSyndicationAgreementLink agreementLink = null;
+        try {
+            agreementLink = dataSyndicationService.getAgreementLink(agreementLinkId);
+            if (agreementLink == null) {
+                return notFound(views.html.error.not_found.render(""));
+            }
+        } catch (Exception e) {
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+        }
+
+        // cancel the agreement
+        try {
+            dataSyndicationService.cancelAgreementLink(agreementLink);
+        } catch (Exception e) {
+            return ok(views.html.admin.datasyndication.communication_error.render());
+        }
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_data_syndication.link.cancel.success"));
+
+        return redirect(controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntry.id));
     }
 
     /**
