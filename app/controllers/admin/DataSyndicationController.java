@@ -18,11 +18,9 @@
 package controllers.admin;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -40,7 +38,6 @@ import framework.utils.Utilities;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.pmo.PortfolioEntry;
-import play.cache.CacheApi;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
@@ -74,9 +71,6 @@ public class DataSyndicationController extends Controller {
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
-
-    @Inject
-    private CacheApi cacheApi;
 
     /**
      * Display the list of master agreements.
@@ -205,7 +199,7 @@ public class DataSyndicationController extends Controller {
 
                 List<DataSyndicationPartnerListView> dataSyndicationPartnerRows = new ArrayList<DataSyndicationPartnerListView>();
                 for (DataSyndicationPartner partner : partners) {
-                    dataSyndicationPartnerRows.add(new DataSyndicationPartnerListView(partner, storePartnerLogo(partner.customerLogo)));
+                    dataSyndicationPartnerRows.add(new DataSyndicationPartnerListView(partner));
                 }
                 Table<DataSyndicationPartnerListView> dataSyndicationPartnerTable = DataSyndicationPartnerListView.templateTable
                         .fill(dataSyndicationPartnerRows);
@@ -217,38 +211,6 @@ public class DataSyndicationController extends Controller {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
-    }
-
-    private static final String PARTNER_LOGO_CACHE_PREFIX = "maf.cache.partner_logo.";
-    private static final int PARTNER_LOGO_CACHE_TTL = 60;
-
-    /**
-     * Decode (base64) and store in the cache the partner logo. Finally return
-     * the corresponding uuid.
-     * 
-     * @param imageBase64
-     *            the logo encode with base 64
-     */
-    private String storePartnerLogo(byte[] imageBase64) {
-        if (imageBase64 != null) {
-            UUID uuid = UUID.randomUUID();
-            byte[] image = Base64.getDecoder().decode(imageBase64);
-            cacheApi.set(PARTNER_LOGO_CACHE_PREFIX + uuid.toString(), image, PARTNER_LOGO_CACHE_TTL);
-            return uuid.toString();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Get the partner logo for a uuid.
-     * 
-     * @param uuid
-     *            the uuid
-     */
-    public Result partnerLogo(String uuid) {
-        byte[] bytes = (byte[]) cacheApi.get(PARTNER_LOGO_CACHE_PREFIX + uuid);
-        return ok(bytes);
     }
 
     /**

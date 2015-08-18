@@ -41,13 +41,12 @@ public class DataSyndicationPartnerListView {
             {
                 setIdFieldName("domain");
 
-                addColumn("logoUuid", "logoUuid", "object.data_syndication_partner.customer_logo.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("logoUuid", new IColumnFormatter<DataSyndicationPartnerListView>() {
+                addColumn("customerLogo", "customerLogo", "object.data_syndication_partner.customer_logo.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("customerLogo", new IColumnFormatter<DataSyndicationPartnerListView>() {
                     @Override
                     public String apply(DataSyndicationPartnerListView dataSyndicationPartnerListView, Object value) {
-                        if (dataSyndicationPartnerListView.logoUuid != null) {
-                            return "<img style=\"max-height: 60px;\" src='"
-                                    + controllers.admin.routes.DataSyndicationController.partnerLogo(dataSyndicationPartnerListView.logoUuid).url() + "' />";
+                        if (dataSyndicationPartnerListView.customerLogo != null) {
+                            return "<img style=\"max-height: 60px;\" src='" + dataSyndicationPartnerListView.customerLogo + "' />";
                         } else {
                             return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
                         }
@@ -92,7 +91,7 @@ public class DataSyndicationPartnerListView {
 
     public String domain;
 
-    public String logoUuid;
+    public String customerLogo;
     public String customerName;
     public String customerDescription;
     public String customerWebsite;
@@ -102,14 +101,12 @@ public class DataSyndicationPartnerListView {
      * 
      * @param dataSyndicationPartner
      *            the partner
-     * @param logoUuid
-     *            the uuid of the logo
      */
-    public DataSyndicationPartnerListView(DataSyndicationPartner dataSyndicationPartner, String logoUuid) {
+    public DataSyndicationPartnerListView(DataSyndicationPartner dataSyndicationPartner) {
 
         this.domain = dataSyndicationPartner.domain;
 
-        this.logoUuid = logoUuid;
+        this.customerLogo = dataSyndicationPartner.customerLogo;
         this.customerName = dataSyndicationPartner.customerName;
         this.customerDescription = dataSyndicationPartner.customerDescription;
         this.customerWebsite = dataSyndicationPartner.customerWebsite;

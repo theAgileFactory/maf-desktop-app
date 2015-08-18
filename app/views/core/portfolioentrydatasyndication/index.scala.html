@@ -41,20 +41,22 @@
     @if(slaveAgreementLinks.size == 0 && masterAgreementLinks.size == 0) {
     
         @if(masterAgreements.size == 0) {
-            <p>There is no master agreements registered for this BizDock instance. Please follow this 
-            <a href="@controllers.admin.routes.DataSyndicationController.searchPartner().url">link</a>
-            to submit a new agreement request (specific permissions are required).</p>
+            <blockquote>@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_no_master", controllers.admin.routes.DataSyndicationController.searchPartner().url)</blockquote>
         } else {
-            <p>This initiative is currently not shared with another BizDock instance. Simply select a partner to request a new relation.</p>
+            <blockquote>@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_with_master", portfolioEntry.getName)</blockquote>
             
             <div class="row">
             @for(masterAgreement <- masterAgreements) {
                 <div class="col-md-2 text-center">
                     <div class="panel panel-warning">
                         <div class="panel-heading">
-                            <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
-                            <h4>Partner 1</h4>
-                            <a class="btn btn-warning" href="#TODO"><span class="glyphicons glyphicons-share-alt"></span> Share</a>
+                            @if(masterAgreement.slavePartner.customerLogo != null) {
+                                <div><img src="@masterAgreement.slavePartner.customerLogo" style="max-width:140px;"></div>
+                            }
+                            <h4>@masterAgreement.slavePartner.customerName</h4>
+                            <a class="btn btn-warning" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id, masterAgreement.id).url">
+                                <span class="glyphicons glyphicons-share-alt"></span> @parts.Msg("button.share")
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -69,33 +71,32 @@
             <div class="col-md-4" style="display: inline-block; vertical-align: middle; float: none;">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Consume from
+                        @parts.Msg("core.portfolio_entry_data_syndication.index.with_link.slave.title")
                     </div>
                     <div class="panel-body ">
+                    
+                        @if(slaveAgreementLinks.size == 0) {
+                            @parts.Msg("core.portfolio_entry_data_syndication.index.with_link.slave.no_data", portfolioEntry.getName)
+                        }
                         
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8 text-center">
-                            <div class="panel panel-warning">
-                                <div class="panel-heading">
-                                    <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
-                                    <h4>Partner 1</h4>
-                                    <small>Link name</small>
+                        @for(slaveLink <- slaveAgreementLinks) {
+                            <a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, slaveLink.id).url">
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8 text-center">
+                                        <div class="panel panel-@slaveLink.status.getBootstrapClass">
+                                            <div class="panel-heading">
+                                                @if(slaveLink.agreement.masterPartner.customerLogo != null) {
+                                                    <div><img src="@slaveLink.agreement.masterPartner.customerLogo" style="max-width:140px;"></div>
+                                                }
+                                                <h4>@slaveLink.agreement.masterPartner.customerName</h4>
+                                                <small>@slaveLink.name</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2"></div>
-                        
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8 text-center">
-                            <div class="panel panel-warning">
-                                <div class="panel-heading">
-                                    <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
-                                    <h4>Partner 2</h4>
-                                    <small>Link name</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2"></div>
+                            </a>
+                        }
                         
                     </div>
                 </div>
@@ -120,30 +121,45 @@
             --><div class="col-md-4" style="display: inline-block; vertical-align: middle; float: none;">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Provide to
-                        <div class="pull-right">
-                            <a href="#TODO"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
-                        </div>
+                        @parts.Msg("core.portfolio_entry_data_syndication.index.with_link.master.title")
+                        @if(masterAgreements.size > 0) {
+                            <div class="pull-right">
+                                <a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                            </div>
+                        }
                     </div>
                     <div class="panel-body ">
                     
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8 text-center">
-                            <div class="panel panel-warning">
-                                <div class="panel-heading">
-                                    <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
-                                    <h4>Partner</h4>
-                                    <small>Link name</small>
+                        @if(masterAgreementLinks.size == 0) {
+                            @parts.Msg("core.portfolio_entry_data_syndication.index.with_link.master.no_data", portfolioEntry.getName)
+                        }
+                    
+                        @for(masterLink <- masterAgreementLinks) {
+                            <a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, masterLink.id).url">
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8 text-center">
+                                        <div class="panel panel-@masterLink.status.getBootstrapClass">
+                                            <div class="panel-heading">
+                                                @if(masterLink.agreement.slavePartner.customerLogo != null) {
+                                                    <div><img src="@masterLink.agreement.slavePartner.customerLogo" style="max-width:140px;"></div>
+                                                }
+                                                <h4>@masterLink.agreement.slavePartner.customerName</h4>
+                                                <small>@masterLink.name</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2"></div>
+                            </a>
+                        }
                         
                     </div>
                 </div>
             </div>
         
         </div>
+        
+        @parts.Msg("core.portfolio_entry_data_syndication.index.legend.label"): @for(status <- services.datasyndication.models.DataSyndicationAgreementLink.Status.values) { @Html(status.render) }
     
     }
 

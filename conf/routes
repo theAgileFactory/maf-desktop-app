@@ -357,7 +357,10 @@ GET    /portfolio-entry/event/delete              controllers.core.PortfolioEntr
 # Core: PortfolioEntryDataSyndication
 #-------------------
 
-GET    /portfolio-entry/data-syndication          controllers.core.PortfolioEntryDataSyndicationController.index(id: Long)
+GET    /portfolio-entry/data-syndication                    controllers.core.PortfolioEntryDataSyndicationController.index(id: Long)
+GET    /portfolio-entry/data-syndication/link/view          controllers.core.PortfolioEntryDataSyndicationController.viewAgreementLink(id: Long, agreementLinkId: Long)
+GET    /portfolio-entry/data-syndication/link/submit        controllers.core.PortfolioEntryDataSyndicationController.submitAgreementLink(id: Long, agreementId: Long ?= 0)
+POST   /portfolio-entry/data-syndication/link/submit        controllers.core.PortfolioEntryDataSyndicationController.processSubmitAgreementLink()
 
 #-------------------
 # Core: Timesheet
@@ -681,7 +684,6 @@ GET     /admin/data-syndication/master-agreements          controllers.admin.Dat
 GET     /admin/data-syndication/consumer-agreements        controllers.admin.DataSyndicationController.viewConsumerAgreements()
 GET     /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.searchPartner()
 POST    /admin/data-syndication/partner/search             controllers.admin.DataSyndicationController.processSearchPartner()
-GET     /admin/data-syndication/partner/logo               controllers.admin.DataSyndicationController.partnerLogo(uuid: String)
 GET     /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.submitAgreement(domain: String)
 POST    /admin/data-syndication/agreement/submit           controllers.admin.DataSyndicationController.processSubmitAgreement()
 GET     /admin/data-syndication/agreement/view             controllers.admin.DataSyndicationController.viewAgreement(agreementId: Long, viewAllLinks: Boolean ?= false)

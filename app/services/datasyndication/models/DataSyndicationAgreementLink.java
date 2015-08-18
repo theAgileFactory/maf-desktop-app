@@ -45,6 +45,13 @@ public class DataSyndicationAgreementLink {
         }
 
         /**
+         * Get the bootstrap class.
+         */
+        public String getBootstrapClass() {
+            return this.bootstrapClass;
+        }
+
+        /**
          * Render the status.
          */
         public String render() {

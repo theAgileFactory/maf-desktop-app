@@ -140,6 +140,7 @@ button.reset_to_default=Reset to default
 button.save=Save
 button.search=Search
 button.send=Send
+button.share=Share
 button.signin=Sign in
 button.start=Start
 button.stop=Stop
@@ -2390,6 +2391,19 @@ core.portfolio_entry_status_reporting.event.edit.successful=The event has been u
 
 #delete event
 core.portfolio_entry_status_reporting.event.delete.successful=The event has been removed.
+
+#----------------------
+# portfolio entry: data syndication
+#----------------------
+
+core.portfolio_entry_data_syndication.index.no_link_no_master=There is no master agreements registered for this BizDock instance. \
+Please follow this <a href="{0}">link</a>to create a new agreement (specific permissions are required).
+core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" is currently not shared with another BizDock instance. Simply select a partner to request a new relation.
+core.portfolio_entry_data_syndication.index.with_link.slave.title=Consume from
+core.portfolio_entry_data_syndication.index.with_link.slave.no_data="{0}" is not provisioned by another BizDock instance.
+core.portfolio_entry_data_syndication.index.with_link.master.title=Provide to
+core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" does not provide data to another BizDock instance.
+core.portfolio_entry_data_syndication.index.legend.label=Legend
 
 #----------------------
 # purchase order
