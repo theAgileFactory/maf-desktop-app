@@ -333,6 +333,8 @@ public interface IEchannelService {
      * -The instance is the master of the corresponding agreement<br/>
      * -The given masterObjectId corresponds to the master object id of the link
      * 
+     * The corresponding agreements should be ONGOING.
+     * 
      * @param dataType
      *            the data type
      * @param masterObjectId
@@ -346,6 +348,8 @@ public interface IEchannelService {
      * This means:<br/>
      * -The instance is the slave of the corresponding agreement<br/>
      * -The given slaveObjectId corresponds to the slave object id of the link
+     * 
+     * The corresponding agreements should be ONGOING.
      * 
      * @param dataType
      *            the data type

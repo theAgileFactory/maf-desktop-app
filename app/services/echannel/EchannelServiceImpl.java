@@ -306,6 +306,8 @@ public class EchannelServiceImpl implements IEchannelService {
             String permissions) {
 
         // TODO check the slave could be a slave
+        // create a notificationEvent for the slave instance (containing the
+        // link to decide it)
 
         SubmitDataSyndicationAgreementRequest submitAgreementRequest = new SubmitDataSyndicationAgreementRequest();
         submitAgreementRequest.refId = refId;
@@ -328,6 +330,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // Impossible to accept a non-pending agreement
         // The current instance should be the slave of the agreement
+        // create a notificationEvent for the master instance
 
         AcceptDataSyndicationAgreementRequest acceptAgreementRequest = new AcceptDataSyndicationAgreementRequest();
         acceptAgreementRequest.apiName = apiKey.name;
@@ -347,6 +350,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // Impossible to reject a non-pending agreement
         // The current instance should be the slave of the agreement
+        // create a notificationEvent for the master instance
 
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
@@ -363,6 +367,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // The current instance should be the master or the slave of the
         // agreement
+        // create a notificationEvent for the master and the slave instances
 
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
@@ -379,6 +384,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // Impossible to suspend a non-ongoing agreement
         // The current instance should be the master of the agreement
+        // create a notificationEvent for the slave instance
 
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
@@ -395,6 +401,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // Impossible to restart a non-suspended agreement
         // The current instance should be the master of the agreement
+        // create a notificationEvent for the slave instance
 
         PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
         patchAgreementRequest.permissions = permissions;
@@ -421,6 +428,7 @@ public class EchannelServiceImpl implements IEchannelService {
 
         // TODO The current instance should be the master or the slave of the
         // agreement
+        // create a notificationEvent for the master and the slave instances
 
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/delete", null, null);
     }
@@ -476,6 +484,8 @@ public class EchannelServiceImpl implements IEchannelService {
 
         // TODO to check in echannel
         // The current instance should be the master of the agreement
+        // create a notificationEvent for the slave instance (containing the
+        // link to decide it)
 
         SubmitDataSyndicationAgreementLinkRequest submitAgreementLinkRequest = new SubmitDataSyndicationAgreementLinkRequest();
         submitAgreementLinkRequest.agreementId = agreementId;
@@ -498,6 +508,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // Impossible to accept a non-pending agreement link
         // The current instance should be the slave of the agreement
+        // create a notificationEvent for the master instance
 
         AcceptDataSyndicationAgreementLinkRequest acceptAgreementLinkRequest = new AcceptDataSyndicationAgreementLinkRequest();
         acceptAgreementLinkRequest.slaveObjectId = slaveObjectId;
@@ -515,6 +526,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // Impossible to accept a non-pending agreement link
         // The current instance should be the slave of the agreement
+        // create a notificationEvent for the master instance
 
         PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
         patchAgreementLinkRequest.permissions = permissions;
@@ -531,6 +543,7 @@ public class EchannelServiceImpl implements IEchannelService {
         // TODO to check in echannel
         // The current instance should be the master or the slave of the
         // agreement
+        // create a notificationEvent for the master and the slave instances
 
         PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
         patchAgreementLinkRequest.permissions = permissions;
