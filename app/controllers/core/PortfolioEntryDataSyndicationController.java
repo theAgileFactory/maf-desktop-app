@@ -23,9 +23,13 @@ import javax.inject.Inject;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import dao.pmo.PortfolioEntryDao;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Utilities;
 import models.pmo.PortfolioEntry;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
@@ -35,6 +39,7 @@ import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
+import utils.form.DataSyndicationAgreementLinkSubmitFormData;
 
 /**
  * The controller which allows to manage the data syndication for a portfolio
@@ -43,6 +48,9 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
  * @author Johann Kohler
  */
 public class PortfolioEntryDataSyndicationController extends Controller {
+
+    private static Form<DataSyndicationAgreementLinkSubmitFormData> agreementLinkSubmitFormTemplate = Form
+            .form(DataSyndicationAgreementLinkSubmitFormData.class);
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
@@ -127,7 +135,10 @@ public class PortfolioEntryDataSyndicationController extends Controller {
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
-        return ok(views.html.core.portfolioentrydatasyndication.agreement_link_view.render(portfolioEntry, agreementLink));
+        // define if the instance is the master or slave of the agreement link
+        Boolean isMasterAgreementLink = agreementLink.agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain());
+
+        return ok(views.html.core.portfolioentrydatasyndication.agreement_link_view.render(portfolioEntry, isMasterAgreementLink, agreementLink));
 
     }
 
@@ -161,7 +172,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         try {
             dataSyndicationService.cancelAgreementLink(agreementLink);
         } catch (Exception e) {
-            return ok(views.html.admin.datasyndication.communication_error.render());
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_data_syndication.link.cancel.success"));
@@ -175,13 +186,44 @@ public class PortfolioEntryDataSyndicationController extends Controller {
      * @param id
      *            the portfolio entry id
      * @param agreementId
-     *            the agreement id (to initialize the form), 0 if not specified
+     *            the agreement id
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result submitAgreementLink(Long id, Long agreementId) {
-        // TODO check right
-        return TODO;
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the agreement link
+        DataSyndicationAgreement agreement = null;
+        try {
+            agreement = dataSyndicationService.getAgreement(agreementId);
+            if (agreement == null) {
+                return notFound(views.html.error.not_found.render(""));
+            }
+        } catch (Exception e) {
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+        }
+
+        if (!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)
+                || !agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        // get possible items
+        ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
+        for (DataSyndicationAgreementItem item : agreement.items) {
+            if (item.dataType.equals(PortfolioEntry.class.getName())) {
+                itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getLabel()));
+            }
+        }
+
+        // initialize the form
+        Form<DataSyndicationAgreementLinkSubmitFormData> form = agreementLinkSubmitFormTemplate
+                .fill(new DataSyndicationAgreementLinkSubmitFormData(agreementId, portfolioEntry.getName(), portfolioEntry.getDescription()));
+
+        return ok(views.html.core.portfolioentrydatasyndication.agreement_link_submit.render(portfolioEntry, agreement, itemsAsVH, form));
     }
 
     /**

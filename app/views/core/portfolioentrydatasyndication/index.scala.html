@@ -48,13 +48,14 @@
             <div class="row">
             @for(masterAgreement <- masterAgreements) {
                 <div class="col-md-2 text-center">
-                    <div class="panel panel-warning">
+                    <div class="panel panel-success">
                         <div class="panel-heading">
                             @if(masterAgreement.slavePartner.customerLogo != null) {
                                 <div><img src="@masterAgreement.slavePartner.customerLogo" style="max-width:140px;"></div>
                             }
                             <h4>@masterAgreement.slavePartner.customerName</h4>
-                            <a class="btn btn-warning" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id, masterAgreement.id).url">
+                            <small>@masterAgreement.name</small>
+                            <a class="btn btn-success" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id, masterAgreement.id).url">
                                 <span class="glyphicons glyphicons-share-alt"></span> @parts.Msg("button.share")
                             </a>
                         </div>
@@ -124,7 +125,18 @@
                         @parts.Msg("core.portfolio_entry_data_syndication.index.with_link.master.title")
                         @if(masterAgreements.size > 0) {
                             <div class="pull-right">
-                                <a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                                <div class="btn-group">
+                                    <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="glyphicons glyphicons-plus glyphicons-panel"></i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right text-left">
+                                        @for(masterAgreement <- masterAgreements) {
+                                            <li><a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id, masterAgreement.id).url">
+                                                @masterAgreement.slavePartner.customerName <small>@masterAgreement.name</small>
+                                            </a></li>
+                                        }
+                                    </ul>
+                                </div>
                             </div>
                         }
                     </div>

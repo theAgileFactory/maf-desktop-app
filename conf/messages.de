@@ -2422,6 +2422,9 @@ core.portfolio_entry_data_syndication.link.view.title=Details
 
 core.portfolio_entry_data_syndication.link.cancel.success=de: The relation has been successfully cancelled.
 
+core.portfolio_entry_data_syndication.link.submit.title=de: Submit a relation request
+core.portfolio_entry_data_syndication.link.submit.agreement.title=de: Details of the agreement
+
 #----------------------
 # purchase order
 #----------------------

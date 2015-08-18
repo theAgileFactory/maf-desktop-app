@@ -17,6 +17,7 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
+    isMasterAgreementLink: Boolean,
     agreementLink: services.datasyndication.models.DataSyndicationAgreementLink
 )
 
@@ -25,6 +26,14 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import framework_views.parts
 @import views.html.modelsparts._
+
+@partner=@{
+    if(isMasterAgreementLink) {
+        agreementLink.agreement.slavePartner
+    } else {
+        agreementLink.agreement.masterPartner
+    }
+}
 
 @breadcrump=@{
     Seq(
@@ -36,7 +45,7 @@
 
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.INTEGRATION, breadcrump){
 
-        <div class="panel panel-default">
+    <div class="panel panel-default">
         
         <div class="panel-heading">
             @parts.Msg("core.portfolio_entry_data_syndication.link.view.title")
@@ -57,6 +66,10 @@
                      <col class="col-md-9">
                 </colgroup>
                 <tbody>
+                    <tr>
+                        <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
+                        <td>@partner.customerName</td>
+                    </tr>
                     <tr>
                         <th>@parts.Msg("object.data_syndication_agreement_link.agreement.label")</th>
                         <td>

@@ -360,7 +360,7 @@ GET    /portfolio-entry/event/delete              controllers.core.PortfolioEntr
 GET    /portfolio-entry/data-syndication                    controllers.core.PortfolioEntryDataSyndicationController.index(id: Long)
 GET    /portfolio-entry/data-syndication/link/view          controllers.core.PortfolioEntryDataSyndicationController.viewAgreementLink(id: Long, agreementLinkId: Long)
 GET    /portfolio-entry/data-syndication/link/cancel        controllers.core.PortfolioEntryDataSyndicationController.cancelAgreementLink(id: Long, agreementLinkId: Long)
-GET    /portfolio-entry/data-syndication/link/submit        controllers.core.PortfolioEntryDataSyndicationController.submitAgreementLink(id: Long, agreementId: Long ?= 0)
+GET    /portfolio-entry/data-syndication/link/submit        controllers.core.PortfolioEntryDataSyndicationController.submitAgreementLink(id: Long, agreementId: Long)
 POST   /portfolio-entry/data-syndication/link/submit        controllers.core.PortfolioEntryDataSyndicationController.processSubmitAgreementLink()
 
 #-------------------

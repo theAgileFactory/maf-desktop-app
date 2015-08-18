@@ -38,9 +38,9 @@
 
 @partner=@{
     if(isMasterAgreement) {
-        agreement.masterPartner
-    } else {
         agreement.slavePartner
+    } else {
+        agreement.masterPartner
     }
 }
 
@@ -74,14 +74,6 @@
                         </colgroup>
                         <tbody>
                             <tr>
-                                <th>@parts.Msg("object.data_syndication_agreement.name.label")</th>
-                                <td>@display_object(agreement.name)</td>
-                            </tr>
-                            <tr>
-                                <th>@parts.Msg("object.data_syndication_agreement.ref_id.label")</th>
-                                <td>@display_object(agreement.refId)</td>
-                            </tr>
-                            <tr>
                                 <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
                                 <td>@display_object(partner.customerName)</td>
                             </tr>
@@ -92,6 +84,14 @@
                             <tr>
                                 <th>@parts.Msg("object.data_syndication_agreement.contact_email.label")</th>
                                 <td>@display_object(partner.contactEmail)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.name.label")</th>
+                                <td>@display_object(agreement.name)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.ref_id.label")</th>
+                                <td>@display_object(agreement.refId)</td>
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.data_syndication_agreement.start_date.label")</th>
