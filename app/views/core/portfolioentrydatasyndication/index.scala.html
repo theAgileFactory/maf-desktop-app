@@ -37,4 +37,114 @@
 
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.INTEGRATION, breadcrump){
 
+
+    @if(slaveAgreementLinks.size == 0 && masterAgreementLinks.size == 0) {
+    
+        @if(masterAgreements.size == 0) {
+            <p>There is no master agreements registered for this BizDock instance. Please follow this 
+            <a href="@controllers.admin.routes.DataSyndicationController.searchPartner().url">link</a>
+            to submit a new agreement request (specific permissions are required).</p>
+        } else {
+            <p>This initiative is currently not shared with another BizDock instance. Simply select a partner to request a new relation.</p>
+            
+            <div class="row">
+            @for(masterAgreement <- masterAgreements) {
+                <div class="col-md-2 text-center">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
+                            <h4>Partner 1</h4>
+                            <a class="btn btn-warning" href="#TODO"><span class="glyphicons glyphicons-share-alt"></span> Share</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+        }
+    
+    } else {
+    
+        <div class="row">
+        
+            <div class="col-md-4" style="display: inline-block; vertical-align: middle; float: none;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Consume from
+                    </div>
+                    <div class="panel-body ">
+                        
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8 text-center">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
+                                    <h4>Partner 1</h4>
+                                    <small>Link name</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                        
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8 text-center">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
+                                    <h4>Partner 2</h4>
+                                    <small>Link name</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                        
+                    </div>
+                </div>
+            </div><!--
+    
+            --><div class="col-md-1 text-center" style="display: inline-block; vertical-align: middle; float: none;">
+                <span style="margin-top:-15px;font-size:30px;" class="glyphicons glyphicons-right-arrow"></span>
+            </div><!--
+    
+            --><div class="col-md-2 text-center" style="display: inline-block; vertical-align: middle; float: none;">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>@portfolioEntry.getName</h4>
+                    </div>
+                </div> 
+            </div><!--
+            
+            --><div class="col-md-1 text-center" style="display: inline-block; vertical-align: middle; float: none;">
+                <span style="margin-top:-15px;font-size:30px;" class="glyphicons glyphicons-right-arrow"></span>
+            </div><!--
+            
+            --><div class="col-md-4" style="display: inline-block; vertical-align: middle; float: none;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Provide to
+                        <div class="pull-right">
+                            <a href="#TODO"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                        </div>
+                    </div>
+                    <div class="panel-body ">
+                    
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8 text-center">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <div><img src="https://www.bizdock.io/wp-content/uploads/2015/06/redmine.png" style="max-width:140px;"></div>
+                                    <h4>Partner</h4>
+                                    <small>Link name</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                        
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    
+    }
+
 }

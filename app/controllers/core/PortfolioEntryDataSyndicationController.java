@@ -60,7 +60,9 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         // get the agreement links as slave (consumer)
         List<DataSyndicationAgreementLink> slaveAgreementLinks = null;
         try {
-            slaveAgreementLinks = dataSyndicationService.getAgreementLinksOfSlaveObject(PortfolioEntry.class.getName(), id);
+            // slaveAgreementLinks =
+            // dataSyndicationService.getAgreementLinksOfSlaveObject(PortfolioEntry.class.getName(),
+            // id);
         } catch (Exception e) {
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
@@ -68,15 +70,19 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         // get the agreement links as master
         List<DataSyndicationAgreementLink> masterAgreementLinks = null;
         try {
-            masterAgreementLinks = dataSyndicationService.getAgreementLinksOfMasterObject(PortfolioEntry.class.getName(), id);
+            // masterAgreementLinks =
+            // dataSyndicationService.getAgreementLinksOfMasterObject(PortfolioEntry.class.getName(),
+            // id);
         } catch (Exception e) {
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
+        // TODO only master agreements with one PE datatype item
+
         // get the master agreements
         List<DataSyndicationAgreement> masterAgreements = null;
         try {
-            masterAgreements = dataSyndicationService.getMasterAgreements();
+            // masterAgreements = dataSyndicationService.getMasterAgreements();
         } catch (Exception e) {
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }

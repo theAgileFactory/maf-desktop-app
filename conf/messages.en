@@ -1556,7 +1556,7 @@ object.data_syndication_agreement.status.FINISHED.label=Finished
 object.data_syndication_agreement.status.SUSPENDED.label=Suspended
 object.data_syndication_agreement.status.CANCELLED.label=Cancelled
 object.data_syndication_agreement.items.label=Authorized items
-object.data_syndication_agreement.process.label=Process the decision
+object.data_syndication_agreement.process.label=Process the request
 object.data_syndication_agreement.suspend.confirm=Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
 object.data_syndication_agreement.cancel.confirm=Are you sure you want to cancel this agreement? This action is definitive and couldn''t be reverted.
 object.data_syndication_agreement.table.empty=There is no agreement
@@ -1576,7 +1576,7 @@ object.data_syndication_agreement_link.status.PENDING.label=Pending
 object.data_syndication_agreement_link.status.ONGOING.label=Ongoing
 object.data_syndication_agreement_link.status.REJECTED.label=Rejected
 object.data_syndication_agreement_link.status.CANCELLED.label=Cancelled
-object.data_syndication_agreement_link.process.label=Process the decision
+object.data_syndication_agreement_link.process.label=Process the request
 object.data_syndication_agreement_link.cancel.confirm=Are you sure you want to cancel this agreement link? This action is definitive and couldn''t be reverted.
 object.data_syndication_agreement_link.table.empty=There is no agreement link
 
@@ -3000,15 +3000,15 @@ admin.data_syndication.search_partner.title=Search for a partner into the BizDoc
 admin.data_syndication.search_partner.error=Please enter a partner name
 admin.data_syndication.search_partner.keywords.placeholder=Partner name
 admin.data_syndication.search_partner_result.title=Search results
-admin.data_syndication.search_partner_result.header=Please click on the wished partner in order to submit a proposal agreement.
+admin.data_syndication.search_partner_result.header=Please click on the wished partner in order to submit an agreement request.
 
-admin.data_syndication.submit_agreement.title=Submit a master agreement
-admin.data_syndication.submit_agreement.success=The agreement has been submitted. It should be now processed by the partner.
+admin.data_syndication.submit_agreement.title=Submit a master agreement request
+admin.data_syndication.submit_agreement.success=The agreement request has been submitted. It should be now processed by the partner.
 
 admin.data_syndication.process_agreement.title=Process a consumer agreement request
 admin.data_syndication.process_agreement.already=The agreement request has been already processed.
-admin.data_syndication.process_agreement.accept.success=The consumer agreement has been successfully approved.
-admin.data_syndication.process_agreement.reject.success=The consumer agreement has been successfully rejected.
+admin.data_syndication.process_agreement.accept.success=The consumer agreement request has been successfully approved.
+admin.data_syndication.process_agreement.reject.success=The consumer agreement request has been successfully rejected.
 
 admin.data_syndication.suspend_agreement.success=The agreement has been successfully suspended.
 admin.data_syndication.restart_agreement.success=The agreement has been successfully restarted.

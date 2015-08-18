@@ -1568,7 +1568,7 @@ object.data_syndication_agreement.status.FINISHED.label=Terminé
 object.data_syndication_agreement.status.SUSPENDED.label=Suspendu
 object.data_syndication_agreement.status.CANCELLED.label=Annulé
 object.data_syndication_agreement.items.label=Eléments autorisés
-object.data_syndication_agreement.process.label=Traiter la décision
+object.data_syndication_agreement.process.label=Traiter la requête
 object.data_syndication_agreement.suspend.confirm=Etes-vous sûr(e) de vouloir suspendre cet agrément? Toutes les synchronisations correspondantes seront également suspendues.
 object.data_syndication_agreement.cancel.confirm=Etes-vous sûr(e) de vouloir annuler cet agrément? Cette action est définitive.
 object.data_syndication_agreement.table.empty=Aucun agrément.
@@ -1588,7 +1588,7 @@ object.data_syndication_agreement_link.status.PENDING.label=En attente
 object.data_syndication_agreement_link.status.ONGOING.label=En cours
 object.data_syndication_agreement_link.status.REJECTED.label=Rejeté
 object.data_syndication_agreement_link.status.CANCELLED.label=Annulé
-object.data_syndication_agreement_link.process.label=Traiter la décision
+object.data_syndication_agreement_link.process.label=Traiter la requête
 object.data_syndication_agreement_link.cancel.confirm=Etes-vous sûr(e) de vouloir annuler ce lien d''agrément? Cette action est définitive.
 object.data_syndication_agreement_link.table.empty=Aucun lien d''agrément
 
@@ -3016,21 +3016,21 @@ admin.data_syndication.search_partner.title=Rechercher un partenaire dans le cat
 admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
 admin.data_syndication.search_partner.keywords.placeholder=Nom du partenaire
 admin.data_syndication.search_partner_result.title=Résultats de la recherche
-admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de soumettre une demande d''agrément.
+admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de lui soumettre une demande d''agrément.
 
-admin.data_syndication.submit_agreement.title=Soumettre un agrément de provisionnement
-admin.data_syndication.submit_agreement.success=L''agrément a été soumis. Il doit maintenant être validé par le partenaire.
+admin.data_syndication.submit_agreement.title=Soumettre une requête d''agrément de provisionnement
+admin.data_syndication.submit_agreement.success=La requête d''agrément a été soumise. Elle doit maintenant être validée par le partenaire.
 
 admin.data_syndication.process_agreement.title=Approuver une requête d''agrément de consommation
 admin.data_syndication.process_agreement.already=La requête d''agrément a déjà été traitée.
-admin.data_syndication.process_agreement.accept.success=L''agrément de consommation a été appouvé.
-admin.data_syndication.process_agreement.reject.success=L''agrément de consommation a été rejeté.
+admin.data_syndication.process_agreement.accept.success=La requête d''agrément de consommation a été appouvée.
+admin.data_syndication.process_agreement.reject.success=La requête d''agrément de consommation a été rejetée.
 
 admin.data_syndication.suspend_agreement.success=L''agrément a été suspendu.
 admin.data_syndication.restart_agreement.success=L''agrément a été réactivé.
 admin.data_syndication.cancel_agreement.success=L''agrément a été annulé.
 
-admin.data_syndication.process_agreement_link.title=Approuver une requête de lien d''agrément
+admin.data_syndication.process_agreement_link.title=Approuver un lien d''agrément
 admin.data_syndication.process_agreement_link.already=Le lien d''agrément a déjà été traité.
 admin.data_syndication.process_agreement_link.pe.accept.new.title=Approuver avec une nouvelle initative
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=Nouvelle initiative avec syndication
