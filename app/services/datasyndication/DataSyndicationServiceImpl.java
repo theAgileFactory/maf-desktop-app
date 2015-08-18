@@ -213,9 +213,10 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType,
+    public void submitAgreementLink(DataSyndicationAgreement agreement, String name, String description, List<Long> agreementItemIds, String dataType,
             Long masterObjectId) throws DataSyndicationException {
-        echannelService.submitAgreementLink(agreement.id, agreementItems, dataType, masterObjectId, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+        echannelService.submitAgreementLink(agreement.id, name, description, agreementItemIds, dataType, masterObjectId,
+                IMafConstants.PARTNER_SYNDICATION_PERMISSION);
     }
 
     @Override

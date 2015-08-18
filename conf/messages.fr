@@ -2431,6 +2431,7 @@ core.portfolio_entry_data_syndication.link.cancel.success=La relation a été an
 
 core.portfolio_entry_data_syndication.link.submit.title=Soumettre une requête de relation
 core.portfolio_entry_data_syndication.link.submit.agreement.title=Détails de l''agrément
+core.portfolio_entry_data_syndication.link.submit.success=La requête de relation a été soumise. Le partenaire doit maintenant la valider.
 
 #----------------------
 # purchase order
@@ -3040,7 +3041,7 @@ admin.data_syndication.search_partner_result.title=Résultats de la recherche
 admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de lui soumettre une demande d''agrément.
 
 admin.data_syndication.submit_agreement.title=Soumettre une requête d''agrément de provisionnement
-admin.data_syndication.submit_agreement.success=La requête d''agrément a été soumise. Elle doit maintenant être validée par le partenaire.
+admin.data_syndication.submit_agreement.success=La requête d''agrément a été soumise. Le partenaire doit maintenant la valider.
 
 admin.data_syndication.process_agreement.title=Approuver une requête d''agrément de consommation
 admin.data_syndication.process_agreement.already=La requête d''agrément a déjà été traitée.

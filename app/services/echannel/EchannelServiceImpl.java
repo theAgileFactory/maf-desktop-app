@@ -471,7 +471,7 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void submitAgreementLink(Long agreementId, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId,
+    public void submitAgreementLink(Long agreementId, String name, String description, List<Long> agreementItemIds, String dataType, Long masterObjectId,
             String permissions) {
 
         // TODO to check in echannel
@@ -479,10 +479,9 @@ public class EchannelServiceImpl implements IEchannelService {
 
         SubmitDataSyndicationAgreementLinkRequest submitAgreementLinkRequest = new SubmitDataSyndicationAgreementLinkRequest();
         submitAgreementLinkRequest.agreementId = agreementId;
-        submitAgreementLinkRequest.agreementItemIds = new ArrayList<>();
-        for (DataSyndicationAgreementItem agreementItem : agreementItems) {
-            submitAgreementLinkRequest.agreementItemIds.add(agreementItem.id);
-        }
+        submitAgreementLinkRequest.name = name;
+        submitAgreementLinkRequest.description = description;
+        submitAgreementLinkRequest.agreementItemIds = agreementItemIds;
         submitAgreementLinkRequest.dataType = dataType;
         submitAgreementLinkRequest.masterObjectId = masterObjectId;
         submitAgreementLinkRequest.permissions = permissions;

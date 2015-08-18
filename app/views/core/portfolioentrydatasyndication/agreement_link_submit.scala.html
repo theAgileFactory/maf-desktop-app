@@ -100,8 +100,6 @@
                         
                         <input type="hidden" name="agreementId" value="@agreement.id"/>
                         
-                        <input type="hidden" name="dataType" value="@classOf[models.pmo.PortfolioEntry].getName()"/>
-                        
                         @helper.inputText(submitAgreementLinkForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement_link.name.label"))
                         
                         @helper.textarea(submitAgreementLinkForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement_link.description.label"))

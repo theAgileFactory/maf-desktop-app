@@ -252,8 +252,12 @@ public interface IEchannelService {
      * 
      * @param agreementId
      *            the corresponding agreement id
-     * @param agreementItems
-     *            the authorized items
+     * @param name
+     *            the name
+     * @param description
+     *            the description
+     * @param agreementItemIds
+     *            the ids of the authorized items
      * @param dataType
      *            the data type
      * @param masterObjectId
@@ -261,7 +265,8 @@ public interface IEchannelService {
      * @param permissions
      *            the permissions used to notify the slave instance
      */
-    void submitAgreementLink(Long agreementId, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId, String permissions);
+    void submitAgreementLink(Long agreementId, String name, String description, List<Long> agreementItemIds, String dataType, Long masterObjectId,
+            String permissions);
 
     /**
      * Accept a pending agreement link.

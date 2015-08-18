@@ -28,6 +28,8 @@ import java.util.List;
 public class SubmitDataSyndicationAgreementLinkRequest {
 
     public Long agreementId;
+    public String name;
+    public String description;
     public List<Long> agreementItemIds;
     public String dataType;
     public Long masterObjectId;

@@ -167,15 +167,19 @@ public interface IDataSyndicationService {
      * 
      * @param agreement
      *            the corresponding agreement
-     * @param agreementItems
-     *            the authorized items
+     * @param name
+     *            the name
+     * @param description
+     *            the description
+     * @param agreementItemIds
+     *            the ids of the authorized items
      * @param dataType
      *            the data type
      * @param masterObjectId
      *            the id of the master object
      */
-    void submitAgreementLink(DataSyndicationAgreement agreement, List<DataSyndicationAgreementItem> agreementItems, String dataType, Long masterObjectId)
-            throws DataSyndicationException;
+    void submitAgreementLink(DataSyndicationAgreement agreement, String name, String description, List<Long> agreementItemIds, String dataType,
+            Long masterObjectId) throws DataSyndicationException;
 
     /**
      * Accept a pending agreement link.

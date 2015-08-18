@@ -36,9 +36,6 @@ public class DataSyndicationAgreementLinkSubmitFormData {
     public Long id;
 
     @Required
-    public String dataType;
-
-    @Required
     public Long agreementId;
 
     @Required

@@ -2424,6 +2424,7 @@ core.portfolio_entry_data_syndication.link.cancel.success=de: The relation has b
 
 core.portfolio_entry_data_syndication.link.submit.title=de: Submit a relation request
 core.portfolio_entry_data_syndication.link.submit.agreement.title=de: Details of the agreement
+core.portfolio_entry_data_syndication.link.submit.success=de: The relation request has been submitted. The partner should now validate it.
 
 #----------------------
 # purchase order
@@ -3035,7 +3036,7 @@ admin.data_syndication.search_partner_result.title=de: Search results
 admin.data_syndication.search_partner_result.header=de: Please click on the wished partner in order to submit an agreement request.
 
 admin.data_syndication.submit_agreement.title=de: Submit a master agreement request
-admin.data_syndication.submit_agreement.success=de: The agreement request has been submitted. It should be now processed by the partner.
+admin.data_syndication.submit_agreement.success=de: The agreement request has been submitted. The partner should now validate it.
 
 admin.data_syndication.process_agreement.title=de: Process a consumer agreement request
 admin.data_syndication.process_agreement.already=de: The agreement request has been already processed.

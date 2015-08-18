@@ -195,7 +195,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        // get the agreement link
+        // get the agreement
         DataSyndicationAgreement agreement = null;
         try {
             agreement = dataSyndicationService.getAgreement(agreementId);
@@ -232,8 +232,55 @@ public class PortfolioEntryDataSyndicationController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processSubmitAgreementLink() {
-        // TODO check right
-        return TODO;
+
+        // bind the form
+        Form<DataSyndicationAgreementLinkSubmitFormData> boundForm = agreementLinkSubmitFormTemplate.bindFromRequest();
+
+        // get the portfolio entry
+        Long id = Long.valueOf(boundForm.data().get("id"));
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the agreement
+        Long agreementId = Long.valueOf(boundForm.data().get("agreementId"));
+        DataSyndicationAgreement agreement = null;
+        try {
+            agreement = dataSyndicationService.getAgreement(agreementId);
+            if (agreement == null) {
+                return notFound(views.html.error.not_found.render(""));
+            }
+        } catch (Exception e) {
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+        }
+
+        if (!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)
+                || !agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        if (boundForm.hasErrors()) {
+
+            // get possible items
+            ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
+            for (DataSyndicationAgreementItem item : agreement.items) {
+                if (item.dataType.equals(PortfolioEntry.class.getName())) {
+                    itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getLabel()));
+                }
+            }
+
+            return ok(views.html.core.portfolioentrydatasyndication.agreement_link_submit.render(portfolioEntry, agreement, itemsAsVH, boundForm));
+        }
+
+        DataSyndicationAgreementLinkSubmitFormData formData = boundForm.get();
+
+        try {
+            dataSyndicationService.submitAgreementLink(agreement, formData.name, formData.description, formData.itemIds, PortfolioEntry.class.getName(), id);
+        } catch (Exception e) {
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+        }
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_data_syndication.link.submit.success"));
+
+        return redirect(controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntry.id));
     }
 
 }
