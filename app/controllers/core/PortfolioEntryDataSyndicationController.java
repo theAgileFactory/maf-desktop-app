@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import dao.pmo.PortfolioEntryDao;
+import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -54,6 +55,9 @@ public class PortfolioEntryDataSyndicationController extends Controller {
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
+
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
 
     /**
      * Display the data syndication agreements.
@@ -273,7 +277,8 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         DataSyndicationAgreementLinkSubmitFormData formData = boundForm.get();
 
         try {
-            dataSyndicationService.submitAgreementLink(agreement, formData.name, formData.description, formData.itemIds, PortfolioEntry.class.getName(), id);
+            dataSyndicationService.submitAgreementLink(userSessionManagerPlugin.getUserSessionId(ctx()), agreement, formData.name, formData.description,
+                    formData.itemIds, PortfolioEntry.class.getName(), id);
         } catch (Exception e) {
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }

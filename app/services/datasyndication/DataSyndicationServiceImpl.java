@@ -17,6 +17,7 @@
  */
 package services.datasyndication;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -29,8 +30,12 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.api.commons.ApiSignatureException;
 import framework.services.api.server.IApiApplicationConfiguration;
 import framework.services.api.server.IApiSignatureService;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Msg;
+import models.pmo.PortfolioEntry;
 import play.Configuration;
 import play.Logger;
+import play.i18n.Lang;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 import services.datasyndication.models.DataSyndicationAgreement;
@@ -39,6 +44,7 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
 import services.datasyndication.models.DataSyndicationPartner;
 import services.echannel.IEchannelService;
+import services.echannel.models.RecipientsDescriptor;
 
 /**
  * The data syndication service.
@@ -50,6 +56,8 @@ import services.echannel.IEchannelService;
 public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
     private boolean isActive;
+
+    private Lang lang;
 
     private IApiSignatureService apiSignatureService;
     private IEchannelService echannelService;
@@ -98,14 +106,18 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
      *            the API signature service
      * @param preferenceManagerPlugin
      *            the preference service
+     * @param i18nMessagesPlugin
+     *            the i18n service
      */
     @Inject
     public DataSyndicationServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IEchannelService echannelService,
-            IApiSignatureService apiSignatureService, IPreferenceManagerPlugin preferenceManagerPlugin) {
+            IApiSignatureService apiSignatureService, IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin i18nMessagesPlugin) {
 
         Logger.info("SERVICE>>> DataSyndicationServiceImpl starting...");
 
         this.isActive = configuration.getBoolean(Config.DATA_SYNDICATION_ACTIVE.getConfigurationKey());
+
+        this.lang = i18nMessagesPlugin.getLanguageByCode(i18nMessagesPlugin.getDefaultLanguageCode()).getLang();
 
         this.echannelService = echannelService;
         this.apiSignatureService = apiSignatureService;
@@ -147,7 +159,18 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
     @Override
     public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain) {
-        echannelService.submitAgreement(refId, name, startDate, endDate, agreementItemIds, slaveDomain, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        DataSyndicationAgreement agreement = echannelService.submitAgreement(refId, name, startDate, endDate, agreementItemIds, slaveDomain);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.processAgreement(agreement.id).url();
+            String title = Msg.get(this.lang, "data_syndication.submit_agreement.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.submit_agreement.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(slaveDomain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for submitAgreement action", e);
+        }
     }
 
     @Override
@@ -163,38 +186,94 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         apiKey.secretKey = applicationConfiguration.getSignatureGenerator().getSharedSecret();
         apiKey.applicationKey = applicationConfiguration.getSignatureGenerator().getApplicationKey();
 
-        echannelService.acceptAgreement(agreement.id, apiKey, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+        echannelService.acceptAgreement(agreement.id, apiKey);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String title = Msg.get(this.lang, "data_syndication.accept_agreement.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.accept_agreement.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(agreement.masterPartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for acceptAgreement action", e);
+        }
 
     }
 
     @Override
     public void rejectAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
-        echannelService.rejectAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        echannelService.rejectAgreement(agreement.id);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String title = Msg.get(this.lang, "data_syndication.reject_agreement.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.reject_agreement.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(agreement.masterPartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for rejectAgreement action", e);
+        }
     }
 
     @Override
     public void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException {
-        echannelService.cancelAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        echannelService.cancelAgreement(agreement.id);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String title = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.message", actionLink);
+
+            String domain = null;
+            if (this.getCurrentDomain().equals(agreement.masterPartner.domain)) {
+                domain = agreement.slavePartner.domain;
+            } else {
+                domain = agreement.masterPartner.domain;
+            }
+
+            echannelService.createNotificationEvent(domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for cancelAgreement action", e);
+        }
     }
 
     @Override
     public void suspendAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
-        echannelService.suspendAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        echannelService.suspendAgreement(agreement.id);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String title = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for suspendAgreement action", e);
+        }
     }
 
     @Override
     public void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
-        echannelService.restartAgreement(agreement.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        echannelService.restartAgreement(agreement.id);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String title = Msg.get(this.lang, "data_syndication.restart_agreement.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.restart_agreement.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for restartAgreement action", e);
+        }
     }
 
     @Override
     public DataSyndicationAgreement getAgreement(Long id) {
         return echannelService.getAgreement(id);
-    }
-
-    @Override
-    public void deleteAgreement(Long id) {
-        echannelService.deleteAgreement(id);
     }
 
     @Override
@@ -213,31 +292,122 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void submitAgreementLink(DataSyndicationAgreement agreement, String name, String description, List<Long> agreementItemIds, String dataType,
-            Long masterObjectId) throws DataSyndicationException {
-        echannelService.submitAgreementLink(agreement.id, name, description, agreementItemIds, dataType, masterObjectId,
-                IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+    public void submitAgreementLink(String masterPrincipalUid, DataSyndicationAgreement agreement, String name, String description,
+            List<Long> agreementItemIds, String dataType, Long masterObjectId) throws DataSyndicationException {
+
+        DataSyndicationAgreementLink agreementLink = echannelService.submitAgreementLink(masterPrincipalUid, agreement.id, name, description,
+                agreementItemIds, dataType, masterObjectId);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.processAgreementLink(agreementLink.id).url();
+            String title = Msg.get(this.lang, "data_syndication.submit_agreement_link.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.submit_agreement_link.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for submitAgreementLink action", e);
+        }
+
     }
 
     @Override
     public void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws DataSyndicationException {
-        echannelService.acceptAgreementLink(agreementLink.id, slaveObjectId, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        echannelService.acceptAgreementLink(agreementLink.id, slaveObjectId);
+
+        try {
+
+            String actionLink = null;
+            if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
+                actionLink = controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(agreementLink.masterObjectId, agreementLink.id)
+                        .url();
+            }
+
+            String title = Msg.get(this.lang, "data_syndication.accept_agreement_link.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.accept_agreement_link.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(agreementLink.agreement.masterPartner.domain,
+                    getRecipientsDescriptorAsPrincipal(agreementLink.masterPrincipalUid), title, message, actionLink);
+
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for acceptAgreementLink action", e);
+        }
+
     }
 
     @Override
     public void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
-        echannelService.rejectAgreementLink(agreementLink.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        echannelService.rejectAgreementLink(agreementLink.id);
+
+        try {
+
+            String actionLink = null;
+            if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
+                actionLink = controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(agreementLink.masterObjectId, agreementLink.id)
+                        .url();
+            }
+
+            String title = Msg.get(this.lang, "data_syndication.reject_agreement_link.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.reject_agreement_link.notification.message", actionLink);
+
+            echannelService.createNotificationEvent(agreementLink.agreement.masterPartner.domain,
+                    getRecipientsDescriptorAsPrincipal(agreementLink.masterPrincipalUid), title, message, actionLink);
+
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for rejectAgreementLink action", e);
+        }
 
     }
 
     @Override
     public void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
-        echannelService.cancelAgreement(agreementLink.id, IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        echannelService.cancelAgreement(agreementLink.id);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, true).url();
+            String title = Msg.get(this.lang, "data_syndication.cancel_agreement_link.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.cancel_agreement_link.notification.message", actionLink);
+
+            String domain = null;
+            if (this.getCurrentDomain().equals(agreementLink.agreement.masterPartner.domain)) {
+                domain = agreementLink.agreement.slavePartner.domain;
+            } else {
+                domain = agreementLink.agreement.masterPartner.domain;
+            }
+
+            echannelService.createNotificationEvent(domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for cancelAgreementLink action", e);
+        }
+
     }
 
     @Override
     public DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) {
         return echannelService.getAgreementLink(agreementLinkId);
+    }
+
+    @Override
+    public void deleteAgreementLink(DataSyndicationAgreementLink agreementLink) {
+
+        echannelService.deleteAgreementLink(agreementLink.id);
+
+        try {
+            String actionLink = controllers.admin.routes.DataSyndicationController.viewMasterAgreements().url();
+            String title = Msg.get(this.lang, "data_syndication.delete_agreement_link.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.delete_agreement_link.notification.message", agreementLink.agreement.name);
+
+            echannelService.createNotificationEvent(agreementLink.agreement.masterPartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message,
+                    actionLink);
+            echannelService.createNotificationEvent(agreementLink.agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message,
+                    actionLink);
+
+        } catch (Exception e) {
+            Logger.error("Error when creating notification event for deleteAgreementLink action", e);
+        }
     }
 
     @Override
@@ -253,5 +423,36 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) {
         return echannelService.getAgreementLinksOfSlaveObject(dataType, masterObjectId);
+    }
+
+    /**
+     * Get the "partner admin" recipients descriptor for notification event.
+     */
+    private static RecipientsDescriptor getRecipientsDescriptorAsPartnerAdmin() {
+
+        RecipientsDescriptor descriptor = new RecipientsDescriptor();
+
+        descriptor.type = RecipientsDescriptor.Type.PERMISSIONS;
+        descriptor.permissions = new ArrayList<>();
+        descriptor.permissions.add(IMafConstants.PARTNER_SYNDICATION_PERMISSION);
+
+        return descriptor;
+    }
+
+    /**
+     * Get the "principal" recipients descriptor for notification event.
+     * 
+     * @param principalUid
+     *            as principal uid
+     */
+    private static RecipientsDescriptor getRecipientsDescriptorAsPrincipal(String principalUid) {
+
+        RecipientsDescriptor descriptor = new RecipientsDescriptor();
+
+        descriptor.type = RecipientsDescriptor.Type.PRINCIPALS;
+        descriptor.principals = new ArrayList<>();
+        descriptor.principals.add(principalUid);
+
+        return descriptor;
     }
 }

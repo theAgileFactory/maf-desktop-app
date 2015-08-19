@@ -25,6 +25,8 @@ import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
 import services.datasyndication.models.DataSyndicationPartner;
+import services.echannel.models.NotificationEvent;
+import services.echannel.models.RecipientsDescriptor;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 
 /**
@@ -36,6 +38,28 @@ import services.echannel.request.LoginEventRequest.ErrorCode;
 public interface IEchannelService {
 
     String NAME = "echannelService";
+
+    /**
+     * Create a notification event in order to notify some users of another
+     * instance.
+     * 
+     * @param domain
+     *            the domain name
+     * @param recipientsDescriptor
+     *            the recipients descriptor
+     * @param title
+     *            the title
+     * @param message
+     *            the message
+     * @param actionLink
+     *            the action link (when clicking on the notification)
+     */
+    void createNotificationEvent(String domain, RecipientsDescriptor recipientsDescriptor, String title, String message, String actionLink);
+
+    /**
+     * Get the notification events to notify.
+     */
+    public List<NotificationEvent> getNotificationEventsToNotify();
 
     /**
      * Return true if this is possible to create a new user.
@@ -121,7 +145,7 @@ public interface IEchannelService {
     List<DataSyndicationAgreementItem> getDataAgreementItems();
 
     /**
-     * Create a new master agreement for the instance.
+     * Create a new master agreement for the instance and return it.
      * 
      * The agreement should be then accepted by the slave instance.
      * 
@@ -137,10 +161,8 @@ public interface IEchannelService {
      *            the ids of the authorized items
      * @param slaveDomain
      *            the domain of the slave instance
-     * @param permissions
-     *            the permissions used to notify the slave instance
      */
-    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain, String permissions);
+    DataSyndicationAgreement submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain);
 
     /**
      * Accept a pending agreement.
@@ -151,10 +173,8 @@ public interface IEchannelService {
      *            the agreement id
      * @param apiKey
      *            the API key of the slave instance
-     * @param permissions
-     *            the permissions used to notify the master instance
      */
-    void acceptAgreement(Long id, DataSyndicationApiKey apiKey, String permissions);
+    void acceptAgreement(Long id, DataSyndicationApiKey apiKey);
 
     /**
      * Reject a pending agreement.
@@ -163,10 +183,8 @@ public interface IEchannelService {
      * 
      * @param id
      *            the agreement id
-     * @param permissions
-     *            the permissions used to notify the master instance
      */
-    void rejectAgreement(Long id, String permissions);
+    void rejectAgreement(Long id);
 
     /**
      * Cancel an agreement.
@@ -175,11 +193,8 @@ public interface IEchannelService {
      * 
      * @param id
      *            the agreement id
-     * @param permissions
-     *            the permissions used to notify the master and the slave
-     *            instances
      */
-    void cancelAgreement(Long id, String permissions);
+    void cancelAgreement(Long id);
 
     /**
      * Suspend an ongoing agreement.
@@ -188,10 +203,8 @@ public interface IEchannelService {
      * 
      * @param id
      *            the agreement id
-     * @param permissions
-     *            the permissions used to notify the slave instance
      */
-    void suspendAgreement(Long id, String permissions);
+    void suspendAgreement(Long id);
 
     /**
      * Restart a suspended agreement.
@@ -200,10 +213,8 @@ public interface IEchannelService {
      * 
      * @param id
      *            the agreement id
-     * @param permissions
-     *            the permissions used to notify the slave instance
      */
-    void restartAgreement(Long id, String permissions);
+    void restartAgreement(Long id);
 
     /**
      * Get an agreement by id.
@@ -214,16 +225,6 @@ public interface IEchannelService {
      *            the agreement id
      */
     DataSyndicationAgreement getAgreement(Long id);
-
-    /**
-     * Delete an agreement.
-     * 
-     * The instance should be the master or the slave of the agreement.
-     * 
-     * @param id
-     *            the agreement id
-     */
-    void deleteAgreement(Long id);
 
     /**
      * Get the master agreements of the instance.
@@ -246,10 +247,14 @@ public interface IEchannelService {
     List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id);
 
     /**
-     * Create a new agreement link for a master agreement of the instance.
+     * Create a new agreement link for a master agreement of the instance and
+     * return it.
      * 
      * The agreement link should be then accepted by the slave instance.
      * 
+     * @param masterPrincipalUid
+     *            the uid of the principal that request the agreement link (in
+     *            the master instance)
      * @param agreementId
      *            the corresponding agreement id
      * @param name
@@ -262,11 +267,9 @@ public interface IEchannelService {
      *            the data type
      * @param masterObjectId
      *            the id of the master object
-     * @param permissions
-     *            the permissions used to notify the slave instance
      */
-    void submitAgreementLink(Long agreementId, String name, String description, List<Long> agreementItemIds, String dataType, Long masterObjectId,
-            String permissions);
+    DataSyndicationAgreementLink submitAgreementLink(String masterPrincipalUid, Long agreementId, String name, String description,
+            List<Long> agreementItemIds, String dataType, Long masterObjectId);
 
     /**
      * Accept a pending agreement link.
@@ -277,10 +280,8 @@ public interface IEchannelService {
      *            the agreement link id
      * @param slaveObjectId
      *            the associated slave object id
-     * @param permissions
-     *            the permissions used to notify the master instance
      */
-    void acceptAgreementLink(Long id, Long slaveObjectId, String permissions);
+    void acceptAgreementLink(Long id, Long slaveObjectId);
 
     /**
      * Reject a pending agreement link.
@@ -289,10 +290,8 @@ public interface IEchannelService {
      * 
      * @param id
      *            the agreement link id
-     * @param permissions
-     *            the permissions used to notify the master instance
      */
-    void rejectAgreementLink(Long id, String permissions);
+    void rejectAgreementLink(Long id);
 
     /**
      * Cancel an agreement link.
@@ -302,11 +301,8 @@ public interface IEchannelService {
      * 
      * @param id
      *            the agreement link id
-     * @param permissions
-     *            the permissions used to notify the master and the slave
-     *            instances
      */
-    void cancelAgreementLink(Long id, String permissions);
+    void cancelAgreementLink(Long id);
 
     /**
      * Get an agreement link by id.
@@ -318,6 +314,17 @@ public interface IEchannelService {
      *            the agreement link id
      */
     DataSyndicationAgreementLink getAgreementLink(Long id);
+
+    /**
+     * Delete an agreement link.
+     * 
+     * The instance should be the master or the slave of the corresponding
+     * agreement.
+     * 
+     * @param id
+     *            the agreement link id
+     */
+    void deleteAgreementLink(Long id);
 
     /**
      * Get the ongoing agreement links of the instance.

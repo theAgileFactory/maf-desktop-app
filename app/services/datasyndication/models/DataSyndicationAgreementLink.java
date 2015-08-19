@@ -15,6 +15,7 @@ import framework.utils.Msg;
 public class DataSyndicationAgreementLink {
 
     public Long id;
+    public String masterPrincipalUid;
     public String name;
     public String description;
     public DataSyndicationAgreement agreement;

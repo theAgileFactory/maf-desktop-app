@@ -47,12 +47,13 @@ import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
 import services.datasyndication.models.DataSyndicationPartner;
+import services.echannel.models.NotificationEvent;
+import services.echannel.models.RecipientsDescriptor;
 import services.echannel.request.AcceptDataSyndicationAgreementLinkRequest;
 import services.echannel.request.AcceptDataSyndicationAgreementRequest;
 import services.echannel.request.LoginEventRequest;
 import services.echannel.request.LoginEventRequest.ErrorCode;
-import services.echannel.request.PatchDataSyndicationAgreementLinkRequest;
-import services.echannel.request.PatchDataSyndicationAgreementRequest;
+import services.echannel.request.NotificationEventRequest;
 import services.echannel.request.SubmitDataSyndicationAgreementLinkRequest;
 import services.echannel.request.SubmitDataSyndicationAgreementRequest;
 import services.echannel.request.UpdateConsumedPortfolioEntriesRequest;
@@ -74,6 +75,8 @@ public class EchannelServiceImpl implements IEchannelService {
     private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static final String ACTION_PATTERN = "/{domain}/{action}";
+
+    private static final String NOTIFICATION_EVENT_ACTION = "notification-event";
 
     private static final String CAN_CREATE_USER_ACTION = "can-create-user";
     private static final String CAN_CREATE_PORTOLIO_ENTRY_ACTION = "can-create-portfolio-entry";
@@ -149,6 +152,34 @@ public class EchannelServiceImpl implements IEchannelService {
         });
 
         Logger.info("SERVICE>>> EchannelServiceImpl started");
+    }
+
+    @Override
+    public void createNotificationEvent(String domain, RecipientsDescriptor recipientsDescriptor, String title, String message, String actionLink) {
+        NotificationEventRequest notificationEventRequest = new NotificationEventRequest();
+        notificationEventRequest.domain = domain;
+        notificationEventRequest.recipientsDescriptor = recipientsDescriptor;
+        notificationEventRequest.title = title;
+        notificationEventRequest.message = message;
+        notificationEventRequest.actionLink = actionLink;
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode content = mapper.valueToTree(notificationEventRequest);
+        this.call(HttpMethod.POST, NOTIFICATION_EVENT_ACTION, null, content);
+
+    }
+
+    @Override
+    public List<NotificationEvent> getNotificationEventsToNotify() {
+
+        JsonNode response = this.call(HttpMethod.GET, NOTIFICATION_EVENT_ACTION + "/find", null, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<NotificationEvent> r = new ArrayList<>();
+        for (JsonNode item : response) {
+            r.add(mapper.convertValue(item, NotificationEvent.class));
+        }
+
+        return r;
     }
 
     @Override
@@ -304,12 +335,10 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain,
-            String permissions) {
+    public DataSyndicationAgreement submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds,
+            String slaveDomain) {
 
         // TODO check the slave could be a slave (flag: is_slave_syndicable)
-        // create a notificationEvent for the slave instance (containing the
-        // link to decide it)
 
         SubmitDataSyndicationAgreementRequest submitAgreementRequest = new SubmitDataSyndicationAgreementRequest();
         submitAgreementRequest.refId = refId;
@@ -318,27 +347,25 @@ public class EchannelServiceImpl implements IEchannelService {
         submitAgreementRequest.endDate = endDate;
         submitAgreementRequest.agreementItemIds = agreementItemIds;
         submitAgreementRequest.slaveDomain = slaveDomain;
-        submitAgreementRequest.permissions = permissions;
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode content = mapper.valueToTree(submitAgreementRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/submit", null, content);
+        JsonNode response = this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/submit", null, content);
+        return mapper.convertValue(response, DataSyndicationAgreement.class);
 
     }
 
     @Override
-    public void acceptAgreement(Long id, DataSyndicationApiKey apiKey, String permissions) {
+    public void acceptAgreement(Long id, DataSyndicationApiKey apiKey) {
 
         // TODO to check in echannel
         // Impossible to accept a non-pending agreement
         // The current instance should be the slave of the agreement
-        // create a notificationEvent for the master instance
 
         AcceptDataSyndicationAgreementRequest acceptAgreementRequest = new AcceptDataSyndicationAgreementRequest();
         acceptAgreementRequest.apiName = apiKey.name;
         acceptAgreementRequest.apiSecretKey = apiKey.secretKey;
         acceptAgreementRequest.apiSecretKey = apiKey.applicationKey;
-        acceptAgreementRequest.permissions = permissions;
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode content = mapper.valueToTree(acceptAgreementRequest);
@@ -347,70 +374,46 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void rejectAgreement(Long id, String permissions) {
+    public void rejectAgreement(Long id) {
 
         // TODO to check in echannel
         // Impossible to reject a non-pending agreement
         // The current instance should be the slave of the agreement
-        // create a notificationEvent for the master instance
 
-        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
-        patchAgreementRequest.permissions = permissions;
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(patchAgreementRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/reject", null, content);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/reject", null, null);
 
     }
 
     @Override
-    public void cancelAgreement(Long id, String permissions) {
+    public void cancelAgreement(Long id) {
 
         // TODO to check in echannel
         // The current instance should be the master or the slave of the
         // agreement
-        // create a notificationEvent for the master and the slave instances
 
-        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
-        patchAgreementRequest.permissions = permissions;
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(patchAgreementRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/cancel", null, content);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/cancel", null, null);
 
     }
 
     @Override
-    public void suspendAgreement(Long id, String permissions) {
+    public void suspendAgreement(Long id) {
 
         // TODO to check in echannel
         // Impossible to suspend a non-ongoing agreement
         // The current instance should be the master of the agreement
-        // create a notificationEvent for the slave instance
 
-        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
-        patchAgreementRequest.permissions = permissions;
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(patchAgreementRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/suspend", null, content);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/suspend", null, null);
 
     }
 
     @Override
-    public void restartAgreement(Long id, String permissions) {
+    public void restartAgreement(Long id) {
 
         // TODO to check in echannel
         // Impossible to restart a non-suspended agreement
         // The current instance should be the master of the agreement
-        // create a notificationEvent for the slave instance
 
-        PatchDataSyndicationAgreementRequest patchAgreementRequest = new PatchDataSyndicationAgreementRequest();
-        patchAgreementRequest.permissions = permissions;
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(patchAgreementRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/restart", null, content);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/restart", null, null);
 
     }
 
@@ -423,16 +426,6 @@ public class EchannelServiceImpl implements IEchannelService {
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id, null, null);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(response, DataSyndicationAgreement.class);
-    }
-
-    @Override
-    public void deleteAgreement(Long id) {
-
-        // TODO The current instance should be the master or the slave of the
-        // agreement
-        // create a notificationEvent for the master and the slave instances
-
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/delete", null, null);
     }
 
     @Override
@@ -481,40 +474,37 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void submitAgreementLink(Long agreementId, String name, String description, List<Long> agreementItemIds, String dataType, Long masterObjectId,
-            String permissions) {
+    public DataSyndicationAgreementLink submitAgreementLink(String masterPrincipalUid, Long agreementId, String name, String description,
+            List<Long> agreementItemIds, String dataType, Long masterObjectId) {
 
         // TODO to check in echannel
         // The current instance should be the master of the agreement
-        // create a notificationEvent for the slave instance (containing the
-        // link to decide it)
 
         SubmitDataSyndicationAgreementLinkRequest submitAgreementLinkRequest = new SubmitDataSyndicationAgreementLinkRequest();
+        submitAgreementLinkRequest.masterPrincipalUid = masterPrincipalUid;
         submitAgreementLinkRequest.agreementId = agreementId;
         submitAgreementLinkRequest.name = name;
         submitAgreementLinkRequest.description = description;
         submitAgreementLinkRequest.agreementItemIds = agreementItemIds;
         submitAgreementLinkRequest.dataType = dataType;
         submitAgreementLinkRequest.masterObjectId = masterObjectId;
-        submitAgreementLinkRequest.permissions = permissions;
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode content = mapper.valueToTree(submitAgreementLinkRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/submit", null, content);
+        JsonNode response = this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/submit", null, content);
+        return mapper.convertValue(response, DataSyndicationAgreementLink.class);
 
     }
 
     @Override
-    public void acceptAgreementLink(Long id, Long slaveObjectId, String permissions) {
+    public void acceptAgreementLink(Long id, Long slaveObjectId) {
 
         // TODO to check in echannel
         // Impossible to accept a non-pending agreement link
         // The current instance should be the slave of the agreement
-        // create a notificationEvent for the master instance
 
         AcceptDataSyndicationAgreementLinkRequest acceptAgreementLinkRequest = new AcceptDataSyndicationAgreementLinkRequest();
         acceptAgreementLinkRequest.slaveObjectId = slaveObjectId;
-        acceptAgreementLinkRequest.permissions = permissions;
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode content = mapper.valueToTree(acceptAgreementLinkRequest);
@@ -523,36 +513,24 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public void rejectAgreementLink(Long id, String permissions) {
+    public void rejectAgreementLink(Long id) {
 
         // TODO to check in echannel
         // Impossible to accept a non-pending agreement link
         // The current instance should be the slave of the agreement
-        // create a notificationEvent for the master instance
 
-        PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
-        patchAgreementLinkRequest.permissions = permissions;
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(patchAgreementLinkRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/reject", null, content);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/reject", null, null);
 
     }
 
     @Override
-    public void cancelAgreementLink(Long id, String permissions) {
+    public void cancelAgreementLink(Long id) {
 
         // TODO to check in echannel
         // The current instance should be the master or the slave of the
         // agreement
-        // create a notificationEvent for the master and the slave instances
 
-        PatchDataSyndicationAgreementLinkRequest patchAgreementLinkRequest = new PatchDataSyndicationAgreementLinkRequest();
-        patchAgreementLinkRequest.permissions = permissions;
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(patchAgreementLinkRequest);
-        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/cancel", null, content);
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/cancel", null, null);
 
     }
 
@@ -565,6 +543,15 @@ public class EchannelServiceImpl implements IEchannelService {
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id, null, null);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(response, DataSyndicationAgreementLink.class);
+    }
+
+    @Override
+    public void deleteAgreementLink(Long id) {
+
+        // TODO The current instance should be the master or the slave of the
+        // agreement
+
+        this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/delete", null, null);
     }
 
     @Override

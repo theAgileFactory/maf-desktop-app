@@ -654,6 +654,32 @@ authentication.not_accessible=Instanz kann nicht geladen werden, bitte wenden Si
 licenses_management.cannot_create_portfolio_entry=Neue Initiative kann nicht angelegt werden, Ihre Lizenz ist aufgebraucht. Bitte wenden Sie sich an den Administrator für weitere Auskünfte.
 licenses_management.cannot_create_user=Neuer Benutzer kann nicht angelegt werden, Ihre Lizenz ist aufgebraucht. Bitte wenden Sie sich an den Administrator für weitere Auskünfte.
 
+#----------------------
+# data syndication
+#----------------------
+
+data_syndication.submit_agreement.notification.title=Partner agreement request to validate
+data_syndication.submit_agreement.notification.message=A new partner agreement request is pending. Please click <a href="{0}">here</a> to consult this request and process the decision.
+data_syndication.accept_agreement.notification.title=Partner agreement request accepted
+data_syndication.accept_agreement.notification.message=A submitted agreement request has been accepted by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
+data_syndication.reject_agreement.notification.title=Partner agreement request rejected
+data_syndication.reject_agreement.notification.message=A submitted agreement request has been rejected by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
+data_syndication.cancel_agreement.notification.title=Partner agreement cancelled
+data_syndication.cancel_agreement.notification.message=An agreement has been cancelled by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
+data_syndication.suspend_agreement.notification.title=Partner agreement suspended
+data_syndication.suspend_agreement.notification.message=An agreement has been suspended by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
+data_syndication.restart_agreement.notification.title=Partner agreement restarted
+data_syndication.restart_agreement.notification.message=An agreement has been restarted by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
+data_syndication.submit_agreement_link.notification.title=Partner relation request to validate
+data_syndication.submit_agreement_link.notification.message=A new partner relation request is pending. Please click <a href="{0}">here</a> to consult this request and process the decision.
+data_syndication.accept_agreement_link.notification.title=Partner relation request accepted
+data_syndication.accept_agreement_link.notification.message=A submitted relation request has been accepted by your partner. You can consult the relation details by clicking <a href="{0}">here</a>.
+data_syndication.reject_agreement_link.notification.title=Partner relation request rejected
+data_syndication.reject_agreement_link.notification.message=A submitted relation request has been rejected by your partner. You can consult the relation details by clicking <a href="{0}">here</a>.
+data_syndication.cancel_agreement_link.notification.title=Partner relation cancelled
+data_syndication.cancel_agreement_link.notification.message=An agreement relation has been cancelled by your partner. You can consult the corresponding agreement details by clicking <a href="{0}">here</a>.
+data_syndication.delete_agreement_link.notification.title=Partner relation deleted
+data_syndication.delete_agreement_link.notification.message=The agreement relation {0} has been deleted because you or your partner has deleted the corresponding resource.
 
 ########################
 # Objects

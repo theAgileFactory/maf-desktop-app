@@ -26,7 +26,6 @@ package services.echannel.request;
 public class AcceptDataSyndicationAgreementLinkRequest {
 
     public Long slaveObjectId;
-    public String permissions;
 
     /**
      * Default constructor.

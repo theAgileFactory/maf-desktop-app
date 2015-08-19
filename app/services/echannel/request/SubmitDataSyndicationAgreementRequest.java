@@ -34,7 +34,6 @@ public class SubmitDataSyndicationAgreementRequest {
     public Date endDate;
     public List<Long> agreementItemIds;
     public String slaveDomain;
-    public String permissions;
 
     /**
      * Default constructor.

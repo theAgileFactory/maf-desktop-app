@@ -28,7 +28,6 @@ public class AcceptDataSyndicationAgreementRequest {
     public String apiName;
     public String apiSecretKey;
     public String apiApplicationKey;
-    public String permissions;
 
     /**
      * Default constructor.

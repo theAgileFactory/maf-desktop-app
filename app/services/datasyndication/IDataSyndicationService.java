@@ -137,14 +137,6 @@ public interface IDataSyndicationService {
     DataSyndicationAgreement getAgreement(Long id);
 
     /**
-     * Delete an agreement.
-     * 
-     * @param id
-     *            the agreement id
-     */
-    void deleteAgreement(Long id);
-
-    /**
      * Get the master agreements of the instance.
      */
     List<DataSyndicationAgreement> getMasterAgreements();
@@ -165,6 +157,9 @@ public interface IDataSyndicationService {
     /**
      * Create a new agreement link for a master agreement of the instance.
      * 
+     * @param masterPrincipalUid
+     *            the UID of the principal that creates the links (in the master
+     *            instance)
      * @param agreement
      *            the corresponding agreement
      * @param name
@@ -178,8 +173,8 @@ public interface IDataSyndicationService {
      * @param masterObjectId
      *            the id of the master object
      */
-    void submitAgreementLink(DataSyndicationAgreement agreement, String name, String description, List<Long> agreementItemIds, String dataType,
-            Long masterObjectId) throws DataSyndicationException;
+    void submitAgreementLink(String masterPrincipalUid, DataSyndicationAgreement agreement, String name, String description, List<Long> agreementItemIds,
+            String dataType, Long masterObjectId) throws DataSyndicationException;
 
     /**
      * Accept a pending agreement link.
@@ -214,6 +209,14 @@ public interface IDataSyndicationService {
      *            the agreement link id
      */
     DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) throws DataSyndicationException;
+
+    /**
+     * Delete an agreement link.
+     * 
+     * @param agreementLink
+     *            the agreement link
+     */
+    void deleteAgreementLink(DataSyndicationAgreementLink agreementLink);
 
     /**
      * Get the ongoing agreement links of the instance.
