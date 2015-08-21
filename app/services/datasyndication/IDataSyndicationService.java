@@ -68,7 +68,7 @@ public interface IDataSyndicationService {
     /**
      * Get all available agreement items.
      */
-    List<DataSyndicationAgreementItem> getDataAgreementItems();
+    List<DataSyndicationAgreementItem> getAgreementItems();
 
     /**
      * Create a new master agreement for the instance.
@@ -139,12 +139,12 @@ public interface IDataSyndicationService {
     /**
      * Get the master agreements of the instance.
      */
-    List<DataSyndicationAgreement> getMasterAgreements();
+    List<DataSyndicationAgreement> getAgreementsAsMaster();
 
     /**
      * Get the slave agreements of the instance.
      */
-    List<DataSyndicationAgreement> getSlaveAgreements();
+    List<DataSyndicationAgreement> getAgreementsAsSlave();
 
     /**
      * Get the agreement links of an agreement.

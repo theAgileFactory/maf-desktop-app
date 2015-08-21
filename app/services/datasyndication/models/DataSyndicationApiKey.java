@@ -1,7 +1,7 @@
 package services.datasyndication.models;
 
 /**
- * Define an agreement for data syndication.
+ * Define an slave API key for data syndication.
  * 
  * @author Johann Kohler
  *

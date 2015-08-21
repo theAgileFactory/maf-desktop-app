@@ -91,7 +91,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         // get the master agreements
         List<DataSyndicationAgreement> masterAgreements = null;
         try {
-            masterAgreements = dataSyndicationService.getMasterAgreements();
+            masterAgreements = dataSyndicationService.getAgreementsAsMaster();
         } catch (Exception e) {
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }

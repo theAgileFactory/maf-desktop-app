@@ -153,8 +153,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public List<DataSyndicationAgreementItem> getDataAgreementItems() {
-        return echannelService.getDataAgreementItems();
+    public List<DataSyndicationAgreementItem> getAgreementItems() {
+        return echannelService.getAgreementItems();
     }
 
     @Override
@@ -277,13 +277,13 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public List<DataSyndicationAgreement> getMasterAgreements() {
-        return echannelService.getMasterAgreements();
+    public List<DataSyndicationAgreement> getAgreementsAsMaster() {
+        return echannelService.getAgreementsAsMaster();
     }
 
     @Override
-    public List<DataSyndicationAgreement> getSlaveAgreements() {
-        return echannelService.getSlaveAgreements();
+    public List<DataSyndicationAgreement> getAgreementsAsSlave() {
+        return echannelService.getAgreementsAsSlave();
     }
 
     @Override

@@ -142,7 +142,7 @@ public interface IEchannelService {
     /**
      * Get all available agreement items.
      */
-    List<DataSyndicationAgreementItem> getDataAgreementItems();
+    List<DataSyndicationAgreementItem> getAgreementItems();
 
     /**
      * Create a new master agreement for the instance and return it.
@@ -229,12 +229,12 @@ public interface IEchannelService {
     /**
      * Get the master agreements of the instance.
      */
-    List<DataSyndicationAgreement> getMasterAgreements();
+    List<DataSyndicationAgreement> getAgreementsAsMaster();
 
     /**
      * Get the slave agreements of the instance.
      */
-    List<DataSyndicationAgreement> getSlaveAgreements();
+    List<DataSyndicationAgreement> getAgreementsAsSlave();
 
     /**
      * Get the agreement links of an agreement.

@@ -83,7 +83,7 @@ public class DataSyndicationController extends Controller {
 
             List<DataSyndicationAgreement> masterAgreements = null;
             try {
-                masterAgreements = dataSyndicationService.getMasterAgreements();
+                masterAgreements = dataSyndicationService.getAgreementsAsMaster();
             } catch (Exception e) {
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
@@ -119,7 +119,7 @@ public class DataSyndicationController extends Controller {
 
             List<DataSyndicationAgreement> slaveAgreements = null;
             try {
-                slaveAgreements = dataSyndicationService.getSlaveAgreements();
+                slaveAgreements = dataSyndicationService.getAgreementsAsSlave();
             } catch (Exception e) {
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
@@ -234,7 +234,7 @@ public class DataSyndicationController extends Controller {
             // get all possible items
             ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
             try {
-                for (DataSyndicationAgreementItem item : dataSyndicationService.getDataAgreementItems()) {
+                for (DataSyndicationAgreementItem item : dataSyndicationService.getAgreementItems()) {
                     itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
                 }
             } catch (Exception e) {
@@ -277,7 +277,7 @@ public class DataSyndicationController extends Controller {
                 // get all possible items
                 ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
                 try {
-                    for (DataSyndicationAgreementItem item : dataSyndicationService.getDataAgreementItems()) {
+                    for (DataSyndicationAgreementItem item : dataSyndicationService.getAgreementItems()) {
                         itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
                     }
                 } catch (Exception e) {
