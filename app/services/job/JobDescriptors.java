@@ -17,9 +17,15 @@
  */
 package services.job;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import framework.services.job.IJobDescriptor;
 import modules.StaticAccessor;
 import play.Logger;
+import services.echannel.IEchannelService;
+import services.echannel.models.NotificationEvent;
 import services.licensesmanagement.ILicensesManagementService;
 
 /**
@@ -91,6 +97,9 @@ public interface JobDescriptors {
      */
     class SendNotificationEventsJobDescriptor implements IJobDescriptor {
 
+        @Inject
+        private IEchannelService echannelService;
+
         @Override
         public String getId() {
             return "SendNotificationEvents";
@@ -113,12 +122,12 @@ public interface JobDescriptors {
 
         @Override
         public int getStartHour() {
-            return 01;
+            return 17;
         }
 
         @Override
         public int getStartMinute() {
-            return 00;
+            return 20;
         }
 
         @Override
@@ -127,13 +136,12 @@ public interface JobDescriptors {
             Logger.info("start trigger " + this.getId());
 
             try {
-                /*
-                 * List<NotificationEvent> notificationEvents =
-                 * echannelService.getNotificationEventsToNotify(); for
-                 * (NotificationEvent notificationEvent : notificationEvents) {
-                 * // TODO send the notification Logger.info("send: " +
-                 * notificationEvent.title); }
-                 */
+
+                List<NotificationEvent> notificationEvents = echannelService.getNotificationEventsToNotify();
+                for (NotificationEvent notificationEvent : notificationEvents) {
+                    // TODO send the notification
+                    Logger.info("send: " + notificationEvent.title);
+                }
 
             } catch (Exception e) {
                 Logger.error(this.getId() + " unexpected error", e);
