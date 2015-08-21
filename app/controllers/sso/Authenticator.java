@@ -414,7 +414,7 @@ public class Authenticator extends SecureController {
             saml2Client.setKeystorePassword(cfg.getString("maf.saml.keystore.password"));
             saml2Client.setPrivateKeyPassword(cfg.getString("maf.saml.privatekey.password"));
             saml2Client.setIdpMetadataPath(new File(configurationDirectory, cfg.getString("maf.saml.idpmetadata")).getAbsolutePath());
-            //saml2Client.setCallbackUrl(publicUrl + controllers.sso.routes.AlternativeFederatedCallbackController.callback().url() + SAML_CLIENT_ID_EXTENTION);
+            saml2Client.setCallbackUrl(publicUrl + controllers.sso.routes.Authenticator.customCallback().url() + SAML_CLIENT_ID_EXTENTION);
             saml2Client.setMaximumAuthenticationLifetime(cfg.getInt("maf.saml.maximum.authentication.lifetime"));
 
             // Write the client meta data to the file system
