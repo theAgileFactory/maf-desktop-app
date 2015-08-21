@@ -41,7 +41,7 @@
     @if(slaveAgreementLinks.size == 0 && masterAgreementLinks.size == 0) {
     
         @if(masterAgreements.size == 0) {
-            <blockquote>@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_no_master", controllers.admin.routes.DataSyndicationController.searchPartner().url)</blockquote>
+            <div class="alert alert-info">@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_no_master", controllers.admin.routes.DataSyndicationController.searchPartner().url)</div>
         } else {
             <blockquote>@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_with_master", portfolioEntry.getName)</blockquote>
             
