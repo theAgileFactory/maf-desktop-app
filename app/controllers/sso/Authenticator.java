@@ -20,7 +20,6 @@ package controllers.sso;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -32,13 +31,15 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.pac4j.cas.client.CasClient;
 import org.pac4j.core.client.Clients;
+import org.pac4j.core.context.WebContext;
+import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.http.client.FormClient;
 import org.pac4j.http.profile.UsernameProfileCreator;
 import org.pac4j.play.Config;
 import org.pac4j.play.PlayLogoutHandler;
 import org.pac4j.play.java.RequiresAuthentication;
 import org.pac4j.play.java.SecureController;
-import org.pac4j.saml.client.Saml2Client;
+import org.pac4j.saml.credentials.Saml2Credentials;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import controllers.ControllersUtils;
@@ -56,19 +57,10 @@ import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import play.Configuration;
 import play.Logger;
-import play.api.http.MediaRange;
-import play.api.mvc.RequestHeader;
-import play.i18n.Lang;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
-import play.mvc.Http;
-import play.mvc.Http.Context;
 import play.mvc.Http.Cookie;
-import play.mvc.Http.Cookies;
-import play.mvc.Http.Request;
-import play.mvc.Http.RequestBody;
 import play.mvc.Result;
-import play.mvc.With;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 import services.licensesmanagement.ILicensesManagementService;
 
@@ -111,6 +103,7 @@ public class Authenticator extends SecureController {
      * @param preferenceManagerPlugin
      * @param i18nMessagesPlugin
      * @param authenticationMode
+     * @throws MalformedURLException 
      */
     @Inject
     public Authenticator(
@@ -121,7 +114,7 @@ public class Authenticator extends SecureController {
             ILicensesManagementService licensesManagementService,
             IPreferenceManagerPlugin preferenceManagerPlugin,
             II18nMessagesPlugin i18nMessagesPlugin,
-            @Named("AuthenticatonMode") AuthenticationMode authenticationMode) {
+            @Named("AuthenticatonMode") AuthenticationMode authenticationMode) throws MalformedURLException {
         super();
         this.configuration=configuration;
         this.authenticationMode=authenticationMode;
@@ -292,15 +285,6 @@ public class Authenticator extends SecureController {
      * Clear the user session and logout the user.<br/>
      * The user is then redirected to the login page.
      */
-    @With(FederatedAction.class)
-    public Promise<Result> federatedCustomCallback() {
-        return customCallback();
-    }
-
-    /**
-     * Clear the user session and logout the user.<br/>
-     * The user is then redirected to the login page.
-     */
     public Promise<Result> customCallback() {
 
         if (!getLicensesManagementService().isInstanceAccessible()) {
@@ -338,25 +322,11 @@ public class Authenticator extends SecureController {
         if (redmineCookie != null) {
             ctx().response().discardCookie("_redmine_session");
         }
-        // Workaround
+        if(getAuthenticationMode().equals(AuthenticationMode.FEDERATED)){
+            return ok(views.html.sso.federated_logout.render(Utilities.getPreferenceElseConfigurationValue(getConfiguration(), IFrameworkConstants.PUBLIC_URL_PREFERENCE,
+                    "maf.public.url")));
+        }
         return logoutAndRedirect();
-    }
-    
-    /**
-     * The user is then redirected to the login page.
-     */
-    public Result customLogoutCas(){
-        return logoutAndRedirect();
-    }
-
-    /**
-     * The logout page for the federated authentication.
-     * 
-     * @return
-     */
-    public Result customLogoutFederated() {
-        return ok(views.html.sso.federated_logout.render(Utilities.getPreferenceElseConfigurationValue(getConfiguration(), IFrameworkConstants.PUBLIC_URL_PREFERENCE,
-                "maf.public.url")));
     }
     
     /**
@@ -364,8 +334,9 @@ public class Authenticator extends SecureController {
      * 
      * @param authenticationMode
      *            the selected authentication mode
+     * @throws MalformedURLException 
      */
-    public void init(IFrameworkConstants.AuthenticationMode authenticationMode) {
+    public void init(IFrameworkConstants.AuthenticationMode authenticationMode) throws MalformedURLException {
         // Initialize the authentication mode
         switch (authenticationMode) {
         case CAS_MASTER:
@@ -404,12 +375,13 @@ public class Authenticator extends SecureController {
 
     /**
      * Initialize the SSO module based on SAMLv2.
+     * @throws MalformedURLException 
      * 
      * @throws ConfigurationException
      */
-    private void initSAMLv2SingleSignOn() {
+    private void initSAMLv2SingleSignOn() throws MalformedURLException {
         log.info(">>>>>>>>>>>>>>>> Initialize SAMLv2 SSO");
-        final Saml2Client saml2Client = new Saml2Client();
+        final Saml2Client saml2Client = new Saml2Client(getConfiguration().getString("maf.public.url"));
         File samlConfigFile = new File(getConfiguration().getString("saml.sso.config"));
         if (!samlConfigFile.exists() || samlConfigFile.isDirectory()) {
             throw new IllegalArgumentException("The authentication mode is FEDERATED but the SAML config file does not exists " + samlConfigFile);
@@ -452,7 +424,7 @@ public class Authenticator extends SecureController {
             if (cfg.containsKey("maf.saml.logout.url")) {
                 Config.setDefaultLogoutUrl(cfg.getString("maf.saml.logout.url"));
             } else {
-                Config.setDefaultLogoutUrl(controllers.sso.routes.Authenticator.customLogoutFederated().url());
+                Config.setDefaultLogoutUrl(controllers.sso.routes.Authenticator.customLogout().url());
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to initialize the FEDERATED SSO", e);
@@ -510,175 +482,113 @@ public class Authenticator extends SecureController {
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
-
+    
     /**
-     * A request wrapper to modify the host name for the SAMLv2 callback managed by Pac4j.
-     * If BizDock is deployed behind a SSL proxy the SAMLv2 host in the assertion
-     * will be different from the "real one" as understood by play.<br/>
-     * We thus wrap the request in order to artificially modify the host name.
-     * @author Pierre-Yves Cloux
+     * An alternative implementation of the standard PAC4J {@link org.pac4j.saml.client.Saml2Client}.
+     * The purpose of this client is to support the SAML authentication while the server
+     * is behind a SSL reverse proxy (thus altering the host name, port and security level)
      */
-    private static class RequestWrapper implements Request{
-        private Http.Request realRequest;
-        private boolean alternativeSecure;
-        private String alternativeHost;
+    public static class Saml2Client extends org.pac4j.saml.client.Saml2Client{
+        private URL alternativeHostUrl;
         
-        public RequestWrapper(Request realRequest, boolean alternativeSecure, String alternativeHost){
+        /**
+         * Creates a {@link Saml2Client} with an alternative host URL
+         * @param alternativePublicUrl
+         * @throws MalformedURLException 
+         */
+        public Saml2Client(String alternativeHostUrlAsString) throws MalformedURLException {
             super();
-            this.realRequest = realRequest;
-            this.alternativeHost=alternativeHost;
-            this.alternativeSecure=alternativeSecure;
+            alternativeHostUrl=new URL(alternativeHostUrlAsString);
         }
-    
-        @Override
-        public RequestHeader _underlyingHeader() {
-            return realRequest._underlyingHeader();
-        }
-    
-        @Override
-        public List<Lang> acceptLanguages() {
-            return realRequest.acceptLanguages();
-        }
-    
-        @Override
-        public List<MediaRange> acceptedTypes() {
-            return realRequest.acceptedTypes();
-        }
-    
-        @Override
-        public boolean accepts(String arg0) {
-            return realRequest.accepts(arg0);
-        }
-    
-        @Override
-        public Cookie cookie(String arg0) {
-            return realRequest.cookie(arg0);
-        }
-    
-        @Override
-        public Cookies cookies() {
-            return realRequest.cookies();
-        }
-    
-        @Override
-        public String getHeader(String arg0) {
-            return realRequest.getHeader(arg0);
-        }
-    
-        @Override
-        public String getQueryString(String arg0) {
-            return realRequest.getQueryString(arg0);
-        }
-    
-        @Override
-        public boolean hasHeader(String arg0) {
-            return realRequest.hasHeader(arg0);
-        }
-    
-        @Override
-        public Map<String, String[]> headers() {
-            return realRequest.headers();
-        }
-    
-        @Override
-        public String host() {
-            return alternativeHost;
-        }
-    
-        @Override
-        public String method() {
-            return realRequest.method();
-        }
-    
-        @Override
-        public String path() {
-            return realRequest.path();
-        }
-    
-        @Override
-        public Map<String, String[]> queryString() {
-            return realRequest.queryString();
-        }
-    
-        @Override
-        public String remoteAddress() {
-            return realRequest.remoteAddress();
-        }
-    
-        @Override
-        public boolean secure() {
-            return alternativeSecure;
-        }
-    
-        @Override
-        public String uri() {
-            return realRequest.uri();
-        }
-    
-        @Override
-        public String version() {
-            return realRequest.version();
-        }
-    
-        @Override
-        public play.api.mvc.Request<RequestBody> _underlyingRequest() {
-            return realRequest._underlyingRequest();
-        }
-    
-        @Override
-        public RequestBody body() {
-            return realRequest.body();
-        }
-    
-        @SuppressWarnings("deprecation")
-        @Override
-        public void setUsername(String arg0) {
-            realRequest.setUsername(arg0);
-        }
-    
-        @Override
-        public String username() {
-            return realRequest.username();
-        }
-    
-        @Override
-        public Request withUsername(String arg0) {
-            return realRequest.withUsername(arg0);
-        }
-        
-    }
 
-    /**
-     * An {@link Context} wrapper.</br>
-     * Please see {@link RequestWrapper}.
-     * @author Pierre-Yves Cloux
-     */
-    private static class ContextWrapper extends Context{    
-        public ContextWrapper(Context realCtx, boolean alternativeSecure,String alternativeHost){
-            super(realCtx.id(),realCtx._requestHeader(),new RequestWrapper(realCtx.request(), alternativeSecure, alternativeHost),realCtx.session(),realCtx.flash(),realCtx.args);
-        }
-        
-    }
-
-    /**
-     * An action to be used for the "SAMLv2" callback method.
-     * Please see {@link RequestWrapper}.
-     * @author Pierre-Yves Cloux
-     */
-    private class FederatedAction extends play.mvc.Action.Simple{
-        private boolean alternativeSecure;
-        private String alternativeHost;
-        
-        @SuppressWarnings("unused")
-        public FederatedAction() throws MalformedURLException {
-            URL url=new URL(getConfiguration().getString("maf.public.url"));
-            alternativeSecure=url.getProtocol().equalsIgnoreCase("https");
-            alternativeHost=url.getHost();
-        }
-        
         @Override
-        public Promise<Result> call(Context ctx) throws Throwable {
-            return delegate.call(new ContextWrapper(ctx, alternativeSecure, alternativeHost));
+        protected Saml2Credentials retrieveCredentials(final WebContext wc) throws RequiresHttpAction {
+            return super.retrieveCredentials(new WebContext() {
+                
+                @Override
+                public void writeResponseContent(String content) {
+                    wc.writeResponseContent(content);
+                }
+                
+                @Override
+                public void setSessionAttribute(String name, Object value) {
+                    wc.setSessionAttribute(name, value);
+                }
+                
+                @Override
+                public void setResponseStatus(int code) {
+                    wc.setResponseStatus(code);
+                }
+                
+                @Override
+                public void setResponseHeader(String name, String value) {
+                    wc.setResponseHeader(name, value);
+                }
+                
+                @Override
+                public Object getSessionAttribute(String name) {
+                    return wc.getSessionAttribute(name);
+                }
+                
+                @Override
+                public int getServerPort() {
+                    if(getAlternativeHostUrl().getPort()==-1){
+                        return getAlternativeHostUrl().getDefaultPort();
+                    }
+                    return getAlternativeHostUrl().getPort();
+                }
+                
+                @Override
+                public String getServerName() {
+                    return getAlternativeHostUrl().getHost();
+                }
+                
+                @Override
+                public String getScheme() {
+                    return getAlternativeHostUrl().getProtocol();
+                }
+                
+                @Override
+                public Map<String, String[]> getRequestParameters() {
+                    return wc.getRequestParameters();
+                }
+                
+                @Override
+                public String getRequestParameter(String name) {
+                    return wc.getRequestParameter(name);
+                }
+                
+                @Override
+                public String getRequestMethod() {
+                    return wc.getRequestMethod();
+                }
+                
+                @Override
+                public String getRequestHeader(String name) {
+                    return wc.getRequestHeader(name);
+                }
+                
+                @Override
+                public String getFullRequestURL() {
+                    StringBuffer fullRequestUrl=new StringBuffer();
+                    fullRequestUrl.append(getScheme());
+                    fullRequestUrl.append("://");
+                    fullRequestUrl.append(getServerName());
+                    if(getAlternativeHostUrl().getPort()!=-1){
+                        fullRequestUrl.append(':');
+                        fullRequestUrl.append(getServerPort());
+                    }
+                    fullRequestUrl.append(request().uri());
+                    return fullRequestUrl.toString();
+                }
+            });
         }
+
+
+
+        private URL getAlternativeHostUrl() {
+            return alternativeHostUrl;
+        }
+        
     }
 }

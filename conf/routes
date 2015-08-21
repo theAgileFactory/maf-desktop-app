@@ -50,13 +50,7 @@ GET     /loginFederated             controllers.sso.Authenticator.loginFederated
 GET     /redirectToSavedUrl         controllers.sso.Authenticator.redirectToThePreviouslySavedUrl()
 GET     /callback                   controllers.sso.Authenticator.customCallback()
 POST    /callback                   controllers.sso.Authenticator.customCallback()
-GET     /casProxyCallback           controllers.sso.Authenticator.customCallback()
-POST    /casProxyCallback           controllers.sso.Authenticator.customCallback()
-GET     /samlCallback               controllers.sso.Authenticator.federatedCustomCallback()
-POST    /samlCallback               controllers.sso.Authenticator.federatedCustomCallback()
 GET     /logout                     controllers.sso.Authenticator.customLogout()
-GET     /logout_cas                 controllers.sso.Authenticator.customLogoutCas()
-GET     /logout_federated           controllers.sso.Authenticator.customLogoutFederated()
 
 #-------------------
 # My module
