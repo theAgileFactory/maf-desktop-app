@@ -150,6 +150,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         // Initialize with a defined list of jobs
         List<Pair<IJobDescriptor, Boolean>> jobs = new ArrayList<>();
         jobs.add(Pair.of(new JobDescriptors.UpdateConsumedLicensesJobDescriptor(), true));
+        jobs.add(Pair.of(new JobDescriptors.UpdateConsumedLicensesJobDescriptor(), false));
         bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
         bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
 

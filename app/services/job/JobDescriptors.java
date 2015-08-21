@@ -17,8 +17,9 @@
  */
 package services.job;
 
-import modules.StaticAccessor;
 import framework.services.job.IJobDescriptor;
+import modules.StaticAccessor;
+import play.Logger;
 import services.licensesmanagement.ILicensesManagementService;
 
 /**
@@ -68,10 +69,77 @@ public interface JobDescriptors {
 
         @Override
         public void trigger() {
-            ILicensesManagementService licensesManagementService=StaticAccessor.getLicensesManagementService();
+            ILicensesManagementService licensesManagementService = StaticAccessor.getLicensesManagementService();
             licensesManagementService.updateConsumedPortfolioEntries();
             licensesManagementService.updateConsumedUsers();
             licensesManagementService.updateConsumedStorage();
+
+        }
+
+        @Override
+        public String getTriggerUrl() {
+            return null;
+        }
+
+    }
+
+    /**
+     * Send notification events.
+     * 
+     * @author Johann Kohler
+     * 
+     */
+    class SendNotificationEventsJobDescriptor implements IJobDescriptor {
+
+        @Override
+        public String getId() {
+            return "SendNotificationEvents";
+        }
+
+        @Override
+        public String getName(String languageCode) {
+            return "Send the notification events";
+        }
+
+        @Override
+        public String getDescription(String languageCode) {
+            return "Send the notification eventy to notify provided by eChannel.";
+        }
+
+        @Override
+        public Frequency getFrequency() {
+            return Frequency.HOURLY;
+        }
+
+        @Override
+        public int getStartHour() {
+            return 01;
+        }
+
+        @Override
+        public int getStartMinute() {
+            return 00;
+        }
+
+        @Override
+        public void trigger() {
+
+            Logger.info("start trigger " + this.getId());
+
+            try {
+                /*
+                 * List<NotificationEvent> notificationEvents =
+                 * echannelService.getNotificationEventsToNotify(); for
+                 * (NotificationEvent notificationEvent : notificationEvents) {
+                 * // TODO send the notification Logger.info("send: " +
+                 * notificationEvent.title); }
+                 */
+
+            } catch (Exception e) {
+                Logger.error(this.getId() + " unexpected error", e);
+            }
+
+            Logger.info("end trigger " + this.getId());
 
         }
 
