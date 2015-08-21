@@ -127,7 +127,7 @@ public interface JobDescriptors {
 
         @Override
         public int getStartMinute() {
-            return 20;
+            return 30;
         }
 
         @Override
