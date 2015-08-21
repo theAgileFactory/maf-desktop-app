@@ -18,6 +18,10 @@
 package controllers.sso;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,14 +40,6 @@ import org.pac4j.play.java.RequiresAuthentication;
 import org.pac4j.play.java.SecureController;
 import org.pac4j.saml.client.Saml2Client;
 
-import play.Configuration;
-import play.Logger;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
-import play.mvc.Http.Cookie;
-import play.mvc.Result;
-import services.echannel.request.LoginEventRequest.ErrorCode;
-import services.licensesmanagement.ILicensesManagementService;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants;
@@ -58,6 +54,23 @@ import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
+import play.Configuration;
+import play.Logger;
+import play.api.http.MediaRange;
+import play.api.mvc.RequestHeader;
+import play.i18n.Lang;
+import play.libs.F.Function0;
+import play.libs.F.Promise;
+import play.mvc.Http;
+import play.mvc.Http.Context;
+import play.mvc.Http.Cookie;
+import play.mvc.Http.Cookies;
+import play.mvc.Http.Request;
+import play.mvc.Http.RequestBody;
+import play.mvc.Result;
+import play.mvc.With;
+import services.echannel.request.LoginEventRequest.ErrorCode;
+import services.licensesmanagement.ILicensesManagementService;
 
 /**
  * The controller that deals with the user authentication.<br/>
@@ -274,6 +287,15 @@ public class Authenticator extends SecureController {
     public Result notAccessible() {
         return ok(views.html.sso.not_accessible.render());
     }
+    
+    /**
+     * Clear the user session and logout the user.<br/>
+     * The user is then redirected to the login page.
+     */
+    @With(FederatedAction.class)
+    public Promise<Result> federatedCustomCallback() {
+        return customCallback();
+    }
 
     /**
      * Clear the user session and logout the user.<br/>
@@ -416,7 +438,7 @@ public class Authenticator extends SecureController {
             saml2Client.setIdpMetadataPath(new File(configurationDirectory, cfg.getString("maf.saml.idpmetadata")).getAbsolutePath());
             saml2Client.setCallbackUrl(publicUrl + controllers.sso.routes.Authenticator.customCallback().url() + SAML_CLIENT_ID_EXTENTION);
             saml2Client.setMaximumAuthenticationLifetime(cfg.getInt("maf.saml.maximum.authentication.lifetime"));
-
+            
             // Write the client meta data to the file system
             String spMetaDataFileName = cfg.getString("maf.saml.spmetadata");
             FileUtils.write(new File(configurationDirectory, spMetaDataFileName), saml2Client.printClientMetadata());
@@ -487,5 +509,176 @@ public class Authenticator extends SecureController {
 
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * A request wrapper to modify the host name for the SAMLv2 callback managed by Pac4j.
+     * If BizDock is deployed behind a SSL proxy the SAMLv2 host in the assertion
+     * will be different from the "real one" as understood by play.<br/>
+     * We thus wrap the request in order to artificially modify the host name.
+     * @author Pierre-Yves Cloux
+     */
+    private static class RequestWrapper implements Request{
+        private Http.Request realRequest;
+        private boolean alternativeSecure;
+        private String alternativeHost;
+        
+        public RequestWrapper(Request realRequest, boolean alternativeSecure, String alternativeHost){
+            super();
+            this.realRequest = realRequest;
+            this.alternativeHost=alternativeHost;
+            this.alternativeSecure=alternativeSecure;
+        }
+    
+        @Override
+        public RequestHeader _underlyingHeader() {
+            return realRequest._underlyingHeader();
+        }
+    
+        @Override
+        public List<Lang> acceptLanguages() {
+            return realRequest.acceptLanguages();
+        }
+    
+        @Override
+        public List<MediaRange> acceptedTypes() {
+            return realRequest.acceptedTypes();
+        }
+    
+        @Override
+        public boolean accepts(String arg0) {
+            return realRequest.accepts(arg0);
+        }
+    
+        @Override
+        public Cookie cookie(String arg0) {
+            return realRequest.cookie(arg0);
+        }
+    
+        @Override
+        public Cookies cookies() {
+            return realRequest.cookies();
+        }
+    
+        @Override
+        public String getHeader(String arg0) {
+            return realRequest.getHeader(arg0);
+        }
+    
+        @Override
+        public String getQueryString(String arg0) {
+            return realRequest.getQueryString(arg0);
+        }
+    
+        @Override
+        public boolean hasHeader(String arg0) {
+            return realRequest.hasHeader(arg0);
+        }
+    
+        @Override
+        public Map<String, String[]> headers() {
+            return realRequest.headers();
+        }
+    
+        @Override
+        public String host() {
+            return alternativeHost;
+        }
+    
+        @Override
+        public String method() {
+            return realRequest.method();
+        }
+    
+        @Override
+        public String path() {
+            return realRequest.path();
+        }
+    
+        @Override
+        public Map<String, String[]> queryString() {
+            return realRequest.queryString();
+        }
+    
+        @Override
+        public String remoteAddress() {
+            return realRequest.remoteAddress();
+        }
+    
+        @Override
+        public boolean secure() {
+            return alternativeSecure;
+        }
+    
+        @Override
+        public String uri() {
+            return realRequest.uri();
+        }
+    
+        @Override
+        public String version() {
+            return realRequest.version();
+        }
+    
+        @Override
+        public play.api.mvc.Request<RequestBody> _underlyingRequest() {
+            return realRequest._underlyingRequest();
+        }
+    
+        @Override
+        public RequestBody body() {
+            return realRequest.body();
+        }
+    
+        @SuppressWarnings("deprecation")
+        @Override
+        public void setUsername(String arg0) {
+            realRequest.setUsername(arg0);
+        }
+    
+        @Override
+        public String username() {
+            return realRequest.username();
+        }
+    
+        @Override
+        public Request withUsername(String arg0) {
+            return realRequest.withUsername(arg0);
+        }
+        
+    }
+
+    /**
+     * An {@link Context} wrapper.</br>
+     * Please see {@link RequestWrapper}.
+     * @author Pierre-Yves Cloux
+     */
+    private static class ContextWrapper extends Context{    
+        public ContextWrapper(Context realCtx, boolean alternativeSecure,String alternativeHost){
+            super(realCtx.id(),realCtx._requestHeader(),new RequestWrapper(realCtx.request(), alternativeSecure, alternativeHost),realCtx.session(),realCtx.flash(),realCtx.args);
+        }
+        
+    }
+
+    /**
+     * An action to be used for the "SAMLv2" callback method.
+     * Please see {@link RequestWrapper}.
+     * @author Pierre-Yves Cloux
+     */
+    private class FederatedAction extends play.mvc.Action.Simple{
+        private boolean alternativeSecure;
+        private String alternativeHost;
+        
+        @SuppressWarnings("unused")
+        public FederatedAction() throws MalformedURLException {
+            URL url=new URL(getConfiguration().getString("maf.public.url"));
+            alternativeSecure=url.getProtocol().equalsIgnoreCase("https");
+            alternativeHost=url.getHost();
+        }
+        
+        @Override
+        public Promise<Result> call(Context ctx) throws Throwable {
+            return delegate.call(new ContextWrapper(ctx, alternativeSecure, alternativeHost));
+        }
     }
 }
