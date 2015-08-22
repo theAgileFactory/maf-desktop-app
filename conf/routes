@@ -876,47 +876,47 @@ GET     /api/core/root/report/reload                                    controll
 GET     /api/core/root/kpi/reload                                       controllers.api.core.RootApiController.kpiReload()
 
 # Doc
-GET     /api-docs               										  controllers.api.doc.ApiHelpController.getResources
+GET     /api-docs               										  framework.services.api.doc.ApiHelpController.getResources
 
-GET     /api-docs/api/system    										  controllers.api.doc.ApiHelpController.getResource(path = "/api/system")
+GET     /api-docs/api/system    										  framework.services.api.doc.ApiHelpController.getResource(path = "/api/system")
 
-GET     /api-docs/api/core/actor                                          controllers.api.doc.ApiHelpController.getResource(path = "/api/core/actor")
-GET     /api-docs/api/core/actor-capacity                                 controllers.api.doc.ApiHelpController.getResource(path = "/api/core/actor-capacity")
-GET     /api-docs/api/core/actor-type                                     controllers.api.doc.ApiHelpController.getResource(path = "/api/core/actor-type")
+GET     /api-docs/api/core/actor                                          framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/actor")
+GET     /api-docs/api/core/actor-capacity                                 framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/actor-capacity")
+GET     /api-docs/api/core/actor-type                                     framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/actor-type")
 
-GET     /api-docs/api/core/competency                                     controllers.api.doc.ApiHelpController.getResource(path = "/api/core/competency")
+GET     /api-docs/api/core/competency                                     framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/competency")
 
-GET     /api-docs/api/core/org-unit                                       controllers.api.doc.ApiHelpController.getResource(path = "/api/core/org-unit")
-GET     /api-docs/api/core/org-unit-type                                  controllers.api.doc.ApiHelpController.getResource(path = "/api/core/org-unit-type")
+GET     /api-docs/api/core/org-unit                                       framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/org-unit")
+GET     /api-docs/api/core/org-unit-type                                  framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/org-unit-type")
 
-GET     /api-docs/api/core/portfolio                                      controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio")
-GET     /api-docs/api/core/portfolio-type                                 controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-type")
-GET     /api-docs/api/core/portfolio-entry                                controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry")
-GET     /api-docs/api/core/portfolio-entry-event-type                     controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-event-type")
-GET     /api-docs/api/core/portfolio-entry-planning-package-group         controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-planning-package-group")
-GET     /api-docs/api/core/portfolio-entry-report-status-type             controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-report-status-type")
-GET     /api-docs/api/core/portfolio-entry-type                           controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-type")
-GET     /api-docs/api/core/portfolio-entry-risk-type                      controllers.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-risk-type")
+GET     /api-docs/api/core/portfolio                                      framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio")
+GET     /api-docs/api/core/portfolio-type                                 framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-type")
+GET     /api-docs/api/core/portfolio-entry                                framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry")
+GET     /api-docs/api/core/portfolio-entry-event-type                     framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-event-type")
+GET     /api-docs/api/core/portfolio-entry-planning-package-group         framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-planning-package-group")
+GET     /api-docs/api/core/portfolio-entry-report-status-type             framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-report-status-type")
+GET     /api-docs/api/core/portfolio-entry-type                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-type")
+GET     /api-docs/api/core/portfolio-entry-risk-type                      framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-risk-type")
 
-GET     /api-docs/api/core/stakeholder                                    controllers.api.doc.ApiHelpController.getResource(path = "/api/core/stakeholder")
-GET     /api-docs/api/core/stakeholder-type                               controllers.api.doc.ApiHelpController.getResource(path = "/api/core/stakeholder-type")
+GET     /api-docs/api/core/stakeholder                                    framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/stakeholder")
+GET     /api-docs/api/core/stakeholder-type                               framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/stakeholder-type")
 
-GET     /api-docs/api/core/release                                        controllers.api.doc.ApiHelpController.getResource(path = "/api/core/release")
+GET     /api-docs/api/core/release                                        framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/release")
 
-GET     /api-docs/api/core/requirement-severity                           controllers.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-severity")
-GET     /api-docs/api/core/requirement-priority                           controllers.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-priority")
-GET     /api-docs/api/core/requirement-status                             controllers.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-status")
+GET     /api-docs/api/core/requirement-severity                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-severity")
+GET     /api-docs/api/core/requirement-priority                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-priority")
+GET     /api-docs/api/core/requirement-status                             framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-status")
 
-GET     /api-docs/api/core/budget-bucket                                  controllers.api.doc.ApiHelpController.getResource(path = "/api/core/budget-bucket")
+GET     /api-docs/api/core/budget-bucket                                  framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/budget-bucket")
 
-GET     /api-docs/api/core/purchase-order                                 controllers.api.doc.ApiHelpController.getResource(path = "/api/core/purchase-order")
+GET     /api-docs/api/core/purchase-order                                 framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/purchase-order")
 
-GET     /api-docs/api/core/cost-center                                    controllers.api.doc.ApiHelpController.getResource(path = "/api/core/cost-center")
+GET     /api-docs/api/core/cost-center                                    framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/cost-center")
 
-GET     /api-docs/api/core/currency                                       controllers.api.doc.ApiHelpController.getResource(path = "/api/core/currency")
+GET     /api-docs/api/core/currency                                       framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/currency")
 
-GET     /api-docs/api/core/supplier                                       controllers.api.doc.ApiHelpController.getResource(path = "/api/core/supplier")
+GET     /api-docs/api/core/supplier                                       framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/supplier")
 
-GET     /api-docs/api/core/life-cycle-process                             controllers.api.doc.ApiHelpController.getResource(path = "/api/core/life-cycle-process")
+GET     /api-docs/api/core/life-cycle-process                             framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/life-cycle-process")
 
-GET     /api-docs/api/core/kpi                                            controllers.api.doc.ApiHelpController.getResource(path = "/api/core/kpi")
+GET     /api-docs/api/core/kpi                                            framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/kpi")

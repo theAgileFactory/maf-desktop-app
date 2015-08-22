@@ -70,7 +70,6 @@ import framework.services.storage.SharedStorageServiceImpl;
 import framework.services.system.ISysAdminUtils;
 import framework.services.system.SysAdminUtilsImpl;
 import models.CustomBeanPersistController;
-import models.framework_models.account.SystemPermission;
 import play.Configuration;
 import play.Environment;
 import play.Logger;
@@ -96,11 +95,9 @@ import utils.reporting.ReportingUtilsImpl;
 public class ApplicationServicesModule extends FrameworkModule {
     private static Logger.ALogger log = Logger.of(ApplicationServicesModule.class);
 
-    private final Environment environment;
     private final Configuration configuration;
 
     public ApplicationServicesModule(Environment environment, Configuration configuration) {
-        this.environment = environment;
         this.configuration = configuration;
     }
 
@@ -111,14 +108,11 @@ public class ApplicationServicesModule extends FrameworkModule {
     protected void beforeInjection() {
         super.beforeInjection();
         initDataTypes();
-        // initPermissions();
     }
 
     @Override
     protected void configure() {
         beforeInjection();
-
-        // runPatchBeforeStart();
         super.configure();
         log.info(">>> Desktop static dependency injected start...");
         requestStaticInjection(CustomBeanPersistController.class);
@@ -142,30 +136,26 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(INotificationManagerPlugin.class).to(DefaultNotificationManagerPlugin.class).asEagerSingleton();
         bind(IPluginManagerService.class).to(PluginManagerServiceImpl.class).asEagerSingleton();
         bind(IActorSystemPlugin.class).to(ActorSystemPluginImpl.class).asEagerSingleton();
-
-        // Get the default currency
-        // bind(String.class).annotatedWith(Names.named("defaultCurrencyCode")).toInstance(CurrencyDAO.getCurrencyDefaultAsCode());
         bind(IKpiService.class).to(KpiServiceImpl.class).asEagerSingleton();
-
+        bind(IAuditLoggerService.class).to(AuditLoggerServiceImpl.class).asEagerSingleton();
+        bind(IReportingUtils.class).to(ReportingUtilsImpl.class).asEagerSingleton();
+        bind(ISysAdminUtils.class).to(SysAdminUtilsImpl.class).asEagerSingleton();
+        bind(ICustomRouterService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
+        bind(ICustomRouterNotificationService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
+        bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
+        
         // Initialize with a defined list of jobs
         List<Pair<IJobDescriptor, Boolean>> jobs = new ArrayList<>();
-
         JobDescriptors.UpdateConsumedLicensesJobDescriptor updateConsumedLicensesJobDescriptor = new JobDescriptors.UpdateConsumedLicensesJobDescriptor();
         bind(JobDescriptors.UpdateConsumedLicensesJobDescriptor.class).toInstance(updateConsumedLicensesJobDescriptor);
         jobs.add(Pair.of(updateConsumedLicensesJobDescriptor, true));
-
         JobDescriptors.SendNotificationEventsJobDescriptor sendNotificationEventsJobDescriptor = new JobDescriptors.SendNotificationEventsJobDescriptor();
         bind(JobDescriptors.SendNotificationEventsJobDescriptor.class).toInstance(sendNotificationEventsJobDescriptor);
         jobs.add(Pair.of(sendNotificationEventsJobDescriptor, false));
-
         bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
         bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
 
-        bind(ICustomRouterService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
-        bind(ICustomRouterNotificationService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
-
-        bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
-
+        //Echannel services
         bind(IEchannelService.class).to(EchannelServiceImpl.class).asEagerSingleton();
         bind(ILicensesManagementService.class).to(LicensesManagementServiceImpl.class).asEagerSingleton();
         bind(IDataSyndicationService.class).to(DataSyndicationServiceImpl.class).asEagerSingleton();
@@ -205,11 +195,6 @@ public class ApplicationServicesModule extends FrameworkModule {
             bind(IAccountManagerPlugin.class).to(AccountManagerPluginImpl.class).asEagerSingleton();
             break;
         }
-
-        bind(IAuditLoggerService.class).to(AuditLoggerServiceImpl.class).asEagerSingleton();
-        ;
-        bind(IReportingUtils.class).to(ReportingUtilsImpl.class).asEagerSingleton();
-        bind(ISysAdminUtils.class).to(SysAdminUtilsImpl.class).asEagerSingleton();
         log.info(">>> Standard dependency injection end");
     }
 
@@ -245,18 +230,6 @@ public class ApplicationServicesModule extends FrameworkModule {
     }
 
     /**
-     * Check permissions (=check the consistency between the code and the
-     * database content).
-     */
-    private void initPermissions() {
-        log.info(">>>>>>>>>>>>>>>> Check permissions consistency");
-        if (!SystemPermission.checkPermissions(IMafConstants.class)) {
-            log.error("WARNING: permissions in code are not consistent with permissions in database");
-        }
-        log.info(">>>>>>>>>>>>>>>> Check permissions consistency (end)");
-    }
-
-    /**
      * Execute the patches.
      */
     private void runPatchBeforeStart() {
@@ -277,10 +250,6 @@ public class ApplicationServicesModule extends FrameworkModule {
             // Halt the execution of the application startup
             throw new RuntimeException(e);
         }
-    }
-
-    private Environment getEnvironment() {
-        return environment;
     }
 
     private Configuration getConfiguration() {
