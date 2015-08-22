@@ -86,6 +86,7 @@ import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 import utils.reporting.IReportingUtils;
 import utils.reporting.ReportingUtilsImpl;
+import framework.services.plugins.IEventBroadcastingService;
 
 /**
  * The module which configure the dependency injection for the application
@@ -135,6 +136,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IAttachmentManagerPlugin.class).to(DefaultAttachmentManagerPlugin.class).asEagerSingleton();
         bind(INotificationManagerPlugin.class).to(DefaultNotificationManagerPlugin.class).asEagerSingleton();
         bind(IPluginManagerService.class).to(PluginManagerServiceImpl.class).asEagerSingleton();
+        bind(IEventBroadcastingService.class).to(PluginManagerServiceImpl.class);
         bind(IActorSystemPlugin.class).to(ActorSystemPluginImpl.class).asEagerSingleton();
         bind(IKpiService.class).to(KpiServiceImpl.class).asEagerSingleton();
         bind(IAuditLoggerService.class).to(AuditLoggerServiceImpl.class).asEagerSingleton();

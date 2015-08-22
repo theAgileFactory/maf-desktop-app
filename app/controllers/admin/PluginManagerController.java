@@ -42,6 +42,7 @@ import framework.commons.IFrameworkConstants.Syntax;
 import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
 import framework.security.SecurityUtils;
+import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.IPluginManagerService.PluginStatus;
@@ -91,6 +92,8 @@ public class PluginManagerController extends Controller {
 
     @Inject
     private IPluginManagerService pluginManagerService;
+    @Inject
+    private IEventBroadcastingService eventBroadcastingService;
 
     private static Logger.ALogger log = Logger.of(PluginManagerController.class);
 
@@ -761,7 +764,7 @@ public class PluginManagerController extends Controller {
             eventMessage.setPluginConfigurationId(pluginConfigurationId);
             eventMessage.setMessageType(MessageType.CUSTOM);
             eventMessage.setPayload(pluginActionDescriptor.getPayLoad(null));
-            getPluginManagerService().postOutMessage(eventMessage);
+            getEventBroadcastingService().postOutMessage(eventMessage);
 
             log.info(String.format("Admin message for plugin %d posted with transaction id %s", pluginConfigurationId, eventMessage.getTransactionId()));
         } catch (Exception e) {
@@ -811,6 +814,10 @@ public class PluginManagerController extends Controller {
 
     private IPluginManagerService getPluginManagerService() {
         return pluginManagerService;
+    }
+
+    private IEventBroadcastingService getEventBroadcastingService() {
+        return eventBroadcastingService;
     }
 
     /**

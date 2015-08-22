@@ -43,6 +43,7 @@ import framework.security.SecurityUtils;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
 import framework.utils.Msg;
 import framework.utils.PreferenceFormAndDisplayHandler;
@@ -61,6 +62,8 @@ import be.objectify.deadbolt.java.actions.Restrict;
 public class ConfigurationController extends Controller {
     @Inject
     private IPluginManagerService pluginManagerService;
+    @Inject
+    private IEventBroadcastingService eventBroadcastingService;
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
@@ -338,7 +341,7 @@ public class ConfigurationController extends Controller {
             SystemLevelRoleTypeEventMessage.PayLoad payload = new SystemLevelRoleTypeEventMessage.PayLoad();
             payload.setPreviousPermissionNames(previousPermissionNames);
             eventMessage.setPayload(payload);
-            getPluginManagerService().postOutMessage(eventMessage);
+            getEventBroadcastingService().postOutMessage(eventMessage);
         }
 
         roleFormData.description.persist(getI18nMessagesPlugin());
@@ -408,5 +411,9 @@ public class ConfigurationController extends Controller {
 
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    private IEventBroadcastingService getEventBroadcastingService() {
+        return eventBroadcastingService;
     }
 }
