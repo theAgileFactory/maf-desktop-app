@@ -52,6 +52,7 @@ import controllers.ControllersUtils;
 import dao.reporting.ReportingDao;
 import framework.services.account.AccountManagementException;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.taftree.EntityTafTreeNodeWrapper;
 import framework.taftree.TafTreeHelper;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
@@ -113,7 +114,7 @@ public class ReportingController extends Controller {
                 categories = ReportingDao.getReportingCategoryAsListByParent(id);
             }
 
-            return ok(TafTreeHelper.gets(categories, getI18nMessagesPlugin()));
+            return ok(TafTreeHelper.gets(EntityTafTreeNodeWrapper.fromEntityList(categories), getI18nMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();

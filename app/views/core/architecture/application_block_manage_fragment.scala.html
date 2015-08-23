@@ -17,7 +17,8 @@
  *@
 @(
     parent: models.architecture.ApplicationBlock,
-    applicationBlockForm: Form[utils.form.ApplicationBlockFormData]
+    applicationBlockForm: Form[utils.form.ApplicationBlockFormData],
+    hasChildren: Boolean
 )
 
 @import helper._
@@ -56,7 +57,7 @@
                         parts.Msg.asString("object.application_block.archived.help")
                     )
                     
-                    @if(dao.architecture.ArchitectureDao.getApplicationBlockById(Long.valueOf(applicationBlockForm("id").value)).hasChildren) {
+                    @if(hasChildren) {
                     <script>
                         $("#archived").change(function(e) {
                             if ($(this).prop('checked')) {

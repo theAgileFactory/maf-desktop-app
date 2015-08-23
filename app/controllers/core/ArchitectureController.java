@@ -46,6 +46,7 @@ import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
+import framework.taftree.EntityTafTreeNodeWrapper;
 import framework.taftree.TafTreeHelper;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.FilterConfig;
@@ -318,7 +319,8 @@ public class ArchitectureController extends Controller {
 
         Form<ApplicationBlockFormData> applicationBlockForm = null;
         ApplicationBlock parent = null;
-
+        boolean hasChildren=false;
+        
         // edit case
         if (id != null) {
 
@@ -327,6 +329,7 @@ public class ArchitectureController extends Controller {
             parent = applicationBlock.parent;
 
             applicationBlockForm = applicationBlockFormTemplate.fill(new ApplicationBlockFormData(applicationBlock));
+            hasChildren=applicationBlock.hasNodeChildren();
 
             // add the custom attributes values
             CustomAttributeFormAndDisplayHandler.fillWithValues(applicationBlockForm, ApplicationBlock.class, id);
@@ -343,7 +346,7 @@ public class ArchitectureController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(applicationBlockForm, ApplicationBlock.class, null);
         }
 
-        return ok(views.html.core.architecture.application_block_manage_fragment.render(parent, applicationBlockForm));
+        return ok(views.html.core.architecture.application_block_manage_fragment.render(parent, applicationBlockForm, hasChildren));
     }
 
     /**
@@ -363,7 +366,14 @@ public class ArchitectureController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, ApplicationBlock.class)) {
-            return ok(views.html.core.architecture.application_block_manage_fragment.render(parent, boundForm));
+            //WARNING: don't know if this works
+            String id=boundForm.field("id")!=null?boundForm.field("id").value():null;
+            boolean hasChildren=false;
+            if(id!=null){
+                ApplicationBlock currentApplicationBlock=ArchitectureDao.getApplicationBlockById(Long.valueOf(id));
+                hasChildren=currentApplicationBlock!=null?currentApplicationBlock.hasNodeChildren():false;
+            }
+            return ok(views.html.core.architecture.application_block_manage_fragment.render(parent, boundForm, hasChildren));
         }
 
         ApplicationBlockFormData applicationBlockFormData = boundForm.get();
@@ -398,7 +408,7 @@ public class ArchitectureController extends Controller {
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, ApplicationBlock.class, applicationBlock.id);
 
-        return ok(views.html.framework_views.parts.taftree.taf_tree_manual_manage_node.render("applicationBlockTree", action, applicationBlock));
+        return ok(views.html.framework_views.parts.taftree.taf_tree_manual_manage_node.render("applicationBlockTree", action, new EntityTafTreeNodeWrapper<ApplicationBlock>(applicationBlock)));
     }
 
     /**
@@ -434,10 +444,10 @@ public class ArchitectureController extends Controller {
                 applicationBlock = ArchitectureDao.getApplicationBlockById(id);
             }
 
-            TafTreeHelper.fill(request(), applicationBlock, getMessagesPlugin());
+            TafTreeHelper.fill(request(), new EntityTafTreeNodeWrapper<ApplicationBlock>(applicationBlock), getMessagesPlugin());
             applicationBlock.save();
 
-            return ok(TafTreeHelper.get(applicationBlock, getMessagesPlugin()));
+            return ok(TafTreeHelper.get(new EntityTafTreeNodeWrapper<ApplicationBlock>(applicationBlock), getMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
@@ -461,7 +471,7 @@ public class ArchitectureController extends Controller {
                 applicationBlocks = ArchitectureDao.getApplicationBlockActiveAsListByParent(id);
             }
 
-            return ok(TafTreeHelper.gets(applicationBlocks, getMessagesPlugin()));
+            return ok(TafTreeHelper.gets(EntityTafTreeNodeWrapper.fromEntityList(applicationBlocks), getMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
