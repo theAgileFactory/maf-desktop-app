@@ -41,6 +41,7 @@ import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.architecture.ArchitectureDao;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -81,6 +82,8 @@ public class ArchitectureController extends Controller {
     private IPersonalStoragePlugin personalStoragePlugin;
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
     @Inject
     private ISysAdminUtils sysAdminUtils;
 
@@ -431,10 +434,10 @@ public class ArchitectureController extends Controller {
                 applicationBlock = ArchitectureDao.getApplicationBlockById(id);
             }
 
-            TafTreeHelper.fill(request(), applicationBlock);
+            TafTreeHelper.fill(request(), applicationBlock, getMessagesPlugin());
             applicationBlock.save();
 
-            return ok(TafTreeHelper.get(applicationBlock));
+            return ok(TafTreeHelper.get(applicationBlock, getMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
@@ -458,7 +461,7 @@ public class ArchitectureController extends Controller {
                 applicationBlocks = ArchitectureDao.getApplicationBlockActiveAsListByParent(id);
             }
 
-            return ok(TafTreeHelper.gets(applicationBlocks));
+            return ok(TafTreeHelper.gets(applicationBlocks, getMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
@@ -483,5 +486,9 @@ public class ArchitectureController extends Controller {
 
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
     }
 }

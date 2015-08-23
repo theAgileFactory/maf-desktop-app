@@ -101,7 +101,7 @@ public class ActorApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = actorListRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
@@ -184,7 +184,7 @@ public class ActorApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = actorRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
@@ -257,7 +257,7 @@ public class ActorApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = actorRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(404, errorMsg));
             }
 

@@ -19,6 +19,8 @@ package controllers.admin;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.reporting.ReportingCategory;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -27,6 +29,7 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.reporting.ReportingDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.taftree.TafTreeHelper;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
@@ -43,6 +46,8 @@ import framework.utils.Utilities;
  */
 @Restrict({ @Group(IMafConstants.REPORTING_ADMINISTRATION_PERMISSION) })
 public class ReportingCategoryController extends Controller {
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
 
     /**
      * Action that manages a category.
@@ -65,10 +70,10 @@ public class ReportingCategoryController extends Controller {
                 return badRequest(Msg.get("object.reporting.category.delete.error"));
             }
 
-            TafTreeHelper.fill(request(), category);
+            TafTreeHelper.fill(request(), category,getMessagesPlugin());
             category.save();
 
-            return ok(TafTreeHelper.get(category));
+            return ok(TafTreeHelper.get(category,getMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
@@ -91,7 +96,7 @@ public class ReportingCategoryController extends Controller {
                 categories = ReportingDao.getReportingCategoryAsListByParent(id);
             }
 
-            return ok(TafTreeHelper.gets(categories));
+            return ok(TafTreeHelper.gets(categories, getMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
@@ -122,6 +127,10 @@ public class ReportingCategoryController extends Controller {
 
         return ok(Json.newObject());
 
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
     }
 
 }

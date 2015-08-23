@@ -104,7 +104,7 @@ public class OrgUnitApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = orgUnitListRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
@@ -161,7 +161,7 @@ public class OrgUnitApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = orgUnitRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
@@ -228,7 +228,7 @@ public class OrgUnitApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = orgUnitRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(404, errorMsg));
             }
 

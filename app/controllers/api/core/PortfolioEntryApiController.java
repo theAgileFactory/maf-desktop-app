@@ -148,7 +148,7 @@ public class PortfolioEntryApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = portfolioEntryListRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
@@ -213,7 +213,7 @@ public class PortfolioEntryApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = portfolioEntryRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
@@ -288,7 +288,7 @@ public class PortfolioEntryApiController extends ApiController {
                 // get errors
                 Map<String, List<ValidationError>> allErrors = portfolioEntryRequestForm.errors();
                 // get errors to String Format
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 

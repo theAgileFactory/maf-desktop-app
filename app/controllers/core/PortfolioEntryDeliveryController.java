@@ -66,6 +66,7 @@ import framework.highcharts.pattern.BasicBar;
 import framework.highcharts.pattern.DistributedDonut;
 import framework.highcharts.pattern.RangeLine;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
@@ -85,6 +86,8 @@ import framework.security.SecurityUtils;
 public class PortfolioEntryDeliveryController extends Controller {
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -225,7 +228,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         // priority pie chart (for the needs)
 
-        DistributedDonut distributedDonutPriority = new DistributedDonut();
+        DistributedDonut distributedDonutPriority = new DistributedDonut(getMessagesPlugin());
 
         DistributedDonut.Elem mustElem = new DistributedDonut.Elem(Msg.get("core.portfolio_entry_delivery.requirement.status.priority.must.true.label"));
         double mustTotal = 0;
@@ -283,7 +286,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         // severity pie chart (for the defects)
 
-        DistributedDonut distributedDonutSeverity = new DistributedDonut();
+        DistributedDonut distributedDonutSeverity = new DistributedDonut(getMessagesPlugin());
 
         DistributedDonut.Elem blockerElem =
                 new DistributedDonut.Elem(Msg.get("core.portfolio_entry_delivery.requirement.status.severity.blocker.true.label"));
@@ -887,6 +890,10 @@ public class PortfolioEntryDeliveryController extends Controller {
 
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
     }
 
 }

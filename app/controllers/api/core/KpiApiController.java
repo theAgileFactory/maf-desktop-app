@@ -108,7 +108,7 @@ public class KpiApiController extends ApiController {
             // if errors
             if (kpiDataRequestForm.hasErrors()) {
                 Map<String, List<ValidationError>> allErrors = kpiDataRequestForm.errors();
-                String errorMsg = ApiError.getValidationErrorsMessage(allErrors);
+                String errorMsg = ApiError.getValidationErrorsMessage(getMessagesPlugin(), allErrors);
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 

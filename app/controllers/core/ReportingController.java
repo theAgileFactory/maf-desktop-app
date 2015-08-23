@@ -113,7 +113,7 @@ public class ReportingController extends Controller {
                 categories = ReportingDao.getReportingCategoryAsListByParent(id);
             }
 
-            return ok(TafTreeHelper.gets(categories));
+            return ok(TafTreeHelper.gets(categories, getI18nMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
