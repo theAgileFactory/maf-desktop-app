@@ -22,17 +22,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.framework_models.account.SystemLevelRoleType;
-import models.framework_models.account.SystemPermission;
-import play.Logger;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import utils.form.RoleFormData;
-import utils.table.RoleListView;
-
 import com.avaje.ebean.Ebean;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.ControllersUtils;
@@ -44,13 +37,18 @@ import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.plugins.IEventBroadcastingService;
-import framework.services.plugins.IPluginManagerService;
 import framework.utils.Msg;
 import framework.utils.PreferenceFormAndDisplayHandler;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
+import models.framework_models.account.SystemLevelRoleType;
+import models.framework_models.account.SystemPermission;
+import play.Logger;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import utils.form.RoleFormData;
+import utils.table.RoleListView;
 
 /**
  * The administration interface which is used to configuration the BizDock
@@ -60,8 +58,6 @@ import be.objectify.deadbolt.java.actions.Restrict;
  * 
  */
 public class ConfigurationController extends Controller {
-    @Inject
-    private IPluginManagerService pluginManagerService;
     @Inject
     private IEventBroadcastingService eventBroadcastingService;
     @Inject
@@ -399,10 +395,6 @@ public class ConfigurationController extends Controller {
      * @author Pierre-Yves Cloux
      */
     public static class PrefsData {
-    }
-
-    private IPluginManagerService getPluginManagerService() {
-        return pluginManagerService;
     }
 
     private IAccountManagerPlugin getAccountManagerPlugin() {

@@ -553,7 +553,7 @@ public class ConfigurationCustomAttributeController extends Controller {
     public static ISelectableValueHolderCollection<String> getAllDataTypes() {
         DefaultSelectableValueHolderCollection<String> valueHolderCollection = new DefaultSelectableValueHolderCollection<String>();
         for (DataType dataType : DataType.getAllCustomAttributeDataTypes()) {
-            valueHolderCollection.add(new DefaultSelectableValueHolder<String>(dataType.getDataTypeClassName(), dataType.getLabel()));
+            valueHolderCollection.add(new DefaultSelectableValueHolder<String>(dataType.getDataTypeClassName(), Msg.get(dataType.getLabel())));
         }
         return valueHolderCollection;
     }

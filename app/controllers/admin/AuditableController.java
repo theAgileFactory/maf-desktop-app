@@ -351,7 +351,7 @@ public class AuditableController extends Controller {
         // Get all the selectable entities from the configuration
         ISelectableValueHolderCollection<String> selectableObjects = new DefaultSelectableValueHolderCollection<String>();
         for (DataType dataType : DataType.getAllAuditableDataTypes()) {
-            selectableObjects.add(new DefaultSelectableValueHolder<String>(dataType.getDataTypeClassName(), dataType.getLabel()));
+            selectableObjects.add(new DefaultSelectableValueHolder<String>(dataType.getDataTypeClassName(), Msg.get(dataType.getLabel())));
         }
         // Remove the previously selected entities
         List<Auditable> auditables = ServiceStaticAccessor.getAuditLoggerService().getAllActiveAuditable();
@@ -362,7 +362,7 @@ public class AuditableController extends Controller {
         // selected again)
         if (!StringUtils.isBlank(currentObjectClass)) {
             selectableObjects
-                    .add(new DefaultSelectableValueHolder<String>(currentObjectClass, DataType.getDataTypeFromClassName(currentObjectClass).getLabel()));
+                    .add(new DefaultSelectableValueHolder<String>(currentObjectClass, Msg.get(DataType.getDataTypeFromClassName(currentObjectClass).getLabel())));
         }
         return selectableObjects;
     }
@@ -374,7 +374,7 @@ public class AuditableController extends Controller {
      *            the auditable object
      */
     public static ISelectableValueHolder<String> getSelectedValueForObjectClass(Auditable object) {
-        return new DefaultSelectableValueHolder<String>(object.objectClass, DataType.getDataTypeFromClassName(object.objectClass).getLabel());
+        return new DefaultSelectableValueHolder<String>(object.objectClass, Msg.get(DataType.getDataTypeFromClassName(object.objectClass).getLabel()));
     }
 
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
