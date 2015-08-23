@@ -69,6 +69,7 @@ import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.api.IPluginMenuDescriptor;
 import framework.services.remote.IAdPanelManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FileAttachmentHelper;
 import framework.utils.FilterConfig;
 import framework.utils.Msg;
@@ -90,15 +91,14 @@ import framework.utils.Utilities;
 public class Application extends Controller {
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
-
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
-    
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
-    
     @Inject
     private IAdPanelManagerService adPanelManagerService;
+    @Inject
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
     
     private static Logger.ALogger log = Logger.of(Application.class);
 
@@ -355,7 +355,7 @@ public class Application extends Controller {
      */
     @SubjectPresent
     public Result downloadFileAttachment(Long attachmentId) {
-        return FileAttachmentHelper.downloadFileAttachment(attachmentId);
+        return FileAttachmentHelper.downloadFileAttachment(attachmentId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
     }
 
     /**
@@ -367,7 +367,7 @@ public class Application extends Controller {
      */
     @SubjectPresent
     public Result deleteFileAttachment(Long attachmentId) {
-        return FileAttachmentHelper.deleteFileAttachment(attachmentId);
+        return FileAttachmentHelper.deleteFileAttachment(attachmentId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
     }
 
     /**
@@ -735,5 +735,9 @@ public class Application extends Controller {
 
     private IAdPanelManagerService getAdPanelManagerService() {
         return adPanelManagerService;
+    }
+
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
     }
 }

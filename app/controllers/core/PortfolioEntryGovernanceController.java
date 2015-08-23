@@ -179,7 +179,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
             /** if exists, get the description document */
 
-            List<Attachment> attachment = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id);
+            List<Attachment> attachment = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
             if (attachment != null && attachment.size() > 0) {
                 attachments.add(attachment.get(0));
             } else {
@@ -404,7 +404,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             // if exists, add the the description document file
             if (FileAttachmentHelper.hasFileField("descriptionDocument")) {
                 try {
-                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", ProcessTransitionRequest.class, processTransitionRequest.id);
+                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", ProcessTransitionRequest.class, processTransitionRequest.id, getAttachmentManagerPlugin());
                 } catch (Exception e) {
                     Utilities.sendErrorFlashMessage(Msg.get("object.process_transition_request.description_document.error"));
                 }
@@ -468,7 +468,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             // if exists, add the the description document file
             if (FileAttachmentHelper.hasFileField("descriptionDocument")) {
                 try {
-                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id);
+                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id,getAttachmentManagerPlugin());
                 } catch (Exception e) {
                     Utilities.sendErrorFlashMessage(Msg.get("object.process_transition_request.description_document.error"));
                 }

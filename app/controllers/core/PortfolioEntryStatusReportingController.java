@@ -52,6 +52,7 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
 import framework.utils.CssValueForValueHolder;
@@ -117,6 +118,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryStatusReportingController.class);
 
@@ -468,7 +471,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
          */
 
         // authorize the attachments
-        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryReport.class, reportId);
+        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryReport.class, reportId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         // create the table
         List<Attachment> attachments = Attachment.getAttachmentsFromObjectTypeAndObjectId(PortfolioEntryReport.class, reportId);
@@ -593,7 +596,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
             if (FileAttachmentHelper.hasFileField("document")) {
                 Logger.debug("has document");
                 try {
-                    FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryReport.class, portfolioEntryReport.id);
+                    FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryReport.class, portfolioEntryReport.id, getAttachmentManagerPlugin());
                 } catch (IOException e) {
                     Logger.error("impossible to add the document for the created report '" + portfolioEntryReport.id + "'. The report still created.", e);
                 }
@@ -708,7 +711,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         // store the document
         try {
-            FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryReport.class, report.id);
+            FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryReport.class, report.id, getAttachmentManagerPlugin());
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -746,7 +749,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         // delete the attachment
-        FileAttachmentHelper.deleteFileAttachment(attachmentId);
+        FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         attachment.doDelete();
 
@@ -1115,6 +1118,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
     }
 
 }

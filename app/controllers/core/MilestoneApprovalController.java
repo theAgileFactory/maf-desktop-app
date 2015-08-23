@@ -59,6 +59,7 @@ import framework.security.SecurityUtils;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FileAttachmentHelper;
@@ -90,6 +91,8 @@ public class MilestoneApprovalController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private IAttachmentManagerPlugin attachmentPluginManager;
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -282,7 +285,7 @@ public class MilestoneApprovalController extends Controller {
         List<String> status = LifeCycleMilestoneDao.getLCMilestoneAsStatusByPEAndLCMilestone(portfolioEntry.id, milestoneInstance.lifeCycleMilestone.id);
 
         // if exists, get the description document
-        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, milestoneInstance.id);
+        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, milestoneInstance.id, getAttachmentPluginManager(), getUserSessionManagerPlugin());
         Attachment descriptionDocument = null;
         if (attachments != null && attachments.size() > 0) {
             descriptionDocument = attachments.get(0);
@@ -530,6 +533,10 @@ public class MilestoneApprovalController extends Controller {
 
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
+    }
+
+    private IAttachmentManagerPlugin getAttachmentPluginManager() {
+        return attachmentPluginManager;
     }
 
 }

@@ -56,6 +56,8 @@ import dao.timesheet.TimesheetDao;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.Color;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
@@ -128,6 +130,10 @@ public class PortfolioEntryPlanningController extends Controller {
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private II18nMessagesPlugin messagesPlugin;
+    @Inject
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -692,7 +698,7 @@ public class PortfolioEntryPlanningController extends Controller {
          */
 
         // authorize the attachments
-        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryPlanningPackage.class, planningPackageId);
+        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryPlanningPackage.class, planningPackageId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         // create the table
         List<Attachment> attachments = Attachment.getAttachmentsFromObjectTypeAndObjectId(PortfolioEntryPlanningPackage.class, planningPackageId);
@@ -815,7 +821,7 @@ public class PortfolioEntryPlanningController extends Controller {
             if (FileAttachmentHelper.hasFileField("document")) {
                 Logger.debug("has document");
                 try {
-                    FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryPlanningPackage.class, planningPackage.id);
+                    FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryPlanningPackage.class, planningPackage.id, getAttachmentManagerPlugin());
                 } catch (IOException e) {
                     Logger.error("impossible to add the document for the created package '" + planningPackage.id + "'. The package still created.", e);
                 }
@@ -1047,7 +1053,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         // store the document
         try {
-            FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryPlanningPackage.class, planningPackage.id);
+            FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryPlanningPackage.class, planningPackage.id, getAttachmentManagerPlugin());
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -1085,7 +1091,7 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         // delete the attachment
-        FileAttachmentHelper.deleteFileAttachment(attachmentId);
+        FileAttachmentHelper.deleteFileAttachment(attachmentId,getAttachmentManagerPlugin(),getUserSessionManagerPlugin());
 
         attachment.doDelete();
 
@@ -1950,6 +1956,10 @@ public class PortfolioEntryPlanningController extends Controller {
         return messagesPlugin;
     }
 
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
+    }
+
     /**
      * The configuration of the overview (gantt chart).
      * 
@@ -2022,6 +2032,10 @@ public class PortfolioEntryPlanningController extends Controller {
             ServiceStaticAccessor.getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE, json);
         }
 
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 
 }

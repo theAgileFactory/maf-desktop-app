@@ -161,7 +161,7 @@ public class ProcessTransitionRequestController extends Controller {
         List<String> status = LifeCycleMilestoneDao.getLCMilestoneAsStatusByPEAndLCMilestone(id, lifeCycleMilestone.id);
 
         // if exists, get the description document
-        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id);
+        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id,getAttachmentManagerPlugin(),getUserSessionManagerPlugin());
         Attachment descriptionDocument = null;
         if (attachments != null && attachments.size() > 0) {
             descriptionDocument = attachments.get(0);
@@ -206,7 +206,7 @@ public class ProcessTransitionRequestController extends Controller {
         ProcessTransitionRequest request = ProcessTransitionRequestDao.getProcessTransitionRequestById(processMilestoneRequestFormData.requestId);
 
         // if exists, get the request description document file
-        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id);
+        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id,getAttachmentManagerPlugin(),getUserSessionManagerPlugin());
         Attachment descriptionDocument = null;
         if (attachments != null && attachments.size() > 0) {
             descriptionDocument = attachments.get(0);

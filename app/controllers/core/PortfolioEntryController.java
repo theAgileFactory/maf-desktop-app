@@ -50,6 +50,7 @@ import framework.services.account.AccountManagementException;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
@@ -117,6 +118,8 @@ public class PortfolioEntryController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IPluginManagerService pluginManagerService;
+    @Inject
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -195,7 +198,7 @@ public class PortfolioEntryController extends Controller {
 
             // if exists, Creation of the attachment
             if (FileAttachmentHelper.hasFileField("scopeDescription")) {
-                attachmentId = FileAttachmentHelper.saveAsAttachement("scopeDescription", PortfolioEntry.class, portfolioEntry.id);
+                attachmentId = FileAttachmentHelper.saveAsAttachement("scopeDescription", PortfolioEntry.class, portfolioEntry.id, getAttachmentManagerPlugin());
                 log.info("Attachment " + attachmentId + " created for entry " + portfolioEntryId);
             }
 
@@ -205,7 +208,7 @@ public class PortfolioEntryController extends Controller {
             try {
                 // Attempt to rollback the attachment creation
                 if (attachmentId != null) {
-                    FileAttachmentHelper.deleteFileAttachment(attachmentId);
+                    FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
                 }
             } catch (Exception exp) {
                 Logger.error("impossible to rollback the attachment creation", exp);
@@ -456,7 +459,7 @@ public class PortfolioEntryController extends Controller {
          */
 
         // authorize the attachments
-        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntry.class, id);
+        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntry.class, id, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         // create the table
         Pagination<Attachment> attachmentPagination = new Pagination<Attachment>(
@@ -725,7 +728,7 @@ public class PortfolioEntryController extends Controller {
 
         // store the document
         try {
-            FileAttachmentHelper.saveAsAttachement("document", PortfolioEntry.class, portfolioEntry.id);
+            FileAttachmentHelper.saveAsAttachement("document", PortfolioEntry.class, portfolioEntry.id, getAttachmentManagerPlugin());
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -757,7 +760,7 @@ public class PortfolioEntryController extends Controller {
         }
 
         // delete the attachment
-        FileAttachmentHelper.deleteFileAttachment(attachmentId);
+        FileAttachmentHelper.deleteFileAttachment(attachmentId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         attachment.doDelete();
 
@@ -1032,6 +1035,10 @@ public class PortfolioEntryController extends Controller {
 
     private IPluginManagerService getPluginManagerService() {
         return pluginManagerService;
+    }
+
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return attachmentManagerPlugin;
     }
 
 }
