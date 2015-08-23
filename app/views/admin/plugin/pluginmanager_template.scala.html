@@ -24,6 +24,7 @@
 @import views.html.modelsparts._
 @import framework.utils.SideBar
 @import framework.utils.Menu.ClickableMenuItem
+@import views.html.commons._
 
 @breadcrump=@{
     Seq(
@@ -34,7 +35,7 @@
 
 @templates.main_bc_iconsbar(
     pageTitleI18nCode,
-    controllers.admin.PluginManagerController.getIconsBar(utils.Tpl.getDataSyndicationService.isActive, menuItemType),
+    controllers.admin.PluginManagerController.getIconsBar(_dataSyndication.isActive, menuItemType),
     breadcrump
 ){
 @header

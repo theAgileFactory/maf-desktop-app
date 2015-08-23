@@ -18,10 +18,11 @@
 @(portfolioEntry: models.pmo.PortfolioEntry, menuItemType: controllers.core.PortfolioEntryController.MenuItemType, breadcrump: Seq[(String, String)])(content: Html)
 @import framework_views.parts
 @import framework.utils.Menu.ClickableMenuItem
+@import views.html.commons._
 
 @templates.main_bc_iconsbar(
     portfolioEntry.getName,
-    controllers.core.PortfolioEntryController.getIconsBar(utils.Tpl.getDataSyndicationService.isActive, portfolioEntry.id, menuItemType),
+    controllers.core.PortfolioEntryController.getIconsBar(_dataSyndication.isActive, portfolioEntry.id, menuItemType),
     breadcrump
 ){
 }{

@@ -3,14 +3,14 @@ package security;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import be.objectify.deadbolt.java.DeadboltHandler;
+import be.objectify.deadbolt.java.cache.HandlerCache;
+import constants.IMafConstants;
 import controllers.sso.Authenticator;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import models.framework_models.account.SystemPermission;
 import play.Logger;
-import be.objectify.deadbolt.java.DeadboltHandler;
-import be.objectify.deadbolt.java.cache.HandlerCache;
-import constants.IMafConstants;
 
 /**
  * Handlers cache implementation.<br/>

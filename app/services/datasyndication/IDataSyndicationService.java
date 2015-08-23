@@ -34,8 +34,6 @@ import services.datasyndication.models.DataSyndicationPartner;
  */
 public interface IDataSyndicationService {
 
-    String NAME = "dataSyndicationService";
-
     /**
      * Get the domain of the current instance.
      */

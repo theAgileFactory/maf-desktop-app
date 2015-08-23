@@ -4,11 +4,11 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
-import framework.services.ServiceStaticAccessor;
+import framework.handlers.AbstractRequestHandler;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
 import framework.utils.Utilities;
 import play.Logger;
-import play.http.DefaultHttpRequestHandler;
 import play.libs.F.Promise;
 import play.mvc.Action;
 import play.mvc.Http.Context;
@@ -22,14 +22,14 @@ import services.datasyndication.IDataSyndicationService;
  * @author Johann Kohler
  *
  */
-public class MafHttpRequestHandler extends DefaultHttpRequestHandler {
-
-    /**
-     * Inject here the needed services for the views.
-     */
-
+public class MafHttpRequestHandler extends AbstractRequestHandler {
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
     @Inject
     private IDataSyndicationService dataSyndicationService;
+    
+    public MafHttpRequestHandler(){
+    }
 
     @Override
     public Action<Void> createAction(Request request, Method actionMethod) {
@@ -38,12 +38,11 @@ public class MafHttpRequestHandler extends DefaultHttpRequestHandler {
             @Override
             public Promise<Result> call(Context ctx) throws Throwable {
 
-                // add the needed services as args
-                ctx.args.put(IDataSyndicationService.NAME, dataSyndicationService);
-
+                //Inject the required services into the context
+                injectCommonServicesIncontext(ctx);
                 final Language language = new Language(request.getQueryString("lang"));
 
-                if (ServiceStaticAccessor.getMessagesPlugin().isLanguageValid(language.getCode())) {
+                if (messagesPlugin.isLanguageValid(language.getCode())) {
                     Logger.debug("change language to: " + language.getCode());
                     ctx.changeLang(language.getCode());
                     // Update the CAS language cookie which is relying on Spring
@@ -55,7 +54,11 @@ public class MafHttpRequestHandler extends DefaultHttpRequestHandler {
 
             }
         };
-
+       
     }
 
+    protected void injectCommonServicesIncontext(Context ctx){
+        super.injectCommonServicesIncontext(ctx);
+        ctx.args.put(IDataSyndicationService.class.getName(), dataSyndicationService);
+    }
 }
