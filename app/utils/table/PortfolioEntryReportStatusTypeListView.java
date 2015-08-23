@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 
 import models.pmo.PortfolioEntryReportStatusType;
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -106,14 +107,18 @@ public class PortfolioEntryReportStatusTypeListView {
      * 
      * @param reportStatusType
      *            the portfolio entry report status type in the DB
+     * @param messagesPlugin
+     *            the i18n service
      */
-    public PortfolioEntryReportStatusTypeListView(PortfolioEntryReportStatusType reportStatusType) {
+    public PortfolioEntryReportStatusTypeListView(
+            PortfolioEntryReportStatusType reportStatusType,
+            II18nMessagesPlugin messagesPlugin) {
 
         this.id = reportStatusType.id;
         this.name = reportStatusType.name;
         this.description = reportStatusType.description;
         this.selectable = reportStatusType.selectable;
-        this.color = Color.getLabel(reportStatusType.cssClass);
+        this.color = Color.getLabel(reportStatusType.cssClass, messagesPlugin);
 
     }
 }

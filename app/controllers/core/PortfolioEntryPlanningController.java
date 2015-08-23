@@ -55,6 +55,7 @@ import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
@@ -125,6 +126,8 @@ import framework.security.SecurityUtils;
 public class PortfolioEntryPlanningController extends Controller {
     @Inject 
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -750,7 +753,7 @@ public class PortfolioEntryPlanningController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(planningPackageForm, PortfolioEntryPlanningPackage.class, null);
         }
 
-        return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(), planningPackageForm,
+        return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()), planningPackageForm,
                 PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
     }
 
@@ -769,7 +772,7 @@ public class PortfolioEntryPlanningController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class)) {
-            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(), boundForm,
+            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()), boundForm,
                     PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
 
@@ -779,7 +782,7 @@ public class PortfolioEntryPlanningController extends Controller {
         if (!planningPackageFormData.startDate.equals("") && planningPackageFormData.endDate.equals("")) {
             // the start date cannot be filled alone
             boundForm.reject("startDate", Msg.get("object.portfolio_entry_planning_package.start_date.invalid"));
-            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(), boundForm,
+            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()), boundForm,
                     PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
         if (!planningPackageFormData.startDate.equals("") && !planningPackageFormData.endDate.equals("")) {
@@ -788,7 +791,7 @@ public class PortfolioEntryPlanningController extends Controller {
                 if (Utilities.getDateFormat(null).parse(planningPackageFormData.startDate)
                         .after(Utilities.getDateFormat(null).parse(planningPackageFormData.endDate))) {
                     boundForm.reject("endDate", Msg.get("object.portfolio_entry_planning_package.end_date.invalid"));
-                    return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(),
+                    return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
                             boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
                 }
             } catch (ParseException e) {
@@ -1939,6 +1942,14 @@ public class PortfolioEntryPlanningController extends Controller {
         return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
     }
 
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
+    }
+
     /**
      * The configuration of the overview (gantt chart).
      * 
@@ -2011,10 +2022,6 @@ public class PortfolioEntryPlanningController extends Controller {
             ServiceStaticAccessor.getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE, json);
         }
 
-    }
-
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
     }
 
 }

@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackageGroup;
 import constants.IMafConstants;
@@ -28,6 +30,8 @@ import controllers.core.PortfolioEntryPlanningController;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Color;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
@@ -47,7 +51,9 @@ import framework.utils.formats.StringFormatFormatter;
  * @author Johann Kohler
  */
 public class PortfolioEntryPlanningPackageListView {
-
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
+    
     public static FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = getFilterConfig();
 
     /**
@@ -215,6 +221,8 @@ public class PortfolioEntryPlanningPackageListView {
      * 
      * @param portfolioEntryPlanningPackage
      *            the portfolio entry planning package in the DB
+     * @param messagesPlugin
+     *            the i18n service
      */
     public PortfolioEntryPlanningPackageListView(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage) {
 
@@ -222,7 +230,7 @@ public class PortfolioEntryPlanningPackageListView {
         this.portfolioEntryId = portfolioEntryPlanningPackage.portfolioEntry.id;
 
         this.name = portfolioEntryPlanningPackage.name;
-        this.color = portfolioEntryPlanningPackage.getDisplayCssClass();
+        this.color = Color.getLabel(portfolioEntryPlanningPackage.cssClass, getMessagesPlugin());
 
         this.startDate = portfolioEntryPlanningPackage.startDate;
 
@@ -243,5 +251,9 @@ public class PortfolioEntryPlanningPackageListView {
                 TimesheetDao.getTimesheetLogAsTotalHoursByPEPlanningPackage(portfolioEntryPlanningPackage).divide(
                         TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
 
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
     }
 }

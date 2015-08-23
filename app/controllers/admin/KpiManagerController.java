@@ -137,7 +137,7 @@ public class KpiManagerController extends Controller {
         // create the color rules table
         List<KpiColorRuleListView> kpiColorRuleListView = new ArrayList<KpiColorRuleListView>();
         for (KpiColorRule kpiColorRule : kpiDefinition.kpiColorRules) {
-            kpiColorRuleListView.add(new KpiColorRuleListView(kpiColorRule));
+            kpiColorRuleListView.add(new KpiColorRuleListView(kpiColorRule, getI18nMessagesPlugin()));
         }
         Table<KpiColorRuleListView> rulesTable = KpiColorRuleListView.templateTable.fill(kpiColorRuleListView);
 
@@ -372,7 +372,7 @@ public class KpiManagerController extends Controller {
 
         }
 
-        return ok(views.html.admin.kpi.manageRule.render(kpiDefinition, kpi, form, Color.getColorsAsValueHolderCollection()));
+        return ok(views.html.admin.kpi.manageRule.render(kpiDefinition, kpi, form, Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
     }
 
     /**
@@ -389,7 +389,7 @@ public class KpiManagerController extends Controller {
         Kpi kpi = new Kpi(kpiDefinition,getKpiService());
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.admin.kpi.manageRule.render(kpiDefinition, kpi, boundForm, Color.getColorsAsValueHolderCollection()));
+            return ok(views.html.admin.kpi.manageRule.render(kpiDefinition, kpi, boundForm, Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
         }
 
         KpiColorRuleFormData kpiColorRuleFormData = boundForm.get();

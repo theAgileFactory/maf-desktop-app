@@ -21,6 +21,8 @@ import java.text.MessageFormat;
 
 import models.pmo.PortfolioEntryPlanningPackagePattern;
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Color;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -35,7 +37,6 @@ import framework.utils.formats.StringFormatFormatter;
  * @author Johann Kohler
  */
 public class PortfolioEntryPlanningPackagePatternListView {
-
     public static Table<PortfolioEntryPlanningPackagePatternListView> templateTable = new Table<PortfolioEntryPlanningPackagePatternListView>() {
         {
 
@@ -120,8 +121,12 @@ public class PortfolioEntryPlanningPackagePatternListView {
      * 
      * @param packagePattern
      *            the package pattern in the DB
+     * @param messagesPlugin
+     *            the i18n service
      */
-    public PortfolioEntryPlanningPackagePatternListView(PortfolioEntryPlanningPackagePattern packagePattern) {
+    public PortfolioEntryPlanningPackagePatternListView(
+            PortfolioEntryPlanningPackagePattern packagePattern,
+            II18nMessagesPlugin messagesPlugin) {
 
         this.id = packagePattern.id;
         this.packageGroupId = packagePattern.portfolioEntryPlanningPackageGroup.id;
@@ -129,7 +134,7 @@ public class PortfolioEntryPlanningPackagePatternListView {
         this.name = packagePattern.name;
         this.description = packagePattern.description;
         this.isImportant = packagePattern.isImportant;
-        this.color = packagePattern.getDisplayCssClass();
+        this.color = Color.getLabel(packagePattern.cssClass, messagesPlugin);
 
     }
 }

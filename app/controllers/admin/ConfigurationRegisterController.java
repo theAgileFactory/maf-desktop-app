@@ -85,7 +85,7 @@ public class ConfigurationRegisterController extends Controller {
 
         List<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypeListView = new ArrayList<PortfolioEntryReportStatusTypeListView>();
         for (PortfolioEntryReportStatusType portfolioEntryReportStatusType : portfolioEntryReportStatusTypes) {
-            portfolioEntryReportStatusTypeListView.add(new PortfolioEntryReportStatusTypeListView(portfolioEntryReportStatusType));
+            portfolioEntryReportStatusTypeListView.add(new PortfolioEntryReportStatusTypeListView(portfolioEntryReportStatusType, getI18nMessagesPlugin()));
         }
 
         Table<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypesTable =
@@ -213,7 +213,7 @@ public class ConfigurationRegisterController extends Controller {
         }
 
         return ok(views.html.admin.config.datareference.register.report_status_type_manage.render(reportStatusTypeForm,
-                Color.getColorsAsValueHolderCollection()));
+                Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
 
     }
 
@@ -226,7 +226,7 @@ public class ConfigurationRegisterController extends Controller {
         Form<PortfolioEntryReportStatusTypeFormData> boundForm = reportStatusTypeFormTemplate.bindFromRequest();
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.admin.config.datareference.register.report_status_type_manage.render(boundForm, Color.getColorsAsValueHolderCollection()));
+            return ok(views.html.admin.config.datareference.register.report_status_type_manage.render(boundForm, Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
         }
 
         PortfolioEntryReportStatusTypeFormData reportStatusTypeFormData = boundForm.get();

@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 import models.framework_models.kpi.KpiColorRule;
 import constants.IMafConstants;
 import framework.commons.IFrameworkConstants.Syntax;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -113,13 +114,15 @@ public class KpiColorRuleListView {
      * 
      * @param kpiColorRule
      *            the KPI color rule in the DB
+     * @param messagesPlugin
+     *            the i18n service
      */
-    public KpiColorRuleListView(KpiColorRule kpiColorRule) {
+    public KpiColorRuleListView(KpiColorRule kpiColorRule, II18nMessagesPlugin messagesPlugin) {
 
         this.id = kpiColorRule.id;
         this.kpiDefinitionId = kpiColorRule.kpiDefinition.id;
         this.rule = kpiColorRule.rule;
-        this.color = Color.getLabel(kpiColorRule.cssColor);
+        this.color = Color.getLabel(kpiColorRule.cssColor, messagesPlugin);
         this.renderLabel = kpiColorRule.renderLabel;
 
     }

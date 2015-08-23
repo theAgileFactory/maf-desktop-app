@@ -91,7 +91,7 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         List<PortfolioEntryPlanningPackagePatternListView> packagePatternListView = new ArrayList<PortfolioEntryPlanningPackagePatternListView>();
         for (PortfolioEntryPlanningPackagePattern packagePattern : packagePatterns) {
-            packagePatternListView.add(new PortfolioEntryPlanningPackagePatternListView(packagePattern));
+            packagePatternListView.add(new PortfolioEntryPlanningPackagePatternListView(packagePattern, getI18nMessagesPlugin()));
         }
 
         Table<PortfolioEntryPlanningPackagePatternListView> packagePatternsTable =
@@ -251,7 +251,7 @@ public class ConfigurationPlanningPackageController extends Controller {
         }
 
         return ok(views.html.admin.config.datareference.planning_package.package_pattern_manage.render(packageGroup, packagePatternForm,
-                Color.getColorsAsValueHolderCollection()));
+                Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
     }
 
     /**
@@ -268,7 +268,7 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.config.datareference.planning_package.package_pattern_manage.render(packageGroup, boundForm,
-                    Color.getColorsAsValueHolderCollection()));
+                    Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
         }
 
         PortfolioEntryPlanningPackagePatternFormData packagePatternFormData = boundForm.get();
