@@ -17,6 +17,7 @@
  */
 package services.echannel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,12 +29,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import constants.IMafConstants;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.api.AbstractApiController;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -73,6 +76,8 @@ public class EchannelServiceImpl implements IEchannelService {
     private String apiSecretKey;
 
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+
+    private ObjectMapper mapper;
 
     private static final String ACTION_PATTERN = "/{domain}/{action}";
 
@@ -151,32 +156,35 @@ public class EchannelServiceImpl implements IEchannelService {
             return Promise.pure(null);
         });
 
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat(AbstractApiController.DATE_FORMAT));
+        this.mapper = mapper;
+
         Logger.info("SERVICE>>> EchannelServiceImpl started");
     }
 
     @Override
-    public void createNotificationEvent(String domain, RecipientsDescriptor recipientsDescriptor, String title, String message, String actionLink) {
+    public void createNotificationEvent(String domain, RecipientsDescriptor recipientsDescriptor, String title, String message, String actionLink)
+            throws EchannelException {
         NotificationEventRequest notificationEventRequest = new NotificationEventRequest();
         notificationEventRequest.domain = domain;
         notificationEventRequest.recipientsDescriptor = recipientsDescriptor;
         notificationEventRequest.title = title;
         notificationEventRequest.message = message;
         notificationEventRequest.actionLink = actionLink;
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(notificationEventRequest);
+        JsonNode content = getMapper().valueToTree(notificationEventRequest);
         this.call(HttpMethod.POST, NOTIFICATION_EVENT_ACTION, null, content);
 
     }
 
     @Override
-    public List<NotificationEvent> getNotificationEventsToNotify() {
+    public List<NotificationEvent> getNotificationEventsToNotify() throws EchannelException {
 
         JsonNode response = this.call(HttpMethod.GET, NOTIFICATION_EVENT_ACTION + "/find", null, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<NotificationEvent> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, NotificationEvent.class));
+            r.add(getMapper().convertValue(item, NotificationEvent.class));
         }
 
         return r;
@@ -239,8 +247,7 @@ public class EchannelServiceImpl implements IEchannelService {
         try {
             UpdateConsumedUsersRequest updateConsumedUsersRequest = new UpdateConsumedUsersRequest();
             updateConsumedUsersRequest.consumedUsers = consumedUsers;
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode content = mapper.valueToTree(updateConsumedUsersRequest);
+            JsonNode content = getMapper().valueToTree(updateConsumedUsersRequest);
             this.call(HttpMethod.PUT, CONSUMED_USERS_ACTION, null, content);
         } catch (Exception e) {
             Logger.error("eChannel service unexpected error / updateConsumedUsers", e);
@@ -254,8 +261,7 @@ public class EchannelServiceImpl implements IEchannelService {
         try {
             UpdateConsumedPortfolioEntriesRequest updateConsumedPortfolioEntriesRequest = new UpdateConsumedPortfolioEntriesRequest();
             updateConsumedPortfolioEntriesRequest.consumedPortfolioEntries = consumedPortfolioEntries;
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode content = mapper.valueToTree(updateConsumedPortfolioEntriesRequest);
+            JsonNode content = getMapper().valueToTree(updateConsumedPortfolioEntriesRequest);
             this.call(HttpMethod.PUT, CONSUMED_PORTFOLIO_ENTRIES_ACTION, null, content);
         } catch (Exception e) {
             Logger.error("eChannel service unexpected error / updateConsumedPortfolioEntries", e);
@@ -269,8 +275,7 @@ public class EchannelServiceImpl implements IEchannelService {
         try {
             UpdateConsumedStorageRequest updateConsumedStorageRequest = new UpdateConsumedStorageRequest();
             updateConsumedStorageRequest.consumedStorage = consumedStorage;
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode content = mapper.valueToTree(updateConsumedStorageRequest);
+            JsonNode content = getMapper().valueToTree(updateConsumedStorageRequest);
             this.call(HttpMethod.PUT, CONSUMED_STORAGE_ACTION, null, content);
         } catch (Exception e) {
             Logger.error("eChannel service unexpected error / updateConsumedStorage", e);
@@ -287,8 +292,7 @@ public class EchannelServiceImpl implements IEchannelService {
             loginEventRequest.errorMessage = errorMessage;
             loginEventRequest.result = result;
             loginEventRequest.uid = uid;
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode content = mapper.valueToTree(loginEventRequest);
+            JsonNode content = getMapper().valueToTree(loginEventRequest);
             this.call(HttpMethod.POST, LOGIN_EVENT_ACTION, null, content);
         } catch (Exception e) {
             Logger.error("eChannel service unexpected error / addLoginEvent", e);
@@ -297,7 +301,7 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords) {
+    public List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords) throws EchannelException {
 
         List<NameValuePair> queryParams = new ArrayList<>();
         queryParams.add(new BasicNameValuePair("eligibleAsSlave", String.valueOf(eligibleAsSlave)));
@@ -305,36 +309,33 @@ public class EchannelServiceImpl implements IEchannelService {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_PARTNER_ACTION + "/find", queryParams, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationPartner> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationPartner.class));
+            r.add(getMapper().convertValue(item, DataSyndicationPartner.class));
         }
 
         return r;
     }
 
     @Override
-    public DataSyndicationPartner getPartner(String domain) {
+    public DataSyndicationPartner getPartner(String domain) throws EchannelException {
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_PARTNER_ACTION + "/" + domain, null, null);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(response, DataSyndicationPartner.class);
+        return getMapper().convertValue(response, DataSyndicationPartner.class);
     }
 
     @Override
-    public List<DataSyndicationAgreementItem> getAgreementItems() {
+    public List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException {
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ITEM_ACTION + "/find", null, null);
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationAgreementItem> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationAgreementItem.class));
+            r.add(getMapper().convertValue(item, DataSyndicationAgreementItem.class));
         }
         return r;
     }
 
     @Override
-    public DataSyndicationAgreement submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds,
-            String slaveDomain) {
+    public DataSyndicationAgreement submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain)
+            throws EchannelException {
 
         SubmitDataSyndicationAgreementRequest submitAgreementRequest = new SubmitDataSyndicationAgreementRequest();
         submitAgreementRequest.refId = refId;
@@ -344,92 +345,86 @@ public class EchannelServiceImpl implements IEchannelService {
         submitAgreementRequest.agreementItemIds = agreementItemIds;
         submitAgreementRequest.slaveDomain = slaveDomain;
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(submitAgreementRequest);
+        JsonNode content = getMapper().valueToTree(submitAgreementRequest);
         JsonNode response = this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/submit", null, content);
-        return mapper.convertValue(response, DataSyndicationAgreement.class);
+        return getMapper().convertValue(response, DataSyndicationAgreement.class);
 
     }
 
     @Override
-    public void acceptAgreement(Long id, DataSyndicationApiKey apiKey) {
+    public void acceptAgreement(Long id, DataSyndicationApiKey apiKey) throws EchannelException {
 
         AcceptDataSyndicationAgreementRequest acceptAgreementRequest = new AcceptDataSyndicationAgreementRequest();
         acceptAgreementRequest.apiName = apiKey.name;
         acceptAgreementRequest.apiSecretKey = apiKey.secretKey;
         acceptAgreementRequest.apiSecretKey = apiKey.applicationKey;
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(acceptAgreementRequest);
+        JsonNode content = getMapper().valueToTree(acceptAgreementRequest);
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/accept", null, content);
 
     }
 
     @Override
-    public void rejectAgreement(Long id) {
+    public void rejectAgreement(Long id) throws EchannelException {
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/reject", null, null);
 
     }
 
     @Override
-    public void cancelAgreement(Long id) {
+    public void cancelAgreement(Long id) throws EchannelException {
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/cancel", null, null);
     }
 
     @Override
-    public void suspendAgreement(Long id) {
+    public void suspendAgreement(Long id) throws EchannelException {
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/suspend", null, null);
     }
 
     @Override
-    public void restartAgreement(Long id) {
+    public void restartAgreement(Long id) throws EchannelException {
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/restart", null, null);
     }
 
     @Override
-    public DataSyndicationAgreement getAgreement(Long id) {
+    public DataSyndicationAgreement getAgreement(Long id) throws EchannelException {
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id, null, null);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(response, DataSyndicationAgreement.class);
+        return getMapper().convertValue(response, DataSyndicationAgreement.class);
     }
 
     @Override
-    public List<DataSyndicationAgreement> getAgreementsAsMaster() {
+    public List<DataSyndicationAgreement> getAgreementsAsMaster() throws EchannelException {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/find/as-master", null, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationAgreement> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationAgreement.class));
+            r.add(getMapper().convertValue(item, DataSyndicationAgreement.class));
         }
 
         return r;
     }
 
     @Override
-    public List<DataSyndicationAgreement> getAgreementsAsSlave() {
+    public List<DataSyndicationAgreement> getAgreementsAsSlave() throws EchannelException {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/find/as-slave", null, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationAgreement> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationAgreement.class));
+            r.add(getMapper().convertValue(item, DataSyndicationAgreement.class));
         }
 
         return r;
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id) {
+    public List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id) throws EchannelException {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/link/find", null, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationAgreementLink> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+            r.add(getMapper().convertValue(item, DataSyndicationAgreementLink.class));
         }
 
         return r;
@@ -437,7 +432,7 @@ public class EchannelServiceImpl implements IEchannelService {
 
     @Override
     public DataSyndicationAgreementLink submitAgreementLink(String masterPrincipalUid, Long agreementId, String name, String description,
-            List<Long> agreementItemIds, String dataType, Long masterObjectId) {
+            List<Long> agreementItemIds, String dataType, Long masterObjectId) throws EchannelException {
 
         SubmitDataSyndicationAgreementLinkRequest submitAgreementLinkRequest = new SubmitDataSyndicationAgreementLinkRequest();
         submitAgreementLinkRequest.masterPrincipalUid = masterPrincipalUid;
@@ -448,56 +443,52 @@ public class EchannelServiceImpl implements IEchannelService {
         submitAgreementLinkRequest.dataType = dataType;
         submitAgreementLinkRequest.masterObjectId = masterObjectId;
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(submitAgreementLinkRequest);
+        JsonNode content = getMapper().valueToTree(submitAgreementLinkRequest);
         JsonNode response = this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/submit", null, content);
-        return mapper.convertValue(response, DataSyndicationAgreementLink.class);
+        return getMapper().convertValue(response, DataSyndicationAgreementLink.class);
 
     }
 
     @Override
-    public void acceptAgreementLink(Long id, Long slaveObjectId) {
+    public void acceptAgreementLink(Long id, Long slaveObjectId) throws EchannelException {
 
         AcceptDataSyndicationAgreementLinkRequest acceptAgreementLinkRequest = new AcceptDataSyndicationAgreementLinkRequest();
         acceptAgreementLinkRequest.slaveObjectId = slaveObjectId;
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode content = mapper.valueToTree(acceptAgreementLinkRequest);
+        JsonNode content = getMapper().valueToTree(acceptAgreementLinkRequest);
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/accept", null, content);
 
     }
 
     @Override
-    public void rejectAgreementLink(Long id) {
+    public void rejectAgreementLink(Long id) throws EchannelException {
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/reject", null, null);
     }
 
     @Override
-    public void cancelAgreementLink(Long id) {
+    public void cancelAgreementLink(Long id) throws EchannelException {
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/cancel", null, null);
     }
 
     @Override
-    public DataSyndicationAgreementLink getAgreementLink(Long id) {
+    public DataSyndicationAgreementLink getAgreementLink(Long id) throws EchannelException {
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id, null, null);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(response, DataSyndicationAgreementLink.class);
+        return getMapper().convertValue(response, DataSyndicationAgreementLink.class);
     }
 
     @Override
-    public void deleteAgreementLink(Long id) {
+    public void deleteAgreementLink(Long id) throws EchannelException {
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/" + id + "/delete", null, null);
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() {
+    public List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() throws EchannelException {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/find/to-synchronize", null, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationAgreementLink> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+            r.add(getMapper().convertValue(item, DataSyndicationAgreementLink.class));
         }
 
         return r;
@@ -505,7 +496,7 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) {
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) throws EchannelException {
 
         List<NameValuePair> queryParams = new ArrayList<>();
         queryParams.add(new BasicNameValuePair("dataType", dataType));
@@ -513,10 +504,9 @@ public class EchannelServiceImpl implements IEchannelService {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/find/as-master", queryParams, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationAgreementLink> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+            r.add(getMapper().convertValue(item, DataSyndicationAgreementLink.class));
         }
 
         return r;
@@ -524,7 +514,7 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId) {
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId) throws EchannelException {
 
         List<NameValuePair> queryParams = new ArrayList<>();
         queryParams.add(new BasicNameValuePair("dataType", dataType));
@@ -532,10 +522,9 @@ public class EchannelServiceImpl implements IEchannelService {
 
         JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_LINK_ACTION + "/find/as-slave", queryParams, null);
 
-        ObjectMapper mapper = new ObjectMapper();
         List<DataSyndicationAgreementLink> r = new ArrayList<>();
         for (JsonNode item : response) {
-            r.add(mapper.convertValue(item, DataSyndicationAgreementLink.class));
+            r.add(getMapper().convertValue(item, DataSyndicationAgreementLink.class));
         }
 
         return r;
@@ -579,32 +568,42 @@ public class EchannelServiceImpl implements IEchannelService {
      * @param content
      *            the request content (for POST)
      */
-    private JsonNode call(HttpMethod httpMethod, String action, List<NameValuePair> queryParams, JsonNode content) {
+    private JsonNode call(HttpMethod httpMethod, String action, List<NameValuePair> queryParams, JsonNode content) throws EchannelException {
 
         String url = this.getActionUrl(action);
 
         Logger.debug("URL: " + url);
 
-        WSRequest request = WS.url(url);
+        WSRequest request = WS.url(url).setHeader("Content-Type", "application/octet-stream");
         request.setHeader(HTTP_HEADER_API_KEY, this.getApiSecretKey());
 
         if (queryParams != null) {
             for (NameValuePair param : queryParams) {
-                request = request.setQueryParameter(param.getName(), param.getValue());
+                request.setQueryParameter(param.getName(), param.getValue());
             }
         }
 
         Promise<WSResponse> response = null;
+
+        String contentString = null;
+        if (content != null) {
+            try {
+                contentString = getMapper().writeValueAsString(content);
+                Logger.info("contentString: " + contentString);
+            } catch (JsonProcessingException e) {
+                throw new EchannelException(e.getMessage());
+            }
+        }
 
         switch (httpMethod) {
         case GET:
             response = request.get();
             break;
         case POST:
-            response = request.post(content);
+            response = request.post(contentString);
             break;
         case PUT:
-            response = request.put(content);
+            response = request.put(contentString);
             break;
         }
 
@@ -626,11 +625,18 @@ public class EchannelServiceImpl implements IEchannelService {
         if (responseContent.getLeft().equals(200) || responseContent.getLeft().equals(204)) {
             return responseContent.getRight();
         } else {
-            Logger.error("eChannel service call error / url: " + url + " / status: " + responseContent.getLeft() + " / errors: "
-                    + responseContent.getRight().toString());
-            return null;
+            String errorMessage = "eChannel service call error / url: " + url + " / status: " + responseContent.getLeft() + " / errors: "
+                    + responseContent.getRight().toString();
+            throw new EchannelException(errorMessage);
         }
 
+    }
+
+    /**
+     * Get the JSON object mapper.
+     */
+    private ObjectMapper getMapper() {
+        return this.mapper;
     }
 
     /**

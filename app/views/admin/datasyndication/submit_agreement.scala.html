@@ -40,7 +40,7 @@
         @helper.form(action = controllers.admin.routes.DataSyndicationController.processSubmitAgreement()) {
             <fieldset>
             
-                <input type="hidden" name="domain" value="@submitAgreementForm("slaveDomain").value"/>
+                <input type="hidden" name="slaveDomain" value="@submitAgreementForm("slaveDomain").value"/>
                 
                 <div class="form-group ">
                     <label for="startDate" class="control-label">@parts.Msg.asString("object.data_syndication_agreement.partner.label")</label>

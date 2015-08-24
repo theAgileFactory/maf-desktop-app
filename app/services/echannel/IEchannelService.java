@@ -54,12 +54,13 @@ public interface IEchannelService {
      * @param actionLink
      *            the action link (when clicking on the notification)
      */
-    void createNotificationEvent(String domain, RecipientsDescriptor recipientsDescriptor, String title, String message, String actionLink);
+    void createNotificationEvent(String domain, RecipientsDescriptor recipientsDescriptor, String title, String message, String actionLink)
+            throws EchannelException;
 
     /**
      * Get the notification events to notify.
      */
-    public List<NotificationEvent> getNotificationEventsToNotify();
+    public List<NotificationEvent> getNotificationEventsToNotify() throws EchannelException;
 
     /**
      * Return true if this is possible to create a new user.
@@ -67,7 +68,7 @@ public interface IEchannelService {
      * @param consumedUsers
      *            the current number of consumed users
      */
-    boolean canCreateUser(int consumedUsers);
+    boolean canCreateUser(int consumedUsers) throws EchannelException;
 
     /**
      * Return true if this is possible to create a new portfolio entry.
@@ -75,12 +76,12 @@ public interface IEchannelService {
      * @param consumedPortfolioEntries
      *            the current number of consumed portfolio entries
      */
-    boolean canCreatePortfolioEntry(int consumedPortfolioEntries);
+    boolean canCreatePortfolioEntry(int consumedPortfolioEntries) throws EchannelException;
 
     /**
      * Return true if the instance is accessible.
      */
-    boolean isInstanceAccessible();
+    boolean isInstanceAccessible() throws EchannelException;
 
     /**
      * Update the number of consumed users.
@@ -88,7 +89,7 @@ public interface IEchannelService {
      * @param consumedUsers
      *            the current number of consumed users
      */
-    void updateConsumedUsers(int consumedUsers);
+    void updateConsumedUsers(int consumedUsers) throws EchannelException;
 
     /**
      * Update the number of consumed portfolio entries.
@@ -96,7 +97,7 @@ public interface IEchannelService {
      * @param consumedPortfolioEntries
      *            the current number of consumed portfolio entries
      */
-    void updateConsumedPortfolioEntries(int consumedPortfolioEntries);
+    void updateConsumedPortfolioEntries(int consumedPortfolioEntries) throws EchannelException;
 
     /**
      * Update the number of consumed storage.
@@ -104,7 +105,7 @@ public interface IEchannelService {
      * @param consumedStorage
      *            the current number of consumed storage
      */
-    void updateConsumedStorage(int consumedStorage);
+    void updateConsumedStorage(int consumedStorage) throws EchannelException;
 
     /**
      * Add a login event.
@@ -118,7 +119,7 @@ public interface IEchannelService {
      * @param errorMessage
      *            the error message
      */
-    void addLoginEvent(String uid, Boolean result, ErrorCode errorCode, String errorMessage);
+    void addLoginEvent(String uid, Boolean result, ErrorCode errorCode, String errorMessage) throws EchannelException;
 
     /**
      * Find the available partners for an agreement with filter capabilities.
@@ -129,7 +130,7 @@ public interface IEchannelService {
      * @param keywords
      *            the keywords, null to get all
      */
-    List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords);
+    List<DataSyndicationPartner> findPartners(boolean eligibleAsSlave, String keywords) throws EchannelException;
 
     /**
      * Get a partner by domain.
@@ -137,12 +138,12 @@ public interface IEchannelService {
      * @param domain
      *            the partner domain
      */
-    DataSyndicationPartner getPartner(String domain);
+    DataSyndicationPartner getPartner(String domain) throws EchannelException;
 
     /**
      * Get all available agreement items.
      */
-    List<DataSyndicationAgreementItem> getAgreementItems();
+    List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException;
 
     /**
      * Create a new master agreement for the instance and return it.
@@ -162,7 +163,8 @@ public interface IEchannelService {
      * @param slaveDomain
      *            the domain of the slave instance
      */
-    DataSyndicationAgreement submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain);
+    DataSyndicationAgreement submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain)
+            throws EchannelException;
 
     /**
      * Accept a pending agreement.
@@ -174,7 +176,7 @@ public interface IEchannelService {
      * @param apiKey
      *            the API key of the slave instance
      */
-    void acceptAgreement(Long id, DataSyndicationApiKey apiKey);
+    void acceptAgreement(Long id, DataSyndicationApiKey apiKey) throws EchannelException;
 
     /**
      * Reject a pending agreement.
@@ -184,7 +186,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement id
      */
-    void rejectAgreement(Long id);
+    void rejectAgreement(Long id) throws EchannelException;
 
     /**
      * Cancel an agreement.
@@ -194,7 +196,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement id
      */
-    void cancelAgreement(Long id);
+    void cancelAgreement(Long id) throws EchannelException;
 
     /**
      * Suspend an ongoing agreement.
@@ -204,7 +206,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement id
      */
-    void suspendAgreement(Long id);
+    void suspendAgreement(Long id) throws EchannelException;
 
     /**
      * Restart a suspended agreement.
@@ -214,7 +216,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement id
      */
-    void restartAgreement(Long id);
+    void restartAgreement(Long id) throws EchannelException;
 
     /**
      * Get an agreement by id.
@@ -224,17 +226,17 @@ public interface IEchannelService {
      * @param id
      *            the agreement id
      */
-    DataSyndicationAgreement getAgreement(Long id);
+    DataSyndicationAgreement getAgreement(Long id) throws EchannelException;
 
     /**
      * Get the master agreements of the instance.
      */
-    List<DataSyndicationAgreement> getAgreementsAsMaster();
+    List<DataSyndicationAgreement> getAgreementsAsMaster() throws EchannelException;
 
     /**
      * Get the slave agreements of the instance.
      */
-    List<DataSyndicationAgreement> getAgreementsAsSlave();
+    List<DataSyndicationAgreement> getAgreementsAsSlave() throws EchannelException;
 
     /**
      * Get the agreement links of an agreement.
@@ -244,7 +246,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement id
      */
-    List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id);
+    List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id) throws EchannelException;
 
     /**
      * Create a new agreement link for a master agreement of the instance and
@@ -269,7 +271,7 @@ public interface IEchannelService {
      *            the id of the master object
      */
     DataSyndicationAgreementLink submitAgreementLink(String masterPrincipalUid, Long agreementId, String name, String description,
-            List<Long> agreementItemIds, String dataType, Long masterObjectId);
+            List<Long> agreementItemIds, String dataType, Long masterObjectId) throws EchannelException;
 
     /**
      * Accept a pending agreement link.
@@ -281,7 +283,7 @@ public interface IEchannelService {
      * @param slaveObjectId
      *            the associated slave object id
      */
-    void acceptAgreementLink(Long id, Long slaveObjectId);
+    void acceptAgreementLink(Long id, Long slaveObjectId) throws EchannelException;
 
     /**
      * Reject a pending agreement link.
@@ -291,7 +293,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement link id
      */
-    void rejectAgreementLink(Long id);
+    void rejectAgreementLink(Long id) throws EchannelException;
 
     /**
      * Cancel an agreement link.
@@ -302,7 +304,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement link id
      */
-    void cancelAgreementLink(Long id);
+    void cancelAgreementLink(Long id) throws EchannelException;
 
     /**
      * Get an agreement link by id.
@@ -313,7 +315,7 @@ public interface IEchannelService {
      * @param id
      *            the agreement link id
      */
-    DataSyndicationAgreementLink getAgreementLink(Long id);
+    DataSyndicationAgreementLink getAgreementLink(Long id) throws EchannelException;
 
     /**
      * Delete an agreement link.
@@ -324,14 +326,14 @@ public interface IEchannelService {
      * @param id
      *            the agreement link id
      */
-    void deleteAgreementLink(Long id);
+    void deleteAgreementLink(Long id) throws EchannelException;
 
     /**
      * Get the ongoing agreement links of the instance.
      * 
      * The corresponding agreement should be also ongoing.
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize();
+    List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() throws EchannelException;
 
     /**
      * Get the agreement links of a master object.
@@ -347,7 +349,7 @@ public interface IEchannelService {
      * @param masterObjectId
      *            the master object id
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId);
+    List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) throws EchannelException;
 
     /**
      * Get the agreement links of a slave object.
@@ -363,6 +365,27 @@ public interface IEchannelService {
      * @param slaveObjectId
      *            the slave object id
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId);
+    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId) throws EchannelException;
+
+    /**
+     * The echannel exception.
+     * 
+     * @author Johann Kohler
+     *
+     */
+    public static class EchannelException extends Exception {
+        private static final long serialVersionUID = 4512312387668L;
+
+        /**
+         * Construct with message.
+         * 
+         * @param message
+         *            the exception message
+         */
+        public EchannelException(String message) {
+            super(message);
+        }
+
+    }
 
 }

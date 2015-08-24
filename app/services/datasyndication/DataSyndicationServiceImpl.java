@@ -44,6 +44,7 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
 import services.datasyndication.models.DataSyndicationPartner;
 import services.echannel.IEchannelService;
+import services.echannel.IEchannelService.EchannelException;
 import services.echannel.models.RecipientsDescriptor;
 
 /**
@@ -143,22 +144,23 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) {
+    public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) throws EchannelException {
         return echannelService.findPartners(true, keywords);
     }
 
     @Override
-    public DataSyndicationPartner getPartner(String domain) {
+    public DataSyndicationPartner getPartner(String domain) throws EchannelException {
         return echannelService.getPartner(domain);
     }
 
     @Override
-    public List<DataSyndicationAgreementItem> getAgreementItems() {
+    public List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException {
         return echannelService.getAgreementItems();
     }
 
     @Override
-    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain) {
+    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain)
+            throws EchannelException {
 
         DataSyndicationAgreement agreement = echannelService.submitAgreement(refId, name, startDate, endDate, agreementItemIds, slaveDomain);
 
@@ -174,7 +176,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException {
+    public void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, EchannelException {
 
         // create an application API key
         IApiApplicationConfiguration applicationConfiguration = apiSignatureService.setApplicationConfiguration(UUID.randomUUID().toString(),
@@ -201,7 +203,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void rejectAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
+    public void rejectAgreement(DataSyndicationAgreement agreement) throws EchannelException {
 
         echannelService.rejectAgreement(agreement.id);
 
@@ -217,7 +219,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException {
+    public void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, EchannelException {
 
         echannelService.cancelAgreement(agreement.id);
 
@@ -240,7 +242,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void suspendAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
+    public void suspendAgreement(DataSyndicationAgreement agreement) throws EchannelException {
 
         echannelService.suspendAgreement(agreement.id);
 
@@ -256,7 +258,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException {
+    public void restartAgreement(DataSyndicationAgreement agreement) throws EchannelException {
 
         echannelService.restartAgreement(agreement.id);
 
@@ -272,28 +274,28 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public DataSyndicationAgreement getAgreement(Long id) {
+    public DataSyndicationAgreement getAgreement(Long id) throws EchannelException {
         return echannelService.getAgreement(id);
     }
 
     @Override
-    public List<DataSyndicationAgreement> getAgreementsAsMaster() {
+    public List<DataSyndicationAgreement> getAgreementsAsMaster() throws EchannelException {
         return echannelService.getAgreementsAsMaster();
     }
 
     @Override
-    public List<DataSyndicationAgreement> getAgreementsAsSlave() {
+    public List<DataSyndicationAgreement> getAgreementsAsSlave() throws EchannelException {
         return echannelService.getAgreementsAsSlave();
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id) {
+    public List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id) throws EchannelException {
         return echannelService.getLinksOfAgreement(id);
     }
 
     @Override
     public void submitAgreementLink(String masterPrincipalUid, DataSyndicationAgreement agreement, String name, String description,
-            List<Long> agreementItemIds, String dataType, Long masterObjectId) throws DataSyndicationException {
+            List<Long> agreementItemIds, String dataType, Long masterObjectId) throws EchannelException {
 
         DataSyndicationAgreementLink agreementLink = echannelService.submitAgreementLink(masterPrincipalUid, agreement.id, name, description,
                 agreementItemIds, dataType, masterObjectId);
@@ -311,7 +313,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws DataSyndicationException {
+    public void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws EchannelException {
 
         echannelService.acceptAgreementLink(agreementLink.id, slaveObjectId);
 
@@ -336,7 +338,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
+    public void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws EchannelException {
 
         echannelService.rejectAgreementLink(agreementLink.id);
 
@@ -361,7 +363,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException {
+    public void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws EchannelException {
 
         echannelService.cancelAgreement(agreementLink.id);
 
@@ -386,12 +388,12 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) {
+    public DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) throws EchannelException {
         return echannelService.getAgreementLink(agreementLinkId);
     }
 
     @Override
-    public void deleteAgreementLink(DataSyndicationAgreementLink agreementLink) {
+    public void deleteAgreementLink(DataSyndicationAgreementLink agreementLink) throws EchannelException {
 
         echannelService.deleteAgreementLink(agreementLink.id);
 
@@ -411,17 +413,17 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() {
+    public List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() throws EchannelException {
         return echannelService.getAgreementLinksToSynchronize();
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) {
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) throws EchannelException {
         return echannelService.getAgreementLinksOfMasterObject(dataType, masterObjectId);
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) {
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws EchannelException {
         return echannelService.getAgreementLinksOfSlaveObject(dataType, masterObjectId);
     }
 

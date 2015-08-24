@@ -38,6 +38,7 @@ import framework.utils.Utilities;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.pmo.PortfolioEntry;
+import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
@@ -85,6 +86,7 @@ public class DataSyndicationController extends Controller {
             try {
                 masterAgreements = dataSyndicationService.getAgreementsAsMaster();
             } catch (Exception e) {
+                Logger.error("DataSyndication viewMasterAgreements unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -121,6 +123,7 @@ public class DataSyndicationController extends Controller {
             try {
                 slaveAgreements = dataSyndicationService.getAgreementsAsSlave();
             } catch (Exception e) {
+                Logger.error("DataSyndication viewConsumerAgreements unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -179,6 +182,7 @@ public class DataSyndicationController extends Controller {
             try {
                 partners = dataSyndicationService.searchFromSlavePartners(keywords);
             } catch (Exception e) {
+                Logger.error("DataSyndication processSearchPartner unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -228,6 +232,7 @@ public class DataSyndicationController extends Controller {
             try {
                 partner = dataSyndicationService.getPartner(domain);
             } catch (Exception e) {
+                Logger.error("DataSyndication submitAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -238,6 +243,7 @@ public class DataSyndicationController extends Controller {
                     itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication submitAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -271,6 +277,7 @@ public class DataSyndicationController extends Controller {
                 try {
                     partner = dataSyndicationService.getPartner(slaveDomain);
                 } catch (Exception e) {
+                    Logger.error("DataSyndication processSubmitAgreement unexpected error", e);
                     return ok(views.html.admin.datasyndication.communication_error.render());
                 }
 
@@ -281,6 +288,7 @@ public class DataSyndicationController extends Controller {
                         itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
                     }
                 } catch (Exception e) {
+                    Logger.error("DataSyndication processSubmitAgreement unexpected error", e);
                     return ok(views.html.admin.datasyndication.communication_error.render());
                 }
 
@@ -293,6 +301,7 @@ public class DataSyndicationController extends Controller {
                 dataSyndicationService.submitAgreement(formData.refId, formData.name, formData.getStartDateAsDate(), formData.getEndDateAsDate(),
                         formData.itemIds, slaveDomain);
             } catch (Exception e) {
+                Logger.error("DataSyndication processSubmitAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -326,6 +335,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication viewAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -337,6 +347,7 @@ public class DataSyndicationController extends Controller {
             try {
                 links = dataSyndicationService.getLinksOfAgreement(agreementId);
             } catch (Exception e) {
+                Logger.error("DataSyndication viewAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -379,6 +390,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication processAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -418,6 +430,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication acceptAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -436,6 +449,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.acceptAgreement(agreement);
             } catch (Exception e) {
+                Logger.error("DataSyndication acceptAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -467,6 +481,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication rejectAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -485,6 +500,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.rejectAgreement(agreement);
             } catch (Exception e) {
+                Logger.error("DataSyndication rejectAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -515,6 +531,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication suspendAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -528,6 +545,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.suspendAgreement(agreement);
             } catch (Exception e) {
+                Logger.error("DataSyndication suspendAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -558,6 +576,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication restartAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -571,6 +590,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.restartAgreement(agreement);
             } catch (Exception e) {
+                Logger.error("DataSyndication restartAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -601,6 +621,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication cancelAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -616,6 +637,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.cancelAgreement(agreement);
             } catch (Exception e) {
+                Logger.error("DataSyndication cancelAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -646,6 +668,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication processAgreementLink unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -690,6 +713,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication acceptAgreementLinkNewPE unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -706,6 +730,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.acceptAgreementLink(agreementLink, portfolioEntry.id);
             } catch (Exception e) {
+                Logger.error("DataSyndication acceptAgreementLinkNewPE unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -746,6 +771,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication acceptAgreementLinkExistingPE unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -763,6 +789,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.acceptAgreementLink(agreementLink, portfolioEntry.id);
             } catch (Exception e) {
+                Logger.error("DataSyndication acceptAgreementLinkExistingPE unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -799,6 +826,7 @@ public class DataSyndicationController extends Controller {
                     return notFound(views.html.error.not_found.render(""));
                 }
             } catch (Exception e) {
+                Logger.error("DataSyndication rejectAgreementLink unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 
@@ -806,6 +834,7 @@ public class DataSyndicationController extends Controller {
             try {
                 dataSyndicationService.rejectAgreementLink(agreementLink);
             } catch (Exception e) {
+                Logger.error("DataSyndication rejectAgreementLink unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());
             }
 

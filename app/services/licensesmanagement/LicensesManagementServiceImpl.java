@@ -31,6 +31,7 @@ import play.Logger;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 import services.echannel.IEchannelService;
+import services.echannel.IEchannelService.EchannelException;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 
 /**
@@ -125,41 +126,58 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     @Override
     public boolean canCreateUser() {
         if (this.isActive) {
-            return echannelService.canCreateUser(Principal.getConsumedUsers());
-        } else {
-            return true;
+            try {
+                return echannelService.canCreateUser(Principal.getConsumedUsers());
+            } catch (EchannelException e) {
+                Logger.error("LicensesManagementService unexpected error with canCreateUser", e);
+            }
         }
+        return true;
     }
 
     @Override
     public boolean canCreatePortfolioEntry() {
         if (this.isActive) {
-            return echannelService.canCreatePortfolioEntry(PortfolioEntryDao.getPEAsNumberConsumedLicenses());
-        } else {
-            return true;
+            try {
+                return echannelService.canCreatePortfolioEntry(PortfolioEntryDao.getPEAsNumberConsumedLicenses());
+            } catch (EchannelException e) {
+                Logger.error("LicensesManagementService unexpected error with canCreatePortfolioEntry", e);
+            }
         }
+        return true;
     }
 
     @Override
     public boolean isInstanceAccessible() {
         if (this.isActive) {
-            return echannelService.isInstanceAccessible();
-        } else {
-            return true;
+            try {
+                return echannelService.isInstanceAccessible();
+            } catch (EchannelException e) {
+                Logger.error("LicensesManagementService unexpected error with isInstanceAccessible", e);
+            }
         }
+        return true;
     }
 
     @Override
     public void updateConsumedUsers() {
         if (this.isActive) {
-            echannelService.updateConsumedUsers(Principal.getConsumedUsers());
+            try {
+                echannelService.updateConsumedUsers(Principal.getConsumedUsers());
+            } catch (EchannelException e) {
+                Logger.error("LicensesManagementService unexpected error with updateConsumedUsers", e);
+            }
         }
     }
 
     @Override
     public void updateConsumedPortfolioEntries() {
         if (this.isActive) {
-            echannelService.updateConsumedPortfolioEntries(PortfolioEntryDao.getPEAsNumberConsumedLicenses());
+            try {
+                echannelService.updateConsumedPortfolioEntries(PortfolioEntryDao.getPEAsNumberConsumedLicenses());
+            } catch (EchannelException e) {
+                Logger.error("LicensesManagementService unexpected error with updateConsumedPortfolioEntries", e);
+            }
         }
     }
 
@@ -201,7 +219,11 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     @Override
     public void addLoginEvent(String uid, Boolean result, ErrorCode errorCode, String errorMessage) {
         if (this.isActive) {
-            echannelService.addLoginEvent(uid, result, errorCode, errorMessage);
+            try {
+                echannelService.addLoginEvent(uid, result, errorCode, errorMessage);
+            } catch (EchannelException e) {
+                Logger.error("LicensesManagementService unexpected error with addLoginEvent", e);
+            }
         }
     }
 

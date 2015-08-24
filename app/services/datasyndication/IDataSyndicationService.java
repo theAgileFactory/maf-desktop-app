@@ -25,6 +25,7 @@ import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationPartner;
+import services.echannel.IEchannelService.EchannelException;
 
 /**
  * The data syndication service.
@@ -53,7 +54,7 @@ public interface IDataSyndicationService {
      * @param keywords
      *            the keywords
      */
-    List<DataSyndicationPartner> searchFromSlavePartners(String keywords);
+    List<DataSyndicationPartner> searchFromSlavePartners(String keywords) throws EchannelException;
 
     /**
      * Get a partner by domain.
@@ -61,12 +62,12 @@ public interface IDataSyndicationService {
      * @param domain
      *            the partner domain
      */
-    DataSyndicationPartner getPartner(String domain);
+    DataSyndicationPartner getPartner(String domain) throws EchannelException;
 
     /**
      * Get all available agreement items.
      */
-    List<DataSyndicationAgreementItem> getAgreementItems();
+    List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException;
 
     /**
      * Create a new master agreement for the instance.
@@ -84,7 +85,7 @@ public interface IDataSyndicationService {
      * @param slaveDomain
      *            the domain of the slave instance
      */
-    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain);
+    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain) throws EchannelException;
 
     /**
      * Accept a pending agreement.
@@ -92,7 +93,7 @@ public interface IDataSyndicationService {
      * @param agreement
      *            the agreement
      */
-    void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException;
+    void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, EchannelException;
 
     /**
      * Reject a pending agreement.
@@ -100,7 +101,7 @@ public interface IDataSyndicationService {
      * @param agreement
      *            the agreement
      */
-    void rejectAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
+    void rejectAgreement(DataSyndicationAgreement agreement) throws EchannelException;
 
     /**
      * Cancel an agreement.
@@ -108,7 +109,7 @@ public interface IDataSyndicationService {
      * @param agreement
      *            the agreement
      */
-    void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, DataSyndicationException;
+    void cancelAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, EchannelException;
 
     /**
      * Suspend an ongoing agreement.
@@ -116,7 +117,7 @@ public interface IDataSyndicationService {
      * @param agreement
      *            the agreement
      */
-    void suspendAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
+    void suspendAgreement(DataSyndicationAgreement agreement) throws EchannelException;
 
     /**
      * Restart a suspended agreement.
@@ -124,7 +125,7 @@ public interface IDataSyndicationService {
      * @param agreement
      *            the agreement
      */
-    void restartAgreement(DataSyndicationAgreement agreement) throws DataSyndicationException;
+    void restartAgreement(DataSyndicationAgreement agreement) throws EchannelException;
 
     /**
      * Get an agreement by id.
@@ -132,17 +133,17 @@ public interface IDataSyndicationService {
      * @param id
      *            the agreement id
      */
-    DataSyndicationAgreement getAgreement(Long id);
+    DataSyndicationAgreement getAgreement(Long id) throws EchannelException;
 
     /**
      * Get the master agreements of the instance.
      */
-    List<DataSyndicationAgreement> getAgreementsAsMaster();
+    List<DataSyndicationAgreement> getAgreementsAsMaster() throws EchannelException;
 
     /**
      * Get the slave agreements of the instance.
      */
-    List<DataSyndicationAgreement> getAgreementsAsSlave();
+    List<DataSyndicationAgreement> getAgreementsAsSlave() throws EchannelException;
 
     /**
      * Get the agreement links of an agreement.
@@ -150,7 +151,7 @@ public interface IDataSyndicationService {
      * @param id
      *            the agreement id
      */
-    List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id);
+    List<DataSyndicationAgreementLink> getLinksOfAgreement(Long id) throws EchannelException;
 
     /**
      * Create a new agreement link for a master agreement of the instance.
@@ -172,7 +173,7 @@ public interface IDataSyndicationService {
      *            the id of the master object
      */
     void submitAgreementLink(String masterPrincipalUid, DataSyndicationAgreement agreement, String name, String description, List<Long> agreementItemIds,
-            String dataType, Long masterObjectId) throws DataSyndicationException;
+            String dataType, Long masterObjectId) throws EchannelException;
 
     /**
      * Accept a pending agreement link.
@@ -182,7 +183,7 @@ public interface IDataSyndicationService {
      * @param slaveObjectId
      *            the associated slave object id
      */
-    void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws DataSyndicationException;
+    void acceptAgreementLink(DataSyndicationAgreementLink agreementLink, Long slaveObjectId) throws EchannelException;
 
     /**
      * Reject a pending agreement link.
@@ -190,7 +191,7 @@ public interface IDataSyndicationService {
      * @param agreementLink
      *            the agreement link
      */
-    void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
+    void rejectAgreementLink(DataSyndicationAgreementLink agreementLink) throws EchannelException;
 
     /**
      * Cancel an agreement link.
@@ -198,7 +199,7 @@ public interface IDataSyndicationService {
      * @param agreementLink
      *            the agreement link
      */
-    void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws DataSyndicationException;
+    void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws EchannelException;
 
     /**
      * Get an agreement link by id.
@@ -206,20 +207,21 @@ public interface IDataSyndicationService {
      * @param agreementLinkId
      *            the agreement link id
      */
-    DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) throws DataSyndicationException;
+    DataSyndicationAgreementLink getAgreementLink(Long agreementLinkId) throws EchannelException;
 
     /**
      * Delete an agreement link.
      * 
      * @param agreementLink
      *            the agreement link
+     * 
      */
-    void deleteAgreementLink(DataSyndicationAgreementLink agreementLink);
+    void deleteAgreementLink(DataSyndicationAgreementLink agreementLink) throws EchannelException;
 
     /**
      * Get the ongoing agreement links of the instance.
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() throws DataSyndicationException;
+    List<DataSyndicationAgreementLink> getAgreementLinksToSynchronize() throws EchannelException;
 
     /**
      * Get the agreement links for a master object.
@@ -229,7 +231,7 @@ public interface IDataSyndicationService {
      * @param masterObjectId
      *            the master object id
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) throws DataSyndicationException;
+    List<DataSyndicationAgreementLink> getAgreementLinksOfMasterObject(String dataType, Long masterObjectId) throws EchannelException;
 
     /**
      * Get the agreement links for a slave object.
@@ -239,27 +241,5 @@ public interface IDataSyndicationService {
      * @param masterObjectId
      *            the slave object id
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws DataSyndicationException;
-
-    /**
-     * The data syndication exception.
-     * 
-     * @author Johann Kohler
-     *
-     */
-    public static class DataSyndicationException extends Exception {
-        private static final long serialVersionUID = 456423132897542L;
-
-        /**
-         * Construct with message.
-         * 
-         * @param message
-         *            the exception message
-         */
-        public DataSyndicationException(String message) {
-            super(message);
-        }
-
-    }
-
+    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws EchannelException;
 }

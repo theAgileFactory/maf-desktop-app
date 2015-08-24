@@ -30,6 +30,7 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Utilities;
 import models.pmo.PortfolioEntry;
+import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -77,6 +78,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         try {
             slaveAgreementLinks = dataSyndicationService.getAgreementLinksOfSlaveObject(PortfolioEntry.class.getName(), id);
         } catch (Exception e) {
+            Logger.error("DataSyndication index unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -85,6 +87,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         try {
             masterAgreementLinks = dataSyndicationService.getAgreementLinksOfMasterObject(PortfolioEntry.class.getName(), id);
         } catch (Exception e) {
+            Logger.error("DataSyndication index unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -93,6 +96,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         try {
             masterAgreements = dataSyndicationService.getAgreementsAsMaster();
         } catch (Exception e) {
+            Logger.error("DataSyndication index unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -136,6 +140,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
                 return notFound(views.html.error.not_found.render(""));
             }
         } catch (Exception e) {
+            Logger.error("DataSyndication viewAgreementLink unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -169,6 +174,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
                 return notFound(views.html.error.not_found.render(""));
             }
         } catch (Exception e) {
+            Logger.error("DataSyndication cancelAgreementLink unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -176,6 +182,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         try {
             dataSyndicationService.cancelAgreementLink(agreementLink);
         } catch (Exception e) {
+            Logger.error("DataSyndication cancelAgreementLink unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -207,6 +214,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
                 return notFound(views.html.error.not_found.render(""));
             }
         } catch (Exception e) {
+            Logger.error("DataSyndication submitAgreementLink unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -253,6 +261,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
                 return notFound(views.html.error.not_found.render(""));
             }
         } catch (Exception e) {
+            Logger.error("DataSyndication processSubmitAgreementLink unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
@@ -280,6 +289,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
             dataSyndicationService.submitAgreementLink(userSessionManagerPlugin.getUserSessionId(ctx()), agreement, formData.name, formData.description,
                     formData.itemIds, PortfolioEntry.class.getName(), id);
         } catch (Exception e) {
+            Logger.error("DataSyndication processSubmitAgreementLink unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
         }
 
