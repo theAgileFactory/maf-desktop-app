@@ -357,7 +357,7 @@ public class EchannelServiceImpl implements IEchannelService {
         AcceptDataSyndicationAgreementRequest acceptAgreementRequest = new AcceptDataSyndicationAgreementRequest();
         acceptAgreementRequest.apiName = apiKey.name;
         acceptAgreementRequest.apiSecretKey = apiKey.secretKey;
-        acceptAgreementRequest.apiSecretKey = apiKey.applicationKey;
+        acceptAgreementRequest.apiApplicationKey = apiKey.applicationKey;
 
         JsonNode content = getMapper().valueToTree(acceptAgreementRequest);
         this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/" + id + "/accept", null, content);
@@ -589,7 +589,6 @@ public class EchannelServiceImpl implements IEchannelService {
         if (content != null) {
             try {
                 contentString = getMapper().writeValueAsString(content);
-                Logger.info("contentString: " + contentString);
             } catch (JsonProcessingException e) {
                 throw new EchannelException(e.getMessage());
             }

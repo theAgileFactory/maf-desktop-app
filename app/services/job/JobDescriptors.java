@@ -126,12 +126,12 @@ public interface JobDescriptors {
 
         @Override
         public int getStartHour() {
-            return 17;
+            return 15;
         }
 
         @Override
         public int getStartMinute() {
-            return 30;
+            return 55;
         }
 
         @Override
