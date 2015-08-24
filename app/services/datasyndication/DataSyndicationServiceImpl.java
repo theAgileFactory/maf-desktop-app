@@ -159,13 +159,13 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain)
+    public void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain, String slaveBaseUrl)
             throws EchannelException {
 
         DataSyndicationAgreement agreement = echannelService.submitAgreement(refId, name, startDate, endDate, agreementItemIds, slaveDomain);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.processAgreement(agreement.id).url();
+            String actionLink = slaveBaseUrl + controllers.admin.routes.DataSyndicationController.processAgreement(agreement.id).url();
             String title = Msg.get(this.lang, "data_syndication.submit_agreement.notification.title");
             String message = Msg.get(this.lang, "data_syndication.submit_agreement.notification.message", actionLink);
 
@@ -191,7 +191,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         echannelService.acceptAgreement(agreement.id, apiKey);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String actionLink = agreement.masterPartner.baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
             String title = Msg.get(this.lang, "data_syndication.accept_agreement.notification.title");
             String message = Msg.get(this.lang, "data_syndication.accept_agreement.notification.message", actionLink);
 
@@ -208,7 +208,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         echannelService.rejectAgreement(agreement.id);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String actionLink = agreement.masterPartner.baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
             String title = Msg.get(this.lang, "data_syndication.reject_agreement.notification.title");
             String message = Msg.get(this.lang, "data_syndication.reject_agreement.notification.message", actionLink);
 
@@ -224,16 +224,20 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         echannelService.cancelAgreement(agreement.id);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
-            String title = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.title");
-            String message = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.message", actionLink);
 
             String domain = null;
+            String baseUrl = null;
             if (this.getCurrentDomain().equals(agreement.masterPartner.domain)) {
                 domain = agreement.slavePartner.domain;
+                baseUrl = agreement.slavePartner.baseUrl;
             } else {
                 domain = agreement.masterPartner.domain;
+                baseUrl = agreement.masterPartner.baseUrl;
             }
+
+            String actionLink = baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String title = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.message", actionLink);
 
             echannelService.createNotificationEvent(domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
         } catch (Exception e) {
@@ -247,7 +251,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         echannelService.suspendAgreement(agreement.id);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String actionLink = agreement.slavePartner.baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
             String title = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.title");
             String message = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.message", actionLink);
 
@@ -263,7 +267,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         echannelService.restartAgreement(agreement.id);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+            String actionLink = agreement.slavePartner.baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
             String title = Msg.get(this.lang, "data_syndication.restart_agreement.notification.title");
             String message = Msg.get(this.lang, "data_syndication.restart_agreement.notification.message", actionLink);
 
@@ -301,7 +305,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                 agreementItemIds, dataType, masterObjectId);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.processAgreementLink(agreementLink.id).url();
+            String actionLink = agreement.slavePartner.baseUrl
+                    + controllers.admin.routes.DataSyndicationController.processAgreementLink(agreementLink.id).url();
             String title = Msg.get(this.lang, "data_syndication.submit_agreement_link.notification.title");
             String message = Msg.get(this.lang, "data_syndication.submit_agreement_link.notification.message", actionLink);
 
@@ -321,8 +326,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
             String actionLink = null;
             if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
-                actionLink = controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(agreementLink.masterObjectId, agreementLink.id)
-                        .url();
+                actionLink = agreementLink.agreement.masterPartner.baseUrl + controllers.core.routes.PortfolioEntryDataSyndicationController
+                        .viewAgreementLink(agreementLink.masterObjectId, agreementLink.id).url();
             }
 
             String title = Msg.get(this.lang, "data_syndication.accept_agreement_link.notification.title");
@@ -346,8 +351,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
             String actionLink = null;
             if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
-                actionLink = controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(agreementLink.masterObjectId, agreementLink.id)
-                        .url();
+                actionLink = agreementLink.agreement.masterPartner.baseUrl + controllers.core.routes.PortfolioEntryDataSyndicationController
+                        .viewAgreementLink(agreementLink.masterObjectId, agreementLink.id).url();
             }
 
             String title = Msg.get(this.lang, "data_syndication.reject_agreement_link.notification.title");
@@ -368,16 +373,20 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         echannelService.cancelAgreement(agreementLink.id);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, true).url();
-            String title = Msg.get(this.lang, "data_syndication.cancel_agreement_link.notification.title");
-            String message = Msg.get(this.lang, "data_syndication.cancel_agreement_link.notification.message", actionLink);
 
             String domain = null;
+            String baseUrl = null;
             if (this.getCurrentDomain().equals(agreementLink.agreement.masterPartner.domain)) {
                 domain = agreementLink.agreement.slavePartner.domain;
+                baseUrl = agreementLink.agreement.slavePartner.baseUrl;
             } else {
                 domain = agreementLink.agreement.masterPartner.domain;
+                baseUrl = agreementLink.agreement.masterPartner.baseUrl;
             }
+
+            String actionLink = baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, true).url();
+            String title = Msg.get(this.lang, "data_syndication.cancel_agreement_link.notification.title");
+            String message = Msg.get(this.lang, "data_syndication.cancel_agreement_link.notification.message", actionLink);
 
             echannelService.createNotificationEvent(domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
 
@@ -398,14 +407,18 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         echannelService.deleteAgreementLink(agreementLink.id);
 
         try {
-            String actionLink = controllers.admin.routes.DataSyndicationController.viewMasterAgreements().url();
             String title = Msg.get(this.lang, "data_syndication.delete_agreement_link.notification.title");
             String message = Msg.get(this.lang, "data_syndication.delete_agreement_link.notification.message", agreementLink.agreement.name);
 
+            String masterActionLink = agreementLink.agreement.masterPartner.baseUrl
+                    + controllers.admin.routes.DataSyndicationController.viewMasterAgreements().url();
             echannelService.createNotificationEvent(agreementLink.agreement.masterPartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message,
-                    actionLink);
+                    masterActionLink);
+
+            String slaveActionLink = agreementLink.agreement.slavePartner.baseUrl
+                    + controllers.admin.routes.DataSyndicationController.viewMasterAgreements().url();
             echannelService.createNotificationEvent(agreementLink.agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message,
-                    actionLink);
+                    slaveActionLink);
 
         } catch (Exception e) {
             Logger.error("Error when creating notification event for deleteAgreementLink action", e);

@@ -270,16 +270,16 @@ public class DataSyndicationController extends Controller {
             // get the slave domain
             String slaveDomain = boundForm.data().get("slaveDomain");
 
-            if (boundForm.hasErrors()) {
+            // get the partner
+            DataSyndicationPartner partner = null;
+            try {
+                partner = dataSyndicationService.getPartner(slaveDomain);
+            } catch (Exception e) {
+                Logger.error("DataSyndication processSubmitAgreement unexpected error", e);
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
 
-                // get the partner
-                DataSyndicationPartner partner = null;
-                try {
-                    partner = dataSyndicationService.getPartner(slaveDomain);
-                } catch (Exception e) {
-                    Logger.error("DataSyndication processSubmitAgreement unexpected error", e);
-                    return ok(views.html.admin.datasyndication.communication_error.render());
-                }
+            if (boundForm.hasErrors()) {
 
                 // get all possible items
                 ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
@@ -299,7 +299,7 @@ public class DataSyndicationController extends Controller {
 
             try {
                 dataSyndicationService.submitAgreement(formData.refId, formData.name, formData.getStartDateAsDate(), formData.getEndDateAsDate(),
-                        formData.itemIds, slaveDomain);
+                        formData.itemIds, slaveDomain, partner.baseUrl);
             } catch (Exception e) {
                 Logger.error("DataSyndication processSubmitAgreement unexpected error", e);
                 return ok(views.html.admin.datasyndication.communication_error.render());

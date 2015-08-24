@@ -84,8 +84,11 @@ public interface IDataSyndicationService {
      *            the ids of the authorized items
      * @param slaveDomain
      *            the domain of the slave instance
+     * @param slaveBaseUrl
+     *            the base URL of the slave instance (for the notification link)
      */
-    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain) throws EchannelException;
+    void submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain, String slaveBaseUrl)
+            throws EchannelException;
 
     /**
      * Accept a pending agreement.
