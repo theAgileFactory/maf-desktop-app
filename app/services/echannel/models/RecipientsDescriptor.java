@@ -30,7 +30,7 @@ public class RecipientsDescriptor {
      * @author Johann Kohler
      */
     public static enum Type {
-        ALL, PERMISSIONS, ACTORS, PRINCIPALS;
+        PERMISSIONS, ACTORS, PRINCIPALS;
     }
 
 }

@@ -10,6 +10,7 @@ public class DataSyndicationPartner {
 
     // from instance
     public String domain;
+    public String baseUrl;
 
     // from customer
     public String customerLogo;

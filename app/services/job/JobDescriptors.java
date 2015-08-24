@@ -21,7 +21,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dao.pmo.ActorDao;
+import framework.services.ServiceStaticAccessor;
 import framework.services.job.IJobDescriptor;
+import models.framework_models.account.NotificationCategory;
+import models.framework_models.account.NotificationCategory.Code;
 import modules.StaticAccessor;
 import play.Logger;
 import services.echannel.IEchannelService;
@@ -139,8 +143,31 @@ public interface JobDescriptors {
 
                 List<NotificationEvent> notificationEvents = echannelService.getNotificationEventsToNotify();
                 for (NotificationEvent notificationEvent : notificationEvents) {
-                    // TODO send the notification
-                    Logger.info("send: " + notificationEvent.title);
+
+                    switch (notificationEvent.recipientsDescriptor.type) {
+                    case ACTORS:
+                        for (Long actorId : notificationEvent.recipientsDescriptor.actors) {
+                            ActorDao.sendNotificationWithContent(ActorDao.getActorById(actorId), NotificationCategory.getByCode(Code.INFORMATION),
+                                    notificationEvent.actionLink, notificationEvent.title, notificationEvent.message);
+                        }
+                        break;
+                    case PERMISSIONS:
+                        for (String permission : notificationEvent.recipientsDescriptor.permissions) {
+                            ServiceStaticAccessor.getNotificationManagerPlugin().sendNotificationWithPermission(permission,
+                                    NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.title, notificationEvent.message,
+                                    notificationEvent.actionLink);
+                        }
+                        break;
+                    case PRINCIPALS:
+                        for (String uid : notificationEvent.recipientsDescriptor.principals) {
+                            ActorDao.sendNotificationWithContent(uid, NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.actionLink,
+                                    notificationEvent.title, notificationEvent.message);
+                        }
+                        break;
+                    default:
+                        break;
+
+                    }
                 }
 
             } catch (Exception e) {

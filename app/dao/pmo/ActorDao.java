@@ -23,20 +23,11 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import models.framework_models.account.NotificationCategory;
-import models.framework_models.account.Principal;
-import models.pmo.Actor;
-import models.pmo.ActorCapacity;
-import models.pmo.ActorType;
-import models.pmo.Competency;
-
 import org.apache.commons.lang3.StringUtils;
 
-import play.Logger;
-
-import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.SqlUpdate;
@@ -49,6 +40,13 @@ import framework.services.configuration.Language;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
+import models.framework_models.account.NotificationCategory;
+import models.framework_models.account.Principal;
+import models.pmo.Actor;
+import models.pmo.ActorCapacity;
+import models.pmo.ActorType;
+import models.pmo.Competency;
+import play.Logger;
 
 /**
  * DAO for the {@link Actor} and {@link ActorCapacity} and {@link ActorType} and
@@ -302,10 +300,9 @@ public abstract class ActorDao {
      */
     public static List<Actor> getActorAsListByKeywords(String key) {
         key = key.replace("\"", "\\\"");
-        String sql =
-                "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND (a.ref_id LIKE \"" + key
-                        + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR "
-                        + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key + "%\")";
+        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND (a.ref_id LIKE \"" + key
+                + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
+                + "%\")";
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         return findActor.query().setRawSql(rawSql).findList();
     }
@@ -319,10 +316,9 @@ public abstract class ActorDao {
      */
     public static List<Actor> getActorActiveAsListByKeywords(String key) {
         key = key.replace("\"", "\\\"");
-        String sql =
-                "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.ref_id LIKE \"" + key
-                        + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR "
-                        + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key + "%\")";
+        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.ref_id LIKE \"" + key
+                + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
+                + "%\")";
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         return findActor.query().setRawSql(rawSql).findList();
     }
@@ -336,10 +332,9 @@ public abstract class ActorDao {
      */
     public static List<Actor> getActorActiveWithoutUidAsListByKeywords(String key) {
         key = key.replace("\"", "\\\"");
-        String sql =
-                "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.uid IS NULL OR a.uid = '') AND (a.ref_id LIKE \"" + key
-                        + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR "
-                        + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key + "%\")";
+        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.uid IS NULL OR a.uid = '') AND (a.ref_id LIKE \""
+                + key + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \""
+                + key + "%\")";
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         return findActor.query().setRawSql(rawSql).findList();
     }
@@ -389,11 +384,10 @@ public abstract class ActorDao {
      */
     public static ISelectableValueHolderCollection<Long> getActorActiveAsVHByKeywordsAndPE(String key, Long portfolioEntryId) {
         key = key.replace("\"", "\\\"");
-        String sql =
-                "SELECT a.id FROM actor a JOIN stakeholder s ON a.id = s.actor_id WHERE "
-                        + "a.deleted = false AND a.is_active = true AND s.deleted = false AND s.portfolio_entry_id = '" + portfolioEntryId
-                        + "' AND (CONCAT_WS(\" \", a.first_name, a.last_name) like \"" + key + "%\" OR "
-                        + "CONCAT_WS(\" \", a.last_name, a.first_name) like \"" + key + "%\")";
+        String sql = "SELECT a.id FROM actor a JOIN stakeholder s ON a.id = s.actor_id WHERE "
+                + "a.deleted = false AND a.is_active = true AND s.deleted = false AND s.portfolio_entry_id = '" + portfolioEntryId
+                + "' AND (CONCAT_WS(\" \", a.first_name, a.last_name) like \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) like \"" + key
+                + "%\")";
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         List<Actor> actors = findActor.query().setRawSql(rawSql).findList();
 
@@ -434,6 +428,31 @@ public abstract class ActorDao {
             }
         }
         return actor;
+    }
+
+    /**
+     * Send a notification to a user with direct content (no keys used for title
+     * and message).
+     * 
+     * @param recipient
+     *            the uid of the user (principal)
+     * @param category
+     *            the notification category
+     * @param url
+     *            the attached url for the notification
+     * @param title
+     *            the title
+     * @param message
+     *            the message
+     */
+    public static void sendNotificationWithContent(String recipient, NotificationCategory category, String url, String title, String message) {
+
+        // get the principal
+        Principal principal = Principal.getPrincipalFromUid(recipient);
+
+        if (principal != null) {
+            ServiceStaticAccessor.getNotificationManagerPlugin().sendNotification(recipient, category, title, message, url);
+        }
     }
 
     /**
@@ -478,6 +497,28 @@ public abstract class ActorDao {
     }
 
     /**
+     * Send a notification (with direct content - no keys used for title and
+     * message) to the user (principal) associated to an actor. If the actor is
+     * not linked to a principal then the notification is not sent.
+     * 
+     * @param actor
+     *            the actor for which the notification should be sent
+     * @param category
+     *            the notification category
+     * @param url
+     *            the attached url for the notification (can be null)
+     * @param title
+     *            the title
+     * @param message
+     *            the message
+     */
+    public static void sendNotificationWithContent(Actor actor, NotificationCategory category, String url, String title, String message) {
+        if (actor != null && actor.uid != null && !actor.uid.equals("")) {
+            sendNotificationWithContent(actor.uid, category, url, title, message);
+        }
+    }
+
+    /**
      * Send a notification to the user (principal) associated to an actor. If
      * the actor is not linked to a principal then the notification is not sent.
      * 
@@ -497,6 +538,34 @@ public abstract class ActorDao {
     public static void sendNotification(Actor actor, NotificationCategory category, String url, String titleKey, String messageKey, Object... args) {
         if (actor != null && actor.uid != null && !actor.uid.equals("")) {
             sendNotification(actor.uid, category, url, titleKey, messageKey, args);
+        }
+    }
+
+    /**
+     * Send a notification (with direct content - no keys used for title and
+     * message) to a list of actors. For each actor we take the principal (only
+     * if it exists).
+     * 
+     * @param actors
+     *            the list of actors for which the notification should be sent
+     * @param category
+     *            the notification category
+     * @param url
+     *            the attached url for the notification (can be null)
+     * @param title
+     *            the title
+     * @param message
+     *            the message
+     */
+    public static void sendNotificationWithContent(List<Actor> actors, NotificationCategory category, String url, String title, String message) {
+        Set<String> recipients = new HashSet<>();
+        for (Actor actor : actors) {
+            if (actor != null && actor.uid != null && !actor.uid.equals("")) {
+                recipients.add(actor.uid);
+            }
+        }
+        for (String recipient : recipients) {
+            sendNotificationWithContent(recipient, category, url, title, message);
         }
     }
 
