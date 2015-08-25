@@ -17,6 +17,7 @@
  */
 package controllers.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -101,6 +102,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
         }
 
         // remove agreements that is not ONGOING or hasn't PE item
+        List<DataSyndicationAgreement> activeMasterAgreements = new ArrayList<>();
         for (DataSyndicationAgreement masterAgreement : masterAgreements) {
             boolean hasPEItem = false;
             for (DataSyndicationAgreementItem item : masterAgreement.items) {
@@ -109,12 +111,13 @@ public class PortfolioEntryDataSyndicationController extends Controller {
                     break;
                 }
             }
-            if (!masterAgreement.status.equals(DataSyndicationAgreement.Status.ONGOING) || !hasPEItem) {
-                masterAgreements.remove(masterAgreement);
+            if (masterAgreement.status.equals(DataSyndicationAgreement.Status.ONGOING) && hasPEItem) {
+                activeMasterAgreements.add(masterAgreement);
             }
         }
 
-        return ok(views.html.core.portfolioentrydatasyndication.index.render(portfolioEntry, slaveAgreementLinks, masterAgreementLinks, masterAgreements));
+        return ok(views.html.core.portfolioentrydatasyndication.index.render(portfolioEntry, slaveAgreementLinks, masterAgreementLinks,
+                activeMasterAgreements));
     }
 
     /**

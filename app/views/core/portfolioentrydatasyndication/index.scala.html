@@ -43,7 +43,8 @@
         @if(masterAgreements.size == 0) {
             <div class="alert alert-info">@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_no_master", controllers.admin.routes.DataSyndicationController.searchPartner().url)</div>
         } else {
-            <blockquote>@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_with_master", portfolioEntry.getName)</blockquote>
+        
+            <div class="alert alert-info">@parts.Msg("core.portfolio_entry_data_syndication.index.no_link_with_master", portfolioEntry.getName)</div>
             
             <div class="row">
             @for(masterAgreement <- masterAgreements) {
@@ -54,7 +55,7 @@
                                 <div><img src="@masterAgreement.slavePartner.customerLogo" style="max-width:140px;"></div>
                             }
                             <h4>@masterAgreement.slavePartner.customerName</h4>
-                            <small>@masterAgreement.name</small>
+                            <small>@masterAgreement.name</small><br/><br/>
                             <a class="btn btn-success" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id, masterAgreement.id).url">
                                 <span class="glyphicons glyphicons-share-alt"></span> @parts.Msg("button.share")
                             </a>
