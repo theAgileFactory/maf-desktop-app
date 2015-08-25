@@ -370,7 +370,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public void cancelAgreementLink(DataSyndicationAgreementLink agreementLink) throws EchannelException {
 
-        echannelService.cancelAgreement(agreementLink.id);
+        echannelService.cancelAgreementLink(agreementLink.id);
 
         try {
 

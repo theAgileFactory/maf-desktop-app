@@ -49,14 +49,17 @@
         
         <div class="panel-heading">
             @parts.Msg("core.portfolio_entry_data_syndication.link.view.title")
-            <div class="pull-right">
-                <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.cancelAgreementLink(portfolioEntry.id, agreementLink.id)"><span class="glyphicons glyphicons-ban glyphicons-panel"></span></a>
-                <script type="text/javascript">
-                    function maf_confirmDelete(){
-                        return window.confirm("@parts.Msg("object.data_syndication_agreement_link.cancel.confirm")");
-                    }
-                </script>
-            </div>
+            @if(agreementLink.status.equals(services.datasyndication.models.DataSyndicationAgreementLink.Status.ONGOING) ||
+                  agreementLink.status.equals(services.datasyndication.models.DataSyndicationAgreementLink.Status.PENDING)) {
+                <div class="pull-right">
+                    <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.cancelAgreementLink(portfolioEntry.id, agreementLink.id)"><span class="glyphicons glyphicons-ban glyphicons-panel"></span></a>
+                    <script type="text/javascript">
+                        function maf_confirmDelete(){
+                            return window.confirm("@parts.Msg("object.data_syndication_agreement_link.cancel.confirm")");
+                        }
+                    </script>
+                </div>
+            }
         </div>
 
         <div class="panel-body">
