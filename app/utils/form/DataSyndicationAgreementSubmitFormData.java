@@ -48,6 +48,7 @@ public class DataSyndicationAgreementSubmitFormData {
     @Required
     public String endDate;
 
+    @Required
     public List<Long> itemIds = new ArrayList<Long>();
 
     /**

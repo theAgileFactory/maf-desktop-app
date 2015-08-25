@@ -47,6 +47,7 @@ public class DataSyndicationAgreementLinkSubmitFormData {
     @MaxLength(value = IModelConstants.XLARGE_STRING)
     public String description;
 
+    @Required
     public List<Long> itemIds = new ArrayList<Long>();
 
     /**
