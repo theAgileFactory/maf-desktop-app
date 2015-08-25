@@ -30,6 +30,7 @@ import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Utilities;
+import models.framework_models.account.Principal;
 import models.pmo.PortfolioEntry;
 import play.Logger;
 import play.data.Form;
@@ -288,9 +289,16 @@ public class PortfolioEntryDataSyndicationController extends Controller {
 
         DataSyndicationAgreementLinkSubmitFormData formData = boundForm.get();
 
+        String masterPrincipalUid = null;
+        if (portfolioEntry.manager.uid != null && Principal.getPrincipalFromUid(portfolioEntry.manager.uid) != null) {
+            masterPrincipalUid = portfolioEntry.manager.uid;
+        } else {
+            masterPrincipalUid = userSessionManagerPlugin.getUserSessionId(ctx());
+        }
+
         try {
-            dataSyndicationService.submitAgreementLink(userSessionManagerPlugin.getUserSessionId(ctx()), agreement, formData.name, formData.description,
-                    formData.itemIds, PortfolioEntry.class.getName(), id);
+            dataSyndicationService.submitAgreementLink(masterPrincipalUid, agreement, formData.name, formData.description, formData.itemIds,
+                    PortfolioEntry.class.getName(), id);
         } catch (Exception e) {
             Logger.error("DataSyndication processSubmitAgreementLink unexpected error", e);
             return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
