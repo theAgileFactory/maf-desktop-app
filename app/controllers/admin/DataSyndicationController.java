@@ -551,7 +551,7 @@ public class DataSyndicationController extends Controller {
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.suspend_agreement.success"));
 
-            return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+            return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
 
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));
@@ -596,7 +596,7 @@ public class DataSyndicationController extends Controller {
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.restart_agreement.success"));
 
-            return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+            return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
 
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));
@@ -626,10 +626,11 @@ public class DataSyndicationController extends Controller {
             }
 
             // check the agreement is "ongoing or pending or suspended" and the
-            // instance is the master
+            // instance is the master or the slave
             if ((!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING) && !agreement.status.equals(DataSyndicationAgreement.Status.PENDING)
                     && !agreement.status.equals(DataSyndicationAgreement.Status.SUSPENDED))
-                    || !agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+                    || (!agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())
+                            && !agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain()))) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             }
 
@@ -643,7 +644,11 @@ public class DataSyndicationController extends Controller {
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.cancel_agreement.success"));
 
-            return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+            if (agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+                return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
+            } else {
+                return redirect(controllers.admin.routes.DataSyndicationController.viewConsumerAgreements());
+            }
 
         } else {
             return forbidden(views.html.error.access_forbidden.render(""));

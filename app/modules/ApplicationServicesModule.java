@@ -52,6 +52,7 @@ import framework.services.kpi.IKpiService;
 import framework.services.kpi.KpiServiceImpl;
 import framework.services.notification.DefaultNotificationManagerPlugin;
 import framework.services.notification.INotificationManagerPlugin;
+import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.PluginManagerServiceImpl;
 import framework.services.remote.AdPanelServiceImpl;
@@ -86,7 +87,6 @@ import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 import utils.reporting.IReportingUtils;
 import utils.reporting.ReportingUtilsImpl;
-import framework.services.plugins.IEventBroadcastingService;
 
 /**
  * The module which configure the dependency injection for the application
@@ -145,7 +145,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(ICustomRouterService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
         bind(ICustomRouterNotificationService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
         bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
-        
+
         // Initialize with a defined list of jobs
         List<Pair<IJobDescriptor, Boolean>> jobs = new ArrayList<>();
         JobDescriptors.UpdateConsumedLicensesJobDescriptor updateConsumedLicensesJobDescriptor = new JobDescriptors.UpdateConsumedLicensesJobDescriptor();
@@ -157,7 +157,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
         bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
 
-        //Echannel services
+        // Echannel services
         bind(IEchannelService.class).to(EchannelServiceImpl.class).asEagerSingleton();
         bind(ILicensesManagementService.class).to(LicensesManagementServiceImpl.class).asEagerSingleton();
         bind(IDataSyndicationService.class).to(DataSyndicationServiceImpl.class).asEagerSingleton();
