@@ -67,7 +67,7 @@
                     </tr>
                     <tr>
                         <th>@parts.Msg("object.data_syndication_agreement_link.status.label")</th>
-                        <td>@Html(agreementLink.status.render)</td>
+                        <td>@display_agreement_status(agreementLink.getStatus)</td>
                     </tr>
                    
                 </tbody>

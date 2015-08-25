@@ -358,8 +358,8 @@ public class DataSyndicationController extends Controller {
             }
             List<DataSyndicationAgreementLinkListView> linkRows = new ArrayList<DataSyndicationAgreementLinkListView>();
             for (DataSyndicationAgreementLink link : links) {
-                if (viewAllLinks || link.status.equals(DataSyndicationAgreementLink.Status.PENDING)
-                        || link.status.equals(DataSyndicationAgreementLink.Status.ONGOING)) {
+                if (viewAllLinks || link.getStatus().equals(DataSyndicationAgreement.Status.PENDING)
+                        || link.getStatus().equals(DataSyndicationAgreement.Status.ONGOING)) {
                     linkRows.add(new DataSyndicationAgreementLinkListView(link, dataSyndicationService.getCurrentDomain()));
                 }
             }
@@ -683,7 +683,7 @@ public class DataSyndicationController extends Controller {
             }
 
             // check the agreement is pending
-            if (!agreementLink.status.equals(DataSyndicationAgreementLink.Status.PENDING)) {
+            if (!agreementLink.getStatus().equals(DataSyndicationAgreement.Status.PENDING)) {
                 Utilities.sendInfoFlashMessage(Msg.get("admin.data_syndication.process_agreement_link.already"));
                 return redirect(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, false));
             }

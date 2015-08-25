@@ -27,6 +27,7 @@ import framework.utils.Table;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
 import models.pmo.PortfolioEntry;
+import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 
@@ -84,7 +85,7 @@ public class DataSyndicationAgreementLinkListView {
                 setJavaColumnFormatter("status", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
                     @Override
                     public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
-                        return dataSyndicationAgreementLinkListView.status.render();
+                        return views.html.modelsparts.display_agreement_status.render(dataSyndicationAgreementLinkListView.status).body();
                     }
                 });
 
@@ -94,7 +95,7 @@ public class DataSyndicationAgreementLinkListView {
                     @Override
                     public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
 
-                        if (dataSyndicationAgreementLinkListView.status.equals(DataSyndicationAgreementLink.Status.PENDING)) {
+                        if (dataSyndicationAgreementLinkListView.status.equals(DataSyndicationAgreement.Status.PENDING)) {
 
                             String content = "<a title=\"" + Msg.get("object.data_syndication_agreement_link.process.label")
                                     + "\" href=\"%s\"><span class=\"glyphicons glyphicons-thumbs-up\"></span></a>";
@@ -134,7 +135,7 @@ public class DataSyndicationAgreementLinkListView {
 
     public List<DataSyndicationAgreementItem> items;
 
-    public DataSyndicationAgreementLink.Status status;
+    public DataSyndicationAgreement.Status status;
 
     /**
      * Construct a list view with an agreement link.
@@ -159,7 +160,7 @@ public class DataSyndicationAgreementLinkListView {
 
         this.items = dataSyndicationAgreementLink.items;
 
-        this.status = dataSyndicationAgreementLink.status;
+        this.status = dataSyndicationAgreementLink.getStatus();
 
     }
 

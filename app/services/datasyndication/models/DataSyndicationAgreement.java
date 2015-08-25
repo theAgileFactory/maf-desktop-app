@@ -3,8 +3,6 @@ package services.datasyndication.models;
 import java.util.Date;
 import java.util.List;
 
-import framework.utils.Msg;
-
 /**
  * An agreement for data syndication.
  * 
@@ -31,9 +29,9 @@ public class DataSyndicationAgreement {
      */
     public static enum Status {
 
-        PENDING("warning"), ONGOING("success"), REJECTED("danger"), FINISHED("default"), SUSPENDED("warning"), CANCELLED("default");
+        PENDING("primary"), ONGOING("success"), REJECTED("danger"), FINISHED("info"), SUSPENDED("warning"), CANCELLED("default");
 
-        private String bootstrapClass;
+        public String bootstrapClass;
 
         /**
          * Construct with the bootstrap label class.
@@ -43,14 +41,6 @@ public class DataSyndicationAgreement {
          */
         Status(String bootstrapClass) {
             this.bootstrapClass = bootstrapClass;
-        }
-
-        /**
-         * Render the status.
-         */
-        public String render() {
-            return "<span class=\"label label-" + bootstrapClass + "\">" + Msg.get("object.data_syndication_agreement.status." + name() + ".label")
-                    + "</span>";
         }
 
     }

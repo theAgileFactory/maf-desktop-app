@@ -2,7 +2,7 @@ package services.datasyndication.models;
 
 import java.util.List;
 
-import framework.utils.Msg;
+import services.datasyndication.models.DataSyndicationAgreement.Status;
 
 /**
  * Define an agreement link for data syndication.
@@ -23,41 +23,16 @@ public class DataSyndicationAgreementLink {
     public String dataType;
     public Long masterObjectId;
     public Long slaveObjectId;
-    public Status status;
+    private Status status;
 
     /**
-     * The possible status.
-     * 
-     * @author Johann Kohler
+     * Get the status.
      */
-    public static enum Status {
-        PENDING("warning"), ONGOING("success"), REJECTED("danger"), CANCELLED("default");
-
-        private String bootstrapClass;
-
-        /**
-         * Construct with the bootstrap label class.
-         * 
-         * @param bootstrapClass
-         *            the bootstrap label class
-         */
-        Status(String bootstrapClass) {
-            this.bootstrapClass = bootstrapClass;
-        }
-
-        /**
-         * Get the bootstrap class.
-         */
-        public String getBootstrapClass() {
-            return this.bootstrapClass;
-        }
-
-        /**
-         * Render the status.
-         */
-        public String render() {
-            return "<span class=\"label label-" + bootstrapClass + "\">" + Msg.get("object.data_syndication_agreement.status." + name() + ".label")
-                    + "</span>";
+    public Status getStatus() {
+        if (this.agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)) {
+            return this.status;
+        } else {
+            return this.agreement.status;
         }
     }
 

@@ -86,7 +86,7 @@
                                 <div class="row">
                                     <div class="col-md-2"></div>
                                     <div class="col-md-8 text-center">
-                                        <div class="panel panel-@slaveLink.status.getBootstrapClass">
+                                        <div class="panel panel-@slaveLink.getStatus.bootstrapClass">
                                             <div class="panel-heading">
                                                 @if(slaveLink.agreement.masterPartner.customerLogo != null) {
                                                     <div><img src="@slaveLink.agreement.masterPartner.customerLogo" style="max-width:140px;"></div>
@@ -152,7 +152,7 @@
                                 <div class="row">
                                     <div class="col-md-2"></div>
                                     <div class="col-md-8 text-center">
-                                        <div class="panel panel-@masterLink.status.getBootstrapClass">
+                                        <div class="panel panel-@masterLink.getStatus.bootstrapClass">
                                             <div class="panel-heading">
                                                 @if(masterLink.agreement.slavePartner.customerLogo != null) {
                                                     <div><img src="@masterLink.agreement.slavePartner.customerLogo" style="max-width:140px;"></div>
@@ -172,7 +172,10 @@
         
         </div>
         
-        @parts.Msg("core.portfolio_entry_data_syndication.index.legend.label"): @for(status <- services.datasyndication.models.DataSyndicationAgreementLink.Status.values) { @Html(status.render) }
+        @parts.Msg("core.portfolio_entry_data_syndication.index.legend.label"):
+        @for(status <- services.datasyndication.models.DataSyndicationAgreement.Status.values) { 
+            @display_agreement_status(status)
+        }
     
     }
 

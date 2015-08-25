@@ -78,7 +78,7 @@ public class DataSyndicationAgreementListView {
                 setJavaColumnFormatter("status", new IColumnFormatter<DataSyndicationAgreementListView>() {
                     @Override
                     public String apply(DataSyndicationAgreementListView dataSyndicationAgreementListView, Object value) {
-                        return dataSyndicationAgreementListView.status.render();
+                        return views.html.modelsparts.display_agreement_status.render(dataSyndicationAgreementListView.status).body();
                     }
                 });
 
