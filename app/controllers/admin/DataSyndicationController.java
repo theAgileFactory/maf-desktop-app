@@ -353,7 +353,7 @@ public class DataSyndicationController extends Controller {
 
             // construct the links table
             Set<String> columnsToHide = new HashSet<>();
-            if (!isMasterAgreement) {
+            if (isMasterAgreement) {
                 columnsToHide.add("processActionLink");
             }
             List<DataSyndicationAgreementLinkListView> linkRows = new ArrayList<DataSyndicationAgreementLinkListView>();
