@@ -19,6 +19,7 @@ package services.echannel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -342,6 +343,7 @@ public class EchannelServiceImpl implements IEchannelService {
         submitAgreementRequest.name = name;
         submitAgreementRequest.startDate = startDate;
         submitAgreementRequest.endDate = endDate;
+        agreementItemIds.removeAll(Collections.singleton(null));
         submitAgreementRequest.agreementItemIds = agreementItemIds;
         submitAgreementRequest.slaveDomain = slaveDomain;
 
@@ -439,6 +441,7 @@ public class EchannelServiceImpl implements IEchannelService {
         submitAgreementLinkRequest.agreementId = agreementId;
         submitAgreementLinkRequest.name = name;
         submitAgreementLinkRequest.description = description;
+        agreementItemIds.removeAll(Collections.singleton(null));
         submitAgreementLinkRequest.agreementItemIds = agreementItemIds;
         submitAgreementLinkRequest.dataType = dataType;
         submitAgreementLinkRequest.masterObjectId = masterObjectId;
@@ -589,6 +592,7 @@ public class EchannelServiceImpl implements IEchannelService {
         if (content != null) {
             try {
                 contentString = getMapper().writeValueAsString(content);
+                Logger.info("contentString: " + contentString);
             } catch (JsonProcessingException e) {
                 throw new EchannelException(e.getMessage());
             }
