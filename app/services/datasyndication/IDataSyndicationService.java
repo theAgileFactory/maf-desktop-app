@@ -91,6 +91,25 @@ public interface IDataSyndicationService {
             throws EchannelException;
 
     /**
+     * Create a new master agreement without slave for the instance.
+     * 
+     * @param refId
+     *            the refId
+     * @param name
+     *            the name
+     * @param startDate
+     *            the start date
+     * @param endDate
+     *            the end date
+     * @param agreementItemIds
+     *            the ids of the authorized items
+     * @param partnerEmail
+     *            the email of the wished partner
+     */
+    void submitAgreementNoSlave(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String partnerEmail)
+            throws EchannelException;
+
+    /**
      * Accept a pending (or pending_instance) agreement.
      * 
      * @param agreement

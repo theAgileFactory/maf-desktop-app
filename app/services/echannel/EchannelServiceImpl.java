@@ -59,6 +59,7 @@ import services.echannel.request.LoginEventRequest;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 import services.echannel.request.NotificationEventRequest;
 import services.echannel.request.SubmitDataSyndicationAgreementLinkRequest;
+import services.echannel.request.SubmitDataSyndicationAgreementNoSlaveRequest;
 import services.echannel.request.SubmitDataSyndicationAgreementRequest;
 import services.echannel.request.UpdateConsumedPortfolioEntriesRequest;
 import services.echannel.request.UpdateConsumedStorageRequest;
@@ -349,6 +350,25 @@ public class EchannelServiceImpl implements IEchannelService {
 
         JsonNode content = getMapper().valueToTree(submitAgreementRequest);
         JsonNode response = this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/submit", null, content);
+        return getMapper().convertValue(response, DataSyndicationAgreement.class);
+
+    }
+
+    @Override
+    public DataSyndicationAgreement submitAgreementNoSlave(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds,
+            String partnerEmail) throws EchannelException {
+
+        SubmitDataSyndicationAgreementNoSlaveRequest submitAgreementNoSlaveRequest = new SubmitDataSyndicationAgreementNoSlaveRequest();
+        submitAgreementNoSlaveRequest.refId = refId;
+        submitAgreementNoSlaveRequest.name = name;
+        submitAgreementNoSlaveRequest.startDate = startDate;
+        submitAgreementNoSlaveRequest.endDate = endDate;
+        agreementItemIds.removeAll(Collections.singleton(null));
+        submitAgreementNoSlaveRequest.agreementItemIds = agreementItemIds;
+        submitAgreementNoSlaveRequest.partnerEmail = partnerEmail;
+
+        JsonNode content = getMapper().valueToTree(submitAgreementNoSlaveRequest);
+        JsonNode response = this.call(HttpMethod.POST, DATA_SYNDICATION_AGREEMENT_ACTION + "/submit/no-slave", null, content);
         return getMapper().convertValue(response, DataSyndicationAgreement.class);
 
     }

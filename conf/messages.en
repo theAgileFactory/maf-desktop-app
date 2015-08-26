@@ -3047,9 +3047,12 @@ admin.data_syndication.search_partner.error=Please enter a partner name
 admin.data_syndication.search_partner.keywords.placeholder=Partner name
 admin.data_syndication.search_partner_result.title=Search results
 admin.data_syndication.search_partner_result.header=Please click on the wished partner in order to submit an agreement request.
+admin.data_syndication.search_partner_no_result.header=The partner you try to find has currently no BizDock instance. You can invite him to create a new free BizDock instance, the agreement will be automatically created.
 
 admin.data_syndication.submit_agreement.title=Submit a master agreement request
 admin.data_syndication.submit_agreement.success=The agreement request has been submitted. The partner should now validate it.
+
+admin.data_syndication.submit_agreement.no_slave.success=The invitation has been submitted. The partner should now validate it.
 
 admin.data_syndication.process_agreement.title=Process a consumer agreement request
 admin.data_syndication.process_agreement.already=The agreement request has been already processed.

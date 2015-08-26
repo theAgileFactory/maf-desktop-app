@@ -167,6 +167,25 @@ public interface IEchannelService {
             throws EchannelException;
 
     /**
+     * Create a new master agreement for the instance and return it.
+     * 
+     * @param refId
+     *            the refId
+     * @param name
+     *            the name
+     * @param startDate
+     *            the start date
+     * @param endDate
+     *            the end date
+     * @param agreementItemIds
+     *            the ids of the authorized items
+     * @param partnerEmail
+     *            the partner email
+     */
+    DataSyndicationAgreement submitAgreementNoSlave(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String partnerEmail)
+            throws EchannelException;
+
+    /**
      * Accept a pending (or pending_instance) agreement.
      * 
      * The instance should be the slave of the agreement.

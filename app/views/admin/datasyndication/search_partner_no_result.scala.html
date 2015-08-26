@@ -1,0 +1,76 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    keywords: String,
+    items: framework.utils.ISelectableValueHolderCollection[Long],
+    submitAgreementNoSlaveForm: Form[utils.form.DataSyndicationAgreementNoSlaveSubmitFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts.formats._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.DATA_SYNDICATION,parts.Msg.asString("admin.integration.sidebar.data_syndication.master_agreements")){
+}{ 
+
+    <div class="alert alert-info">@parts.Msg("admin.data_syndication.search_partner_no_result.header")</div>
+
+    <div class="maf-form">
+        @if(submitAgreementNoSlaveForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.admin.routes.DataSyndicationController.processSubmitAgreementNoSlave()) {
+            <fieldset>
+
+                <div class="form-group ">
+                    <label for="startDate" class="control-label">@parts.Msg.asString("object.data_syndication_agreement.partner.label")</label>
+                    <div class="input-group">
+                        @keywords
+                    </div>
+                </div>
+                
+                <input type="hidden" name="keywords" value="@keywords" />
+                
+                @helper.inputText(submitAgreementNoSlaveForm("partnerEmail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.contact_email.label"), 'autofocus -> "autofocus")
+                
+                @helper.inputText(submitAgreementNoSlaveForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.ref_id.label"))
+                
+                @helper.inputText(submitAgreementNoSlaveForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.name.label"))
+                
+                @parts.dateinput(submitAgreementNoSlaveForm("startDate"), parts.Msg.asString("object.data_syndication_agreement.start_date.label"))
+                
+                @parts.dateinput(submitAgreementNoSlaveForm("endDate"), parts.Msg.asString("object.data_syndication_agreement.end_date.label"))
+                
+                @parts.checkboxlist(submitAgreementNoSlaveForm("itemIds"), parts.Msg.asString("object.data_syndication_agreement.items.label"), items)
+                
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.admin.routes.DataSyndicationController.searchPartner()'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+        }
+
+    </div> 
+   
+}

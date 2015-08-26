@@ -176,6 +176,12 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
+    public void submitAgreementNoSlave(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String partnerEmail)
+            throws EchannelException {
+        echannelService.submitAgreementNoSlave(refId, name, startDate, endDate, agreementItemIds, partnerEmail);
+    }
+
+    @Override
     public void acceptAgreement(DataSyndicationAgreement agreement) throws ApiSignatureException, EchannelException {
 
         // create an application API key

@@ -50,6 +50,7 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationPartner;
 import utils.form.DataSyndicationAgreementLinkAcceptExistingPEFormData;
 import utils.form.DataSyndicationAgreementLinkAcceptNewPEFormData;
+import utils.form.DataSyndicationAgreementNoSlaveSubmitFormData;
 import utils.form.DataSyndicationAgreementSubmitFormData;
 import utils.table.DataSyndicationAgreementLinkListView;
 import utils.table.DataSyndicationAgreementListView;
@@ -69,6 +70,8 @@ public class DataSyndicationController extends Controller {
             .form(DataSyndicationAgreementLinkAcceptNewPEFormData.class);
     private static Form<DataSyndicationAgreementLinkAcceptExistingPEFormData> agreementLinkAcceptExistingPEFormTemplate = Form
             .form(DataSyndicationAgreementLinkAcceptExistingPEFormData.class);
+    private static Form<DataSyndicationAgreementNoSlaveSubmitFormData> agreementNoSlaveSubmitFormTemplate = Form
+            .form(DataSyndicationAgreementNoSlaveSubmitFormData.class);
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
@@ -77,8 +80,6 @@ public class DataSyndicationController extends Controller {
      * Display the list of master agreements.
      */
     public Result viewMasterAgreements() {
-
-        // TODO(jkohler) add sort and filter capabilities
 
         if (dataSyndicationService.isActive()) {
 
@@ -114,8 +115,6 @@ public class DataSyndicationController extends Controller {
      * Display the list of consumer agreements.
      */
     public Result viewConsumerAgreements() {
-
-        // TODO(jkohler) add sort and filter capabilities
 
         if (dataSyndicationService.isActive()) {
 
@@ -197,8 +196,19 @@ public class DataSyndicationController extends Controller {
             }
 
             if (partners == null || partners.size() == 0) {
-                // TODO(jkohler) refs #1565
-                return TODO;
+
+                // get all possible items
+                ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
+                try {
+                    for (DataSyndicationAgreementItem item : dataSyndicationService.getAgreementItems()) {
+                        itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
+                    }
+                } catch (Exception e) {
+                    Logger.error("DataSyndication submitAgreement unexpected error", e);
+                    return ok(views.html.admin.datasyndication.communication_error.render());
+                }
+
+                return ok(views.html.admin.datasyndication.search_partner_no_result.render(keywords, itemsAsVH, agreementNoSlaveSubmitFormTemplate));
             } else {
 
                 List<DataSyndicationPartnerListView> dataSyndicationPartnerRows = new ArrayList<DataSyndicationPartnerListView>();
@@ -306,6 +316,54 @@ public class DataSyndicationController extends Controller {
             }
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.submit_agreement.success"));
+
+            return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
+
+        } else {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+    }
+
+    /**
+     * Process the form to submit a new master agreement without slave.
+     */
+    public Result processSubmitAgreementNoSlave() {
+
+        if (dataSyndicationService.isActive()) {
+
+            // bind the form
+            Form<DataSyndicationAgreementNoSlaveSubmitFormData> boundForm = agreementNoSlaveSubmitFormTemplate.bindFromRequest();
+
+            if (boundForm.hasErrors()) {
+
+                // get all possible items
+                ISelectableValueHolderCollection<Long> itemsAsVH = new DefaultSelectableValueHolderCollection<Long>();
+                try {
+                    for (DataSyndicationAgreementItem item : dataSyndicationService.getAgreementItems()) {
+                        itemsAsVH.add(new DefaultSelectableValueHolder<Long>(item.id, item.getFullLabel()));
+                    }
+                } catch (Exception e) {
+                    Logger.error("DataSyndication processSubmitAgreementNoSlave unexpected error", e);
+                    return ok(views.html.admin.datasyndication.communication_error.render());
+                }
+
+                // get the initial keywords
+                String keywords = boundForm.data().get("keywords");
+
+                return ok(views.html.admin.datasyndication.search_partner_no_result.render(keywords, itemsAsVH, boundForm));
+            }
+
+            DataSyndicationAgreementNoSlaveSubmitFormData formData = boundForm.get();
+
+            try {
+                dataSyndicationService.submitAgreementNoSlave(formData.refId, formData.name, formData.getStartDateAsDate(), formData.getEndDateAsDate(),
+                        formData.itemIds, formData.partnerEmail);
+            } catch (Exception e) {
+                Logger.error("DataSyndication processSubmitAgreementNoSlave unexpected error", e);
+                return ok(views.html.admin.datasyndication.communication_error.render());
+            }
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.submit_agreement.no_slave.success"));
 
             return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
 
