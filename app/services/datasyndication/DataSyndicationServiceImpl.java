@@ -228,18 +228,24 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
             String domain = null;
             String baseUrl = null;
             if (this.getCurrentDomain().equals(agreement.masterPartner.domain)) {
-                domain = agreement.slavePartner.domain;
-                baseUrl = agreement.slavePartner.baseUrl;
+                if (agreement.slavePartner != null) {
+                    domain = agreement.slavePartner.domain;
+                    baseUrl = agreement.slavePartner.baseUrl;
+                }
             } else {
                 domain = agreement.masterPartner.domain;
                 baseUrl = agreement.masterPartner.baseUrl;
             }
 
-            String actionLink = baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
-            String title = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.title");
-            String message = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.message", actionLink);
+            if (domain != null && baseUrl != null) {
 
-            echannelService.createNotificationEvent(domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+                String actionLink = baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+                String title = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.title");
+                String message = Msg.get(this.lang, "data_syndication.cancel_agreement.notification.message", actionLink);
+
+                echannelService.createNotificationEvent(domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+            }
+
         } catch (Exception e) {
             Logger.error("Error when creating notification event for cancelAgreement action", e);
         }
@@ -250,14 +256,18 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
         echannelService.suspendAgreement(agreement.id);
 
-        try {
-            String actionLink = agreement.slavePartner.baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
-            String title = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.title");
-            String message = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.message", actionLink);
+        if (agreement.slavePartner != null) {
+            try {
 
-            echannelService.createNotificationEvent(agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
-        } catch (Exception e) {
-            Logger.error("Error when creating notification event for suspendAgreement action", e);
+                String actionLink = agreement.slavePartner.baseUrl
+                        + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+                String title = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.title");
+                String message = Msg.get(this.lang, "data_syndication.suspend_agreement.notification.message", actionLink);
+
+                echannelService.createNotificationEvent(agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+            } catch (Exception e) {
+                Logger.error("Error when creating notification event for suspendAgreement action", e);
+            }
         }
     }
 
@@ -266,14 +276,17 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
         echannelService.restartAgreement(agreement.id);
 
-        try {
-            String actionLink = agreement.slavePartner.baseUrl + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
-            String title = Msg.get(this.lang, "data_syndication.restart_agreement.notification.title");
-            String message = Msg.get(this.lang, "data_syndication.restart_agreement.notification.message", actionLink);
+        if (agreement.slavePartner != null) {
+            try {
+                String actionLink = agreement.slavePartner.baseUrl
+                        + controllers.admin.routes.DataSyndicationController.viewAgreement(agreement.id, false).url();
+                String title = Msg.get(this.lang, "data_syndication.restart_agreement.notification.title");
+                String message = Msg.get(this.lang, "data_syndication.restart_agreement.notification.message", actionLink);
 
-            echannelService.createNotificationEvent(agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
-        } catch (Exception e) {
-            Logger.error("Error when creating notification event for restartAgreement action", e);
+                echannelService.createNotificationEvent(agreement.slavePartner.domain, getRecipientsDescriptorAsPartnerAdmin(), title, message, actionLink);
+            } catch (Exception e) {
+                Logger.error("Error when creating notification event for restartAgreement action", e);
+            }
         }
     }
 

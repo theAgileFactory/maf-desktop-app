@@ -218,9 +218,11 @@ public class DataSyndicationAgreementListView {
         this.masterContactName = dataSyndicationAgreement.masterPartner.contactName;
         this.masterContactEmail = dataSyndicationAgreement.masterPartner.contactName;
 
-        this.slaveCustomerName = dataSyndicationAgreement.slavePartner.customerName;
-        this.slaveContactName = dataSyndicationAgreement.slavePartner.contactName;
-        this.slaveContactEmail = dataSyndicationAgreement.slavePartner.contactEmail;
+        if (dataSyndicationAgreement.slavePartner != null) {
+            this.slaveCustomerName = dataSyndicationAgreement.slavePartner.customerName;
+            this.slaveContactName = dataSyndicationAgreement.slavePartner.contactName;
+            this.slaveContactEmail = dataSyndicationAgreement.slavePartner.contactEmail;
+        }
 
         this.name = dataSyndicationAgreement.name;
         this.refId = dataSyndicationAgreement.refId;

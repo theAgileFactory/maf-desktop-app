@@ -73,18 +73,20 @@
                              <col class="col-md-8">
                         </colgroup>
                         <tbody>
-                            <tr>
-                                <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
-                                <td>@display_object(partner.customerName)</td>
-                            </tr>
-                            <tr>
-                                <th>@parts.Msg("object.data_syndication_agreement.contact_name.label")</th>
-                                <td>@display_object(partner.contactName)</td>
-                            </tr>
-                            <tr>
-                                <th>@parts.Msg("object.data_syndication_agreement.contact_email.label")</th>
-                                <td>@display_object(partner.contactEmail)</td>
-                            </tr>
+                            @if(partner != null) {
+                                <tr>
+                                    <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
+                                    <td>@display_object(partner.customerName)</td>
+                                </tr>
+                                <tr>
+                                    <th>@parts.Msg("object.data_syndication_agreement.contact_name.label")</th>
+                                    <td>@display_object(partner.contactName)</td>
+                                </tr>
+                                <tr>
+                                    <th>@parts.Msg("object.data_syndication_agreement.contact_email.label")</th>
+                                    <td>@display_object(partner.contactEmail)</td>
+                                </tr>
+                            }
                             <tr>
                                 <th>@parts.Msg("object.data_syndication_agreement.name.label")</th>
                                 <td>@display_object(agreement.name)</td>

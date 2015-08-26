@@ -395,7 +395,7 @@ public class DataSyndicationController extends Controller {
             }
 
             // check the instance is the slave
-            if (!agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+            if (agreement.slavePartner == null || !agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             }
 
@@ -435,7 +435,7 @@ public class DataSyndicationController extends Controller {
             }
 
             // check the instance is the slave
-            if (!agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+            if (agreement.slavePartner == null || !agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             }
 
@@ -486,7 +486,7 @@ public class DataSyndicationController extends Controller {
             }
 
             // check the instance is the slave
-            if (!agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+            if (agreement.slavePartner == null || !agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             }
 
@@ -630,7 +630,7 @@ public class DataSyndicationController extends Controller {
             if ((!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING) && !agreement.status.equals(DataSyndicationAgreement.Status.PENDING)
                     && !agreement.status.equals(DataSyndicationAgreement.Status.SUSPENDED))
                     || (!agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())
-                            && !agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain()))) {
+                            && (agreement.slavePartner == null || !agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())))) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             }
 
