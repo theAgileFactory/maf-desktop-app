@@ -1578,6 +1578,7 @@ object.data_syndication_agreement.end_date.label=End date
 object.data_syndication_agreement.end_date.invalid=The end date should be after the start date.
 object.data_syndication_agreement.status.label=Status
 object.data_syndication_agreement.status.PENDING.label=Pending
+object.data_syndication_agreement.status.PENDING_INSTANCE.label=Pending
 object.data_syndication_agreement.status.ONGOING.label=Ongoing
 object.data_syndication_agreement.status.REJECTED.label=Rejected
 object.data_syndication_agreement.status.FINISHED.label=Finished

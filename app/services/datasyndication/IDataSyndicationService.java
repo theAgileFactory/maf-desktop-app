@@ -91,7 +91,7 @@ public interface IDataSyndicationService {
             throws EchannelException;
 
     /**
-     * Accept a pending agreement.
+     * Accept a pending (or pending_instance) agreement.
      * 
      * @param agreement
      *            the agreement

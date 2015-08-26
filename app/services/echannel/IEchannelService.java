@@ -167,7 +167,7 @@ public interface IEchannelService {
             throws EchannelException;
 
     /**
-     * Accept a pending agreement.
+     * Accept a pending (or pending_instance) agreement.
      * 
      * The instance should be the slave of the agreement.
      * 

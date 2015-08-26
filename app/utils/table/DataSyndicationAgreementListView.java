@@ -149,6 +149,7 @@ public class DataSyndicationAgreementListView {
 
                         if (dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.ONGOING)
                                 || dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.PENDING)
+                                || dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.PENDING_INSTANCE)
                                 || dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.SUSPENDED)) {
 
                             String content = MessageFormat.format(

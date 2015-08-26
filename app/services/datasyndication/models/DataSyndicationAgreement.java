@@ -29,17 +29,23 @@ public class DataSyndicationAgreement {
      */
     public static enum Status {
 
-        PENDING("primary"), ONGOING("success"), REJECTED("danger"), FINISHED("info"), SUSPENDED("warning"), CANCELLED("default");
+        PENDING(true, "primary"), PENDING_INSTANCE(false, "primary"), ONGOING(true, "success"), REJECTED(true, "danger"), FINISHED(true,
+                "info"), SUSPENDED(true, "warning"), CANCELLED(true, "default");
 
+        public boolean displayAsLegend;
         public String bootstrapClass;
 
         /**
          * Construct with the bootstrap label class.
          * 
+         * @param displayAsLegend
+         *            set to true if the status should be displayed in the
+         *            legends list
          * @param bootstrapClass
          *            the bootstrap label class
          */
-        Status(String bootstrapClass) {
+        Status(boolean displayAsLegend, String bootstrapClass) {
+            this.displayAsLegend = displayAsLegend;
             this.bootstrapClass = bootstrapClass;
         }
 

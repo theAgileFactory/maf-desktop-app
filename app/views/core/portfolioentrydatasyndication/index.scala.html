@@ -174,7 +174,9 @@
         
         @parts.Msg("core.portfolio_entry_data_syndication.index.legend.label"):
         @for(status <- services.datasyndication.models.DataSyndicationAgreement.Status.values) { 
-            @display_agreement_status(status)
+            @if(status.displayAsLegend) {
+                @display_agreement_status(status)
+            }
         }
     
     }

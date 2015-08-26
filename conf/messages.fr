@@ -1590,6 +1590,7 @@ object.data_syndication_agreement.end_date.label=Date de fin
 object.data_syndication_agreement.end_date.invalid=La date de fin doit être ultérieure à la date de début.
 object.data_syndication_agreement.status.label=Statut
 object.data_syndication_agreement.status.PENDING.label=En attente
+object.data_syndication_agreement.status.PENDING_INSTANCE.label=En attente
 object.data_syndication_agreement.status.ONGOING.label=En cours
 object.data_syndication_agreement.status.REJECTED.label=Rejeté
 object.data_syndication_agreement.status.FINISHED.label=Terminé

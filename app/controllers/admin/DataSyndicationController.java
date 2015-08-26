@@ -321,7 +321,7 @@ public class DataSyndicationController extends Controller {
      *            the agreement id
      * @param viewAllLinks
      *            if true then display all links of the agreement, else display
-     *            only PENDING and ONGOING links
+     *            only PENDING, PENDING_INSTANCE and ONGOING links
      */
     public Result viewAgreement(Long agreementId, Boolean viewAllLinks) {
 
@@ -628,6 +628,7 @@ public class DataSyndicationController extends Controller {
             // check the agreement is "ongoing or pending or suspended" and the
             // instance is the master or the slave
             if ((!agreement.status.equals(DataSyndicationAgreement.Status.ONGOING) && !agreement.status.equals(DataSyndicationAgreement.Status.PENDING)
+                    && !agreement.status.equals(DataSyndicationAgreement.Status.PENDING_INSTANCE)
                     && !agreement.status.equals(DataSyndicationAgreement.Status.SUSPENDED))
                     || (!agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())
                             && (agreement.slavePartner == null || !agreement.slavePartner.domain.equals(dataSyndicationService.getCurrentDomain())))) {
