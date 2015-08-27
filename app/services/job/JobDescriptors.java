@@ -28,6 +28,8 @@ import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import modules.StaticAccessor;
 import play.Logger;
+import services.datasyndication.IDataSyndicationService;
+import services.datasyndication.models.DataSyndicationAgreement;
 import services.echannel.IEchannelService;
 import services.echannel.models.NotificationEvent;
 import services.licensesmanagement.ILicensesManagementService;
@@ -167,6 +169,79 @@ public interface JobDescriptors {
                     default:
                         break;
 
+                    }
+                }
+
+            } catch (Exception e) {
+                Logger.error(this.getId() + " unexpected error", e);
+            }
+
+            Logger.info("end trigger " + this.getId());
+
+        }
+
+        @Override
+        public String getTriggerUrl() {
+            return null;
+        }
+
+    }
+
+    /**
+     * Activate PENDING_INSTANCE agreement.
+     * 
+     * This job is executed ones, 5 minutes after application is started.
+     * 
+     * @author Johann Kohler
+     * 
+     */
+    class ActivatePendingInstanceAgreementJobDescriptor implements IJobDescriptor {
+
+        @Inject
+        private IDataSyndicationService dataSyndicationService;
+
+        @Override
+        public String getId() {
+            return "ActivatePendingInstanceAgreement";
+        }
+
+        @Override
+        public String getName(String languageCode) {
+            return "Activate PENDING_INSTANCE agreement";
+        }
+
+        @Override
+        public String getDescription(String languageCode) {
+            return "Activate the PENDING_INSTANCE agreement if it exist.";
+        }
+
+        @Override
+        public Frequency getFrequency() {
+            return Frequency.ONE_TIME;
+        }
+
+        @Override
+        public int getStartHour() {
+            return 0;
+        }
+
+        @Override
+        public int getStartMinute() {
+            return 0;
+        }
+
+        @Override
+        public void trigger() {
+
+            Logger.info("start trigger " + this.getId());
+
+            try {
+
+                List<DataSyndicationAgreement> agreements = dataSyndicationService.getAgreementsAsSlave();
+                for (DataSyndicationAgreement agreement : agreements) {
+                    Logger.info("agreement id: " + agreement.id);
+                    if (agreement.status.equals(DataSyndicationAgreement.Status.PENDING_INSTANCE)) {
+                        dataSyndicationService.acceptAgreement(agreement);
                     }
                 }
 

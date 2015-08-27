@@ -7,8 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.inject.name.Names;
 
 import be.objectify.deadbolt.java.cache.HandlerCache;
@@ -147,13 +145,16 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
 
         // Initialize with a defined list of jobs
-        List<Pair<IJobDescriptor, Boolean>> jobs = new ArrayList<>();
+        List<IJobDescriptor> jobs = new ArrayList<>();
         JobDescriptors.UpdateConsumedLicensesJobDescriptor updateConsumedLicensesJobDescriptor = new JobDescriptors.UpdateConsumedLicensesJobDescriptor();
         bind(JobDescriptors.UpdateConsumedLicensesJobDescriptor.class).toInstance(updateConsumedLicensesJobDescriptor);
-        jobs.add(Pair.of(updateConsumedLicensesJobDescriptor, true));
+        jobs.add(updateConsumedLicensesJobDescriptor);
         JobDescriptors.SendNotificationEventsJobDescriptor sendNotificationEventsJobDescriptor = new JobDescriptors.SendNotificationEventsJobDescriptor();
         bind(JobDescriptors.SendNotificationEventsJobDescriptor.class).toInstance(sendNotificationEventsJobDescriptor);
-        jobs.add(Pair.of(sendNotificationEventsJobDescriptor, false));
+        jobs.add(sendNotificationEventsJobDescriptor);
+        JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor activatePendingInstanceAgreementJobDescriptor = new JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor();
+        bind(JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor.class).toInstance(activatePendingInstanceAgreementJobDescriptor);
+        jobs.add(activatePendingInstanceAgreementJobDescriptor);
         bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
         bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
 
