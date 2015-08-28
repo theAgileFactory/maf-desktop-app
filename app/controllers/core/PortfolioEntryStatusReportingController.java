@@ -48,6 +48,7 @@ import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
 import dao.reporting.ReportingDao;
+import framework.security.SecurityUtils;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
@@ -86,6 +87,9 @@ import play.mvc.With;
 import scala.concurrent.duration.Duration;
 import security.CheckPortfolioEntryExists;
 import security.DefaultDynamicResourceHandler;
+import services.datasyndication.IDataSyndicationService;
+import services.datasyndication.models.DataSyndicationAgreementItem;
+import services.datasyndication.models.DataSyndicationAgreementLink;
 import utils.form.AttachmentFormData;
 import utils.form.PortfolioEntryEventFormData;
 import utils.form.PortfolioEntryReportFormData;
@@ -95,7 +99,6 @@ import utils.table.AttachmentListView;
 import utils.table.PortfolioEntryEventListView;
 import utils.table.PortfolioEntryReportListView;
 import utils.table.PortfolioEntryRiskListView;
-import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the status reporting (events, risks,
@@ -110,7 +113,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private IPersonalStoragePlugin personalStoragePlugin;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
-    @Inject 
+    @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private IReportingUtils reportingUtils;
@@ -120,7 +123,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private IAttachmentManagerPlugin attachmentManagerPlugin;
-    
+
+    @Inject
+    private IDataSyndicationService dataSyndicationService;
+
     private static Logger.ALogger log = Logger.of(PortfolioEntryStatusReportingController.class);
 
     public static Form<PortfolioEntryReportFormData> reportFormTemplate = Form.form(PortfolioEntryReportFormData.class);
@@ -201,6 +207,20 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Table<PortfolioEntryReportListView> filledReportsTable = PortfolioEntryReportListView.templateTable.fill(portfolioEntryReportsListView,
                 hideColumnsForReport);
 
+        // get the syndicated reports
+        List<DataSyndicationAgreementLink> agreementLinks = new ArrayList<>();
+        DataSyndicationAgreementItem agreementItem = null;
+        if (portfolioEntry.isSyndicated && dataSyndicationService.isActive()) {
+            try {
+                agreementItem = dataSyndicationService.getAgreementItemByDataTypeAndDescriptor(PortfolioEntry.class.getName(), "REPORT");
+                if (agreementItem != null) {
+                    agreementLinks = dataSyndicationService.getAgreementLinksOfItemAndSlaveObject(agreementItem, PortfolioEntry.class.getName(), id);
+                }
+            } catch (Exception e) {
+                Logger.error("impossible to get the syndicated report data", e);
+            }
+        }
+
         // get the portfolioEntry risks
 
         Pagination<PortfolioEntryRisk> risksPagination = PortfolioEntryRiskDao.getPERiskAsPaginationByPE(id, viewAllRisks);
@@ -246,7 +266,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateName());
 
         return ok(views.html.core.portfolioentrystatusreporting.registers.render(portfolioEntry, filledReportsTable, reportsPagination, filledRisksTable,
-                risksPagination, filledIssuesTable, issuesPagination, viewAllRisks, viewAllIssues, report.isActive));
+                risksPagination, filledIssuesTable, issuesPagination, viewAllRisks, viewAllIssues, report.isActive, agreementLinks, agreementItem));
     }
 
     /**
@@ -383,12 +403,12 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     getSysAdminUtils().scheduleOnce(false, "Events Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
                         @Override
                         public void run() {
-                            
+
                             try {
                                 OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                                 IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
-                                        controllers.my.routes.MyPersonalStorage.index().url());
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
@@ -471,7 +491,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
          */
 
         // authorize the attachments
-        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryReport.class, reportId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryReport.class, reportId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         // create the table
         List<Attachment> attachments = Attachment.getAttachmentsFromObjectTypeAndObjectId(PortfolioEntryReport.class, reportId);
@@ -989,7 +1009,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
             // try to get the current actor
             try {
-                
+
                 String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 portfolioEntryEvent.actor = ActorDao.getActorByUid(uid);
             } catch (Exception e) {
@@ -1061,7 +1081,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the name of the preference
      */
     private void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
-        
+
         getPreferenceManagerPlugin().updatePreferenceValue(preferenceName, filterConfigAsJson);
     }
 
@@ -1072,7 +1092,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the name of the preference
      */
     private String getFilterConfigurationFromPreferences(String preferenceName) {
-       
+
         return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
     }
 

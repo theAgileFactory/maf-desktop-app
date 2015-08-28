@@ -2445,6 +2445,8 @@ core.portfolio_entry_data_syndication.link.view.title=Details
 
 core.portfolio_entry_data_syndication.link.cancel.success=de: The relation has been successfully cancelled.
 
+core.portfolio_entry_data_syndication.link.synchronize.success=de: The data have been pushed in the partner instance.
+
 core.portfolio_entry_data_syndication.link.submit.title=de: Submit a relation request
 core.portfolio_entry_data_syndication.link.submit.agreement.title=de: Details of the agreement
 core.portfolio_entry_data_syndication.link.submit.success=de: The relation request has been submitted. The partner should now validate it.

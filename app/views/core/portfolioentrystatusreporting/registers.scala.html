@@ -25,7 +25,9 @@
     issuesPagination: framework.utils.Pagination[models.pmo.PortfolioEntryRisk], 
     viewAllRisks: Boolean,
     viewAllIssues: Boolean,
-    isActiveReport: Boolean
+    isActiveReport: Boolean,
+    agreementLinks: List[services.datasyndication.models.DataSyndicationAgreementLink],
+    agreementItem: services.datasyndication.models.DataSyndicationAgreementItem
 )
 
 @import be.objectify.deadbolt.java.views.html._
@@ -63,6 +65,12 @@
             @parts.table.tableview_with_pagination_and_queryparams(reportsTable, reportsPagination, null, null, "id=" + portfolioEntry.id)
         </div>
     </div>
+    
+    @if(agreementLinks != null && agreementItem != null) {
+        @for(agreementLink <- agreementLinks) {
+            @display_data_syndication_table(agreementLink, agreementItem)
+        }
+    }
     
     <h4>@parts.Msg("core.portfolio_entry_status_reporting.registers.risks_and_issues.title")</h4>
     

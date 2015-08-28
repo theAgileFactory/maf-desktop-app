@@ -21,7 +21,9 @@
     pagination: framework.utils.Pagination[models.pmo.PortfolioEntryPlanningPackage],
     filterConfig: framework.utils.FilterConfig[utils.table.PortfolioEntryPlanningPackageListView],
     groups: List[models.pmo.PortfolioEntryPlanningPackageGroup],
-    ganttSource: String
+    ganttSource: String,
+    agreementLinks: List[services.datasyndication.models.DataSyndicationAgreementLink],
+    agreementItem: services.datasyndication.models.DataSyndicationAgreementItem
 )
 
 @import be.objectify.deadbolt.java.views.html._
@@ -73,7 +75,7 @@
             )
         </div>
     </div>
-    
+
     @if(ganttSource != null && !ganttSource.trim.equals("[ ]")) {
     
         <div class="pull-right small">
@@ -99,5 +101,11 @@
             
         </script>
     
+    }
+    
+    @if(agreementLinks != null && agreementItem != null) {
+        @for(agreementLink <- agreementLinks) {
+            @display_data_syndication_table(agreementLink, agreementItem)
+        }
     }
 }

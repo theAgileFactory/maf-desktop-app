@@ -53,6 +53,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
+import framework.security.SecurityUtils;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -101,6 +102,9 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import security.DefaultDynamicResourceHandler;
+import services.datasyndication.IDataSyndicationService;
+import services.datasyndication.models.DataSyndicationAgreementItem;
+import services.datasyndication.models.DataSyndicationAgreementLink;
 import utils.SortableCollection;
 import utils.SortableCollection.ComplexSortableObject;
 import utils.SortableCollection.DateSortableObject;
@@ -118,7 +122,6 @@ import utils.table.AttachmentListView;
 import utils.table.PortfolioEntryPlanningPackageListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
-import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the planning of a portfolio entry.
@@ -126,7 +129,8 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioEntryPlanningController extends Controller {
-    @Inject 
+
+    @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private II18nMessagesPlugin messagesPlugin;
@@ -134,7 +138,10 @@ public class PortfolioEntryPlanningController extends Controller {
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
-    
+
+    @Inject
+    private IDataSyndicationService dataSyndicationService;
+
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
     public static Form<OverviewConfiguration> overviewConfigurationFormTemplate = Form.form(OverviewConfiguration.class);
@@ -524,10 +531,25 @@ public class PortfolioEntryPlanningController extends Controller {
             }
 
             // get the table
-            Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig);
+            Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig,
+                    getMessagesPlugin());
 
             // get the available groups
             List<PortfolioEntryPlanningPackageGroup> groups = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveNonEmptyAsList();
+
+            // get the syndicated reports
+            List<DataSyndicationAgreementLink> agreementLinks = new ArrayList<>();
+            DataSyndicationAgreementItem agreementItem = null;
+            if (portfolioEntry.isSyndicated && getDataSyndicationService().isActive()) {
+                try {
+                    agreementItem = getDataSyndicationService().getAgreementItemByDataTypeAndDescriptor(PortfolioEntry.class.getName(), "PLANNING_PACKAGE");
+                    if (agreementItem != null) {
+                        agreementLinks = getDataSyndicationService().getAgreementLinksOfItemAndSlaveObject(agreementItem, PortfolioEntry.class.getName(), id);
+                    }
+                } catch (Exception e) {
+                    Logger.error("impossible to get the syndicated planning package data", e);
+                }
+            }
 
             // construct the gantt
 
@@ -578,7 +600,8 @@ public class PortfolioEntryPlanningController extends Controller {
                 Logger.error(e.getMessage());
             }
 
-            return ok(views.html.core.portfolioentryplanning.packages.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig, groups, ganttSource));
+            return ok(views.html.core.portfolioentryplanning.packages.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig, groups, ganttSource,
+                    agreementLinks, agreementItem));
 
         } catch (Exception e) {
 
@@ -615,7 +638,8 @@ public class PortfolioEntryPlanningController extends Controller {
             FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = PortfolioEntryPlanningPackageListView.filterConfig.parseResponse(json);
 
             // get the table
-            Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig);
+            Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig,
+                    getMessagesPlugin());
 
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
@@ -632,9 +656,11 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the portfolio entry id
      * @param filterConfig
      *            the filter config.
+     * @param messagesPlugin
+     *            the message service
      */
     private static Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> getPackagesTable(Long portfolioEntryId,
-            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig) {
+            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig, II18nMessagesPlugin messagesPlugin) {
 
         ExpressionList<PortfolioEntryPlanningPackage> expressionList = filterConfig
                 .updateWithSearchExpression(PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsExprByPE(portfolioEntryId));
@@ -645,7 +671,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         List<PortfolioEntryPlanningPackageListView> portfolioEntryPlanningPackageListView = new ArrayList<PortfolioEntryPlanningPackageListView>();
         for (PortfolioEntryPlanningPackage portfolioEntryPlanningPackage : pagination.getListOfObjects()) {
-            portfolioEntryPlanningPackageListView.add(new PortfolioEntryPlanningPackageListView(portfolioEntryPlanningPackage));
+            portfolioEntryPlanningPackageListView.add(new PortfolioEntryPlanningPackageListView(portfolioEntryPlanningPackage, messagesPlugin));
         }
 
         Set<String> hideColumnsForPackage = filterConfig.getColumnsToHide();
@@ -698,7 +724,8 @@ public class PortfolioEntryPlanningController extends Controller {
          */
 
         // authorize the attachments
-        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryPlanningPackage.class, planningPackageId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryPlanningPackage.class, planningPackageId, getAttachmentManagerPlugin(),
+                getUserSessionManagerPlugin());
 
         // create the table
         List<Attachment> attachments = Attachment.getAttachmentsFromObjectTypeAndObjectId(PortfolioEntryPlanningPackage.class, planningPackageId);
@@ -759,8 +786,8 @@ public class PortfolioEntryPlanningController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(planningPackageForm, PortfolioEntryPlanningPackage.class, null);
         }
 
-        return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()), planningPackageForm,
-                PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+        return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
+                planningPackageForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
     }
 
     /**
@@ -778,8 +805,9 @@ public class PortfolioEntryPlanningController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class)) {
-            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()), boundForm,
-                    PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+            return ok(
+                    views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
+                            boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
 
         PortfolioEntryPlanningPackageFormData planningPackageFormData = boundForm.get();
@@ -788,8 +816,9 @@ public class PortfolioEntryPlanningController extends Controller {
         if (!planningPackageFormData.startDate.equals("") && planningPackageFormData.endDate.equals("")) {
             // the start date cannot be filled alone
             boundForm.reject("startDate", Msg.get("object.portfolio_entry_planning_package.start_date.invalid"));
-            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()), boundForm,
-                    PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+            return ok(
+                    views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
+                            boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
         if (!planningPackageFormData.startDate.equals("") && !planningPackageFormData.endDate.equals("")) {
             // the end date should be after the start date
@@ -797,8 +826,9 @@ public class PortfolioEntryPlanningController extends Controller {
                 if (Utilities.getDateFormat(null).parse(planningPackageFormData.startDate)
                         .after(Utilities.getDateFormat(null).parse(planningPackageFormData.endDate))) {
                     boundForm.reject("endDate", Msg.get("object.portfolio_entry_planning_package.end_date.invalid"));
-                    return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
-                            boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+                    return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry,
+                            Color.getColorsAsValueHolderCollection(getMessagesPlugin()), boundForm,
+                            PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
                 }
             } catch (ParseException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -1091,7 +1121,7 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         // delete the attachment
-        FileAttachmentHelper.deleteFileAttachment(attachmentId,getAttachmentManagerPlugin(),getUserSessionManagerPlugin());
+        FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         attachment.doDelete();
 
@@ -1948,14 +1978,23 @@ public class PortfolioEntryPlanningController extends Controller {
         return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
     }
 
+    /**
+     * Get the preference manager service.
+     */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
     }
 
+    /**
+     * Get the message service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }
 
+    /**
+     * Get the attachment service.
+     */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
     }
@@ -1998,7 +2037,8 @@ public class PortfolioEntryPlanningController extends Controller {
          * Load the configuration from a user preference.
          */
         public static OverviewConfiguration load() {
-            String overviewPreferenceAsJson = ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE);
+            String overviewPreferenceAsJson = ServiceStaticAccessor.getPreferenceManagerPlugin()
+                    .getPreferenceValueAsString(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE);
             if (overviewPreferenceAsJson == null || overviewPreferenceAsJson.equals("")) {
                 OverviewConfiguration conf = new OverviewConfiguration(true);
                 store(conf);
@@ -2034,8 +2074,18 @@ public class PortfolioEntryPlanningController extends Controller {
 
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
+    }
+
+    /**
+     * Get the data syndication service.
+     */
+    private IDataSyndicationService getDataSyndicationService() {
+        return dataSyndicationService;
     }
 
 }

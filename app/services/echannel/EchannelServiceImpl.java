@@ -336,6 +336,12 @@ public class EchannelServiceImpl implements IEchannelService {
     }
 
     @Override
+    public DataSyndicationAgreementItem getAgreementItemByDataTypeAndDescriptor(String dataType, String descriptor) throws EchannelException {
+        JsonNode response = this.call(HttpMethod.GET, DATA_SYNDICATION_AGREEMENT_ITEM_ACTION + "/" + dataType + "/" + descriptor, null, null);
+        return getMapper().convertValue(response, DataSyndicationAgreementItem.class);
+    }
+
+    @Override
     public DataSyndicationAgreement submitAgreement(String refId, String name, Date startDate, Date endDate, List<Long> agreementItemIds, String slaveDomain)
             throws EchannelException {
 

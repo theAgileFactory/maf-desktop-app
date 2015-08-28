@@ -146,6 +146,16 @@ public interface IEchannelService {
     List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException;
 
     /**
+     * Get an agreement item by data type and descriptor.
+     * 
+     * @param dataType
+     *            the item data type
+     * @param descriptor
+     *            the item descriptor
+     */
+    DataSyndicationAgreementItem getAgreementItemByDataTypeAndDescriptor(String dataType, String descriptor) throws EchannelException;
+
+    /**
      * Create a new master agreement for the instance and return it.
      * 
      * The agreement should be then accepted by the slave instance.

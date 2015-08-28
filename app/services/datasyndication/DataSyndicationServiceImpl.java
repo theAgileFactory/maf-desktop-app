@@ -17,7 +17,9 @@
  */
 package services.datasyndication;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,19 +27,30 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import constants.IMafConstants;
+import dao.pmo.PortfolioEntryDao;
+import dao.pmo.PortfolioEntryPlanningPackageDao;
+import dao.pmo.PortfolioEntryReportDao;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.api.AbstractApiController;
+import framework.services.api.commons.ApiMethod;
 import framework.services.api.commons.ApiSignatureException;
 import framework.services.api.server.IApiApplicationConfiguration;
 import framework.services.api.server.IApiSignatureService;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryPlanningPackage;
+import models.pmo.PortfolioEntryReport;
 import play.Configuration;
 import play.Logger;
 import play.i18n.Lang;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
+import services.bizdockapi.IBizdockApiClient;
+import services.bizdockapi.IBizdockApiClient.BizdockApiException;
 import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
@@ -63,6 +76,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     private IApiSignatureService apiSignatureService;
     private IEchannelService echannelService;
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    private IBizdockApiClient bizdockApiClient;
 
     /**
      * Configurations of the the service.
@@ -103,6 +117,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
      *            the Play configuration service
      * @param echannelService
      *            the eChannel service
+     * @param bizdockApiClient
+     *            the BizDock API client (for the slave instance)
      * @param apiSignatureService
      *            the API signature service
      * @param preferenceManagerPlugin
@@ -112,7 +128,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
      */
     @Inject
     public DataSyndicationServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IEchannelService echannelService,
-            IApiSignatureService apiSignatureService, IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin i18nMessagesPlugin) {
+            IBizdockApiClient bizdockApiClient, IApiSignatureService apiSignatureService, IPreferenceManagerPlugin preferenceManagerPlugin,
+            II18nMessagesPlugin i18nMessagesPlugin) {
 
         Logger.info("SERVICE>>> DataSyndicationServiceImpl starting...");
 
@@ -123,6 +140,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         this.echannelService = echannelService;
         this.apiSignatureService = apiSignatureService;
         this.preferenceManagerPlugin = preferenceManagerPlugin;
+        this.bizdockApiClient = bizdockApiClient;
 
         lifecycle.addStopHook(() -> {
             Logger.info("SERVICE>>> DataSyndicationServiceImpl stopping...");
@@ -144,6 +162,16 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
+    public Date getStringDate(String stringDate) {
+        SimpleDateFormat df = new SimpleDateFormat(AbstractApiController.DATE_FORMAT);
+        try {
+            return df.parse(stringDate);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) throws EchannelException {
         return echannelService.findPartners(true, keywords);
     }
@@ -156,6 +184,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException {
         return echannelService.getAgreementItems();
+    }
+
+    @Override
+    public DataSyndicationAgreementItem getAgreementItemByDataTypeAndDescriptor(String dataType, String descriptor) throws EchannelException {
+        return echannelService.getAgreementItemByDataTypeAndDescriptor(dataType, descriptor);
     }
 
     @Override
@@ -455,8 +488,20 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws EchannelException {
-        return echannelService.getAgreementLinksOfSlaveObject(dataType, masterObjectId);
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId) throws EchannelException {
+        return echannelService.getAgreementLinksOfSlaveObject(dataType, slaveObjectId);
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfItemAndSlaveObject(DataSyndicationAgreementItem item, String dataType, Long slaveObjectId)
+            throws EchannelException {
+        List<DataSyndicationAgreementLink> agreementLinks = new ArrayList<>();
+        for (DataSyndicationAgreementLink agreementLink : this.getAgreementLinksOfSlaveObject(PortfolioEntry.class.getName(), slaveObjectId)) {
+            if (agreementLink.items.contains(item)) {
+                agreementLinks.add(agreementLink);
+            }
+        }
+        return agreementLinks;
     }
 
     /**
@@ -488,5 +533,102 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
         descriptor.principals.add(principalUid);
 
         return descriptor;
+    }
+
+    @Override
+    public boolean postData(DataSyndicationAgreementLink agreementLink) {
+
+        boolean noError = true;
+
+        try {
+
+            // Call the getSystemCurrentTime method in order to now if the slave
+            // instance is accessible
+            String getSystemCurrentTimeUrl = agreementLink.agreement.slavePartner.baseUrl
+                    + controllers.api.system.routes.SystemApiController.getSystemCurrentTime().url();
+            bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.GET,
+                    getSystemCurrentTimeUrl, null);
+
+            // PortfolioEntry case
+            if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
+
+                // verify the master object exists
+                boolean masterPeExists = PortfolioEntryDao.getPEById(agreementLink.masterObjectId) != null;
+
+                // verify the slave object exists
+                boolean slavePeExists = false;
+                String getPortfolioEntryUrl = agreementLink.agreement.slavePartner.baseUrl
+                        + controllers.api.core.routes.PortfolioEntryApiController.getPortfolioEntryById(agreementLink.slaveObjectId).url();
+                try {
+                    bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.GET,
+                            getPortfolioEntryUrl, null);
+                    slavePeExists = true;
+                } catch (BizdockApiException e) {
+                    Logger.warn("impossible to get the portfolio entry of the slave instance, we remove the link");
+                }
+
+                // if the slave or the master object does not exist
+                // then call deleteAgreementLink
+                if (!masterPeExists || !slavePeExists) {
+                    noError = false;
+                    try {
+                        this.deleteAgreementLink(agreementLink);
+                    } catch (Exception e) {
+                        Logger.error("error with dataSyndicationService.deleteAgreementLink", e);
+                    }
+                } else {
+
+                    for (DataSyndicationAgreementItem agreementItem : agreementLink.items) {
+
+                        String postDataUrl = agreementLink.agreement.slavePartner.baseUrl
+                                + controllers.api.core.routes.DataSyndicationApiController.postData(agreementLink.id, agreementItem.id).url();
+
+                        // construct the data
+                        List<List<Object>> data = new ArrayList<>();
+                        if (agreementItem.descriptor.equals("PLANNING_PACKAGE")) {
+                            data.add(Arrays.asList("object.portfolio_entry_planning_package.is_important.label",
+                                    "object.portfolio_entry_planning_package.name.label", "object.portfolio_entry_planning_package.description.label",
+                                    "object.portfolio_entry_planning_package.start_date.label", "object.portfolio_entry_planning_package.end_date.label",
+                                    "object.portfolio_entry_planning_package.group.label", "object.portfolio_entry_planning_package.status.label"));
+                            for (PortfolioEntryPlanningPackage planningPackage : PortfolioEntryPlanningPackageDao
+                                    .getPEPlanningPackageAsListByPE(agreementLink.masterObjectId)) {
+                                String group = planningPackage.portfolioEntryPlanningPackageGroup != null
+                                        ? planningPackage.portfolioEntryPlanningPackageGroup.name : null;
+                                data.add(Arrays.asList(planningPackage.isImportant, planningPackage.name, planningPackage.description,
+                                        planningPackage.startDate, planningPackage.endDate, group,
+                                        "object.portfolio_entry_planning_package.status." + planningPackage.status.name() + ".label"));
+                            }
+
+                        } else if (agreementItem.descriptor.equals("REPORT")) {
+                            data.add(Arrays.asList("object.portfolio_entry_report.report_date.label", "object.portfolio_entry_report.author.label",
+                                    "object.portfolio_entry_report.status.label", "object.portfolio_entry_report.comments.label"));
+                            for (PortfolioEntryReport report : PortfolioEntryReportDao.getPEReportAsListByPE(agreementLink.masterObjectId)) {
+                                String status = views.html.modelsparts.display_portfolio_entry_report_status_type
+                                        .render(report.portfolioEntryReportStatusType).body();
+                                data.add(Arrays.asList(report.creationDate, report.author.getName(), status, report.comments));
+                            }
+                        }
+                        JsonNode jsonData = bizdockApiClient.getMapper().valueToTree(data);
+
+                        try {
+                            bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.POST,
+                                    postDataUrl, jsonData);
+                        } catch (BizdockApiException e) {
+                            noError = false;
+                            Logger.error("error with bizdockApiClient.postData", e);
+                        }
+
+                    }
+
+                }
+
+            }
+        } catch (BizdockApiException e) {
+            noError = false;
+            Logger.error("error with bizdockApiClient.getSystemCurrentTime", e);
+        }
+
+        return noError;
+
     }
 }

@@ -78,6 +78,8 @@ import play.Logger;
 import play.db.ebean.DefaultEbeanConfig;
 import play.db.ebean.EbeanConfig;
 import security.DefaultHandlerCache;
+import services.bizdockapi.BizdockApiClientImpl;
+import services.bizdockapi.IBizdockApiClient;
 import services.configuration.ImplementationDefinedObjectImpl;
 import services.datasyndication.DataSyndicationServiceImpl;
 import services.datasyndication.IDataSyndicationService;
@@ -148,6 +150,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(ICustomRouterService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
         bind(ICustomRouterNotificationService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
         bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
+        bind(IBizdockApiClient.class).to(BizdockApiClientImpl.class).asEagerSingleton();
 
         // Initialize with a defined list of jobs
         List<IJobDescriptor> jobs = new ArrayList<>();
@@ -160,6 +163,9 @@ public class ApplicationServicesModule extends FrameworkModule {
         JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor activatePendingInstanceAgreementJobDescriptor = new JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor();
         bind(JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor.class).toInstance(activatePendingInstanceAgreementJobDescriptor);
         jobs.add(activatePendingInstanceAgreementJobDescriptor);
+        JobDescriptors.SynchronizeDataSyndicationJobDescriptor synchronizeDataSyndicationJobDescriptor = new JobDescriptors.SynchronizeDataSyndicationJobDescriptor();
+        bind(JobDescriptors.SynchronizeDataSyndicationJobDescriptor.class).toInstance(synchronizeDataSyndicationJobDescriptor);
+        jobs.add(synchronizeDataSyndicationJobDescriptor);
         bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
         bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
 
