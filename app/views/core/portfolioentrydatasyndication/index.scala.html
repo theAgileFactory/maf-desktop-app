@@ -51,11 +51,13 @@
                 <div class="col-md-2 text-center">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                            @if(masterAgreement.slavePartner.customerLogo != null) {
-                                <div><img src="@masterAgreement.slavePartner.customerLogo" style="max-width:140px;"></div>
-                            }
-                            <h4>@masterAgreement.slavePartner.customerName</h4>
-                            <small>@masterAgreement.name</small><br/><br/>
+                            <div style="min-height:150px;">
+                                @if(masterAgreement.slavePartner.customerLogo != null) {
+                                    <div><img src="@masterAgreement.slavePartner.customerLogo" style="max-width:140px;"></div>
+                                }
+                                <h4>@masterAgreement.slavePartner.customerName</h4>
+                                <small>@masterAgreement.name</small><br/><br/>
+                            </div>
                             <a class="btn btn-success" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.submitAgreementLink(portfolioEntry.id, masterAgreement.id).url">
                                 <span class="glyphicons glyphicons-share-alt"></span> @parts.Msg("button.share")
                             </a>

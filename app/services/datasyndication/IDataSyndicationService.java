@@ -264,4 +264,12 @@ public interface IDataSyndicationService {
      *            the slave object id
      */
     List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws EchannelException;
+
+    /**
+     * Post de data of an agreement link in the slave instance.
+     * 
+     * @param agreementLink
+     *            the agreement link
+     */
+    public void postData(DataSyndicationAgreementLink agreementLink);
 }

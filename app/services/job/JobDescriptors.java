@@ -18,6 +18,7 @@
 package services.job;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,7 @@ import modules.StaticAccessor;
 import play.Logger;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreement;
+import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.echannel.IEchannelService;
 import services.echannel.models.NotificationEvent;
 import services.licensesmanagement.ILicensesManagementService;
@@ -239,7 +241,6 @@ public interface JobDescriptors {
 
                 List<DataSyndicationAgreement> agreements = dataSyndicationService.getAgreementsAsSlave();
                 for (DataSyndicationAgreement agreement : agreements) {
-                    Logger.info("agreement id: " + agreement.id);
                     if (agreement.status.equals(DataSyndicationAgreement.Status.PENDING_INSTANCE)) {
                         dataSyndicationService.acceptAgreement(agreement);
                     }
@@ -247,6 +248,90 @@ public interface JobDescriptors {
 
             } catch (Exception e) {
                 Logger.error(this.getId() + " unexpected error", e);
+            }
+
+            Logger.info("end trigger " + this.getId());
+
+        }
+
+        @Override
+        public String getTriggerUrl() {
+            return null;
+        }
+
+    }
+
+    /**
+     * Synchronize data syndication.
+     * 
+     * @author Johann Kohler
+     * 
+     */
+    class SynchronizeDataSyndicationJobDescriptor implements IJobDescriptor {
+
+        @Inject
+        private IDataSyndicationService dataSyndicationService;
+
+        @Override
+        public String getId() {
+            return "SynchronizeDataSyndication";
+        }
+
+        @Override
+        public String getName(String languageCode) {
+            return "Synchronize data syndication.";
+        }
+
+        @Override
+        public String getDescription(String languageCode) {
+            return "Push to all slave partner instance the data to synchronize.";
+        }
+
+        @Override
+        public Frequency getFrequency() {
+            return Frequency.DAILY;
+        }
+
+        @Override
+        public int getStartHour() {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(3) + 2; // [2,4]
+            return randomNum;
+        }
+
+        @Override
+        public int getStartMinute() {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(60); // [0,59]
+            return randomNum;
+        }
+
+        @Override
+        public void trigger() {
+
+            Logger.info("start trigger " + this.getId());
+
+            /**
+             * TODO The eChannel API client (in BizDock) could be centralized,
+             * maybe the calls must be grouped. The current
+             * licenseManagementService should be generalized. The goal is to
+             * limit the number of request, especially the number of schedulers,
+             * maybe by using a “polling” system.
+             */
+
+            List<DataSyndicationAgreementLink> agreementLinks = null;
+            try {
+                agreementLinks = dataSyndicationService.getAgreementLinksToSynchronize();
+            } catch (Exception e) {
+                Logger.error("error with dataSyndicationService.getAgreementLinksToSynchronize", e);
+            }
+
+            if (agreementLinks != null) {
+
+                for (DataSyndicationAgreementLink agreementLink : agreementLinks) {
+                    dataSyndicationService.postData(agreementLink);
+                }
+
             }
 
             Logger.info("end trigger " + this.getId());

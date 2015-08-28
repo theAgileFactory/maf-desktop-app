@@ -864,6 +864,9 @@ GET     /api/core/life-cycle-process/:id                                  contro
 #KPI
 POST    /api/core/kpi/:uid/data                                         controllers.api.core.KpiApiController.addKpiData(uid: String)
 
+#Data syndication
+POST    /api/core/data-syndication/:agreementLinkId/:agreementItemId     controllers.api.core.DataSyndicationApiController.postData(agreementLinkId: Long, agreementItemId: Long)
+
 #Root
 GET     /api/core/root/instance/status                                  controllers.api.core.RootApiController.instanceStatus()
 GET     /api/core/root/instance/memory-status                           controllers.api.core.RootApiController.instanceMemoryStatus()
@@ -877,9 +880,9 @@ GET     /api/core/root/report/reload                                    controll
 GET     /api/core/root/kpi/reload                                       controllers.api.core.RootApiController.kpiReload()
 
 # Doc
-GET     /api-docs               										  framework.services.api.doc.ApiHelpController.getResources
+GET     /api-docs                                                         framework.services.api.doc.ApiHelpController.getResources
 
-GET     /api-docs/api/system    										  framework.services.api.doc.ApiHelpController.getResource(path = "/api/system")
+GET     /api-docs/api/system                                              framework.services.api.doc.ApiHelpController.getResource(path = "/api/system")
 
 GET     /api-docs/api/core/actor                                          framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/actor")
 GET     /api-docs/api/core/actor-capacity                                 framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/actor-capacity")
@@ -921,3 +924,5 @@ GET     /api-docs/api/core/supplier                                       framew
 GET     /api-docs/api/core/life-cycle-process                             framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/life-cycle-process")
 
 GET     /api-docs/api/core/kpi                                            framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/kpi")
+
+GET     /api-docs/api/core/data-syndication                               framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/data-syndication")
