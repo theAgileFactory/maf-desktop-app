@@ -19,15 +19,15 @@ package security;
 
 import java.util.Optional;
 
-import controllers.sso.Authenticator;
-import play.libs.F.Promise;
-import play.mvc.Http;
-import play.mvc.Result;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
 import framework.security.CommonDeadboltHandler;
+import framework.security.IAuthenticator;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Msg;
+import play.libs.F.Promise;
+import play.mvc.Http;
+import play.mvc.Result;
 
 /**
  * The handler for the authorization mechanism based on Deadbold.<br/>
@@ -39,14 +39,12 @@ import framework.utils.Msg;
  */
 public class DefaultDeadboltHandler extends CommonDeadboltHandler {
     private DefaultDynamicResourceHandler dynamicResourceHandler;
-    private Authenticator authenticator;
-    
-    public DefaultDeadboltHandler(
-            IUserSessionManagerPlugin userSessionManagerPlugin, 
-            IAccountManagerPlugin accountManagerPlugin,
-            Authenticator authenticator) {
+    private IAuthenticator authenticator;
+
+    public DefaultDeadboltHandler(IUserSessionManagerPlugin userSessionManagerPlugin, IAccountManagerPlugin accountManagerPlugin,
+            IAuthenticator authenticator) {
         super(userSessionManagerPlugin, accountManagerPlugin);
-        this.authenticator=authenticator;
+        this.authenticator = authenticator;
         this.dynamicResourceHandler = new DefaultDynamicResourceHandler(userSessionManagerPlugin, accountManagerPlugin);
     }
 
@@ -70,7 +68,7 @@ public class DefaultDeadboltHandler extends CommonDeadboltHandler {
         return dynamicResourceHandler;
     }
 
-    private Authenticator getAuthenticator() {
+    private IAuthenticator getAuthenticator() {
         return authenticator;
     }
 }

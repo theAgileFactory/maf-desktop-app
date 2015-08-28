@@ -13,12 +13,15 @@ import be.objectify.deadbolt.java.cache.HandlerCache;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.api.ApiAuthenticationBizdockCheck;
+import controllers.sso.Authenticator;
 import framework.commons.IFrameworkConstants;
 import framework.commons.IFrameworkConstants.AuthenticationMode;
 import framework.modules.FrameworkModule;
 import framework.patcher.IPatchLog;
 import framework.patcher.PatchManager;
 import framework.patcher.PatcherException;
+import framework.security.IAuthenticator;
+import framework.security.IInstanceAccessSupervisor;
 import framework.services.account.AccountManagerPluginImpl;
 import framework.services.account.DefaultAuthenticationAccountReaderPlugin;
 import framework.services.account.DefaultAuthenticationAccountWriterPlugin;
@@ -123,7 +126,9 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(EbeanConfig.class).toProvider(DefaultEbeanConfig.EbeanConfigParser.class).asEagerSingleton();
         bind(IDatabaseDependencyService.class).to(DatabaseDependencyServiceImpl.class).asEagerSingleton();
         bind(IImplementationDefinedObjectService.class).to(ImplementationDefinedObjectImpl.class).asEagerSingleton();
+
         bind(HandlerCache.class).to(DefaultHandlerCache.class).asEagerSingleton();
+
         bind(IExtensionManagerService.class).to(ExtensionManagerServiceImpl.class).asEagerSingleton();
         bind(II18nMessagesPlugin.class).to(I18nMessagesPluginImpl.class).asEagerSingleton();
         bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
@@ -161,6 +166,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         // Echannel services
         bind(IEchannelService.class).to(EchannelServiceImpl.class).asEagerSingleton();
         bind(ILicensesManagementService.class).to(LicensesManagementServiceImpl.class).asEagerSingleton();
+        bind(IInstanceAccessSupervisor.class).to(LicensesManagementServiceImpl.class);
         bind(IDataSyndicationService.class).to(DataSyndicationServiceImpl.class).asEagerSingleton();
 
         // Configure the authentication system
@@ -198,6 +204,7 @@ public class ApplicationServicesModule extends FrameworkModule {
             bind(IAccountManagerPlugin.class).to(AccountManagerPluginImpl.class).asEagerSingleton();
             break;
         }
+        bind(IAuthenticator.class).to(Authenticator.class).asEagerSingleton();
         log.info(">>> Standard dependency injection end");
     }
 

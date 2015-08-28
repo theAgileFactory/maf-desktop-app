@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import be.objectify.deadbolt.java.DeadboltHandler;
 import be.objectify.deadbolt.java.cache.HandlerCache;
 import constants.IMafConstants;
-import controllers.sso.Authenticator;
+import framework.security.IAuthenticator;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import models.framework_models.account.SystemPermission;
@@ -21,10 +21,7 @@ public class DefaultHandlerCache implements HandlerCache {
     private final DeadboltHandler defaultHandler;
 
     @Inject
-    public DefaultHandlerCache(
-            IUserSessionManagerPlugin userSessionManagerPlugin, 
-            IAccountManagerPlugin accountManagerPlugin,
-            Authenticator authenticator) {
+    public DefaultHandlerCache(IUserSessionManagerPlugin userSessionManagerPlugin, IAccountManagerPlugin accountManagerPlugin, IAuthenticator authenticator) {
         Logger.info(">>>>>>>>>>>>>>>> Check permissions consistency");
         if (!SystemPermission.checkPermissions(IMafConstants.class)) {
             Logger.error("WARNING: permissions in code are not consistent with permissions in database");

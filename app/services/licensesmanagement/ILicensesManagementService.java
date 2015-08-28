@@ -17,6 +17,7 @@
  */
 package services.licensesmanagement;
 
+import framework.security.IInstanceAccessSupervisor;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 
 /**
@@ -25,7 +26,7 @@ import services.echannel.request.LoginEventRequest.ErrorCode;
  * @author Johann Kohler
  * 
  */
-public interface ILicensesManagementService {
+public interface ILicensesManagementService extends IInstanceAccessSupervisor {
 
     String NAME = "licensesManagementService";
 

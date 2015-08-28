@@ -227,6 +227,21 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
         }
     }
 
+    @Override
+    public void logSuccessfulLoginEvent(String uid) {
+        addLoginEvent(uid, true, null, null);
+    }
+
+    @Override
+    public boolean checkLoginAuthorized() {
+        if (!isInstanceAccessible()) {
+            // event: not accessible / STANDALONE + CAS
+            addLoginEvent(null, false, ErrorCode.IS_NOT_ACCESSIBLE, null);
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Get the shared storage service.
      */

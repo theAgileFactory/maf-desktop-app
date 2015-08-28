@@ -105,10 +105,8 @@
                     </p>
                     <p class="text-center">
                         @for((identifier, actionDescriptor) <- pluginInfo.getStaticDescriptor().getActionDescriptors()) {
-                            @if(actionDescriptor.isAdmin()){
                             <a class="btn btn-primary @stopDisabled" id="_AdminCommand_@actionDescriptor.getIdentifier()" href="#">
                             @parts.Msg(actionDescriptor.getLabel())</a>
-                            }
                         }
                     </p>
                     }

@@ -197,12 +197,11 @@ public class PluginManagerController extends Controller {
                     SortStatusType.DESC);
             addColumnConfiguration("isError", "isError", "object.plugin_log.is_error.label", new CheckboxFilterComponent(true), true, true,
                     SortStatusType.UNSORTED);
-            addColumnConfiguration("event", "event", "object.plugin_log.event.label", new TextFieldFilterComponent("*"), true, false,
-                    SortStatusType.UNSORTED);
+            addColumnConfiguration("event", "event", "object.plugin_log.event.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
             addColumnConfiguration("logMessage", "logMessage", "object.plugin_log.log_message.label", new TextFieldFilterComponent("*"), true, false,
                     SortStatusType.UNSORTED);
-            addColumnConfiguration("transactionId", "transactionId", "object.plugin_log.transaction_id.label", new TextFieldFilterComponent("*"), false,
-                    false, SortStatusType.UNSORTED);
+            addColumnConfiguration("transactionId", "transactionId", "object.plugin_log.transaction_id.label", new TextFieldFilterComponent("*"), false, false,
+                    SortStatusType.UNSORTED);
             addColumnConfiguration("dataType", "dataType", "object.plugin_log.data_type.label", new TextFieldFilterComponent("*"), false, false,
                     SortStatusType.UNSORTED);
             addColumnConfiguration("internalId", "internalId", "object.plugin_log.internal_id.label", new TextFieldFilterComponent("*"), false, false,
@@ -756,10 +755,6 @@ public class PluginManagerController extends Controller {
                 return badRequest();
             }
             IPluginActionDescriptor pluginActionDescriptor = pluginInfo.getStaticDescriptor().getActionDescriptors().get(pluginActionIdentifier);
-            if (!pluginActionDescriptor.isAdmin()) {
-                return badRequest();
-            }
-
             EventMessage eventMessage = new EventMessage();
             eventMessage.setPluginConfigurationId(pluginConfigurationId);
             eventMessage.setMessageType(MessageType.CUSTOM);
