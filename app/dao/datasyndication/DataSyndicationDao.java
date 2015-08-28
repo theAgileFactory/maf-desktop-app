@@ -17,9 +17,13 @@
  */
 package dao.datasyndication;
 
+import java.util.List;
+
 import com.avaje.ebean.Model.Finder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import models.datasyndication.DataSyndication;
+import play.Logger;
 
 /**
  * DAO for the {@link DataSyndication} object.
@@ -49,12 +53,57 @@ public abstract class DataSyndicationDao {
     /**
      * Get a data syndication for an item of a link.
      * 
-     * @param dataSyndicationAgreementLinkId the agreement link id
-     * @param dataSyndicationAgreementItemId the agreement item id
+     * @param dataSyndicationAgreementLinkId
+     *            the agreement link id
+     * @param dataSyndicationAgreementItemId
+     *            the agreement item id
      */
     public static DataSyndication getDataSyndicationByLinkAndItem(Long dataSyndicationAgreementLinkId, Long dataSyndicationAgreementItemId) {
         return findDataSyndication.where().eq("deleted", false).eq("dataSyndicationAgreementLinkId", dataSyndicationAgreementLinkId)
                 .eq("dataSyndicationAgreementItemId", dataSyndicationAgreementItemId).findUnique();
+    }
+
+    /**
+     * Get the data part of a data syndication for an item of a link.
+     * 
+     * @param dataSyndicationAgreementLinkId
+     *            the agreement link id
+     * @param dataSyndicationAgreementItemId
+     *            the agreement item id
+     */
+    public static List<List<Object>> getDataSyndicationAsDataByLinkAndItem(Long dataSyndicationAgreementLinkId, Long dataSyndicationAgreementItemId) {
+
+        DataSyndication dataSyndication = getDataSyndicationByLinkAndItem(dataSyndicationAgreementLinkId, dataSyndicationAgreementItemId);
+
+        if (dataSyndication != null) {
+            try {
+                DataJsonMapping dataJsonMapping = new ObjectMapper().readValue("{ \"data\" : " + dataSyndication.data + " }", DataJsonMapping.class);
+                return dataJsonMapping.data;
+            } catch (Exception e) {
+                Logger.error("impossible to convert the data to a List<List<Object>>", e);
+            }
+        }
+
+        return null;
+
+    }
+
+    /**
+     * JSON Mapping class for the data attribute of a DataSyndication.
+     * 
+     * @author Johann Kohler
+     *
+     */
+    public static class DataJsonMapping {
+
+        public List<List<Object>> data;
+
+        /**
+         * Default constructor.
+         */
+        public DataJsonMapping() {
+        }
+
     }
 
 }

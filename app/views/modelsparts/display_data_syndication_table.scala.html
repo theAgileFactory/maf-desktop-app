@@ -1,0 +1,73 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(agreementLink: services.datasyndication.models.DataSyndicationAgreementLink, agreementItem: services.datasyndication.models.DataSyndicationAgreementItem)
+
+@dataSyndication=@{
+    dao.datasyndication.DataSyndicationDao.getDataSyndicationAsDataByLinkAndItem(agreementLink.id, agreementItem.id)
+}
+
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import views.html.commons._
+
+@if(dataSyndication != null) {
+
+
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            <strong>@agreementLink.agreement.masterPartner.customerName</strong> / @parts.Msg("object.data_syndication_agreement_item." + agreementItem.dataType + "." + agreementItem.descriptor + ".label")
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            @for(header <- dataSyndication.get(0)) {
+                                <th>@parts.Msg(header.toString)</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for((row, i) <- dataSyndication.zipWithIndex) {
+                            @if(i!=0) {
+                                <tr>
+                                    @for(elem <-row) {
+                                        <td>
+                                            @if(elem.isInstanceOf[java.lang.String] && _dataSyndication.getStringDate(elem.toString) != null) {
+                                                @display_date(_dataSyndication.getStringDate(elem.toString))
+                                            } else { @if(elem.isInstanceOf[java.lang.Boolean]) {
+                                                @display_boolean(Boolean.valueOf(elem.toString))
+                                            } else { @if(elem.isInstanceOf[java.lang.Integer] || elem.isInstanceOf[java.lang.Long] || elem.isInstanceOf[java.lang.Double]) {
+                                                @display_number(Double.valueOf(elem.toString))
+                                            } else {
+                                                @display_object(elem)
+                                            }}}
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+}

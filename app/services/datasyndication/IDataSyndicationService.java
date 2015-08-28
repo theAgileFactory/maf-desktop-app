@@ -46,6 +46,15 @@ public interface IDataSyndicationService {
     boolean isActive();
 
     /**
+     * Return the corresponding date of the given date if it is in the
+     * API-standard format, else return null.
+     * 
+     * @param stringDate
+     *            the date as a string
+     */
+    Date getStringDate(String stringDate);
+
+    /**
      * Get partners, filtered by keywords, that are eligible to be the slave
      * instance of an agreement.
      * 
@@ -68,6 +77,16 @@ public interface IDataSyndicationService {
      * Get all available agreement items.
      */
     List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException;
+
+    /**
+     * Get an agreement item by data type and descriptor.
+     * 
+     * @param dataType
+     *            the item data type
+     * @param descriptor
+     *            the item descriptor
+     */
+    DataSyndicationAgreementItem getAgreementItemByDataTypeAndDescriptor(String dataType, String descriptor) throws EchannelException;
 
     /**
      * Create a new master agreement for the instance.
@@ -260,10 +279,23 @@ public interface IDataSyndicationService {
      * 
      * @param dataType
      *            the data type
-     * @param masterObjectId
+     * @param slaveObjectId
      *            the slave object id
      */
-    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws EchannelException;
+    List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId) throws EchannelException;
+
+    /**
+     * Get the agreement links for an item and a slave object.
+     * 
+     * @param item
+     *            the agreement item
+     * @param dataType
+     *            the data type
+     * @param slaveObjectId
+     *            the slave object id
+     */
+    List<DataSyndicationAgreementLink> getAgreementLinksOfItemAndSlaveObject(DataSyndicationAgreementItem item, String dataType, Long slaveObjectId)
+            throws EchannelException;
 
     /**
      * Post de data of an agreement link in the slave instance.

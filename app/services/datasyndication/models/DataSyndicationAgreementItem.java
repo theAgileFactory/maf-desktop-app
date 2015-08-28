@@ -35,4 +35,13 @@ public class DataSyndicationAgreementItem {
                 + Msg.get("object.data_syndication_agreement_item." + this.dataType + "." + this.descriptor + ".label");
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DataSyndicationAgreementItem) {
+            DataSyndicationAgreementItem toCompare = (DataSyndicationAgreementItem) o;
+            return this.id.equals(toCompare.id);
+        }
+        return false;
+    }
+
 }

@@ -17,6 +17,7 @@
  */
 package services.datasyndication;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,6 +34,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.api.AbstractApiController;
 import framework.services.api.commons.ApiMethod;
 import framework.services.api.commons.ApiSignatureException;
 import framework.services.api.server.IApiApplicationConfiguration;
@@ -160,6 +162,16 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
+    public Date getStringDate(String stringDate) {
+        SimpleDateFormat df = new SimpleDateFormat(AbstractApiController.DATE_FORMAT);
+        try {
+            return df.parse(stringDate);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<DataSyndicationPartner> searchFromSlavePartners(String keywords) throws EchannelException {
         return echannelService.findPartners(true, keywords);
     }
@@ -172,6 +184,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     @Override
     public List<DataSyndicationAgreementItem> getAgreementItems() throws EchannelException {
         return echannelService.getAgreementItems();
+    }
+
+    @Override
+    public DataSyndicationAgreementItem getAgreementItemByDataTypeAndDescriptor(String dataType, String descriptor) throws EchannelException {
+        return echannelService.getAgreementItemByDataTypeAndDescriptor(dataType, descriptor);
     }
 
     @Override
@@ -471,8 +488,20 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long masterObjectId) throws EchannelException {
-        return echannelService.getAgreementLinksOfSlaveObject(dataType, masterObjectId);
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfSlaveObject(String dataType, Long slaveObjectId) throws EchannelException {
+        return echannelService.getAgreementLinksOfSlaveObject(dataType, slaveObjectId);
+    }
+
+    @Override
+    public List<DataSyndicationAgreementLink> getAgreementLinksOfItemAndSlaveObject(DataSyndicationAgreementItem item, String dataType, Long slaveObjectId)
+            throws EchannelException {
+        List<DataSyndicationAgreementLink> agreementLinks = new ArrayList<>();
+        for (DataSyndicationAgreementLink agreementLink : this.getAgreementLinksOfSlaveObject(PortfolioEntry.class.getName(), slaveObjectId)) {
+            if (agreementLink.items.contains(item)) {
+                agreementLinks.add(agreementLink);
+            }
+        }
+        return agreementLinks;
     }
 
     /**
