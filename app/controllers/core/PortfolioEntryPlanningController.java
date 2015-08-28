@@ -102,6 +102,9 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import security.DefaultDynamicResourceHandler;
+import services.datasyndication.IDataSyndicationService;
+import services.datasyndication.models.DataSyndicationAgreementItem;
+import services.datasyndication.models.DataSyndicationAgreementLink;
 import utils.SortableCollection;
 import utils.SortableCollection.ComplexSortableObject;
 import utils.SortableCollection.DateSortableObject;
@@ -126,6 +129,7 @@ import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
  * @author Johann Kohler
  */
 public class PortfolioEntryPlanningController extends Controller {
+
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
@@ -134,6 +138,9 @@ public class PortfolioEntryPlanningController extends Controller {
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
+
+    @Inject
+    private IDataSyndicationService dataSyndicationService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -530,6 +537,20 @@ public class PortfolioEntryPlanningController extends Controller {
             // get the available groups
             List<PortfolioEntryPlanningPackageGroup> groups = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveNonEmptyAsList();
 
+            // get the syndicated reports
+            List<DataSyndicationAgreementLink> agreementLinks = new ArrayList<>();
+            DataSyndicationAgreementItem agreementItem = null;
+            if (portfolioEntry.isSyndicated && getDataSyndicationService().isActive()) {
+                try {
+                    agreementItem = getDataSyndicationService().getAgreementItemByDataTypeAndDescriptor(PortfolioEntry.class.getName(), "PLANNING_PACKAGE");
+                    if (agreementItem != null) {
+                        agreementLinks = getDataSyndicationService().getAgreementLinksOfItemAndSlaveObject(agreementItem, PortfolioEntry.class.getName(), id);
+                    }
+                } catch (Exception e) {
+                    Logger.error("impossible to get the syndicated planning package data", e);
+                }
+            }
+
             // construct the gantt
 
             ExpressionList<PortfolioEntryPlanningPackage> expressionList = filterConfig
@@ -579,7 +600,8 @@ public class PortfolioEntryPlanningController extends Controller {
                 Logger.error(e.getMessage());
             }
 
-            return ok(views.html.core.portfolioentryplanning.packages.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig, groups, ganttSource));
+            return ok(views.html.core.portfolioentryplanning.packages.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig, groups, ganttSource,
+                    agreementLinks, agreementItem));
 
         } catch (Exception e) {
 
@@ -2057,6 +2079,13 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
+    }
+
+    /**
+     * Get the data syndication service.
+     */
+    private IDataSyndicationService getDataSyndicationService() {
+        return dataSyndicationService;
     }
 
 }
