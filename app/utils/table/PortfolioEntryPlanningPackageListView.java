@@ -21,10 +21,6 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import javax.inject.Inject;
-
-import models.pmo.PortfolioEntryPlanningPackage;
-import models.pmo.PortfolioEntryPlanningPackageGroup;
 import constants.IMafConstants;
 import controllers.core.PortfolioEntryPlanningController;
 import dao.finance.PortfolioEntryResourcePlanDAO;
@@ -33,6 +29,7 @@ import dao.timesheet.TimesheetDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -43,6 +40,8 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.PortfolioEntryPlanningPackage;
+import models.pmo.PortfolioEntryPlanningPackageGroup;
 
 /**
  * A portfolio entry planning package list view is used to display an portfolio
@@ -51,9 +50,7 @@ import framework.utils.formats.StringFormatFormatter;
  * @author Johann Kohler
  */
 public class PortfolioEntryPlanningPackageListView {
-    @Inject
-    private II18nMessagesPlugin messagesPlugin;
-    
+
     public static FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = getFilterConfig();
 
     /**
@@ -69,11 +66,11 @@ public class PortfolioEntryPlanningPackageListView {
                 addColumnConfiguration("name", "name", "object.portfolio_entry_planning_package.name.label", new TextFieldFilterComponent("*"), true, false,
                         SortStatusType.NONE);
 
-                addColumnConfiguration("startDate", "startDate", "object.portfolio_entry_planning_package.start_date.label", new DateRangeFilterComponent(
-                        new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.NONE);
+                addColumnConfiguration("startDate", "startDate", "object.portfolio_entry_planning_package.start_date.label",
+                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.NONE);
 
-                addColumnConfiguration("endDate", "endDate", "object.portfolio_entry_planning_package.end_date.label", new DateRangeFilterComponent(
-                        new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.NONE);
+                addColumnConfiguration("endDate", "endDate", "object.portfolio_entry_planning_package.end_date.label",
+                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.NONE);
 
                 ISelectableValueHolderCollection<Long> groups = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH();
                 if (groups != null && groups.getValues().size() > 0) {
@@ -89,11 +86,11 @@ public class PortfolioEntryPlanningPackageListView {
 
                 ISelectableValueHolderCollection<String> status = PortfolioEntryPlanningController.getPackageStatusAsValueHolderCollection();
                 if (status != null && status.getValues().size() > 0) {
-                    addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label", new SelectFilterComponent(status
-                            .getValues().iterator().next().getValue(), status), true, false, SortStatusType.NONE);
+                    addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label",
+                            new SelectFilterComponent(status.getValues().iterator().next().getValue(), status), true, false, SortStatusType.NONE);
                 } else {
-                    addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label", new NoneFilterComponent(), true,
-                            false, SortStatusType.NONE);
+                    addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label", new NoneFilterComponent(), true, false,
+                            SortStatusType.NONE);
                 }
 
                 addColumnConfiguration("allocatedResourcesDays", "allocatedResourcesDays",
@@ -158,12 +155,12 @@ public class PortfolioEntryPlanningPackageListView {
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackageListView>(IMafConstants.EDIT_URL_FORMAT,
                         new StringFormatFormatter.Hook<PortfolioEntryPlanningPackageListView>() {
-                            @Override
-                            public String convert(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView) {
-                                return controllers.core.routes.PortfolioEntryPlanningController.managePackage(
-                                        portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
-                            }
-                        }));
+                    @Override
+                    public String convert(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView) {
+                        return controllers.core.routes.PortfolioEntryPlanningController
+                                .managePackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -171,11 +168,10 @@ public class PortfolioEntryPlanningPackageListView {
                 setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryPlanningPackageListView>() {
                     @Override
                     public String apply(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.core.routes.PortfolioEntryPlanningController.deletePackage(
-                                        portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = controllers.core.routes.PortfolioEntryPlanningController
+                                .deletePackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
                         return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     }
                 });
@@ -185,8 +181,8 @@ public class PortfolioEntryPlanningPackageListView {
                 this.setLineAction(new IColumnFormatter<PortfolioEntryPlanningPackageListView>() {
                     @Override
                     public String apply(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryPlanningController.viewPackage(portfolioEntryPlanningPackageListView.portfolioEntryId,
-                                portfolioEntryPlanningPackageListView.id).url();
+                        return controllers.core.routes.PortfolioEntryPlanningController
+                                .viewPackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
                     }
                 });
 
@@ -224,13 +220,13 @@ public class PortfolioEntryPlanningPackageListView {
      * @param messagesPlugin
      *            the i18n service
      */
-    public PortfolioEntryPlanningPackageListView(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage) {
+    public PortfolioEntryPlanningPackageListView(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage, II18nMessagesPlugin messagesPlugin) {
 
         this.id = portfolioEntryPlanningPackage.id;
         this.portfolioEntryId = portfolioEntryPlanningPackage.portfolioEntry.id;
 
         this.name = portfolioEntryPlanningPackage.name;
-        this.color = Color.getLabel(portfolioEntryPlanningPackage.cssClass, getMessagesPlugin());
+        this.color = Color.getLabel(portfolioEntryPlanningPackage.cssClass, messagesPlugin);
 
         this.startDate = portfolioEntryPlanningPackage.startDate;
 
@@ -242,18 +238,12 @@ public class PortfolioEntryPlanningPackageListView {
 
         this.status = Msg.get("object.portfolio_entry_planning_package.status." + portfolioEntryPlanningPackage.status.name() + ".label");
 
-        this.allocatedResourcesDays =
-                PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsDaysByPlanningPackage(portfolioEntryPlanningPackage)
-                        .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPlanningPackage(portfolioEntryPlanningPackage))
-                        .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPlanningPackage(portfolioEntryPlanningPackage));
+        this.allocatedResourcesDays = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsDaysByPlanningPackage(portfolioEntryPlanningPackage)
+                .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPlanningPackage(portfolioEntryPlanningPackage))
+                .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPlanningPackage(portfolioEntryPlanningPackage));
 
-        this.timesheetsDays =
-                TimesheetDao.getTimesheetLogAsTotalHoursByPEPlanningPackage(portfolioEntryPlanningPackage).divide(
-                        TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
+        this.timesheetsDays = TimesheetDao.getTimesheetLogAsTotalHoursByPEPlanningPackage(portfolioEntryPlanningPackage)
+                .divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
 
-    }
-
-    private II18nMessagesPlugin getMessagesPlugin() {
-        return messagesPlugin;
     }
 }
