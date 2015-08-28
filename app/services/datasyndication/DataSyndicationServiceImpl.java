@@ -536,7 +536,9 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public void postData(DataSyndicationAgreementLink agreementLink) {
+    public boolean postData(DataSyndicationAgreementLink agreementLink) {
+
+        boolean noError = true;
 
         try {
 
@@ -562,12 +564,13 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                             getPortfolioEntryUrl, null);
                     slavePeExists = true;
                 } catch (BizdockApiException e) {
-                    Logger.debug("impossible to get the portfolio entry of the slave instance, we remove the link");
+                    Logger.warn("impossible to get the portfolio entry of the slave instance, we remove the link");
                 }
 
                 // if the slave or the master object does not exist
                 // then call deleteAgreementLink
                 if (!masterPeExists || !slavePeExists) {
+                    noError = false;
                     try {
                         this.deleteAgreementLink(agreementLink);
                     } catch (Exception e) {
@@ -610,8 +613,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                         try {
                             bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.POST,
                                     postDataUrl, jsonData);
-                            slavePeExists = true;
                         } catch (BizdockApiException e) {
+                            noError = false;
                             Logger.error("error with bizdockApiClient.postData", e);
                         }
 
@@ -621,8 +624,11 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
 
             }
         } catch (BizdockApiException e) {
+            noError = false;
             Logger.error("error with bizdockApiClient.getSystemCurrentTime", e);
         }
+
+        return noError;
 
     }
 }

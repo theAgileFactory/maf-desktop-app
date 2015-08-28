@@ -196,6 +196,53 @@ public class PortfolioEntryDataSyndicationController extends Controller {
     }
 
     /**
+     * Synchronize (push in the slave) an agreement link.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param agreementLinkId
+     *            the agreement link id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result synchronizeAgreementLink(Long id, Long agreementLinkId) {
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the agreement link
+        DataSyndicationAgreementLink agreementLink = null;
+        try {
+            agreementLink = dataSyndicationService.getAgreementLink(agreementLinkId);
+            if (agreementLink == null) {
+                return notFound(views.html.error.not_found.render(""));
+            }
+        } catch (Exception e) {
+            Logger.error("DataSyndication synchronizeAgreementLink unexpected error", e);
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+        }
+
+        if (!agreementLink.getStatus().equals(DataSyndicationAgreement.Status.ONGOING)
+                || !agreementLink.agreement.masterPartner.domain.equals(dataSyndicationService.getCurrentDomain())) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        // synchronize the agreement link
+        try {
+            if (dataSyndicationService.postData(agreementLink)) {
+                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_data_syndication.link.synchronize.success"));
+            } else {
+                Utilities.sendErrorFlashMessage(Msg.get("admin.data_syndication.communication_error"));
+            }
+        } catch (Exception e) {
+            Logger.error("DataSyndication synchronizeAgreementLink unexpected error", e);
+            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+        }
+
+        return redirect(controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, agreementLinkId));
+    }
+
+    /**
      * Form to submit an agreement link.
      * 
      * @param id

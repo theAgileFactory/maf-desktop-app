@@ -2453,6 +2453,8 @@ core.portfolio_entry_data_syndication.link.view.title=Détails
 
 core.portfolio_entry_data_syndication.link.cancel.success=La relation a été annulée.
 
+core.portfolio_entry_data_syndication.link.synchronize.success=Les données ont été poussées dans l'instance du partenaire.
+
 core.portfolio_entry_data_syndication.link.submit.title=Soumettre une requête de relation
 core.portfolio_entry_data_syndication.link.submit.agreement.title=Détails de l''agrément
 core.portfolio_entry_data_syndication.link.submit.success=La requête de relation a été soumise. Le partenaire doit maintenant la valider.

@@ -45,23 +45,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for((row, i) <- dataSyndication.zipWithIndex) {
-                            @if(i!=0) {
-                                <tr>
-                                    @for(elem <-row) {
-                                        <td>
-                                            @if(elem.isInstanceOf[java.lang.String] && _dataSyndication.getStringDate(elem.toString) != null) {
-                                                @display_date(_dataSyndication.getStringDate(elem.toString))
-                                            } else { @if(elem.isInstanceOf[java.lang.Boolean]) {
-                                                @display_boolean(Boolean.valueOf(elem.toString))
-                                            } else { @if(elem.isInstanceOf[java.lang.Integer] || elem.isInstanceOf[java.lang.Long] || elem.isInstanceOf[java.lang.Double]) {
-                                                @display_number(Double.valueOf(elem.toString))
-                                            } else {
-                                                @display_object(elem)
-                                            }}}
-                                        </td>
-                                    }
-                                </tr>
+                        @if(dataSyndication.size == 1) {
+                            <tr class="warning">
+                                <td class="text-center" colspan="@dataSyndication.get(0).size">@parts.Msg("table.empty")</td>
+                            </tr>
+                        } else {
+                            @for((row, i) <- dataSyndication.zipWithIndex) {
+                                @if(i != 0) {
+                                    <tr>
+                                        @for(elem <-row) {
+                                            <td>
+                                                @if(elem.isInstanceOf[java.lang.String] && _dataSyndication.getStringDate(elem.toString) != null) {
+                                                    @display_date(_dataSyndication.getStringDate(elem.toString))
+                                                } else { @if(elem.isInstanceOf[java.lang.Boolean]) {
+                                                    @display_boolean(Boolean.valueOf(elem.toString))
+                                                } else { @if(elem.isInstanceOf[java.lang.Integer] || elem.isInstanceOf[java.lang.Long] || elem.isInstanceOf[java.lang.Double]) {
+                                                    @display_number(Double.valueOf(elem.toString))
+                                                } else {
+                                                    @display_object(elem)
+                                                }}}
+                                            </td>
+                                        }
+                                    </tr>
+                                }
                             }
                         }
                     </tbody>

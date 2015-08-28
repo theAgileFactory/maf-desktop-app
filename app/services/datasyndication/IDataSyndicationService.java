@@ -298,10 +298,13 @@ public interface IDataSyndicationService {
             throws EchannelException;
 
     /**
-     * Post de data of an agreement link in the slave instance.
+     * Post data of an agreement link in the slave instance.
+     * 
+     * Return true if everything was done without error, else return false (the
+     * errors are logged)
      * 
      * @param agreementLink
      *            the agreement link
      */
-    public void postData(DataSyndicationAgreementLink agreementLink);
+    public boolean postData(DataSyndicationAgreementLink agreementLink);
 }
