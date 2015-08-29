@@ -32,7 +32,6 @@ import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants;
 import framework.commons.message.EventMessage;
 import framework.commons.message.SystemLevelRoleTypeEventMessage;
-import framework.security.SecurityUtils;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -47,6 +46,7 @@ import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.ISecurityService;
 import utils.form.RoleFormData;
 import utils.table.RoleListView;
 
@@ -64,6 +64,8 @@ public class ConfigurationController extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private ISecurityService securityService;
 
     private static Logger.ALogger log = Logger.of(ConfigurationController.class);
 
@@ -100,15 +102,16 @@ public class ConfigurationController extends Controller {
 
     /**
      * Display the correct page according to permission.
+     * @throws AccountManagementException 
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION), @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) })
-    public Result index() {
+    public Result index() throws AccountManagementException {
 
-        if (SecurityUtils.isAllowed(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
+        if (getSecurityService().currentUserHasRole(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationController.systemPreferences());
         }
 
-        if (SecurityUtils.isAllowed(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION)) {
+        if (getSecurityService().currentUserHasRole(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.list(IMafConstants.PortfolioEntry));
         }
 
@@ -407,5 +410,9 @@ public class ConfigurationController extends Controller {
 
     private IEventBroadcastingService getEventBroadcastingService() {
         return eventBroadcastingService;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 }

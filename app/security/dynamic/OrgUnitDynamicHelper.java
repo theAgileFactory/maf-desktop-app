@@ -25,18 +25,14 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.sql.ActorHierarchy;
 import play.Logger;
-import play.mvc.Http;
+import security.ISecurityService;
 
 
 /**
@@ -55,25 +51,24 @@ public class OrgUnitDynamicHelper {
      *            the ebean filter expression
      * @param orderBy
      *            the ebean order by
+     * @param securityService
+     *            the security service
      */
-    public static ExpressionList<OrgUnit> getOrgUnitsViewAllowedAsQuery(Expression expression, OrderBy<OrgUnit> orderBy) throws AccountManagementException {
+    public static ExpressionList<OrgUnit> getOrgUnitsViewAllowedAsQuery(Expression expression, OrderBy<OrgUnit> orderBy, ISecurityService securityService) throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
-
+        IUserAccount userAccount = securityService.getCurrentUser();
         String raw = "(";
 
         // user has permission ORG_UNIT_VIEW_ALL_PERMISSION
         // OR
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_ALL_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION AND
         // user or his subordinates is manager of the orgUnit OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION)) {
+        if (actor != null && securityService.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION)) {
 
             raw += "manager.id = " + actor.id + " OR ";
 
@@ -110,10 +105,12 @@ public class OrgUnitDynamicHelper {
      * 
      * @param orgUnitId
      *            the org unit id
+     * @param securityService
+     *            the security service
      */
-    public static boolean isOrgUnitViewAllowed(Long orgUnitId) {
+    public static boolean isOrgUnitViewAllowed(Long orgUnitId, ISecurityService securityService) {
         try {
-            return getOrgUnitsViewAllowedAsQuery(Expr.eq("id", orgUnitId), null).findRowCount() > 0 ? true : false;
+            return getOrgUnitsViewAllowedAsQuery(Expr.eq("id", orgUnitId), null,securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("OrgUnitDynamicHelper.isOrgUnitViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());

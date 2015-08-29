@@ -20,10 +20,11 @@
 @import framework_views.parts
 @import framework.utils.SideBar
 @import framework.utils.Menu.ClickableMenuItem
+@import views.html.commons._
 
 @templates.main_bc_iconsbar(
     actor.getNameHumanReadable,
-    controllers.core.ActorController.getSideBar(actor.id, currentType),
+    controllers.core.ActorController.getSideBar(actor.id, currentType, _securityService),
     Seq(
         (actor.getNameHumanReadable,controllers.core.routes.ActorController.view(actor.id).url),
         (pageSubTitle, null)

@@ -22,7 +22,7 @@
 
 @templates.main_bc_iconsbar(
     portfolioEntry.getName,
-    controllers.core.PortfolioEntryController.getIconsBar(_dataSyndication.isActive, portfolioEntry.id, menuItemType),
+    controllers.core.PortfolioEntryController.getIconsBar(_dataSyndication.isActive, portfolioEntry.id, menuItemType, _securityService),
     breadcrump
 ){
 }{

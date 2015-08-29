@@ -23,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
+import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
@@ -38,7 +39,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
@@ -69,7 +69,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result index(Long id) {
 
         // get the portfolio entry
@@ -130,7 +130,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
      *            the agreement link id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result viewAgreementLink(Long id, Long agreementLinkId) {
 
         // get the portfolio entry
@@ -164,7 +164,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
      *            the agreement link id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result cancelAgreementLink(Long id, Long agreementLinkId) {
 
         // get the portfolio entry
@@ -204,7 +204,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
      *            the agreement link id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result synchronizeAgreementLink(Long id, Long agreementLinkId) {
 
         // get the portfolio entry
@@ -251,7 +251,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
      *            the agreement id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result submitAgreementLink(Long id, Long agreementId) {
 
         // get the portfolio entry
@@ -293,7 +293,7 @@ public class PortfolioEntryDataSyndicationController extends Controller {
      * Process the form to submit an agreement link.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processSubmitAgreementLink() {
 
         // bind the form

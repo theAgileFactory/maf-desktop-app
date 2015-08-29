@@ -47,7 +47,7 @@
                     @parts.Msg("core.portfolio_entry_stakeholder.list.title")
                     
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.PortfolioEntryStakeholderController.manage(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                         }
                     </div>

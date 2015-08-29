@@ -26,27 +26,11 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import models.framework_models.common.CustomAttributeDefinition;
-import models.framework_models.common.ICustomAttributeValue;
-import models.reporting.Reporting;
-import models.reporting.ReportingCategory;
-import play.Logger;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
-import security.CheckReportingExists;
-import security.DefaultDynamicResourceHandler;
-import security.dynamic.ReportingDynamicHelper;
-import utils.form.ReportingParamsFormData;
-import utils.reporting.IReportingUtils;
-import utils.table.ReportingListView;
+import com.avaje.ebean.Expr;
+
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
-
-import com.avaje.ebean.Expr;
-
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.reporting.ReportingDao;
@@ -58,6 +42,21 @@ import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.framework_models.common.CustomAttributeDefinition;
+import models.framework_models.common.ICustomAttributeValue;
+import models.reporting.Reporting;
+import models.reporting.ReportingCategory;
+import play.Logger;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import security.CheckReportingExists;
+import security.ISecurityService;
+import security.dynamic.ReportingDynamicHelper;
+import utils.form.ReportingParamsFormData;
+import utils.reporting.IReportingUtils;
+import utils.table.ReportingListView;
 
 /**
  * The controller which allows to view the reports.
@@ -69,6 +68,8 @@ public class ReportingController extends Controller {
     private IReportingUtils reportingUtils;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private ISecurityService securityService;
 
     private static Logger.ALogger log = Logger.of(ReportingController.class);
 
@@ -135,7 +136,7 @@ public class ReportingController extends Controller {
 
             List<Reporting> reports;
             try {
-                reports = ReportingDynamicHelper.getReportsViewAllowedAsQuery(Expr.eq("reportingCategory.id", categoryId), null).findList();
+                reports = ReportingDynamicHelper.getReportsViewAllowedAsQuery(Expr.eq("reportingCategory.id", categoryId), null, getSecurityService()).findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
             }
@@ -166,7 +167,7 @@ public class ReportingController extends Controller {
      *            the report id
      */
     @With(CheckReportingExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.REPORTING_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.REPORTING_VIEW_DYNAMIC_PERMISSION)
     public Result parametrize(Long id) {
 
         // get the report
@@ -182,7 +183,7 @@ public class ReportingController extends Controller {
      * Generate a report.
      */
     @With(CheckReportingExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.REPORTING_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.REPORTING_VIEW_DYNAMIC_PERMISSION)
     public Result generate() {
 
         // bind the form
@@ -226,5 +227,9 @@ public class ReportingController extends Controller {
 
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 }

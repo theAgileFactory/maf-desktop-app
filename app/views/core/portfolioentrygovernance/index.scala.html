@@ -40,7 +40,7 @@
         <div class="panel-heading">
             @parts.Msg("core.portfolio_entry_governance.view.title", processInstance.lifeCycleProcess.getShortName)
             
-            @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+            @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                 <div class="pull-right">
                     <a href="@controllers.core.routes.PortfolioEntryGovernanceController.changeLifeCycleProcess(portfolioEntry.id)"><span class="glyphicons glyphicons-retweet-2 glyphicons-panel"></span></a>
                     &nbsp;<a href="@controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>

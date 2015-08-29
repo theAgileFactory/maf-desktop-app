@@ -22,6 +22,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
+import be.objectify.deadbolt.java.actions.Dynamic;
+import constants.IMafConstants;
+import dao.pmo.PortfolioEntryDao;
+import dao.pmo.StakeholderDao;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.pmo.PortfolioEntry;
 import models.pmo.Stakeholder;
 import play.data.Form;
@@ -29,17 +38,10 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import utils.form.StakeholderFormData;
 import utils.table.PortfolioEntryStakeholderListView;
 import utils.table.PortfolioStakeholderListView;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import dao.pmo.PortfolioEntryDao;
-import dao.pmo.StakeholderDao;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
-import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage a stakeholder of a portfolio entry.
@@ -47,6 +49,8 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioEntryStakeholderController extends Controller {
+    @Inject
+    private ISecurityService securityService;
 
     public static Form<StakeholderFormData> formTemplate = Form.form(StakeholderFormData.class);
 
@@ -58,7 +62,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
     public Result index(Long id) {
 
         // get the portfolioEntry
@@ -88,7 +92,7 @@ public class PortfolioEntryStakeholderController extends Controller {
         }
 
         Set<String> hideColumnsForStakeholder = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForStakeholder.add("editActionLink");
             hideColumnsForStakeholder.add("removeActionLink");
         }
@@ -108,7 +112,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      *            the stakeholder id (set to 0 for create case)
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manage(Long id, Long stakeholderId) {
 
         // get the portfolioEntry
@@ -136,7 +140,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      * Process the creation/update of a stakeholder.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManage() {
 
         // bind the form
@@ -197,7 +201,7 @@ public class PortfolioEntryStakeholderController extends Controller {
      *            the stakeholder id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result delete(Long id, Long stakeholderId) {
 
         // get the stakeholder
@@ -214,6 +218,10 @@ public class PortfolioEntryStakeholderController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_stakeholder.delete"));
 
         return redirect(controllers.core.routes.PortfolioEntryStakeholderController.index(id));
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

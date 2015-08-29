@@ -41,7 +41,7 @@ import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants.Syntax;
 import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
-import framework.security.SecurityUtils;
+import framework.services.account.AccountManagementException;
 import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
@@ -72,6 +72,7 @@ import play.data.validation.Constraints.Required;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.ISecurityService;
 
 /**
  * The GUI for managing the plugins.
@@ -89,11 +90,12 @@ import play.mvc.Result;
  * @author Pierre-Yves Cloux
  */
 public class PluginManagerController extends Controller {
-
     @Inject
     private IPluginManagerService pluginManagerService;
     @Inject
     private IEventBroadcastingService eventBroadcastingService;
+    @Inject
+    private ISecurityService securityService;
 
     private static Logger.ALogger log = Logger.of(PluginManagerController.class);
 
@@ -274,13 +276,14 @@ public class PluginManagerController extends Controller {
     /**
      * Display the overview display for the plugins.<br/>
      * It consists in a list of plugins with their status (started/stopped).
+     * @throws AccountManagementException 
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION),
             @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
-    public Result index() {
+    public Result index() throws AccountManagementException {
 
-        if (!SecurityUtils.isAllowed(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
-            if (SecurityUtils.isAllowed(IMafConstants.API_MANAGER_PERMISSION)) {
+        if (!getSecurityService().currentUserHasRole(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
+            if (getSecurityService().currentUserHasRole(IMafConstants.API_MANAGER_PERMISSION)) {
                 return redirect(controllers.admin.routes.ApiManagerController.index());
             } else {
                 return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());
@@ -815,6 +818,10 @@ public class PluginManagerController extends Controller {
         return eventBroadcastingService;
     }
 
+    private ISecurityService getSecurityService() {
+        return securityService;
+    }
+
     /**
      * {@link Form} object to be used for editing a plugin configuration block.
      * 
@@ -917,7 +924,7 @@ public class PluginManagerController extends Controller {
 
         HeaderMenuItem pluginsMenu = new HeaderMenuItem("admin.integration.sidebar.plugins", "glyphicons glyphicons-remote-control",
                 currentType.equals(MenuItemType.PLUGINS));
-        pluginsMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION));
+        pluginsMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION));
         sideBar.addMenuItem(pluginsMenu);
 
         pluginsMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.plugins.active_plugins",
@@ -930,7 +937,7 @@ public class PluginManagerController extends Controller {
 
             HeaderMenuItem dataSyndicationMenu = new HeaderMenuItem("admin.integration.sidebar.data_syndication", "glyphicons glyphicons-share-alt",
                     currentType.equals(MenuItemType.DATA_SYNDICATION));
-            dataSyndicationMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PARTNER_SYNDICATION_PERMISSION));
+            dataSyndicationMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PARTNER_SYNDICATION_PERMISSION));
             sideBar.addMenuItem(dataSyndicationMenu);
 
             dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.master_agreements",
@@ -942,7 +949,7 @@ public class PluginManagerController extends Controller {
         }
 
         HeaderMenuItem apiMenu = new HeaderMenuItem("admin.integration.sidebar.api", "glyphicons glyphicons-transfer", currentType.equals(MenuItemType.API));
-        apiMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
+        apiMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
         sideBar.addMenuItem(apiMenu);
 
         apiMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.api.keys", controllers.admin.routes.ApiManagerController.index(),
@@ -954,7 +961,7 @@ public class PluginManagerController extends Controller {
         ClickableMenuItem sharedStorageMenu = new ClickableMenuItem("admin.integration.sidebar.shared_storage",
                 controllers.admin.routes.SharedStorageManagerController.index(), "glyphicons glyphicons-inbox-in",
                 currentType.equals(MenuItemType.SHARED_STORAGE));
-        sharedStorageMenu.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
+        sharedStorageMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
         sideBar.addMenuItem(sharedStorageMenu);
 
         return sideBar;

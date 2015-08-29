@@ -48,7 +48,7 @@
             @parts.Msg("core.portfolio_entry_financial.view.budget.panel.budget.title")
             
             <div class="pull-right">
-                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
                     <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                 }
             </div>
@@ -67,7 +67,7 @@
             @parts.Msg("core.portfolio_entry_financial.view.forecast.panel.cost_to_complete.title")
             
             <div class="pull-right">
-                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
                     <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                 }
             </div>

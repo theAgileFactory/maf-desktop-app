@@ -44,6 +44,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
+import security.ISecurityService;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import utils.table.NotificationListView;
 import utils.tour.TourUtils;
@@ -99,6 +100,8 @@ public class Application extends Controller {
     private IAdPanelManagerService adPanelManagerService;
     @Inject
     private IAttachmentManagerPlugin attachmentManagerPlugin;
+    @Inject
+    private ISecurityService securityService;
     
     private static Logger.ALogger log = Logger.of(Application.class);
 
@@ -331,7 +334,7 @@ public class Application extends Controller {
         orderBy.desc("creationDate");
         orderBy.desc("id");
         try {
-            portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(orderBy).setMaxRows(5).findList();
+            portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(orderBy, getSecurityService()).setMaxRows(5).findList();
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
@@ -739,5 +742,9 @@ public class Application extends Controller {
 
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 }

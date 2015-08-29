@@ -24,6 +24,7 @@ import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
 import dao.reporting.ReportingDao;
+import framework.utils.Utilities;
 
 /**
  * Check if a report exists.
@@ -36,7 +37,7 @@ public class CheckReportingExists extends Action.Simple {
     @Override
     public Promise<Result> call(final Http.Context ctx) throws Throwable {
 
-        Long id = DefaultDynamicResourceHandler.getId(ctx);
+        Long id = Utilities.getId(ctx);
         if (id != null) {
             Reporting reporting = ReportingDao.getReportingById(id);
             if (reporting != null) {

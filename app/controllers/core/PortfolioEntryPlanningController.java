@@ -53,7 +53,6 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
-import framework.security.SecurityUtils;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -101,7 +100,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
@@ -138,6 +137,8 @@ public class PortfolioEntryPlanningController extends Controller {
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private ISecurityService securityService;
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
@@ -181,7 +182,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result overview(Long id) {
 
         // load the overview configuration from the user preference
@@ -479,7 +480,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result overviewChangeConf(Long id) {
 
         Form<OverviewConfiguration> boundForm = overviewConfigurationFormTemplate.bindFromRequest();
@@ -500,7 +501,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result packages(Long id, Boolean reset) {
 
         // get the portfolioEntry
@@ -623,7 +624,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result packagesFilter(Long id) {
 
         try {
@@ -659,7 +660,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * @param messagesPlugin
      *            the message service
      */
-    private static Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> getPackagesTable(Long portfolioEntryId,
+    private Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> getPackagesTable(Long portfolioEntryId,
             FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig, II18nMessagesPlugin messagesPlugin) {
 
         ExpressionList<PortfolioEntryPlanningPackage> expressionList = filterConfig
@@ -675,7 +676,7 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         Set<String> hideColumnsForPackage = filterConfig.getColumnsToHide();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForPackage.add("editActionLink");
             hideColumnsForPackage.add("deleteActionLink");
         }
@@ -696,7 +697,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the planning package id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result viewPackage(Long id, Long planningPackageId) {
 
         // get the portfolio entry
@@ -737,7 +738,7 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         Set<String> hideColumns = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
 
@@ -756,7 +757,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the planning package id (0 for create case)
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result managePackage(Long id, Long planningPackageId) {
 
         // get the portfolioEntry
@@ -794,7 +795,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * Save a planning package.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManagePackage() {
 
         // bind the form
@@ -943,7 +944,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * @return
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result addPackageGroups(Long id) {
 
         // get the portfolioEntry
@@ -962,7 +963,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * according to the patterns.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processAddPackageGroups() {
 
         // bind the form
@@ -1015,7 +1016,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the planning package id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deletePackage(Long id, Long planningPackageId) {
 
         // get the planning package
@@ -1044,7 +1045,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the planning package id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result createPackageAttachment(Long id, Long planningPackageId) {
 
         // get the portfolioEntry
@@ -1064,7 +1065,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * Process the form to add an attachment to a planning package.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processCreatePackageAttachment() {
 
         Form<AttachmentFormData> boundForm = attachmentFormTemplate.bindFromRequest();
@@ -1105,7 +1106,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the attachment id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deletePackageAttachment(Long id, Long planningPackageId, Long attachmentId) {
 
         // get the package
@@ -1137,7 +1138,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result resources(Long id) {
 
         // get the portfolioEntry
@@ -1154,7 +1155,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Set<String> hideColumnsForResourcePlanTable = new HashSet<String>();
         hideColumnsForResourcePlanTable.add("portfolioEntryName");
         hideColumnsForResourcePlanTable.add("followPackageDates");
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForResourcePlanTable.add("editActionLink");
             hideColumnsForResourcePlanTable.add("removeActionLink");
             hideColumnsForResourcePlanTable.add("reallocate");
@@ -1223,7 +1224,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated actor id, set to 0 for create case
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageAllocatedActor(Long id, Long allocatedActorId) {
 
         // for create case, check there is at least one actor that can be
@@ -1269,7 +1270,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * Save an allocated actor.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageAllocatedActor() {
 
         // bind the form
@@ -1347,7 +1348,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated actor id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteAllocatedActor(Long id, Long allocatedActorId) {
 
         // get the allocated actor
@@ -1379,7 +1380,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated delivery unit id, set to 0 for create case
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
 
         // for create case, check there is at least one delivery unit that can
@@ -1427,7 +1428,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * Save an allocated delivery unit.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageAllocatedOrgUnit() {
 
         // bind the form
@@ -1494,7 +1495,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated delivery unit id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
 
         // get the allocated org unit
@@ -1522,7 +1523,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated competency id, set to 0 for create case
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageAllocatedCompetency(Long id, Long allocatedCompetencyId) {
 
         // get the portfolioEntry
@@ -1559,7 +1560,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * Save an allocated competency.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageAllocatedCompetency() {
 
         // bind the form
@@ -1626,7 +1627,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated competency id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteAllocatedCompetency(Long id, Long allocatedCompetencyId) {
 
         // get the allocated competency
@@ -1656,7 +1657,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated org unit
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result reallocateOrgUnit(Long id, Long allocatedOrgUnitId) {
 
         // get the portfolioEntry
@@ -1684,7 +1685,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * Process the reallocation of an org unit to an actor.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processReallocateOrgUnit() {
 
         // bind the form
@@ -1753,7 +1754,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the balance to report
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result reallocateOrgUnitReportBalance(Long id, Long allocatedOrgUnitId, Double days) {
 
         // get the portfolioEntry
@@ -1777,7 +1778,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the balance to report
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processReallocateOrgUnitReportBalance(Long id, Long allocatedOrgUnitId, Double days) {
 
         // get the deleted allocated org unit
@@ -1803,7 +1804,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the allocated competency
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result reallocateCompetency(Long id, Long allocatedCompetencyId) {
 
         // get the portfolioEntry
@@ -1832,7 +1833,7 @@ public class PortfolioEntryPlanningController extends Controller {
      * Process the reallocation of an competency to an actor.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processReallocateCompetency() {
 
         // bind the form
@@ -1903,7 +1904,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the balance to report
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result reallocateCompetencyReportBalance(Long id, Long allocatedCompetencyId, Double days) {
 
         // get the portfolioEntry
@@ -1927,7 +1928,7 @@ public class PortfolioEntryPlanningController extends Controller {
      *            the balance to report
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processReallocateCompetencyReportBalance(Long id, Long allocatedCompetencyId, Double days) {
 
         // get the deleted allocated competency
@@ -2086,6 +2087,10 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     private IDataSyndicationService getDataSyndicationService() {
         return dataSyndicationService;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

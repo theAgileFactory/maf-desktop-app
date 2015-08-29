@@ -49,7 +49,7 @@
                 <div class="panel-heading">
                     @parts.Msg("core.portfolio_entry_planning.package.view.title")
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id, planningPackage.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                             &nbsp;
                         }
@@ -118,7 +118,7 @@
                     @parts.Msg("core.portfolio_entry.view.attachments.title")
                     
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.PortfolioEntryPlanningController.createPackageAttachment(portfolioEntry.id, planningPackage.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                         }
                     </div>

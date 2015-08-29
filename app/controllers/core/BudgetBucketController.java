@@ -22,19 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import models.finance.BudgetBucket;
-import models.finance.BudgetBucketLine;
-import models.finance.PortfolioEntryBudgetLine;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
-import security.CheckBudgetBucketExists;
-import security.DefaultDynamicResourceHandler;
-import utils.form.BudgetBucketFormData;
-import utils.form.BudgetBucketLineFormData;
-import utils.table.BudgetBucketLineListView;
-import utils.table.PortfolioEntryBudgetLineListView;
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -48,6 +35,18 @@ import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.finance.BudgetBucket;
+import models.finance.BudgetBucketLine;
+import models.finance.PortfolioEntryBudgetLine;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import security.CheckBudgetBucketExists;
+import utils.form.BudgetBucketFormData;
+import utils.form.BudgetBucketLineFormData;
+import utils.table.BudgetBucketLineListView;
+import utils.table.PortfolioEntryBudgetLineListView;
 
 /**
  * The controller which manage the budget buckets.
@@ -71,7 +70,7 @@ public class BudgetBucketController extends Controller {
      *            the current page for the initiative budget table
      */
     @With(CheckBudgetBucketExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.BUDGET_BUCKET_VIEW_DYNAMIC_PERMISSION)
     public Result view(Long id, Integer budgetTablePage, Integer initiativeBudgetTablePage) {
 
         // get the budget bucket
@@ -187,7 +186,7 @@ public class BudgetBucketController extends Controller {
      *            the budget bucket id
      */
     @With(CheckBudgetBucketExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
     public Result edit(Long id) {
 
         // get the budget bucket
@@ -209,7 +208,7 @@ public class BudgetBucketController extends Controller {
      *            the budget bucket id
      */
     @With(CheckBudgetBucketExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
     public Result delete(Long id) {
 
         // get the budget bucket
@@ -227,7 +226,7 @@ public class BudgetBucketController extends Controller {
      * Save a budget bucket.
      */
     @With(CheckBudgetBucketExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
     public Result save() {
 
         // bind the form
@@ -263,7 +262,7 @@ public class BudgetBucketController extends Controller {
      *            the budget bucket line id, set to 0 for create case
      */
     @With(CheckBudgetBucketExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
     public Result manageLine(Long id, Long lineId) {
 
         // get the budget bucket
@@ -292,7 +291,7 @@ public class BudgetBucketController extends Controller {
      * Save a budget bucket line.
      */
     @With(CheckBudgetBucketExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
     public Result saveLine() {
 
         // bind the form
@@ -345,7 +344,7 @@ public class BudgetBucketController extends Controller {
      *            the budget bucket line id
      */
     @With(CheckBudgetBucketExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION)
     public Result deleteLine(Long id, Long lineId) {
 
         // get the budget bucket line

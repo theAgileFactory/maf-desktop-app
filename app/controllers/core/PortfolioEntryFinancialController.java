@@ -26,6 +26,22 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Dynamic;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryBudgetDAO;
+import dao.finance.PurchaseOrderDAO;
+import dao.finance.WorkOrderDAO;
+import dao.pmo.PortfolioEntryDao;
+import framework.highcharts.pattern.BasicBar;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IUserAccount;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.utils.CustomAttributeFormAndDisplayHandler;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.finance.PortfolioEntryBudget;
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PurchaseOrder;
@@ -39,7 +55,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import utils.finance.Totals;
 import utils.form.EngageWorkOrderAmountSelectorFormData;
 import utils.form.PortfolioEntryBudgetLineFormData;
@@ -49,23 +65,6 @@ import utils.form.WorkOrderFormData;
 import utils.table.PortfolioEntryBudgetLineListView;
 import utils.table.PurchaseOrderLineItemListView;
 import utils.table.WorkOrderListView;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import constants.IMafConstants;
-import controllers.ControllersUtils;
-import dao.finance.CurrencyDAO;
-import dao.finance.PortfolioEntryBudgetDAO;
-import dao.finance.PurchaseOrderDAO;
-import dao.finance.WorkOrderDAO;
-import dao.pmo.PortfolioEntryDao;
-import framework.highcharts.pattern.BasicBar;
-import framework.security.SecurityUtils;
-import framework.services.account.IAccountManagerPlugin;
-import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * The controller which allows to manage the financial part of a portfolio
@@ -78,6 +77,8 @@ public class PortfolioEntryFinancialController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private ISecurityService securityService;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
@@ -96,7 +97,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
     public Result details(Long id) {
 
         // get the portfolioEntry
@@ -112,7 +113,7 @@ public class PortfolioEntryFinancialController extends Controller {
         // hide columns for budget table
         Set<String> hideColumnsForBudgetTable = new HashSet<String>();
         hideColumnsForBudgetTable.add("portfolioEntryName");
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForBudgetTable.add("editActionLink");
             hideColumnsForBudgetTable.add("removeActionLink");
         }
@@ -141,16 +142,16 @@ public class PortfolioEntryFinancialController extends Controller {
 
         // define the columns to hide for the cost to complete table
         Set<String> hideColumnsForCostToCompleteTable = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("editActionLink");
             hideColumnsForCostToCompleteTable.add("deleteActionLink");
         }
         if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
-                || !SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+                || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("selectLineItemActionLink");
         }
         if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
-                || !SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+                || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("engageWorkOrder");
         }
         hideColumnsForCostToCompleteTable.add("amountReceived");
@@ -162,13 +163,13 @@ public class PortfolioEntryFinancialController extends Controller {
         Set<String> hideColumnsForEngagedTable = new HashSet<String>();
         hideColumnsForEngagedTable.add("selectLineItemActionLink");
         hideColumnsForEngagedTable.add("engageWorkOrder");
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForEngagedTable.add("editActionLink");
         }
         if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
             hideColumnsForEngagedTable.add("shared");
         }
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")
                 || PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
             hideColumnsForEngagedTable.add("deleteActionLink");
         }
@@ -220,7 +221,7 @@ public class PortfolioEntryFinancialController extends Controller {
             // if the user hasn't the permission
             // PURCHASE_ORDER_VIEW_ALL_PERMISSION
             // then we remove the action line
-            if (!SecurityUtils.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
+            if (!getSecurityService().hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
                 lineItemsTable.setLineAction(null);
             }
 
@@ -237,7 +238,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
     public Result status(Long id) {
 
         // get the portfolioEntry
@@ -288,7 +289,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the budget line id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
     public Result viewBudgetLine(Long id, Long budgetLineId) {
 
         // get the portfolioEntry
@@ -309,7 +310,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the budget line id, set to 0 for create case
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result manageBudgetLine(Long id, Long budgetLineId) {
 
         // get the portfolioEntry
@@ -345,7 +346,7 @@ public class PortfolioEntryFinancialController extends Controller {
      * Save a budget line.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result processManageBudgetLine() {
 
         // bind the form
@@ -411,7 +412,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the budget line id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result deleteBudgetLine(Long id, Long budgetLineId) {
 
         // get the budget line
@@ -443,7 +444,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the work order id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION)
     public Result viewWorkOrder(Long id, Long workOrderId) {
 
         // get the portfolioEntry
@@ -464,7 +465,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the work order id, set to 0 for create case
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result manageWorkOrder(Long id, Long workOrderId) {
 
         // get the portfolioEntry
@@ -503,7 +504,7 @@ public class PortfolioEntryFinancialController extends Controller {
      * Save a work order.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result processManageWorkOrder() {
 
         // bind the form
@@ -573,7 +574,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the work order id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result deleteWorkOrder(Long id, Long workOrderId) {
 
         // get the work order
@@ -604,7 +605,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the work order id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result engageWorkOrderStep1(Long id, Long workOrderId) {
 
         // get the portfolioEntry
@@ -629,7 +630,7 @@ public class PortfolioEntryFinancialController extends Controller {
      * "cost to complete" work order based on the difference
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result engageWorkOrderStep2() {
 
         // bind the form
@@ -677,7 +678,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the work order id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result selectWorkOrderLineItemStep1(Long id, Long workOrderId) {
 
         // get the portfolioEntry
@@ -700,7 +701,7 @@ public class PortfolioEntryFinancialController extends Controller {
      * of line items that is "compatible" with the work order
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result selectWorkOrderLineItemStep2() {
 
         // bind the form
@@ -811,7 +812,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the line item id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result selectWorkOrderLineItemStep3(Long id, Long workOrderId, Long lineItemId) {
 
         // get the portfolioEntry
@@ -843,7 +844,7 @@ public class PortfolioEntryFinancialController extends Controller {
      * Step 4: only for a shared work order, process the amount to engage
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result selectWorkOrderLineItemStep4() {
 
         // bind the form
@@ -925,7 +926,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the amount to report
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result workOrderReportBalance(Long id, Long workOrderId, Double amount) {
 
         // get the portfolioEntry
@@ -948,7 +949,7 @@ public class PortfolioEntryFinancialController extends Controller {
      *            the amount to report
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
     public Result workOrderReportBalanceSave(Long id, Long workOrderId, Double amount) {
 
         // get the portfolioEntry
@@ -987,5 +988,9 @@ public class PortfolioEntryFinancialController extends Controller {
 
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 }

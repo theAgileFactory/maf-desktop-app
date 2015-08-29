@@ -24,6 +24,24 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.avaje.ebean.Ebean;
+
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.ProcessTransitionRequestDao;
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioEntryDao;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
+import framework.utils.FileAttachmentHelper;
+import framework.utils.Msg;
+import framework.utils.Pagination;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
@@ -39,29 +57,10 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import utils.form.ProcessMilestoneRequestFormData;
 import utils.form.RequestMilestoneFormData;
 import utils.table.MilestoneRequestListView;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-
-import com.avaje.ebean.Ebean;
-
-import constants.IMafConstants;
-import controllers.ControllersUtils;
-import dao.governance.LifeCycleMilestoneDao;
-import dao.governance.ProcessTransitionRequestDao;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioEntryDao;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.FileAttachmentHelper;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * The controller which is to be used to review approve/reject a process
@@ -80,6 +79,9 @@ public class ProcessTransitionRequestController extends Controller {
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private ISecurityService securityService;
+    
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
     private static Form<ProcessMilestoneRequestFormData> processMilestoneRequestFormTemplate = Form.form(ProcessMilestoneRequestFormData.class);
@@ -103,7 +105,7 @@ public class ProcessTransitionRequestController extends Controller {
             MilestoneRequestListView milestoneRequest = new MilestoneRequestListView(request);
             if (milestoneRequest.portfolioEntry != null
                     && milestoneRequest.milestone != null
-                    && DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, "",
+                    && getSecurityService().dynamic(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, "",
                             milestoneRequest.portfolioEntry.id)) {
                 requestsListView.add(milestoneRequest);
             }
@@ -123,7 +125,7 @@ public class ProcessTransitionRequestController extends Controller {
      *            the request id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
     public Result processMilestoneRequest(Long id, Long requestId) {
 
         // get the portfolio entry
@@ -184,7 +186,7 @@ public class ProcessTransitionRequestController extends Controller {
      * automatically approve it
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
     public Result acceptMilestoneRequest() {
 
         Form<ProcessMilestoneRequestFormData> boundForm = processMilestoneRequestFormTemplate.bindFromRequest();
@@ -311,7 +313,7 @@ public class ProcessTransitionRequestController extends Controller {
      *            the request id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION)
     public Result rejectMilestoneRequest(Long id, Long requestId) {
 
         // get the portfolio entry
@@ -344,5 +346,9 @@ public class ProcessTransitionRequestController extends Controller {
 
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 }

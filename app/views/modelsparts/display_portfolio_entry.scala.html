@@ -18,10 +18,12 @@
 @(portfolioEntry: models.pmo.PortfolioEntry, withLink: Boolean = true)
 
 @import framework_views.parts
+@import views.html.commons._
+@import views.html.commons._
 
 @if(portfolioEntry != null && !portfolioEntry.deleted) {
 
-    @if(withLink && security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
+    @if(withLink && _securityService.dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
         <a href="@controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id)">
     }
 
@@ -39,7 +41,7 @@
     
     @portfolioEntry.getName
     
-    @if(withLink && security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
+    @if(withLink && _securityService.dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
         </a>
     }
 

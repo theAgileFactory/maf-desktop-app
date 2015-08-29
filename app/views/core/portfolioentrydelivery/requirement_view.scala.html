@@ -45,7 +45,7 @@
                 <div class="panel-heading">
                     @parts.Msg("core.portfolio_entry_delivery.requirement.view.details.title")
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.PortfolioEntryDeliveryController.editRequirement(portfolioEntry.id, requirement.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                             &nbsp;
                         }

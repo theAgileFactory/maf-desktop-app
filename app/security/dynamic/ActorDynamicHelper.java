@@ -24,17 +24,13 @@ import com.avaje.ebean.OrderBy;
 
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import models.pmo.Actor;
 import models.sql.ActorHierarchy;
 import play.Logger;
-import play.mvc.Http;
+import security.ISecurityService;
 
 
 /**
@@ -53,22 +49,20 @@ public class ActorDynamicHelper {
      *            the ebean filter expression
      * @param orderBy
      *            the ebean order by
+     * @param securityService
+     *            the security service
      */
-    public static ExpressionList<Actor> getActorsViewAllowedAsQuery(Expression expression, OrderBy<Actor> orderBy) throws AccountManagementException {
-        
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
-
+    public static ExpressionList<Actor> getActorsViewAllowedAsQuery(Expression expression, OrderBy<Actor> orderBy, ISecurityService securityService) throws AccountManagementException {
+        IUserAccount currentUserAccount=securityService.getCurrentUser();
         String raw = "(";
 
         // user has permission ACTOR_VIEW_ALL_PERMISSION
         // OR
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_ALL_PERMISSION)) {
+        if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
-        Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
+        Actor actor = ActorDao.getActorByUid(currentUserAccount.getIdentifier());
         if (actor != null) {
 
             // the actor "is" the user
@@ -77,7 +71,7 @@ public class ActorDynamicHelper {
             // user has permission
             // ACTOR_VIEW_AS_SUPERIOR_PERMISSION AND
             // user or his subordinates is manager of the actor OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION)) {
+            if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION)) {
                 raw += "manager.id = " + actor.id + " OR ";
 
                 String subordinatesString = ActorHierarchy.getSubordinatesAsString(actor.id, ",");
@@ -115,10 +109,12 @@ public class ActorDynamicHelper {
      * 
      * @param actorId
      *            the actor id
+     * @param securityService
+     *            the security service
      */
-    public static boolean isActorViewAllowed(Long actorId) {
+    public static boolean isActorViewAllowed(Long actorId, ISecurityService securityService) {
         try {
-            return getActorsViewAllowedAsQuery(Expr.eq("id", actorId), null).findRowCount() > 0 ? true : false;
+            return getActorsViewAllowedAsQuery(Expr.eq("id", actorId), null, securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("ActorDynamicHelper.isActorViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());
@@ -131,21 +127,20 @@ public class ActorDynamicHelper {
      * 
      * @param actor
      *            the actor to edit
+     * @param securityService
+     *            the security service
      */
-    public static boolean isActorEditAllowed(Actor actor) {
+    public static boolean isActorEditAllowed(Actor actor, ISecurityService securityService) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
-
+            IUserAccount currentUserAccount=securityService.getCurrentUser();
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
             // the actor "is" the user
-            Actor currenctActor = ActorDao.getActorByUid(userAccount.getIdentifier());
+            Actor currenctActor = ActorDao.getActorByUid(currentUserAccount.getIdentifier());
             if (currenctActor != null && currenctActor.id.equals(actor.id)) {
                 return true;
             }
@@ -165,16 +160,15 @@ public class ActorDynamicHelper {
      * 
      * @param actor
      *            the actor to delete
+     * @param securityService
+     *            the security service
      */
-    public static boolean isActorDeleteAllowed(Actor actor) {
+    public static boolean isActorDeleteAllowed(Actor actor, ISecurityService securityService) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
-
+            IUserAccount currentUserAccount=securityService.getCurrentUser();
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 

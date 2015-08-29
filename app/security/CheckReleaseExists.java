@@ -18,6 +18,7 @@
 package security;
 
 import dao.delivery.ReleaseDAO;
+import framework.utils.Utilities;
 import models.delivery.Release;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
@@ -35,7 +36,7 @@ public class CheckReleaseExists extends Action.Simple {
     @Override
     public Promise<Result> call(final Http.Context ctx) throws Throwable {
 
-        Long id = DefaultDynamicResourceHandler.getId(ctx);
+        Long id = Utilities.getId(ctx);
         if (id != null) {
             Release release = ReleaseDAO.getReleaseById(id);
             if (release != null) {

@@ -50,7 +50,7 @@
             }
             
             <div class="pull-right">
-                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                     <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, portfolioEntryRisk.id)"><span class="glyphicons glyphicons-edit"></span></a>
                     &nbsp;
                 }

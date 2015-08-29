@@ -67,7 +67,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckActorExists;
 import security.CheckOrgUnitExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.OrgUnitFormData;
@@ -81,7 +81,6 @@ import utils.table.PortfolioEntryListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
-import framework.security.SecurityUtils;
 
 /**
  * The controller which displays / allows to edit an org unit.
@@ -89,7 +88,6 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class OrgUnitController extends Controller {
-
     private static Logger.ALogger log = Logger.of(OrgUnitController.class);
 
     public static Form<OrgUnitFormData> formTemplate = Form.form(OrgUnitFormData.class);
@@ -256,7 +254,7 @@ public class OrgUnitController extends Controller {
      *            the current page
      */
     @With(CheckOrgUnitExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result listPortfolioEntries(Long id, Integer page) {
 
         // get the org unit
@@ -284,7 +282,7 @@ public class OrgUnitController extends Controller {
      *            the org unit id
      */
     @With(CheckOrgUnitExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result allocation(Long id) {
 
         // get the org unit
@@ -422,7 +420,7 @@ public class OrgUnitController extends Controller {
      *            unit)
      */
     @With(CheckOrgUnitExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result allocationDetails(Long id, Integer page) {
 
         // get the org unit
@@ -482,7 +480,7 @@ public class OrgUnitController extends Controller {
      *            the actor id
      */
     @With(CheckOrgUnitExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result actorsPortfolioEntryAllocationsFilter(Long id) {
 
         try {
@@ -513,7 +511,7 @@ public class OrgUnitController extends Controller {
      *            the actor id
      */
     @With(CheckOrgUnitExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result actorsActivityAllocationsFilter(Long id) {
 
         try {
@@ -598,15 +596,17 @@ public class OrgUnitController extends Controller {
      *            the org unit id
      * @param currentType
      *            the current menu item type, useful to select the correct item
+     * @param securityService
+     *            the security service
      */
-    public static SideBar getSideBar(Long id, MenuItemType currentType) {
+    public static SideBar getSideBar(Long id, MenuItemType currentType, ISecurityService securityService) {
 
         SideBar sideBar = new SideBar();
 
         sideBar.addMenuItem(new ClickableMenuItem("core.org_unit.sidebar.overview", controllers.core.routes.OrgUnitController.view(id, 0),
                 "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.OVERVIEW)));
 
-        if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
+        if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
 
             sideBar.addMenuItem(
                     new ClickableMenuItem("core.org_unit.sidebar.portfolio_entries", controllers.core.routes.OrgUnitController.listPortfolioEntries(id, 0),
@@ -721,5 +721,4 @@ public class OrgUnitController extends Controller {
     public static enum MenuItemType {
         OVERVIEW, INITIATIVES, ALLOCATION;
     }
-
 }

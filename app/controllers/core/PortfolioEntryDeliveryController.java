@@ -24,38 +24,15 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import models.delivery.Iteration;
-import models.delivery.Release;
-import models.delivery.ReleasePortfolioEntry;
-import models.delivery.Requirement;
-import models.delivery.RequirementPriority;
-import models.delivery.RequirementSeverity;
-import models.delivery.RequirementStatus.Type;
-import models.pmo.PortfolioEntry;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-
-import play.Logger;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
-import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
-import utils.form.IterationFormData;
-import utils.form.ReleasePortfolioEntryFormData;
-import utils.form.RequirementFormData;
-import utils.table.IterationListView;
-import utils.table.ReleasePortfolioEntryListView;
-import utils.table.RequirementListView;
-import be.objectify.deadbolt.java.actions.Dynamic;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.delivery.IterationDAO;
@@ -76,7 +53,27 @@ import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.security.SecurityUtils;
+import models.delivery.Iteration;
+import models.delivery.Release;
+import models.delivery.ReleasePortfolioEntry;
+import models.delivery.Requirement;
+import models.delivery.RequirementPriority;
+import models.delivery.RequirementSeverity;
+import models.delivery.RequirementStatus.Type;
+import models.pmo.PortfolioEntry;
+import play.Logger;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import security.CheckPortfolioEntryExists;
+import security.ISecurityService;
+import utils.form.IterationFormData;
+import utils.form.ReleasePortfolioEntryFormData;
+import utils.form.RequirementFormData;
+import utils.table.IterationListView;
+import utils.table.ReleasePortfolioEntryListView;
+import utils.table.RequirementListView;
 
 /**
  * The controller which allows to manage the delivery part of a portfolio entry.
@@ -88,6 +85,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private II18nMessagesPlugin messagesPlugin;
+    @Inject
+    private ISecurityService securityService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -104,7 +103,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result requirements(Long id, Boolean reset) {
 
         // get the portfolio entry
@@ -146,7 +145,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             }
 
             Set<String> hideColumns = filterConfig.getColumnsToHide();
-            if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
                 hideColumns.add("editActionLink");
             }
 
@@ -174,7 +173,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result requirementsFilter(Long id) {
 
         try {
@@ -200,7 +199,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             }
 
             Set<String> hideColumns = filterConfig.getColumnsToHide();
-            if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
                 hideColumns.add("editActionLink");
             }
 
@@ -220,7 +219,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result requirementsStatus(Long id) {
 
         // get the portfolio entry
@@ -358,7 +357,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the requirement id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result viewRequirement(Long id, Long requirementId) {
 
         // get the portfolio entry
@@ -384,7 +383,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the requirement id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result editRequirement(Long id, Long requirementId) {
 
         // get the portfolio entry
@@ -412,7 +411,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      * Process the edition of a requirement.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processEditRequirement() {
 
         // bind the form
@@ -458,7 +457,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result iterations(Long id, Boolean reset) {
 
         // get the portfolio entry
@@ -571,7 +570,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result iterationsFilter(Long id) {
 
         try {
@@ -603,8 +602,10 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the portfolio entry id
      * @param filterConfig
      *            the filter config.
+     * @param securityService
+     *           the security service
      */
-    private static Pair<Table<IterationListView>, Pagination<Iteration>> getIterationsTable(Long portfolioEntryId,
+    private Pair<Table<IterationListView>, Pagination<Iteration>> getIterationsTable(Long portfolioEntryId,
             FilterConfig<IterationListView> filterConfig) {
 
         ExpressionList<Iteration> expressionList = filterConfig.updateWithSearchExpression(IterationDAO.getIterationAllAsExprByPE(portfolioEntryId));
@@ -619,7 +620,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         Set<String> hideColumns = filterConfig.getColumnsToHide();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("editActionLink");
         }
 
@@ -638,7 +639,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the iteration id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result viewIteration(Long id, Long iterationId) {
 
         // get the portfolio entry
@@ -664,7 +665,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the iteration id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result editIteration(Long id, Long iterationId) {
 
         // get the portfolioEntry
@@ -691,7 +692,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      * Save an iteration.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processEditIteration() {
 
         // bind the form
@@ -735,7 +736,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result releases(Long id) {
 
         // get the portfolio entry
@@ -750,7 +751,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         Set<String> columnsToHide = new HashSet<>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             columnsToHide.add("unassignActionLink");
         }
 
@@ -766,7 +767,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the portfolio entry
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result assignRelease(Long id) {
 
         // get the portfolio entry
@@ -782,7 +783,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      * Process the form to assign a release.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processAssignRelease() {
 
         // bind the form
@@ -824,7 +825,7 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the release id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result unassignRelease(Long id, Long releaseId) {
 
         ReleasePortfolioEntry association = ReleaseDAO.getReleaseByIdAndPE(releaseId, id);
@@ -894,6 +895,10 @@ public class PortfolioEntryDeliveryController extends Controller {
 
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

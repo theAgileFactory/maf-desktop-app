@@ -19,6 +19,7 @@
 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.commons._
 
 <!DOCTYPE html>
 <html>
@@ -57,7 +58,7 @@
                 });
             </script>
             
-            @utils.tour.TourUtils.getTour(request.path, request.getQueryString("tourUid"), request.getQueryString("tourStep"))
+            @utils.tour.TourUtils.getTour(request.path, request.getQueryString("tourUid"), request.getQueryString("tourStep"), _messagesPluginService, _securityService)
         }
     </body>
 </html>

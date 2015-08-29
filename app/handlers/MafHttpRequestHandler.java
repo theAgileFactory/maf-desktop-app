@@ -13,6 +13,7 @@ import play.libs.F.Promise;
 import play.mvc.Action;
 import play.mvc.Http.Context;
 import play.mvc.Http.Request;
+import security.ISecurityService;
 import play.mvc.Result;
 import services.datasyndication.IDataSyndicationService;
 
@@ -27,6 +28,8 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
     private II18nMessagesPlugin messagesPlugin;
     @Inject
     private IDataSyndicationService dataSyndicationService;
+    @Inject
+    private ISecurityService securityService;
     
     public MafHttpRequestHandler(){
     }
@@ -37,7 +40,6 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
         return new Action.Simple() {
             @Override
             public Promise<Result> call(Context ctx) throws Throwable {
-
                 //Inject the required services into the context
                 injectCommonServicesIncontext(ctx);
                 final Language language = new Language(request.getQueryString("lang"));
@@ -57,8 +59,9 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
        
     }
 
-    protected void injectCommonServicesIncontext(Context ctx){
-        super.injectCommonServicesIncontext(ctx);
-        ctx.args.put(IDataSyndicationService.class.getName(), dataSyndicationService);
+    protected void injectCommonServicesIncontext(Context context){
+        super.injectCommonServicesIncontext(context);
+        context.args.put(IDataSyndicationService.class.getName(), dataSyndicationService);
+        context.args.put(ISecurityService.class.getName(), securityService);
     }
 }

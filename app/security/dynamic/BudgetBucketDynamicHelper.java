@@ -25,18 +25,14 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.finance.BudgetBucketDAO;
 import dao.pmo.ActorDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import models.finance.BudgetBucket;
 import models.pmo.Actor;
 import models.sql.ActorHierarchy;
 import play.Logger;
-import play.mvc.Http;
+import security.ISecurityService;
 
 /**
  * Provides all method to compute the dynamic permissions for a budget bucket.
@@ -54,26 +50,26 @@ public class BudgetBucketDynamicHelper {
      *            the ebean filter expression
      * @param orderBy
      *            the ebean order by
+     * @param securityService
+     *            the security service
      */
-    public static ExpressionList<BudgetBucket> getBudgetBucketsViewAllowedAsQuery(Expression expression, OrderBy<BudgetBucket> orderBy)
+    public static ExpressionList<BudgetBucket> getBudgetBucketsViewAllowedAsQuery(Expression expression, OrderBy<BudgetBucket> orderBy, ISecurityService securityService)
             throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+        IUserAccount userAccount = securityService.getCurrentUser();
 
         String raw = "(";
 
         // user has permission BUDGET_BUCKET_VIEW_ALL_PERMISSION
         // OR
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION AND
         // user or his subordinates is owner of the budgetBucket OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
+        if (actor != null && securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
 
             raw += "owner.id = " + actor.id + " OR ";
 
@@ -110,10 +106,12 @@ public class BudgetBucketDynamicHelper {
      * 
      * @param budgetBucketId
      *            the budget bucket id
+     * @param securityService
+     *            the security service
      */
-    public static boolean isBudgetBucketViewAllowed(Long budgetBucketId) {
+    public static boolean isBudgetBucketViewAllowed(Long budgetBucketId, ISecurityService securityService) {
         try {
-            return getBudgetBucketsViewAllowedAsQuery(Expr.eq("id", budgetBucketId), null).findRowCount() > 0 ? true : false;
+            return getBudgetBucketsViewAllowedAsQuery(Expr.eq("id", budgetBucketId), null, securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("BudgetBucketDynamicHelper.isBudgetBucketViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());
@@ -126,16 +124,16 @@ public class BudgetBucketDynamicHelper {
      * 
      * @param budgetBucket
      *            the budget bucket to edit
+     * @param securityService
+     *            the security service
      */
-    public static boolean isBudgetBucketEditAllowed(BudgetBucket budgetBucket) {
+    public static boolean isBudgetBucketEditAllowed(BudgetBucket budgetBucket, ISecurityService securityService) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+            IUserAccount userAccount = securityService.getCurrentUser();
 
             // user has permission BUDGET_BUCKET_EDIT_ALL_PERMISSION OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION)) {
+            if (securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION)) {
                 Logger.debug("has BUDGET_BUCKET_EDIT_ALL_PERMISSION");
                 return true;
             }
@@ -143,7 +141,7 @@ public class BudgetBucketDynamicHelper {
             // user has permission BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION
             // AND is owner or responsible of the budget bucket
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION)
+            if (actor != null && securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION)
                     && (actor.id.equals(budgetBucket.owner.id) || ActorHierarchy.getSubordinatesAsId(actor.id).contains(budgetBucket.owner.id))) {
 
                 Logger.debug("has BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION and is owner or responsible");

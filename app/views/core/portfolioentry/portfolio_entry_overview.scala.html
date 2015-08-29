@@ -43,7 +43,7 @@
     
     <div class="row">
         @views.html.framework_views.parts.kpi.display_kpi_dashboard(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
-        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION) {
+        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION) {
             @views.html.framework_views.parts.kpi.display_kpi_box("KPI_DEVIATION_CAPEX", portfolioEntry.id)
             @views.html.framework_views.parts.kpi.display_kpi_box("KPI_DEVIATION_OPEX", portfolioEntry.id)
         }
@@ -71,7 +71,7 @@
                         @parts.Msg("core.portfolio_entry.overview.status.panel.title")
                         
                         <div class="pull-right">
-                            @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                            @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                                 <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id, portfolioEntry.lastPortfolioEntryReport.id).url"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                                 &nbsp;&nbsp;
                             }

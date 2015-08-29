@@ -24,6 +24,7 @@ import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
 import dao.timesheet.TimesheetDao;
+import framework.utils.Utilities;
 
 /**
  * Check if a timesheet report exists.
@@ -36,7 +37,7 @@ public class CheckTimesheetReportExists extends Action.Simple {
     @Override
     public Promise<Result> call(final Http.Context ctx) throws Throwable {
 
-        Long id = DefaultDynamicResourceHandler.getId(ctx);
+        Long id = Utilities.getId(ctx);
         if (id != null) {
             TimesheetReport report = TimesheetDao.getTimesheetReportById(id);
 

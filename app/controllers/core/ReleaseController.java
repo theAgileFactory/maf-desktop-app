@@ -30,40 +30,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import models.delivery.Release;
-import models.delivery.ReleasePortfolioEntry;
-import models.delivery.Requirement;
-import models.framework_models.account.NotificationCategory;
-import models.framework_models.account.NotificationCategory.Code;
-import models.pmo.Actor;
-import models.pmo.PortfolioEntry;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-
-import play.Logger;
-import play.data.Form;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
-import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
-import scala.concurrent.duration.Duration;
-import security.CheckReleaseExists;
-import security.DefaultDynamicResourceHandler;
-import security.dynamic.ReleaseDynamicHelper;
-import utils.form.ReleaseFormData;
-import utils.gantt.SourceDataValue;
-import utils.gantt.SourceItem;
-import utils.gantt.SourceValue;
-import utils.table.PortfolioEntryListView;
-import utils.table.ReleaseListView;
-import utils.table.RequirementListView;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
@@ -72,6 +41,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.delivery.ReleaseDAO;
@@ -93,6 +65,32 @@ import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.TableExcelRenderer;
 import framework.utils.Utilities;
+import models.delivery.Release;
+import models.delivery.ReleasePortfolioEntry;
+import models.delivery.Requirement;
+import models.framework_models.account.NotificationCategory;
+import models.framework_models.account.NotificationCategory.Code;
+import models.pmo.Actor;
+import models.pmo.PortfolioEntry;
+import play.Logger;
+import play.data.Form;
+import play.libs.F.Function0;
+import play.libs.F.Promise;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import scala.concurrent.duration.Duration;
+import security.CheckReleaseExists;
+import security.ISecurityService;
+import security.dynamic.ReleaseDynamicHelper;
+import utils.form.ReleaseFormData;
+import utils.gantt.SourceDataValue;
+import utils.gantt.SourceItem;
+import utils.gantt.SourceValue;
+import utils.table.PortfolioEntryListView;
+import utils.table.ReleaseListView;
+import utils.table.RequirementListView;
 
 /**
  * The controller which displays / allows to edit a release.
@@ -110,6 +108,8 @@ public class ReleaseController extends Controller {
     private INotificationManagerPlugin notificationManagerPlugin;
     @Inject
     private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private ISecurityService securityService;
     
     private static Logger.ALogger log = Logger.of(ReleaseController.class);
 
@@ -187,7 +187,7 @@ public class ReleaseController extends Controller {
                     FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.parseResponse(json);
 
                     OrderBy<Release> orderBy = filterConfig.getSortExpression();
-                    ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy);
+                    ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
                     List<ReleaseListView> releaseListView = new ArrayList<ReleaseListView>();
                     for (Release release : expressionList.findList()) {
@@ -291,7 +291,7 @@ public class ReleaseController extends Controller {
             }
 
             OrderBy<Release> orderBy = filterConfig.getSortExpression();
-            ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy);
+            ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
             // initiate the source items (gantt)
             List<SourceItem> items = new ArrayList<SourceItem>();
@@ -370,12 +370,12 @@ public class ReleaseController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<ReleaseListView>, Pagination<Release>> getReleasesTable(FilterConfig<ReleaseListView> filterConfig)
+    private Pair<Table<ReleaseListView>, Pagination<Release>> getReleasesTable(FilterConfig<ReleaseListView> filterConfig)
             throws AccountManagementException {
 
         OrderBy<Release> orderBy = filterConfig.getSortExpression();
 
-        ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy);
+        ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
         Pagination<Release> pagination = new Pagination<Release>(expressionList.findList().size(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
@@ -417,7 +417,7 @@ public class ReleaseController extends Controller {
      *            the current page for initiatives list
      */
     @With(CheckReleaseExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.RELEASE_VIEW_DYNAMIC_PERMISSION)
     public Result view(Long id, Integer page) {
 
         Release release = ReleaseDAO.getReleaseById(id);
@@ -450,7 +450,7 @@ public class ReleaseController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckReleaseExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.RELEASE_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.RELEASE_VIEW_DYNAMIC_PERMISSION)
     public Result viewInitiative(Long id, Long portfolioEntryId) {
 
         // get the association
@@ -526,7 +526,7 @@ public class ReleaseController extends Controller {
      *            the release id
      */
     @With(CheckReleaseExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.RELEASE_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.RELEASE_EDIT_DYNAMIC_PERMISSION)
     public Result edit(Long id) {
 
         // get the release
@@ -545,7 +545,7 @@ public class ReleaseController extends Controller {
      * Process the form to edit a release.
      */
     @With(CheckReleaseExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.RELEASE_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.RELEASE_EDIT_DYNAMIC_PERMISSION)
     public Result saveEdit() {
 
         // bind the form
@@ -580,7 +580,7 @@ public class ReleaseController extends Controller {
      *            the release id
      */
     @With(CheckReleaseExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.RELEASE_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.RELEASE_EDIT_DYNAMIC_PERMISSION)
     public Result delete(Long id) {
 
         // get the release
@@ -642,6 +642,10 @@ public class ReleaseController extends Controller {
 
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

@@ -50,7 +50,7 @@
                     <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, false).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
                 }
                 &nbsp;
-                @dynamic(security.DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION) {
+                @dynamic(constants.IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION) {
                     <a href="@controllers.core.routes.ActorController.manageAllocatedActivity(actor.id)"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                 }
             </div>

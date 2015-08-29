@@ -24,45 +24,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.pmo.Actor;
-import models.pmo.ActorCapacity;
-import models.pmo.Competency;
-import models.pmo.Portfolio;
-import models.pmo.PortfolioEntry;
-import models.timesheet.TimesheetActivity;
-import models.timesheet.TimesheetActivityAllocatedActor;
-import models.timesheet.TimesheetReport;
-import play.Logger;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
-import security.CheckActorExists;
-import security.DefaultDynamicResourceHandler;
-import utils.SortableCollection;
-import utils.SortableCollection.DateSortableObject;
-import utils.form.ActorCapacityFormData;
-import utils.form.ActorCompetenciesFormData;
-import utils.form.ActorDefaultCompetencyFormData;
-import utils.form.ActorFormData;
-import utils.form.TimesheetActivityAllocatedActorFormData;
-import utils.form.TimesheetReportApprovalFormData;
-import utils.gantt.SourceDataValue;
-import utils.gantt.SourceItem;
-import utils.gantt.SourceValue;
-import utils.table.ActorListView;
-import utils.table.CompetencyListView;
-import utils.table.PortfolioEntryListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
-import utils.table.PortfolioListView;
-import utils.table.TimesheetActivityAllocatedActorListView;
+import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.core.TimesheetController.OptionData;
 import dao.finance.PortfolioEntryResourcePlanDAO;
@@ -82,11 +54,39 @@ import framework.utils.Pagination;
 import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import framework.security.SecurityUtils;
+import models.finance.PortfolioEntryResourcePlanAllocatedActor;
+import models.pmo.Actor;
+import models.pmo.ActorCapacity;
+import models.pmo.Competency;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioEntry;
+import models.timesheet.TimesheetActivity;
+import models.timesheet.TimesheetActivityAllocatedActor;
+import models.timesheet.TimesheetReport;
+import play.Logger;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import security.CheckActorExists;
+import security.ISecurityService;
+import utils.SortableCollection;
+import utils.SortableCollection.DateSortableObject;
+import utils.form.ActorCapacityFormData;
+import utils.form.ActorCompetenciesFormData;
+import utils.form.ActorDefaultCompetencyFormData;
+import utils.form.ActorFormData;
+import utils.form.TimesheetActivityAllocatedActorFormData;
+import utils.form.TimesheetReportApprovalFormData;
+import utils.gantt.SourceDataValue;
+import utils.gantt.SourceItem;
+import utils.gantt.SourceValue;
+import utils.table.ActorListView;
+import utils.table.CompetencyListView;
+import utils.table.PortfolioEntryListView;
+import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
+import utils.table.PortfolioListView;
+import utils.table.TimesheetActivityAllocatedActorListView;
 
 /**
  * The controller which displays / allows to edit an actor.
@@ -95,6 +95,8 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class ActorController extends Controller {
+    @Inject
+    private ISecurityService securityService;
 
     public static Form<ActorFormData> formTemplate = Form.form(ActorFormData.class);
 
@@ -181,7 +183,7 @@ public class ActorController extends Controller {
      *            the actor id
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result edit(Long id) {
 
         // get the actor
@@ -199,7 +201,7 @@ public class ActorController extends Controller {
     /**
      * Process the save of an actor (create and edit cases).
      */
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result save() {
 
         // bind the form
@@ -270,7 +272,7 @@ public class ActorController extends Controller {
      *            the actor id
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_DELETE_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_DELETE_DYNAMIC_PERMISSION)
     public Result delete(Long id) {
 
         // get the actor
@@ -292,7 +294,7 @@ public class ActorController extends Controller {
      *            the actor id
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result editCompetencies(Long id) {
 
         // get the actor
@@ -309,7 +311,7 @@ public class ActorController extends Controller {
      * Process the form to select the competencies of the actor.
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result processEditCompetencies() {
 
         // bind the form
@@ -353,7 +355,7 @@ public class ActorController extends Controller {
      * Process the form to edit the default competency of an actor.
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result processEditDefaultCompetency() {
 
         // bind the form
@@ -384,7 +386,7 @@ public class ActorController extends Controller {
      *            the current page
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION)
     public Result listPortfolioEntries(Long id, Integer page) {
 
         // get the actor
@@ -414,7 +416,7 @@ public class ActorController extends Controller {
      *            the current page
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION)
     public Result listPortfolios(Long id, Integer page) {
 
         // get the actor
@@ -440,7 +442,7 @@ public class ActorController extends Controller {
      *            the actor id
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION)
     public Result allocation(Long id) {
 
         // get the actor
@@ -578,7 +580,7 @@ public class ActorController extends Controller {
      * 
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION)
     public Result allocationDetails(Long id, Integer pagePortfolioEntry, Integer pageActivity, Boolean viewAllActivities) {
 
         // get the actor
@@ -644,7 +646,7 @@ public class ActorController extends Controller {
      *            the allocated activity id (0 for create)
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result manageAllocatedActivity(Long id, Long allocatedActivityId) {
 
         // get the actor
@@ -701,7 +703,7 @@ public class ActorController extends Controller {
      * Process the form to create/edit an allocation with an activity.
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result processManageAllocatedActivity() {
 
         // bind the form
@@ -760,7 +762,7 @@ public class ActorController extends Controller {
      *            the allocated activity id
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result deleteAllocatedActivity(Long id, Long allocatedActivityId) {
 
         // get the allocated activity
@@ -790,7 +792,7 @@ public class ActorController extends Controller {
      * 
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION)
     public Result capacity(Long id, Integer year) {
 
         if (year.equals(0)) {
@@ -803,7 +805,7 @@ public class ActorController extends Controller {
         Form<ActorCapacityFormData> capacityForm = capacityFormTemplate.fill(new ActorCapacityFormData(actor, year));
 
         // can edit
-        boolean canEdit = SecurityUtils.dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION, "");
+        boolean canEdit = getSecurityService().dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION, "");
 
         return ok(views.html.core.actor.actor_capacity.render(actor, year, capacityForm, canEdit));
     }
@@ -812,7 +814,7 @@ public class ActorController extends Controller {
      * Save the capacity.
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION)
     public Result saveCapacity() {
 
         // bind the form
@@ -850,7 +852,7 @@ public class ActorController extends Controller {
      *            report including this date, if empty it uses the current date.
      */
     @With(CheckActorExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION)
     public Result viewWeeklyTimesheet(Long id, String stringDate) {
 
         // get the actor
@@ -869,15 +871,17 @@ public class ActorController extends Controller {
      *            the actor id
      * @param currentType
      *            the current menu item type, useful to select the correct item
+     * @param securityService
+     *            the security service
      */
-    public static SideBar getSideBar(Long id, MenuItemType currentType) {
+    public static SideBar getSideBar(Long id, MenuItemType currentType, ISecurityService securityService) {
 
         SideBar sideBar = new SideBar();
 
         sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.overview", controllers.core.routes.ActorController.view(id),
                 "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.OVERVIEW)));
 
-        if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.ACTOR_VIEW_DYNAMIC_PERMISSION, "")) {
+        if (securityService.dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION, "")) {
 
             sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolio_entries", controllers.core.routes.ActorController.listPortfolioEntries(id,
                     0), "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.INITIATIVES)));
@@ -916,6 +920,10 @@ public class ActorController extends Controller {
      */
     public static enum MenuItemType {
         OVERVIEW, INITIATIVES, PORTFOLIOS, TIMESHEET, ALLOCATION;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

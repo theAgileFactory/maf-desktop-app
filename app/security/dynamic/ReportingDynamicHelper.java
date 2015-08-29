@@ -23,16 +23,12 @@ import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 
 import constants.IMafConstants;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import models.reporting.Reporting;
 import play.Logger;
-import play.mvc.Http;
+import security.ISecurityService;
 
 /**
  * Provides all method to compute the dynamic permissions for a report.
@@ -50,25 +46,25 @@ public class ReportingDynamicHelper {
      *            the ebean filter expression
      * @param orderBy
      *            the ebean order by
+     * @param securityService
+     *            the security service
      */
-    public static ExpressionList<Reporting> getReportsViewAllowedAsQuery(Expression expression, OrderBy<Reporting> orderBy) throws AccountManagementException {
+    public static ExpressionList<Reporting> getReportsViewAllowedAsQuery(Expression expression, OrderBy<Reporting> orderBy, ISecurityService securityService) throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+        IUserAccount userAccount = securityService.getCurrentUser();
 
         String raw = "(";
 
         // user has permission REPORTING_VIEW_ALL_PERMISSION
         // OR
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_ALL_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.REPORTING_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission
         // REPORTING_VIEW_AS_VIEWER_PERMISSION AND
         // (the report is public OR the user has access to it)
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION)) {
             raw += "(isPublic = 1 OR reportingAuthorization.principals.uid='" + userAccount.getIdentifier() + "') OR ";
         }
 
@@ -98,10 +94,12 @@ public class ReportingDynamicHelper {
      * 
      * @param reportingId
      *            the report id
+     * @param securityService
+     *            the security service
      */
-    public static boolean isReportViewAllowed(Long reportingId) {
+    public static boolean isReportViewAllowed(Long reportingId, ISecurityService securityService) {
         try {
-            return getReportsViewAllowedAsQuery(Expr.eq("id", reportingId), null).query().setDistinct(true).findRowCount() > 0 ? true : false;
+            return getReportsViewAllowedAsQuery(Expr.eq("id", reportingId), null, securityService).query().setDistinct(true).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("ReportingDynamicHelper.isReportViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());

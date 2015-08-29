@@ -54,10 +54,10 @@
                     @parts.Msg("core.portfolio_entry.view.details.title")
                     
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a id="portfolio-entry-edit" href="@controllers.core.routes.PortfolioEntryController.edit(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                         }
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION) {
                             &nbsp;&nbsp;
                             <a id="portfolio-entry-delete" onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryController.delete(portfolioEntry.id)"><span class="glyphicons glyphicons-bin glyphicons-panel"></span></a>
                             <script type="text/javascript">
@@ -125,7 +125,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @parts.Msg("core.portfolio_entry.view.extended.title")
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <div class="pull-right">
                                 <a href="@controllers.core.routes.PortfolioEntryController.editCustomAttr(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                             </div>
@@ -144,7 +144,7 @@
             <div class="panel panel-default" id="portfolios">
                 <div class="panel-heading">
                     @parts.Msg("core.portfolio_entry.view.portfolios.title")
-                    @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                         <div class="pull-right">
                             <a href="@controllers.core.routes.PortfolioEntryController.editPortfolios(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                         </div>
@@ -158,7 +158,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     @parts.Msg("core.portfolio_entry.view.dependencies.title")
-                    @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                         <div class="pull-right">
                             <a href="@controllers.core.routes.PortfolioEntryController.addDependency(portfolioEntry.id)"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                         </div>
@@ -175,7 +175,7 @@
                     @parts.Msg("core.portfolio_entry.view.attachments.title")
                     
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.PortfolioEntryController.createAttachment(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                         }
                     </div>

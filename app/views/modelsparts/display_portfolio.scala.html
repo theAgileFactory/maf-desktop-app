@@ -19,10 +19,11 @@
 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.commons._
 
 @if(portfolio!= null && !portfolio.deleted) {
 
-    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
+    @if(_securityService.dynamic(constants.IMafConstants.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
         <a href="@controllers.core.routes.PortfolioController.overview(portfolio.id)">
     }
 
@@ -32,7 +33,7 @@
         @portfolio.getName
     }
     
-    @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
+    @if(_securityService.dynamic(constants.IMafConstants.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, "", portfolio.id)) {
         </a>
     }
 } else {

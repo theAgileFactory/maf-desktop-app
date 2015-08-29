@@ -51,7 +51,7 @@
                     @parts.Msg("core.budget_bucket.view.details.title")
                     
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.BudgetBucketController.edit(budgetBucket.id).url"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                             &nbsp;
                             <a class="pull-right" onclick="return maf_confirmDelete();" href="@controllers.core.routes.BudgetBucketController.delete(budgetBucket.id)">
@@ -113,7 +113,7 @@
                     @parts.Msg("core.budget_bucket.view.budget.title")
                     
                     <div class="pull-right">
-                        @dynamic(security.DefaultDynamicResourceHandler.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.BudgetBucketController.manageLine(budgetBucket.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                         }
                     </div>

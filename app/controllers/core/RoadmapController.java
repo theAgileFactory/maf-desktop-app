@@ -18,7 +18,6 @@
 package controllers.core;
 
 import java.io.ByteArrayInputStream;
-import framework.security.SecurityUtils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -98,6 +97,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
+import security.ISecurityService;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
@@ -122,6 +122,8 @@ public class RoadmapController extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private IPersonalStoragePlugin personalStoragePlugin;
+    @Inject
+    private ISecurityService securityService;
     
     private static Logger.ALogger log = Logger.of(RoadmapController.class);
 
@@ -234,7 +236,7 @@ public class RoadmapController extends Controller {
 
                     OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
                     ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
-                            .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy);
+                            .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
                     List<PortfolioEntryListView> portfolioEntryListView = new ArrayList<PortfolioEntryListView>();
                     for (PortfolioEntry portfolioEntry : expressionList.findList()) {
@@ -319,7 +321,7 @@ public class RoadmapController extends Controller {
 
             OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
             ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
-                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy);
+                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
             // initiate the source items (gantt)
             List<SourceItem> items = new ArrayList<SourceItem>();
@@ -458,7 +460,7 @@ public class RoadmapController extends Controller {
 
             OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
             ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
-                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy);
+                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
             for (PortfolioEntry portfolioEntry : expressionList.findList()) {
                 ids.add(String.valueOf(portfolioEntry.id));
@@ -475,9 +477,10 @@ public class RoadmapController extends Controller {
 
     /**
      * Return the HTML fragment of the KPIs for "scenario simulator".
+     * @throws AccountManagementException 
      */
     @Restrict({ @Group(IMafConstants.ROADMAP_SIMULATOR_PERMISSION) })
-    public Result simulatorKpisFragment() {
+    public Result simulatorKpisFragment() throws AccountManagementException {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
 
@@ -520,7 +523,7 @@ public class RoadmapController extends Controller {
             allocationConfirmed = allocationConfirmed.add(entryAllocationDaysConfirmed);
             allocationNotConfirmed = allocationNotConfirmed.add(entryAllocationDaysNotConfirmed);
 
-            if (SecurityUtils.isAllowed(IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (getSecurityService().currentUserHasRole(IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
 
                 // budget
                 Double entryBudgetCapex = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false);
@@ -980,13 +983,13 @@ public class RoadmapController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> getTable(FilterConfig<PortfolioEntryListView> filterConfig)
+    private Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> getTable(FilterConfig<PortfolioEntryListView> filterConfig)
             throws AccountManagementException {
 
         OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
 
         ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(),
-                orderBy);
+                orderBy, getSecurityService());
 
         Pagination<PortfolioEntry> pagination = new Pagination<PortfolioEntry>(expressionList.findList().size(), expressionList);
 
@@ -1000,7 +1003,7 @@ public class RoadmapController extends Controller {
         Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fillForFilterConfig(portfolioEntryListView,
                 getColumnsToHide(filterConfig));
 
-        if (SecurityUtils.isAllowed(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
+        if (getSecurityService().currentUserHasRole(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
 
             table.addAjaxRowAction(Msg.get("core.roadmap.simulator.capacity_kpis"), controllers.core.routes.RoadmapController.simulatorKpisFragment().url(),
                     "simulator-kpis");
@@ -1547,6 +1550,10 @@ public class RoadmapController extends Controller {
 
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

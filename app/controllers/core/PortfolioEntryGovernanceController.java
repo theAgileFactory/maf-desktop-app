@@ -26,6 +26,22 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.avaje.ebean.Ebean;
+
+import be.objectify.deadbolt.java.actions.Dynamic;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.LifeCyclePlanningDao;
+import dao.governance.LifeCycleProcessDao;
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioEntryDao;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
+import framework.utils.FileAttachmentHelper;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
@@ -51,7 +67,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.PlannedDateFormData;
@@ -61,23 +77,6 @@ import utils.table.GovernanceListView;
 import utils.table.MilestoneApproverListView;
 import utils.table.PortfolioEntryBudgetLineListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
-import be.objectify.deadbolt.java.actions.Dynamic;
-
-import com.avaje.ebean.Ebean;
-
-import controllers.ControllersUtils;
-import dao.governance.LifeCycleMilestoneDao;
-import dao.governance.LifeCyclePlanningDao;
-import dao.governance.LifeCycleProcessDao;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioEntryDao;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.FileAttachmentHelper;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
-import framework.security.SecurityUtils;
 
 /**
  * The controller which allows to manage the governance of a portfolio entry.
@@ -89,6 +88,8 @@ public class PortfolioEntryGovernanceController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IAttachmentManagerPlugin attachmentManagerPlugin;
+    @Inject
+    private ISecurityService securityService;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryGovernanceController.class);
 
@@ -104,7 +105,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result index(Long id) {
 
         // get the portfolioEntry
@@ -121,7 +122,7 @@ public class PortfolioEntryGovernanceController extends Controller {
         }
 
         Set<String> hideColumnsForGovernance = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForGovernance.add("requestActionLink");
         }
 
@@ -140,7 +141,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      *            the milestone id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result viewMilestone(Long id, Long milestoneId) {
 
         // get the portfolioEntry
@@ -281,7 +282,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      *            the milestone id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result requestMilestone(Long id, Long milestoneId) {
 
         // if there is already a pending milestone instance, then this is not
@@ -325,7 +326,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      * passed
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processRequestMilestone() {
 
         Form<RequestMilestoneFormData> boundForm = requestMilestoneFormTemplate.bindFromRequest();
@@ -488,7 +489,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result editPlanning(Long id) {
 
         // get the portfolioEntry
@@ -511,7 +512,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      * Process the update of the current planning of a portfolio entry.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processEditPlanning() {
 
         // bind the form
@@ -558,7 +559,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result changeLifeCycleProcess(Long id) {
 
         // get the portfolioEntry
@@ -572,7 +573,7 @@ public class PortfolioEntryGovernanceController extends Controller {
      * Process the change of the life cycle process of a portfolio entry.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processChangeLifeCycleProcess() {
 
         // bind the form
@@ -703,6 +704,10 @@ public class PortfolioEntryGovernanceController extends Controller {
 
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

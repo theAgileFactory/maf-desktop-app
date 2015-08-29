@@ -17,19 +17,19 @@
  */
 package controllers.core;
 
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+import constants.IMafConstants;
+import dao.pmo.PortfolioDao;
+import dao.pmo.StakeholderDao;
+import framework.utils.Msg;
+import framework.utils.Utilities;
 import models.pmo.Portfolio;
 import models.pmo.Stakeholder;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.DefaultDynamicResourceHandler;
 import utils.form.StakeholderFormData;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
-import dao.pmo.PortfolioDao;
-import dao.pmo.StakeholderDao;
-import framework.utils.Msg;
-import framework.utils.Utilities;
 
 /**
  * The controller which allows to manage the stakeholders of a portfolio.
@@ -49,7 +49,7 @@ public class PortfolioStakeholderController extends Controller {
      * @param stakeholderId
      *            the stakeholder id (set to 0 for create case)
      */
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
     public Result manage(Long id, Long stakeholderId) {
 
         // get the portfolio
@@ -76,7 +76,7 @@ public class PortfolioStakeholderController extends Controller {
     /**
      * Perform the save for a new/update portfolio stakeholder.
      */
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
     public Result save() {
 
         // bind the form
@@ -136,7 +136,7 @@ public class PortfolioStakeholderController extends Controller {
      * @param stakeholderId
      *            the stakeholder id
      */
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
     public Result delete(Long id, Long stakeholderId) {
 
         // get the stakeholder

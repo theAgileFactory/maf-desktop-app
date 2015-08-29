@@ -48,7 +48,6 @@ import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
 import dao.reporting.ReportingDao;
-import framework.security.SecurityUtils;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
@@ -86,7 +85,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import scala.concurrent.duration.Duration;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
@@ -123,7 +122,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private IAttachmentManagerPlugin attachmentManagerPlugin;
-
+    @Inject
+    private ISecurityService securityService;
     @Inject
     private IDataSyndicationService dataSyndicationService;
 
@@ -141,7 +141,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the actor id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result exportStatusReport(Long id) {
 
         Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateName());
@@ -181,7 +181,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            displayed
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result registers(Long id, Integer pageReports, Integer pageRisks, Integer pageIssues, Boolean viewAllRisks, Boolean viewAllIssues) {
 
         // get the portfolioEntry
@@ -199,7 +199,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> hideColumnsForReport = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForReport.add("editActionLink");
             hideColumnsForReport.add("deleteActionLink");
         }
@@ -235,7 +235,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Set<String> hideColumnsForRisk = new HashSet<String>();
         hideColumnsForRisk.add("owner");
         hideColumnsForRisk.add("dueDate");
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForRisk.add("editActionLink");
         }
 
@@ -255,7 +255,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Set<String> hideColumnsForIssue = new HashSet<String>();
         hideColumnsForIssue.add("isMitigated");
         hideColumnsForIssue.add("targetDate");
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForIssue.add("editActionLink");
         }
 
@@ -278,7 +278,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result events(Long id, Boolean reset) {
 
         // get the portfolio entry
@@ -332,7 +332,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result eventsFilter(Long id) {
 
         try {
@@ -363,7 +363,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Promise<Result> exportEventsAsExcel(final Long id) {
 
         return Promise.promise(new Function0<Result>() {
@@ -435,7 +435,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<PortfolioEntryEventListView>, Pagination<PortfolioEntryEvent>> getEventsTable(Long portfolioEntryId,
+    private Pair<Table<PortfolioEntryEventListView>, Pagination<PortfolioEntryEvent>> getEventsTable(Long portfolioEntryId,
             FilterConfig<PortfolioEntryEventListView> filterConfig) {
 
         ExpressionList<PortfolioEntryEvent> expressionList = filterConfig
@@ -451,7 +451,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> hideColumnsForEvent = filterConfig.getColumnsToHide();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForEvent.add("editActionLink");
             hideColumnsForEvent.add("deleteActionLink");
         }
@@ -472,7 +472,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the report id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result viewReport(Long id, Long reportId) {
 
         // get the portfolioEntry
@@ -503,7 +503,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> hideColumns = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
 
@@ -521,7 +521,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the report id (set to 0 for create case)
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageReport(Long id, Long reportId) {
 
         // get the portfolioEntry
@@ -563,7 +563,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * Perform the save for a new/update report.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageReport() {
 
         // bind the form
@@ -654,7 +654,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the report id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteReport(Long id, Long reportId) {
 
         // get the portfolio entry
@@ -692,7 +692,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the report id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result createReportAttachment(Long id, Long reportId) {
 
         // get the portfolioEntry
@@ -712,7 +712,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * Process the form to add an attachment to a report.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processCreateReportAttachment() {
 
         Form<AttachmentFormData> boundForm = attachmentFormTemplate.bindFromRequest();
@@ -753,7 +753,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the attachment id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteReportAttachment(Long id, Long reportId, Long attachmentId) {
 
         // get the report
@@ -788,7 +788,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the risk/issue id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result viewRisk(Long id, Long riskId) {
 
         // get the portfolioEntry
@@ -817,7 +817,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            is useful for the create case)
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageRisk(Long id, Long riskId, Boolean isRisk) {
 
         // get the portfolioEntry
@@ -864,7 +864,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * Perform the save for a new/update risk/issue.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageRisk() {
 
         // bind the form
@@ -944,7 +944,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the event id (set to 0 for create case)
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageEvent(Long id, Long eventId) {
 
         // get the portfolioEntry
@@ -981,7 +981,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * Perform the save for a new/update event.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageEvent() {
 
         // bind the form
@@ -1052,7 +1052,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
      *            the event id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteEvent(Long id, Long eventId) {
 
         // get the event
@@ -1142,6 +1142,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

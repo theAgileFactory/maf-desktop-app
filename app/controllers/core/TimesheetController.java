@@ -27,6 +27,26 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioEntryDao;
+import dao.pmo.PortfolioEntryPlanningPackageDao;
+import dao.timesheet.TimesheetDao;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.utils.Msg;
+import framework.utils.Utilities;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.pmo.Actor;
@@ -37,36 +57,13 @@ import models.timesheet.TimesheetActivityType;
 import models.timesheet.TimesheetEntry;
 import models.timesheet.TimesheetLog;
 import models.timesheet.TimesheetReport;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckTimesheetReportExists;
-import security.DefaultDynamicResourceHandler;
 import utils.form.TimesheetReportApprovalFormData;
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-
-import com.avaje.ebean.Ebean;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import constants.IMafConstants;
-import controllers.ControllersUtils;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioEntryDao;
-import dao.pmo.PortfolioEntryPlanningPackageDao;
-import dao.timesheet.TimesheetDao;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Msg;
-import framework.utils.Utilities;
 
 /**
  * The controller which allows to manage the timesheeting.
@@ -451,7 +448,7 @@ public class TimesheetController extends Controller {
      * Process (accept or reject) a timesheet.
      */
     @With(CheckTimesheetReportExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION)
     public Result processTimesheet() {
 
         // bind the form
@@ -520,7 +517,7 @@ public class TimesheetController extends Controller {
      *            the timesheet report id
      */
     @With(CheckTimesheetReportExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION)
     public Result sendReminderTimesheet(Long id) {
 
         // get the report

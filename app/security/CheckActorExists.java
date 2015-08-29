@@ -24,6 +24,7 @@ import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
 import dao.pmo.ActorDao;
+import framework.utils.Utilities;
 
 /**
  * Check if an actor exists .
@@ -35,7 +36,7 @@ public class CheckActorExists extends Action.Simple {
     @Override
     public Promise<Result> call(final Http.Context ctx) throws Throwable {
 
-        Long id = DefaultDynamicResourceHandler.getId(ctx);
+        Long id = Utilities.getId(ctx);
         if (id != null) {
             Actor actor = ActorDao.getActorById(id);
             if (actor != null) {

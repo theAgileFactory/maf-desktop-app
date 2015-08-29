@@ -25,18 +25,14 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.timesheet.TimesheetDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import models.pmo.Actor;
 import models.sql.ActorHierarchy;
 import models.timesheet.TimesheetReport;
 import play.Logger;
-import play.mvc.Http;
+import security.ISecurityService;
 
 /**
  * Provides all method to compute the dynamic permissions for a timesheet
@@ -56,19 +52,19 @@ public class TimesheetReportDynamicHelper {
      *            the ebean filter expression
      * @param orderBy
      *            the ebean order by
+     * @param securityService
+     *            the security service
      */
-    public static ExpressionList<TimesheetReport> getTimesheetReportsApprovalAllowedAsQuery(Expression expression, OrderBy<TimesheetReport> orderBy)
+    public static ExpressionList<TimesheetReport> getTimesheetReportsApprovalAllowedAsQuery(Expression expression, OrderBy<TimesheetReport> orderBy, ISecurityService securityService)
             throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+        IUserAccount userAccount = securityService.getCurrentUser();
 
         String raw = "(";
 
         // user has permission TIMESHEET_APPROVAL_ALL_PERMISSION
         // OR
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
@@ -76,7 +72,7 @@ public class TimesheetReportDynamicHelper {
         // TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION AND
         // user or his subordinates is manager of the actor of the report OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION)) {
+        if (actor != null && securityService.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION)) {
 
             raw += "actor.manager.id=" + actor.id + " OR ";
 
@@ -113,10 +109,12 @@ public class TimesheetReportDynamicHelper {
      * 
      * @param timesheetReportId
      *            the timesheet report id
+     * @param securityService
+     *            the security service
      */
-    public static boolean isTimesheetReportApprovalAllowed(Long timesheetReportId) {
+    public static boolean isTimesheetReportApprovalAllowed(Long timesheetReportId, ISecurityService securityService) {
         try {
-            return getTimesheetReportsApprovalAllowedAsQuery(Expr.eq("id", timesheetReportId), null).findRowCount() > 0 ? true : false;
+            return getTimesheetReportsApprovalAllowedAsQuery(Expr.eq("id", timesheetReportId), null,securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error(e.getMessage());
             return false;

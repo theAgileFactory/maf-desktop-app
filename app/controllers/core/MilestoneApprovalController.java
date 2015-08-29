@@ -39,6 +39,7 @@ import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.ISecurityService;
 import utils.form.ProcessMilestoneApprovalFormData;
 import utils.form.ProcessMilestoneDecisionFormData;
 import utils.table.MilestoneApprovalListView;
@@ -55,7 +56,6 @@ import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
-import framework.security.SecurityUtils;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -93,6 +93,8 @@ public class MilestoneApprovalController extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private IAttachmentManagerPlugin attachmentPluginManager;
+    @Inject
+    private ISecurityService securityService;
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -179,7 +181,7 @@ public class MilestoneApprovalController extends Controller {
 
         // get the milestone instances required for a vote/decision
         Pagination<LifeCycleMilestoneInstance> pagination;
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
+        if (getSecurityService().hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
             pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPagination();
         } else {
             // if the sign in user hasn't the permission
@@ -243,7 +245,7 @@ public class MilestoneApprovalController extends Controller {
 
         // if the user hasn't the permission MILESTONE_DECIDE_PERMISSION, then
         // he must be an approver of the milestone instance
-        if (!SecurityUtils.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
+        if (!getSecurityService().hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
             if (approverInstance == null) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             } else {
@@ -299,7 +301,7 @@ public class MilestoneApprovalController extends Controller {
 
         // construct the decision form
         Form<ProcessMilestoneDecisionFormData> processMilestoneDecisionForm = null;
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
+        if (getSecurityService().hasRole(userAccount, IMafConstants.MILESTONE_DECIDE_PERMISSION)) {
             processMilestoneDecisionForm = processMilestoneDecisionFormTemplate.fill(new ProcessMilestoneDecisionFormData(milestoneInstance));
         }
 
@@ -537,6 +539,10 @@ public class MilestoneApprovalController extends Controller {
 
     private IAttachmentManagerPlugin getAttachmentPluginManager() {
         return attachmentPluginManager;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 
 }

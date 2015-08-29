@@ -25,17 +25,13 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import models.pmo.Actor;
 import models.pmo.Portfolio;
 import play.Logger;
-import play.mvc.Http;
+import security.ISecurityService;
 
 /**
  * Provides all method to compute the dynamic permissions for a portfolio.
@@ -53,19 +49,19 @@ public class PortfolioDynamicHelper {
      *            the ebean filter expression
      * @param orderBy
      *            the ebean order by
+     * @param securityService
+     *            the security service
      */
-    public static ExpressionList<Portfolio> getPortfoliosViewAllowedAsQuery(Expression expression, OrderBy<Portfolio> orderBy)
+    public static ExpressionList<Portfolio> getPortfoliosViewAllowedAsQuery(Expression expression, OrderBy<Portfolio> orderBy, ISecurityService securityService)
             throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+        IUserAccount userAccount = securityService.getCurrentUser();
 
         String raw = "(";
 
         // user has permission PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION
         // OR
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
@@ -75,14 +71,14 @@ public class PortfolioDynamicHelper {
             // user has permission
             // PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION AND
             // user is manager of the portfolio OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION)) {
+            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION)) {
                 raw += "manager.id=" + actor.id + " OR ";
             }
 
             // user has permission
             // PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION AND
             // user is direct stakeholder of the portfolio
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
+            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
                 raw += "(stakeholders.deleted=false AND stakeholders.actor.id=" + actor.id + ") OR ";
             }
 
@@ -114,10 +110,12 @@ public class PortfolioDynamicHelper {
      * 
      * @param portfolioId
      *            the portfolio id
+     * @param securityService
+     *            the security service
      */
-    public static boolean isPortfolioViewAllowed(Long portfolioId) {
+    public static boolean isPortfolioViewAllowed(Long portfolioId, ISecurityService securityService) {
         try {
-            return getPortfoliosViewAllowedAsQuery(Expr.eq("id", portfolioId), null).findRowCount() > 0 ? true : false;
+            return getPortfoliosViewAllowedAsQuery(Expr.eq("id", portfolioId), null, securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("PortfolioDynamicHelper.isPortfolioViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());
@@ -130,16 +128,16 @@ public class PortfolioDynamicHelper {
      * 
      * @param portfolio
      *            the portfolio
+     * @param securityService
+     *            the security service
      */
-    public static boolean isPortfolioEditAllowed(Portfolio portfolio) {
+    public static boolean isPortfolioEditAllowed(Portfolio portfolio, ISecurityService securityService) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+            IUserAccount userAccount = securityService.getCurrentUser();
 
             // user has permission PORTFOLIO_EDIT_ALL_PERMISSION OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION)) {
+            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
@@ -147,7 +145,7 @@ public class PortfolioDynamicHelper {
             // PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION
             // AND user is manager of the portfolio
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION)
+            if (actor != null && securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION)
                     && actor.id.equals(portfolio.manager.id)) {
                 return true;
             }
@@ -164,18 +162,18 @@ public class PortfolioDynamicHelper {
      * 
      * @param portfolio
      *            the portfolio
+     * @param securityService
+     *            the security service
      */
-    public static boolean isPortfolioViewFinancialAllowed(Portfolio portfolio) {
+    public static boolean isPortfolioViewFinancialAllowed(Portfolio portfolio, ISecurityService securityService) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+            IUserAccount userAccount = securityService.getCurrentUser();
 
             // user has permission
             // PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION
             // OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
                 return true;
             }
 
@@ -183,7 +181,7 @@ public class PortfolioDynamicHelper {
             // PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION
             // AND is manager of the portfolio
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
+            if (actor != null && securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
                     && actor.id.equals(portfolio.manager.id)) {
                 return true;
             }

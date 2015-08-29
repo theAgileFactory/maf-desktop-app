@@ -24,13 +24,13 @@ import constants.IMafConstants;
 import controllers.Assets.Asset;
 import dao.finance.CurrencyDAO;
 import framework.commons.DataType;
-import framework.security.SecurityUtils;
 import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.database.IDatabaseDependencyService;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
 import framework.utils.Menu.SeparatorMenuItem;
 import framework.utils.TopMenuBar;
+import framework.utils.Utilities;
 import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
 import play.Configuration;
@@ -196,7 +196,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private void defineSearchMenu(String perspectiveKey) {
         ClickableMenuItem searchMenuItem = new ClickableMenuItem(TopMenus.SEARCH.name(), "topmenubar.search.menu.label",
                 controllers.core.routes.SearchController.index());
-        searchMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.SEARCH_PERMISSION));
+        searchMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.SEARCH_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(searchMenuItem);
         } else {
@@ -213,7 +213,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private void defineAdminMenu(String perspectiveKey) {
         // Admin user management features
         HeaderMenuItem adminMenuItem = new HeaderMenuItem(TopMenus.ADMIN.name(), "topmenubar.admin.menu.label");
-        adminMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
+        adminMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
                 IMafConstants.ADMIN_AUDIT_LOG_PERMISSION, IMafConstants.REPORTING_ADMINISTRATION_PERMISSION, IMafConstants.ADMIN_CONFIGURATION_PERMISSION,
                 IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION, IMafConstants.ADMIN_KPI_MANAGER_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
         if (perspectiveKey == null) {
@@ -226,38 +226,38 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         ClickableMenuItem userManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(1), "topmenubar.admin.usermanager.menu.label",
                 controllers.admin.routes.UserManager.displayUserSearchForm());
         adminMenuItem.addSubMenuItem(userManagerMenuItem);
-        userManagerMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION));
+        userManagerMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION));
 
         // Configuration
         ClickableMenuItem systemPreferenceMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(2), "topmenubar.admin.configuration.menu.label",
                 controllers.admin.routes.ConfigurationController.index());
         adminMenuItem.addSubMenuItem(systemPreferenceMenuItem);
         systemPreferenceMenuItem.setAuthorizedPermissions(
-                SecurityUtils.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
+                Utilities.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
 
         // Integration
         ClickableMenuItem pluginManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(3), "topmenubar.admin.integration.menu.label",
                 controllers.admin.routes.PluginManagerController.index());
         adminMenuItem.addSubMenuItem(pluginManagerMenuItem);
-        pluginManagerMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION,
+        pluginManagerMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION,
                 IMafConstants.API_MANAGER_PERMISSION, IMafConstants.PARTNER_SYNDICATION_PERMISSION));
 
         // KPI manager
         ClickableMenuItem kpiManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(4), "topmenubar.admin.kpimanager.menu.label",
                 controllers.admin.routes.KpiManagerController.index());
         adminMenuItem.addSubMenuItem(kpiManagerMenuItem);
-        kpiManagerMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_KPI_MANAGER_PERMISSION));
+        kpiManagerMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_KPI_MANAGER_PERMISSION));
 
         // Reporting
         ClickableMenuItem reportingMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(5), "topmenubar.admin.reporting.menu.label",
                 controllers.admin.routes.ReportingController.index());
         adminMenuItem.addSubMenuItem(reportingMenuItem);
-        reportingMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.REPORTING_ADMINISTRATION_PERMISSION));
+        reportingMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.REPORTING_ADMINISTRATION_PERMISSION));
 
         // Audit log
         ClickableMenuItem auditLogMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(6), "topmenubar.admin.audit.menu.label",
                 controllers.admin.routes.AuditableController.listAuditable());
-        auditLogMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ADMIN_AUDIT_LOG_PERMISSION));
+        auditLogMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_AUDIT_LOG_PERMISSION));
         adminMenuItem.addSubMenuItem(auditLogMenuItem);
     }
 
@@ -269,7 +269,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineToolsMenu(String perspectiveKey) {
         HeaderMenuItem toolsMenuItem = new HeaderMenuItem(TopMenus.TOOLS.name(), "topmenubar.tools.menu.label");
-        toolsMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION,
+        toolsMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION,
                 IMafConstants.REPORTING_VIEW_ALL_PERMISSION, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(toolsMenuItem);
@@ -279,13 +279,13 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
         ClickableMenuItem timesheetMenuItem = new ClickableMenuItem(TopMenus.TOOLS.name(1), "topmenubar.tools.timesheet.menu.label",
                 controllers.core.routes.TimesheetController.weeklyFill(""));
-        timesheetMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION));
+        timesheetMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION));
         toolsMenuItem.addSubMenuItem(timesheetMenuItem);
 
         ClickableMenuItem viewReportingMenuItem = new ClickableMenuItem(TopMenus.TOOLS.name(2), "topmenubar.tools.reporting.menu.label",
                 controllers.core.routes.ReportingController.index());
         viewReportingMenuItem.setAuthorizedPermissions(
-                SecurityUtils.getListOfArray(IMafConstants.REPORTING_VIEW_ALL_PERMISSION, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
+                Utilities.getListOfArray(IMafConstants.REPORTING_VIEW_ALL_PERMISSION, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
         toolsMenuItem.addSubMenuItem(viewReportingMenuItem);
     }
 
@@ -298,7 +298,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private void defineDeliveryMenu(String perspectiveKey) {
         HeaderMenuItem deliveryMenuItem = new HeaderMenuItem(TopMenus.DELIVERY.name(), "topmenubar.delivery.menu.label");
         deliveryMenuItem.setAuthorizedPermissions(
-                SecurityUtils.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
+                Utilities.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(deliveryMenuItem);
         } else {
@@ -308,7 +308,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         ClickableMenuItem viewReleasesMenuItem = new ClickableMenuItem(TopMenus.DELIVERY.name(1), "topmenubar.delivery.releases.menu.label",
                 controllers.core.routes.ReleaseController.list(false));
         viewReleasesMenuItem.setAuthorizedPermissions(
-                SecurityUtils.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
+                Utilities.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
         deliveryMenuItem.addSubMenuItem(viewReleasesMenuItem);
     }
 
@@ -321,7 +321,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private void defineArchitectureMenu(String perspectiveKey) {
         ClickableMenuItem architectureMenuItem = new ClickableMenuItem(TopMenus.ARCHITECTURE.name(), "topmenubar.architecture.menu.label",
                 controllers.core.routes.ArchitectureController.index(null));
-        architectureMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ARCHITECTURE_PERMISSION));
+        architectureMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ARCHITECTURE_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(architectureMenuItem);
         } else {
@@ -337,7 +337,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineGovernanceMenu(String perspectiveKey) {
         HeaderMenuItem governanceMenuItem = new HeaderMenuItem(TopMenus.GOVERNANCE.name(), "topmenubar.governance.menu.label");
-        governanceMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION,
+        governanceMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION,
                 IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION,
                 IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION, IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION));
         if (perspectiveKey == null) {
@@ -348,19 +348,19 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
         ClickableMenuItem milestonePlanningMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(1),
                 "topmenubar.governance.milestone_planning.menu.label", controllers.core.routes.MilestoneApprovalController.overview());
-        milestonePlanningMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION));
+        milestonePlanningMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION));
         governanceMenuItem.addSubMenuItem(milestonePlanningMenuItem);
 
         ClickableMenuItem provideApprovalMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(2), "topmenubar.governance.provide_approval.menu.label",
                 controllers.core.routes.MilestoneApprovalController.list(0));
         provideApprovalMenuItem.setAuthorizedPermissions(
-                SecurityUtils.getListOfArray(IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION));
+                Utilities.getListOfArray(IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION));
         governanceMenuItem.addSubMenuItem(provideApprovalMenuItem);
 
         ClickableMenuItem reviewRequestMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(3),
                 "topmenubar.governance.review_milestone_request.menu.label",
                 controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0));
-        reviewRequestMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION,
+        reviewRequestMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION,
                 IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION));
         governanceMenuItem.addSubMenuItem(reviewRequestMenuItem);
     }
@@ -370,39 +370,39 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineBizDockNewMenu() {
         HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label");
-        newMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION,
+        newMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION,
                 IMafConstants.ACTOR_EDIT_ALL_PERMISSION, IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION,
                 IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         TopMenuBar.getInstance().addMenuItem(newMenuItem);
 
         ClickableMenuItem newInitiativeMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.initiative.menu.label",
                 controllers.core.routes.PortfolioEntryController.createStep1());
-        newInitiativeMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
+        newInitiativeMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
         newMenuItem.addSubMenuItem(newInitiativeMenuItem);
 
         SeparatorMenuItem newSeparatorMenuItem = new SeparatorMenuItem();
-        newSeparatorMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION,
+        newSeparatorMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION,
                 IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newSeparatorMenuItem);
 
         ClickableMenuItem newActorMenuItem = new ClickableMenuItem(TopMenus.NEW.name(2), "topmenubar.new.actor.menu.label",
                 controllers.core.routes.ActorController.create());
-        newActorMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION));
+        newActorMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newActorMenuItem);
 
         ClickableMenuItem newOrgUnitMenuItem = new ClickableMenuItem(TopMenus.NEW.name(3), "topmenubar.new.org_unit.menu.label",
                 controllers.core.routes.OrgUnitController.create());
-        newOrgUnitMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION));
+        newOrgUnitMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newOrgUnitMenuItem);
 
         ClickableMenuItem newPortfolioMenuItem = new ClickableMenuItem(TopMenus.NEW.name(4), "topmenubar.new.portfolio.menu.label",
                 controllers.core.routes.PortfolioController.create());
-        newPortfolioMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION));
+        newPortfolioMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newPortfolioMenuItem);
 
         ClickableMenuItem newBudgetBucketMenuItem = new ClickableMenuItem(TopMenus.NEW.name(5), "topmenubar.new.budget_bucket.menu.label",
                 controllers.core.routes.BudgetBucketController.create());
-        newBudgetBucketMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
+        newBudgetBucketMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newBudgetBucketMenuItem);
 
     }
@@ -413,12 +413,12 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private void defineDevDockNewMenu() {
 
         HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label");
-        newMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
+        newMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
         TopMenuBar.getInstance().get(DEVDOCK_PERSPECTIVE_KEY).addMenuItem(newMenuItem);
 
         ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.release.menu.label",
                 controllers.core.routes.ReleaseController.create());
-        newReleaseMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
+        newReleaseMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newReleaseMenuItem);
     }
 
@@ -431,7 +431,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private void defineCockpitMenu(String perspectiveKey) {
         ClickableMenuItem cockpitMenuItem = new ClickableMenuItem(TopMenus.COCKPIT.name(), "topmenubar.cockpit.menu.label",
                 controllers.core.routes.CockpitController.initiatives(0, 0, false));
-        cockpitMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.COCKPIT_DISPLAY_PERMISSION));
+        cockpitMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.COCKPIT_DISPLAY_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(cockpitMenuItem);
         } else {
@@ -448,7 +448,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private void defineRoadmapMenu(String perspectiveKey) {
         ClickableMenuItem roadmapMenuItem = new ClickableMenuItem(TopMenus.ROADMAP.name(), "topmenubar.roadmap.menu.label",
                 controllers.core.routes.RoadmapController.index(false));
-        roadmapMenuItem.setAuthorizedPermissions(SecurityUtils.getListOfArray(IMafConstants.ROADMAP_DISPLAY_PERMISSION));
+        roadmapMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ROADMAP_DISPLAY_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(roadmapMenuItem);
         } else {

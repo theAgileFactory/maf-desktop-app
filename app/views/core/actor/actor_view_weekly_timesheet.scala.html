@@ -28,6 +28,7 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import framework_views.parts
 @import views.html.modelsparts._
+@import views.html.commons._
 
 @actor_template(parts.Msg.asString("core.actor.sidebar.timesheet"), actor, controllers.core.ActorController.MenuItemType.TIMESHEET){
 
@@ -130,7 +131,7 @@
                 </div>
 
                  
-                @if(security.DefaultDynamicResourceHandler.isStaticAllowedWithObject(security.DefaultDynamicResourceHandler.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION, "", report.id)) {
+                @if(_securityService.dynamic(constants.IMafConstants.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION, "", report.id)) {
                     @if(report.isProcessable) {
                         @helper.form(action = controllers.core.routes.TimesheetController.processTimesheet()) {
                             <input type="hidden" name="id" value="@report.id" />

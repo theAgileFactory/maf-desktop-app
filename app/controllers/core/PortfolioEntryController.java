@@ -45,8 +45,8 @@ import dao.governance.LifeCycleProcessDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
-import framework.security.SecurityUtils;
 import framework.services.account.AccountManagementException;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -89,7 +89,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import services.licensesmanagement.ILicensesManagementService;
 import utils.MilestonesTrend;
@@ -120,6 +120,10 @@ public class PortfolioEntryController extends Controller {
     private IPluginManagerService pluginManagerService;
     @Inject
     private IAttachmentManagerPlugin attachmentManagerPlugin;
+    @Inject
+    private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -379,12 +383,12 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
     public Result overview(Long id) {
 
         // if the user is not permitted to see the details of the PE, then
         // redirect him to the view page
-        if (!SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "")) {
+        if (!getSecurityService().dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "")) {
             return redirect(controllers.core.routes.PortfolioEntryController.view(id, 0));
         }
 
@@ -405,7 +409,7 @@ public class PortfolioEntryController extends Controller {
         LifeCycleInstance activeLifeCycleProcessInstance = portfolioEntry.activeLifeCycleInstance;
         List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao
                 .getLCMilestoneInstanceAsListByLCInstance(activeLifeCycleProcessInstance.id);
-        MilestonesTrend milestonesTrend = new MilestonesTrend(activeLifeCycleProcessInstance.lifeCycleProcess.lifeCycleMilestones, milestoneInstances);
+        MilestonesTrend milestonesTrend = new MilestonesTrend(activeLifeCycleProcessInstance.lifeCycleProcess.lifeCycleMilestones, milestoneInstances, getMessagesPlugin(),getSecurityService());
 
         return ok(views.html.core.portfolioentry.portfolio_entry_overview.render(portfolioEntry, milestonesTable, milestonesTrend));
     }
@@ -419,7 +423,7 @@ public class PortfolioEntryController extends Controller {
      *            the current page for the attachment table
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
     public Result view(Long id, Integer attachmentPage) {
 
         // get the portfolioEntry
@@ -447,7 +451,7 @@ public class PortfolioEntryController extends Controller {
         }
 
         Set<String> columnsToHideForDependencies = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             columnsToHideForDependencies.add("deleteActionLink");
         }
 
@@ -475,7 +479,7 @@ public class PortfolioEntryController extends Controller {
         }
 
         Set<String> hideColumns = new HashSet<String>();
-        if (!SecurityUtils.dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
 
@@ -493,7 +497,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result edit(Long id) {
 
         // get the portfolioEntry
@@ -512,7 +516,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result editCustomAttr(Long id) {
 
         // get the portfolioEntry
@@ -531,7 +535,7 @@ public class PortfolioEntryController extends Controller {
      * Process the update of the standard attributes of a portfolio entry.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processEdit() {
 
         // bind the form
@@ -566,7 +570,7 @@ public class PortfolioEntryController extends Controller {
      * Process the update of the custom attributes of a portfolio entry.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processEditCustomAttr() {
 
         // bind the form
@@ -597,7 +601,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result pluginConfig(Long id) {
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -616,7 +620,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION)
     public Result delete(Long id) {
 
         // get the portfolioEntry
@@ -640,7 +644,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result editPortfolios(Long id) {
 
         // get the portfolioEntry
@@ -660,7 +664,7 @@ public class PortfolioEntryController extends Controller {
      * Process the update of the selected portfolios of a portfolio entry.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processEditPortfolios() {
 
         // bind the form
@@ -697,7 +701,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result createAttachment(Long id) {
 
         // get the portfolioEntry
@@ -713,7 +717,7 @@ public class PortfolioEntryController extends Controller {
      * Process the creation of the attachment.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processCreateAttachment() {
 
         Form<AttachmentFormData> boundForm = attachmentFormTemplate.bindFromRequest();
@@ -748,7 +752,7 @@ public class PortfolioEntryController extends Controller {
      *            the attachment id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteAttachment(Long id, Long attachmentId) {
 
         // get the attachment
@@ -776,7 +780,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result addDependency(Long id) {
 
         // get the portfolio entry
@@ -789,7 +793,7 @@ public class PortfolioEntryController extends Controller {
      * Process the form to add a dependency.
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processAddDependency() {
 
         // bind the form
@@ -840,7 +844,7 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry dependency id (type part)
      */
     @With(CheckPortfolioEntryExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteDependency(Long id, Long peDepSourceId, Long peDepDestinationId, Long peDepTypeId) {
 
         PortfolioEntryDependency dependency = PortfolioEntryDao.getPEDependencyById(peDepSourceId, peDepDestinationId, peDepTypeId);
@@ -874,7 +878,7 @@ public class PortfolioEntryController extends Controller {
 
                 Expression expression = Expr.or(Expr.ilike("name", query + "%"), Expr.ilike("governanceId", query + "%"));
 
-                for (PortfolioEntry portfolioEntry : PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression).findList()) {
+                for (PortfolioEntry portfolioEntry : PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService()).findList()) {
                     portfolioEntries.add(new DefaultSelectableValueHolder<Long>(portfolioEntry.id, portfolioEntry.getName()));
                 }
 
@@ -905,12 +909,14 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      * @param currentType
      *            the current menu item type, useful to select the correct item
+     * @param securityService 
+     *            the security service
      */
-    public static SideBar getIconsBar(Boolean isDataSyndicationActive, Long portfolioEntryId, MenuItemType currentType) {
+    public static SideBar getIconsBar(Boolean isDataSyndicationActive, Long portfolioEntryId, MenuItemType currentType, ISecurityService securityService) {
 
         SideBar sideBar = new SideBar();
 
-        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "",
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "",
                 portfolioEntryId)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.overview.label",
                     controllers.core.routes.PortfolioEntryController.overview(portfolioEntryId), "glyphicons glyphicons-radar",
@@ -921,7 +927,7 @@ public class PortfolioEntryController extends Controller {
                 new ClickableMenuItem("core.portfolio_entry.sidebar.view.label", controllers.core.routes.PortfolioEntryController.view(portfolioEntryId, 0),
                         "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.VIEW)));
 
-        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "",
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "",
                 portfolioEntryId)) {
 
             HeaderMenuItem financialMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.financial.label", "glyphicons glyphicons-coins",
@@ -940,7 +946,7 @@ public class PortfolioEntryController extends Controller {
                 controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntryId), "glyphicons glyphicons-group",
                 currentType.equals(MenuItemType.STAKEHOLDERS)));
 
-        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "",
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "",
                 portfolioEntryId)) {
 
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.governance.label",
@@ -993,7 +999,7 @@ public class PortfolioEntryController extends Controller {
 
         }
 
-        if (DefaultDynamicResourceHandler.isStaticAllowedWithObject(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "",
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "",
                 portfolioEntryId)) {
 
             HeaderMenuItem integrationMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.integration.label", "glyphicons glyphicons-cloud",
@@ -1039,6 +1045,14 @@ public class PortfolioEntryController extends Controller {
 
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
     }
 
 }

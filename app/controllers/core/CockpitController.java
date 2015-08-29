@@ -25,6 +25,40 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.ExpressionList;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import dao.delivery.ReleaseDAO;
+import dao.finance.PortfolioEntryResourcePlanDAO;
+import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
+import dao.pmo.PortfolioDao;
+import dao.pmo.PortfolioEntryDao;
+import dao.pmo.StakeholderDao;
+import dao.timesheet.TimesheetDao;
+import framework.services.ServiceStaticAccessor;
+import framework.services.account.AccountManagementException;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.utils.FilterConfig;
+import framework.utils.IColumnFormatter;
+import framework.utils.JqueryGantt;
+import framework.utils.Menu.ClickableMenuItem;
+import framework.utils.Menu.HeaderMenuItem;
+import framework.utils.Msg;
+import framework.utils.Pagination;
+import framework.utils.SideBar;
+import framework.utils.Table;
 import models.delivery.Release;
 import models.finance.BudgetBucket;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
@@ -35,12 +69,10 @@ import models.pmo.PortfolioEntry;
 import models.sql.ActorHierarchy;
 import models.timesheet.TimesheetActivityAllocatedActor;
 import models.timesheet.TimesheetReport;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.ISecurityService;
 import security.dynamic.BudgetBucketDynamicHelper;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
@@ -56,39 +88,6 @@ import utils.table.PortfolioListView;
 import utils.table.ReleaseListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
 import utils.table.TimesheetReportListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.Expression;
-import com.avaje.ebean.ExpressionList;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-import constants.IMafConstants;
-import controllers.ControllersUtils;
-import dao.delivery.ReleaseDAO;
-import dao.finance.PortfolioEntryResourcePlanDAO;
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import dao.pmo.PortfolioDao;
-import dao.pmo.PortfolioEntryDao;
-import dao.pmo.StakeholderDao;
-import dao.timesheet.TimesheetDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.FilterConfig;
-import framework.utils.IColumnFormatter;
-import framework.utils.JqueryGantt;
-import framework.utils.Menu.ClickableMenuItem;
-import framework.utils.Menu.HeaderMenuItem;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.SideBar;
-import framework.utils.Table;
 
 /**
  * The controller which displays different cockpits of the sign in user.
@@ -99,6 +98,8 @@ import framework.utils.Table;
 public class CockpitController extends Controller {
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private ISecurityService securityService;
     
     private static Logger.ALogger log = Logger.of(CockpitController.class);
 
@@ -795,7 +796,7 @@ public class CockpitController extends Controller {
 
         ExpressionList<BudgetBucket> query = null;
         try {
-            query = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(ownerIdExpression, null);
+            query = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(ownerIdExpression, null, getSecurityService());
         } catch (Exception e) {
             Logger.error("impossible to construct the \"budget bucket view all\" query", e);
         }
@@ -879,8 +880,11 @@ public class CockpitController extends Controller {
      * 
      * @param currentType
      *            the current menu item type, useful to select the correct item
+     * @param securityService
+     *            the security service
+     * @throws AccountManagementException 
      */
-    public static SideBar getSideBar(MenuItemType currentType) {
+    public static SideBar getSideBar(MenuItemType currentType, ISecurityService securityService) throws AccountManagementException {
 
         SideBar sideBar = new SideBar();
 
@@ -923,14 +927,14 @@ public class CockpitController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.org_units", controllers.core.routes.CockpitController.orgUnits(0, false),
                 "glyphicons glyphicons-building", currentType.equals(MenuItemType.MY_ORG_UNITS)));
 
-        if (SecurityUtils.isAllowed(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
-                || SecurityUtils.isAllowed(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
+        if (securityService.currentUserHasRole(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
+                || securityService.currentUserHasRole(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.budget_buckets", controllers.core.routes.CockpitController.budgetBuckets(0, 0,
                     false, false), "glyphicons glyphicons-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
         }
 
-        if (SecurityUtils.isAllowed(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
-                || SecurityUtils.isAllowed(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
+        if (securityService.currentUserHasRole(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
+                || securityService.currentUserHasRole(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.releases", controllers.core.routes.CockpitController.releases(0, false),
                     "glyphicons glyphicons-git-branch", currentType.equals(MenuItemType.MY_RELEASES)));
         }
@@ -1042,6 +1046,14 @@ public class CockpitController extends Controller {
 
     }
 
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
+    }
+
     /**
      * The menu item type.
      * 
@@ -1050,9 +1062,5 @@ public class CockpitController extends Controller {
      */
     public static enum MenuItemType {
         MY_INITIATIVES, MY_PORTFOLIOS, MY_EMPLOYEES, MY_ORG_UNITS, MY_BUDGET_BUCKETS, MY_RELEASES, MY_EMPLOYEE_CARD;
-    }
-
-    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
-        return userSessionManagerPlugin;
     }
 }

@@ -18,6 +18,7 @@
 package security;
 
 import dao.finance.BudgetBucketDAO;
+import framework.utils.Utilities;
 import models.finance.BudgetBucket;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
@@ -35,7 +36,7 @@ public class CheckBudgetBucketExists extends Action.Simple {
     @Override
     public Promise<Result> call(final Http.Context ctx) throws Throwable {
 
-        Long id = DefaultDynamicResourceHandler.getId(ctx);
+        Long id = Utilities.getId(ctx);
         if (id != null) {
             BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
             if (budgetBucket != null) {

@@ -30,7 +30,7 @@
         <div class="caption text-center">
             <h4>@parts.Msg(pluginInfoPair.getRight().getStaticDescriptor().getName())</h4>
             <p>@pluginInfoPair.getMiddle()</p>
-            @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+            @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                 @if(pluginInfoPair.getRight().getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTED) &&
                     pluginInfoPair.getRight().getConfigurator()!=null &&
                     pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration()!=null &&

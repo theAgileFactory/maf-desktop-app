@@ -46,7 +46,7 @@
             @parts.Msg("core.portfolio_entry_financial.budget_line.view.title")
             
             <div class="pull-right">
-                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
                     <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id, budgetLine.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                 }
             </div>

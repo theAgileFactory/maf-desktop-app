@@ -20,10 +20,11 @@
 @import framework_views.parts
 @import framework.utils.SideBar
 @import framework.utils.Menu.ClickableMenuItem
+@import views.html.commons._
 
 @templates.main_bc_iconsbar(
     orgUnit.getName,
-    controllers.core.OrgUnitController.getSideBar(orgUnit.id, currentType),
+    controllers.core.OrgUnitController.getSideBar(orgUnit.id, currentType, _securityService),
     Seq(
         (orgUnit.getName,controllers.core.routes.OrgUnitController.view(orgUnit.id).url),
         (pageSubTitle, null)

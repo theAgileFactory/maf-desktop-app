@@ -20,10 +20,11 @@
 )
 
 @import framework_views.parts
+@import views.html.commons._
 
 @templates.main_bc_iconsbar(
     parts.Msg.asString("core.cockpit.sidebar.subordinates"),
-    controllers.core.CockpitController.getSideBar(controllers.core.CockpitController.MenuItemType.MY_EMPLOYEES),
+    controllers.core.CockpitController.getSideBar(controllers.core.CockpitController.MenuItemType.MY_EMPLOYEES, _securityService),
     Seq(
         ("topmenubar.cockpit.menu.label", controllers.core.routes.CockpitController.initiatives().url),
         ("core.cockpit.sidebar.subordinates", null)

@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import constants.IMafConstants;
 import models.governance.LifeCycleMilestone;
 import models.governance.LifeCycleMilestoneInstance;
 import models.governance.PlannedLifeCycleMilestoneInstance;
-import security.DefaultDynamicResourceHandler;
+import security.ISecurityService;
 import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
-import framework.utils.Msg;
-import framework.security.SecurityUtils;
+import framework.services.configuration.II18nMessagesPlugin;
 
 /**
  * Compute and display the milestones trend table.
@@ -41,10 +41,11 @@ import framework.security.SecurityUtils;
  * 
  */
 public class MilestonesTrend {
-
     List<LifeCycleMilestone> lifeCycleMilestones;
     List<Row> rows;
     Long portfolioEntryId;
+    private ISecurityService securityService;
+    private II18nMessagesPlugin messagesPlugin;
 
     /**
      * Construct the trend milestones.
@@ -53,13 +54,21 @@ public class MilestonesTrend {
      *            the milestones of the process
      * @param milestoneInstances
      *            the approved milestone instances of the process instance
+     * @param messagesPlugin
+     *            the i18n service
      */
-    public MilestonesTrend(List<LifeCycleMilestone> lifeCycleMilestones, List<LifeCycleMilestoneInstance> milestoneInstances) {
+    public MilestonesTrend(
+            List<LifeCycleMilestone> lifeCycleMilestones, 
+            List<LifeCycleMilestoneInstance> milestoneInstances,
+            II18nMessagesPlugin messagesPlugin,
+            ISecurityService securityService) {
         this.lifeCycleMilestones = lifeCycleMilestones;
+        this.securityService=securityService;
         this.rows = new ArrayList<>();
+        this.messagesPlugin=messagesPlugin;
         Row lastRow = null;
         for (LifeCycleMilestoneInstance milestoneInstance : milestoneInstances) {
-            Row row = new Row(lastRow, lifeCycleMilestones, milestoneInstance);
+            Row row = new Row(lastRow, lifeCycleMilestones, milestoneInstance, messagesPlugin);
             this.rows.add(row);
             lastRow = row;
             this.portfolioEntryId = milestoneInstance.lifeCycleInstance.portfolioEntry.id;
@@ -79,7 +88,7 @@ public class MilestonesTrend {
             // colgroup
             table += "<colgroup>";
             table += "<col class=\"col-md-1\">";
-            if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
+            if (getSecurityService().dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
                 table += "<col class=\"col-md-1\">";
             }
             table += "<col class=\"col-md-1\">";
@@ -90,13 +99,13 @@ public class MilestonesTrend {
 
             // header
             table += "<thead><tr>";
-            table += "<th style=\"white-space: nowrap\">" + Msg.get("core.portfolio_entry.overview.milestones_trend.panel.milestone.label") + "</th>";
-            if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
+            table += "<th style=\"white-space: nowrap\">" + getMessagesPlugin().get("core.portfolio_entry.overview.milestones_trend.panel.milestone.label") + "</th>";
+            if (getSecurityService().dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
                 table +=
-                        "<th style=\"white-space: nowrap\">" + Msg.get("core.portfolio_entry.overview.milestones_trend.panel.budget.label") + " ("
+                        "<th style=\"white-space: nowrap\">" + getMessagesPlugin().get("core.portfolio_entry.overview.milestones_trend.panel.budget.label") + " ("
                                 + CurrencyDAO.getCurrencyDefaultAsCode() + ")" + "</th>";
             }
-            table += "<th style=\"white-space: nowrap\">" + Msg.get("core.portfolio_entry.overview.milestones_trend.panel.resources.label") + "</th>";
+            table += "<th style=\"white-space: nowrap\">" + getMessagesPlugin().get("core.portfolio_entry.overview.milestones_trend.panel.resources.label") + "</th>";
             for (LifeCycleMilestone milestone : lifeCycleMilestones) {
                 table += "<th style=\"white-space: nowrap\">" + milestone.getShortName() + "</th>";
             }
@@ -113,7 +122,7 @@ public class MilestonesTrend {
                                 + controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(this.portfolioEntryId, row.lifeCycleMilestoneId)
                                         .url() + "\"></a>" + row.milestoneInstance.lifeCycleMilestone.getShortName() + "</td>";
 
-                if (SecurityUtils.dynamic(DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
+                if (getSecurityService().dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "")) {
                     table += "<td style=\"white-space: nowrap\">" + row.renderBugdteContent() + "</td>";
                 }
 
@@ -136,7 +145,7 @@ public class MilestonesTrend {
             return table;
 
         } else {
-            return Msg.get("core.portfolio_entry.overview.milestones_trend.panel.empty");
+            return getMessagesPlugin().get("core.portfolio_entry.overview.milestones_trend.panel.empty");
         }
     }
 
@@ -147,7 +156,7 @@ public class MilestonesTrend {
      * 
      */
     public static class Row {
-
+        private II18nMessagesPlugin messagesPlugin;
         Long lifeCycleMilestoneId;
         LifeCycleMilestoneInstance milestoneInstance;
         DecimalCell opexAmount;
@@ -164,11 +173,13 @@ public class MilestonesTrend {
          *            the milestones of the process
          * @param milestoneInstance
          *            the milestone instance
+         * @param messagesPlugin
+         *            the i18n service
          */
-        public Row(Row lastRow, List<LifeCycleMilestone> lifeCycleMilestones, LifeCycleMilestoneInstance milestoneInstance) {
-
+        public Row(Row lastRow, List<LifeCycleMilestone> lifeCycleMilestones, LifeCycleMilestoneInstance milestoneInstance, II18nMessagesPlugin messagesPlugin) {
             this.milestoneInstance = milestoneInstance;
             this.lifeCycleMilestoneId = milestoneInstance.lifeCycleMilestone.id;
+            this.messagesPlugin=messagesPlugin;
 
             BigDecimal lastResourcesValue = lastRow != null ? lastRow.resources.value : null;
             BigDecimal lastOpexAmountValue = lastRow != null ? lastRow.opexAmount.value : null;
@@ -221,7 +232,7 @@ public class MilestonesTrend {
          *            the i18n key
          */
         public String renderResourcesContent(String i18nKey) {
-            return Msg.get(i18nKey, resources.value) + resources.renderArrow();
+            return getMessagesPlugin().get(i18nKey, resources.value) + resources.renderArrow();
         }
 
         /**
@@ -235,6 +246,10 @@ public class MilestonesTrend {
                     "CAPEX: " + views.html.framework_views.parts.formats.display_number.render(capexAmount.value, null, false).body()
                             + capexAmount.renderArrow();
             return opexContent + "<br/>" + capexContent;
+        }
+
+        private II18nMessagesPlugin getMessagesPlugin() {
+            return messagesPlugin;
         }
 
     }
@@ -334,5 +349,13 @@ public class MilestonesTrend {
                 return "<td class=\"bg-warning\">&nbsp;</td>";
             }
         }
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
     }
 }

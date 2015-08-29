@@ -22,21 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.pmo.Portfolio;
-import models.pmo.PortfolioEntry;
-import models.pmo.Stakeholder;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
-import security.CheckPortfolioExists;
-import security.DefaultDynamicResourceHandler;
-import utils.form.PortfolioFormData;
-import utils.table.PortfolioEntryListView;
-import utils.table.PortfolioMilestoneListView;
-import utils.table.PortfolioReportListView;
-import utils.table.PortfolioStakeholderListView;
+import javax.inject.Inject;
+
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -53,7 +40,21 @@ import framework.utils.Pagination;
 import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.security.SecurityUtils;
+import models.governance.PlannedLifeCycleMilestoneInstance;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioEntry;
+import models.pmo.Stakeholder;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import security.CheckPortfolioExists;
+import security.ISecurityService;
+import utils.form.PortfolioFormData;
+import utils.table.PortfolioEntryListView;
+import utils.table.PortfolioMilestoneListView;
+import utils.table.PortfolioReportListView;
+import utils.table.PortfolioStakeholderListView;
 
 /**
  * The controller which displays / allows to edit a portfolio.
@@ -61,6 +62,8 @@ import framework.security.SecurityUtils;
  * @author Johann Kohler
  */
 public class PortfolioController extends Controller {
+    @Inject
+    private ISecurityService securityService;
 
     public static Form<PortfolioFormData> formTemplate = Form.form(PortfolioFormData.class);
 
@@ -71,7 +74,7 @@ public class PortfolioController extends Controller {
      *            the portfolio id
      */
     @With(CheckPortfolioExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_VIEW_DYNAMIC_PERMISSION)
     public Result overview(Long id) {
 
         // get the portfolio
@@ -105,7 +108,7 @@ public class PortfolioController extends Controller {
      *            the current page for the stakeholders table
      */
     @With(CheckPortfolioExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_VIEW_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_VIEW_DYNAMIC_PERMISSION)
     public Result view(Long id, Integer portfolioEntryPage, Integer stakeholderPage) {
 
         // get the portfolio
@@ -136,7 +139,7 @@ public class PortfolioController extends Controller {
 
         Set<String> hideColumnsForStakeholder = new HashSet<String>();
         hideColumnsForStakeholder.add("portfolio");
-        if (!SecurityUtils.dynamic("PORTFOLIO_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic("PORTFOLIO_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForStakeholder.add("editActionLink");
             hideColumnsForStakeholder.add("removeActionLink");
         }
@@ -200,7 +203,7 @@ public class PortfolioController extends Controller {
      *            the portfolio id
      */
     @With(CheckPortfolioExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
     public Result edit(Long id) {
 
         // get the portfolio
@@ -219,7 +222,7 @@ public class PortfolioController extends Controller {
      * Process the update of a portfolio.
      */
     @With(CheckPortfolioExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
     public Result save() {
 
         // bind the form
@@ -258,7 +261,7 @@ public class PortfolioController extends Controller {
      *            the portfolio id
      */
     @With(CheckPortfolioExists.class)
-    @Dynamic(DefaultDynamicResourceHandler.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
+    @Dynamic(IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION)
     public Result delete(Long id) {
 
         // get the portfolio
@@ -303,5 +306,9 @@ public class PortfolioController extends Controller {
      */
     public static enum MenuItemType {
         OVERVIEW, VIEW;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 }

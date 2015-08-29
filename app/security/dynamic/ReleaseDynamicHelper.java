@@ -25,17 +25,13 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.delivery.ReleaseDAO;
 import dao.pmo.ActorDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
 import models.delivery.Release;
 import models.pmo.Actor;
 import play.Logger;
-import play.mvc.Http;
+import security.ISecurityService;
 
 /**
  * Provides all method to compute the dynamic permissions for a release.
@@ -53,25 +49,25 @@ public class ReleaseDynamicHelper {
      *            the ebean filter expression
      * @param orderBy
      *            the ebean order by
+     * @param securityService
+     *            the security service
      */
-    public static ExpressionList<Release> getReleasesViewAllowedAsQuery(Expression expression, OrderBy<Release> orderBy) throws AccountManagementException {
+    public static ExpressionList<Release> getReleasesViewAllowedAsQuery(Expression expression, OrderBy<Release> orderBy, ISecurityService securityService) throws AccountManagementException {
 
-        IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-        IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+        IUserAccount userAccount = securityService.getCurrentUser();
 
         String raw = "(";
 
         // user has permission RELEASE_VIEW_ALL_PERMISSION
         // OR
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_ALL_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.RELEASE_VIEW_ALL_PERMISSION)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission RELEASE_VIEW_AS_MANAGER_PERMISSION AND is the
         // manager of the release OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
+        if (actor != null && securityService.hasRole(userAccount, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
             raw += "manager.id = " + actor.id + " OR ";
         }
 
@@ -101,10 +97,12 @@ public class ReleaseDynamicHelper {
      * 
      * @param releaseId
      *            the release id
+     * @param securityService
+     *            the security service
      */
-    public static boolean isReleaseViewAllowed(Long releaseId) {
+    public static boolean isReleaseViewAllowed(Long releaseId, ISecurityService securityService) {
         try {
-            return getReleasesViewAllowedAsQuery(Expr.eq("id", releaseId), null).findRowCount() > 0 ? true : false;
+            return getReleasesViewAllowedAsQuery(Expr.eq("id", releaseId), null, securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("ReleaseDynamicHelper.isReleaseViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());
@@ -117,23 +115,23 @@ public class ReleaseDynamicHelper {
      * 
      * @param release
      *            the release to edit
+     * @param securityService
+     *            the security service
      */
-    public static boolean isReleaseEditAllowed(Release release) {
+    public static boolean isReleaseEditAllowed(Release release, ISecurityService securityService) {
 
         try {
-            IUserSessionManagerPlugin userSessionManagerPlugin = ServiceStaticAccessor.getUserSessionManagerPlugin();
-            IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(Http.Context.current()));
+            IUserAccount userAccount = securityService.getCurrentUser();
 
             // user has permission RELEASE_EDIT_ALL_PERMISSION OR
-            if (SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_ALL_PERMISSION)) {
+            if (securityService.hasRole(userAccount, IMafConstants.RELEASE_EDIT_ALL_PERMISSION)) {
                 return true;
             }
 
             // user has permission RELEASE_EDIT_AS_MANAGER_PERMISSION AND is
             // manager of the release
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && SecurityUtils.hasRole(userAccount, IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION) && actor.id.equals(release.manager.id)) {
+            if (actor != null && securityService.hasRole(userAccount, IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION) && actor.id.equals(release.manager.id)) {
                 return true;
             }
 

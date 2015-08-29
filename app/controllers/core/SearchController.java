@@ -20,6 +20,25 @@ package controllers.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import dao.finance.PurchaseOrderDAO;
+import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
+import framework.services.ServiceStaticAccessor;
+import framework.services.account.AccountManagementException;
+import framework.services.account.IUserAccount;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.Msg;
+import framework.utils.Table;
 import models.finance.BudgetBucket;
 import models.finance.PurchaseOrder;
 import models.pmo.Actor;
@@ -31,6 +50,7 @@ import play.data.Form;
 import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
+import security.ISecurityService;
 import security.dynamic.BudgetBucketDynamicHelper;
 import security.dynamic.PortfolioDynamicHelper;
 import security.dynamic.PortfolioEntryDynamicHelper;
@@ -40,25 +60,6 @@ import utils.table.OrgUnitListView;
 import utils.table.PortfolioEntryListView;
 import utils.table.PortfolioListView;
 import utils.table.PurchaseOrderListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.Expression;
-
-import constants.IMafConstants;
-import controllers.ControllersUtils;
-import dao.finance.PurchaseOrderDAO;
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import framework.security.SecurityUtils;
-import framework.services.ServiceStaticAccessor;
-import framework.services.account.AccountManagementException;
-import framework.services.account.IUserAccount;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.Msg;
-import framework.utils.Table;
 
 /**
  * The controller which allows to search entities.
@@ -67,13 +68,17 @@ import framework.utils.Table;
  */
 @Restrict({ @Group(IMafConstants.SEARCH_PERMISSION) })
 public class SearchController extends Controller {   
+    @Inject
+    private ISecurityService securityService;
+    
     private static Form<SearchFormData> formTemplate = Form.form(SearchFormData.class);
     private static Logger.ALogger log = Logger.of(SearchController.class);
 
     /**
      * The list of searchable entity types, its depends of the user permissions.
+     * @param securityService the security service
      */
-    public static DefaultSelectableValueHolderCollection<ObjectTypes> getObjectTypes() {
+    public static DefaultSelectableValueHolderCollection<ObjectTypes> getObjectTypes(ISecurityService securityService) {
 
         // get the current user
         IUserAccount userAccount = null;
@@ -93,11 +98,11 @@ public class SearchController extends Controller {
 
         objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit")));
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && SecurityUtils.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && securityService.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order")));
         }
 
-        if (SecurityUtils.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
+        if (securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.BUDGET_BUCKET, Msg.get("core.search.type.budget_bucket")));
         }
 
@@ -109,7 +114,7 @@ public class SearchController extends Controller {
      * Display the search form.
      */
     public Result index() {
-        return ok(views.html.core.search.index.render(formTemplate, getObjectTypes(), null));
+        return ok(views.html.core.search.index.render(formTemplate, getObjectTypes(getSecurityService()), null));
     }
 
     /**
@@ -121,7 +126,7 @@ public class SearchController extends Controller {
         Form<SearchFormData> boundForm = formTemplate.bindFromRequest();
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.core.search.index.render(boundForm, getObjectTypes(), null));
+            return ok(views.html.core.search.index.render(boundForm, getObjectTypes(getSecurityService()), null));
         }
 
         SearchFormData searchFormData = boundForm.get();
@@ -139,7 +144,7 @@ public class SearchController extends Controller {
                     Expr.ilike("refId", keywords + "%"));
             List<PortfolioEntry> portfolioEntries;
             try {
-                portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression).findList();
+                portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService()).findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
             }
@@ -170,7 +175,7 @@ public class SearchController extends Controller {
             List<Portfolio> portfolios = null;
             try {
                 portfolios = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(
-                        Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), Expr.ilike("refId", keywords + "%")), null)
+                        Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), Expr.ilike("refId", keywords + "%")), null, getSecurityService())
                         .findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -255,7 +260,7 @@ public class SearchController extends Controller {
             List<BudgetBucket> budgetBuckets;
             try {
                 budgetBuckets = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(
-                        Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), null).findList();
+                        Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), null, getSecurityService()).findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
             }
@@ -278,7 +283,7 @@ public class SearchController extends Controller {
             break;
         }
 
-        return ok(views.html.core.search.index.render(boundForm, getObjectTypes(), "core.search.submit.noresult"));
+        return ok(views.html.core.search.index.render(boundForm, getObjectTypes(getSecurityService()), "core.search.submit.noresult"));
     }
 
     /**
@@ -308,5 +313,9 @@ public class SearchController extends Controller {
      */
     public static enum ObjectTypes {
         PORTFOLIO_ENTRY, ACTOR, PORTFOLIO, ORGUNIT, PURCHASE_ORDER, BUDGET_BUCKET;
+    }
+
+    private ISecurityService getSecurityService() {
+        return securityService;
     }
 }

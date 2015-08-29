@@ -5,7 +5,7 @@ import javax.inject.Provider;
 
 import controllers.ControllersUtils;
 import controllers.api.ApiController;
-import framework.services.ServiceStaticAccessor;
+import framework.handlers.AbstractErrorHandler;
 import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
 import framework.services.router.ICustomRouterNotificationService;
@@ -14,20 +14,29 @@ import play.Environment;
 import play.Logger;
 import play.api.OptionalSourceMapper;
 import play.api.routing.Router;
-import play.http.DefaultHttpErrorHandler;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
-import play.mvc.Http.RequestHeader;
 import play.mvc.Controller;
 import play.mvc.Http;
+import play.mvc.Http.Context;
+import play.mvc.Http.RequestHeader;
+import security.ISecurityService;
+import services.datasyndication.IDataSyndicationService;
 import play.mvc.Result;
-import framework.handlers.AbstractErrorHandler;
 
+/**
+ * Handler registered to deal with errors
+ * @author Pierre-Yves Cloux
+ */
 public class MafHttpErrorHandler extends AbstractErrorHandler {
     private static Logger.ALogger log = Logger.of(MafHttpErrorHandler.class);
     
     @Inject
     private ICustomRouterNotificationService customRouterNotificationService;
+    @Inject
+    private IDataSyndicationService dataSyndicationService;
+    @Inject
+    private ISecurityService securityService;
 
     @Inject
     public MafHttpErrorHandler(Configuration configuration, Environment environment, OptionalSourceMapper optionalSourceMapper, Provider<Router> providerRouter) {
@@ -86,6 +95,13 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
 
     private ICustomRouterNotificationService getCustomRouterNotificationService() {
         return customRouterNotificationService;
+    }
+
+    @Override
+    protected void injectCommonServicesIncontext(Context context) {
+        super.injectCommonServicesIncontext(context);
+        context.args.put(IDataSyndicationService.class.getName(), dataSyndicationService);
+        context.args.put(ISecurityService.class.getName(), securityService);
     }
 
 

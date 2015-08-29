@@ -55,7 +55,7 @@
                     <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)"><span class="glyphicons glyphicons-download-alt glyphicons-panel"></span></a>
                     &nbsp;
                 }
-                @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                     <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                 }
             </div>
@@ -90,7 +90,7 @@
                             <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, false, viewAllIssues).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
                         }
                         &nbsp;
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                         }
                     </div>
@@ -117,7 +117,7 @@
                             <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, false).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
                         }
                         &nbsp;
-                        @dynamic(security.DefaultDynamicResourceHandler.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                             <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, 0, false).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
                         }
                     </div>
