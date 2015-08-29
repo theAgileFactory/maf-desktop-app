@@ -25,6 +25,7 @@ import com.avaje.ebean.OrderBy;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
+import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IUserAccount;
 import framework.utils.Utilities;
@@ -32,7 +33,6 @@ import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.sql.ActorHierarchy;
 import play.Logger;
-import security.ISecurityService;
 
 
 /**

@@ -6,6 +6,7 @@ import javax.inject.Provider;
 import controllers.ControllersUtils;
 import controllers.api.ApiController;
 import framework.handlers.AbstractErrorHandler;
+import framework.security.ISecurityService;
 import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
 import framework.services.router.ICustomRouterNotificationService;
@@ -20,7 +21,6 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Http.RequestHeader;
-import security.ISecurityService;
 import services.datasyndication.IDataSyndicationService;
 import play.mvc.Result;
 

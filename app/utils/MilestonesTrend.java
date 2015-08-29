@@ -26,12 +26,12 @@ import constants.IMafConstants;
 import models.governance.LifeCycleMilestone;
 import models.governance.LifeCycleMilestoneInstance;
 import models.governance.PlannedLifeCycleMilestoneInstance;
-import security.ISecurityService;
 import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
+import framework.security.ISecurityService;
 import framework.services.configuration.II18nMessagesPlugin;
 
 /**

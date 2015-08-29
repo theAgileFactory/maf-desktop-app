@@ -32,6 +32,7 @@ import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants;
 import framework.commons.message.EventMessage;
 import framework.commons.message.SystemLevelRoleTypeEventMessage;
+import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -46,7 +47,6 @@ import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.ISecurityService;
 import utils.form.RoleFormData;
 import utils.table.RoleListView;
 

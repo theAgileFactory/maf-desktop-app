@@ -18,12 +18,12 @@
 package utils.tour;
 
 import constants.IMafConstants;
+import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import play.twirl.api.Html;
-import security.ISecurityService;
 
 /**
  * Provide the methods to manage the help tour.

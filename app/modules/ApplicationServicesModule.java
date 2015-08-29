@@ -22,6 +22,7 @@ import framework.patcher.PatchManager;
 import framework.patcher.PatcherException;
 import framework.security.IAuthenticator;
 import framework.security.IInstanceAccessSupervisor;
+import framework.security.ISecurityService;
 import framework.services.account.AccountManagerPluginImpl;
 import framework.services.account.DefaultAuthenticationAccountReaderPlugin;
 import framework.services.account.DefaultAuthenticationAccountWriterPlugin;
@@ -77,8 +78,7 @@ import play.Environment;
 import play.Logger;
 import play.db.ebean.DefaultEbeanConfig;
 import play.db.ebean.EbeanConfig;
-import security.DefaultHandlerCache;
-import security.ISecurityService;
+import security.SecurityServiceImpl;
 import services.bizdockapi.BizdockApiClientImpl;
 import services.bizdockapi.IBizdockApiClient;
 import services.configuration.ImplementationDefinedObjectImpl;
@@ -130,8 +130,8 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IDatabaseDependencyService.class).to(DatabaseDependencyServiceImpl.class).asEagerSingleton();
         bind(IImplementationDefinedObjectService.class).to(ImplementationDefinedObjectImpl.class).asEagerSingleton();
 
-        bind(HandlerCache.class).to(DefaultHandlerCache.class).asEagerSingleton();
-        bind(ISecurityService.class).to(DefaultHandlerCache.class);
+        bind(HandlerCache.class).to(SecurityServiceImpl.class).asEagerSingleton();
+        bind(ISecurityService.class).to(SecurityServiceImpl.class);
 
         bind(IExtensionManagerService.class).to(ExtensionManagerServiceImpl.class).asEagerSingleton();
         bind(II18nMessagesPlugin.class).to(I18nMessagesPluginImpl.class).asEagerSingleton();

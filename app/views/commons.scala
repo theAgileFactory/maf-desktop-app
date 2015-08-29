@@ -12,5 +12,5 @@ object commons extends framework.handlers.ViewsInjector{
 	// Please see framework.handlers.AbstractRequestHandler
 	//-----------------------------------------------------------------------------------
 	val _dataSyndication=play.mvc.Http.Context.current().args.get(classOf[services.datasyndication.IDataSyndicationService].getName).asInstanceOf[services.datasyndication.IDataSyndicationService]
-    val _securityService=play.mvc.Http.Context.current().args.get(classOf[security.ISecurityService].getName).asInstanceOf[security.ISecurityService]
+    val _securityService=play.mvc.Http.Context.current().args.get(classOf[framework.security.ISecurityService].getName).asInstanceOf[framework.security.ISecurityService]
 }

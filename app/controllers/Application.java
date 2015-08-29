@@ -44,7 +44,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
-import security.ISecurityService;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import utils.table.NotificationListView;
 import utils.tour.TourUtils;
@@ -61,6 +60,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
+import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;

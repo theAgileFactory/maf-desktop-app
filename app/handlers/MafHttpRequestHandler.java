@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import javax.inject.Inject;
 
 import framework.handlers.AbstractRequestHandler;
+import framework.security.ISecurityService;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
 import framework.utils.Utilities;
@@ -13,7 +14,6 @@ import play.libs.F.Promise;
 import play.mvc.Action;
 import play.mvc.Http.Context;
 import play.mvc.Http.Request;
-import security.ISecurityService;
 import play.mvc.Result;
 import services.datasyndication.IDataSyndicationService;
 

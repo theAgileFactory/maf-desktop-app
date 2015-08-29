@@ -41,6 +41,7 @@ import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants.Syntax;
 import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
+import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
@@ -72,7 +73,6 @@ import play.data.validation.Constraints.Required;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.ISecurityService;
 
 /**
  * The GUI for managing the plugins.
