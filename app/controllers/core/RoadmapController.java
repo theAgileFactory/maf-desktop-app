@@ -523,7 +523,7 @@ public class RoadmapController extends Controller {
             allocationConfirmed = allocationConfirmed.add(entryAllocationDaysConfirmed);
             allocationNotConfirmed = allocationNotConfirmed.add(entryAllocationDaysNotConfirmed);
 
-            if (getSecurityService().currentUserHasRole(IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (getSecurityService().restrict(IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
 
                 // budget
                 Double entryBudgetCapex = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false);
@@ -1003,7 +1003,7 @@ public class RoadmapController extends Controller {
         Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fillForFilterConfig(portfolioEntryListView,
                 getColumnsToHide(filterConfig));
 
-        if (getSecurityService().currentUserHasRole(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
+        if (getSecurityService().restrict(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
 
             table.addAjaxRowAction(Msg.get("core.roadmap.simulator.capacity_kpis"), controllers.core.routes.RoadmapController.simulatorKpisFragment().url(),
                     "simulator-kpis");

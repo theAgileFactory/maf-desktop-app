@@ -87,7 +87,7 @@ public class TourUtils {
         } else {
 
             IPreferenceManagerPlugin preferenceService = ServiceStaticAccessor.getPreferenceManagerPlugin();
-            boolean isAdmin = securityService.currentUserHasRole(IMafConstants.ADMIN_CONFIGURATION_PERMISSION);
+            boolean isAdmin = securityService.restrict(IMafConstants.ADMIN_CONFIGURATION_PERMISSION);
 
             for (TourUid tourUid : TourUid.values()) {
                 if (preferenceService.getPreferenceValueAsBoolean(tourUid.name())) {

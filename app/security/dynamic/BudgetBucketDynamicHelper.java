@@ -62,14 +62,14 @@ public class BudgetBucketDynamicHelper {
 
         // user has permission BUDGET_BUCKET_VIEW_ALL_PERMISSION
         // OR
-        if (securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
+        if (securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION, userAccount)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION AND
         // user or his subordinates is owner of the budgetBucket OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
+        if (actor != null && securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION, userAccount)) {
 
             raw += "owner.id = " + actor.id + " OR ";
 
@@ -133,7 +133,7 @@ public class BudgetBucketDynamicHelper {
             IUserAccount userAccount = securityService.getCurrentUser();
 
             // user has permission BUDGET_BUCKET_EDIT_ALL_PERMISSION OR
-            if (securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION, userAccount)) {
                 Logger.debug("has BUDGET_BUCKET_EDIT_ALL_PERMISSION");
                 return true;
             }
@@ -141,7 +141,7 @@ public class BudgetBucketDynamicHelper {
             // user has permission BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION
             // AND is owner or responsible of the budget bucket
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION)
+            if (actor != null && securityService.restrict(IMafConstants.BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION, userAccount)
                     && (actor.id.equals(budgetBucket.owner.id) || ActorHierarchy.getSubordinatesAsId(actor.id).contains(budgetBucket.owner.id))) {
 
                 Logger.debug("has BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION and is owner or responsible");

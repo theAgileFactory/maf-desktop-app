@@ -57,14 +57,14 @@ public class ReportingDynamicHelper {
 
         // user has permission REPORTING_VIEW_ALL_PERMISSION
         // OR
-        if (securityService.hasRole(userAccount, IMafConstants.REPORTING_VIEW_ALL_PERMISSION)) {
+        if (securityService.restrict( IMafConstants.REPORTING_VIEW_ALL_PERMISSION,userAccount)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission
         // REPORTING_VIEW_AS_VIEWER_PERMISSION AND
         // (the report is public OR the user has access to it)
-        if (securityService.hasRole(userAccount, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION)) {
+        if (securityService.restrict( IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION,userAccount)) {
             raw += "(isPublic = 1 OR reportingAuthorization.principals.uid='" + userAccount.getIdentifier() + "') OR ";
         }
 

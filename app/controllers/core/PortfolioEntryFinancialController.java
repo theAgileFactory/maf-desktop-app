@@ -221,7 +221,7 @@ public class PortfolioEntryFinancialController extends Controller {
             // if the user hasn't the permission
             // PURCHASE_ORDER_VIEW_ALL_PERMISSION
             // then we remove the action line
-            if (!getSecurityService().hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
+            if (!getSecurityService().restrict(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION, userAccount)) {
                 lineItemsTable.setLineAction(null);
             }
 

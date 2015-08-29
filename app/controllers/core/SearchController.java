@@ -98,11 +98,11 @@ public class SearchController extends Controller {
 
         objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit")));
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && securityService.hasRole(userAccount, IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION)) {
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && securityService.restrict(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION, userAccount)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order")));
         }
 
-        if (securityService.hasRole(userAccount, IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)) {
+        if (securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION, userAccount)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.BUDGET_BUCKET, Msg.get("core.search.type.budget_bucket")));
         }
 

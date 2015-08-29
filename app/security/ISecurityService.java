@@ -106,13 +106,24 @@ public interface ISecurityService {
     /**
      * Check if the subject has the given role.
      *
-     * @param subject
-     *            an option for the subject
      * @param roleName
      *            the name of the role
+     * @param subject
+     *            an option for the subject
      * @return true iff the subject has the role represented by the role name
      */
-    public boolean hasRole(Subject subject, String roleName);
+    public boolean restrict(final String roleName, final Subject subject);
+    
+    /**
+     * Check if the specified subject has all the roles
+     * 
+     * @param roleNames
+     *            an array of role names
+     * @param subject
+     *            a subject
+     * @return true if the user has all the specified roles
+     */
+    public boolean restrict(final String[] roleNames, final Subject subject);
     
     /**
      * Check if the current user has the given role.
@@ -121,18 +132,8 @@ public interface ISecurityService {
      *            the name of the role
      * @return true iff the subject has the role represented by the role name
      */
-    public boolean currentUserHasRole(String roleName)throws AccountManagementException;
+    public boolean restrict(String roleName)throws AccountManagementException;
 
-    /**
-     * Check if the specified subject has all the roles
-     * 
-     * @param subject
-     *            a subject
-     * @param roleNames
-     *            an array of role names
-     * @return true if the user has all the specified roles
-     */
-    public boolean hasAllRoles(Subject subject, String[] roleNames);
     
     /**
      * Check if the current user has all the roles
@@ -141,6 +142,6 @@ public interface ISecurityService {
      *            an array of role names
      * @return true if the user has all the specified roles
      */
-    public boolean currentUserHasAllRoles(String[] roleNames)throws AccountManagementException;
+    public boolean restrict(String[] roleNames)throws AccountManagementException;
 
 }

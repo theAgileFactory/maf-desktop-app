@@ -927,14 +927,14 @@ public class CockpitController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.org_units", controllers.core.routes.CockpitController.orgUnits(0, false),
                 "glyphicons glyphicons-building", currentType.equals(MenuItemType.MY_ORG_UNITS)));
 
-        if (securityService.currentUserHasRole(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
-                || securityService.currentUserHasRole(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
+        if (securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
+                || securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.budget_buckets", controllers.core.routes.CockpitController.budgetBuckets(0, 0,
                     false, false), "glyphicons glyphicons-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
         }
 
-        if (securityService.currentUserHasRole(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
-                || securityService.currentUserHasRole(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
+        if (securityService.restrict(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
+                || securityService.restrict(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.releases", controllers.core.routes.CockpitController.releases(0, false),
                     "glyphicons glyphicons-git-branch", currentType.equals(MenuItemType.MY_RELEASES)));
         }

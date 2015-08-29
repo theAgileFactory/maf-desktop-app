@@ -61,7 +61,7 @@ public class PortfolioDynamicHelper {
 
         // user has permission PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION
         // OR
-        if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION)) {
+        if (securityService.restrict(IMafConstants.PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION, userAccount)) {
             raw += "1 = '1' OR ";
         }
 
@@ -71,14 +71,14 @@ public class PortfolioDynamicHelper {
             // user has permission
             // PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION AND
             // user is manager of the portfolio OR
-            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION, userAccount)) {
                 raw += "manager.id=" + actor.id + " OR ";
             }
 
             // user has permission
             // PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION AND
             // user is direct stakeholder of the portfolio
-            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION, userAccount)) {
                 raw += "(stakeholders.deleted=false AND stakeholders.actor.id=" + actor.id + ") OR ";
             }
 
@@ -137,7 +137,7 @@ public class PortfolioDynamicHelper {
             IUserAccount userAccount = securityService.getCurrentUser();
 
             // user has permission PORTFOLIO_EDIT_ALL_PERMISSION OR
-            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION, userAccount)) {
                 return true;
             }
 
@@ -145,7 +145,7 @@ public class PortfolioDynamicHelper {
             // PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION
             // AND user is manager of the portfolio
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION)
+            if (actor != null && securityService.restrict(IMafConstants.PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION, userAccount)
                     && actor.id.equals(portfolio.manager.id)) {
                 return true;
             }
@@ -173,7 +173,7 @@ public class PortfolioDynamicHelper {
             // user has permission
             // PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION
             // OR
-            if (securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION, userAccount)) {
                 return true;
             }
 
@@ -181,7 +181,7 @@ public class PortfolioDynamicHelper {
             // PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION
             // AND is manager of the portfolio
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && securityService.hasRole(userAccount, IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION)
+            if (actor != null && securityService.restrict(IMafConstants.PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION, userAccount)
                     && actor.id.equals(portfolio.manager.id)) {
                 return true;
             }

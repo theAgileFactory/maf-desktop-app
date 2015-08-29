@@ -61,14 +61,14 @@ public class OrgUnitDynamicHelper {
 
         // user has permission ORG_UNIT_VIEW_ALL_PERMISSION
         // OR
-        if (securityService.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_ALL_PERMISSION)) {
+        if (securityService.restrict(IMafConstants.ORG_UNIT_VIEW_ALL_PERMISSION, userAccount)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION AND
         // user or his subordinates is manager of the orgUnit OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && securityService.hasRole(userAccount, IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION)) {
+        if (actor != null && securityService.restrict( IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION, userAccount)) {
 
             raw += "manager.id = " + actor.id + " OR ";
 

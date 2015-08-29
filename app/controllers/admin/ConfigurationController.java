@@ -107,11 +107,11 @@ public class ConfigurationController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION), @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) })
     public Result index() throws AccountManagementException {
 
-        if (getSecurityService().currentUserHasRole(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
+        if (getSecurityService().restrict(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationController.systemPreferences());
         }
 
-        if (getSecurityService().currentUserHasRole(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION)) {
+        if (getSecurityService().restrict(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.list(IMafConstants.PortfolioEntry));
         }
 

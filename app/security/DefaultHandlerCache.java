@@ -189,9 +189,6 @@ public class DefaultHandlerCache implements HandlerCache, ISecurityService {
         return getDefaultHandler().isAllowed(name, meta, get(), id).get(DEFAULT_TIMEOUT);
     }
 
-    /* (non-Javadoc)
-     * @see security.ISecurityService#restrict(java.util.List)
-     */
     @Override
     public boolean restrict(List<String[]> deadBoltRoles) {
         try {
@@ -216,9 +213,6 @@ public class DefaultHandlerCache implements HandlerCache, ISecurityService {
         }
     }
 
-    /* (non-Javadoc)
-     * @see security.ISecurityService#restrict(java.util.List, java.lang.String)
-     */
     @Override
     public boolean restrict(List<String[]> deadBoltRoles, String uid) {
         try {
@@ -234,9 +228,6 @@ public class DefaultHandlerCache implements HandlerCache, ISecurityService {
         }
     }
 
-    /* (non-Javadoc)
-     * @see security.ISecurityService#restrict(java.util.List, be.objectify.deadbolt.core.models.Subject)
-     */
     @Override
     public boolean restrict(List<String[]> deadBoltRoles, Subject subject) {
         try {
@@ -255,30 +246,24 @@ public class DefaultHandlerCache implements HandlerCache, ISecurityService {
         }
     }
 
-    /* (non-Javadoc)
-     * @see security.ISecurityService#hasRole(be.objectify.deadbolt.core.models.Subject, java.lang.String)
-     */
     @Override
-    public boolean hasRole(final Subject subject, final String roleName) {
+    public boolean restrict(final String roleName, final Subject subject) {
         return getDeadBoltAnalyzer().hasRole(Optional.of(subject), roleName);
     }
 
-    /* (non-Javadoc)
-     * @see security.ISecurityService#hasAllRoles(be.objectify.deadbolt.core.models.Subject, java.lang.String[])
-     */
     @Override
-    public boolean hasAllRoles(final Subject subject, final String[] roleNames) {
+    public boolean restrict(final String[] roleNames, final Subject subject) {
         return getDeadBoltAnalyzer().hasAllRoles(Optional.of(subject), roleNames);
     }
 
     @Override
-    public boolean currentUserHasRole(String roleName) throws AccountManagementException {
-        return hasRole(getCurrentUser(), roleName);
+    public boolean restrict(String roleName) throws AccountManagementException {
+        return restrict(roleName, getCurrentUser());
     }
 
     @Override
-    public boolean currentUserHasAllRoles(String[] roleNames) throws AccountManagementException {
-        return hasAllRoles(getCurrentUser(), roleNames);
+    public boolean restrict(String[] roleNames) throws AccountManagementException {
+        return restrict(roleNames, getCurrentUser());
     }
 
     private JavaAnalyzer getDeadBoltAnalyzer() {

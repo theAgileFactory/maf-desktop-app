@@ -64,7 +64,7 @@ public class TimesheetReportDynamicHelper {
 
         // user has permission TIMESHEET_APPROVAL_ALL_PERMISSION
         // OR
-        if (securityService.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION)) {
+        if (securityService.restrict( IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION,userAccount)) {
             raw += "1 = '1' OR ";
         }
 
@@ -72,7 +72,7 @@ public class TimesheetReportDynamicHelper {
         // TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION AND
         // user or his subordinates is manager of the actor of the report OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && securityService.hasRole(userAccount, IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION)) {
+        if (actor != null && securityService.restrict( IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION,userAccount)) {
 
             raw += "actor.manager.id=" + actor.id + " OR ";
 

@@ -282,8 +282,8 @@ public class PluginManagerController extends Controller {
             @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
     public Result index() throws AccountManagementException {
 
-        if (!getSecurityService().currentUserHasRole(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
-            if (getSecurityService().currentUserHasRole(IMafConstants.API_MANAGER_PERMISSION)) {
+        if (!getSecurityService().restrict(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION)) {
+            if (getSecurityService().restrict(IMafConstants.API_MANAGER_PERMISSION)) {
                 return redirect(controllers.admin.routes.ApiManagerController.index());
             } else {
                 return redirect(controllers.admin.routes.DataSyndicationController.viewMasterAgreements());

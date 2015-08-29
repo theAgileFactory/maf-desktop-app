@@ -58,7 +58,7 @@ public class ActorDynamicHelper {
 
         // user has permission ACTOR_VIEW_ALL_PERMISSION
         // OR
-        if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_VIEW_ALL_PERMISSION)) {
+        if (securityService.restrict(IMafConstants.ACTOR_VIEW_ALL_PERMISSION, currentUserAccount)) {
             raw += "1 = '1' OR ";
         }
 
@@ -71,7 +71,7 @@ public class ActorDynamicHelper {
             // user has permission
             // ACTOR_VIEW_AS_SUPERIOR_PERMISSION AND
             // user or his subordinates is manager of the actor OR
-            if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.ACTOR_VIEW_AS_SUPERIOR_PERMISSION, currentUserAccount)) {
                 raw += "manager.id = " + actor.id + " OR ";
 
                 String subordinatesString = ActorHierarchy.getSubordinatesAsString(actor.id, ",");
@@ -135,7 +135,7 @@ public class ActorDynamicHelper {
         try {
             IUserAccount currentUserAccount=securityService.getCurrentUser();
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.ACTOR_EDIT_ALL_PERMISSION, currentUserAccount)) {
                 return true;
             }
 
@@ -168,7 +168,7 @@ public class ActorDynamicHelper {
         try {
             IUserAccount currentUserAccount=securityService.getCurrentUser();
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
-            if (securityService.hasRole(currentUserAccount, IMafConstants.ACTOR_EDIT_ALL_PERMISSION)) {
+            if (securityService.restrict(IMafConstants.ACTOR_EDIT_ALL_PERMISSION, currentUserAccount)) {
                 return true;
             }
 

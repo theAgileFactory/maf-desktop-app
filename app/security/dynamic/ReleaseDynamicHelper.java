@@ -60,14 +60,14 @@ public class ReleaseDynamicHelper {
 
         // user has permission RELEASE_VIEW_ALL_PERMISSION
         // OR
-        if (securityService.hasRole(userAccount, IMafConstants.RELEASE_VIEW_ALL_PERMISSION)) {
+        if (securityService.restrict( IMafConstants.RELEASE_VIEW_ALL_PERMISSION,userAccount)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission RELEASE_VIEW_AS_MANAGER_PERMISSION AND is the
         // manager of the release OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && securityService.hasRole(userAccount, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
+        if (actor != null && securityService.restrict( IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION,userAccount)) {
             raw += "manager.id = " + actor.id + " OR ";
         }
 
@@ -124,14 +124,14 @@ public class ReleaseDynamicHelper {
             IUserAccount userAccount = securityService.getCurrentUser();
 
             // user has permission RELEASE_EDIT_ALL_PERMISSION OR
-            if (securityService.hasRole(userAccount, IMafConstants.RELEASE_EDIT_ALL_PERMISSION)) {
+            if (securityService.restrict( IMafConstants.RELEASE_EDIT_ALL_PERMISSION,userAccount)) {
                 return true;
             }
 
             // user has permission RELEASE_EDIT_AS_MANAGER_PERMISSION AND is
             // manager of the release
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && securityService.hasRole(userAccount, IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION) && actor.id.equals(release.manager.id)) {
+            if (actor != null && securityService.restrict( IMafConstants.RELEASE_EDIT_AS_MANAGER_PERMISSION,userAccount) && actor.id.equals(release.manager.id)) {
                 return true;
             }
 
