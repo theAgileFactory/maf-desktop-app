@@ -92,7 +92,7 @@ public class BizdockApiClientImpl implements IBizdockApiClient {
                 contentString = getMapper().writeValueAsString(content);
                 Logger.info("contentString: " + contentString);
             } catch (JsonProcessingException e) {
-                throw new BizdockApiException(e.getMessage());
+                throw new BizdockApiException(e.getMessage(), 500);
             }
         }
 
@@ -106,7 +106,7 @@ public class BizdockApiClientImpl implements IBizdockApiClient {
             byte[] contentAsByte = contentString != null ? contentString.getBytes() : null;
             signatureAsByte = signatureGenerator.getRequestSignature(apiMethod, url, contentAsByte, timestamp.getTime());
         } catch (Exception e) {
-            throw new BizdockApiException(e.getMessage());
+            throw new BizdockApiException(e.getMessage(), 500);
         }
 
         // construct the request
@@ -155,7 +155,7 @@ public class BizdockApiClientImpl implements IBizdockApiClient {
         } else {
             String errorMessage = "BizDock API call error / url: " + url + " / status: " + responseContent.getLeft() + " / errors: "
                     + responseContent.getRight().toString();
-            throw new BizdockApiException(errorMessage);
+            throw new BizdockApiException(errorMessage, responseContent.getLeft());
         }
 
     }

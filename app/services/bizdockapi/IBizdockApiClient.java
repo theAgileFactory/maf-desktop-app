@@ -60,16 +60,29 @@ public interface IBizdockApiClient {
      *
      */
     public static class BizdockApiException extends Exception {
+
         private static final long serialVersionUID = 451215933974L;
+
+        private Integer httpStatusCode;
 
         /**
          * Construct with message.
          * 
          * @param message
          *            the exception message
+         * @param httpStatusCode
+         *            the HTTP status code
          */
-        public BizdockApiException(String message) {
+        public BizdockApiException(String message, Integer httpStatusCode) {
             super(message);
+            this.httpStatusCode = httpStatusCode;
+        }
+
+        /**
+         * Get the HTTP status code.
+         */
+        public Integer getHttpStatusCode() {
+            return this.httpStatusCode;
         }
 
     }

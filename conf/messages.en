@@ -669,6 +669,15 @@ data_syndication.cancel_agreement_link.notification.message=An agreement relatio
 data_syndication.delete_agreement_link.notification.title=Partner relation deleted
 data_syndication.delete_agreement_link.notification.message=The agreement relation {0} has been deleted because you or your partner has deleted the corresponding resource.
 
+data_syndication.post_data.error.E1001=Impossible the reach the partner instance.
+data_syndication.post_data.error.E1002=Impossible to get the corresponding partner object (where to post the data).
+data_syndication.post_data.error.E1003=The master or the partner object is not existing but it was impossible to delete the agreement relation.
+data_syndication.post_data.error.E1004=Impossible to post the syndicated data in the partner instance.
+data_syndication.post_data.error.E2001=The data type is currently not managed by BizDock.
+data_syndication.post_data.error.E2002=The master object is not existing, the agreement relation has been deleted.
+data_syndication.post_data.error.E2003=The partner object is not existing, the agreement relation has been deleted.
+data_syndication.post_data.error.E2004=The master or the partner object is not active, the synchronization is not done.
+
 ########################
 # Objects
 ########################

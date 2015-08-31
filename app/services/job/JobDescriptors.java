@@ -25,11 +25,13 @@ import javax.inject.Inject;
 import dao.pmo.ActorDao;
 import framework.services.ServiceStaticAccessor;
 import framework.services.job.IJobDescriptor;
+import framework.utils.Msg;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import modules.StaticAccessor;
 import play.Logger;
 import services.datasyndication.IDataSyndicationService;
+import services.datasyndication.IDataSyndicationService.DataSyndicationPostDataException;
 import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.echannel.IEchannelService;
@@ -321,7 +323,14 @@ public interface JobDescriptors {
             if (agreementLinks != null) {
 
                 for (DataSyndicationAgreementLink agreementLink : agreementLinks) {
-                    dataSyndicationService.postData(agreementLink);
+                    try {
+                        dataSyndicationService.postData(agreementLink);
+                    } catch (DataSyndicationPostDataException e) {
+                        Logger.warn("postData for agreement link [id=" + agreementLink.id + ", agreementId=" + agreementLink.agreement.id + ", dataType="
+                                + agreementLink.dataType + ", masterObjectId=" + agreementLink.masterObjectId + ", slaveObjectId="
+                                + agreementLink.slaveObjectId + "]");
+                        Logger.error(Msg.get(e.getCode().getMessageKey()));
+                    }
                 }
 
             }

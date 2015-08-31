@@ -40,6 +40,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import services.datasyndication.IDataSyndicationService;
+import services.datasyndication.IDataSyndicationService.DataSyndicationPostDataException;
 import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
@@ -229,14 +230,12 @@ public class PortfolioEntryDataSyndicationController extends Controller {
 
         // synchronize the agreement link
         try {
-            if (dataSyndicationService.postData(agreementLink)) {
-                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_data_syndication.link.synchronize.success"));
-            } else {
-                Utilities.sendErrorFlashMessage(Msg.get("admin.data_syndication.communication_error"));
-            }
-        } catch (Exception e) {
-            Logger.error("DataSyndication synchronizeAgreementLink unexpected error", e);
-            return ok(views.html.core.portfolioentrydatasyndication.communication_error.render(portfolioEntry));
+            dataSyndicationService.postData(agreementLink);
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_data_syndication.link.synchronize.success"));
+        } catch (DataSyndicationPostDataException e) {
+            Logger.warn("postData for agreement link [id=" + agreementLink.id + ", agreementId=" + agreementLink.agreement.id + ", dataType="
+                    + agreementLink.dataType + ", masterObjectId=" + agreementLink.masterObjectId + ", slaveObjectId=" + agreementLink.slaveObjectId + "]");
+            Utilities.sendErrorFlashMessage(Msg.get(e.getCode().getMessageKey()));
         }
 
         return redirect(controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, agreementLinkId));

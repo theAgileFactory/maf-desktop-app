@@ -306,5 +306,54 @@ public interface IDataSyndicationService {
      * @param agreementLink
      *            the agreement link
      */
-    public boolean postData(DataSyndicationAgreementLink agreementLink);
+    public void postData(DataSyndicationAgreementLink agreementLink) throws DataSyndicationPostDataException;
+
+    /**
+     * The data syndication exception for postData method.
+     * 
+     * @author Johann Kohler
+     *
+     */
+    public static class DataSyndicationPostDataException extends Exception {
+
+        private static final long serialVersionUID = 1253447786214L;
+
+        private ErrorCode code;
+
+        /**
+         * Construct with message.
+         * 
+         * @param code
+         *            the error code
+         */
+        public DataSyndicationPostDataException(ErrorCode code) {
+            super();
+            this.code = code;
+        }
+
+        /**
+         * Get the error code.
+         */
+        public ErrorCode getCode() {
+            return this.code;
+        }
+
+        /**
+         * The error codes.
+         * 
+         * @author Johann Kohler
+         */
+        public static enum ErrorCode {
+
+            E1001, E1002, E1003, E1004, E2001, E2002, E2003, E2004;
+
+            /**
+             * Get the message.
+             */
+            public String getMessageKey() {
+                return "data_syndication.post_data.error." + this.name();
+            }
+        }
+
+    }
 }

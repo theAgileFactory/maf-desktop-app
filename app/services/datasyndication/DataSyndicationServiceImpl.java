@@ -27,6 +27,7 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import constants.IMafConstants;
@@ -536,99 +537,117 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
     }
 
     @Override
-    public boolean postData(DataSyndicationAgreementLink agreementLink) {
+    public void postData(DataSyndicationAgreementLink agreementLink) throws DataSyndicationPostDataException {
 
-        boolean noError = true;
-
+        // Call the getSystemCurrentTime method in order to now if the slave
+        // instance is accessible
         try {
-
-            // Call the getSystemCurrentTime method in order to now if the slave
-            // instance is accessible
             String getSystemCurrentTimeUrl = agreementLink.agreement.slavePartner.baseUrl
                     + controllers.api.system.routes.SystemApiController.getSystemCurrentTime().url();
             bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.GET,
                     getSystemCurrentTimeUrl, null);
+        } catch (BizdockApiException e) {
+            Logger.error("dataSyndicationService.postData: error with bizdockApiClient.getSystemCurrentTime", e);
+            throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1001);
+        }
 
-            // PortfolioEntry case
-            if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
+        // PortfolioEntry case
+        if (agreementLink.dataType.equals(PortfolioEntry.class.getName())) {
 
-                // verify the master object exists
-                boolean masterPeExists = PortfolioEntryDao.getPEById(agreementLink.masterObjectId) != null;
+            // verify the master object exists
+            PortfolioEntry masterPE = PortfolioEntryDao.getPEById(agreementLink.masterObjectId);
+            if (masterPE == null) {
+                try {
+                    this.deleteAgreementLink(agreementLink);
+                    throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E2002);
+                } catch (Exception e) {
+                    Logger.error("dataSyndicationService.postData: error with dataSyndicationService.deleteAgreementLink", e);
+                    throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1003);
+                }
+            }
 
-                // verify the slave object exists
-                boolean slavePeExists = false;
+            // verify the slave object exists
+            JsonNode reponse = null;
+            try {
                 String getPortfolioEntryUrl = agreementLink.agreement.slavePartner.baseUrl
                         + controllers.api.core.routes.PortfolioEntryApiController.getPortfolioEntryById(agreementLink.slaveObjectId).url();
-                try {
-                    bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.GET,
-                            getPortfolioEntryUrl, null);
-                    slavePeExists = true;
-                } catch (BizdockApiException e) {
-                    Logger.warn("impossible to get the portfolio entry of the slave instance, we remove the link");
-                }
-
-                // if the slave or the master object does not exist
-                // then call deleteAgreementLink
-                if (!masterPeExists || !slavePeExists) {
-                    noError = false;
+                reponse = bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.GET,
+                        getPortfolioEntryUrl, null);
+            } catch (BizdockApiException e) {
+                if (e.getHttpStatusCode().equals(404)) {
                     try {
                         this.deleteAgreementLink(agreementLink);
-                    } catch (Exception e) {
-                        Logger.error("error with dataSyndicationService.deleteAgreementLink", e);
+                        throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E2003);
+                    } catch (Exception e2) {
+                        Logger.error("dataSyndicationService.postData: error with dataSyndicationService.deleteAgreementLink", e2);
+                        throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1003);
                     }
                 } else {
+                    Logger.error("dataSyndicationService.postData: error with bizdockApiClient.getPortfolioEntryById", e);
+                    throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1002);
+                }
+            }
+            PortfolioEntry slavePE = null;
+            try {
+                slavePE = bizdockApiClient.getMapper().treeToValue(reponse, PortfolioEntry.class);
+            } catch (JsonProcessingException e) {
+                Logger.error("dataSyndicationService.postData: error with JSON parsing", e);
+                throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1002);
+            }
 
-                    for (DataSyndicationAgreementItem agreementItem : agreementLink.items) {
+            // if the slave or the master object is not active, then the sync is
+            // not done
+            if (masterPE.archived || slavePE.archived) {
+                throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E2004);
+            }
 
-                        String postDataUrl = agreementLink.agreement.slavePartner.baseUrl
-                                + controllers.api.core.routes.DataSyndicationApiController.postData(agreementLink.id, agreementItem.id).url();
+            // for each item
+            for (DataSyndicationAgreementItem agreementItem : agreementLink.items) {
 
-                        // construct the data
-                        List<List<Object>> data = new ArrayList<>();
-                        if (agreementItem.descriptor.equals("PLANNING_PACKAGE")) {
-                            data.add(Arrays.asList("object.portfolio_entry_planning_package.is_important.label",
-                                    "object.portfolio_entry_planning_package.name.label", "object.portfolio_entry_planning_package.description.label",
-                                    "object.portfolio_entry_planning_package.start_date.label", "object.portfolio_entry_planning_package.end_date.label",
-                                    "object.portfolio_entry_planning_package.group.label", "object.portfolio_entry_planning_package.status.label"));
-                            for (PortfolioEntryPlanningPackage planningPackage : PortfolioEntryPlanningPackageDao
-                                    .getPEPlanningPackageAsListByPE(agreementLink.masterObjectId)) {
-                                String group = planningPackage.portfolioEntryPlanningPackageGroup != null
-                                        ? planningPackage.portfolioEntryPlanningPackageGroup.name : null;
-                                data.add(Arrays.asList(planningPackage.isImportant, planningPackage.name, planningPackage.description,
-                                        planningPackage.startDate, planningPackage.endDate, group,
-                                        "object.portfolio_entry_planning_package.status." + planningPackage.status.name() + ".label"));
-                            }
-
-                        } else if (agreementItem.descriptor.equals("REPORT")) {
-                            data.add(Arrays.asList("object.portfolio_entry_report.report_date.label", "object.portfolio_entry_report.author.label",
-                                    "object.portfolio_entry_report.status.label", "object.portfolio_entry_report.comments.label"));
-                            for (PortfolioEntryReport report : PortfolioEntryReportDao.getPEReportAsListByPE(agreementLink.masterObjectId)) {
-                                String status = views.html.modelsparts.display_portfolio_entry_report_status_type
-                                        .render(report.portfolioEntryReportStatusType).body();
-                                data.add(Arrays.asList(report.creationDate, report.author.getName(), status, report.comments));
-                            }
-                        }
-                        JsonNode jsonData = bizdockApiClient.getMapper().valueToTree(data);
-
-                        try {
-                            bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.POST,
-                                    postDataUrl, jsonData);
-                        } catch (BizdockApiException e) {
-                            noError = false;
-                            Logger.error("error with bizdockApiClient.postData", e);
-                        }
-
+                // construct the data
+                List<List<Object>> data = new ArrayList<>();
+                if (agreementItem.descriptor.equals("PLANNING_PACKAGE")) {
+                    data.add(Arrays.asList("object.portfolio_entry_planning_package.is_important.label", "object.portfolio_entry_planning_package.name.label",
+                            "object.portfolio_entry_planning_package.description.label", "object.portfolio_entry_planning_package.start_date.label",
+                            "object.portfolio_entry_planning_package.end_date.label", "object.portfolio_entry_planning_package.group.label",
+                            "object.portfolio_entry_planning_package.status.label"));
+                    for (PortfolioEntryPlanningPackage planningPackage : PortfolioEntryPlanningPackageDao
+                            .getPEPlanningPackageAsListByPE(agreementLink.masterObjectId)) {
+                        String group = planningPackage.portfolioEntryPlanningPackageGroup != null ? planningPackage.portfolioEntryPlanningPackageGroup.name
+                                : null;
+                        data.add(Arrays.asList(planningPackage.isImportant, planningPackage.name, planningPackage.description, planningPackage.startDate,
+                                planningPackage.endDate, group,
+                                "object.portfolio_entry_planning_package.status." + planningPackage.status.name() + ".label"));
                     }
 
+                } else if (agreementItem.descriptor.equals("REPORT")) {
+                    data.add(Arrays.asList("object.portfolio_entry_report.report_date.label", "object.portfolio_entry_report.author.label",
+                            "object.portfolio_entry_report.status.label", "object.portfolio_entry_report.comments.label"));
+                    for (PortfolioEntryReport report : PortfolioEntryReportDao.getPEReportAsListByPE(agreementLink.masterObjectId)) {
+                        String status = views.html.modelsparts.display_portfolio_entry_report_status_type.render(report.portfolioEntryReportStatusType)
+                                .body();
+                        data.add(Arrays.asList(report.creationDate, report.author.getName(), status, report.comments));
+                    }
+                }
+                JsonNode jsonData = bizdockApiClient.getMapper().valueToTree(data);
+
+                // post the data
+                try {
+                    String postDataUrl = agreementLink.agreement.slavePartner.baseUrl
+                            + controllers.api.core.routes.DataSyndicationApiController.postData(agreementLink.id, agreementItem.id).url();
+                    bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.POST,
+                            postDataUrl, jsonData);
+                } catch (BizdockApiException e) {
+                    Logger.error("dataSyndicationService.postData: error with bizdockApiClient.postData", e);
+                    throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1004);
                 }
 
             }
-        } catch (BizdockApiException e) {
-            noError = false;
-            Logger.error("error with bizdockApiClient.getSystemCurrentTime", e);
+
+        } else {
+            throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E2001);
         }
 
-        return noError;
-
     }
+
 }
