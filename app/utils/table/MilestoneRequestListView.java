@@ -21,13 +21,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import models.framework_models.common.Attachment;
-import models.governance.LifeCycleMilestone;
-import models.governance.ProcessTransitionRequest;
-import models.pmo.Actor;
-import models.pmo.PortfolioEntry;
-import play.Logger;
-import utils.form.RequestMilestoneFormData;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.ServiceStaticAccessor;
@@ -37,6 +30,13 @@ import framework.utils.Table;
 import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.framework_models.common.Attachment;
+import models.governance.LifeCycleMilestone;
+import models.governance.ProcessTransitionRequest;
+import models.pmo.Actor;
+import models.pmo.PortfolioEntry;
+import play.Logger;
+import utils.form.RequestMilestoneFormData;
 
 /**
  * A milestone request list view is used to display a milestone approval request
@@ -73,7 +73,6 @@ public class MilestoneRequestListView {
                     return views.html.modelsparts.display_milestone.render(requestListView.milestone).body();
                 }
             });
-            this.setColumnValueCssClass("milestone", "rowlink-skip");
 
             addColumn("requester", "requester", "object.process_transition_request.requester.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("requester", new IColumnFormatter<MilestoneRequestListView>() {
@@ -93,8 +92,8 @@ public class MilestoneRequestListView {
             this.setLineAction(new IColumnFormatter<MilestoneRequestListView>() {
                 @Override
                 public String apply(MilestoneRequestListView requestListView, Object value) {
-                    return controllers.core.routes.ProcessTransitionRequestController.processMilestoneRequest(requestListView.portfolioEntry.id,
-                            requestListView.id).url();
+                    return controllers.core.routes.ProcessTransitionRequestController
+                            .processMilestoneRequest(requestListView.portfolioEntry.id, requestListView.id).url();
                 }
             });
 
@@ -132,11 +131,11 @@ public class MilestoneRequestListView {
         if (request.requestType.equals(ProcessTransitionRequest.RequestType.MILESTONE_APPROVAL.name())) {
 
             IAttachmentManagerPlugin attachmentPlugin = ServiceStaticAccessor.getAttachmentManagerPlugin();
-            List<Attachment> structuredDocumentAttachments =
-                    attachmentPlugin.getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class, request.id, true);
+            List<Attachment> structuredDocumentAttachments = attachmentPlugin.getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class,
+                    request.id, true);
             if (structuredDocumentAttachments != null && structuredDocumentAttachments.size() > 0) {
-                RequestMilestoneFormData requestMilestoneFormData =
-                        (RequestMilestoneFormData) Utilities.unmarshallObject(structuredDocumentAttachments.get(0).structuredDocument.content);
+                RequestMilestoneFormData requestMilestoneFormData = (RequestMilestoneFormData) Utilities
+                        .unmarshallObject(structuredDocumentAttachments.get(0).structuredDocument.content);
 
                 try {
                     this.passedDate = Utilities.getDateFormat(null).parse(requestMilestoneFormData.passedDate);
