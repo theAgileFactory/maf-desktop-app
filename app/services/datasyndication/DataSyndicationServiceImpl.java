@@ -560,7 +560,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                 try {
                     this.deleteAgreementLink(agreementLink);
                     throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E2002);
-                } catch (Exception e) {
+                } catch (EchannelException e) {
                     Logger.error("dataSyndicationService.postData: error with dataSyndicationService.deleteAgreementLink", e);
                     throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1003);
                 }
@@ -578,7 +578,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                     try {
                         this.deleteAgreementLink(agreementLink);
                         throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E2003);
-                    } catch (Exception e2) {
+                    } catch (EchannelException e2) {
                         Logger.error("dataSyndicationService.postData: error with dataSyndicationService.deleteAgreementLink", e2);
                         throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1003);
                     }

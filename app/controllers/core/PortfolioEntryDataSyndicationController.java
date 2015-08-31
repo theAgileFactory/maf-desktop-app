@@ -236,6 +236,10 @@ public class PortfolioEntryDataSyndicationController extends Controller {
             Logger.warn("postData for agreement link [id=" + agreementLink.id + ", agreementId=" + agreementLink.agreement.id + ", dataType="
                     + agreementLink.dataType + ", masterObjectId=" + agreementLink.masterObjectId + ", slaveObjectId=" + agreementLink.slaveObjectId + "]");
             Utilities.sendErrorFlashMessage(Msg.get(e.getCode().getMessageKey()));
+            if (e.getCode().equals(DataSyndicationPostDataException.ErrorCode.E2002)
+                    || e.getCode().equals(DataSyndicationPostDataException.ErrorCode.E2003)) {
+                return redirect(controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntry.id));
+            }
         }
 
         return redirect(controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, agreementLinkId));
