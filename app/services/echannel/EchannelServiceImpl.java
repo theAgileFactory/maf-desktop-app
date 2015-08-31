@@ -98,7 +98,7 @@ public class EchannelServiceImpl implements IEchannelService {
     private static final String DATA_SYNDICATION_AGREEMENT_ITEM_ACTION = "data-syndication-agreement-item";
     private static final String DATA_SYNDICATION_AGREEMENT_LINK_ACTION = "data-syndication-agreement-link";
 
-    private static final long WS_TIMEOUT = 2000;
+    private static final long WS_TIMEOUT = 5000;
 
     private static final String HTTP_HEADER_API_KEY = "X-echannel-API-Key";
 
