@@ -311,14 +311,6 @@ public interface JobDescriptors {
 
             Logger.info("start trigger " + this.getId());
 
-            /**
-             * TODO The eChannel API client (in BizDock) could be centralized,
-             * maybe the calls must be grouped. The current
-             * licenseManagementService should be generalized. The goal is to
-             * limit the number of request, especially the number of schedulers,
-             * maybe by using a “polling” system.
-             */
-
             List<DataSyndicationAgreementLink> agreementLinks = null;
             try {
                 agreementLinks = dataSyndicationService.getAgreementLinksToSynchronize();
