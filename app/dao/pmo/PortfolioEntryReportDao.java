@@ -19,18 +19,17 @@ package dao.pmo;
 
 import java.util.List;
 
-import models.pmo.PortfolioEntryReport;
-import models.pmo.PortfolioEntryReportStatusType;
-import play.Play;
-import com.avaje.ebean.Model.Finder;
-
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 
 import framework.utils.CssValueForValueHolder;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
+import models.pmo.PortfolioEntryReport;
+import models.pmo.PortfolioEntryReportStatusType;
+import play.Play;
 
 /**
  * DAO for the {@link PortfolioEntryReport} and
@@ -42,8 +41,7 @@ public abstract class PortfolioEntryReportDao {
 
     public static Finder<Long, PortfolioEntryReport> findPortfolioEntryReport = new Finder<>(PortfolioEntryReport.class);
 
-    public static Finder<Long, PortfolioEntryReportStatusType> findPortfolioEntryReportStatusType = new Finder<>(
-            PortfolioEntryReportStatusType.class);
+    public static Finder<Long, PortfolioEntryReportStatusType> findPortfolioEntryReportStatusType = new Finder<>(PortfolioEntryReportStatusType.class);
 
     /**
      * Default constructor.
@@ -98,7 +96,7 @@ public abstract class PortfolioEntryReportDao {
      *            the portfolio entry id
      */
     public static List<PortfolioEntryReport> getPEReportAsListByPE(Long portfolioEntryId) {
-        return findPortfolioEntryReport.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).findList();
+        return findPortfolioEntryReport.orderBy("creationDate DESC").where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).findList();
     }
 
     /**
@@ -122,7 +120,8 @@ public abstract class PortfolioEntryReportDao {
      * Get all selectable status types as value holder collection.
      */
     public static ISelectableValueHolderCollection<Long> getPEReportStatusTypeActiveAsVH() {
-        return new DefaultSelectableValueHolderCollection<>(findPortfolioEntryReportStatusType.where().eq("deleted", false).eq("selectable", true).findList());
+        return new DefaultSelectableValueHolderCollection<>(
+                findPortfolioEntryReportStatusType.where().eq("deleted", false).eq("selectable", true).findList());
     }
 
     /**
@@ -132,12 +131,13 @@ public abstract class PortfolioEntryReportDao {
     public static DefaultSelectableValueHolderCollection<CssValueForValueHolder> getPEReportStatusTypeActiveAsCssVH() {
         DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryReportStatusTypes;
         selectablePortfolioEntryReportStatusTypes = new DefaultSelectableValueHolderCollection<>();
-        List<PortfolioEntryReportStatusType> list =
-                findPortfolioEntryReportStatusType.orderBy("id").where().eq("deleted", false).eq("selectable", true).findList();
+        List<PortfolioEntryReportStatusType> list = findPortfolioEntryReportStatusType.orderBy("id").where().eq("deleted", false).eq("selectable", true)
+                .findList();
         for (PortfolioEntryReportStatusType portfolioEntryReportStatusType : list) {
-            selectablePortfolioEntryReportStatusTypes.add(new DefaultSelectableValueHolder<>(new CssValueForValueHolder(String
-                    .valueOf(portfolioEntryReportStatusType.id), portfolioEntryReportStatusType.getName(), portfolioEntryReportStatusType.cssClass), String
-                    .valueOf(portfolioEntryReportStatusType.id)));
+            selectablePortfolioEntryReportStatusTypes.add(new DefaultSelectableValueHolder<>(
+                    new CssValueForValueHolder(String.valueOf(portfolioEntryReportStatusType.id), portfolioEntryReportStatusType.getName(),
+                            portfolioEntryReportStatusType.cssClass),
+                    String.valueOf(portfolioEntryReportStatusType.id)));
 
         }
         return selectablePortfolioEntryReportStatusTypes;
