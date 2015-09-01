@@ -29,11 +29,13 @@ public class DataSyndicationAgreementLink {
      * Get the status.
      */
     public Status getStatus() {
-        if (this.agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)) {
+        if (this.status.equals(DataSyndicationAgreement.Status.CANCELLED) || this.status.equals(DataSyndicationAgreement.Status.REJECTED)
+                || this.agreement.status.equals(DataSyndicationAgreement.Status.ONGOING)) {
             return this.status;
         } else {
             return this.agreement.status;
         }
+
     }
 
 }
