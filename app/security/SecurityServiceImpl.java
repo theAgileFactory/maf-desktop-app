@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import be.objectify.deadbolt.java.AbstractDynamicResourceHandler;
 import be.objectify.deadbolt.java.DeadboltHandler;
@@ -51,6 +52,7 @@ import security.dynamic.ReleaseDynamicHelper;
 import security.dynamic.ReportingDynamicHelper;
 import security.dynamic.TimesheetReportDynamicHelper;
 
+@Singleton
 public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
     private static Logger.ALogger log = Logger.of(SecurityServiceImpl.class);
     private IPreferenceManagerPlugin preferenceManagerPlugin;
@@ -58,12 +60,11 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
 
     @Inject
     public SecurityServiceImpl(JavaAnalyzer deadBoltAnalyzer, SubjectCache subjectCache, IUserSessionManagerPlugin userSessionManagerPlugin,
-            IAccountManagerPlugin accountManagerPlugin, ISecurityService securityService, CacheApi cacheApi,
-            IAuthenticator authenticator,IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin messagesPlugins) {
-        super(deadBoltAnalyzer, subjectCache, userSessionManagerPlugin, accountManagerPlugin, securityService, cacheApi,
-                authenticator);
-        this.preferenceManagerPlugin=preferenceManagerPlugin;
-        this.messagesPlugins=messagesPlugins;
+            IAccountManagerPlugin accountManagerPlugin, ISecurityService securityService, CacheApi cacheApi, IAuthenticator authenticator,
+            IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin messagesPlugins) {
+        super(deadBoltAnalyzer, subjectCache, userSessionManagerPlugin, accountManagerPlugin, securityService, cacheApi, authenticator);
+        this.preferenceManagerPlugin = preferenceManagerPlugin;
+        this.messagesPlugins = messagesPlugins;
         log.info(">>>>>>>>>>>>>>>> Check permissions consistency");
         if (!SystemPermission.checkPermissions(IMafConstants.class)) {
             log.error("WARNING: permissions in code are not consistent with permissions in database");
@@ -72,8 +73,8 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
     }
 
     @Override
-    public Map<String, DynamicResourceHandler> getDynamicResourceHandlers(){
-        Map<String, DynamicResourceHandler> dynamicAuthenticationHandlers=new HashMap<String, DynamicResourceHandler>();
+    public Map<String, DynamicResourceHandler> getDynamicResourceHandlers() {
+        Map<String, DynamicResourceHandler> dynamicAuthenticationHandlers = new HashMap<String, DynamicResourceHandler>();
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -86,7 +87,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -99,7 +100,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -112,7 +113,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_DELETE_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -125,7 +126,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -138,7 +139,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -151,7 +152,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -164,7 +165,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -177,7 +178,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -190,7 +191,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_VIEW_FINANCIAL_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -203,7 +204,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.BUDGET_BUCKET_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -216,7 +217,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -229,7 +230,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.RELEASE_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -242,7 +243,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.RELEASE_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -255,7 +256,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.REPORTING_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -268,12 +269,12 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
                     TimesheetReport report = TimesheetDao.getTimesheetReportById(Utilities.getId(context));
-    
+
                     if (report == null) {
                         return true;
                     } else {
@@ -282,12 +283,12 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
                     Actor actor = ActorDao.getActorById(Utilities.getId(context));
-    
+
                     if (actor == null) {
                         return true;
                     } else {
@@ -296,7 +297,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -309,7 +310,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.ACTOR_DELETE_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
@@ -322,12 +323,12 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                 });
             }
         });
-    
+
         dynamicAuthenticationHandlers.put(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
                     OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(Utilities.getId(context));
-    
+
                     if (orgUnit == null) {
                         return true;
                     } else {
