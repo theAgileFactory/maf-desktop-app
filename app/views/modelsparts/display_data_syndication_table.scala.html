@@ -25,10 +25,10 @@
 @import framework_views.parts.formats._
 @import views.html.commons._
 
-@if(dataSyndication != null) {
+@if(agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.ONGOING) && dataSyndication != null) {
 
 
-    <div class="panel panel-default">
+    <div class="panel panel-info">
         
         <div class="panel-heading">
             <strong>@agreementLink.agreement.masterPartner.customerName</strong> / @parts.Msg("object.data_syndication_agreement_item." + agreementItem.dataType + "." + agreementItem.descriptor + ".label")

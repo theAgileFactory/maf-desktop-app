@@ -2432,13 +2432,16 @@ core.portfolio_entry_status_reporting.event.delete.successful=The event has been
 core.portfolio_entry_data_syndication.index.no_link_no_master=There is no master agreements registered for this BizDock instance. \
 Please follow this <a href="{0}">link</a>to create a new agreement (specific permissions are required).
 core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" is currently not shared with another BizDock instance. Simply select a partner to request a new relation.
-core.portfolio_entry_data_syndication.index.with_link.slave.title=Consume from
+core.portfolio_entry_data_syndication.index.with_link.slave.title=Consume data from
 core.portfolio_entry_data_syndication.index.with_link.slave.no_data="{0}" is not provisioned by another BizDock instance.
-core.portfolio_entry_data_syndication.index.with_link.master.title=Provide to
+core.portfolio_entry_data_syndication.index.with_link.master.title=Provide data to
 core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" does not provide data to another BizDock instance.
-core.portfolio_entry_data_syndication.index.legend.label=Legend
 
 core.portfolio_entry_data_syndication.link.view.title=Details
+core.portfolio_entry_data_syndication.link.admin.title=Administration
+core.portfolio_entry_data_syndication.link.admin.trigger.label=Push the data
+core.portfolio_entry_data_syndication.link.admin.cancel.label=Cancel the relation
+core.portfolio_entry_data_syndication.link.no_action.label=No available action
 
 core.portfolio_entry_data_syndication.link.cancel.success=The relation has been successfully cancelled.
 
@@ -2978,7 +2981,7 @@ admin.plugin_manager.configuration.view.panel.log.flush.success=Plugin logs have
 #new configuration (instance)
 admin.plugin_manager.configuration.new.title=Create new plugin instance
 admin.plugin_manager.configuration.new.header=You are about to create an instance of plugin.<br/>\
-Please provide a name for the instance (this allows to differenciate multiple instances of the same plugin). 
+Please provide a name for the instance (this allows to differenciate multiple instances of the same plugin).
 admin.plugin_manager.configuration.new.success=The plugin instance {0} has been successfully registered.
 admin.plugin_manager.configuration.new.error=The plugin instance {0} has fail to register.
 
@@ -3196,4 +3199,3 @@ admin.auditable.export.notification.success.message=The audit log archive has be
 admin.auditable.export.notification.error.title=Export audit log error
 admin.auditable.export.notification.error.message=The system failed to export your audit log archive, please contact your administrator
 admin.auditable.export.notification.not_found.message=No audit logs found for this system, have you activated the audit log for any object ?
-

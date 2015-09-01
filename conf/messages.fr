@@ -521,7 +521,7 @@ report.milestones_overdue.description=Liste des jalons en retard pour les initia
 # permissions
 #----------------------
 
-permission.roadmap_display_permission.description=Autorise un utilisateur à voir le lien "Feuille de route" et d''accéder à la page. 
+permission.roadmap_display_permission.description=Autorise un utilisateur à voir le lien "Feuille de route" et d''accéder à la page.
 permission.cockpit_display_permission.description=Autorise un utilisateur à voir le lien "Cockpit" et d''accéder à la page.
 permission.portfolio_entry_view_public_permission.description=Autorise un utilisateur à lister et à voir les données de base de toutes les initiatives publiques et non-conceptuelles.
 permission.portfolio_entry_view_details_all_permission.description=Autorise un utilisateur à voir tous les détails (sauf les données financières) de toute initiative.
@@ -557,7 +557,7 @@ permission.admin_kpi_manager_permission.description=Autorise un utilisateur à c
 permission.milestone_approval_permission.description=Autorise un utilisateur à voter pour un jalon dont il est un approbateur.
 permission.milestone_decide_permission.description=Autorise un utilisateur à décider (approuver ou rejeter) du statut final de tout jalon.
 permission.milestone_overview_permission.description=Autorise un utilisateur à afficher l''agenda des jalons.
-permission.search_permission.description=Autorise un utilisateur à voir le lien "Rechercher" et d''accéder à la page. 
+permission.search_permission.description=Autorise un utilisateur à voir le lien "Rechercher" et d''accéder à la page.
 permission.actor_view_all_permission.description=Autorise un utilisateur à voir tous les détails de tout employé.
 permission.actor_view_as_superior_permission.description=Autorise un utilisateur à voir tous les détails d''un employé pour lequel il est un supérieur (direct ou non).
 permission.actor_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails de tout employé.
@@ -2452,13 +2452,16 @@ core.portfolio_entry_status_reporting.event.delete.successful=L''évènement a �
 core.portfolio_entry_data_syndication.index.no_link_no_master=Il n''existe aucun agrément de provisionnement pour cette instance BizDock. \
 Veuillez suivre ce <a href="{0}">lien</a> pour créer un nouvel agrément (des permissions particulières sont requises).
 core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" n''est actuellement pas partagé avec une autre instance BizDock. Veuillez sélectionner un partenaire pour soumettre une demande de partage.
-core.portfolio_entry_data_syndication.index.with_link.slave.title=Consomme depuis
+core.portfolio_entry_data_syndication.index.with_link.slave.title=Consomme les données depuis
 core.portfolio_entry_data_syndication.index.with_link.slave.no_data="{0}" n''est pas provisionné par une autre instance BizDock.
-core.portfolio_entry_data_syndication.index.with_link.master.title=Fournit à
+core.portfolio_entry_data_syndication.index.with_link.master.title=Fournit les données à
 core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" ne provisionne pas une autre instance BizDock.
-core.portfolio_entry_data_syndication.index.legend.label=Légende
 
 core.portfolio_entry_data_syndication.link.view.title=Détails
+core.portfolio_entry_data_syndication.link.admin.title=Administration
+core.portfolio_entry_data_syndication.link.admin.trigger.label=Synchroniser les données
+core.portfolio_entry_data_syndication.link.admin.cancel.label=Annuler la relation
+core.portfolio_entry_data_syndication.link.no_action.label=Aucune action disponible
 
 core.portfolio_entry_data_syndication.link.cancel.success=La relation a été annulée.
 
@@ -2982,7 +2985,7 @@ admin.plugin_manager.configuration.view.panel.admin.title=Administration
 admin.plugin_manager.configuration.view.panel.admin.action.title=Commande d''administration
 admin.plugin_manager.configuration.view.panel.admin.action.success=La commande a été envoyée avec succès au plugin.
 admin.plugin_manager.configuration.view.panel.admin.action.error=Une erreur est survenue lors de l''envoi de la commande.
-admin.plugin_manager.configuration.view.panel.admin.start.success=Plugin {0} est en cours de démarrage, cela peut prendre quelques secondes. 
+admin.plugin_manager.configuration.view.panel.admin.start.success=Plugin {0} est en cours de démarrage, cela peut prendre quelques secondes.
 admin.plugin_manager.configuration.view.panel.admin.start.error=Plugin {0} n''a pas pu démarré, veuillez consulter les logs.
 admin.plugin_manager.configuration.view.panel.admin.stop.success=Plugin {0} est en cours d''arrêt, cela peut prendre quelques secondes.
 admin.plugin_manager.configuration.view.panel.configuration.title=Configuration du plugin

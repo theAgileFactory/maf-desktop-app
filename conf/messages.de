@@ -452,7 +452,7 @@ kpi.allocated_actor_days.main.name=Mitarbeiter
 kpi.allocated_actor_days.additional1.name=bestätigt
 kpi.allocated_actor_days.additional2.name=nicht bestätigt
 
-kpi.allocated_org_unit_days.main.name=Resourcen 
+kpi.allocated_org_unit_days.main.name=Resourcen
 kpi.allocated_org_unit_days.additional1.name=bestätigt
 kpi.allocated_org_unit_days.additional2.name=nicht bestätigt
 
@@ -2444,13 +2444,16 @@ core.portfolio_entry_status_reporting.event.delete.successful=Der Ereignis wurde
 core.portfolio_entry_data_syndication.index.no_link_no_master=de: There is no master agreements registered for this BizDock instance. \
 Please follow this <a href="{0}">link</a>to create a new agreement (specific permissions are required).
 core.portfolio_entry_data_syndication.index.no_link_with_master=de: "{0}" is currently not shared with another BizDock instance. Simply select a partner to request a new relation.
-core.portfolio_entry_data_syndication.index.with_link.slave.title=de: Consume from
+core.portfolio_entry_data_syndication.index.with_link.slave.title=de: Consume data from
 core.portfolio_entry_data_syndication.index.with_link.slave.no_data=de: "{0}" is not provisioned by another BizDock instance.
-core.portfolio_entry_data_syndication.index.with_link.master.title=de: Provide to
+core.portfolio_entry_data_syndication.index.with_link.master.title=de: Provide data to
 core.portfolio_entry_data_syndication.index.with_link.master.no_data=de: "{0}" does not provide data to another BizDock instance.
-core.portfolio_entry_data_syndication.index.legend.label=de: Legend
 
 core.portfolio_entry_data_syndication.link.view.title=Details
+core.portfolio_entry_data_syndication.link.admin.title=Verwalten
+core.portfolio_entry_data_syndication.link.admin.trigger.label=de: Push the data
+core.portfolio_entry_data_syndication.link.admin.cancel.label=de: Cancel the relation
+core.portfolio_entry_data_syndication.link.no_action.label=de: No available action
 
 core.portfolio_entry_data_syndication.link.cancel.success=de: The relation has been successfully cancelled.
 

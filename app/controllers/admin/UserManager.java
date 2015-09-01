@@ -85,16 +85,16 @@ public class UserManager extends Controller {
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
-    private ILicensesManagementService licensesManagementService ;
+    private ILicensesManagementService licensesManagementService;
     @Inject
-    private INotificationManagerPlugin notificationManagerPlugin ;
+    private INotificationManagerPlugin notificationManagerPlugin;
     @Inject
     private IPersonalStoragePlugin personalStoragePlugin;
     @Inject
-    private IUserSessionManagerPlugin userSessionManagerPlugin ;
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private ISysAdminUtils sysAdminUtils;
-    
+
     private static Logger.ALogger log = Logger.of(UserManager.class);
     private static Form<UserSeachFormData> userSearchForm = Form.form(UserSeachFormData.class);
     private static Form<UserAccountFormData> basicDataUpdateForm = Form.form(UserAccountFormData.class, UserAccountFormData.BasicDataChangeGroup.class);
@@ -115,6 +115,13 @@ public class UserManager extends Controller {
             this.addColumn("firstName", "firstName", "object.user_account.first_name.label", SorterType.NONE);
             this.addColumn("lastName", "lastName", "object.user_account.last_name.label", SorterType.NONE);
             this.addColumn("mail", "mail", "object.user_account.email.label", SorterType.NONE);
+            this.addColumn("accountType", "accountType", "object.user_account.type.label", SorterType.NONE);
+            this.setJavaColumnFormatter("accountType", new IColumnFormatter<IUserAccount>() {
+                @Override
+                public String apply(IUserAccount userAccount, Object value) {
+                    return userAccount.getAccountType().getLabel();
+                }
+            });
 
             this.setLineAction(new IColumnFormatter<IUserAccount>() {
                 @Override
@@ -144,7 +151,7 @@ public class UserManager extends Controller {
         if (boundForm.hasErrors()) {
             return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
         }
-        
+
         UserSeachFormData searchFormData = boundForm.get();
 
         // Reject if search by UID but no uid
@@ -243,7 +250,7 @@ public class UserManager extends Controller {
      *            a unique user id
      */
     public Result displayUser(String uid) {
-        
+
         IUserAccount userAccount = null;
         try {
             userAccount = getAccountManagerPlugin().getUserAccountFromUid(uid);
@@ -399,7 +406,7 @@ public class UserManager extends Controller {
      */
     public Result resetPassword(String uid) {
         try {
-            resetUserPasswordFromUid(getAccountManagerPlugin(),uid, true);
+            resetUserPasswordFromUid(getAccountManagerPlugin(), uid, true);
             return redirect(controllers.admin.routes.UserManager.displayUser(uid));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -410,7 +417,8 @@ public class UserManager extends Controller {
      * The method to trigger a password reset for the specified uid.<br/>
      * This sends an e-mail to the user with a validation key.
      * 
-     * @param accountManagerPlugin a user account manager reference
+     * @param accountManagerPlugin
+     *            a user account manager reference
      * @param uid
      *            a unique user id
      * @param eraseCurrentPassword
@@ -419,7 +427,8 @@ public class UserManager extends Controller {
      * @throws Exception
      * @throws AccountManagementException
      */
-    public static void resetUserPasswordFromUid(IAccountManagerPlugin accountManagerPlugin,String uid, boolean eraseCurrentPassword) throws Exception, AccountManagementException {
+    public static void resetUserPasswordFromUid(IAccountManagerPlugin accountManagerPlugin, String uid, boolean eraseCurrentPassword)
+            throws Exception, AccountManagementException {
         if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
             return;
         }
@@ -435,7 +444,8 @@ public class UserManager extends Controller {
      * The method to trigger a password reset for the specified mail.<br/>
      * This sends an e-mail to the user with a validation key.
      * 
-     * @param accountManagerPlugin a user account manager reference
+     * @param accountManagerPlugin
+     *            a user account manager reference
      * @param mail
      *            a user e-mail
      * @param eraseCurrentPassword
@@ -445,7 +455,7 @@ public class UserManager extends Controller {
      * @throws AccountManagementException
      * @return a boolean (false if the e-mail does not exists)
      */
-    public static boolean resetUserPasswordFromEmail(IAccountManagerPlugin accountManagerPlugin,String mail, boolean eraseCurrentPassword) {
+    public static boolean resetUserPasswordFromEmail(IAccountManagerPlugin accountManagerPlugin, String mail, boolean eraseCurrentPassword) {
         try {
             IUserAccount userAccount = accountManagerPlugin.getUserAccountFromEmail(mail);
             if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
@@ -481,8 +491,8 @@ public class UserManager extends Controller {
         }
 
         // Send an e-mail for reseting password
-        String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
-                + controllers.admin.routes.PasswordReset.displayPasswordResetForm(userAccount.getUid(), validationKey).url();
+        String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(), IFrameworkConstants.PUBLIC_URL_PREFERENCE,
+                "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(userAccount.getUid(), validationKey).url();
         EmailUtils.sendEmail(Msg.get("admin.user_manager.reset_password.mail.subject"), play.Configuration.root().getString("maf.email.from"),
                 Utilities.renderViewI18n("views.html.mail.account_password_reset_html", play.Configuration.root().getString("maf.platformName"),
                         userAccount.getFirstName() + " " + userAccount.getLastName(), resetPasswordUrl).body(),
@@ -498,7 +508,7 @@ public class UserManager extends Controller {
      */
     public Result editRoles(String uid) {
         try {
-            
+
             IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             Form<UserAccountFormData> userAccountFormLoaded = rolesUpdateForm.fill(new UserAccountFormData(account));
             return ok(views.html.admin.usermanager.usermanager_editroles.render(Msg.get("admin.user_manager.edit_roles.title"),
@@ -513,7 +523,7 @@ public class UserManager extends Controller {
      */
     public Result saveRoles() {
         try {
-            
+
             Form<UserAccountFormData> boundForm = rolesUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_roles.title"), boundForm));
@@ -541,8 +551,6 @@ public class UserManager extends Controller {
      *            the status (true to unlock, false to lock)
      */
     public Result changeActivationStatus(String uid, boolean activationStatus) {
-
-        
 
         IUserAccount userAccount = null;
         try {
@@ -602,7 +610,7 @@ public class UserManager extends Controller {
         }
 
         try {
-            
+
             Form<UserAccountFormData> boundForm = creationForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
@@ -648,7 +656,8 @@ public class UserManager extends Controller {
                 getAccountManagerPlugin().updatePassword(accountDataForm.uid, password);
 
                 // Notify account creation & password setup
-                String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
+                String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),
+                        IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
                         + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
                 EmailUtils.sendEmail(Msg.get("admin.user_manager.create.mail.subject"), play.Configuration.root().getString("maf.email.from"),
                         Utilities.renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
@@ -685,7 +694,6 @@ public class UserManager extends Controller {
 
         try {
 
-            
             IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             if (account == null || account.isMarkedForDeletion() || !account.isDisplayed()) {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.user_manager.unknown_user"));
@@ -753,6 +761,7 @@ public class UserManager extends Controller {
         final String firstNameLabel = Msg.get("object.user_account.first_name.label");
         final String lastNameLabel = Msg.get("object.user_account.last_name.label");
         final String emailLabel = Msg.get("object.user_account.email.label");
+        final String accountTypeLabel = Msg.get("object.user_account.type.label");
         final String isActiveLabel = Msg.get("object.user_account.is_active.label");
         final String rolesLabel = Msg.get("object.user_account.roles.label");
         final String permissionsLabel = Msg.get("object.user_account.permissions.label");
@@ -766,6 +775,13 @@ public class UserManager extends Controller {
                         this.addColumn("firstName", "firstName", firstNameLabel, SorterType.NONE);
                         this.addColumn("lastName", "lastName", lastNameLabel, SorterType.NONE);
                         this.addColumn("mail", "mail", emailLabel, SorterType.NONE);
+                        this.addColumn("accountType", "accountType", accountTypeLabel, SorterType.NONE);
+                        this.setJavaColumnFormatter("accountType", new IColumnFormatter<IUserAccount>() {
+                            @Override
+                            public String apply(IUserAccount userAccount, Object value) {
+                                return userAccount.getAccountType().getLabel();
+                            }
+                        });
                         this.addColumn("active", "active", isActiveLabel, SorterType.NONE);
                         this.addColumn("mafUid", "mafUid", "BizDock Id", SorterType.NONE);
                         this.addColumn("systemLevelRoleTypeNames", "uid", rolesLabel, SorterType.NONE);
@@ -826,7 +842,7 @@ public class UserManager extends Controller {
      *            a unique user id
      */
     public Result deleteUser(String uid) {
-        
+
         try {
             getAccountManagerPlugin().deleteAccount(uid);
 

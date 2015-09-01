@@ -49,8 +49,8 @@
             <div class="row">
             @for(masterAgreement <- masterAgreements) {
                 <div class="col-md-2 text-center">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
+                    <div class="panel panel-default">
+                        <div class="panel-body ">
                             <div style="min-height:150px;">
                                 @if(masterAgreement.slavePartner.customerLogo != null) {
                                     <div><img src="@masterAgreement.slavePartner.customerLogo" style="max-width:140px;"></div>
@@ -80,26 +80,11 @@
                     <div class="panel-body ">
                     
                         @if(slaveAgreementLinks.size == 0) {
-                            @parts.Msg("core.portfolio_entry_data_syndication.index.with_link.slave.no_data", portfolioEntry.getName)
+                            <div class="alert alert-warning">@parts.Msg("core.portfolio_entry_data_syndication.index.with_link.slave.no_data", portfolioEntry.getName)</div>
                         }
                         
                         @for(slaveLink <- slaveAgreementLinks) {
-                            <a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, slaveLink.id).url">
-                                <div class="row">
-                                    <div class="col-md-2"></div>
-                                    <div class="col-md-8 text-center">
-                                        <div class="panel panel-@slaveLink.getStatus.bootstrapClass">
-                                            <div class="panel-heading">
-                                                @if(slaveLink.agreement.masterPartner.customerLogo != null) {
-                                                    <div><img src="@slaveLink.agreement.masterPartner.customerLogo" style="max-width:140px;"></div>
-                                                }
-                                                <h4>@slaveLink.agreement.masterPartner.customerName</h4>
-                                                <small>@slaveLink.name</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+                            @agreement_link_box(portfolioEntry, slaveLink)
                         }
                         
                     </div>
@@ -146,26 +131,11 @@
                     <div class="panel-body ">
                     
                         @if(masterAgreementLinks.size == 0) {
-                            @parts.Msg("core.portfolio_entry_data_syndication.index.with_link.master.no_data", portfolioEntry.getName)
+                            <div class="alert alert-warning">@parts.Msg("core.portfolio_entry_data_syndication.index.with_link.master.no_data", portfolioEntry.getName)</div>
                         }
                     
                         @for(masterLink <- masterAgreementLinks) {
-                            <a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, masterLink.id).url">
-                                <div class="row">
-                                    <div class="col-md-2"></div>
-                                    <div class="col-md-8 text-center">
-                                        <div class="panel panel-@masterLink.getStatus.bootstrapClass">
-                                            <div class="panel-heading">
-                                                @if(masterLink.agreement.slavePartner.customerLogo != null) {
-                                                    <div><img src="@masterLink.agreement.slavePartner.customerLogo" style="max-width:140px;"></div>
-                                                }
-                                                <h4>@masterLink.agreement.slavePartner.customerName</h4>
-                                                <small>@masterLink.name</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+                            @agreement_link_box(portfolioEntry, masterLink)
                         }
                         
                     </div>
@@ -173,14 +143,7 @@
             </div>
         
         </div>
-        
-        @parts.Msg("core.portfolio_entry_data_syndication.index.legend.label"):
-        @for(status <- services.datasyndication.models.DataSyndicationAgreement.Status.values) { 
-            @if(status.displayAsLegend) {
-                @display_agreement_status(status)
-            }
-        }
-    
+
     }
 
 }

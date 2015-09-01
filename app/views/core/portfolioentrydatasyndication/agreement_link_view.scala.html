@@ -45,79 +45,108 @@
 
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.INTEGRATION, breadcrump){
 
-    <div class="panel panel-default">
-        
-        <div class="panel-heading">
-            @parts.Msg("core.portfolio_entry_data_syndication.link.view.title")
-            <div class="pull-right">
-                @if(agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.ONGOING) ||
-                  agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.PENDING)) {
-                    <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.cancelAgreementLink(portfolioEntry.id, agreementLink.id)"><span class="glyphicons glyphicons-ban glyphicons-panel"></span></a>
-                    <script type="text/javascript">
-                        function maf_confirmDelete(){
-                            return window.confirm("@parts.Msg("object.data_syndication_agreement_link.cancel.confirm")");
-                        }
-                    </script>
-                }
-                @if(isMasterAgreementLink && agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.ONGOING)) {
-                    &nbsp;&nbsp;
-                    <a href="@controllers.core.routes.PortfolioEntryDataSyndicationController.synchronizeAgreementLink(portfolioEntry.id, agreementLink.id)"><span class="glyphicons glyphicons-play glyphicons-panel"></span></a>
-                }
-            </div>
-        </div>
+    <div class="row">
+    
+        <div class="col-md-6">
 
-        <div class="panel-body">
-            <table class="table table-condensed table-hover">
-                <colgroup>
-                     <col class="col-md-3">
-                     <col class="col-md-9">
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
-                        <td>@partner.customerName</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement_link.agreement.label")</th>
-                        <td>
-                            @restrictOr(la(as(constants.IMafConstants.PARTNER_SYNDICATION_PERMISSION))) {
-                                @display_url(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id).url, agreementLink.agreement.name)
-                            }{
-                                @agreementLink.agreement.name
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_data_syndication.link.view.title")
+                </div>
+        
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover">
+                        <colgroup>
+                             <col class="col-md-3">
+                             <col class="col-md-9">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
+                                <td>@partner.customerName</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement_link.agreement.label")</th>
+                                <td>
+                                    @restrictOr(la(as(constants.IMafConstants.PARTNER_SYNDICATION_PERMISSION))) {
+                                        @display_url(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id).url, agreementLink.agreement.name)
+                                    }{
+                                        @agreementLink.agreement.name
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement_link.name.label")</th>
+                                <td>@display_object(agreementLink.name)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement_link.description.label")</th>
+                                <td>@display_object(agreementLink.description)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.start_date.label")</th>
+                                <td>@display_date(agreementLink.agreement.startDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.end_date.label")</th>
+                                <td>@display_date(agreementLink.agreement.endDate)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement_link.data_type.label")</th>
+                                <td>@parts.Msg("object.data_syndication_agreement_item." + agreementLink.dataType + ".label")</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement_link.items.label")</th>
+                                <td>@display_list_of_values(agreementLink.items)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement_link.status.label")</th>
+                                <td>@display_agreement_status(agreementLink.getStatus)</td>
+                            </tr>
+                           
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        <div class="col-md-6">
+        
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    @parts.Msg("core.portfolio_entry_data_syndication.link.admin.title")
+                </div>
+        
+                <div class="panel-body text-center">
+                    @if(agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.ONGOING) ||
+                      agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.PENDING)) {
+                      
+                        @if(isMasterAgreementLink && agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.ONGOING)) {
+                            <a class="btn btn-primary" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.synchronizeAgreementLink(portfolioEntry.id, agreementLink.id)">
+                                <span class="glyphicons glyphicons-play glyphicons-panel"></span> @parts.Msg("core.portfolio_entry_data_syndication.link.admin.trigger.label")
+                            </a>
+                            &nbsp;&nbsp;
+                        }
+                        <a class="btn btn-danger"  onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.cancelAgreementLink(portfolioEntry.id, agreementLink.id)">
+                            <span class="glyphicons glyphicons-ban glyphicons-panel"></span> @parts.Msg("core.portfolio_entry_data_syndication.link.admin.cancel.label")
+                        </a>
+                        <script type="text/javascript">
+                            function maf_confirmDelete(){
+                                return window.confirm("@parts.Msg("object.data_syndication_agreement_link.cancel.confirm")");
                             }
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement_link.name.label")</th>
-                        <td>@display_object(agreementLink.name)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement_link.description.label")</th>
-                        <td>@display_object(agreementLink.description)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement.start_date.label")</th>
-                        <td>@display_date(agreementLink.agreement.startDate)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement.end_date.label")</th>
-                        <td>@display_date(agreementLink.agreement.endDate)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement_link.data_type.label")</th>
-                        <td>@parts.Msg("object.data_syndication_agreement_item." + agreementLink.dataType + ".label")</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement_link.items.label")</th>
-                        <td>@display_list_of_values(agreementLink.items)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.data_syndication_agreement_link.status.label")</th>
-                        <td>@display_agreement_status(agreementLink.getStatus)</td>
-                    </tr>
-                   
-                </tbody>
-            </table>
+                        </script>
+                    } else {
+                        @parts.Msg("core.portfolio_entry_data_syndication.link.no_action.label")
+                    }
+                    
+                </div>
+                
+            </div>
+        
         </div>
         
     </div>

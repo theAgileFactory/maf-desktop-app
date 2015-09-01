@@ -19,16 +19,14 @@ package dao.pmo;
 
 import java.util.List;
 
-import models.pmo.PortfolioEntryPlanningPackage;
-import models.pmo.PortfolioEntryPlanningPackageGroup;
-import models.pmo.PortfolioEntryPlanningPackagePattern;
-import com.avaje.ebean.Model.Finder;
-
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Pagination;
+import models.pmo.PortfolioEntryPlanningPackage;
+import models.pmo.PortfolioEntryPlanningPackageGroup;
+import models.pmo.PortfolioEntryPlanningPackagePattern;
 
 /**
  * DAO for the {@link PortfolioEntryPlanningPackage} and
@@ -39,8 +37,7 @@ import framework.utils.Pagination;
  */
 public abstract class PortfolioEntryPlanningPackageDao {
 
-    public static Finder<Long, PortfolioEntryPlanningPackage> findPortfolioEntryPlanningPackage = new Finder<>(
-            PortfolioEntryPlanningPackage.class);
+    public static Finder<Long, PortfolioEntryPlanningPackage> findPortfolioEntryPlanningPackage = new Finder<>(PortfolioEntryPlanningPackage.class);
 
     public static Finder<Long, PortfolioEntryPlanningPackageGroup> findPortfolioEntryPlanningPackageGroup = new Finder<>(
             PortfolioEntryPlanningPackageGroup.class);
@@ -71,7 +68,7 @@ public abstract class PortfolioEntryPlanningPackageDao {
      *            the portfolio entry id
      */
     public static ExpressionList<PortfolioEntryPlanningPackage> getPEPlanningPackageAsExprByPE(Long portfolioEntryId) {
-        return findPortfolioEntryPlanningPackage.orderBy("endDate, order").where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId);
+        return findPortfolioEntryPlanningPackage.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId);
     }
 
     /**
@@ -82,16 +79,6 @@ public abstract class PortfolioEntryPlanningPackageDao {
      */
     public static List<PortfolioEntryPlanningPackage> getPEPlanningPackageAsListByPE(Long portfolioEntryId) {
         return getPEPlanningPackageAsExprByPE(portfolioEntryId).findList();
-    }
-
-    /**
-     * Get all planning packages of a portfolio entry as pagination.
-     * 
-     * @param portfolioEntryId
-     *            the portfolio entry id
-     */
-    public static Pagination<PortfolioEntryPlanningPackage> getPEPlanningPackageAsPaginationByPE(Long portfolioEntryId) {
-        return new Pagination<>(getPEPlanningPackageAsExprByPE(portfolioEntryId));
     }
 
     /**
@@ -253,9 +240,8 @@ public abstract class PortfolioEntryPlanningPackageDao {
      *            the package group id
      */
     public static Integer getPEPlanningPackagePatternAsLastOrderByGroup(Long packageGroupId) {
-        PortfolioEntryPlanningPackagePattern lastPackagePattern =
-                findPortfolioEntryPlanningPackagePattern.orderBy("order DESC").where().eq("deleted", false)
-                        .eq("portfolioEntryPlanningPackageGroup.id", packageGroupId).setMaxRows(1).findUnique();
+        PortfolioEntryPlanningPackagePattern lastPackagePattern = findPortfolioEntryPlanningPackagePattern.orderBy("order DESC").where().eq("deleted", false)
+                .eq("portfolioEntryPlanningPackageGroup.id", packageGroupId).setMaxRows(1).findUnique();
         if (lastPackagePattern == null) {
             return -1;
         } else {

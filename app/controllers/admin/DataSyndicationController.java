@@ -379,7 +379,7 @@ public class DataSyndicationController extends Controller {
      *            the agreement id
      * @param viewAllLinks
      *            if true then display all links of the agreement, else display
-     *            only PENDING, PENDING_INSTANCE and ONGOING links
+     *            only PENDING, SUSPENDED, FINISHED and ONGOING links
      */
     public Result viewAgreement(Long agreementId, Boolean viewAllLinks) {
 
@@ -417,7 +417,9 @@ public class DataSyndicationController extends Controller {
             List<DataSyndicationAgreementLinkListView> linkRows = new ArrayList<DataSyndicationAgreementLinkListView>();
             for (DataSyndicationAgreementLink link : links) {
                 if (viewAllLinks || link.getStatus().equals(DataSyndicationAgreement.Status.PENDING)
-                        || link.getStatus().equals(DataSyndicationAgreement.Status.ONGOING)) {
+                        || link.getStatus().equals(DataSyndicationAgreement.Status.ONGOING)
+                        || link.getStatus().equals(DataSyndicationAgreement.Status.SUSPENDED)
+                        || link.getStatus().equals(DataSyndicationAgreement.Status.FINISHED)) {
                     linkRows.add(new DataSyndicationAgreementLinkListView(link, dataSyndicationService.getCurrentDomain()));
                 }
             }
