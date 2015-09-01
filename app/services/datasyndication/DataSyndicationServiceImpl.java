@@ -613,8 +613,8 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                             "object.portfolio_entry_planning_package.status.label"));
                     for (PortfolioEntryPlanningPackage planningPackage : PortfolioEntryPlanningPackageDao
                             .getPEPlanningPackageAsListByPE(agreementLink.masterObjectId)) {
-                        String group = planningPackage.portfolioEntryPlanningPackageGroup != null ? planningPackage.portfolioEntryPlanningPackageGroup.name
-                                : null;
+                        String group = planningPackage.portfolioEntryPlanningPackageGroup != null
+                                ? Msg.get(planningPackage.portfolioEntryPlanningPackageGroup.getName()) : null;
                         data.add(Arrays.asList(planningPackage.isImportant, planningPackage.name, planningPackage.description, planningPackage.startDate,
                                 planningPackage.endDate, group,
                                 "object.portfolio_entry_planning_package.status." + planningPackage.status.name() + ".label"));
