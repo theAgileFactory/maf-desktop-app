@@ -452,7 +452,7 @@ kpi.allocated_actor_days.main.name=Mitarbeiter
 kpi.allocated_actor_days.additional1.name=bestätigt
 kpi.allocated_actor_days.additional2.name=nicht bestätigt
 
-kpi.allocated_org_unit_days.main.name=Resourcen 
+kpi.allocated_org_unit_days.main.name=Resourcen
 kpi.allocated_org_unit_days.additional1.name=bestätigt
 kpi.allocated_org_unit_days.additional2.name=nicht bestätigt
 
@@ -2453,7 +2453,7 @@ core.portfolio_entry_data_syndication.link.view.title=Details
 core.portfolio_entry_data_syndication.link.admin.title=Verwalten
 core.portfolio_entry_data_syndication.link.admin.trigger.label=de: Push the data
 core.portfolio_entry_data_syndication.link.admin.cancel.label=de: Cancel the relation
-core.portfolio_entry_data_syndication.link.no_action.label=de: No action
+core.portfolio_entry_data_syndication.link.no_action.label=de: No available action
 
 core.portfolio_entry_data_syndication.link.cancel.success=de: The relation has been successfully cancelled.
 
