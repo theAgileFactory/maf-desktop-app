@@ -33,11 +33,11 @@ import constants.IMafConstants;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.plugins.IPluginManagerService;
-import framework.services.plugins.api.IStaticPluginRunnerDescriptor;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
+import framework.services.ext.api.IExtensionDescriptor.IPluginDescriptor;
 
 /**
  * A controller to be used by the system owner to display and modify the core
@@ -120,9 +120,9 @@ public class SystemOwnerController extends Controller {
         // List of available plugins
         List<PluginDefinitionTableObject> pluginDescriptions = new ArrayList<PluginDefinitionTableObject>();
         
-        for (IStaticPluginRunnerDescriptor pluginDescriptor : getPluginManagerService().getAllPluginDescriptors().values()) {
+        for (IPluginDescriptor pluginDescriptor : getPluginManagerService().getAllPluginDescriptors().values()) {
             PluginDefinitionTableObject tableObject = new PluginDefinitionTableObject();
-            tableObject.identifier = pluginDescriptor.getPluginDefinitionIdentifier();
+            tableObject.identifier = pluginDescriptor.getIdentifier();
             tableObject.name = Msg.get(pluginDescriptor.getName());
             tableObject.version = pluginDescriptor.getVersion();
             pluginDescriptions.add(tableObject);

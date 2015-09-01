@@ -26,9 +26,9 @@
 
 <div class="col-sm-6 col-md-3">
     <div class="thumbnail">
-        <img src="@controllers.admin.routes.PluginManagerController.image(pluginInfoPair.getRight().getStaticDescriptor().getPluginDefinitionIdentifier(),true)" style="max-height: 100px;" />
+        <img src="@controllers.admin.routes.PluginManagerController.image(pluginInfoPair.getRight().getDescriptor().getIdentifier(),true)" style="max-height: 100px;" />
         <div class="caption text-center">
-            <h4>@parts.Msg(pluginInfoPair.getRight().getStaticDescriptor().getName())</h4>
+            <h4>@parts.Msg(pluginInfoPair.getRight().getDescriptor().getName())</h4>
             <p>@pluginInfoPair.getMiddle()</p>
             @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                 @if(pluginInfoPair.getRight().getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTED) &&

@@ -80,8 +80,8 @@
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.plugin_definition.name.label")</th>
-                                <td><a href="@controllers.admin.routes.PluginManagerController.pluginDefinitionDetails(pluginInfo.getStaticDescriptor().getPluginDefinitionIdentifier())">
-                                @parts.Msg(pluginInfo.getStaticDescriptor().getName())</a></td>
+                                <td><a href="@controllers.admin.routes.PluginManagerController.pluginDefinitionDetails(pluginInfo.getDescriptor().getIdentifier())">
+                                @parts.Msg(pluginInfo.getDescriptor().getName())</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -98,13 +98,13 @@
                         <a class="btn btn-success @startDisabled" href="@controllers.admin.routes.PluginManagerController.startPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-play"></i>&nbsp;@parts.Msg("button.start")</a>
                         <a class="btn btn-danger @stopDisabled" href="@controllers.admin.routes.PluginManagerController.stopPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-stop"></i>&nbsp;@parts.Msg("button.stop")</a>
                     </p>
-                    @if(pluginInfo.getStaticDescriptor().getActionDescriptors()!=null){
+                    @if(pluginInfo.getConfigurator().getActionDescriptors()!=null){
                     <hr/>
                     <p class="text-center">
                         <small>@parts.Msg("admin.plugin_manager.configuration.view.panel.admin.action.title")</small><br/>
                     </p>
                     <p class="text-center">
-                        @for((identifier, actionDescriptor) <- pluginInfo.getStaticDescriptor().getActionDescriptors()) {
+                        @for((identifier, actionDescriptor) <- pluginInfo.getConfigurator().getActionDescriptors()) {
                             <a class="btn btn-primary @stopDisabled" id="_AdminCommand_@actionDescriptor.getIdentifier()" href="#">
                             @parts.Msg(actionDescriptor.getLabel())</a>
                         }
@@ -123,7 +123,7 @@
             </div>
         </div>
     </div>
-    @if(pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors()!=null){
+    @if(pluginInfo.getDescriptor().getConfigurationBlockDescriptors()!=null){
     <div class="row">
         <div class="col-md-12">
              <div class="panel panel-default">

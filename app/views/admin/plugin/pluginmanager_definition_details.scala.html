@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(pluginDescriptor: framework.services.plugins.api.IStaticPluginRunnerDescriptor, isAvailable: Boolean)
+@(pluginDescriptor: framework.services.ext.api.IExtensionDescriptor.IPluginDescriptor, isAvailable: Boolean)
 
 @import helper._
 @import bootstrap3._
@@ -32,7 +32,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img src="@controllers.admin.routes.PluginManagerController.image(pluginDescriptor.getPluginDefinitionIdentifier(),true)" style="max-height: 120px;" />
+                            <img src="@controllers.admin.routes.PluginManagerController.image(pluginDescriptor.getIdentifier(),true)" style="max-height: 120px;" />
                             <br/>&nbsp;
                         </div>
                         <div class="col-md-10">

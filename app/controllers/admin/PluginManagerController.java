@@ -43,14 +43,14 @@ import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
+import framework.services.ext.api.IExtensionDescriptor.IPluginConfigurationBlockDescriptor;
+import framework.services.ext.api.IExtensionDescriptor.IPluginConfigurationBlockDescriptor.ConfigurationBlockEditionType;
+import framework.services.ext.api.IExtensionDescriptor.IPluginDescriptor;
 import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.IPluginManagerService.PluginStatus;
 import framework.services.plugins.api.IPluginActionDescriptor;
-import framework.services.plugins.api.IPluginConfigurationBlockDescriptor;
-import framework.services.plugins.api.IPluginConfigurationBlockDescriptor.ConfigurationBlockEditionType;
-import framework.services.plugins.api.IStaticPluginRunnerDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -298,11 +298,11 @@ public class PluginManagerController extends Controller {
             tableObject.id = pluginConfigurationId;
             IPluginInfo pluginInfo = registeredPlugins.get(pluginConfigurationId);
             tableObject.name = PluginConfiguration.getAvailablePluginById(pluginConfigurationId).name;
-            tableObject.definitionIdentifier = pluginInfo.getStaticDescriptor().getPluginDefinitionIdentifier();
-            tableObject.definitionName = Msg.get(pluginInfo.getStaticDescriptor().getName());
-            tableObject.definitionDescription = Msg.get(pluginInfo.getStaticDescriptor().getDescription());
-            tableObject.definitionProviderUrl = pluginInfo.getStaticDescriptor().getVendorUrl().toString();
-            tableObject.definitionVersion = pluginInfo.getStaticDescriptor().getVersion();
+            tableObject.definitionIdentifier = pluginInfo.getDescriptor().getIdentifier();
+            tableObject.definitionName = Msg.get(pluginInfo.getDescriptor().getName());
+            tableObject.definitionDescription = Msg.get(pluginInfo.getDescriptor().getDescription());
+            tableObject.definitionProviderUrl = pluginInfo.getDescriptor().getVendorUrl();
+            tableObject.definitionVersion = pluginInfo.getDescriptor().getVersion();
             tableObject.status = pluginInfo.getPluginStatus();
             pluginConfigurations.add(tableObject);
         }
@@ -323,11 +323,11 @@ public class PluginManagerController extends Controller {
 
         // Select the definitions to be displayed (remove the mono instance
         // plugins which are already registered)
-        Map<Pair<String, Boolean>, IStaticPluginRunnerDescriptor> pluginDescriptors = getPluginManagerService().getAllPluginDescriptors();
-        List<Pair<Boolean, IStaticPluginRunnerDescriptor>> plugins = new ArrayList<>();
+        Map<Pair<String, Boolean>, IPluginDescriptor> pluginDescriptors = getPluginManagerService().getAllPluginDescriptors();
+        List<Pair<Boolean, IPluginDescriptor>> plugins = new ArrayList<>();
         for (Pair<String, Boolean> key : pluginDescriptors.keySet()) {
-            IStaticPluginRunnerDescriptor pluginDescriptor = pluginDescriptors.get(key);
-            if (!(registeredDefinitions.contains(pluginDescriptor.getPluginDefinitionIdentifier()) && !pluginDescriptor.multiInstanceAllowed())) {
+            IPluginDescriptor pluginDescriptor = pluginDescriptors.get(key);
+            if (!(registeredDefinitions.contains(pluginDescriptor.getIdentifier()) && !pluginDescriptor.multiInstanceAllowed())) {
                 plugins.add(Pair.of(key.getRight(), pluginDescriptor));
             }
         }
@@ -346,7 +346,7 @@ public class PluginManagerController extends Controller {
     public Result displayRegistrationForm(String pluginDefinitionIdentifier) {
         PluginRegistrationFormObject pluginRegistrationFormObject = new PluginRegistrationFormObject();
 
-        IStaticPluginRunnerDescriptor pluginRunnerDescriptor = getPluginManagerService().getAvailablePluginDescriptor(pluginDefinitionIdentifier);
+        IPluginDescriptor pluginRunnerDescriptor = getPluginManagerService().getAvailablePluginDescriptor(pluginDefinitionIdentifier);
         if (pluginRunnerDescriptor == null || (!pluginRunnerDescriptor.multiInstanceAllowed()
                 && getAlreadyRegisteredPlugins(getPluginManagerService()).contains(pluginDefinitionIdentifier))) {
             return badRequest();
@@ -455,14 +455,13 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result pluginDefinitionDetails(String pluginDefinitionIdentifier) {
-
-        IStaticPluginRunnerDescriptor pluginRunnerDescriptor = getPluginManagerService().getPluginDescriptor(pluginDefinitionIdentifier);
-        if (pluginRunnerDescriptor == null) {
+        IPluginDescriptor pluginDescriptor = getPluginManagerService().getPluginDescriptor(pluginDefinitionIdentifier);
+        if (pluginDescriptor == null) {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.definition.view.not_exists", pluginDefinitionIdentifier));
             return redirect(routes.PluginManagerController.registration());
         }
-        return ok(views.html.admin.plugin.pluginmanager_definition_details.render(pluginRunnerDescriptor,
-                getPluginManagerService().isPluginAvailable(pluginRunnerDescriptor.getPluginDefinitionIdentifier())));
+        return ok(views.html.admin.plugin.pluginmanager_definition_details.render(pluginDescriptor,
+                getPluginManagerService().isPluginAvailable(pluginDescriptor.getIdentifier())));
     }
 
     /**
@@ -490,8 +489,8 @@ public class PluginManagerController extends Controller {
 
         // Plugin configuration block
         List<PluginConfigurationBlockObject> configurationBlocks = new ArrayList<PluginConfigurationBlockObject>();
-        if (pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors() != null) {
-            for (IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor : pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors()
+        if (pluginInfo.getDescriptor().getConfigurationBlockDescriptors() != null) {
+            for (IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor : pluginInfo.getDescriptor().getConfigurationBlockDescriptors()
                     .values()) {
                 configurationBlocks.add(new PluginConfigurationBlockObject(pluginConfigurationBlockDescriptor, pluginConfigurationId));
             }
@@ -641,11 +640,11 @@ public class PluginManagerController extends Controller {
     private IPluginConfigurationBlockDescriptor getPluginConfigurationBlockDescriptor(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
 
         IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
-        if (pluginInfo == null || pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors() == null
-                || !pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors().containsKey(pluginConfigurationBlockIdentifier)) {
+        if (pluginInfo == null || pluginInfo.getDescriptor().getConfigurationBlockDescriptors() == null
+                || !pluginInfo.getDescriptor().getConfigurationBlockDescriptors().containsKey(pluginConfigurationBlockIdentifier)) {
             return null;
         }
-        IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = pluginInfo.getStaticDescriptor().getConfigurationBlockDescriptors()
+        IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = pluginInfo.getDescriptor().getConfigurationBlockDescriptors()
                 .get(pluginConfigurationBlockIdentifier);
         return pluginConfigurationBlockDescriptor;
     }
@@ -754,10 +753,10 @@ public class PluginManagerController extends Controller {
         try {
 
             IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
-            if (pluginInfo == null || !pluginInfo.getStaticDescriptor().getActionDescriptors().containsKey(pluginActionIdentifier)) {
+            if (pluginInfo == null || !pluginInfo.getConfigurator().getActionDescriptors().containsKey(pluginActionIdentifier)) {
                 return badRequest();
             }
-            IPluginActionDescriptor pluginActionDescriptor = pluginInfo.getStaticDescriptor().getActionDescriptors().get(pluginActionIdentifier);
+            IPluginActionDescriptor pluginActionDescriptor = pluginInfo.getConfigurator().getActionDescriptors().get(pluginActionIdentifier);
             EventMessage eventMessage = new EventMessage();
             eventMessage.setPluginConfigurationId(pluginConfigurationId);
             eventMessage.setMessageType(MessageType.CUSTOM);
@@ -805,7 +804,7 @@ public class PluginManagerController extends Controller {
         Collection<IPluginInfo> pluginInfos = pluginManagerService.getRegisteredPluginDescriptors().values();
         Set<String> registeredDefinitions = new HashSet<String>();
         for (IPluginInfo pluginInfo : pluginInfos) {
-            registeredDefinitions.add(pluginInfo.getStaticDescriptor().getPluginDefinitionIdentifier());
+            registeredDefinitions.add(pluginInfo.getDescriptor().getIdentifier());
         }
         return registeredDefinitions;
     }

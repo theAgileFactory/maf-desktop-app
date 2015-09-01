@@ -16,7 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    plugins: List[org.apache.commons.lang3.tuple.Pair[Boolean, framework.services.plugins.api.IStaticPluginRunnerDescriptor]]
+    plugins: List[org.apache.commons.lang3.tuple.Pair[Boolean, framework.services.ext.api.IExtensionDescriptor.IPluginDescriptor]]
 )
 
 @import helper._
@@ -35,7 +35,7 @@
         
         <div class="col-sm-6 col-md-3" >
             <div class="thumbnail">
-                <img src="@controllers.admin.routes.PluginManagerController.image(plugin.getRight.getPluginDefinitionIdentifier(),true)" style="height: 100px;" />
+                <img src="@controllers.admin.routes.PluginManagerController.image(plugin.getRight.getIdentifier(),true)" style="height: 100px;" />
                 <div class="caption text-center">
                     <div style="min-height: 140px;">
                         <h4>@parts.Msg(plugin.getRight.getName())</h4>
@@ -43,11 +43,11 @@
                     </div>
                     <div class="btn-group btn-group-justified" role="group">
                         <div class="btn-group" role="group">
-                          <a type="button" class="btn btn-light" href="@controllers.admin.routes.PluginManagerController.pluginDefinitionDetails(plugin.getRight.getPluginDefinitionIdentifier)"><i class="glyphicons glyphicons-zoom-in"></i> @parts.Msg("admin.plugin_manager.available_plugins.details.label")</a>
+                          <a type="button" class="btn btn-light" href="@controllers.admin.routes.PluginManagerController.pluginDefinitionDetails(plugin.getRight.getIdentifier)"><i class="glyphicons glyphicons-zoom-in"></i> @parts.Msg("admin.plugin_manager.available_plugins.details.label")</a>
                         </div>
                         @if(plugin.getLeft) {
                             <div class="btn-group" role="group">
-                                <a type="button" class="btn btn-primary" href="@controllers.admin.routes.PluginManagerController.displayRegistrationForm(plugin.getRight.getPluginDefinitionIdentifier)"><i class="glyphicons glyphicons-circle-plus"></i> @parts.Msg("admin.plugin_manager.available_plugins.activate.label")</a>
+                                <a type="button" class="btn btn-primary" href="@controllers.admin.routes.PluginManagerController.displayRegistrationForm(plugin.getRight.getIdentifier)"><i class="glyphicons glyphicons-circle-plus"></i> @parts.Msg("admin.plugin_manager.available_plugins.activate.label")</a>
                             </div>
                         }
                     </div>
