@@ -1608,7 +1608,7 @@ object.data_syndication_agreement.status.CANCELLED.label=Abgesagt
 object.data_syndication_agreement.items.label=de: Authorized items
 object.data_syndication_agreement.process.label=de: Process the request
 object.data_syndication_agreement.suspend.confirm=de: Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
-object.data_syndication_agreement.cancel.confirm=de: Are you sure you want to cancel this agreement? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement.cancel.confirm=de: Are you sure you want to cancel this agreement? This action is definitive and couldn\''t be reverted.
 object.data_syndication_agreement.table.empty=Kein Eintrag
 
 #----------------------
@@ -1623,7 +1623,7 @@ object.data_syndication_agreement_link.object.label=de: Object
 object.data_syndication_agreement_link.items.label=de: Synchronized items
 object.data_syndication_agreement_link.status.label=Status
 object.data_syndication_agreement_link.process.label=de: Process the request
-object.data_syndication_agreement_link.cancel.confirm=de: Are you sure you want to cancel this agreement relation? This action is definitive and couldn''t be reverted.
+object.data_syndication_agreement_link.cancel.confirm=de: Are you sure you want to cancel this agreement relation? This action is definitive and couldn\''t be reverted.
 object.data_syndication_agreement_link.table.empty=Kein Eintrag
 
 ########################
