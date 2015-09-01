@@ -1,0 +1,45 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    agreementLink: services.datasyndication.models.DataSyndicationAgreementLink
+)
+
+@import framework_views.parts.formats._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 text-center">
+        <div class="panel panel-default">
+            <div class="panel-body ">
+                @display_agreement_status(agreementLink.getStatus())<br/><br/>
+                @if(agreementLink.agreement.slavePartner.customerLogo != null) {
+                    <div><img src="@agreementLink.agreement.slavePartner.customerLogo" style="max-width:140px; max-height: 100px;"></div>
+                }
+                <h4>@agreementLink.agreement.slavePartner.customerName</h4>
+                <small>@agreementLink.name</small><br/><br/>
+                <a class="btn btn-default btn-block" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, agreementLink.id).url">
+                    @parts.Msg("core.portfolio_entry_data_syndication.link.view.title")
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</div>

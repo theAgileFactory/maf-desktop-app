@@ -2452,13 +2452,16 @@ core.portfolio_entry_status_reporting.event.delete.successful=L''évènement a �
 core.portfolio_entry_data_syndication.index.no_link_no_master=Il n''existe aucun agrément de provisionnement pour cette instance BizDock. \
 Veuillez suivre ce <a href="{0}">lien</a> pour créer un nouvel agrément (des permissions particulières sont requises).
 core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" n''est actuellement pas partagé avec une autre instance BizDock. Veuillez sélectionner un partenaire pour soumettre une demande de partage.
-core.portfolio_entry_data_syndication.index.with_link.slave.title=Consomme depuis
+core.portfolio_entry_data_syndication.index.with_link.slave.title=Consomme les données depuis
 core.portfolio_entry_data_syndication.index.with_link.slave.no_data="{0}" n''est pas provisionné par une autre instance BizDock.
-core.portfolio_entry_data_syndication.index.with_link.master.title=Fournit à
+core.portfolio_entry_data_syndication.index.with_link.master.title=Fournit les données à
 core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" ne provisionne pas une autre instance BizDock.
-core.portfolio_entry_data_syndication.index.legend.label=Légende
 
 core.portfolio_entry_data_syndication.link.view.title=Détails
+core.portfolio_entry_data_syndication.link.admin.title=Administration
+core.portfolio_entry_data_syndication.link.admin.trigger.label=Synchroniser les données
+core.portfolio_entry_data_syndication.link.admin.cancel.label=Annuler la relation
+core.portfolio_entry_data_syndication.link.no_action.label=Aucun action
 
 core.portfolio_entry_data_syndication.link.cancel.success=La relation a été annulée.
 
