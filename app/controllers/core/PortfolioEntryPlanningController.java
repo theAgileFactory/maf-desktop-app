@@ -558,7 +558,8 @@ public class PortfolioEntryPlanningController extends Controller {
                     .updateWithSearchExpression(PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsExprByPE(id));
             filterConfig.updateWithSortExpression(expressionList);
 
-            List<SourceItem> items = new ArrayList<SourceItem>();
+            // initiate the sortable collection
+            SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
 
             for (PortfolioEntryPlanningPackage planningPackage : expressionList.findList()) {
 
@@ -588,9 +589,16 @@ public class PortfolioEntryPlanningController extends Controller {
 
                     item.values.add(new SourceValue(from, to, "", "", cssClass, null));
 
-                    items.add(item);
+                    sortableCollection.addObject(new DateSortableObject(from, item));
+
                 }
 
+            }
+
+            List<SourceItem> items = new ArrayList<SourceItem>();
+            for (ISortableObject sortableObject : sortableCollection.getSorted()) {
+                SourceItem item = (SourceItem) sortableObject.getObject();
+                items.add(item);
             }
 
             String ganttSource = "";

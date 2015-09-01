@@ -29,7 +29,6 @@ import dao.timesheet.TimesheetDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -61,16 +60,16 @@ public class PortfolioEntryPlanningPackageListView {
             {
 
                 addColumnConfiguration("isImportant", "isImportant", "object.portfolio_entry_planning_package.is_important.label",
-                        new CheckboxFilterComponent(true), true, false, SortStatusType.NONE);
+                        new CheckboxFilterComponent(true), true, false, SortStatusType.UNSORTED);
 
                 addColumnConfiguration("name", "name", "object.portfolio_entry_planning_package.name.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.NONE);
+                        SortStatusType.UNSORTED);
 
                 addColumnConfiguration("startDate", "startDate", "object.portfolio_entry_planning_package.start_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.NONE);
+                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
 
                 addColumnConfiguration("endDate", "endDate", "object.portfolio_entry_planning_package.end_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.NONE);
+                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
 
                 ISelectableValueHolderCollection<Long> groups = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH();
                 if (groups != null && groups.getValues().size() > 0) {
@@ -95,10 +94,10 @@ public class PortfolioEntryPlanningPackageListView {
 
                 addColumnConfiguration("allocatedResourcesDays", "allocatedResourcesDays",
                         "object.portfolio_entry_planning_package.allocated_resources_days.label", new NoneFilterComponent(), false, false,
-                        SortStatusType.NONE);
+                        SortStatusType.UNSORTED);
 
                 addColumnConfiguration("timesheetsDays", "timesheetsDays", "object.portfolio_entry_planning_package.timesheets_days.label",
-                        new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                        new NoneFilterComponent(), false, false, SortStatusType.UNSORTED);
 
                 addCustomAttributesColumns("id", PortfolioEntryPlanningPackage.class);
 
