@@ -25,7 +25,7 @@
 @import framework_views.parts.formats._
 @import views.html.commons._
 
-@if(dataSyndication != null) {
+@if(agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.ONGOING) && dataSyndication != null) {
 
 
     <div class="panel panel-info">
