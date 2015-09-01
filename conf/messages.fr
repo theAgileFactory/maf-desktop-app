@@ -2461,7 +2461,7 @@ core.portfolio_entry_data_syndication.link.view.title=Détails
 core.portfolio_entry_data_syndication.link.admin.title=Administration
 core.portfolio_entry_data_syndication.link.admin.trigger.label=Synchroniser les données
 core.portfolio_entry_data_syndication.link.admin.cancel.label=Annuler la relation
-core.portfolio_entry_data_syndication.link.no_action.label=Aucun action
+core.portfolio_entry_data_syndication.link.no_action.label=Aucune action
 
 core.portfolio_entry_data_syndication.link.cancel.success=La relation a été annulée.
 
