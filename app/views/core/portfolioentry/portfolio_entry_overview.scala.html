@@ -87,6 +87,10 @@
                             </colgroup>
                             <tbody>
                                 <tr>
+                                    <th>@parts.Msg("object.portfolio_entry_report.report_date.label")</th>
+                                    <td>@display_date(portfolioEntry.lastPortfolioEntryReport.creationDate)</td>
+                                </tr>
+                                <tr>
                                     <th>@parts.Msg("object.portfolio_entry_report.status.label")</th>
                                     <td>@display_portfolio_entry_report_status_type(portfolioEntry.lastPortfolioEntryReport.portfolioEntryReportStatusType)</td>
                                 </tr>
