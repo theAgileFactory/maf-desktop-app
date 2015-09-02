@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(menuItemType: controllers.admin.PluginManagerController.MenuItemType, pageTitleI18nCode: String)(header: Html)(content: Html)
+@(menuItemType: controllers.admin.PluginManagerController.MenuItemType, pageTitleI18nCode: String, customBreadcrump: Seq[(String, String)] = null)(header: Html)(content: Html)
 
 @import framework_views.parts.formats._
 @import be.objectify.deadbolt.java.views.html._
@@ -27,10 +27,14 @@
 @import views.html.commons._
 
 @breadcrump=@{
-    Seq(
-        ("topmenubar.admin.integration.menu.label", controllers.admin.routes.PluginManagerController.index().url),
-        (pageTitleI18nCode, null)
-    )
+    if (customBreadcrump != null) {
+        customBreadcrump
+    } else {
+        Seq(
+            ("topmenubar.admin.integration.menu.label", controllers.admin.routes.PluginManagerController.index().url),
+            (pageTitleI18nCode, null)
+        )
+    }
 }
 
 @templates.main_bc_iconsbar(

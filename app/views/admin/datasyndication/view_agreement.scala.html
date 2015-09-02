@@ -52,8 +52,15 @@
     }
 }
 
+@breadcrump=@{
+    Seq(
+        ("topmenubar.admin.integration.menu.label", controllers.admin.routes.PluginManagerController.index().url),
+        (titleKey, backLink),
+        (agreement.name, null)
+    )
+}
 
-@views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.DATA_SYNDICATION,parts.Msg.asString(titleKey)){
+@views.html.admin.plugin.pluginmanager_template(controllers.admin.PluginManagerController.MenuItemType.DATA_SYNDICATION, parts.Msg.asString(titleKey), breadcrump){
 }{ 
 
     <div class="row">
