@@ -25,6 +25,29 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import dao.governance.LifeCycleMilestoneDao;
+import dao.pmo.ActorDao;
+import framework.security.ISecurityService;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IUserAccount;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.FileAttachmentHelper;
+import framework.utils.Msg;
+import framework.utils.Pagination;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.account.Principal;
@@ -43,30 +66,6 @@ import utils.form.ProcessMilestoneApprovalFormData;
 import utils.form.ProcessMilestoneDecisionFormData;
 import utils.table.MilestoneApprovalListView;
 import utils.table.MilestoneApproverListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-
-import com.avaje.ebean.Ebean;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-import constants.IMafConstants;
-import controllers.ControllersUtils;
-import dao.governance.LifeCycleMilestoneDao;
-import dao.pmo.ActorDao;
-import framework.security.ISecurityService;
-import framework.services.account.IAccountManagerPlugin;
-import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.FileAttachmentHelper;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * The controller which allows to approve / decide a milestone instance.
@@ -181,7 +180,7 @@ public class MilestoneApprovalController extends Controller {
 
         // get the milestone instances required for a vote/decision
         Pagination<LifeCycleMilestoneInstance> pagination;
-        if (getSecurityService().restrict(IMafConstants.MILESTONE_DECIDE_PERMISSION,userAccount)) {
+        if (getSecurityService().restrict(IMafConstants.MILESTONE_DECIDE_PERMISSION, userAccount)) {
             pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPagination();
         } else {
             // if the sign in user hasn't the permission
@@ -287,7 +286,8 @@ public class MilestoneApprovalController extends Controller {
         List<String> status = LifeCycleMilestoneDao.getLCMilestoneAsStatusByPEAndLCMilestone(portfolioEntry.id, milestoneInstance.lifeCycleMilestone.id);
 
         // if exists, get the description document
-        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, milestoneInstance.id, getAttachmentPluginManager(), getUserSessionManagerPlugin());
+        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, milestoneInstance.id,
+                getAttachmentPluginManager(), getUserSessionManagerPlugin());
         Attachment descriptionDocument = null;
         if (attachments != null && attachments.size() > 0) {
             descriptionDocument = attachments.get(0);
@@ -397,7 +397,7 @@ public class MilestoneApprovalController extends Controller {
             milestoneInstance.save();
 
             // set the current actor as approver (if exists)
-            
+
             Actor actor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
             if (actor != null) {
                 milestoneInstance.approver = actor;
@@ -518,7 +518,8 @@ public class MilestoneApprovalController extends Controller {
 
             this.url = controllers.core.routes.MilestoneApprovalController.overviewModal(milestoneInstance.id).url();
 
-            this.goToUrl = controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url();
+            this.goToUrl = controllers.core.routes.PortfolioEntryGovernanceController
+                    .viewMilestone(portfolioEntry.id, milestoneInstance.lifeCycleMilestone.id).url();
 
             this.statusClass = statusClass;
 
