@@ -100,13 +100,11 @@
                     </script>
                 }
                 
-                @if(!isRisk) {
-                    @parts.singlevalue_picker(
-                        portfolioEntryRiskForm("owner"), 
-                        parts.Msg.asString("object.portfolio_entry_risk.owner.label"),
-                        controllers.routes.PickerController.owner().url
-                    )
-                }
+                @parts.singlevalue_picker(
+                    portfolioEntryRiskForm("owner"), 
+                    parts.Msg.asString("object.portfolio_entry_risk.owner.label"),
+                    controllers.routes.PickerController.owner().url
+                )
                 
                 @if(portfolioEntryRiskForm("riskId").value!=null) {
                     @parts.extended_attributes_input(portfolioEntryRiskForm, classOf[models.pmo.PortfolioEntryRisk], Long.parseLong(portfolioEntryRiskForm("riskId").value))

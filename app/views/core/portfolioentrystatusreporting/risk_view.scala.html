@@ -51,7 +51,7 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, portfolioEntryRisk.id)"><span class="glyphicons glyphicons-edit"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, portfolioEntryRisk.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
                     &nbsp;
                 }
             </div>
@@ -102,12 +102,10 @@
                             <td>@display_object(portfolioEntryRisk.mitigationComment)</td>
                         </tr>
                     }
-                    @if(!isRisk) {
-                        <tr>
-                            <th>@parts.Msg("object.portfolio_entry_risk.owner.label")</th>
-                            <td >@display_actor(portfolioEntryRisk.owner)</td>
-                        </tr>
-                    }
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_risk.owner.label")</th>
+                        <td >@display_actor(portfolioEntryRisk.owner)</td>
+                    </tr>
                 </tbody>
             </table>
             

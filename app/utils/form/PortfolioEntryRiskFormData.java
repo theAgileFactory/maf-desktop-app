@@ -19,13 +19,13 @@ package utils.form;
 
 import java.text.ParseException;
 
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioEntryRiskDao;
+import framework.utils.Utilities;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntryRisk;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioEntryRiskDao;
-import framework.utils.Utilities;
 
 /**
  * An portfolioEntry risk form data is used to manage the fields when
@@ -108,6 +108,7 @@ public class PortfolioEntryRiskFormData {
         portfolioEntryRisk.description = description;
         portfolioEntryRisk.isActive = isActive != null ? isActive : false;
         portfolioEntryRisk.portfolioEntryRiskType = !riskType.equals("") ? PortfolioEntryRiskDao.getPERiskTypeById(Long.parseLong(riskType)) : null;
+        portfolioEntryRisk.owner = !owner.equals("") ? ActorDao.getActorById(Long.parseLong(owner)) : null;
     }
 
     /**
@@ -130,6 +131,5 @@ public class PortfolioEntryRiskFormData {
      */
     public void fillIssue(PortfolioEntryRisk portfolioEntryRisk) {
         fill(portfolioEntryRisk);
-        portfolioEntryRisk.owner = !owner.equals("") ? ActorDao.getActorById(Long.parseLong(owner)) : null;
     }
 }

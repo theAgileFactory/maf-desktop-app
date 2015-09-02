@@ -233,7 +233,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> hideColumnsForRisk = new HashSet<String>();
-        hideColumnsForRisk.add("owner");
+        hideColumnsForRisk.add("isMitigated");
         hideColumnsForRisk.add("dueDate");
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForRisk.add("editActionLink");
