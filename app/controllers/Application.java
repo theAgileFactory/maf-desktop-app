@@ -26,28 +26,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import models.framework_models.account.Notification;
-import models.framework_models.account.Principal;
-import models.framework_models.account.Shortcut;
-import models.framework_models.common.DynamicSingleItemCustomAttributeValue;
-import models.framework_models.common.HelpTarget;
-import models.pmo.Actor;
-import models.pmo.PortfolioEntry;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-
-import play.Logger;
-import play.Play;
-import play.libs.F.Promise;
-import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Http.Context;
-import play.mvc.Result;
-import security.dynamic.PortfolioEntryDynamicHelper;
-import utils.table.NotificationListView;
-import utils.tour.TourUtils;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
@@ -58,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import framework.security.ISecurityService;
@@ -77,6 +58,23 @@ import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.framework_models.account.Notification;
+import models.framework_models.account.Principal;
+import models.framework_models.account.Shortcut;
+import models.framework_models.common.DynamicSingleItemCustomAttributeValue;
+import models.framework_models.common.HelpTarget;
+import models.pmo.Actor;
+import models.pmo.PortfolioEntry;
+import play.Logger;
+import play.Play;
+import play.libs.F.Promise;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Http.Context;
+import play.mvc.Result;
+import security.dynamic.PortfolioEntryDynamicHelper;
+import utils.table.NotificationListView;
+import utils.tour.TourUtils;
 
 /**
  * The Home application controller.<br/>
@@ -102,7 +100,7 @@ public class Application extends Controller {
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
     private ISecurityService securityService;
-    
+
     private static Logger.ALogger log = Logger.of(Application.class);
 
     /**
@@ -179,7 +177,8 @@ public class Application extends Controller {
 
         String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-        ExpressionList<Notification> expressionList = filterConfig.updateWithSearchExpression(getNotificationManagerPlugin().getNotificationsForUidAsExpr(loggedUser));
+        ExpressionList<Notification> expressionList = filterConfig
+                .updateWithSearchExpression(getNotificationManagerPlugin().getNotificationsForUidAsExpr(loggedUser));
         filterConfig.updateWithSortExpression(expressionList);
 
         Pagination<Notification> pagination = new Pagination<Notification>(expressionList);
@@ -237,7 +236,8 @@ public class Application extends Controller {
 
             String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-            ExpressionList<Notification> expressionList = filterConfig.updateWithSearchExpression(getNotificationManagerPlugin().getNotificationsForUidAsExpr(loggedUser));
+            ExpressionList<Notification> expressionList = filterConfig
+                    .updateWithSearchExpression(getNotificationManagerPlugin().getNotificationsForUidAsExpr(loggedUser));
 
             List<String> ids = new ArrayList<>();
             for (Notification notification : expressionList.findList()) {
@@ -295,7 +295,7 @@ public class Application extends Controller {
             return redirect(routes.Application.displayNotifications());
         }
     }
-    
+
     /**
      * Display the home page.
      * 
@@ -358,7 +358,7 @@ public class Application extends Controller {
      */
     @SubjectPresent
     public Result downloadFileAttachment(Long attachmentId) {
-        return FileAttachmentHelper.downloadFileAttachment(attachmentId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+        return FileAttachmentHelper.downloadFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
     }
 
     /**
@@ -370,7 +370,7 @@ public class Application extends Controller {
      */
     @SubjectPresent
     public Result deleteFileAttachment(Long attachmentId) {
-        return FileAttachmentHelper.deleteFileAttachment(attachmentId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+        return FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
     }
 
     /**
@@ -649,25 +649,25 @@ public class Application extends Controller {
         try {
             if (!StringUtils.isBlank(loggedUser)) {
                 IUserAccount userAccount = ServiceStaticAccessor.getAccountManagerPlugin().getUserAccountFromUid(loggedUser);
-                INotificationManagerPlugin notificationManagerPlugin=ServiceStaticAccessor.getNotificationManagerPlugin();
+                INotificationManagerPlugin notificationManagerPlugin = ServiceStaticAccessor.getNotificationManagerPlugin();
                 if (userAccount != null) {
                     IDZoneData idZoneData = new IDZoneData();
                     idZoneData.isAuthorized = userAccount.isActive();
                     idZoneData.hasNotifications = notificationManagerPlugin.hasNotifications(loggedUser);
                     idZoneData.nbNotReadNotifications = notificationManagerPlugin.nbNotReadNotifications(loggedUser);
                     idZoneData.notifications = notificationManagerPlugin.getNotReadNotificationsForUid(loggedUser);
-                    idZoneData.hasMessages = notificationManagerPlugin.hasMessages(
-                            loggedUser);
-                    idZoneData.nbNotReadMessages =notificationManagerPlugin.nbNotReadMessages(loggedUser);
+                    idZoneData.hasMessages = notificationManagerPlugin.hasMessages(loggedUser);
+                    idZoneData.nbNotReadMessages = notificationManagerPlugin.nbNotReadMessages(loggedUser);
                     idZoneData.messages = notificationManagerPlugin.getNotReadMessagesForUid(loggedUser);
                     idZoneData.login = userAccount.getFirstName() + " " + userAccount.getLastName();
                     idZoneData.pluginMenuDesriptors = new HashMap<Long, Pair<String, IPluginMenuDescriptor>>();
                     Map<Long, IPluginInfo> pluginInfos = ServiceStaticAccessor.getPluginManagerService().getRegisteredPluginDescriptors();
                     for (Long pluginConfigirationId : pluginInfos.keySet()) {
-                        if (pluginInfos.get(pluginConfigirationId).getConfigurator().getMenuDescriptor() != null) {
+                        if (pluginInfos.get(pluginConfigirationId).getConfigurator() != null
+                                && pluginInfos.get(pluginConfigirationId).getConfigurator().getMenuDescriptor() != null) {
                             IPluginInfo pluginInfo = pluginInfos.get(pluginConfigirationId);
-                            idZoneData.pluginMenuDesriptors.put(pluginConfigirationId, Pair.of(
-                                    pluginInfo.getDescriptor().getIdentifier(), pluginInfo.getConfigurator().getMenuDescriptor()));
+                            idZoneData.pluginMenuDesriptors.put(pluginConfigirationId,
+                                    Pair.of(pluginInfo.getDescriptor().getIdentifier(), pluginInfo.getConfigurator().getMenuDescriptor()));
                         }
                     }
                     idZoneData.logoutUrl = controllers.sso.routes.Authenticator.customLogout().url();
