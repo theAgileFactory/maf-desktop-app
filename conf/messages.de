@@ -2688,7 +2688,6 @@ admin.user_manager.edit_account_type.header=Wenn Sie den Konto-type ändern, wer
 
 #edit email
 admin.user_manager.edit_email.title=E-mail ändern
-admin.user_manager.edit_email.header=Nach der Änderung der E-mail werden Sie eine Bestätigung erhalten, damit die neue E-Mail geprüft werden kann.
 
 #edit roles
 admin.user_manager.edit_roles.title=Rollen bearbeiten

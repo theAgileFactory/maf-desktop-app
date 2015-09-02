@@ -22,7 +22,6 @@
 @import framework_views.parts
 
 @usermanager_template(title, controllers.admin.UserManager.MenuItemType.SEARCH) {
-<blockquote>@parts.Msg("admin.user_manager.edit_email.header")</blockquote>
 <div class="maf-form">
     @if(userAccountForm.hasErrors()){
         <div class="alert alert-danger">

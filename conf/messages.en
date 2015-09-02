@@ -2677,7 +2677,6 @@ admin.user_manager.edit_account_type.header=If you update the account type, the 
 
 #edit email
 admin.user_manager.edit_email.title=Change email address
-admin.user_manager.edit_email.header=If you update your e-mail address, you will receive an e-mail to the specified address to complete its validation.
 
 #edit roles
 admin.user_manager.edit_roles.title=Edit roles

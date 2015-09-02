@@ -2696,7 +2696,6 @@ admin.user_manager.edit_account_type.header=En mettant à jour le type d''utilis
 
 #edit email
 admin.user_manager.edit_email.title=Modifier l''adresse email
-admin.user_manager.edit_email.header=En mettant à jour l''adresse email, un message de validation sera envoyé à la nouvelle adresse.
 
 #edit roles
 admin.user_manager.edit_roles.title=Mettre à jour les rôles
