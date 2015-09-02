@@ -546,7 +546,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                     + controllers.api.system.routes.SystemApiController.getSystemCurrentTime().url();
             bizdockApiClient.call(agreementLink.agreement.apiKey.applicationKey, agreementLink.agreement.apiKey.secretKey, ApiMethod.GET,
                     getSystemCurrentTimeUrl, null);
-        } catch (BizdockApiException e) {
+        } catch (Exception e) {
             Logger.error("dataSyndicationService.postData: error with bizdockApiClient.getSystemCurrentTime", e);
             throw new DataSyndicationPostDataException(DataSyndicationPostDataException.ErrorCode.E1001);
         }

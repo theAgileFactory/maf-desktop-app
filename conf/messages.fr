@@ -681,8 +681,8 @@ data_syndication.cancel_agreement_link.notification.message=An agreement relatio
 data_syndication.delete_agreement_link.notification.title=Partner relation deleted
 data_syndication.delete_agreement_link.notification.message=The agreement relation {0} has been deleted because you or your partner has deleted the corresponding resource.
 
-data_syndication.post_data.error.E1001=Impossible de se conntecter à l'instance du partenaire.
-data_syndication.post_data.error.E1002=Impossible de lire l'objet du partenaire (où les données doivent être postée).
+data_syndication.post_data.error.E1001=Impossible de se conntecter à l''instance du partenaire.
+data_syndication.post_data.error.E1002=Impossible de lire l''objet du partenaire (où les données doivent être postée).
 data_syndication.post_data.error.E1003=L''objet de provisionnement ou celui du partenaire n''existe pas, mais il a été impossible de supprimer la relation d''agrément.
 data_syndication.post_data.error.E1004=Impossible de poster les données à syndiquer dans l''instance du partenaire.
 data_syndication.post_data.error.E2001=Le type de donnée n''est actuellement pas géré par BizDock.
@@ -2465,7 +2465,7 @@ core.portfolio_entry_data_syndication.link.no_action.label=Aucune action disponi
 
 core.portfolio_entry_data_syndication.link.cancel.success=La relation a été annulée.
 
-core.portfolio_entry_data_syndication.link.synchronize.success=Les données ont été poussées dans l'instance du partenaire.
+core.portfolio_entry_data_syndication.link.synchronize.success=Les données ont été poussées dans l''instance du partenaire.
 
 core.portfolio_entry_data_syndication.link.submit.title=Soumettre une requête de relation
 core.portfolio_entry_data_syndication.link.submit.agreement.title=Détails de l''agrément
