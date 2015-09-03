@@ -26,6 +26,7 @@ POST   /shortcut/add               controllers.Application.addShortcut()
 POST   /shortcut/delete            controllers.Application.deleteShortcut()
 GET    /tour/end                   controllers.Application.endTour(tourUid: String)
 GET    /adpanel/:page              controllers.Application.getAdPanelContent(page: String)
+GET    /data-syndication/export-as-excel controllers.Application.exportDataSyndicationAsExcel(redirect: String, agreementLinkId: Long, agreementItemId: Long)
 
 #Messaging
 GET    /messaging                  controllers.MessagingController.index()

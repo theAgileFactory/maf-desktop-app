@@ -15,7 +15,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(agreementLink: services.datasyndication.models.DataSyndicationAgreementLink, agreementItem: services.datasyndication.models.DataSyndicationAgreementItem)
+@(
+    agreementLink: services.datasyndication.models.DataSyndicationAgreementLink, 
+    agreementItem: services.datasyndication.models.DataSyndicationAgreementItem,
+    displayTable: Boolean = true,
+    displayExcelLink: Boolean = true
+)
 
 @dataSyndication=@{
     dao.datasyndication.DataSyndicationDao.getDataSyndicationAsDataByLinkAndItem(agreementLink.id, agreementItem.id)
@@ -32,47 +37,56 @@
         
         <div class="panel-heading">
             <strong>@agreementLink.agreement.masterPartner.customerName</strong> / @parts.Msg("object.data_syndication_agreement_item." + agreementItem.dataType + "." + agreementItem.descriptor + ".label")
+            <div class="pull-right">
+                @if(displayExcelLink) {
+                    <a href="@controllers.routes.Application.exportDataSyndicationAsExcel(play.mvc.Http.Context.current().request().uri(), agreementLink.id, agreementItem.id)"><span class="glyphicons glyphicons-disk-save glyphicons-panel"></span></a>
+                }
+            </div>
         </div>
 
         <div class="panel-body">
-            <div class="table-responsive">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            @for(header <- dataSyndication.get(0)) {
-                                <th>@parts.Msg(header.toString)</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if(dataSyndication.size == 1) {
-                            <tr class="warning">
-                                <td class="text-center" colspan="@dataSyndication.get(0).size">@parts.Msg("table.empty")</td>
+            @if(displayTable) {
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                @for(header <- dataSyndication.get(0)) {
+                                    <th>@parts.Msg(header.toString)</th>
+                                }
                             </tr>
-                        } else {
-                            @for((row, i) <- dataSyndication.zipWithIndex) {
-                                @if(i != 0) {
-                                    <tr>
-                                        @for(elem <-row) {
-                                            <td>
-                                                @if(elem.isInstanceOf[java.lang.String] && _dataSyndication.getStringDate(elem.toString) != null) {
-                                                    @display_date(_dataSyndication.getStringDate(elem.toString))
-                                                } else { @if(elem.isInstanceOf[java.lang.Boolean]) {
-                                                    @display_boolean(Boolean.valueOf(elem.toString))
-                                                } else { @if(elem.isInstanceOf[java.lang.Integer] || elem.isInstanceOf[java.lang.Long] || elem.isInstanceOf[java.lang.Double]) {
-                                                    @display_number(Double.valueOf(elem.toString))
-                                                } else {
-                                                    @display_object(elem)
-                                                }}}
-                                            </td>
-                                        }
-                                    </tr>
+                        </thead>
+                        <tbody>
+                            @if(dataSyndication.size == 1) {
+                                <tr class="warning">
+                                    <td class="text-center" colspan="@dataSyndication.get(0).size">@parts.Msg("table.empty")</td>
+                                </tr>
+                            } else {
+                                @for((row, i) <- dataSyndication.zipWithIndex) {
+                                    @if(i != 0) {
+                                        <tr>
+                                            @for(elem <-row) {
+                                                <td>
+                                                    @if(elem.isInstanceOf[java.lang.String] && _dataSyndication.getStringDate(elem.toString) != null) {
+                                                        @display_date(_dataSyndication.getStringDate(elem.toString))
+                                                    } else { @if(elem.isInstanceOf[java.lang.Boolean]) {
+                                                        @display_boolean(Boolean.valueOf(elem.toString))
+                                                    } else { @if(elem.isInstanceOf[java.lang.Integer] || elem.isInstanceOf[java.lang.Long] || elem.isInstanceOf[java.lang.Double]) {
+                                                        @display_number(Double.valueOf(elem.toString))
+                                                    } else {
+                                                        @display_object(elem)
+                                                    }}}
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
                                 }
                             }
-                        }
-                    </tbody>
-                </table>
-            </div>
+                        </tbody>
+                    </table>
+                </div>
+            } else {
+                @parts.Msg("data_syndication.display_date.no_table")
+            }
         </div>
     </div>
 

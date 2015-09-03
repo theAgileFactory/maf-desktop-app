@@ -19,7 +19,9 @@
     portfolioEntry: models.pmo.PortfolioEntry,
     table: framework.utils.Table[utils.table.TimesheetLogListView], 
     pagination: framework.utils.Pagination[models.timesheet.TimesheetLog],
-    filterConfig: framework.utils.FilterConfig[utils.table.TimesheetLogListView]
+    filterConfig: framework.utils.FilterConfig[utils.table.TimesheetLogListView],
+    agreementLinks: List[services.datasyndication.models.DataSyndicationAgreementLink],
+    agreementItem: services.datasyndication.models.DataSyndicationAgreementItem
 )
 
 @import be.objectify.deadbolt.java.views.html._
@@ -53,4 +55,10 @@
 
         </div>
     </div>
+    
+    @if(agreementLinks != null && agreementItem != null) {
+        @for(agreementLink <- agreementLinks) {
+            @display_data_syndication_table(agreementLink, agreementItem, false)
+        }
+    }
 }

@@ -690,6 +690,9 @@ data_syndication.post_data.error.E2002=de: The master object is not existing, th
 data_syndication.post_data.error.E2003=de: The partner object is not existing, the agreement relation has been deleted.
 data_syndication.post_data.error.E2004=de: The master or the partner object is not active, the synchronization is not done.
 
+data_syndication.display_date.no_table=de: The data can be only obtained in Excel.
+data_syndication.display_date.export_as_excel.request.success=de: Your request to export the data as Excel has been correctly submitted. You will be notified when the file will be ready.
+
 ########################
 # Objects
 ########################

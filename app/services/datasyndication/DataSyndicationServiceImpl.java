@@ -635,7 +635,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                             "object.timesheet_report.status.label", "object.timesheet_entry.planning_package.label"));
                     for (TimesheetLog timesheetLog : TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(agreementLink.masterObjectId).findList()) {
                         String planningPackageName = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage != null
-                                ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.name : null;
+                                ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.getName() : null;
                         String status = "<span class=\"label label-" + timesheetLog.timesheetEntry.timesheetReport.getStatusCssClass() + "\">"
                                 + Msg.get("object.timesheet_report.status." + timesheetLog.timesheetEntry.timesheetReport.status.name() + ".label")
                                 + "</span>";

@@ -17,17 +17,31 @@
  */
 package controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFDataFormat;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
@@ -40,6 +54,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
+import dao.datasyndication.DataSyndicationDao;
 import dao.pmo.ActorDao;
 import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
@@ -52,13 +67,18 @@ import framework.services.plugins.api.IPluginMenuDescriptor;
 import framework.services.remote.IAdPanelManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
+import framework.services.storage.IPersonalStoragePlugin;
+import framework.services.system.ISysAdminUtils;
 import framework.utils.FileAttachmentHelper;
 import framework.utils.FilterConfig;
 import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
+import framework.utils.TableExcelRenderer;
 import framework.utils.Utilities;
 import models.framework_models.account.Notification;
+import models.framework_models.account.NotificationCategory;
+import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.account.Principal;
 import models.framework_models.account.Shortcut;
 import models.framework_models.common.DynamicSingleItemCustomAttributeValue;
@@ -72,7 +92,9 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
+import scala.concurrent.duration.Duration;
 import security.dynamic.PortfolioEntryDynamicHelper;
+import services.datasyndication.IDataSyndicationService;
 import utils.table.NotificationListView;
 import utils.tour.TourUtils;
 
@@ -100,6 +122,12 @@ public class Application extends Controller {
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private IPersonalStoragePlugin personalStoragePlugin;
+    @Inject
+    private IDataSyndicationService dataSyndicationService;
 
     private static Logger.ALogger log = Logger.of(Application.class);
 
@@ -630,6 +658,115 @@ public class Application extends Controller {
     }
 
     /**
+     * Export an item of an agreement link as Excel.
+     * 
+     * @param redirect
+     *            the redirect URL
+     * @param agreementLinkId
+     *            the agreement link id
+     * @param agreementItemId
+     *            the agreement item id
+     */
+    @SubjectPresent
+    public Result exportDataSyndicationAsExcel(String redirect, Long agreementLinkId, Long agreementItemId) {
+
+        // get the current user
+        final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+
+        // prepare the message
+        final String fileName = String.format("syndicatedDataExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
+        final String successTitle = Msg.get("excel.export.success.title");
+        final String successMessage = Msg.get("excel.export.success.message", fileName, "Syndicated data");
+        final String failureTitle = Msg.get("excel.export.failure.title");
+        final String failureMessage = Msg.get("excel.export.failure.message", "Syndicated data");
+
+        // Execute asynchronously
+        getSysAdminUtils().scheduleOnce(false, "Data Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+
+                    // get the data
+                    List<List<Object>> dataSyndication = DataSyndicationDao.getDataSyndicationAsDataByLinkAndItem(agreementLinkId, agreementItemId);
+
+                    // create the excel file with a sheet
+                    XSSFWorkbook wb = new XSSFWorkbook();
+                    Sheet sheet = wb.createSheet("export");
+
+                    // add the header
+                    Row headerRow = sheet.createRow(0);
+                    int columnIndex = 0;
+                    CellStyle headerCellStyle = wb.createCellStyle();
+                    Font f = wb.createFont();
+                    f.setBoldweight(Font.BOLDWEIGHT_BOLD);
+                    headerCellStyle.setFont(f);
+                    for (Object header : dataSyndication.get(0)) {
+                        Cell cell = headerRow.createCell(columnIndex);
+                        cell.setCellValue(Msg.get(header.toString()));
+                        cell.setCellStyle(headerCellStyle);
+                        columnIndex++;
+                    }
+
+                    // add the data
+                    int rowIndex = 0;
+                    for (List<Object> row : dataSyndication) {
+                        if (rowIndex != 0) {
+                            Row dataRow = sheet.createRow(rowIndex);
+                            columnIndex = 0;
+                            for (Object elem : row) {
+                                Cell cell = dataRow.createCell(columnIndex);
+                                if (elem == null) {
+                                    cell.setCellValue("");
+                                } else {
+                                    if (elem instanceof String && getDataSyndicationService().getStringDate(elem.toString()) != null) {
+                                        cell.setCellValue(getDataSyndicationService().getStringDate(elem.toString()));
+                                        XSSFCellStyle dateCellStyle = wb.createCellStyle();
+                                        XSSFDataFormat df = wb.createDataFormat();
+                                        dateCellStyle.setDataFormat(df.getFormat(TableExcelRenderer.DEFAULT_EXCEL_DATE_FORMAT));
+                                        cell.setCellStyle(dateCellStyle);
+                                    } else if (elem instanceof Boolean) {
+                                        cell.setCellType(Cell.CELL_TYPE_BOOLEAN);
+                                        cell.setCellValue((Boolean) elem);
+                                    } else if (elem instanceof Integer || elem instanceof Integer || elem instanceof Double) {
+                                        cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+                                        cell.setCellValue(Double.valueOf(elem.toString()));
+                                    } else {
+                                        cell.setCellValue(elem.toString().replaceAll("\\<[^>]*>", "").trim());
+                                    }
+                                }
+                                columnIndex++;
+                            }
+                        }
+                        rowIndex++;
+                    }
+
+                    // create the file
+                    ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+                    wb.write(outBuffer);
+                    outBuffer.close();
+                    final byte[] excelFile = outBuffer.toByteArray();
+
+                    OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
+                    IOUtils.copy(new ByteArrayInputStream(excelFile), out);
+                    getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
+                            controllers.my.routes.MyPersonalStorage.index().url());
+
+                } catch (Exception e) {
+
+                    log.error("Unable to export the excel file", e);
+                    getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage, redirect);
+
+                }
+            }
+        });
+
+        Utilities.sendSuccessFlashMessage(Msg.get("data_syndication.display_date.export_as_excel.request.success"));
+        return redirect(redirect);
+
+    }
+
+    /**
      * Return the AdPanel content for the specified page.
      * 
      * @param page
@@ -746,5 +883,17 @@ public class Application extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private IPersonalStoragePlugin getPersonalStoragePlugin() {
+        return personalStoragePlugin;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
+    }
+
+    private IDataSyndicationService getDataSyndicationService() {
+        return dataSyndicationService;
     }
 }

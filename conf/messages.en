@@ -678,6 +678,9 @@ data_syndication.post_data.error.E2002=The master object is not existing, the ag
 data_syndication.post_data.error.E2003=The partner object is not existing, the agreement relation has been deleted.
 data_syndication.post_data.error.E2004=The master or the partner object is not active, the synchronization is not done.
 
+data_syndication.display_date.no_table=The data can be only obtained in Excel.
+data_syndication.display_date.export_as_excel.request.success=Your request to export the data as Excel has been correctly submitted. You will be notified when the file will be ready.
+
 ########################
 # Objects
 ########################

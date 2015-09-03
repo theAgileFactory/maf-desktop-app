@@ -1117,7 +1117,22 @@ public class PortfolioEntryStatusReportingController extends Controller {
             // get the table
             Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> t = getTimesheetsTable(id, filterConfig);
 
-            return ok(views.html.core.portfolioentrystatusreporting.timesheets.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig));
+            // get the syndicated timesheets
+            List<DataSyndicationAgreementLink> agreementLinks = new ArrayList<>();
+            DataSyndicationAgreementItem agreementItem = null;
+            if (portfolioEntry.isSyndicated && dataSyndicationService.isActive()) {
+                try {
+                    agreementItem = dataSyndicationService.getAgreementItemByDataTypeAndDescriptor(PortfolioEntry.class.getName(), "TIMESHEET");
+                    if (agreementItem != null) {
+                        agreementLinks = dataSyndicationService.getAgreementLinksOfItemAndSlaveObject(agreementItem, PortfolioEntry.class.getName(), id);
+                    }
+                } catch (Exception e) {
+                    Logger.error("impossible to get the syndicated timesheet data", e);
+                }
+            }
+
+            return ok(views.html.core.portfolioentrystatusreporting.timesheets.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig, agreementLinks,
+                    agreementItem));
 
         } catch (Exception e) {
 

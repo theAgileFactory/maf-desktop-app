@@ -690,6 +690,9 @@ data_syndication.post_data.error.E2002=L''objet de provisionnement n''existe pas
 data_syndication.post_data.error.E2003=L''objet du partenaire n''existe pas, la relation d''agrément a été supprimée.
 data_syndication.post_data.error.E2004=L''objet de provisionnement ou celui du partenaire n''est pas actif, la synchronisation n''est pas faite.
 
+data_syndication.display_date.no_table=Les données ne peuvent être obtenues qu''en Excel.
+data_syndication.display_date.export_as_excel.request.success=Votre requête d''exportation des données en Excel a été enregistrée. Vous serez notifié lorsque le fichier sera disponible.
+
 ########################
 # Objects
 ########################
