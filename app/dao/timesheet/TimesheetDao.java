@@ -22,6 +22,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
+
+import constants.IMafConstants;
+import framework.services.ServiceStaticAccessor;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Pagination;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.sql.TotalHours;
@@ -36,20 +49,6 @@ import models.timesheet.TimesheetReport.Type;
 import play.Logger;
 import play.Play;
 
-import com.avaje.ebean.Model.Finder;
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Query;
-import com.avaje.ebean.RawSql;
-import com.avaje.ebean.RawSqlBuilder;
-
-import constants.IMafConstants;
-import framework.services.ServiceStaticAccessor;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Pagination;
-
 /**
  * DAO for the {@link TimesheetActivity} and
  * {@link TimesheetActivityAllocatedActor} and {@link TimesheetActivityType} and
@@ -62,8 +61,7 @@ public abstract class TimesheetDao {
 
     public static Finder<Long, TimesheetActivity> findTimesheetActivity = new Finder<>(TimesheetActivity.class);
 
-    public static Finder<Long, TimesheetActivityAllocatedActor> findTimesheetActivityAllocatedActor = new Finder<>(
-            TimesheetActivityAllocatedActor.class);
+    public static Finder<Long, TimesheetActivityAllocatedActor> findTimesheetActivityAllocatedActor = new Finder<>(TimesheetActivityAllocatedActor.class);
 
     public static Finder<Long, TimesheetActivityType> findTimesheetActivityType = new Finder<>(TimesheetActivityType.class);
 
@@ -128,9 +126,8 @@ public abstract class TimesheetDao {
      */
     public static ExpressionList<TimesheetActivityAllocatedActor> getTimesheetActivityAllocatedActorAsExprByActor(Long actorId, boolean activeOnly) {
 
-        ExpressionList<TimesheetActivityAllocatedActor> expr =
-                findTimesheetActivityAllocatedActor.orderBy("endDate").where().eq("deleted", false).eq("actor.id", actorId)
-                        .eq("timesheetActivity.deleted", false);
+        ExpressionList<TimesheetActivityAllocatedActor> expr = findTimesheetActivityAllocatedActor.orderBy("endDate").where().eq("deleted", false)
+                .eq("actor.id", actorId).eq("timesheetActivity.deleted", false);
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
@@ -162,8 +159,8 @@ public abstract class TimesheetDao {
      *            is in the future
      */
     public static Pagination<TimesheetActivityAllocatedActor> getTimesheetActivityAllocatedActorAsPaginationByActor(Long actorId, boolean activeOnly) {
-        return new Pagination<>(getTimesheetActivityAllocatedActorAsExprByActor(actorId, activeOnly), 5, Play.application().configuration()
-                .getInt("maf.number_page_links"));
+        return new Pagination<>(getTimesheetActivityAllocatedActorAsExprByActor(actorId, activeOnly), 5,
+                Play.application().configuration().getInt("maf.number_page_links"));
     }
 
     /**
@@ -177,9 +174,8 @@ public abstract class TimesheetDao {
      */
     public static ExpressionList<TimesheetActivityAllocatedActor> getTimesheetActivityAllocatedActorAsExprByOrgUnit(Long orgUnitId, boolean activeOnly) {
 
-        ExpressionList<TimesheetActivityAllocatedActor> expr =
-                findTimesheetActivityAllocatedActor.where().eq("deleted", false).eq("actor.isActive", true).eq("actor.deleted", false)
-                        .eq("actor.orgUnit.id", orgUnitId).eq("timesheetActivity.deleted", false);
+        ExpressionList<TimesheetActivityAllocatedActor> expr = findTimesheetActivityAllocatedActor.where().eq("deleted", false).eq("actor.isActive", true)
+                .eq("actor.deleted", false).eq("actor.orgUnit.id", orgUnitId).eq("timesheetActivity.deleted", false);
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
@@ -213,9 +209,8 @@ public abstract class TimesheetDao {
      */
     public static ExpressionList<TimesheetActivityAllocatedActor> getTimesheetActivityAllocatedActorAsExprByManager(Long actorId, boolean activeOnly) {
 
-        ExpressionList<TimesheetActivityAllocatedActor> expr =
-                findTimesheetActivityAllocatedActor.where().eq("deleted", false).eq("actor.isActive", true).eq("actor.deleted", false)
-                        .eq("actor.manager.id", actorId).eq("timesheetActivity.deleted", false);
+        ExpressionList<TimesheetActivityAllocatedActor> expr = findTimesheetActivityAllocatedActor.where().eq("deleted", false).eq("actor.isActive", true)
+                .eq("actor.deleted", false).eq("actor.manager.id", actorId).eq("timesheetActivity.deleted", false);
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
@@ -263,8 +258,8 @@ public abstract class TimesheetDao {
      * @param end
      *            the startDate or the endDate should be before this date
      */
-    public static List<TimesheetActivityAllocatedActor>
-            getTimesheetActivityAllocatedActorAsListByCompetencyAndPeriod(Long competencyId, Date start, Date end) {
+    public static List<TimesheetActivityAllocatedActor> getTimesheetActivityAllocatedActorAsListByCompetencyAndPeriod(Long competencyId, Date start,
+            Date end) {
         return findTimesheetActivityAllocatedActor.where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end)
                 .ge("endDate", start).eq("actor.deleted", false).eq("actor.defaultCompetency.id", competencyId).findList();
 
@@ -338,11 +333,10 @@ public abstract class TimesheetDao {
      */
     public static BigDecimal getTimesheetLogAsTotalHoursByPEPlanningPackage(PortfolioEntryPlanningPackage planningPackage) {
 
-        String sql =
-                "SELECT SUM(tl.hours) AS totalHours FROM timesheet_log tl " + "JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id "
-                        + "JOIN timesheet_report tr ON te.timesheet_report_id = tr.id "
-                        + "WHERE tl.deleted = false AND te.deleted = false AND tr.deleted = false AND te.portfolio_entry_planning_package_id = '"
-                        + planningPackage.id + "'";
+        String sql = "SELECT SUM(tl.hours) AS totalHours FROM timesheet_log tl " + "JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id "
+                + "JOIN timesheet_report tr ON te.timesheet_report_id = tr.id "
+                + "WHERE tl.deleted = false AND te.deleted = false AND tr.deleted = false AND te.portfolio_entry_planning_package_id = '" + planningPackage.id
+                + "'";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -355,6 +349,17 @@ public abstract class TimesheetDao {
         }
 
         return totalHours;
+    }
+
+    /**
+     * Get the timesheet logs of a portfolio entry.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry
+     */
+    public static ExpressionList<TimesheetLog> getTimesheetLogAsExprByPortfolioEntry(Long portfolioEntryId) {
+        return findTimesheetLog.where().eq("deleted", false).ne("hours", 0).eq("timesheetEntry.deleted", false)
+                .eq("timesheetEntry.portfolioEntry.id", portfolioEntryId).eq("timesheetEntry.timesheetReport.deleted", false);
     }
 
     /**
@@ -451,9 +456,8 @@ public abstract class TimesheetDao {
             Date periodStartDate = cal.getTime();
 
             // compute the number of existing reports
-            Integer n =
-                    findTimesheetReport.where().eq("deleted", false).eq("actor.id", actor.id).le("startDate", periodEndDate).ge("startDate", periodStartDate)
-                            .findRowCount();
+            Integer n = findTimesheetReport.where().eq("deleted", false).eq("actor.id", actor.id).le("startDate", periodEndDate)
+                    .ge("startDate", periodStartDate).findRowCount();
 
             // create the reports only if at least one is missing
             if (n != getTimesheetReportReminderLimit()) {
@@ -497,24 +501,21 @@ public abstract class TimesheetDao {
      * Return true if the timesheets should be approved by the managers.
      */
     public static boolean getTimesheetReportMustApprove() {
-        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsBoolean(
-                IMafConstants.TIMESHEET_MUST_APPROVE_PREFERENCE);
+        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.TIMESHEET_MUST_APPROVE_PREFERENCE);
     }
 
     /**
      * Return the reminder limit (number of reports of the past for an actor).
      */
     public static Integer getTimesheetReportReminderLimit() {
-        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(
-                IMafConstants.TIMESHEET_REMINDER_LIMIT_PREFERENCE);
+        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.TIMESHEET_REMINDER_LIMIT_PREFERENCE);
     }
 
     /**
      * Return the expected number of hours for a day.
      */
     public static BigDecimal getTimesheetReportHoursPerDay() {
-        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsDecimal(
-                IMafConstants.TIMESHEET_HOURS_PER_DAY);
+        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsDecimal(IMafConstants.TIMESHEET_HOURS_PER_DAY);
     }
 
 }

@@ -951,6 +951,22 @@ object.timesheet_report.comments.label=Comments
 object.timesheet_report.table.empty=There is currently no timesheet.
 
 #----------------------
+# timesheetEntry
+#----------------------
+
+object.timesheet_entry.portfolio_entry.label=Initiative
+object.timesheet_entry.planning_package.label=Planning package
+object.timesheet_entry.timesheet_activity.label=Activity
+
+#----------------------
+# timesheetLog
+#----------------------
+
+object.timesheet_log.log_date.label=Date
+object.timesheet_log.hours.label=Hours
+object.timesheet_log.table.empty=No entry
+
+#----------------------
 # portfolioEntry
 #----------------------
 
@@ -2063,6 +2079,7 @@ core.portfolio_entry.sidebar.planning.resources.label=Resources
 core.portfolio_entry.sidebar.status_reporting.label=Status reporting
 core.portfolio_entry.sidebar.status_reporting.registers.label=Status registers
 core.portfolio_entry.sidebar.status_reporting.events.label=Events
+core.portfolio_entry.sidebar.status_reporting.timesheets.label=Timesheets
 core.portfolio_entry.sidebar.integration.label=Integration
 core.portfolio_entry.sidebar.integration.plugins.label=Plugins
 core.portfolio_entry.sidebar.integration.data_syndication.label=Partner syndication

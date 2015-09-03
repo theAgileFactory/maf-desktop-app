@@ -48,6 +48,7 @@ import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
 import dao.reporting.ReportingDao;
+import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -76,6 +77,7 @@ import models.pmo.PortfolioEntryReport;
 import models.pmo.PortfolioEntryRisk;
 import models.reporting.Reporting;
 import models.reporting.Reporting.Format;
+import models.timesheet.TimesheetLog;
 import play.Logger;
 import play.data.Form;
 import play.libs.F.Function0;
@@ -98,6 +100,7 @@ import utils.table.AttachmentListView;
 import utils.table.PortfolioEntryEventListView;
 import utils.table.PortfolioEntryReportListView;
 import utils.table.PortfolioEntryRiskListView;
+import utils.table.TimesheetLogListView;
 
 /**
  * The controller which allows to manage the status reporting (events, risks,
@@ -1069,6 +1072,198 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.event.delete.successful"));
 
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(id, false));
+
+    }
+
+    /**
+     * Display the list of timesheet logs.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param reset
+     *            define if the filter should be reseted
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result timesheets(Long id, Boolean reset) {
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        try {
+
+            FilterConfig<TimesheetLogListView> filterConfig = null;
+
+            /*
+             * we try to get the last filter configuration of the sign-in user,
+             * if it exists we use it to filter the timesheet logs (except if
+             * the reset flag is to true)
+             */
+            String backedUpFilter = getFilterConfigurationFromPreferences(IMafConstants.PORTFOLIO_ENTRY_TIMESHEETS_FILTER_STORAGE_PREFERENCE);
+            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
+
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode json = mapper.readTree(backedUpFilter);
+                filterConfig = TimesheetLogListView.filterConfig.parseResponse(json);
+
+            } else {
+
+                // get a copy of the default filter config
+                filterConfig = TimesheetLogListView.filterConfig;
+                storeFilterConfigFromPreferences(filterConfig.marshall(), IMafConstants.PORTFOLIO_ENTRY_TIMESHEETS_FILTER_STORAGE_PREFERENCE);
+
+            }
+
+            // get the table
+            Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> t = getTimesheetsTable(id, filterConfig);
+
+            return ok(views.html.core.portfolioentrystatusreporting.timesheets.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig));
+
+        } catch (Exception e) {
+
+            if (reset.equals(false)) {
+                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(id, true));
+            } else {
+                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            }
+
+        }
+    }
+
+    /**
+     * Filter the timesheet logs.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result timesheetsFilter(Long id) {
+
+        try {
+
+            // get the json
+            JsonNode json = request().body().asJson();
+
+            // store the filter config
+            storeFilterConfigFromPreferences(json.toString(), IMafConstants.PORTFOLIO_ENTRY_TIMESHEETS_FILTER_STORAGE_PREFERENCE);
+
+            // fill the filter config
+            FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.parseResponse(json);
+
+            // get the table
+            Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> t = getTimesheetsTable(id, filterConfig);
+
+            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+        }
+    }
+
+    /**
+     * Export the content of the current timesheet logs table as Excel.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Promise<Result> exportTimesheetsAsExcel(final Long id) {
+
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+
+                try {
+
+                    // Get the current user
+                    final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+
+                    // construct the table
+                    JsonNode json = request().body().asJson();
+                    FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.parseResponse(json);
+
+                    ExpressionList<TimesheetLog> expressionList = filterConfig
+                            .updateWithSearchExpression(TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(id));
+                    filterConfig.updateWithSortExpression(expressionList);
+
+                    List<TimesheetLogListView> timesheetLogListView = new ArrayList<TimesheetLogListView>();
+                    for (TimesheetLog timesheetLog : expressionList.findList()) {
+                        timesheetLogListView.add(new TimesheetLogListView(timesheetLog));
+                    }
+
+                    Table<TimesheetLogListView> table = TimesheetLogListView.templateTable.fillForFilterConfig(timesheetLogListView,
+                            filterConfig.getColumnsToHide());
+
+                    final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
+
+                    final String fileName = String.format("timesheetsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
+                    final String successTitle = Msg.get("excel.export.success.title");
+                    final String successMessage = Msg.get("excel.export.success.message", fileName, "timesheets");
+                    final String failureTitle = Msg.get("excel.export.failure.title");
+                    final String failureMessage = Msg.get("excel.export.failure.message", "timesheets");
+
+                    // Execute asynchronously
+                    getSysAdminUtils().scheduleOnce(false, "Timesheets Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
+                                IOUtils.copy(new ByteArrayInputStream(excelFile), out);
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
+                            } catch (IOException e) {
+                                log.error("Unable to export the excel file", e);
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                        controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(id, false).url());
+                            }
+                        }
+                    });
+
+                    return ok(Json.newObject());
+
+                } catch (Exception e) {
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Get the timesheet entries table for a portfolio entry and a filter
+     * config.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     * @param filterConfig
+     *            the filter config.
+     */
+    private Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> getTimesheetsTable(Long portfolioEntryId,
+            FilterConfig<TimesheetLogListView> filterConfig) {
+
+        ExpressionList<TimesheetLog> expressionList = filterConfig
+                .updateWithSearchExpression(TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(portfolioEntryId));
+        filterConfig.updateWithSortExpression(expressionList);
+
+        Pagination<TimesheetLog> pagination = new Pagination<TimesheetLog>(expressionList);
+        pagination.setCurrentPage(filterConfig.getCurrentPage());
+
+        List<TimesheetLogListView> timesheetLogListView = new ArrayList<TimesheetLogListView>();
+        for (TimesheetLog timesheetLog : pagination.getListOfObjects()) {
+            timesheetLogListView.add(new TimesheetLogListView(timesheetLog));
+        }
+
+        Set<String> columnsToHide = filterConfig.getColumnsToHide();
+        columnsToHide.add("portfolioEntry");
+        columnsToHide.add("timesheetActivity");
+
+        Table<TimesheetLogListView> table = TimesheetLogListView.templateTable.fillForFilterConfig(timesheetLogListView, columnsToHide);
+
+        return Pair.of(table, pagination);
 
     }
 

@@ -963,6 +963,22 @@ object.timesheet_report.comments.label=Commentaire
 object.timesheet_report.table.empty=Il n''existe aucune feuille de temps.
 
 #----------------------
+# timesheetEntry
+#----------------------
+
+object.timesheet_entry.portfolio_entry.label=Initiative
+object.timesheet_entry.planning_package.label=Livrable
+object.timesheet_entry.timesheet_activity.label=Activité
+
+#----------------------
+# timesheetLog
+#----------------------
+
+object.timesheet_log.log_date.label=Date
+object.timesheet_log.hours.label=Heures
+object.timesheet_log.table.empty=Aucune entrée
+
+#----------------------
 # portfolioEntry
 #----------------------
 
@@ -2083,6 +2099,7 @@ core.portfolio_entry.sidebar.planning.resources.label=Ressources
 core.portfolio_entry.sidebar.status_reporting.label=Rapports d''état
 core.portfolio_entry.sidebar.status_reporting.registers.label=Registres d''état
 core.portfolio_entry.sidebar.status_reporting.events.label=Evènements
+core.portfolio_entry.sidebar.status_reporting.timesheets.label=Feuilles de temps
 core.portfolio_entry.sidebar.integration.label=Intégration
 core.portfolio_entry.sidebar.integration.plugins.label=Plugins
 core.portfolio_entry.sidebar.integration.data_syndication.label=Syndication de partenaires

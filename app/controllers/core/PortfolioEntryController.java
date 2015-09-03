@@ -202,7 +202,8 @@ public class PortfolioEntryController extends Controller {
 
             // if exists, Creation of the attachment
             if (FileAttachmentHelper.hasFileField("scopeDescription")) {
-                attachmentId = FileAttachmentHelper.saveAsAttachement("scopeDescription", PortfolioEntry.class, portfolioEntry.id, getAttachmentManagerPlugin());
+                attachmentId = FileAttachmentHelper.saveAsAttachement("scopeDescription", PortfolioEntry.class, portfolioEntry.id,
+                        getAttachmentManagerPlugin());
                 log.info("Attachment " + attachmentId + " created for entry " + portfolioEntryId);
             }
 
@@ -409,7 +410,8 @@ public class PortfolioEntryController extends Controller {
         LifeCycleInstance activeLifeCycleProcessInstance = portfolioEntry.activeLifeCycleInstance;
         List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao
                 .getLCMilestoneInstanceAsListByLCInstance(activeLifeCycleProcessInstance.id);
-        MilestonesTrend milestonesTrend = new MilestonesTrend(activeLifeCycleProcessInstance.lifeCycleProcess.lifeCycleMilestones, milestoneInstances, getMessagesPlugin(),getSecurityService());
+        MilestonesTrend milestonesTrend = new MilestonesTrend(activeLifeCycleProcessInstance.lifeCycleProcess.lifeCycleMilestones, milestoneInstances,
+                getMessagesPlugin(), getSecurityService());
 
         return ok(views.html.core.portfolioentry.portfolio_entry_overview.render(portfolioEntry, milestonesTable, milestonesTrend));
     }
@@ -764,7 +766,7 @@ public class PortfolioEntryController extends Controller {
         }
 
         // delete the attachment
-        FileAttachmentHelper.deleteFileAttachment(attachmentId,getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+        FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
 
         attachment.doDelete();
 
@@ -878,7 +880,8 @@ public class PortfolioEntryController extends Controller {
 
                 Expression expression = Expr.or(Expr.ilike("name", query + "%"), Expr.ilike("governanceId", query + "%"));
 
-                for (PortfolioEntry portfolioEntry : PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService()).findList()) {
+                for (PortfolioEntry portfolioEntry : PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService())
+                        .findList()) {
                     portfolioEntries.add(new DefaultSelectableValueHolder<Long>(portfolioEntry.id, portfolioEntry.getName()));
                 }
 
@@ -909,15 +912,14 @@ public class PortfolioEntryController extends Controller {
      *            the portfolio entry id
      * @param currentType
      *            the current menu item type, useful to select the correct item
-     * @param securityService 
+     * @param securityService
      *            the security service
      */
     public static SideBar getIconsBar(Boolean isDataSyndicationActive, Long portfolioEntryId, MenuItemType currentType, ISecurityService securityService) {
 
         SideBar sideBar = new SideBar();
 
-        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "",
-                portfolioEntryId)) {
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.overview.label",
                     controllers.core.routes.PortfolioEntryController.overview(portfolioEntryId), "glyphicons glyphicons-radar",
                     currentType.equals(MenuItemType.OVERVIEW)));
@@ -927,8 +929,7 @@ public class PortfolioEntryController extends Controller {
                 new ClickableMenuItem("core.portfolio_entry.sidebar.view.label", controllers.core.routes.PortfolioEntryController.view(portfolioEntryId, 0),
                         "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.VIEW)));
 
-        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "",
-                portfolioEntryId)) {
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
             HeaderMenuItem financialMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.financial.label", "glyphicons glyphicons-coins",
                     currentType.equals(MenuItemType.FINANCIAL));
@@ -946,8 +947,7 @@ public class PortfolioEntryController extends Controller {
                 controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntryId), "glyphicons glyphicons-group",
                 currentType.equals(MenuItemType.STAKEHOLDERS)));
 
-        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "",
-                portfolioEntryId)) {
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.governance.label",
                     controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntryId), "glyphicons glyphicons-cluster",
@@ -995,12 +995,15 @@ public class PortfolioEntryController extends Controller {
                     controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId, false), "glyphicons glyphicons-bullhorn",
                     false));
 
+            reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.timesheets.label",
+                    controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntryId, false), "glyphicons glyphicons-clock",
+                    false));
+
             sideBar.addMenuItem(reportingMenu);
 
         }
 
-        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "",
-                portfolioEntryId)) {
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
             HeaderMenuItem integrationMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.integration.label", "glyphicons glyphicons-cloud",
                     currentType.equals(MenuItemType.INTEGRATION));
