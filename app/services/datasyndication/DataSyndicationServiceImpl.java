@@ -34,6 +34,7 @@ import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
+import dao.timesheet.TimesheetDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.api.AbstractApiController;
 import framework.services.api.commons.ApiMethod;
@@ -45,6 +46,7 @@ import framework.utils.Msg;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryReport;
+import models.timesheet.TimesheetLog;
 import play.Configuration;
 import play.Logger;
 import play.i18n.Lang;
@@ -627,6 +629,18 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                         String status = views.html.modelsparts.display_portfolio_entry_report_status_type.render(report.portfolioEntryReportStatusType)
                                 .body();
                         data.add(Arrays.asList(report.creationDate, report.author.getName(), status, report.comments));
+                    }
+                } else if (agreementItem.descriptor.equals("TIMESHEET")) {
+                    data.add(Arrays.asList("object.timesheet_report.actor.label", "object.timesheet_log.log_date.label", "object.timesheet_log.hours.label",
+                            "object.timesheet_report.status.label", "object.timesheet_entry.planning_package.label"));
+                    for (TimesheetLog timesheetLog : TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(agreementLink.masterObjectId).findList()) {
+                        String planningPackageName = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage != null
+                                ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.name : null;
+                        String status = "<span class=\"label label-" + timesheetLog.timesheetEntry.timesheetReport.getStatusCssClass() + "\">"
+                                + Msg.get("object.timesheet_report.status." + timesheetLog.timesheetEntry.timesheetReport.status.name() + ".label")
+                                + "</span>";
+                        data.add(Arrays.asList(timesheetLog.timesheetEntry.timesheetReport.actor.getName(), timesheetLog.logDate, timesheetLog.hours, status,
+                                planningPackageName));
                     }
                 }
                 JsonNode jsonData = bizdockApiClient.getMapper().valueToTree(data);

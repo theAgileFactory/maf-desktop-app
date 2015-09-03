@@ -1579,6 +1579,7 @@ object.application_block.table.empty=There is no application block.
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label=Initiative
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Report status
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Planning package
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.TIMESHEET.label=Timesheet
 
 #----------------------
 # dataSyndicationPartner
