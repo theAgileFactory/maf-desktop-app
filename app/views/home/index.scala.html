@@ -23,6 +23,7 @@
     hasActor: Boolean
 ) 
 
+@import commons._
 @import framework_views.parts
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -41,14 +42,16 @@
         
             <div class="col-md-8">
                 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">@parts.Msg("index.notifications.title")</h3>
+                @if(_notificationService.isInternalSendingSystem) {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@parts.Msg("index.notifications.title")</h3>
+                        </div>
+                        <div class="panel-body">
+                             @parts.table.tableview(notificationsTable)
+                        </div>
                     </div>
-                    <div class="panel-body">
-                         @parts.table.tableview(notificationsTable)
-                    </div>
-                </div>
+                }
                 
                 
                 <div class="row">

@@ -58,6 +58,7 @@ import utils.table.RoleListView;
  * 
  */
 public class ConfigurationController extends Controller {
+
     @Inject
     private IEventBroadcastingService eventBroadcastingService;
     @Inject
@@ -75,6 +76,7 @@ public class ConfigurationController extends Controller {
 
     private static List<String> editableFieldsValues = new ArrayList<String>() {
         private static final long serialVersionUID = -3636216975014360486L;
+
         {
             add(IFrameworkConstants.DISPLAY_LIST_PAGE_SIZE_PREFERENCE);
             add(IMafConstants.FINANCIAL_USE_PURCHASE_ORDER_PREFERENCE);
@@ -85,11 +87,13 @@ public class ConfigurationController extends Controller {
             add(IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE);
             add(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
             add(IFrameworkConstants.API_AUTHZ_MODE_PREFERENCE);
+            add(IFrameworkConstants.NOTIFICATION_SENDING_SYSTEM_PREFERENCE);
         }
     };
 
     private static List<String> smtpFieldsValues = new ArrayList<String>() {
         private static final long serialVersionUID = -36362169778420486L;
+
         {
             add(IFrameworkConstants.SMTP_HOST_PREFERENCE);
             add(IFrameworkConstants.SMTP_PORT_PREFERENCE);
@@ -102,7 +106,8 @@ public class ConfigurationController extends Controller {
 
     /**
      * Display the correct page according to permission.
-     * @throws AccountManagementException 
+     * 
+     * @throws AccountManagementException
      */
     @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION), @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) })
     public Result index() throws AccountManagementException {
@@ -400,18 +405,30 @@ public class ConfigurationController extends Controller {
     public static class PrefsData {
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the event broadcasting service.
+     */
     private IEventBroadcastingService getEventBroadcastingService() {
         return eventBroadcastingService;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }

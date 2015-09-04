@@ -304,6 +304,13 @@ custom_attribute.type.IMAGE.label=Bild
 custom_attribute.type.MULTI_ITEM.label=Dropdown mehrfach
 custom_attribute.type.URL.label=URL
 
+#----------------------
+# Notification
+#----------------------
+
+notification.sending_system.internal=de: BizDock notifications
+notification.sending_system.email=E-Mail
+
 ########################
 # Components
 ########################
@@ -640,6 +647,8 @@ preference.smtp_user_preference.name=Benutzername
 preference.smtp_user_preference.description=Der SMTP-Server-Benutzernamen
 preference.smtp_password_preference.name=Passwort
 preference.smtp_password_preference.description=Der SMTP-Server-Passwort
+preference.notification_sending_system_preference.name=de: Notifications sending system
+preference.notification_sending_system_preference.description=de: The system used to send the notifications. It could be either by BizDock notifications or by email.
 
 #----------------------
 # authentication

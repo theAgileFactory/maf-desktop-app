@@ -17,6 +17,7 @@
  *@
 @()
 
+@import commons._
 @import framework_views.parts
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -70,31 +71,33 @@
                                 <li><a href="@routes.MessagingController.index().url"><span class="glyphicons glyphicons-conversation glyphicons-button-small"></span> @parts.Msg("idzone.messages.messaging")</a></li>
                             </ul>
                         </div>
-                        @log.debug("B>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                        &nbsp;
-                        <div class="btn-group" id="menu-notifications">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicons glyphicons-bell glyphicons-button-small"></span> @parts.Msg("idzone.notifications.title") 
-                                @if(idZoneData.nbNotReadNotifications > 0) { &nbsp;<span class="badge">@idZoneData.nbNotReadNotifications</span> }
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" style="z-index: 1001;">
-                                @if(idZoneData.nbNotReadNotifications > 0) {
-                                    @for(notification <- idZoneData.notifications) {
-                                        <li><a href="@routes.Application.redirectForNotification(notification.id).url">
-                                            @if(notification.notificationCategory != null) {
-                                                <span class="@notification.notificationCategory.bootstrapGlyphicon glyphicons-button-small"></span>
-                                            }
-                                            @notification.getTitle
-                                        </a></li>
+                        @if(_notificationService.isInternalSendingSystem) {
+                            @log.debug("B>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                            &nbsp;
+                            <div class="btn-group" id="menu-notifications">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicons glyphicons-bell glyphicons-button-small"></span> @parts.Msg("idzone.notifications.title") 
+                                    @if(idZoneData.nbNotReadNotifications > 0) { &nbsp;<span class="badge">@idZoneData.nbNotReadNotifications</span> }
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" style="z-index: 1001;">
+                                    @if(idZoneData.nbNotReadNotifications > 0) {
+                                        @for(notification <- idZoneData.notifications) {
+                                            <li><a href="@routes.Application.redirectForNotification(notification.id).url">
+                                                @if(notification.notificationCategory != null) {
+                                                    <span class="@notification.notificationCategory.bootstrapGlyphicon glyphicons-button-small"></span>
+                                                }
+                                                @notification.getTitle
+                                            </a></li>
+                                        }
+                                    } else {
+                                        <li class="dropdown-header">@parts.Msg("idzone.notifications.not_read.empty")</li>
                                     }
-                                } else {
-                                    <li class="dropdown-header">@parts.Msg("idzone.notifications.not_read.empty")</li>
-                                }
-                                <li class="divider"></li>
-                                <li><a href="@routes.Application.displayNotifications().url"><span class="glyphicons glyphicons-list glyphicons-button-small"></span> @parts.Msg("idzone.notifications.view_all")</a></li>
-                            </ul>
-                        </div>
+                                    <li class="divider"></li>
+                                    <li><a href="@routes.Application.displayNotifications().url"><span class="glyphicons glyphicons-list glyphicons-button-small"></span> @parts.Msg("idzone.notifications.view_all")</a></li>
+                                </ul>
+                            </div>
+                        }
                         @log.debug("C>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
                         &nbsp;
                         <div class="btn-group" id="menu-my">
