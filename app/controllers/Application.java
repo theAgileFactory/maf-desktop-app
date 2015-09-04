@@ -670,99 +670,108 @@ public class Application extends Controller {
     @SubjectPresent
     public Result exportDataSyndicationAsExcel(String redirect, Long agreementLinkId, Long agreementItemId) {
 
-        // get the current user
-        final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        try {
 
-        // prepare the message
-        final String fileName = String.format("syndicatedDataExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
-        final String successTitle = Msg.get("excel.export.success.title");
-        final String successMessage = Msg.get("excel.export.success.message", fileName, "Syndicated data");
-        final String failureTitle = Msg.get("excel.export.failure.title");
-        final String failureMessage = Msg.get("excel.export.failure.message", "Syndicated data");
+            // get the data
+            List<List<Object>> dataSyndication = DataSyndicationDao.getDataSyndicationAsDataByLinkAndItem(agreementLinkId, agreementItemId);
 
-        // Execute asynchronously
-        getSysAdminUtils().scheduleOnce(false, "Data Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
-            @Override
-            public void run() {
+            // create the excel file with a sheet
+            XSSFWorkbook wb = new XSSFWorkbook();
+            Sheet sheet = wb.createSheet("export");
 
-                try {
+            // add the header
+            Row headerRow = sheet.createRow(0);
+            int columnIndex = 0;
+            CellStyle headerCellStyle = wb.createCellStyle();
+            Font f = wb.createFont();
+            f.setBoldweight(Font.BOLDWEIGHT_BOLD);
+            headerCellStyle.setFont(f);
+            for (Object header : dataSyndication.get(0)) {
+                Cell cell = headerRow.createCell(columnIndex);
+                cell.setCellValue(Msg.get(header.toString()));
+                cell.setCellStyle(headerCellStyle);
+                columnIndex++;
+            }
 
-                    // get the data
-                    List<List<Object>> dataSyndication = DataSyndicationDao.getDataSyndicationAsDataByLinkAndItem(agreementLinkId, agreementItemId);
-
-                    // create the excel file with a sheet
-                    XSSFWorkbook wb = new XSSFWorkbook();
-                    Sheet sheet = wb.createSheet("export");
-
-                    // add the header
-                    Row headerRow = sheet.createRow(0);
-                    int columnIndex = 0;
-                    CellStyle headerCellStyle = wb.createCellStyle();
-                    Font f = wb.createFont();
-                    f.setBoldweight(Font.BOLDWEIGHT_BOLD);
-                    headerCellStyle.setFont(f);
-                    for (Object header : dataSyndication.get(0)) {
-                        Cell cell = headerRow.createCell(columnIndex);
-                        cell.setCellValue(Msg.get(header.toString()));
-                        cell.setCellStyle(headerCellStyle);
-                        columnIndex++;
-                    }
-
-                    // add the data
-                    int rowIndex = 0;
-                    for (List<Object> row : dataSyndication) {
-                        if (rowIndex != 0) {
-                            Row dataRow = sheet.createRow(rowIndex);
-                            columnIndex = 0;
-                            for (Object elem : row) {
-                                Cell cell = dataRow.createCell(columnIndex);
-                                if (elem == null) {
-                                    cell.setCellValue("");
-                                } else {
-                                    if (elem instanceof String && getDataSyndicationService().getStringDate(elem.toString()) != null) {
-                                        cell.setCellValue(getDataSyndicationService().getStringDate(elem.toString()));
-                                        XSSFCellStyle dateCellStyle = wb.createCellStyle();
-                                        XSSFDataFormat df = wb.createDataFormat();
-                                        dateCellStyle.setDataFormat(df.getFormat(TableExcelRenderer.DEFAULT_EXCEL_DATE_FORMAT));
-                                        cell.setCellStyle(dateCellStyle);
-                                    } else if (elem instanceof Boolean) {
-                                        cell.setCellType(Cell.CELL_TYPE_BOOLEAN);
-                                        cell.setCellValue((Boolean) elem);
-                                    } else if (elem instanceof Integer || elem instanceof Integer || elem instanceof Double) {
-                                        cell.setCellType(Cell.CELL_TYPE_NUMERIC);
-                                        cell.setCellValue(Double.valueOf(elem.toString()));
-                                    } else {
-                                        cell.setCellValue(elem.toString().replaceAll("\\<[^>]*>", "").trim());
-                                    }
-                                }
-                                columnIndex++;
+            // add the data
+            int rowIndex = 0;
+            for (List<Object> row : dataSyndication) {
+                if (rowIndex != 0) {
+                    Row dataRow = sheet.createRow(rowIndex);
+                    columnIndex = 0;
+                    for (Object elem : row) {
+                        Cell cell = dataRow.createCell(columnIndex);
+                        if (elem == null) {
+                            cell.setCellValue("");
+                        } else {
+                            if (elem instanceof String && getDataSyndicationService().getStringDate(elem.toString()) != null) {
+                                cell.setCellValue(getDataSyndicationService().getStringDate(elem.toString()));
+                                XSSFCellStyle dateCellStyle = wb.createCellStyle();
+                                XSSFDataFormat df = wb.createDataFormat();
+                                dateCellStyle.setDataFormat(df.getFormat(TableExcelRenderer.DEFAULT_EXCEL_DATE_FORMAT));
+                                cell.setCellStyle(dateCellStyle);
+                            } else if (elem instanceof Boolean) {
+                                cell.setCellType(Cell.CELL_TYPE_BOOLEAN);
+                                cell.setCellValue((Boolean) elem);
+                            } else if (elem instanceof Integer || elem instanceof Integer || elem instanceof Double) {
+                                cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+                                cell.setCellValue(Double.valueOf(elem.toString()));
+                            } else {
+                                cell.setCellValue(Msg.get(elem.toString().replaceAll("\\<[^>]*>", "").trim()));
                             }
                         }
-                        rowIndex++;
+                        columnIndex++;
                     }
-
-                    // create the file
-                    ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-                    wb.write(outBuffer);
-                    outBuffer.close();
-                    final byte[] excelFile = outBuffer.toByteArray();
-
-                    OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
-                    IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                    getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
-                            controllers.my.routes.MyPersonalStorage.index().url());
-
-                } catch (Exception e) {
-
-                    log.error("Unable to export the excel file", e);
-                    getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage, redirect);
-
                 }
+                rowIndex++;
             }
-        });
 
-        Utilities.sendSuccessFlashMessage(Msg.get("data_syndication.display_date.export_as_excel.request.success"));
-        return redirect(redirect);
+            // create the file
+            ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+            wb.write(outBuffer);
+            wb.close();
+            outBuffer.close();
+            final byte[] excelFile = outBuffer.toByteArray();
+
+            // get the current user
+            final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+
+            // prepare the message
+            final String fileName = String.format("syndicatedDataExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
+            final String successTitle = Msg.get("excel.export.success.title");
+            final String successMessage = Msg.get("excel.export.success.message", fileName, "Syndicated data");
+            final String failureTitle = Msg.get("excel.export.failure.title");
+            final String failureMessage = Msg.get("excel.export.failure.message", "Syndicated data");
+
+            // Execute asynchronously
+            getSysAdminUtils().scheduleOnce(false, "Data Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+
+                        OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
+                        IOUtils.copy(new ByteArrayInputStream(excelFile), out);
+                        getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
+                                controllers.my.routes.MyPersonalStorage.index().url());
+
+                    } catch (Exception e) {
+
+                        log.error("Unable to export the excel file", e);
+                        getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                redirect);
+
+                    }
+                }
+            });
+
+            Utilities.sendSuccessFlashMessage(Msg.get("data_syndication.display_date.export_as_excel.request.success"));
+            return redirect(redirect);
+
+        } catch (Exception e) {
+            log.error("Unable to create the excel file", e);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+        }
 
     }
 
@@ -861,38 +870,65 @@ public class Application extends Controller {
         }
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the ad panel manager service.
+     */
     private IAdPanelManagerService getAdPanelManagerService() {
         return adPanelManagerService;
     }
 
+    /**
+     * Get the attachment manager service.
+     */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the system admin utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the data syndication service.
+     */
     private IDataSyndicationService getDataSyndicationService() {
         return dataSyndicationService;
     }

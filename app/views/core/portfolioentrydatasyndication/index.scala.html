@@ -84,7 +84,7 @@
                         }
                         
                         @for(slaveLink <- slaveAgreementLinks) {
-                            @agreement_link_box(portfolioEntry, slaveLink)
+                            @agreement_link_box(portfolioEntry, slaveLink, slaveLink.agreement.masterPartner)
                         }
                         
                     </div>
@@ -135,7 +135,7 @@
                         }
                     
                         @for(masterLink <- masterAgreementLinks) {
-                            @agreement_link_box(portfolioEntry, masterLink)
+                            @agreement_link_box(portfolioEntry, masterLink, masterLink.agreement.slavePartner)
                         }
                         
                     </div>

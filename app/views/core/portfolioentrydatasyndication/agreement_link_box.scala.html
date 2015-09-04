@@ -17,7 +17,8 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    agreementLink: services.datasyndication.models.DataSyndicationAgreementLink
+    agreementLink: services.datasyndication.models.DataSyndicationAgreementLink,
+    partner: services.datasyndication.models.DataSyndicationPartner
 )
 
 @import framework_views.parts.formats._
@@ -30,10 +31,10 @@
         <div class="panel panel-default">
             <div class="panel-body ">
                 @display_agreement_status(agreementLink.getStatus())<br/><br/>
-                @if(agreementLink.agreement.slavePartner.customerLogo != null) {
-                    <div><img src="@agreementLink.agreement.slavePartner.customerLogo" style="max-width:140px; max-height: 100px;"></div>
+                @if(partner.customerLogo != null) {
+                    <div><img src="@partner.customerLogo" style="max-width:140px; max-height: 100px;"></div>
                 }
-                <h4>@agreementLink.agreement.slavePartner.customerName</h4>
+                <h4>@partner.customerName</h4>
                 <small>@agreementLink.name</small><br/><br/>
                 <a class="btn btn-default btn-block" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.viewAgreementLink(portfolioEntry.id, agreementLink.id).url">
                     @parts.Msg("core.portfolio_entry_data_syndication.link.view.title")
