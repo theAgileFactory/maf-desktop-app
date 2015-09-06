@@ -21,31 +21,26 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.apache.commons.codec.binary.Base64;
+
+import controllers.admin.UserManager;
+import framework.security.AbstractStandaloneAuthenticationController;
+import framework.services.ServiceStaticAccessor;
+import framework.utils.CaptchaManager;
+import framework.utils.Msg;
+import framework.utils.Utilities;
 import models.framework_models.account.Credential;
 import models.framework_models.parent.IModelConstants;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-import org.pac4j.http.client.FormClient;
-import org.pac4j.play.Config;
-
 import play.data.Form;
 import play.data.validation.Constraints.Pattern;
 import play.data.validation.Constraints.Required;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
-import play.mvc.Controller;
 import play.mvc.Result;
 import services.echannel.request.LoginEventRequest.ErrorCode;
 import services.licensesmanagement.ILicensesManagementService;
 import views.html.sso.login;
 import views.html.sso.reset_password;
-import controllers.admin.UserManager;
-import framework.services.ServiceStaticAccessor;
-import framework.services.account.LightAuthenticationLockedAccountException;
-import framework.utils.CaptchaManager;
-import framework.utils.Msg;
-import framework.utils.Utilities;
 
 /**
  * The controller which deals with the standalone authentication based on the
@@ -53,10 +48,9 @@ import framework.utils.Utilities;
  * 
  * @author Pierre-Yves Cloux
  */
-public class StandaloneAuthenticationController extends Controller {
+public class StandaloneAuthenticationController extends AbstractStandaloneAuthenticationController {
     @Inject 
     private ILicensesManagementService licensesManagementService;
-    public static final String ERROR_PARAMETER = "error";
     private static Form<ResetPasswordRequest> passwordResetRequestForm = Form.form(ResetPasswordRequest.class);
 
     /**
@@ -69,22 +63,14 @@ public class StandaloneAuthenticationController extends Controller {
      * Display the authentication form.
      */
     public Result displayLoginForm() {
-        FormClient formClient = (FormClient) Config.getClients().findClient("FormClient");
-        String errorParameter = request().getQueryString(ERROR_PARAMETER);
-        boolean hasError = false;
-        boolean accountLocked = false;
-        if (!StringUtils.isBlank(errorParameter)) {
+        LoginInfo loginInfo=getLoginInfo();
+        if (loginInfo.hasErrors()) {
 
             // event: wrong credential / STANDALONE
             getLicensesManagementService().addLoginEvent(
-                    request().getQueryString(formClient.getUsernameParameter()), false, ErrorCode.WRONG_CREDENTIAL, errorParameter);
-
-            hasError = true;
-            if (errorParameter.equals(LightAuthenticationLockedAccountException.class.getSimpleName())) {
-                accountLocked = true;
-            }
+                    request().getQueryString(loginInfo.getUserLogin()), false, ErrorCode.WRONG_CREDENTIAL, loginInfo.getErrorMessage());
         }
-        return ok(login.render(formClient.getCallbackUrl(), hasError, accountLocked));
+        return ok(login.render(loginInfo.getLoginFormActionUrl(), loginInfo.hasErrors(), loginInfo.isAccountLocked()));
     }
 
     /**
