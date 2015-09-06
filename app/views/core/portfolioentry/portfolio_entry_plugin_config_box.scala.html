@@ -36,11 +36,11 @@
                     pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration()!=null &&
                     pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry())!=null){
                     @if(models.framework_models.plugin.PluginRegistration.isRegistered(pluginInfoPair.getLeft(), constants.MafDataType.getPortfolioEntry(), portfolioEntryId)) {
-                        <a href="@pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry()).getRouteForRegistrationController(framework.services.plugins.api.IPluginContext.HttpMethod.GET, portfolioEntryId, framework.services.plugins.api.AbstractConfiguratorController.INITIAL_ACTION)" class="btn btn-success btn-block" role="button">
+                        <a href="@pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry()).getRouteForRegistrationController(framework.services.plugins.api.IPluginContext.HttpMethod.GET, constants.MafDataType.getPortfolioEntry(), portfolioEntryId, framework.services.plugins.api.AbstractConfiguratorController.INITIAL_ACTION)" class="btn btn-success btn-block" role="button">
                             <i class="glyphicons glyphicons-cogwheel"></i> @parts.Msg("button.configure")
                         </a>
                     } else {
-                        <a href="@pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry()).getRouteForRegistrationController(framework.services.plugins.api.IPluginContext.HttpMethod.GET, portfolioEntryId, framework.services.plugins.api.AbstractConfiguratorController.INITIAL_ACTION)" class="btn btn-primary btn-block" role="button">
+                        <a href="@pluginInfoPair.getRight().getConfigurator().getDataTypesWithRegistration().get(constants.MafDataType.getPortfolioEntry()).getRouteForRegistrationController(framework.services.plugins.api.IPluginContext.HttpMethod.GET, constants.MafDataType.getPortfolioEntry(), portfolioEntryId, framework.services.plugins.api.AbstractConfiguratorController.INITIAL_ACTION)" class="btn btn-primary btn-block" role="button">
                             <i class="glyphicons glyphicons-circle-plus"></i> @parts.Msg("button.activate")
                         </a>
                     }
