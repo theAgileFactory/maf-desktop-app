@@ -323,12 +323,13 @@ public class PluginManagerController extends Controller {
 
         // Select the definitions to be displayed (remove the mono instance
         // plugins which are already registered)
-        Map<Pair<String, Boolean>, IPluginDescriptor> pluginDescriptors = getPluginManagerService().getAllPluginDescriptors();
+        Map<String,Pair<Boolean,IPluginDescriptor>> pluginDescriptors = getPluginManagerService().getAllPluginDescriptors();
         List<Pair<Boolean, IPluginDescriptor>> plugins = new ArrayList<>();
-        for (Pair<String, Boolean> key : pluginDescriptors.keySet()) {
-            IPluginDescriptor pluginDescriptor = pluginDescriptors.get(key);
+        for (String key : pluginDescriptors.keySet()) {
+            Pair<Boolean, IPluginDescriptor> record=pluginDescriptors.get(key);
+            IPluginDescriptor pluginDescriptor = record.getRight();
             if (!(registeredDefinitions.contains(pluginDescriptor.getIdentifier()) && !pluginDescriptor.multiInstanceAllowed())) {
-                plugins.add(Pair.of(key.getRight(), pluginDescriptor));
+                plugins.add(Pair.of(record.getLeft(), pluginDescriptor));
             }
         }
 

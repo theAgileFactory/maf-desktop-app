@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import models.framework_models.account.Principal;
 import play.Logger;
 import play.Play;
@@ -120,8 +122,9 @@ public class SystemOwnerController extends Controller {
         // List of available plugins
         List<PluginDefinitionTableObject> pluginDescriptions = new ArrayList<PluginDefinitionTableObject>();
         
-        for (IPluginDescriptor pluginDescriptor : getPluginManagerService().getAllPluginDescriptors().values()) {
+        for (Pair<Boolean, IPluginDescriptor> pluginDefinitionRecord : getPluginManagerService().getAllPluginDescriptors().values()) {
             PluginDefinitionTableObject tableObject = new PluginDefinitionTableObject();
+            IPluginDescriptor pluginDescriptor=pluginDefinitionRecord.getRight();
             tableObject.identifier = pluginDescriptor.getIdentifier();
             tableObject.name = Msg.get(pluginDescriptor.getName());
             tableObject.version = pluginDescriptor.getVersion();
