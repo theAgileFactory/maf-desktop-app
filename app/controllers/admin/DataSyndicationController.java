@@ -749,7 +749,11 @@ public class DataSyndicationController extends Controller {
                 return redirect(controllers.admin.routes.DataSyndicationController.viewAgreement(agreementLink.agreement.id, false));
             }
 
-            return ok(views.html.admin.datasyndication.process_agreement_link.render(agreementLink, agreementLinkAcceptNewPEFormTemplate,
+            // initialize the new PE form
+            Form<DataSyndicationAgreementLinkAcceptNewPEFormData> agreementLinkAcceptNewPEForm = agreementLinkAcceptNewPEFormTemplate
+                    .fill(new DataSyndicationAgreementLinkAcceptNewPEFormData(agreementLink.name));
+
+            return ok(views.html.admin.datasyndication.process_agreement_link.render(agreementLink, agreementLinkAcceptNewPEForm,
                     agreementLinkAcceptExistingPEFormTemplate));
 
         } else {

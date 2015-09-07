@@ -323,9 +323,9 @@ idzone.my.logout=Sign out
 #----------------------
 
 excel.export.success.title=New Excel export file
-excel.export.success.message=The export "{0}" for "{1}" has been successfully put into your personal space
+excel.export.success.message=The export "{0}" has been successfully put into your personal space
 excel.export.failure.title=Excel export error
-excel.export.failure.message=An error happened while generating the excel export for "{0}", please contact the administrator (or retry later).
+excel.export.failure.message=An error happened while generating an excel export, please contact the administrator (or retry later).
 
 #----------------------
 # shortcut
@@ -1606,6 +1606,7 @@ object.data_syndication_partner.customer_website.label=Corporate website
 # dataSyndicationAgreement
 #----------------------
 
+object.data_syndication_agreement.creation_date.label=Date
 object.data_syndication_agreement.partner.label=Partner
 object.data_syndication_agreement.contact_name.label=Contact
 object.data_syndication_agreement.contact_email.label=E-mail

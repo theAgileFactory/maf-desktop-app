@@ -12,6 +12,7 @@ import java.util.List;
 public class DataSyndicationAgreement {
 
     public Long id;
+    public Date creationDate;
     public String refId;
     public String name;
     public Date startDate;
@@ -20,6 +21,7 @@ public class DataSyndicationAgreement {
     public Status status;
     public DataSyndicationPartner masterPartner;
     public DataSyndicationPartner slavePartner;
+    public String slaveEmail;
     public DataSyndicationApiKey apiKey;
 
     /**
