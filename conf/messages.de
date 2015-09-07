@@ -335,9 +335,9 @@ idzone.my.logout=Abmelden
 #----------------------
 
 excel.export.success.title=Neue Excel-Exportdatei
-excel.export.success.message=Der Export [{0}] für [{1}] wurde erfolgreich in Ihre persönliche Ablage gespeichert
+excel.export.success.message=Der Export "{0}" für "{1}" wurde erfolgreich in Ihre persönliche Ablage gespeichert
 excel.export.failure.title=Excel Export Fehler
-excel.export.failure.message=Fehler: Excel-Export für [{0}] fehlgeschlagen, kontaktieren Sie bitte den Administrator (oder später versuchen)
+excel.export.failure.message=Fehler: Excel-Export für "{0}" fehlgeschlagen, kontaktieren Sie bitte den Administrator (oder später versuchen)
 
 #----------------------
 # shortcut
