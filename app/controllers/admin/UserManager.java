@@ -427,8 +427,7 @@ public class UserManager extends Controller {
      * @throws Exception
      * @throws AccountManagementException
      */
-    public void resetUserPasswordFromUid(String uid, boolean eraseCurrentPassword)
-            throws Exception, AccountManagementException {
+    public void resetUserPasswordFromUid(String uid, boolean eraseCurrentPassword) throws Exception, AccountManagementException {
         if (!getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
             return;
         }
@@ -453,7 +452,7 @@ public class UserManager extends Controller {
      * @throws AccountManagementException
      * @return a boolean (false if the e-mail does not exists)
      */
-    public boolean resetUserPasswordFromEmail( String mail, boolean eraseCurrentPassword) {
+    public boolean resetUserPasswordFromEmail(String mail, boolean eraseCurrentPassword) {
         try {
             IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromEmail(mail);
             if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
@@ -477,8 +476,7 @@ public class UserManager extends Controller {
      *            true if the current user password is cleared before sending
      *            the password reset message
      */
-    private void resetUserPassword(IUserAccount userAccount, boolean eraseCurrentPassword)
-            throws AccountManagementException {
+    private void resetUserPassword(IUserAccount userAccount, boolean eraseCurrentPassword) throws AccountManagementException {
         // Generate a random password
         String validationData = RandomStringUtils.randomAlphanumeric(12);
         String validationKey = accountManagerPlugin.getValidationKey(userAccount.getUid(), validationData);
@@ -489,7 +487,8 @@ public class UserManager extends Controller {
         // Send an e-mail for reseting password
         String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
                 "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(userAccount.getUid(), validationKey).url();
-        EmailUtils.sendEmail(getPreferenceManagerPlugin(),Msg.get("admin.user_manager.reset_password.mail.subject"), play.Configuration.root().getString("maf.email.from"),
+        EmailUtils.sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.reset_password.mail.subject"),
+                play.Configuration.root().getString("maf.email.from"),
                 Utilities.renderViewI18n("views.html.mail.account_password_reset_html", play.Configuration.root().getString("maf.platformName"),
                         userAccount.getFirstName() + " " + userAccount.getLastName(), resetPasswordUrl).body(),
                 userAccount.getMail());
@@ -569,7 +568,8 @@ public class UserManager extends Controller {
         // Notify the user with the lock/unlock action
         try {
             EmailUtils
-                    .sendEmail(getPreferenceManagerPlugin(),Msg.get("admin.user_manager.change_status.mail.subject"), play.Configuration.root().getString("maf.email.from"),
+                    .sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.change_status.mail.subject"),
+                            play.Configuration.root().getString("maf.email.from"),
                             Utilities.renderViewI18n("views.html.mail.account_activation_status_changed_html",
                                     play.Configuration.root().getString("maf.platformName"), userAccount.getFirstName() + " " + userAccount.getLastName(),
                                     userAccount.isActive()).body(),
@@ -652,10 +652,10 @@ public class UserManager extends Controller {
                 getAccountManagerPlugin().updatePassword(accountDataForm.uid, password);
 
                 // Notify account creation & password setup
-                String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(
-                        IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
-                        + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
-                EmailUtils.sendEmail(getPreferenceManagerPlugin(),Msg.get("admin.user_manager.create.mail.subject"), play.Configuration.root().getString("maf.email.from"),
+                String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
+                        "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
+                EmailUtils.sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.create.mail.subject"),
+                        play.Configuration.root().getString("maf.email.from"),
                         Utilities.renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
                                 play.Configuration.root().getString("maf.platformName"), accountDataForm.firstName + " " + accountDataForm.lastName,
                                 resetPasswordUrl, accountDataForm.uid).body(),
@@ -749,9 +749,9 @@ public class UserManager extends Controller {
         final String fileName = String.format("users_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
 
         final String successTitle = Msg.get("excel.export.success.title");
-        final String successMessage = Msg.get("excel.export.success.message", fileName, Msg.get("admin.user_manager.sidebar.export"));
+        final String successMessage = Msg.get("excel.export.success.message", fileName);
         final String failureTitle = Msg.get("excel.export.failure.title");
-        final String failureMessage = Msg.get("excel.export.failure.message", Msg.get("admin.user_manager.sidebar.export"));
+        final String failureMessage = Msg.get("excel.export.failure.message");
 
         final String uidLabel = Msg.get("object.user_account.uid.label");
         final String firstNameLabel = Msg.get("object.user_account.first_name.label");

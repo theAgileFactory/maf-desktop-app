@@ -398,9 +398,9 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
                     final String fileName = String.format("eventsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
                     final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName, "events");
+                    final String successMessage = Msg.get("excel.export.success.message", fileName);
                     final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message", "events");
+                    final String failureMessage = Msg.get("excel.export.failure.message");
 
                     // Execute asynchronously
                     getSysAdminUtils().scheduleOnce(false, "Events Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
@@ -1216,9 +1216,9 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
                     final String fileName = String.format("timesheetsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
                     final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName, "timesheets");
+                    final String successMessage = Msg.get("excel.export.success.message", fileName);
                     final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message", "timesheets");
+                    final String failureMessage = Msg.get("excel.export.failure.message");
 
                     // Execute asynchronously
                     getSysAdminUtils().scheduleOnce(false, "Timesheets Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {

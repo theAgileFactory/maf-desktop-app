@@ -102,7 +102,7 @@ public class ReleaseController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IPersonalStoragePlugin personalStoragePlugin;
-    @Inject 
+    @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
@@ -110,7 +110,7 @@ public class ReleaseController extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private ISecurityService securityService;
-    
+
     private static Logger.ALogger log = Logger.of(ReleaseController.class);
 
     public static Form<ReleaseFormData> formTemplate = Form.form(ReleaseFormData.class);
@@ -187,7 +187,8 @@ public class ReleaseController extends Controller {
                     FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.parseResponse(json);
 
                     OrderBy<Release> orderBy = filterConfig.getSortExpression();
-                    ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
+                    ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy,
+                            getSecurityService());
 
                     List<ReleaseListView> releaseListView = new ArrayList<ReleaseListView>();
                     for (Release release : expressionList.findList()) {
@@ -200,9 +201,9 @@ public class ReleaseController extends Controller {
 
                     final String fileName = String.format("releasesExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
                     final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName, "releases");
+                    final String successMessage = Msg.get("excel.export.success.message", fileName);
                     final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message", "releases");
+                    final String failureMessage = Msg.get("excel.export.failure.message");
 
                     // Execute asynchronously
                     getSysAdminUtils().scheduleOnce(false, "Releases Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
@@ -211,8 +212,8 @@ public class ReleaseController extends Controller {
                             try {
                                 OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                                 IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
-                                        controllers.my.routes.MyPersonalStorage.index().url());
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
@@ -291,7 +292,8 @@ public class ReleaseController extends Controller {
             }
 
             OrderBy<Release> orderBy = filterConfig.getSortExpression();
-            ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
+            ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy,
+                    getSecurityService());
 
             // initiate the source items (gantt)
             List<SourceItem> items = new ArrayList<SourceItem>();
@@ -316,18 +318,18 @@ public class ReleaseController extends Controller {
 
                 } else if (cutOffDate != null && endTestsDate == null) {
 
-                    item1.values.add(new SourceValue(cutOffDate, JqueryGantt.cleanToDate(cutOffDate, deploymentDate), "", Msg
-                            .get("core.release.list.planning.phase.full"), "info", dataValue));
+                    item1.values.add(new SourceValue(cutOffDate, JqueryGantt.cleanToDate(cutOffDate, deploymentDate), "",
+                            Msg.get("core.release.list.planning.phase.full"), "info", dataValue));
 
                 } else if (cutOffDate == null && endTestsDate != null) {
 
-                    item1.values.add(new SourceValue(endTestsDate, JqueryGantt.cleanToDate(endTestsDate, deploymentDate), "", Msg
-                            .get("core.release.list.planning.phase.rollout"), "info", dataValue));
+                    item1.values.add(new SourceValue(endTestsDate, JqueryGantt.cleanToDate(endTestsDate, deploymentDate), "",
+                            Msg.get("core.release.list.planning.phase.rollout"), "info", dataValue));
 
                 } else {
 
-                    item1.values.add(new SourceValue(cutOffDate, JqueryGantt.cleanToDate(cutOffDate, endTestsDate), "", Msg
-                            .get("core.release.list.planning.phase.execution"), "info", dataValue));
+                    item1.values.add(new SourceValue(cutOffDate, JqueryGantt.cleanToDate(cutOffDate, endTestsDate), "",
+                            Msg.get("core.release.list.planning.phase.execution"), "info", dataValue));
 
                     // add one day to the from date of the second bar
                     Date from = endTestsDate;
@@ -335,8 +337,8 @@ public class ReleaseController extends Controller {
                     c.setTime(from);
                     c.add(Calendar.DATE, 1);
                     from = c.getTime();
-                    item2.values.add(new SourceValue(from, JqueryGantt.cleanToDate(from, deploymentDate), "", Msg
-                            .get("core.release.list.planning.phase.rollout"), "info", dataValue));
+                    item2.values.add(new SourceValue(from, JqueryGantt.cleanToDate(from, deploymentDate), "",
+                            Msg.get("core.release.list.planning.phase.rollout"), "info", dataValue));
                     has2Items = true;
 
                 }
@@ -370,12 +372,12 @@ public class ReleaseController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private Pair<Table<ReleaseListView>, Pagination<Release>> getReleasesTable(FilterConfig<ReleaseListView> filterConfig)
-            throws AccountManagementException {
+    private Pair<Table<ReleaseListView>, Pagination<Release>> getReleasesTable(FilterConfig<ReleaseListView> filterConfig) throws AccountManagementException {
 
         OrderBy<Release> orderBy = filterConfig.getSortExpression();
 
-        ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
+        ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy,
+                getSecurityService());
 
         Pagination<Release> pagination = new Pagination<Release>(expressionList.findList().size(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());

@@ -323,9 +323,9 @@ idzone.my.logout=Sign out
 #----------------------
 
 excel.export.success.title=New Excel export file
-excel.export.success.message=The export "{0}" for "{1}" has been successfully put into your personal space
+excel.export.success.message=The export "{0}" has been successfully put into your personal space
 excel.export.failure.title=Excel export error
-excel.export.failure.message=An error happened while generating the excel export for "{0}", please contact the administrator (or retry later).
+excel.export.failure.message=An error happened while generating an excel export, please contact the administrator (or retry later).
 
 #----------------------
 # shortcut

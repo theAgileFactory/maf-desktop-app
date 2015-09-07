@@ -335,9 +335,9 @@ idzone.my.logout=Se déconnecter
 #----------------------
 
 excel.export.success.title=Nouveau fichier Excel d''exportation
-excel.export.success.message=L''export "{0}" pour "{1}" a été correctement généré dans votre espace de stockage personnel
+excel.export.success.message=L''export "{0}" a été correctement généré dans votre espace de stockage personnel
 excel.export.failure.title=Erreur d''exportation Excel
-excel.export.failure.message=Une erreur est survenue lors de la génération du fichier Excel pour "{0}", veuillez contacter votre administrateur (ou réessayer ultérieurement).
+excel.export.failure.message=Une erreur est survenue lors de la génération d''un fichier Excel, veuillez contacter votre administrateur (ou réessayer ultérieurement).
 
 #----------------------
 # shortcut

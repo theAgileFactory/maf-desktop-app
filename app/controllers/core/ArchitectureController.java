@@ -246,9 +246,9 @@ public class ArchitectureController extends Controller {
 
                     final String fileName = String.format("applicationBlocksExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
                     final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName, "application blocks");
+                    final String successMessage = Msg.get("excel.export.success.message", fileName);
                     final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message", "application blocks");
+                    final String failureMessage = Msg.get("excel.export.failure.message");
 
                     // Execute asynchronously
                     getSysAdminUtils().scheduleOnce(false, "Application blocks Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
@@ -257,8 +257,8 @@ public class ArchitectureController extends Controller {
                             try {
                                 OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                                 IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
-                                        controllers.my.routes.MyPersonalStorage.index().url());
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
@@ -319,8 +319,8 @@ public class ArchitectureController extends Controller {
 
         Form<ApplicationBlockFormData> applicationBlockForm = null;
         ApplicationBlock parent = null;
-        boolean hasChildren=false;
-        
+        boolean hasChildren = false;
+
         // edit case
         if (id != null) {
 
@@ -329,7 +329,7 @@ public class ArchitectureController extends Controller {
             parent = applicationBlock.parent;
 
             applicationBlockForm = applicationBlockFormTemplate.fill(new ApplicationBlockFormData(applicationBlock));
-            hasChildren=applicationBlock.hasNodeChildren();
+            hasChildren = applicationBlock.hasNodeChildren();
 
             // add the custom attributes values
             CustomAttributeFormAndDisplayHandler.fillWithValues(applicationBlockForm, ApplicationBlock.class, id);
@@ -366,12 +366,12 @@ public class ArchitectureController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, ApplicationBlock.class)) {
-            //WARNING: don't know if this works
-            String id=boundForm.field("id")!=null?boundForm.field("id").value():null;
-            boolean hasChildren=false;
-            if(id!=null){
-                ApplicationBlock currentApplicationBlock=ArchitectureDao.getApplicationBlockById(Long.valueOf(id));
-                hasChildren=currentApplicationBlock!=null?currentApplicationBlock.hasNodeChildren():false;
+            // WARNING: don't know if this works
+            String id = boundForm.field("id") != null ? boundForm.field("id").value() : null;
+            boolean hasChildren = false;
+            if (id != null) {
+                ApplicationBlock currentApplicationBlock = ArchitectureDao.getApplicationBlockById(Long.valueOf(id));
+                hasChildren = currentApplicationBlock != null ? currentApplicationBlock.hasNodeChildren() : false;
             }
             return ok(views.html.core.architecture.application_block_manage_fragment.render(parent, boundForm, hasChildren));
         }
@@ -408,7 +408,8 @@ public class ArchitectureController extends Controller {
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, ApplicationBlock.class, applicationBlock.id);
 
-        return ok(views.html.framework_views.parts.taftree.taf_tree_manual_manage_node.render("applicationBlockTree", action, new EntityTafTreeNodeWrapper<ApplicationBlock>(applicationBlock)));
+        return ok(views.html.framework_views.parts.taftree.taf_tree_manual_manage_node.render("applicationBlockTree", action,
+                new EntityTafTreeNodeWrapper<ApplicationBlock>(applicationBlock)));
     }
 
     /**
