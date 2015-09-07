@@ -6,11 +6,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import be.objectify.deadbolt.java.AbstractDynamicResourceHandler;
-import be.objectify.deadbolt.java.DeadboltHandler;
-import be.objectify.deadbolt.java.DynamicResourceHandler;
-import be.objectify.deadbolt.java.JavaAnalyzer;
-import be.objectify.deadbolt.java.cache.SubjectCache;
 import constants.IMafConstants;
 import dao.delivery.ReleaseDAO;
 import dao.finance.BudgetBucketDAO;
@@ -37,6 +32,7 @@ import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
 import models.reporting.Reporting;
 import models.timesheet.TimesheetReport;
+import play.Configuration;
 import play.Logger;
 import play.cache.CacheApi;
 import play.libs.F.Promise;
@@ -51,6 +47,12 @@ import security.dynamic.PortfolioEntryDynamicHelper;
 import security.dynamic.ReleaseDynamicHelper;
 import security.dynamic.ReportingDynamicHelper;
 import security.dynamic.TimesheetReportDynamicHelper;
+import be.objectify.deadbolt.java.AbstractDynamicResourceHandler;
+import be.objectify.deadbolt.java.DeadboltHandler;
+import be.objectify.deadbolt.java.DynamicResourceHandler;
+import be.objectify.deadbolt.java.JavaAnalyzer;
+import be.objectify.deadbolt.java.cache.SubjectCache;
+import be.objectify.deadbolt.java.ExecutionContextProvider;
 
 @Singleton
 public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
@@ -59,10 +61,11 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
     private II18nMessagesPlugin messagesPlugins;
 
     @Inject
-    public SecurityServiceImpl(JavaAnalyzer deadBoltAnalyzer, SubjectCache subjectCache, IUserSessionManagerPlugin userSessionManagerPlugin,
-            IAccountManagerPlugin accountManagerPlugin, ISecurityService securityService, CacheApi cacheApi, IAuthenticator authenticator,
+    public SecurityServiceImpl(JavaAnalyzer deadBoltAnalyzer, SubjectCache subjectCache, Configuration configuration, ExecutionContextProvider ecProvider,
+            IUserSessionManagerPlugin userSessionManagerPlugin, IAccountManagerPlugin accountManagerPlugin, CacheApi cacheApi, IAuthenticator authenticator,
             IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin messagesPlugins) {
-        super(deadBoltAnalyzer, subjectCache, userSessionManagerPlugin, accountManagerPlugin, securityService, cacheApi, authenticator);
+        super(deadBoltAnalyzer, subjectCache, configuration, ecProvider, userSessionManagerPlugin, accountManagerPlugin, cacheApi, authenticator);
+
         this.preferenceManagerPlugin = preferenceManagerPlugin;
         this.messagesPlugins = messagesPlugins;
         log.info(">>>>>>>>>>>>>>>> Check permissions consistency");
@@ -74,6 +77,8 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
 
     @Override
     public Map<String, DynamicResourceHandler> getDynamicResourceHandlers() {
+        final ISecurityService securityService = this;
+
         Map<String, DynamicResourceHandler> dynamicAuthenticationHandlers = new HashMap<String, DynamicResourceHandler>();
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
@@ -82,7 +87,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolioEntry == null) {
                         return true;
                     } else {
-                        return PortfolioEntryDynamicHelper.isPortfolioEntryViewAllowed(portfolioEntry.id, getSecurityService());
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryViewAllowed(portfolioEntry.id, securityService);
                     }
                 });
             }
@@ -95,7 +100,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolioEntry == null) {
                         return true;
                     } else {
-                        return PortfolioEntryDynamicHelper.isPortfolioEntryDetailsAllowed(portfolioEntry, getSecurityService());
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryDetailsAllowed(portfolioEntry, securityService);
                     }
                 });
             }
@@ -108,7 +113,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolioEntry == null) {
                         return true;
                     } else {
-                        return PortfolioEntryDynamicHelper.isPortfolioEntryEditAllowed(portfolioEntry, getSecurityService(), getPreferenceManagerPlugin());
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryEditAllowed(portfolioEntry, securityService, getPreferenceManagerPlugin());
                     }
                 });
             }
@@ -121,7 +126,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolioEntry == null) {
                         return true;
                     } else {
-                        return PortfolioEntryDynamicHelper.isPortfolioEntryDeleteAllowed(portfolioEntry, getSecurityService());
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryDeleteAllowed(portfolioEntry, securityService);
                     }
                 });
             }
@@ -134,7 +139,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolioEntry == null) {
                         return true;
                     } else {
-                        return PortfolioEntryDynamicHelper.isPortfolioEntryViewFinancialAllowed(portfolioEntry, getSecurityService());
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryViewFinancialAllowed(portfolioEntry, securityService);
                     }
                 });
             }
@@ -147,7 +152,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolioEntry == null) {
                         return true;
                     } else {
-                        return PortfolioEntryDynamicHelper.isPortfolioEntryEditFinancialAllowed(portfolioEntry, getSecurityService());
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryEditFinancialAllowed(portfolioEntry, securityService);
                     }
                 });
             }
@@ -160,7 +165,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolioEntry == null) {
                         return true;
                     } else {
-                        return PortfolioEntryDynamicHelper.isPortfolioEntryReviewRequestAllowed(portfolioEntry, getSecurityService());
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryReviewRequestAllowed(portfolioEntry, securityService);
                     }
                 });
             }
@@ -173,7 +178,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolio == null) {
                         return true;
                     } else {
-                        return PortfolioDynamicHelper.isPortfolioViewAllowed(portfolio.id, getSecurityService());
+                        return PortfolioDynamicHelper.isPortfolioViewAllowed(portfolio.id, securityService);
                     }
                 });
             }
@@ -186,7 +191,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolio == null) {
                         return true;
                     } else {
-                        return PortfolioDynamicHelper.isPortfolioEditAllowed(portfolio, getSecurityService());
+                        return PortfolioDynamicHelper.isPortfolioEditAllowed(portfolio, securityService);
                     }
                 });
             }
@@ -199,7 +204,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (portfolio == null) {
                         return true;
                     } else {
-                        return PortfolioDynamicHelper.isPortfolioViewFinancialAllowed(portfolio, getSecurityService());
+                        return PortfolioDynamicHelper.isPortfolioViewFinancialAllowed(portfolio, securityService);
                     }
                 });
             }
@@ -212,7 +217,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (budgetBucket == null) {
                         return true;
                     } else {
-                        return BudgetBucketDynamicHelper.isBudgetBucketViewAllowed(budgetBucket.id, getSecurityService());
+                        return BudgetBucketDynamicHelper.isBudgetBucketViewAllowed(budgetBucket.id, securityService);
                     }
                 });
             }
@@ -225,7 +230,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (budgetBucket == null) {
                         return true;
                     } else {
-                        return BudgetBucketDynamicHelper.isBudgetBucketEditAllowed(budgetBucket, getSecurityService());
+                        return BudgetBucketDynamicHelper.isBudgetBucketEditAllowed(budgetBucket, securityService);
                     }
                 });
             }
@@ -238,7 +243,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (release == null) {
                         return true;
                     } else {
-                        return ReleaseDynamicHelper.isReleaseViewAllowed(release.id, getSecurityService());
+                        return ReleaseDynamicHelper.isReleaseViewAllowed(release.id, securityService);
                     }
                 });
             }
@@ -251,7 +256,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (release == null) {
                         return true;
                     } else {
-                        return ReleaseDynamicHelper.isReleaseEditAllowed(release, getSecurityService());
+                        return ReleaseDynamicHelper.isReleaseEditAllowed(release, securityService);
                     }
                 });
             }
@@ -264,7 +269,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (report == null) {
                         return true;
                     } else {
-                        return ReportingDynamicHelper.isReportViewAllowed(report.id, getSecurityService());
+                        return ReportingDynamicHelper.isReportViewAllowed(report.id, securityService);
                     }
                 });
             }
@@ -278,7 +283,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (report == null) {
                         return true;
                     } else {
-                        return TimesheetReportDynamicHelper.isTimesheetReportApprovalAllowed(report.id, getSecurityService());
+                        return TimesheetReportDynamicHelper.isTimesheetReportApprovalAllowed(report.id, securityService);
                     }
                 });
             }
@@ -292,7 +297,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (actor == null) {
                         return true;
                     } else {
-                        return ActorDynamicHelper.isActorViewAllowed(actor.id, getSecurityService());
+                        return ActorDynamicHelper.isActorViewAllowed(actor.id, securityService);
                     }
                 });
             }
@@ -305,7 +310,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (actor == null) {
                         return true;
                     } else {
-                        return ActorDynamicHelper.isActorEditAllowed(actor, getSecurityService());
+                        return ActorDynamicHelper.isActorEditAllowed(actor, securityService);
                     }
                 });
             }
@@ -318,7 +323,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (actor == null) {
                         return true;
                     } else {
-                        return ActorDynamicHelper.isActorDeleteAllowed(actor, getSecurityService());
+                        return ActorDynamicHelper.isActorDeleteAllowed(actor, securityService);
                     }
                 });
             }
@@ -332,7 +337,7 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                     if (orgUnit == null) {
                         return true;
                     } else {
-                        return OrgUnitDynamicHelper.isOrgUnitViewAllowed(orgUnit.id, getSecurityService());
+                        return OrgUnitDynamicHelper.isOrgUnitViewAllowed(orgUnit.id, securityService);
                     }
                 });
             }
