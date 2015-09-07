@@ -4,11 +4,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import controllers.ControllersUtils;
-import controllers.api.ApiController;
 import framework.handlers.AbstractErrorHandler;
 import framework.security.ISecurityService;
 import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
+import framework.services.api.IApiControllerUtilsService;
 import framework.services.router.ICustomRouterNotificationService;
 import play.Configuration;
 import play.Environment;
@@ -21,8 +21,8 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Http.RequestHeader;
-import services.datasyndication.IDataSyndicationService;
 import play.mvc.Result;
+import services.datasyndication.IDataSyndicationService;
 
 /**
  * Handler registered to deal with errors
@@ -37,6 +37,8 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     private IDataSyndicationService dataSyndicationService;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private IApiControllerUtilsService apiControllerUtilsService;
 
     @Inject
     public MafHttpErrorHandler(Configuration configuration, Environment environment, OptionalSourceMapper optionalSourceMapper, Provider<Router> providerRouter) {
@@ -58,7 +60,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
             return Promise.promise(new Function0<Result>() {
                 public Result apply() throws Throwable {
                     if (requestHeader.path().startsWith(AbstractApiController.STANDARD_API_ROOT_URI)) {
-                        return ApiController.getJsonErrorResponse(new ApiError(404, "Not found"));
+                        return getApiControllerUtilsService().getJsonErrorResponse(new ApiError(404, "Not found"), Controller.ctx().response());
                     } else {
                         return play.mvc.Results.notFound(views.html.error.not_found.render(requestHeader.uri()));
                     }
@@ -70,7 +72,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
             return Promise.promise(new Function0<Result>() {
                 public Result apply() throws Throwable {
                     if (requestHeader.path().startsWith(AbstractApiController.STANDARD_API_ROOT_URI)) {
-                        return ApiController.getJsonErrorResponse(new ApiError(400, error));
+                        return getApiControllerUtilsService().getJsonErrorResponse(new ApiError(400, error), Controller.ctx().response());
                     } else {
                         return play.mvc.Results.badRequest(views.html.error.bad_request.render());
                     }
@@ -93,15 +95,19 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         });
     }
 
-    private ICustomRouterNotificationService getCustomRouterNotificationService() {
-        return customRouterNotificationService;
-    }
-
     @Override
     protected void injectCommonServicesIncontext(Context context) {
         super.injectCommonServicesIncontext(context);
         context.args.put(IDataSyndicationService.class.getName(), dataSyndicationService);
         context.args.put(ISecurityService.class.getName(), securityService);
+    }
+
+    private ICustomRouterNotificationService getCustomRouterNotificationService() {
+        return customRouterNotificationService;
+    }
+
+    private IApiControllerUtilsService getApiControllerUtilsService() {
+        return apiControllerUtilsService;
     }
 
 

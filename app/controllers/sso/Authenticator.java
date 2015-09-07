@@ -32,7 +32,6 @@ import framework.services.account.IAuthenticationAccountReaderPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Utilities;
 import play.Configuration;
 import play.mvc.Call;
 import play.mvc.Result;
@@ -126,6 +125,6 @@ public class Authenticator extends AbstractAuthenticator {
     @Override
     public Result getFederatedLogoutDisplay() {
         return ok(views.html.sso.federated_logout
-                .render(Utilities.getPreferenceElseConfigurationValue(getConfiguration(), IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")));
+                .render(getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")));
     }
 }

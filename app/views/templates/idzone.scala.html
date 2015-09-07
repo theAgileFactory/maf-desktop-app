@@ -30,7 +30,7 @@
     play.Logger.of("IDZONEDEBUG")
 }
 
-@applicationLogo=@{models.framework_models.account.Preference.getPreferenceValueFromUuid(constants.IMafConstants.APPLICATION_LOGO_PREFERENCE);}
+@applicationLogo=@{models.framework_models.account.Preference.getPreferenceValueFromUuid(constants.IMafConstants.APPLICATION_LOGO_PREFERENCE, _cache, _usession, _accmngr);}
 @log.debug("BEGIN>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 <div id="idzone_wrapper">
     <div class="container" style="width: 100%; margin-left: 0; margin-left: 0;">

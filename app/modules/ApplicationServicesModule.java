@@ -35,6 +35,8 @@ import framework.services.account.LightAuthenticationAccountReaderPlugin;
 import framework.services.account.LightAuthenticationAccountWriterPlugin;
 import framework.services.actor.ActorSystemPluginImpl;
 import framework.services.actor.IActorSystemPlugin;
+import framework.services.api.ApiControllerUtilsServiceImpl;
+import framework.services.api.IApiControllerUtilsService;
 import framework.services.api.server.ApiSignatureServiceImpl;
 import framework.services.api.server.IApiSignatureService;
 import framework.services.audit.AuditLoggerServiceImpl;
@@ -213,6 +215,7 @@ public class ApplicationServicesModule extends FrameworkModule {
             break;
         }
         bind(IAuthenticator.class).to(Authenticator.class).asEagerSingleton();
+        bind(IApiControllerUtilsService.class).to(ApiControllerUtilsServiceImpl.class).asEagerSingleton();
         log.info(">>> Standard dependency injection end");
     }
 

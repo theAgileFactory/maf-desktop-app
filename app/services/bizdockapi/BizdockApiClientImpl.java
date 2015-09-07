@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
-import framework.services.api.AbstractApiController;
 import framework.services.api.client.SignatureGeneratorImpl;
 import framework.services.api.commons.ApiMethod;
 import framework.services.api.commons.IApiConstants;
@@ -76,7 +75,7 @@ public class BizdockApiClientImpl implements IBizdockApiClient {
         });
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.setDateFormat(new SimpleDateFormat(AbstractApiController.DATE_FORMAT));
+        mapper.setDateFormat(new SimpleDateFormat(IApiConstants.DATE_FORMAT));
         this.mapper = mapper;
 
         Logger.info("SERVICE>>> BizdockApiClientImpl started");

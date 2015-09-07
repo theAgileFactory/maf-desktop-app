@@ -42,6 +42,7 @@ import dao.pmo.ActorDao;
 import framework.commons.IFrameworkConstants;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -61,7 +62,6 @@ import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.Actor;
 import play.Logger;
-import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.validation.Constraints.MaxLength;
@@ -94,6 +94,8 @@ public class UserManager extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(UserManager.class);
     private static Form<UserSeachFormData> userSearchForm = Form.form(UserSeachFormData.class);
@@ -406,7 +408,7 @@ public class UserManager extends Controller {
      */
     public Result resetPassword(String uid) {
         try {
-            resetUserPasswordFromUid(getAccountManagerPlugin(), uid, true);
+            resetUserPasswordFromUid(uid, true);
             return redirect(controllers.admin.routes.UserManager.displayUser(uid));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
@@ -417,8 +419,6 @@ public class UserManager extends Controller {
      * The method to trigger a password reset for the specified uid.<br/>
      * This sends an e-mail to the user with a validation key.
      * 
-     * @param accountManagerPlugin
-     *            a user account manager reference
      * @param uid
      *            a unique user id
      * @param eraseCurrentPassword
@@ -427,16 +427,16 @@ public class UserManager extends Controller {
      * @throws Exception
      * @throws AccountManagementException
      */
-    public static void resetUserPasswordFromUid(IAccountManagerPlugin accountManagerPlugin, String uid, boolean eraseCurrentPassword)
+    public void resetUserPasswordFromUid(String uid, boolean eraseCurrentPassword)
             throws Exception, AccountManagementException {
-        if (!accountManagerPlugin.isAuthenticationRepositoryMasterMode()) {
+        if (!getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
             return;
         }
-        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(uid);
+        IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromUid(uid);
         if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
             throw new Exception("user not found");
         }
-        resetUserPassword(accountManagerPlugin, userAccount, eraseCurrentPassword);
+        resetUserPassword(userAccount, eraseCurrentPassword);
         Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.reset_password.success"));
     }
 
@@ -444,8 +444,6 @@ public class UserManager extends Controller {
      * The method to trigger a password reset for the specified mail.<br/>
      * This sends an e-mail to the user with a validation key.
      * 
-     * @param accountManagerPlugin
-     *            a user account manager reference
      * @param mail
      *            a user e-mail
      * @param eraseCurrentPassword
@@ -455,13 +453,13 @@ public class UserManager extends Controller {
      * @throws AccountManagementException
      * @return a boolean (false if the e-mail does not exists)
      */
-    public static boolean resetUserPasswordFromEmail(IAccountManagerPlugin accountManagerPlugin, String mail, boolean eraseCurrentPassword) {
+    public boolean resetUserPasswordFromEmail( String mail, boolean eraseCurrentPassword) {
         try {
-            IUserAccount userAccount = accountManagerPlugin.getUserAccountFromEmail(mail);
+            IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromEmail(mail);
             if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                 return false;
             }
-            resetUserPassword(accountManagerPlugin, userAccount, eraseCurrentPassword);
+            resetUserPassword(userAccount, eraseCurrentPassword);
             return true;
         } catch (Exception e) {
             log.error("Exception following a password reset attempt with mail " + mail, e);
@@ -473,27 +471,25 @@ public class UserManager extends Controller {
      * Reset the user password of the user associated with the specified
      * account.
      * 
-     * @param accountManagerPlugin
-     *            the account manager plugin
      * @param userAccount
      *            the user account
      * @param eraseCurrentPassword
      *            true if the current user password is cleared before sending
      *            the password reset message
      */
-    private static void resetUserPassword(IAccountManagerPlugin accountManagerPlugin, IUserAccount userAccount, boolean eraseCurrentPassword)
+    private void resetUserPassword(IUserAccount userAccount, boolean eraseCurrentPassword)
             throws AccountManagementException {
         // Generate a random password
         String validationData = RandomStringUtils.randomAlphanumeric(12);
         String validationKey = accountManagerPlugin.getValidationKey(userAccount.getUid(), validationData);
         if (eraseCurrentPassword) {
-            accountManagerPlugin.updatePassword(userAccount.getUid(), validationData);
+            getAccountManagerPlugin().updatePassword(userAccount.getUid(), validationData);
         }
 
         // Send an e-mail for reseting password
-        String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(), IFrameworkConstants.PUBLIC_URL_PREFERENCE,
+        String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
                 "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(userAccount.getUid(), validationKey).url();
-        EmailUtils.sendEmail(Msg.get("admin.user_manager.reset_password.mail.subject"), play.Configuration.root().getString("maf.email.from"),
+        EmailUtils.sendEmail(getPreferenceManagerPlugin(),Msg.get("admin.user_manager.reset_password.mail.subject"), play.Configuration.root().getString("maf.email.from"),
                 Utilities.renderViewI18n("views.html.mail.account_password_reset_html", play.Configuration.root().getString("maf.platformName"),
                         userAccount.getFirstName() + " " + userAccount.getLastName(), resetPasswordUrl).body(),
                 userAccount.getMail());
@@ -573,7 +569,7 @@ public class UserManager extends Controller {
         // Notify the user with the lock/unlock action
         try {
             EmailUtils
-                    .sendEmail(Msg.get("admin.user_manager.change_status.mail.subject"), play.Configuration.root().getString("maf.email.from"),
+                    .sendEmail(getPreferenceManagerPlugin(),Msg.get("admin.user_manager.change_status.mail.subject"), play.Configuration.root().getString("maf.email.from"),
                             Utilities.renderViewI18n("views.html.mail.account_activation_status_changed_html",
                                     play.Configuration.root().getString("maf.platformName"), userAccount.getFirstName() + " " + userAccount.getLastName(),
                                     userAccount.isActive()).body(),
@@ -656,10 +652,10 @@ public class UserManager extends Controller {
                 getAccountManagerPlugin().updatePassword(accountDataForm.uid, password);
 
                 // Notify account creation & password setup
-                String resetPasswordUrl = Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),
+                String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(
                         IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
                         + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
-                EmailUtils.sendEmail(Msg.get("admin.user_manager.create.mail.subject"), play.Configuration.root().getString("maf.email.from"),
+                EmailUtils.sendEmail(getPreferenceManagerPlugin(),Msg.get("admin.user_manager.create.mail.subject"), play.Configuration.root().getString("maf.email.from"),
                         Utilities.renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
                                 play.Configuration.root().getString("maf.platformName"), accountDataForm.firstName + " " + accountDataForm.lastName,
                                 resetPasswordUrl, accountDataForm.uid).body(),
@@ -878,6 +874,14 @@ public class UserManager extends Controller {
 
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
+    }
+
+    private ISysAdminUtils getSysAdminUtils() {
+        return sysAdminUtils;
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
     }
 
     /**
@@ -1129,9 +1133,5 @@ public class UserManager extends Controller {
      */
     public static enum MenuItemType {
         NONE, SEARCH, CREATE;
-    }
-
-    private ISysAdminUtils getSysAdminUtils() {
-        return sysAdminUtils;
     }
 }

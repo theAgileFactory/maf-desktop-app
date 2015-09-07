@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import framework.services.api.AbstractApiController;
+import framework.services.api.commons.IApiConstants;
 import play.data.format.Formats.DateTime;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
@@ -64,7 +64,7 @@ public class KpiDataRequest {
     public BigDecimal additional2Value;
 
     @JsonProperty
-    @DateTime(pattern = AbstractApiController.DATE_FORMAT)
+    @DateTime(pattern = IApiConstants.DATE_FORMAT)
     public Date timestamp;
 
     /**

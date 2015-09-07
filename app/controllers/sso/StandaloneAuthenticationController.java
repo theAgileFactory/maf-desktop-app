@@ -25,7 +25,6 @@ import org.apache.commons.codec.binary.Base64;
 
 import controllers.admin.UserManager;
 import framework.security.AbstractStandaloneAuthenticationController;
-import framework.services.ServiceStaticAccessor;
 import framework.utils.CaptchaManager;
 import framework.utils.Msg;
 import framework.utils.Utilities;
@@ -51,6 +50,9 @@ import views.html.sso.reset_password;
 public class StandaloneAuthenticationController extends AbstractStandaloneAuthenticationController {
     @Inject 
     private ILicensesManagementService licensesManagementService;
+    @Inject
+    private UserManager userManagerController;
+    
     private static Form<ResetPasswordRequest> passwordResetRequestForm = Form.form(ResetPasswordRequest.class);
 
     /**
@@ -117,7 +119,7 @@ public class StandaloneAuthenticationController extends AbstractStandaloneAuthen
             boundForm.reject("captchaText", Msg.get("captcha.error.wrong_word"));
             return badRequest(reset_password.render(uuid, boundForm));
         }
-        if (!UserManager.resetUserPasswordFromEmail(ServiceStaticAccessor.getAccountManagerPlugin(),resetPasswordRequest.mail, false)) {
+        if (!getUserManagerController().resetUserPasswordFromEmail(resetPasswordRequest.mail, false)) {
             boundForm.reject("mail", Msg.get("authentication.standalone.reset.mail.unknown.message"));
             return badRequest(reset_password.render(uuid, boundForm));
         }
@@ -140,5 +142,9 @@ public class StandaloneAuthenticationController extends AbstractStandaloneAuthen
 
     private ILicensesManagementService getLicensesManagementService() {
         return licensesManagementService;
+    }
+
+    private UserManager getUserManagerController() {
+        return userManagerController;
     }
 }

@@ -20,8 +20,19 @@ package controllers.admin;
 import javax.inject.Inject;
 import javax.persistence.Transient;
 
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+import controllers.ControllersUtils;
+import framework.commons.IFrameworkConstants;
+import framework.services.account.AccountManagementException;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IAuthenticationAccountReaderPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.account.IUserAccount;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.utils.EmailUtils;
+import framework.utils.Msg;
+import framework.utils.Utilities;
 import play.Logger;
-import play.Play;
 import play.data.Form;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
@@ -30,17 +41,6 @@ import play.data.validation.Constraints.Required;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
-import controllers.ControllersUtils;
-import framework.commons.IFrameworkConstants;
-import framework.services.account.AccountManagementException;
-import framework.services.account.IAccountManagerPlugin;
-import framework.services.account.IAuthenticationAccountReaderPlugin;
-import framework.services.account.IUserAccount;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.EmailUtils;
-import framework.utils.Msg;
-import framework.utils.Utilities;
 
 /**
  * This controller deal with the self administration of its profile by a user.
@@ -55,6 +55,8 @@ public class MyAccount extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject 
     private IAuthenticationAccountReaderPlugin authenticationReader;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
     
     private static Logger.ALogger log = Logger.of(MyAccount.class);
     private static Form<UserAccountFormData> basicDataUpdateForm = Form.form(UserAccountFormData.class, UserAccountFormData.BasicDataChangeGroup.class);
@@ -185,13 +187,14 @@ public class MyAccount extends Controller {
 
             // Send an e-mail for validation
             EmailUtils.sendEmail(
+                    getPreferenceManagerPlugin(),
                     Msg.get("my.my_profile.update_email.message.subject"),
                     play.Configuration.root().getString("maf.email.from"),
                     Utilities.renderViewI18n(
                             "views.html.mail.account_email_update_html",
                             play.Configuration.root().getString("maf.platformName"),
                             account.getFirstName() + " " + account.getLastName(),
-                            Utilities.getPreferenceElseConfigurationValue(Play.application().configuration(),IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
+                            getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")
                                     + controllers.admin.routes.MyAccount.validateEmailUpdate(validationKey).url()).body(), accountDataForm.mail);
 
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_email.successful"));
@@ -391,6 +394,10 @@ public class MyAccount extends Controller {
 
     private IAuthenticationAccountReaderPlugin getAuthenticationReader() {
         return authenticationReader;
+    }
+
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
     }
 
 }
