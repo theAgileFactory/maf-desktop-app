@@ -114,7 +114,7 @@ import utils.table.PortfolioEntryListView;
 public class RoadmapController extends Controller {
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
-    @Inject 
+    @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
@@ -124,7 +124,7 @@ public class RoadmapController extends Controller {
     private IPersonalStoragePlugin personalStoragePlugin;
     @Inject
     private ISecurityService securityService;
-    
+
     private static Logger.ALogger log = Logger.of(RoadmapController.class);
 
     private static Form<CapacityForecastForm> capacityForecastFormTemplate = Form.form(CapacityForecastForm.class);
@@ -250,9 +250,9 @@ public class RoadmapController extends Controller {
 
                     final String fileName = String.format("roadmapExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
                     final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName, "roadmap");
+                    final String successMessage = Msg.get("excel.export.success.message", fileName);
                     final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message", "roadmap");
+                    final String failureMessage = Msg.get("excel.export.failure.message");
 
                     // Execute asynchronously
                     getSysAdminUtils().scheduleOnce(false, "Roadmap Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
@@ -261,8 +261,8 @@ public class RoadmapController extends Controller {
                             try {
                                 OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
                                 IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
-                                        controllers.my.routes.MyPersonalStorage.index().url());
+                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
@@ -477,7 +477,8 @@ public class RoadmapController extends Controller {
 
     /**
      * Return the HTML fragment of the KPIs for "scenario simulator".
-     * @throws AccountManagementException 
+     * 
+     * @throws AccountManagementException
      */
     @Restrict({ @Group(IMafConstants.ROADMAP_SIMULATOR_PERMISSION) })
     public Result simulatorKpisFragment() throws AccountManagementException {
@@ -1329,7 +1330,8 @@ public class RoadmapController extends Controller {
          */
         public String getBootstrapBackground() {
 
-            Integer percentage = ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
+            Integer percentage = ServiceStaticAccessor.getPreferenceManagerPlugin()
+                    .getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
             if (this.getAvailable() >= this.getPlanned() - 0.01) {
                 return "success";
