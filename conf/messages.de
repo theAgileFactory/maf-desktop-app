@@ -1618,6 +1618,7 @@ object.data_syndication_partner.customer_website.label=de: Corporate website
 # dataSyndicationAgreement
 #----------------------
 
+object.data_syndication_agreement.creation_date.label=Datum
 object.data_syndication_agreement.partner.label=Partner
 object.data_syndication_agreement.contact_name.label=Kontakt
 object.data_syndication_agreement.contact_email.label=E-Mail

@@ -87,6 +87,8 @@
                         @helper.form(action = controllers.admin.routes.DataSyndicationController.acceptAgreementLinkNewPE()) {
                         
                             <input type="hidden" name="agreementLinkId" value="@agreementLink.id">
+                            
+                            @helper.inputText(agreementLinkAcceptNewPEForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
 
                             @parts.dropdownlist(agreementLinkAcceptNewPEForm("portfolioEntryTypeId"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(), null, false)
                 

@@ -47,6 +47,9 @@ public class DataSyndicationAgreementListView {
             {
                 setIdFieldName("id");
 
+                addColumn("creationDate", "creationDate", "object.data_syndication_agreement.creation_date.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("creationDate", new DateFormatter<DataSyndicationAgreementListView>());
+
                 addColumn("name", "name", "object.data_syndication_agreement.name.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("name", new ObjectFormatter<DataSyndicationAgreementListView>());
 
@@ -191,6 +194,8 @@ public class DataSyndicationAgreementListView {
 
     public Long id;
 
+    public Date creationDate;
+
     public String masterCustomerName;
     public String masterContactName;
     public String masterContactEmail;
@@ -215,6 +220,8 @@ public class DataSyndicationAgreementListView {
 
         this.id = dataSyndicationAgreement.id;
 
+        this.creationDate = dataSyndicationAgreement.creationDate;
+
         this.masterCustomerName = dataSyndicationAgreement.masterPartner.customerName;
         this.masterContactName = dataSyndicationAgreement.masterPartner.contactName;
         this.masterContactEmail = dataSyndicationAgreement.masterPartner.contactName;
@@ -223,6 +230,8 @@ public class DataSyndicationAgreementListView {
             this.slaveCustomerName = dataSyndicationAgreement.slavePartner.customerName;
             this.slaveContactName = dataSyndicationAgreement.slavePartner.contactName;
             this.slaveContactEmail = dataSyndicationAgreement.slavePartner.contactEmail;
+        } else if (dataSyndicationAgreement.slaveEmail != null) {
+            this.slaveContactEmail = dataSyndicationAgreement.slaveEmail;
         }
 
         this.name = dataSyndicationAgreement.name;

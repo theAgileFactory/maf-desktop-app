@@ -25,7 +25,10 @@ import controllers.core.PortfolioEntryController;
 import dao.governance.LifeCycleProcessDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
+import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntry;
+import play.data.validation.Constraints.MaxLength;
+import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 
@@ -37,6 +40,11 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
 public class DataSyndicationAgreementLinkAcceptNewPEFormData {
 
     public Long agreementLinkId;
+
+    @Required
+    @MinLength(value = 3)
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
+    public String name;
 
     @Required
     public Long managerId;
@@ -54,6 +62,16 @@ public class DataSyndicationAgreementLinkAcceptNewPEFormData {
     }
 
     /**
+     * Construct with a default name.
+     * 
+     * @param name
+     *            the portfolio entry name
+     */
+    public DataSyndicationAgreementLinkAcceptNewPEFormData(String name) {
+        this.name = name;
+    }
+
+    /**
      * Create and return the corresponding portfolio entry in the DB.
      * 
      * @param agreementLink
@@ -66,7 +84,7 @@ public class DataSyndicationAgreementLinkAcceptNewPEFormData {
 
             PortfolioEntry portfolioEntry = new PortfolioEntry();
             portfolioEntry.isSyndicated = true;
-            portfolioEntry.name = agreementLink.name;
+            portfolioEntry.name = this.name;
             portfolioEntry.description = agreementLink.description;
             portfolioEntry.creationDate = new Date();
             portfolioEntry.manager = ActorDao.getActorById(this.managerId);

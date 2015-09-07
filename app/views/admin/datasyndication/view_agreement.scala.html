@@ -80,6 +80,10 @@
                              <col class="col-md-8">
                         </colgroup>
                         <tbody>
+                            <tr>
+                                <th>@parts.Msg("object.data_syndication_agreement.creation_date.label")</th>
+                                <td>@display_date(agreement.creationDate)</td>
+                            </tr>
                             @if(partner != null) {
                                 <tr>
                                     <th>@parts.Msg("object.data_syndication_agreement.partner.label")</th>
@@ -91,7 +95,13 @@
                                 </tr>
                                 <tr>
                                     <th>@parts.Msg("object.data_syndication_agreement.contact_email.label")</th>
-                                    <td>@display_object(partner.contactEmail)</td>
+                                    <td>@display_mail(partner.contactEmail)</td>
+                                </tr>
+                            }
+                            @if(isMasterAgreement && partner == null && agreement.slaveEmail != null) {
+                                <tr>
+                                    <th>@parts.Msg("object.data_syndication_agreement.contact_email.label")</th>
+                                    <td>@display_mail(agreement.slaveEmail)</td>
                                 </tr>
                             }
                             <tr>
