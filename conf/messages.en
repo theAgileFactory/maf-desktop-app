@@ -382,50 +382,49 @@ tour.breadcrumb.step1.content=You need more information about the current page? 
 #----------------------
 
 #roadmap
-topmenubar.roadmap.menu.label=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
+topmenubar.roadmap.menu.label=Roadmap
 
 #cockpit
-topmenubar.cockpit.menu.label=<i class="glyphicons glyphicons-dashboard"></i>&nbsp;Cockpit
+topmenubar.cockpit.menu.label=Cockpit
 
 #new
-topmenubar.new.menu.label=<i class="glyphicons glyphicons-gift"></i>&nbsp;New
-topmenubar.new.initiative.menu.label=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Initiative
-topmenubar.new.actor.menu.label=<i class="glyphicons glyphicons-parents"></i>&nbsp;Employee
-topmenubar.new.org_unit.menu.label=<i class="glyphicons glyphicons-building"></i>&nbsp;Org unit
-topmenubar.new.portfolio.menu.label=<i class="glyphicons glyphicons-sort"></i>&nbsp;Portfolio
-topmenubar.new.budget_bucket.menu.label=<i class="glyphicons glyphicons-calculator"></i>&nbsp;Budget bucket
-topmenubar.new.release.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Release
+topmenubar.new.menu.label=New
+topmenubar.new.initiative.menu.label=Initiative
+topmenubar.new.actor.menu.label=Employee
+topmenubar.new.org_unit.menu.label=Org unit
+topmenubar.new.portfolio.menu.label=Portfolio
+topmenubar.new.budget_bucket.menu.label=Budget bucket
+topmenubar.new.release.menu.label=Release
 
 #governance
-topmenubar.governance.menu.label=<i class="glyphicons glyphicons-cluster"></i>&nbsp;Governance
-topmenubar.governance.milestone_planning.menu.label=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Milestone planning
-topmenubar.governance.provide_approval.menu.label=<i class="glyphicons glyphicons-thumbs-up"></i>&nbsp;Provide approval
-topmenubar.governance.review_milestone_request.menu.label=<i class="glyphicons glyphicons-transfer"></i>&nbsp;Review milestone requests
+topmenubar.governance.menu.label=Governance
+topmenubar.governance.milestone_planning.menu.label=Milestone planning
+topmenubar.governance.provide_approval.menu.label=Provide approval
+topmenubar.governance.review_milestone_request.menu.label=Review milestone requests
 
 #delivery
-topmenubar.delivery.menu.label=<i class="glyphicons glyphicons-cargo"></i>&nbsp;Delivery
-topmenubar.delivery.releases.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
+topmenubar.delivery.menu.label=Delivery
+topmenubar.delivery.releases.menu.label=Releases
 
 #architecture
-topmenubar.architecture.menu.label=<i class="glyphicons glyphicons-globe-af"></i>&nbsp;Architecture
+topmenubar.architecture.menu.label=Architecture
 
 #tools
-topmenubar.tools.menu.label=<i class="glyphicons glyphicons-settings"></i>&nbsp;Tools
-topmenubar.tools.timesheet.menu.label=<i class="glyphicons glyphicons-clock"></i>&nbsp;Timesheet
-topmenubar.tools.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting
+topmenubar.tools.menu.label=Tools
+topmenubar.tools.timesheet.menu.label=Timesheet
+topmenubar.tools.reporting.menu.label=Reporting
 
 #admin
-topmenubar.admin.menu.label=<i class="glyphicons glyphicons-king"></i>&nbsp;Admin
-topmenubar.admin.usermanager.menu.label=<i class="glyphicons glyphicons-user"></i>&nbsp;User administration
-topmenubar.admin.configuration.menu.label=<i class="glyphicons glyphicons-classic-hammer"></i>&nbsp;Configuration
-topmenubar.admin.integration.menu.label=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration
-topmenubar.admin.kpimanager.menu.label=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manager
-topmenubar.admin.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting manager
-topmenubar.admin.integrationhub.menu.label=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration hub
-topmenubar.admin.audit.menu.label=<i class="glyphicons glyphicons-signal"></i>&nbsp;Audit log
+topmenubar.admin.menu.label=Admin
+topmenubar.admin.usermanager.menu.label=User administration
+topmenubar.admin.configuration.menu.label=Configuration
+topmenubar.admin.integration.menu.label=Integration
+topmenubar.admin.kpimanager.menu.label=KPI manager
+topmenubar.admin.reporting.menu.label=Reporting manager
+topmenubar.admin.audit.menu.label=Audit log
 
 #search
-topmenubar.search.menu.label=<i class="glyphicons glyphicons-search"></i>&nbsp;Search
+topmenubar.search.menu.label=Search
 
 #----------------------
 # standard KPIs
@@ -1768,12 +1767,11 @@ my.personalstorage.file.size.label=Size
 # roadmap
 #----------------------
 
-#helpers
-core.roadmap.title=Roadmap
-core.roadmap.planning.title=Planning
+#roadmap
+core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
 
 #planning
-core.roadmap.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Planning
+core.roadmap.planning.title=Planning
 core.roadmap.planning.nosource=There is no initiative to display: either the configured filters are too much specific or the start and end dates of the initiatives are not filled.
 
 #simulator
@@ -1805,7 +1803,7 @@ core.roadmap.simulator.capacity_forecast.planned.label=Planned
 # search
 #----------------------
 
-core.search.title=Search
+core.search.breadcrumb=<i class="glyphicons glyphicons-search"></i>&nbsp;Search
 core.search.header=You can use this form to search the principal data, such that the initiatives and the employees.<br/>The "*" (star) character represents a wildcard, for example "*test*" will return all entries including the key word "test" at any place.<br/><strong>Warning:</strong> the search results depends on your rights as a consequence the found entries may vary from one user to another.
 core.search.type.portfolio_entry=Initiative
 core.search.type.actor=Employee
@@ -1822,7 +1820,7 @@ core.search.submit.noresult=There is no result for your search
 #----------------------
 
 #helpers
-core.reporting.title=Reports
+core.reporting.breadcrumb=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting
 core.reporting.category.title=Reports repository
 
 #generate
@@ -1837,7 +1835,7 @@ core.reporting.generate.process.failure.message=An error has occured when creati
 #----------------------
 
 #helpers
-core.cockpit.title=Cockpit
+core.cockpit.breadcrumb=<i class="glyphicons glyphicons-dashboard"></i>&nbsp;Cockpit
 core.cockpit.sidebar.initiatives=Initiatives
 core.cockpit.sidebar.portfolios=Portfolios
 core.cockpit.sidebar.subordinates=Subordinates
@@ -1911,7 +1909,7 @@ core.budget_bucket.line.delete.successful=The line has been correctly removed.
 #----------------------
 
 #helper
-core.timesheet.title=Timesheet
+core.timesheet.breadcrumb=<i class="glyphicons glyphicons-clock"></i>&nbsp;Timesheet
 core.timesheet.error=An error occurred, please try again.
 core.timesheet.empty=The timesheet is currently empty.
 
@@ -1967,10 +1965,10 @@ core.timesheet.send_reminder.notification.message=Please fill and submit the tim
 #----------------------
 
 #helper
-core.milestone_approval.title=Provide approval
+core.milestone_approval.breadcrumb=<i class="glyphicons glyphicons-thumbs-up"></i>&nbsp;Provide approval
 
 #planning
-core.milestone.planning.title=Milestone planning
+core.milestone.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Milestone planning
 core.milestone.planning.header=Please find below <span class="label label-success">Passed</span>,  <span class="label label-danger">Rejected</span> and <span class="label label-warning">Pending</span> milestones for all active, non-conceptual and public initiatives.<br/>\
 By clicking on a date, a short summary of all milestones (for this date) is displayed; and by clicking on a bullet, a complete summary of the corresponding milestone is displayed.
 core.milestone.planning.today=Today
@@ -2004,7 +2002,7 @@ core.milestone.approval.process.panel.decide.reject.notification.message=The fin
 #----------------------
 
 #review milestone request list
-core.process_transition_request.review_milestone_request_list.title=Review milestone requests
+core.process_transition_request.review_milestone_request_list.breadcrumb=<i class="glyphicons glyphicons-transfer"></i>&nbsp;Review milestone requests
 core.process_transition_request.review_milestone_request_list.header=Thanks to review the following requests to trigger a milestone approval
 
 #process milestone request
@@ -2603,8 +2601,10 @@ core.org_unit.actor_allocated_activity.add.successful=The activity has been allo
 # release
 #----------------------
 
+#helper
+core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
+
 #list and planning
-core.release.list.title=Releases
 core.release.list.planning.title=Planning
 core.release.list.planning.no_source=There is no release to display: the configured filters are too much specific.
 core.release.list.planning.phase.full=Build & Rollout
@@ -2636,7 +2636,7 @@ core.release.initiative.view.requirements.title=Requirements
 #----------------------
 
 #helper
-core.architecture.title=Architecture
+core.architecture.breadcrumb=<i class="glyphicons glyphicons-globe-af"></i>&nbsp;Architecture
 
 #index
 core.architecture.index.application_block.tree.title=Application blocks
@@ -2654,6 +2654,7 @@ core.architecture.application_block.view.root.label=Main
 #----------------------
 
 #helper
+admin.user_manager.breadcrumb=<i class="glyphicons glyphicons-user"></i>&nbsp;User administration
 admin.user_manager.unknown_user=Unknown user
 admin.user_manager.sidebar.search=Search and update a user
 admin.user_manager.sidebar.create=Create a new user
@@ -2742,6 +2743,7 @@ repair action.
 #----------------------
 
 #helpers
+admin.configuration.breadcrumb=<i class="glyphicons glyphicons-classic-hammer"></i>&nbsp;Configuration
 admin.configuration.system_preferences.title=System preferences
 admin.configuration.system_preferences.breadcrumb.edit=Update
 admin.configuration.system_preferences.category.general=General
@@ -2969,6 +2971,7 @@ admin.configuration.custom_attribute.item.delete.successful=The option has been 
 #----------------------
 
 #helper
+admin.integration.breadcrumb=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration
 admin.integration.sidebar.plugins=Plugins
 admin.integration.sidebar.plugins.active_plugins=Active plugins
 admin.integration.sidebar.plugins.available_plugins=Available plugins
@@ -3124,8 +3127,10 @@ admin.data_syndication.process_agreement_link.reject.success=The agreement relat
 # KPI manager
 #----------------------
 
+#helper
+admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manager
+
 #list
-admin.kpi.title=KPI manager
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
 admin.kpi.object_type.models.pmo.Portfolio=Portfolio
 
@@ -3172,11 +3177,11 @@ admin.kpi.delete.successful=The KPI has been deleted.
 #----------------------
 
 #helper
+admin.reporting.breadcrumb=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting manager
 admin.reporting.standard=Standard
 admin.reporting.customized=Customized
 
 #index
-admin.reporting.title=Reporting manager
 admin.reporting.category.title=Reports repository
 
 #edit
@@ -3204,6 +3209,7 @@ admin.systemowner.info.plugins.title=Available plugins
 #----------------------
 
 #helper
+admin.auditable.breadcrumb=<i class="glyphicons glyphicons-signal"></i>&nbsp;Audit log
 admin.auditable.object_class.label=Object Class
 admin.auditable.is_auditable.label=Audited
 

@@ -394,50 +394,49 @@ tour.breadcrumb.step1.content=Brauchen Sie weitere Information bezüglich einer 
 #----------------------
 
 #roadmap
-topmenubar.roadmap.menu.label=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
+topmenubar.roadmap.menu.label=Roadmap
 
 #cockpit
-topmenubar.cockpit.menu.label=<i class="glyphicons glyphicons-dashboard"></i>&nbsp;Cockpit
+topmenubar.cockpit.menu.label=Cockpit
 
 #new
-topmenubar.new.menu.label=<i class="glyphicons glyphicons-gift"></i>&nbsp;Neu
-topmenubar.new.initiative.menu.label=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Initiative
-topmenubar.new.actor.menu.label=<i class="glyphicons glyphicons-parents"></i>&nbsp;Mitarbeiter
-topmenubar.new.org_unit.menu.label=<i class="glyphicons glyphicons-building"></i>&nbsp;Organisationseinheit
-topmenubar.new.portfolio.menu.label=<i class="glyphicons glyphicons-sort"></i>&nbsp;Portfolio
-topmenubar.new.budget_bucket.menu.label=<i class="glyphicons glyphicons-calculator"></i>&nbsp;Budgetposten
-topmenubar.new.release.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Release
+topmenubar.new.menu.label=Neu
+topmenubar.new.initiative.menu.label=Initiative
+topmenubar.new.actor.menu.label=Mitarbeiter
+topmenubar.new.org_unit.menu.label=Organisationseinheit
+topmenubar.new.portfolio.menu.label=Portfolio
+topmenubar.new.budget_bucket.menu.label=Budgetposten
+topmenubar.new.release.menu.label=Release
 
 #governance
-topmenubar.governance.menu.label=<i class="glyphicons glyphicons-cluster"></i>&nbsp;Unternehmensführung
-topmenubar.governance.milestone_planning.menu.label=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Meilensteinplanung
-topmenubar.governance.provide_approval.menu.label=<i class="glyphicons glyphicons-thumbs-up"></i>&nbsp;Meilensteine akzeptieren
-topmenubar.governance.review_milestone_request.menu.label=<i class="glyphicons glyphicons-transfer"></i>&nbsp;Anfragen validieren
+topmenubar.governance.menu.label=Unternehmensführung
+topmenubar.governance.milestone_planning.menu.label=Meilensteinplanung
+topmenubar.governance.provide_approval.menu.label=Meilensteine akzeptieren
+topmenubar.governance.review_milestone_request.menu.label=Anfragen validieren
 
 #delivery
-topmenubar.delivery.menu.label=<i class="glyphicons glyphicons-cargo"></i>&nbsp;Lieferung
-topmenubar.delivery.releases.menu.label=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Release
+topmenubar.delivery.menu.label=Lieferung
+topmenubar.delivery.releases.menu.label=Release
 
 #architecture
-topmenubar.architecture.menu.label=<i class="glyphicons glyphicons-globe-af"></i>&nbsp;Architektur
+topmenubar.architecture.menu.label=Architektur
 
 #tools
-topmenubar.tools.menu.label=<i class="glyphicons glyphicons-settings"></i>&nbsp;Werkzeuge
-topmenubar.tools.timesheet.menu.label=<i class="glyphicons glyphicons-clock"></i>&nbsp;Zeiterfassung
-topmenubar.tools.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Berichte
+topmenubar.tools.menu.label=Werkzeuge
+topmenubar.tools.timesheet.menu.label=Zeiterfassung
+topmenubar.tools.reporting.menu.label=Berichte
 
 #admin
-topmenubar.admin.menu.label=<i class="glyphicons glyphicons-king"></i>&nbsp;Admin
-topmenubar.admin.usermanager.menu.label=<i class="glyphicons glyphicons-user"></i>&nbsp;Benutzerverwaltung
-topmenubar.admin.configuration.menu.label=<i class="glyphicons glyphicons-classic-hammer"></i>&nbsp;Konfiguration
-topmenubar.admin.integration.menu.label=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration
-topmenubar.admin.kpimanager.menu.label=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI Manager
-topmenubar.admin.reporting.menu.label=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Berichte Manager
-topmenubar.admin.integrationhub.menu.label=<i class="glyphicons glyphicons-cloud"></i>&nbsp;hub
-topmenubar.admin.audit.menu.label=<i class="glyphicons glyphicons-signal"></i>&nbsp;Audit-Log
+topmenubar.admin.menu.label=Admin
+topmenubar.admin.usermanager.menu.label=Benutzerverwaltung
+topmenubar.admin.configuration.menu.label=Konfiguration
+topmenubar.admin.integration.menu.label=Integration
+topmenubar.admin.kpimanager.menu.label=KPI Manager
+topmenubar.admin.reporting.menu.label=Berichte Manager
+topmenubar.admin.audit.menu.label=Audit-Log
 
 #search
-topmenubar.search.menu.label=<i class="glyphicons glyphicons-search"></i>&nbsp;Suche
+topmenubar.search.menu.label=Suche
 
 #----------------------
 # standard KPIs
@@ -1780,12 +1779,11 @@ my.personalstorage.file.size.label=Grösse
 # roadmap
 #----------------------
 
-#helpers
-core.roadmap.title=Roadmap
-core.roadmap.planning.title=Gantt-Diagramm
+#roadmap
+core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
 
 #planning
-core.roadmap.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Gantt-Diagramm
+core.roadmap.planning.title=Gantt-Diagramm
 core.roadmap.planning.nosource=Diagramm kann nicht angezeigt werden. Wahrscheinlich wurden die Start und Enddaten noch nicht eingegeben.
 
 #simulator
@@ -1817,7 +1815,7 @@ core.roadmap.simulator.capacity_forecast.planned.label=Geplant
 # search
 #----------------------
 
-core.search.title=Suche
+core.search.breadcrumb=<i class="glyphicons glyphicons-search"></i>&nbsp;Suche
 core.search.header=Über diese Seite können die wichtigsten Informationen, wie die Initiativen oder Mitarbeiter, gesucht werden.<br/>Das Zeichen "*" (Stern) vereinfacht die Suche indem alle Charakter, die in einem Wort sind, durchsucht werden. Beispiel: mit dem Eintrag "*test*" wird nach allen Einträgen mit Buchstabenfolge "test" gesucht.<br/><strong>ACHTUNG:</strong> Das Suchresultat hängt von Ihren Zugriffsrechten ab, d.h. verschiedene Benutzer können unterschiedliche Einträge finden.
 core.search.type.portfolio_entry=Initiative
 core.search.type.actor=Mitarbeiter
@@ -1834,7 +1832,7 @@ core.search.submit.noresult=Keine Suchergebnisse
 #----------------------
 
 #helpers
-core.reporting.title=Berichte
+core.reporting.breadcrumb=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Berichte
 core.reporting.category.title=Berichte Kategorien
 
 #generate
@@ -1848,7 +1846,7 @@ core.reporting.generate.process.failure.message=Fehler: Berichterstellung fehlge
 # cockpit
 #----------------------
 
-core.cockpit.title=Cockpit
+core.cockpit.breadcrumb=<i class="glyphicons glyphicons-dashboard"></i>&nbsp;Cockpit
 core.cockpit.sidebar.initiatives=Initiativen
 core.cockpit.sidebar.portfolios=Portfolios
 core.cockpit.sidebar.subordinates=Arbeitnehmer
@@ -1922,7 +1920,7 @@ core.budget_bucket.line.delete.successful=Der Eintrag wurde gelöscht.
 #----------------------
 
 #helper
-core.timesheet.title=Zeiterfassung
+core.timesheet.breadcrumb=<i class="glyphicons glyphicons-clock"></i>&nbsp;Zeiterfassung
 core.timesheet.error=Ein Fehler ist aufgetreten, bitte wiederholen.
 core.timesheet.empty=Keine Einträge
 
@@ -1978,10 +1976,10 @@ core.timesheet.send_reminder.notification.message=Bitte Arbeit von {0} bis {1} e
 #----------------------
 
 #helper
-core.milestone_approval.title=Meilenstein genehmigen
+core.milestone_approval.breadcrumb=<i class="glyphicons glyphicons-thumbs-up"></i>&nbsp;Meilenstein genehmigen
 
 #planning
-core.milestone.planning.title=Meilensteinplanung
+core.milestone.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Meilensteinplanung
 core.milestone.planning.header=Untenstehend finden Sie die Liste der Meilensteine (<span class="label label-success">Akzeptierte</span>, <span class="label label-danger">Abgelehnte</span> und <span class="label label-warning">Anstehende</span>) für die aktiven, angestossenen und öffentlichen Initiativen.<br/>\
 Indem Sie auf das Datum klicken, finden Sie eine Uebersicht über aller Meilensteine (bis zu diesem Datum); klicken Sie auf einen Aufzählungspunkt, erhalten Sie eine Uebersicht über den entsprechenden Meilenstein.
 core.milestone.planning.today=Heute
@@ -2015,7 +2013,7 @@ core.milestone.approval.process.panel.decide.reject.notification.message=Die end
 #----------------------
 
 #review milestone request list
-core.process_transition_request.review_milestone_request_list.title=Anfragen validieren
+core.process_transition_request.review_milestone_request_list.breadcrumb=<i class="glyphicons glyphicons-transfer"></i>&nbsp;Anfragen validieren
 core.process_transition_request.review_milestone_request_list.header=Bitte prüfen Sie folgende Meilensteinanfragen
 
 #process milestone request
@@ -2615,8 +2613,10 @@ core.org_unit.actor_allocated_activity.add.successful=Zuweisung wurde hinzugefü
 # release
 #----------------------
 
+#helper
+core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
+
 #list and planning
-core.release.list.title=Releases
 core.release.list.planning.title=Gantt-Diagramm
 core.release.list.planning.no_source=Keine Daten
 core.release.list.planning.phase.full=Erstellen und Liefern
@@ -2648,7 +2648,7 @@ core.release.initiative.view.requirements.title=Anforderungen
 #----------------------
 
 #helper
-core.architecture.title=Architektur
+core.architecture.breadcrumb=<i class="glyphicons glyphicons-globe-af"></i>&nbsp;Architektur
 
 #index
 core.architecture.index.application_block.tree.title=Applikationsblöcke
@@ -2666,6 +2666,7 @@ core.architecture.application_block.view.root.label=Main
 #----------------------
 
 #helper
+admin.user_manager.breadcrumb=<i class="glyphicons glyphicons-user"></i>&nbsp;Benutzerverwaltung
 admin.user_manager.unknown_user=Benuter unbekannt
 admin.user_manager.sidebar.search=Benutzer suchen und anpassen
 admin.user_manager.sidebar.create=Neuer Benutzer
@@ -2752,6 +2753,7 @@ admin.user_manager.resync.header=Benutzen Sie die Resynchronisierung als "Automa
 #----------------------
 
 #helpers
+admin.configuration.breadcrumb=<i class="glyphicons glyphicons-classic-hammer"></i>&nbsp;Konfiguration
 admin.configuration.system_preferences.title=Systemeinstellungen
 admin.configuration.system_preferences.breadcrumb.edit=Aktualisieren
 admin.configuration.system_preferences.category.general=General
@@ -2980,6 +2982,7 @@ admin.configuration.custom_attribute.item.delete.successful=Option entfernt.
 #----------------------
 
 #helper
+admin.integration.breadcrumb=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration
 admin.integration.sidebar.plugins=Plugins
 admin.integration.sidebar.plugins.active_plugins=Active Plugin
 admin.integration.sidebar.plugins.available_plugins=Verfügbare Plugin
@@ -3134,8 +3137,10 @@ admin.data_syndication.process_agreement_link.reject.success=de: The agreement r
 # KPI manager
 #----------------------
 
+#helper
+admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manager
+
 #list
-admin.kpi.title=KPI Manager
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
 admin.kpi.object_type.models.pmo.Portfolio=Portfolio
 
@@ -3182,11 +3187,11 @@ admin.kpi.delete.successful=Der KPI wurde gelöscht.
 #----------------------
 
 #helper
+admin.reporting.breadcrumb=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Berichte Manager
 admin.reporting.standard=Standard
 admin.reporting.customized=Kundenspezifische
 
 #index
-admin.reporting.title=Berichte Manager
 admin.reporting.category.title=Bericht-Kategorien
 
 #edit
@@ -3214,6 +3219,7 @@ admin.systemowner.info.plugins.title=Verfügbare Plugin
 #----------------------
 
 #helper
+admin.auditable.breadcrumb=<i class="glyphicons glyphicons-signal"></i>&nbsp;Audit-Log
 admin.auditable.object_class.label=Objekt Typ
 admin.auditable.is_auditable.label=Aktiviert
 
