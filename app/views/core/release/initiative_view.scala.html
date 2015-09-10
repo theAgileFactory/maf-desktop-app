@@ -24,7 +24,7 @@
 
 @breadcrump=@{
     Seq(
-        ("topmenubar.delivery.releases.menu.label", controllers.core.routes.ReleaseController.list().url),
+        ("core.release.breadcrumb", controllers.core.routes.ReleaseController.list().url),
         (releasePortfolioEntry.getRelease.getName, controllers.core.routes.ReleaseController.view(releasePortfolioEntry.getRelease.id).url),
         (releasePortfolioEntry.getPortfolioEntry.getName, null)
     )

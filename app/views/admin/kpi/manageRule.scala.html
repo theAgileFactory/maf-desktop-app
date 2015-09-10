@@ -29,9 +29,9 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @templates.main_bc_nosidebar(
-    parts.Msg.asString("admin.kpi.title"),
+    parts.Msg.asString("topmenubar.admin.kpimanager.menu.label"),
     Seq(
-        ("topmenubar.admin.kpimanager.menu.label", controllers.admin.routes.KpiManagerController.index().url),
+        ("admin.kpi.breadcrumb", controllers.admin.routes.KpiManagerController.index().url),
         ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
         (kpi.getValueName(framework.services.kpi.Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
         ("admin.kpi.rule.manage.title", null)

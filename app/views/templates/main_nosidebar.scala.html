@@ -16,15 +16,96 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(pageHtmlTitle: String, fluid: Boolean = true, showIdZone: Boolean = true)(header: Html)(content: Html)
+
+@import commons._
+@import framework_views.parts
 @import framework.utils.TopMenuBar
 @import framework_views.parts.menubars.topmenubar
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
-@common(pageHtmlTitle, showIdZone) {
+@idZoneData=@{
+    controllers.Application.getIDZoneData();
+}
+
+@applicationLogo=@{
+    models.framework_models.account.Preference.getPreferenceValueFromUuid(constants.IMafConstants.APPLICATION_LOGO_PREFERENCE, _cache, _usession, _accmngr);
+}
+
+@common(pageHtmlTitle) {
     @header
 }{
-    @topmenubar(routes.Application.index.url)
+    @if(showIdZone) {
+        @topmenubar(routes.Application.index.url){
+            @applicationLogo.renderDisplay()
+        }{
+            @if(idZoneData!=null) {
+                <div class="btn-group" id="menu-messages">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicons glyphicons-envelope glyphicons-button-small"></span>
+                        @if(idZoneData.nbNotReadMessages > 0) { &nbsp;<span class="badge">@idZoneData.nbNotReadMessages</span> }
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" style="z-index: 1001;">
+                        @if(idZoneData.nbNotReadMessages > 0) {
+                            @for(message <- idZoneData.messages) {
+                                <li><a href="@routes.MessagingController.index().url"><span class="glyphicons glyphicons-envelope glyphicons-button-small"></span> @message.getTitle</a></li>
+                            }
+                        } else {
+                            <li class="dropdown-header">@parts.Msg("idzone.messages.not_read.empty")</li>
+                        }
+                        <li class="divider"></li>
+                        <li><a href="@routes.MessagingController.index().url"><span class="glyphicons glyphicons-conversation glyphicons-button-small"></span> @parts.Msg("idzone.messages.messaging")</a></li>
+                    </ul>
+                </div>
+                @if(_notificationService.isInternalSendingSystem) {
+                    &nbsp;
+                    <div class="btn-group" id="menu-notifications">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicons glyphicons-bell glyphicons-button-small"></span>
+                            @if(idZoneData.nbNotReadNotifications > 0) { &nbsp;<span class="badge">@idZoneData.nbNotReadNotifications</span> }
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" style="z-index: 1001;">
+                            @if(idZoneData.nbNotReadNotifications > 0) {
+                                @for(notification <- idZoneData.notifications) {
+                                    <li><a href="@routes.Application.redirectForNotification(notification.id).url">
+                                        @if(notification.notificationCategory != null) {
+                                            <span class="@notification.notificationCategory.bootstrapGlyphicon glyphicons-button-small"></span>
+                                        }
+                                        @notification.getTitle
+                                    </a></li>
+                                }
+                            } else {
+                                <li class="dropdown-header">@parts.Msg("idzone.notifications.not_read.empty")</li>
+                            }
+                            <li class="divider"></li>
+                            <li><a href="@routes.Application.displayNotifications().url"><span class="glyphicons glyphicons-list glyphicons-button-small"></span> @parts.Msg("idzone.notifications.view_all")</a></li>
+                        </ul>
+                    </div>
+                }
+                &nbsp;
+                <div class="btn-group" id="menu-my">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicons glyphicons-user glyphicons-button-small"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" style="z-index: 1001;">
+                        <li><a href="@controllers.admin.routes.MyAccount.display().url"><i class="glyphicons glyphicons-nameplate glyphicons-button-small"></i>&nbsp; @parts.Msg("idzone.my.myaccount")</a></li>
+                        @restrict(la(as(constants.IMafConstants.PERSONAL_SPACE_READ_PERMISSION))){ 
+                            <li><a href="@controllers.my.routes.MyPersonalStorage.index().url"><i class="glyphicons glyphicons-folder-open glyphicons-button-small"></i>&nbsp; @parts.Msg("idzone.my.personalspace")</a></li>
+                        }
+                        <li class="divider"></li>
+                        <li><a href="@play.Play.application().configuration().getString("maf.support.url")" target="_blank"><i class="glyphicons glyphicons-life-preserver glyphicons-button-small"></i>&nbsp; @parts.Msg("idzone.my.support")</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@idZoneData.logoutUrl"><i class="glyphicons glyphicons-power glyphicons-button-small"></i>&nbsp; @parts.Msg("idzone.my.logout")</a></li>
+                    </ul>
+                </div>
+            }
+        }
+    } else {
+        @topmenubar(routes.Application.index.url){&nbsp;}{&nbsp;}
+    }
     @if(fluid) {
         <div class="container-fluid">
     } else {

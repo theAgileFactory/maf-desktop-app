@@ -29,7 +29,7 @@
 
 @breadcrump=@{
     Seq(
-        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
         ("admin.configuration.custom_attributes.title", controllers.admin.routes.ConfigurationCustomAttributeController.list(dataType.getDataName()).url),
         (customAttribute.name, controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttribute.id).url),
         ("admin.configuration.custom_attribute.item.manage.title", null)

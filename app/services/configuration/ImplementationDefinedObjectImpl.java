@@ -157,23 +157,15 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     public void resetTopMenuBar() {
         TopMenuBar.getInstance().clear();
 
-        // main menu (BizDock)
         defineRoadmapMenu(null);
         defineCockpitMenu(null);
-        defineBizDockNewMenu();
+        defineArchitectureMenu(null);
+        defineNewMenu(null);
         defineGovernanceMenu(null);
+        defineDeliveryMenu(null);
         defineToolsMenu(null);
         defineAdminMenu(null);
         defineSearchMenu(null);
-
-        // DevDock menu
-        TopMenuBar.getInstance().add(DEVDOCK_PERSPECTIVE_KEY, views.html.templates.devdock_logo.render());
-        defineArchitectureMenu(DEVDOCK_PERSPECTIVE_KEY);
-        defineCockpitMenu(DEVDOCK_PERSPECTIVE_KEY);
-        defineDevDockNewMenu();
-        defineDeliveryMenu(DEVDOCK_PERSPECTIVE_KEY);
-        defineAdminMenu(DEVDOCK_PERSPECTIVE_KEY);
-        defineSearchMenu(DEVDOCK_PERSPECTIVE_KEY);
     }
 
     @Override
@@ -195,7 +187,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineSearchMenu(String perspectiveKey) {
         ClickableMenuItem searchMenuItem = new ClickableMenuItem(TopMenus.SEARCH.name(), "topmenubar.search.menu.label",
-                controllers.core.routes.SearchController.index());
+                controllers.core.routes.SearchController.index(), "glyphicons glyphicons-search", false);
         searchMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.SEARCH_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(searchMenuItem);
@@ -212,7 +204,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineAdminMenu(String perspectiveKey) {
         // Admin user management features
-        HeaderMenuItem adminMenuItem = new HeaderMenuItem(TopMenus.ADMIN.name(), "topmenubar.admin.menu.label");
+        HeaderMenuItem adminMenuItem = new HeaderMenuItem(TopMenus.ADMIN.name(), "topmenubar.admin.menu.label", "glyphicons glyphicons-king", false);
         adminMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
                 IMafConstants.ADMIN_AUDIT_LOG_PERMISSION, IMafConstants.REPORTING_ADMINISTRATION_PERMISSION, IMafConstants.ADMIN_CONFIGURATION_PERMISSION,
                 IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION, IMafConstants.ADMIN_KPI_MANAGER_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
@@ -224,39 +216,39 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
         // User management
         ClickableMenuItem userManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(1), "topmenubar.admin.usermanager.menu.label",
-                controllers.admin.routes.UserManager.displayUserSearchForm());
+                controllers.admin.routes.UserManager.displayUserSearchForm(), "glyphicons glyphicons-user", false);
         adminMenuItem.addSubMenuItem(userManagerMenuItem);
         userManagerMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION));
 
         // Configuration
         ClickableMenuItem systemPreferenceMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(2), "topmenubar.admin.configuration.menu.label",
-                controllers.admin.routes.ConfigurationController.index());
+                controllers.admin.routes.ConfigurationController.index(), "glyphicons glyphicons-classic-hammer", false);
         adminMenuItem.addSubMenuItem(systemPreferenceMenuItem);
         systemPreferenceMenuItem.setAuthorizedPermissions(
                 Utilities.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
 
         // Integration
         ClickableMenuItem pluginManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(3), "topmenubar.admin.integration.menu.label",
-                controllers.admin.routes.PluginManagerController.index());
+                controllers.admin.routes.PluginManagerController.index(), "glyphicons glyphicons-cloud", false);
         adminMenuItem.addSubMenuItem(pluginManagerMenuItem);
         pluginManagerMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION,
                 IMafConstants.API_MANAGER_PERMISSION, IMafConstants.PARTNER_SYNDICATION_PERMISSION));
 
         // KPI manager
         ClickableMenuItem kpiManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(4), "topmenubar.admin.kpimanager.menu.label",
-                controllers.admin.routes.KpiManagerController.index());
+                controllers.admin.routes.KpiManagerController.index(), "glyphicons glyphicons-stats", false);
         adminMenuItem.addSubMenuItem(kpiManagerMenuItem);
         kpiManagerMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_KPI_MANAGER_PERMISSION));
 
         // Reporting
         ClickableMenuItem reportingMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(5), "topmenubar.admin.reporting.menu.label",
-                controllers.admin.routes.ReportingController.index());
+                controllers.admin.routes.ReportingController.index(), "glyphicons glyphicons-pie-chart", false);
         adminMenuItem.addSubMenuItem(reportingMenuItem);
         reportingMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.REPORTING_ADMINISTRATION_PERMISSION));
 
         // Audit log
         ClickableMenuItem auditLogMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(6), "topmenubar.admin.audit.menu.label",
-                controllers.admin.routes.AuditableController.listAuditable());
+                controllers.admin.routes.AuditableController.listAuditable(), "glyphicons glyphicons-signal", false);
         auditLogMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_AUDIT_LOG_PERMISSION));
         adminMenuItem.addSubMenuItem(auditLogMenuItem);
     }
@@ -268,9 +260,9 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      *            the perspective key, let null for the main
      */
     private void defineToolsMenu(String perspectiveKey) {
-        HeaderMenuItem toolsMenuItem = new HeaderMenuItem(TopMenus.TOOLS.name(), "topmenubar.tools.menu.label");
-        toolsMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION,
-                IMafConstants.REPORTING_VIEW_ALL_PERMISSION, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
+        HeaderMenuItem toolsMenuItem = new HeaderMenuItem(TopMenus.TOOLS.name(), "topmenubar.tools.menu.label", "glyphicons glyphicons-settings", false);
+        toolsMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION, IMafConstants.REPORTING_VIEW_ALL_PERMISSION,
+                IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(toolsMenuItem);
         } else {
@@ -278,12 +270,12 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
 
         ClickableMenuItem timesheetMenuItem = new ClickableMenuItem(TopMenus.TOOLS.name(1), "topmenubar.tools.timesheet.menu.label",
-                controllers.core.routes.TimesheetController.weeklyFill(""));
+                controllers.core.routes.TimesheetController.weeklyFill(""), "glyphicons glyphicons-clock", false);
         timesheetMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION));
         toolsMenuItem.addSubMenuItem(timesheetMenuItem);
 
         ClickableMenuItem viewReportingMenuItem = new ClickableMenuItem(TopMenus.TOOLS.name(2), "topmenubar.tools.reporting.menu.label",
-                controllers.core.routes.ReportingController.index());
+                controllers.core.routes.ReportingController.index(), "glyphicons glyphicons-pie-chart", false);
         viewReportingMenuItem.setAuthorizedPermissions(
                 Utilities.getListOfArray(IMafConstants.REPORTING_VIEW_ALL_PERMISSION, IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
         toolsMenuItem.addSubMenuItem(viewReportingMenuItem);
@@ -296,7 +288,8 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      *            the perspective key, let null for the main
      */
     private void defineDeliveryMenu(String perspectiveKey) {
-        HeaderMenuItem deliveryMenuItem = new HeaderMenuItem(TopMenus.DELIVERY.name(), "topmenubar.delivery.menu.label");
+        HeaderMenuItem deliveryMenuItem = new HeaderMenuItem(TopMenus.DELIVERY.name(), "topmenubar.delivery.menu.label", "glyphicons glyphicons-cargo",
+                false);
         deliveryMenuItem.setAuthorizedPermissions(
                 Utilities.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
         if (perspectiveKey == null) {
@@ -306,7 +299,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
 
         ClickableMenuItem viewReleasesMenuItem = new ClickableMenuItem(TopMenus.DELIVERY.name(1), "topmenubar.delivery.releases.menu.label",
-                controllers.core.routes.ReleaseController.list(false));
+                controllers.core.routes.ReleaseController.list(false), "glyphicons glyphicons-git-branch", false);
         viewReleasesMenuItem.setAuthorizedPermissions(
                 Utilities.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
         deliveryMenuItem.addSubMenuItem(viewReleasesMenuItem);
@@ -320,7 +313,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineArchitectureMenu(String perspectiveKey) {
         ClickableMenuItem architectureMenuItem = new ClickableMenuItem(TopMenus.ARCHITECTURE.name(), "topmenubar.architecture.menu.label",
-                controllers.core.routes.ArchitectureController.index(null));
+                controllers.core.routes.ArchitectureController.index(null), "glyphicons glyphicons-globe-af", false);
         architectureMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ARCHITECTURE_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(architectureMenuItem);
@@ -336,7 +329,8 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      *            the perspective key, let null for the main
      */
     private void defineGovernanceMenu(String perspectiveKey) {
-        HeaderMenuItem governanceMenuItem = new HeaderMenuItem(TopMenus.GOVERNANCE.name(), "topmenubar.governance.menu.label");
+        HeaderMenuItem governanceMenuItem = new HeaderMenuItem(TopMenus.GOVERNANCE.name(), "topmenubar.governance.menu.label",
+                "glyphicons glyphicons-cluster", false);
         governanceMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION,
                 IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION,
                 IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION, IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION));
@@ -347,19 +341,20 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
 
         ClickableMenuItem milestonePlanningMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(1),
-                "topmenubar.governance.milestone_planning.menu.label", controllers.core.routes.MilestoneApprovalController.overview());
+                "topmenubar.governance.milestone_planning.menu.label", controllers.core.routes.MilestoneApprovalController.overview(),
+                "glyphicons glyphicons-calendar", false);
         milestonePlanningMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION));
         governanceMenuItem.addSubMenuItem(milestonePlanningMenuItem);
 
         ClickableMenuItem provideApprovalMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(2), "topmenubar.governance.provide_approval.menu.label",
-                controllers.core.routes.MilestoneApprovalController.list(0));
-        provideApprovalMenuItem.setAuthorizedPermissions(
-                Utilities.getListOfArray(IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION));
+                controllers.core.routes.MilestoneApprovalController.list(0), "glyphicons glyphicons-thumbs-up", false);
+        provideApprovalMenuItem
+                .setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION));
         governanceMenuItem.addSubMenuItem(provideApprovalMenuItem);
 
         ClickableMenuItem reviewRequestMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(3),
                 "topmenubar.governance.review_milestone_request.menu.label",
-                controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0));
+                controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0), "glyphicons glyphicons-transfer", false);
         reviewRequestMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION,
                 IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION));
         governanceMenuItem.addSubMenuItem(reviewRequestMenuItem);
@@ -367,16 +362,23 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
 
     /**
      * Define the new menu for BizDock.
+     * 
+     * @param perspectiveKey
+     *            the perspective key, let null for the main
      */
-    private void defineBizDockNewMenu() {
-        HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label");
+    private void defineNewMenu(String perspectiveKey) {
+        HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label", "glyphicons glyphicons-gift", false);
         newMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION,
                 IMafConstants.ACTOR_EDIT_ALL_PERMISSION, IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION,
-                IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
-        TopMenuBar.getInstance().addMenuItem(newMenuItem);
+                IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION, IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
+        if (perspectiveKey == null) {
+            TopMenuBar.getInstance().addMenuItem(newMenuItem);
+        } else {
+            TopMenuBar.getInstance().get(perspectiveKey).addMenuItem(newMenuItem);
+        }
 
         ClickableMenuItem newInitiativeMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.initiative.menu.label",
-                controllers.core.routes.PortfolioEntryController.createStep1());
+                controllers.core.routes.PortfolioEntryController.createStep1(), "glyphicons glyphicons-wallet", false);
         newInitiativeMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
         newMenuItem.addSubMenuItem(newInitiativeMenuItem);
 
@@ -386,40 +388,30 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         newMenuItem.addSubMenuItem(newSeparatorMenuItem);
 
         ClickableMenuItem newActorMenuItem = new ClickableMenuItem(TopMenus.NEW.name(2), "topmenubar.new.actor.menu.label",
-                controllers.core.routes.ActorController.create());
+                controllers.core.routes.ActorController.create(), "glyphicons glyphicons-parents", false);
         newActorMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newActorMenuItem);
 
         ClickableMenuItem newOrgUnitMenuItem = new ClickableMenuItem(TopMenus.NEW.name(3), "topmenubar.new.org_unit.menu.label",
-                controllers.core.routes.OrgUnitController.create());
+                controllers.core.routes.OrgUnitController.create(), "glyphicons glyphicons-building", false);
         newOrgUnitMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newOrgUnitMenuItem);
 
         ClickableMenuItem newPortfolioMenuItem = new ClickableMenuItem(TopMenus.NEW.name(4), "topmenubar.new.portfolio.menu.label",
-                controllers.core.routes.PortfolioController.create());
+                controllers.core.routes.PortfolioController.create(), "glyphicons glyphicons-sort", false);
         newPortfolioMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newPortfolioMenuItem);
 
         ClickableMenuItem newBudgetBucketMenuItem = new ClickableMenuItem(TopMenus.NEW.name(5), "topmenubar.new.budget_bucket.menu.label",
-                controllers.core.routes.BudgetBucketController.create());
+                controllers.core.routes.BudgetBucketController.create(), "glyphicons glyphicons-calculator", false);
         newBudgetBucketMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newBudgetBucketMenuItem);
 
-    }
-
-    /**
-     * Define the new menu for DevDock.
-     */
-    private void defineDevDockNewMenu() {
-
-        HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label");
-        newMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
-        TopMenuBar.getInstance().get(DEVDOCK_PERSPECTIVE_KEY).addMenuItem(newMenuItem);
-
-        ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.release.menu.label",
-                controllers.core.routes.ReleaseController.create());
+        ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(6), "topmenubar.new.release.menu.label",
+                controllers.core.routes.ReleaseController.create(), "glyphicons glyphicons-git-branch", false);
         newReleaseMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newReleaseMenuItem);
+
     }
 
     /**
@@ -430,7 +422,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineCockpitMenu(String perspectiveKey) {
         ClickableMenuItem cockpitMenuItem = new ClickableMenuItem(TopMenus.COCKPIT.name(), "topmenubar.cockpit.menu.label",
-                controllers.core.routes.CockpitController.initiatives(0, 0, false));
+                controllers.core.routes.CockpitController.initiatives(0, 0, false), "glyphicons glyphicons-dashboard", false);
         cockpitMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.COCKPIT_DISPLAY_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(cockpitMenuItem);
@@ -447,7 +439,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineRoadmapMenu(String perspectiveKey) {
         ClickableMenuItem roadmapMenuItem = new ClickableMenuItem(TopMenus.ROADMAP.name(), "topmenubar.roadmap.menu.label",
-                controllers.core.routes.RoadmapController.index(false));
+                controllers.core.routes.RoadmapController.index(false), "glyphicons glyphicons-road", false);
         roadmapMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ROADMAP_DISPLAY_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(roadmapMenuItem);

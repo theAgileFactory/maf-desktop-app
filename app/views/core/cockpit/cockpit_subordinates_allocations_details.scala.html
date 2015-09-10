@@ -33,7 +33,7 @@
     parts.Msg.asString("core.cockpit.sidebar.subordinates"),
     controllers.core.CockpitController.getSideBar(controllers.core.CockpitController.MenuItemType.MY_EMPLOYEES, _securityService),
     Seq(
-        ("topmenubar.cockpit.menu.label", controllers.core.routes.CockpitController.initiatives().url),
+        ("core.cockpit.breadcrumb", controllers.core.routes.CockpitController.initiatives().url),
         ("core.cockpit.sidebar.subordinates", controllers.core.routes.CockpitController.subordinates().url),
         ("core.cockpit.sidebar.subordinates.allocations_details", null)
     )

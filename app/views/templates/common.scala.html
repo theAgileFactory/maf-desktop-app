@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(pageHtmlTitle: String, showIdZone: Boolean = true)(header: Html)(content: Html)
+@(pageHtmlTitle: String)(header: Html)(content: Html)
 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -41,9 +41,6 @@
         @header
     </head>
     <body>
-        @if(showIdZone) {
-            @idzone()
-        }
         @utils.AdPanelUtils.display(request.path)
         @content
 

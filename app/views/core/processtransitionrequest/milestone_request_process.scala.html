@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
  * reserved.
- *
+ * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation; version 2 of the License.
@@ -31,9 +31,9 @@
 @import framework_views.parts.formats._
 
 @templates.main_bc_nosidebar(
-    parts.Msg.asString("core.process_transition_request.process_milestone_request.title"),
+    parts.Msg.asString("topmenubar.governance.review_milestone_request.menu.label"),
     Seq(
-        ("topmenubar.governance.review_milestone_request.menu.label", controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0).url),
+        ("core.process_transition_request.review_milestone_request_list.breadcrumb", controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0).url),
         ("core.process_transition_request.process_milestone_request.title", null)
     )
 ) {

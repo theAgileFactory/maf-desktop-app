@@ -22,9 +22,9 @@
 @import framework_views.parts
 
 @templates.main_bc_nosidebar(
-    parts.Msg.asString("core.search.title"),
+    parts.Msg.asString("topmenubar.search.menu.label"),
     Seq(
-        ("topmenubar.search.menu.label",null)
+        ("core.search.breadcrumb",null)
     )
 ) {
     <blockquote>@parts.Msg("core.search.header")</blockquote>

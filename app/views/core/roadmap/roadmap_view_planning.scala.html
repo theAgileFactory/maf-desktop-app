@@ -26,7 +26,7 @@
 @sidebarInstance=@{
     val sidebarInstance=new SideBar()
     sidebarInstance.addMenuItem(new ClickableMenuItem(
-        "core.roadmap.title",
+        "topmenubar.roadmap.menu.label",
         controllers.core.routes.RoadmapController.index().url,
         "glyphicons glyphicons-road",
         false)
@@ -42,13 +42,13 @@
 
 @breadcrump=@{
     Seq(
-        ("topmenubar.roadmap.menu.label", controllers.core.routes.RoadmapController.index().url),
-        ("core.roadmap.planning.breadcrumb", null)
+        ("core.roadmap.breadcrumb", controllers.core.routes.RoadmapController.index().url),
+        ("core.roadmap.planning.title", null)
     )
 }
 
 @templates.main_bc_iconsbar(
-    parts.Msg.asString("core.roadmap.title"),
+    parts.Msg.asString("topmenubar.roadmap.menu.label"),
     sidebarInstance,
     breadcrump
 ){

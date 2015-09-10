@@ -49,11 +49,8 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
-import constants.IMafConstants;
 import dao.datasyndication.DataSyndicationDao;
 import dao.pmo.ActorDao;
 import framework.security.ISecurityService;
@@ -88,7 +85,6 @@ import models.pmo.PortfolioEntry;
 import play.Logger;
 import play.Play;
 import play.libs.F.Promise;
-import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
@@ -399,70 +395,6 @@ public class Application extends Controller {
     @SubjectPresent
     public Result deleteFileAttachment(Long attachmentId) {
         return FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
-    }
-
-    /**
-     * Returns a json flow for the IDzone component. Here is a sample structure:
-     * 
-     * <pre>
-     * {
-     *    "authorized" : true,
-     *    "hasNotifications" : true,
-     *    "login" : "Pierre-Yves Cloux",
-     *    "applist" : {
-     *        "1":["Continuous build","http://site/jenkins", "jenk1"],
-     *        "2":["Project management","http://site/redmine","redm1"],
-     *        "0" : ["Governance","http://site/","governance"]},
-     *    "logouturl" : "http://site/logout"
-     * }
-     * </pre>
-     * 
-     * <br/>
-     * The structure of the applist is:
-     * <p>
-     * "pluginConfigurationId", ["Name of the application",
-     * "URL to the application", "pluginDefinitionIdentifier"]
-     * </p>
-     */
-    @SubjectPresent(forceBeforeAuthCheck = true)
-    public Result idzone() {
-        IDZoneData idZoneData = getIDZoneData();
-        ObjectNode result = Json.newObject();
-        try {
-            if (idZoneData != null) {
-                result.put("authorized", idZoneData.isAuthorized);
-                result.put("hasNotifications", idZoneData.hasNotifications);
-                result.put("login", idZoneData.login);
-                ObjectNode applist = Json.newObject();
-
-                // The MAF governance module
-                ArrayNode array = Json.newObject().arrayNode();
-                array.add(Msg.get("main.application.title.header"));
-                array.add(routes.Redirector.governance().url());
-                array.add(IMafConstants.MAF_GOVERNANCE_MODULE_ID);
-                applist.set(String.valueOf(IMafConstants.MAF_GOVERNANCE_MODULE_CONFIGURATION), array);
-
-                // Add the plugin menus
-                for (Long pluginConfigurationId : idZoneData.pluginMenuDesriptors.keySet()) {
-                    IPluginMenuDescriptor pluginMenuDescriptor = idZoneData.pluginMenuDesriptors.get(pluginConfigurationId).getRight();
-                    array = Json.newObject().arrayNode();
-                    array.add(Msg.get(pluginMenuDescriptor.getLabel()));
-                    array.add(pluginMenuDescriptor.getPath());
-                    array.add(idZoneData.pluginMenuDesriptors.get(pluginConfigurationId).getLeft());
-                    applist.set(String.valueOf(pluginConfigurationId), array);
-                }
-                result.set("applist", applist);
-
-                result.put("logouturl", idZoneData.logoutUrl);
-            } else {
-                result.put("authorized", false);
-            }
-        } catch (Exception e) {
-            result = Json.newObject();
-            result.put("authorized", false);
-            log.error("Error while returning the IDzone content", e);
-        }
-        return ok(result);
     }
 
     /**

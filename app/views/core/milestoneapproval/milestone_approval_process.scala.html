@@ -37,9 +37,9 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @templates.main_bc_nosidebar(
-    parts.Msg.asString("core.milestone_approval.title"),
+    parts.Msg.asString("topmenubar.governance.provide_approval.menu.label"),
     Seq(
-        ("topmenubar.governance.provide_approval.menu.label", controllers.core.routes.MilestoneApprovalController.list(0).url),
+        ("core.milestone_approval.breadcrumb", controllers.core.routes.MilestoneApprovalController.list(0).url),
         (portfolioEntry.getName, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
         (milestoneInstance.lifeCycleMilestone.getShortName, null)
     )

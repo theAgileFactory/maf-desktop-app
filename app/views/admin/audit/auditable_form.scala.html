@@ -25,7 +25,7 @@
 @templates.main_bc_nosidebar(
     title,
     Seq(
-        ("topmenubar.admin.audit.menu.label", controllers.admin.routes.AuditableController.listAuditable().url),
+        ("admin.auditable.breadcrumb", controllers.admin.routes.AuditableController.listAuditable().url),
         (title, null)
     )
 ){

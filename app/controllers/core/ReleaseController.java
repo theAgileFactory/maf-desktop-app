@@ -606,7 +606,7 @@ public class ReleaseController extends Controller {
 
         SideBar sideBar = new SideBar();
 
-        sideBar.addMenuItem(new ClickableMenuItem("core.release.list.title", controllers.core.routes.ReleaseController.list(false),
+        sideBar.addMenuItem(new ClickableMenuItem("topmenubar.delivery.releases.menu.label", controllers.core.routes.ReleaseController.list(false),
                 "glyphicons glyphicons-git-branch", currentType.equals(MenuItemType.LIST)));
 
         sideBar.addMenuItem(new ClickableMenuItem("core.release.list.planning.title", controllers.core.routes.ReleaseController.planning(),

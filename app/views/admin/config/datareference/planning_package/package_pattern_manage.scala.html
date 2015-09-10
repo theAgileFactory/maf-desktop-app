@@ -29,7 +29,7 @@
 
 @breadcrump=@{
     Seq(
-        ("topmenubar.admin.configuration.menu.label", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
         ("admin.configuration.reference_data.planning_packages.title", controllers.admin.routes.ConfigurationPlanningPackageController.list().url),
         (packageGroup.getName, controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packageGroup.id).url),
         ("admin.configuration.reference_data.package_pattern.manage.title", null)

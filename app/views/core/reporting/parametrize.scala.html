@@ -25,9 +25,9 @@
 @import framework_views.parts
 
 @templates.main_bc_nosidebar(
-    parts.Msg.asString("core.reporting.title"),
+    parts.Msg.asString("topmenubar.tools.reporting.menu.label"),
     Seq(
-        ("topmenubar.tools.reporting.menu.label", controllers.core.routes.ReportingController.indexForCategory(report.reportingCategory.id).url),
+        ("core.reporting.breadcrumb", controllers.core.routes.ReportingController.indexForCategory(report.reportingCategory.id).url),
         (report.getName, null)
     )
 ) {
