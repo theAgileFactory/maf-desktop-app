@@ -48,6 +48,7 @@ import framework.services.database.DatabaseDependencyServiceImpl;
 import framework.services.database.IDatabaseDependencyService;
 import framework.services.ext.ExtensionManagerServiceImpl;
 import framework.services.ext.IExtensionManagerService;
+import framework.services.ext.ILinkGenerationService;
 import framework.services.job.IJobDescriptor;
 import framework.services.job.IJobsService;
 import framework.services.job.JobInitialConfig;
@@ -136,6 +137,8 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(ISecurityService.class).to(SecurityServiceImpl.class);
 
         bind(IExtensionManagerService.class).to(ExtensionManagerServiceImpl.class).asEagerSingleton();
+        bind(ILinkGenerationService.class).to(ExtensionManagerServiceImpl.class);
+
         bind(II18nMessagesPlugin.class).to(I18nMessagesPluginImpl.class).asEagerSingleton();
         bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
         bind(IPreferenceManagerPlugin.class).to(DefaultPreferenceManagementPlugin.class).asEagerSingleton();

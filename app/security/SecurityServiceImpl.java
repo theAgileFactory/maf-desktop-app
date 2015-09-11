@@ -6,6 +6,11 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import be.objectify.deadbolt.java.AbstractDynamicResourceHandler;
+import be.objectify.deadbolt.java.DeadboltHandler;
+import be.objectify.deadbolt.java.DynamicResourceHandler;
+import be.objectify.deadbolt.java.JavaAnalyzer;
+import be.objectify.deadbolt.java.cache.SubjectCache;
 import constants.IMafConstants;
 import dao.delivery.ReleaseDAO;
 import dao.finance.BudgetBucketDAO;
@@ -47,12 +52,6 @@ import security.dynamic.PortfolioEntryDynamicHelper;
 import security.dynamic.ReleaseDynamicHelper;
 import security.dynamic.ReportingDynamicHelper;
 import security.dynamic.TimesheetReportDynamicHelper;
-import be.objectify.deadbolt.java.AbstractDynamicResourceHandler;
-import be.objectify.deadbolt.java.DeadboltHandler;
-import be.objectify.deadbolt.java.DynamicResourceHandler;
-import be.objectify.deadbolt.java.JavaAnalyzer;
-import be.objectify.deadbolt.java.cache.SubjectCache;
-import be.objectify.deadbolt.java.ExecutionContextProvider;
 
 @Singleton
 public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
@@ -61,10 +60,10 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
     private II18nMessagesPlugin messagesPlugins;
 
     @Inject
-    public SecurityServiceImpl(JavaAnalyzer deadBoltAnalyzer, SubjectCache subjectCache, Configuration configuration, ExecutionContextProvider ecProvider,
+    public SecurityServiceImpl(JavaAnalyzer deadBoltAnalyzer, SubjectCache subjectCache, Configuration configuration,
             IUserSessionManagerPlugin userSessionManagerPlugin, IAccountManagerPlugin accountManagerPlugin, CacheApi cacheApi, IAuthenticator authenticator,
             IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin messagesPlugins) {
-        super(deadBoltAnalyzer, subjectCache, configuration, ecProvider, userSessionManagerPlugin, accountManagerPlugin, cacheApi, authenticator);
+        super(deadBoltAnalyzer, subjectCache, configuration, userSessionManagerPlugin, accountManagerPlugin, cacheApi, authenticator);
 
         this.preferenceManagerPlugin = preferenceManagerPlugin;
         this.messagesPlugins = messagesPlugins;
