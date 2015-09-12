@@ -9,6 +9,7 @@ import framework.security.ISecurityService;
 import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
 import framework.services.api.IApiControllerUtilsService;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.services.router.ICustomRouterNotificationService;
 import play.Configuration;
 import play.Environment;
@@ -39,6 +40,8 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     private ISecurityService securityService;
     @Inject
     private IApiControllerUtilsService apiControllerUtilsService;
+    @Inject
+    private INotificationManagerPlugin notificationService;
 
     @Inject
     public MafHttpErrorHandler(Configuration configuration, Environment environment, OptionalSourceMapper optionalSourceMapper, Provider<Router> providerRouter) {
@@ -100,6 +103,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         super.injectCommonServicesIncontext(context);
         context.args.put(IDataSyndicationService.class.getName(), dataSyndicationService);
         context.args.put(ISecurityService.class.getName(), securityService);
+        context.args.put(INotificationManagerPlugin.class.getName(), notificationService);
     }
 
     private ICustomRouterNotificationService getCustomRouterNotificationService() {

@@ -370,7 +370,6 @@ public class Application extends Controller {
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log);
         }
-
         return ok(views.html.home.index.render(Msg.get("main.application.title.header"), notificationsTable, portfolioEntries, account, hasActor));
     }
 

@@ -23,6 +23,7 @@ import framework.patcher.PatcherException;
 import framework.security.IAuthenticator;
 import framework.security.IInstanceAccessSupervisor;
 import framework.security.ISecurityService;
+import framework.security.ISecurityServiceConfiguration;
 import framework.services.account.AccountManagerPluginImpl;
 import framework.services.account.DefaultAuthenticationAccountReaderPlugin;
 import framework.services.account.DefaultAuthenticationAccountWriterPlugin;
@@ -135,6 +136,7 @@ public class ApplicationServicesModule extends FrameworkModule {
 
         bind(HandlerCache.class).to(SecurityServiceImpl.class).asEagerSingleton();
         bind(ISecurityService.class).to(SecurityServiceImpl.class);
+        bind(ISecurityServiceConfiguration.class).to(SecurityServiceImpl.class);
 
         bind(IExtensionManagerService.class).to(ExtensionManagerServiceImpl.class).asEagerSingleton();
         bind(ILinkGenerationService.class).to(ExtensionManagerServiceImpl.class);
