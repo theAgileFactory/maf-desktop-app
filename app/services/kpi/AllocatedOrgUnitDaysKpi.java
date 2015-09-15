@@ -18,12 +18,17 @@
 package services.kpi;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
-import models.pmo.PortfolioEntry;
+import org.apache.commons.lang3.tuple.Pair;
+
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
+import models.framework_models.kpi.KpiData;
+import models.pmo.PortfolioEntry;
 
 /**
  * The "Allocated org unit days" KPI computation class.
@@ -35,27 +40,37 @@ public class AllocatedOrgUnitDaysKpi implements IKpiRunner {
     @Override
     public BigDecimal computeMain(Kpi kpi, Long objectId) {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
-        return PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPE(portfolioEntry, null).add(
-                PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPortfolioEntry(portfolioEntry, null));
+        return PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPE(portfolioEntry, null)
+                .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPortfolioEntry(portfolioEntry, null));
     }
 
     @Override
     public BigDecimal computeAdditional1(Kpi kpi, Long objectId) {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
-        return PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPE(portfolioEntry, true).add(
-                PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPortfolioEntry(portfolioEntry, true));
+        return PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPE(portfolioEntry, true)
+                .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPortfolioEntry(portfolioEntry, true));
     }
 
     @Override
     public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
-        return PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPE(portfolioEntry, false).add(
-                PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPortfolioEntry(portfolioEntry, false));
+        return PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPE(portfolioEntry, false)
+                .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPortfolioEntry(portfolioEntry, false));
     }
 
     @Override
     public String link(Long objectId) {
         return controllers.core.routes.PortfolioEntryPlanningController.resources(objectId).url();
+    }
+
+    @Override
+    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+        return null;
+    }
+
+    @Override
+    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+        return null;
     }
 
 }

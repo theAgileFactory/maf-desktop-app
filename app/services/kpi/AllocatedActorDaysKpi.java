@@ -18,12 +18,17 @@
 package services.kpi;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
-import models.pmo.PortfolioEntry;
+import org.apache.commons.lang3.tuple.Pair;
+
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
+import models.framework_models.kpi.KpiData;
+import models.pmo.PortfolioEntry;
 
 /**
  * The "Allocated actor days" KPI computation class.
@@ -53,6 +58,16 @@ public class AllocatedActorDaysKpi implements IKpiRunner {
     @Override
     public String link(Long objectId) {
         return controllers.core.routes.PortfolioEntryPlanningController.resources(objectId).url();
+    }
+
+    @Override
+    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+        return null;
+    }
+
+    @Override
+    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+        return null;
     }
 
 }

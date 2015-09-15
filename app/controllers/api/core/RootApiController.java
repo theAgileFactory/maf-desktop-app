@@ -77,12 +77,12 @@ public class RootApiController extends ApiController {
     @Inject
     private II18nMessagesPlugin i8nMessagesPlugin;
     @Inject
-    private IAdPanelManagerService adPanelManagerService ;
+    private IAdPanelManagerService adPanelManagerService;
     @Inject
     private IKpiService kpiService;
     @Inject
     private IReportingUtils reportingUtils;
-    
+
     /**
      * Get the status of the instance.
      **/

@@ -17,15 +17,15 @@
  */
 package utils.table;
 
-import models.framework_models.kpi.KpiDefinition;
 import constants.IMafConstants;
-import framework.services.ServiceStaticAccessor;
+import framework.services.kpi.IKpiService;
 import framework.services.kpi.Kpi;
 import framework.services.kpi.Kpi.DataType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
+import models.framework_models.kpi.KpiDefinition;
 
 /**
  * A kpi definition list view is used to display a kpi definition row in a
@@ -100,9 +100,9 @@ public class KpiDefinitionListView {
      * @param kpiDefinition
      *            the KPI definition in the DB
      */
-    public KpiDefinitionListView(KpiDefinition kpiDefinition) {
+    public KpiDefinitionListView(KpiDefinition kpiDefinition, IKpiService kpiService) {
 
-        Kpi kpi = new Kpi(kpiDefinition, ServiceStaticAccessor.getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, kpiService);
 
         this.id = kpiDefinition.id;
         this.mainValueName = Msg.get(kpi.getValueName(DataType.MAIN));

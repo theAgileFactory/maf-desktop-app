@@ -19,11 +19,11 @@ package controllers;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+import framework.services.kpi.IKpiService;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
-import framework.services.kpi.IKpiService;
 
 /**
  * The controller that provides the KPI.
@@ -34,7 +34,7 @@ import framework.services.kpi.IKpiService;
 public class KpiController extends Controller {
     @Inject
     private IKpiService kpiService;
-    
+
     /**
      * Display the trend of a KPI.
      */

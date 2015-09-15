@@ -496,6 +496,11 @@ kpi.portfolio_entry_progress.main.name=Avancement
 kpi.portfolio_entry_progress.additional1.name=Jours prévus
 kpi.portfolio_entry_progress.additional2.name=Jours consommés
 
+kpi.release_burndown.main.name=Effort restant
+kpi.release_burndown.additional1.name=Effort effectué
+kpi.release_burndown.additional2.name=Estimation
+kpi.release_burndown.static_trend_line.name=Courbe théorique
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
@@ -1332,6 +1337,8 @@ object.requirement.severity.label=Gravité
 object.requirement.author.label=Auteur
 object.requirement.story_points.label=Points
 object.requirement.initial_estimation.label=Estimation
+object.requirement.effort.label=Effort effectué
+object.requirement.remaining_effort.label=Effort restant
 object.requirement.is_scoped.label=Approuvé
 object.requirement.iteration.label=Itération
 object.requirement.release.label=Release
@@ -1535,6 +1542,7 @@ object.kpi_value_definition.render_type.PATTERN.label=Modèle
 object.kpi_value_definition.render_type.LABEL.label=Label
 object.kpi_value_definition.render_pattern.label=Modèle de rendu
 object.kpi_value_definition.render_pattern.invalid=Le modèle de rendu doit être renseigné si le type de rendu vaut "Modèle".
+object.kpi_value_definition.is_trend_displayed.label=Affiché dans la tendance
 
 #----------------------
 # kpiColorRule
@@ -3147,6 +3155,7 @@ admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;Gestion de
 #list
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
 admin.kpi.object_type.models.pmo.Portfolio=Portefeuille
+admin.kpi.object_type.models.delivery.Release=Release
 
 #view
 admin.kpi.view.details.title=Détails

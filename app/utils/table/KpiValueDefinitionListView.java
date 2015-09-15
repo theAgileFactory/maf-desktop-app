@@ -17,13 +17,14 @@
  */
 package utils.table;
 
-import models.framework_models.kpi.KpiValueDefinition;
 import constants.IMafConstants;
 import framework.services.kpi.Kpi.DataType;
 import framework.utils.Msg;
 import framework.utils.Table;
+import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.framework_models.kpi.KpiValueDefinition;
 
 /**
  * A kpi value definition list view is used to display a kpi value definition
@@ -41,6 +42,9 @@ public class KpiValueDefinitionListView {
 
             addColumn("type", "type", "object.kpi_value_definition.type.label", Table.ColumnDef.SorterType.NONE);
 
+            addColumn("isTrendDisplayed", "isTrendDisplayed", "object.kpi_value_definition.is_trend_displayed.label", Table.ColumnDef.SorterType.NONE);
+            setJavaColumnFormatter("isTrendDisplayed", new BooleanFormatter<KpiValueDefinitionListView>());
+
             addColumn("renderType", "renderType", "object.kpi_value_definition.render_type.label", Table.ColumnDef.SorterType.NONE);
 
             addColumn("renderPattern", "renderPattern", "object.kpi_value_definition.render_pattern.label", Table.ColumnDef.SorterType.NONE);
@@ -49,12 +53,11 @@ public class KpiValueDefinitionListView {
             addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("editActionLink", new StringFormatFormatter<KpiValueDefinitionListView>(IMafConstants.EDIT_URL_FORMAT,
                     new StringFormatFormatter.Hook<KpiValueDefinitionListView>() {
-                        @Override
-                        public String convert(KpiValueDefinitionListView kpiValueDefinitionListView) {
-                            return controllers.admin.routes.KpiManagerController.editValue(kpiValueDefinitionListView.id, kpiValueDefinitionListView.type)
-                                    .url();
-                        }
-                    }));
+                @Override
+                public String convert(KpiValueDefinitionListView kpiValueDefinitionListView) {
+                    return controllers.admin.routes.KpiManagerController.editValue(kpiValueDefinitionListView.id, kpiValueDefinitionListView.type).url();
+                }
+            }));
             setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
             setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
@@ -72,6 +75,7 @@ public class KpiValueDefinitionListView {
     public String type;
     public String renderType;
     public String renderPattern;
+    public boolean isTrendDisplayed;
 
     /**
      * Construct a list view with a DB entry.
@@ -88,6 +92,7 @@ public class KpiValueDefinitionListView {
         this.type = dataType.name().toLowerCase();
         this.renderType = Msg.get("object.kpi_value_definition.render_type." + kpiValueDefinition.renderType.name() + ".label");
         this.renderPattern = kpiValueDefinition.renderPattern;
+        this.isTrendDisplayed = kpiValueDefinition.isTrendDisplayed;
 
     }
 }

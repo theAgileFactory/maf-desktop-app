@@ -67,18 +67,21 @@ public class CustomExternalKpiFormData {
         mainValueDefinition.computationJsCode = null;
         mainValueDefinition.name = this.mainName.getKeyIfValue();
         mainValueDefinition.renderPattern = null;
+        mainValueDefinition.isTrendDisplayed = true;
         mainValueDefinition.renderType = RenderType.VALUE;
 
         KpiValueDefinition additional1ValueDefinition = new KpiValueDefinition();
         additional1ValueDefinition.computationJsCode = null;
         additional1ValueDefinition.name = this.additional1Name.getKeyIfValue();
         additional1ValueDefinition.renderPattern = null;
+        additional1ValueDefinition.isTrendDisplayed = false;
         additional1ValueDefinition.renderType = RenderType.VALUE;
 
         KpiValueDefinition additional2ValueDefinition = new KpiValueDefinition();
         additional2ValueDefinition.computationJsCode = null;
         additional2ValueDefinition.name = this.additional2Name.getKeyIfValue();
         additional2ValueDefinition.renderPattern = null;
+        additional2ValueDefinition.isTrendDisplayed = false;
         additional2ValueDefinition.renderType = RenderType.VALUE;
 
         KpiDefinition kpiDefinition = new KpiDefinition();

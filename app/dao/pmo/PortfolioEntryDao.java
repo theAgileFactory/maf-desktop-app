@@ -381,13 +381,33 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
-     * Get the portfolio entries of a release.
+     * Get the portfolio entries as pagination of a release.
      * 
      * @param releaseId
      *            the release id
      */
     public static Pagination<PortfolioEntry> getPEAsPaginationByRelease(Long releaseId) {
-        return new Pagination<>(findPortfolioEntry.where().eq("deleted", false).eq("releasesPortfolioEntries.release.id", releaseId));
+        return new Pagination<>(getPEAsExprByRelease(releaseId));
+    }
+
+    /**
+     * Get the portfolio entries as list of a release.
+     * 
+     * @param releaseId
+     *            the release id
+     */
+    public static List<PortfolioEntry> getPEAsListByRelease(Long releaseId) {
+        return getPEAsExprByRelease(releaseId).findList();
+    }
+
+    /**
+     * Get the portfolio entries as expression list of a release.
+     * 
+     * @param releaseId
+     *            the release id
+     */
+    public static ExpressionList<PortfolioEntry> getPEAsExprByRelease(Long releaseId) {
+        return findPortfolioEntry.where().eq("deleted", false).eq("releasesPortfolioEntries.release.id", releaseId);
     }
 
     /**

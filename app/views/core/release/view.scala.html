@@ -37,6 +37,10 @@
 @template(controllers.core.ReleaseController.MenuItemType.LIST, breadcrump){
 
     <div class="row">
+        @views.html.framework_views.parts.kpi.display_kpi_dashboard(classOf[models.delivery.Release], release.id)
+    </div>
+
+    <div class="row">
         <div class="col-md-4">
 
             <div class="panel panel-default">

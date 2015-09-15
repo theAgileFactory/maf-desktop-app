@@ -496,6 +496,11 @@ kpi.portfolio_entry_progress.main.name=Fortschritt
 kpi.portfolio_entry_progress.additional1.name=Projektierte Tage
 kpi.portfolio_entry_progress.additional2.name=Verbrauchte Tage
 
+kpi.release_burndown.main.name=de: Remaining effort
+kpi.release_burndown.additional1.name=de: Effort made
+kpi.release_burndown.additional2.name=de: Estimation
+kpi.release_burndown.static_trend_line.name=de: Theoretical chart
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
@@ -1332,6 +1337,8 @@ object.requirement.severity.label=Gewichtung
 object.requirement.author.label=Autor
 object.requirement.story_points.label=Story points
 object.requirement.initial_estimation.label=Schätzung
+object.requirement.effort.label=de: Effort made
+object.requirement.remaining_effort.label=de: Remaining effort
 object.requirement.is_scoped.label=Akzeptiert
 object.requirement.iteration.label=Iteration
 object.requirement.release.label=Release
@@ -1535,6 +1542,7 @@ object.kpi_value_definition.render_type.PATTERN.label=Formatierte Zahl
 object.kpi_value_definition.render_type.LABEL.label=Text (Farb)
 object.kpi_value_definition.render_pattern.label=Formatierung
 object.kpi_value_definition.render_pattern.invalid=Formatierung muss eingegeben werden wenn Sie formatiert Zahl gewählt haben.
+object.kpi_value_definition.is_trend_displayed.label=de: Displayed in trend
 
 #----------------------
 # kpiColorRule
@@ -3145,6 +3153,7 @@ admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manage
 #list
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
 admin.kpi.object_type.models.pmo.Portfolio=Portfolio
+admin.kpi.object_type.models.delivery.Release=Release
 
 #view
 admin.kpi.view.details.title=Details

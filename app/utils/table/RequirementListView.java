@@ -20,6 +20,7 @@ package utils.table;
 import constants.IMafConstants;
 import dao.delivery.RequirementDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -63,15 +64,16 @@ public class RequirementListView {
                 addColumnConfiguration("iteration", "iteration", "object.requirement.iteration.label", new NoneFilterComponent(), false, false,
                         SortStatusType.NONE);
 
-                addColumnConfiguration("release", "release", "object.requirement.release.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                addColumnConfiguration("release", "release", "object.requirement.release.label", new NoneFilterComponent(), false, false,
+                        SortStatusType.NONE);
 
                 addColumnConfiguration("category", "category", "object.requirement.category.label", new TextFieldFilterComponent("*"), false, false,
                         SortStatusType.UNSORTED);
 
                 ISelectableValueHolderCollection<Long> status = RequirementDAO.getRequirementStatusAsVH();
                 if (status != null && status.getValues().size() > 0) {
-                    addColumnConfiguration("requirementStatus", "requirementStatus.id", "object.requirement.status.label", new SelectFilterComponent(status
-                            .getValues().iterator().next().getValue(), status), true, false, SortStatusType.NONE);
+                    addColumnConfiguration("requirementStatus", "requirementStatus.id", "object.requirement.status.label",
+                            new SelectFilterComponent(status.getValues().iterator().next().getValue(), status), true, false, SortStatusType.NONE);
                 } else {
                     addColumnConfiguration("requirementStatus", "requirementStatus.id", "object.requirement.status.label", new NoneFilterComponent(), true,
                             false, SortStatusType.NONE);
@@ -79,8 +81,8 @@ public class RequirementListView {
 
                 ISelectableValueHolderCollection<Long> priorities = RequirementDAO.getRequirementPriorityAsVH();
                 if (priorities != null && priorities.getValues().size() > 0) {
-                    addColumnConfiguration("requirementPriority", "requirementPriority.id", "object.requirement.priority.label", new SelectFilterComponent(
-                            priorities.getValues().iterator().next().getValue(), priorities), false, false, SortStatusType.NONE);
+                    addColumnConfiguration("requirementPriority", "requirementPriority.id", "object.requirement.priority.label",
+                            new SelectFilterComponent(priorities.getValues().iterator().next().getValue(), priorities), false, false, SortStatusType.NONE);
                 } else {
                     addColumnConfiguration("requirementPriority", "requirementPriority.id", "object.requirement.priority.label", new NoneFilterComponent(),
                             false, false, SortStatusType.NONE);
@@ -88,8 +90,8 @@ public class RequirementListView {
 
                 ISelectableValueHolderCollection<Long> severities = RequirementDAO.getRequirementSeverityAsVH();
                 if (severities != null && severities.getValues().size() > 0) {
-                    addColumnConfiguration("requirementSeverity", "requirementSeverity.id", "object.requirement.severity.label", new SelectFilterComponent(
-                            severities.getValues().iterator().next().getValue(), severities), false, false, SortStatusType.NONE);
+                    addColumnConfiguration("requirementSeverity", "requirementSeverity.id", "object.requirement.severity.label",
+                            new SelectFilterComponent(severities.getValues().iterator().next().getValue(), severities), false, false, SortStatusType.NONE);
                 } else {
                     addColumnConfiguration("requirementSeverity", "requirementSeverity.id", "object.requirement.severity.label", new NoneFilterComponent(),
                             false, false, SortStatusType.NONE);
@@ -98,13 +100,19 @@ public class RequirementListView {
                 addColumnConfiguration("isScoped", "isScoped", "object.requirement.is_scoped.label", new CheckboxFilterComponent(true), false, false,
                         SortStatusType.NONE);
 
-                addColumnConfiguration("author", "author.id", "object.requirement.author.label", new AutocompleteFilterComponent(
-                        controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
+                addColumnConfiguration("author", "author.id", "object.requirement.author.label",
+                        new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
 
                 addColumnConfiguration("storyPoints", "storyPoints", "object.requirement.story_points.label", new NumericFieldFilterComponent("0", "="),
                         false, false, SortStatusType.UNSORTED);
 
                 addColumnConfiguration("initialEstimation", "initialEstimation", "object.requirement.initial_estimation.label",
+                        new NumericFieldFilterComponent("0", "="), false, false, SortStatusType.UNSORTED);
+
+                addColumnConfiguration("effort", "effort", "object.requirement.effort.label", new NumericFieldFilterComponent("0", "="), false, false,
+                        SortStatusType.UNSORTED);
+
+                addColumnConfiguration("remainingEffort", "remainingEffort", "object.requirement.remaining_effort.label",
                         new NumericFieldFilterComponent("0", "="), false, false, SortStatusType.UNSORTED);
 
                 addCustomAttributesColumns("id", Requirement.class);
@@ -196,25 +204,31 @@ public class RequirementListView {
                 addColumn("initialEstimation", "initialEstimation", "object.requirement.initial_estimation.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("initialEstimation", new NumberFormatter<RequirementListView>());
 
+                addColumn("effort", "effort", "object.requirement.effort.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("effort", new NumberFormatter<RequirementListView>());
+
+                addColumn("remainingEffort", "remainingEffort", "object.requirement.remaining_effort.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("remainingEffort", new NumberFormatter<RequirementListView>());
+
                 addCustomAttributeColumns(Requirement.class);
 
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<RequirementListView>() {
-                            @Override
-                            public String convert(RequirementListView requirementListView) {
-                                return controllers.core.routes.PortfolioEntryDeliveryController.editRequirement(requirementListView.portfolioEntryId,
-                                        requirementListView.id).url();
-                            }
-                        }));
+                setJavaColumnFormatter("editActionLink",
+                        new StringFormatFormatter<RequirementListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<RequirementListView>() {
+                    @Override
+                    public String convert(RequirementListView requirementListView) {
+                        return controllers.core.routes.PortfolioEntryDeliveryController
+                                .editRequirement(requirementListView.portfolioEntryId, requirementListView.id).url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                 this.setLineAction(new IColumnFormatter<RequirementListView>() {
                     @Override
                     public String apply(RequirementListView requirementListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryDeliveryController.viewRequirement(requirementListView.portfolioEntryId,
-                                requirementListView.id).url();
+                        return controllers.core.routes.PortfolioEntryDeliveryController
+                                .viewRequirement(requirementListView.portfolioEntryId, requirementListView.id).url();
                     }
                 });
 
@@ -242,6 +256,8 @@ public class RequirementListView {
     public Actor author;
     public Integer storyPoints;
     public Integer initialEstimation;
+    public Integer effort;
+    public Integer remainingEffort;
     public Boolean isScoped;
     public Iteration iteration;
     public Release release;
@@ -267,6 +283,8 @@ public class RequirementListView {
         this.author = requirement.author;
         this.storyPoints = requirement.storyPoints;
         this.initialEstimation = requirement.initialEstimation;
+        this.effort = requirement.effort;
+        this.remainingEffort = requirement.remainingEffort;
         this.isScoped = requirement.isScoped;
         this.iteration = requirement.iteration;
         this.release = requirement.release;

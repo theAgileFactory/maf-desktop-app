@@ -72,7 +72,7 @@ public class KpiManagerController extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
-    
+
     public static Form<KpiDefinitionFormData> kpiDefinitionFormTemplate = Form.form(KpiDefinitionFormData.class);
     public static Form<KpiValueDefinitionFormData> standardKpiValueDefinitionFormTemplate = Form.form(KpiValueDefinitionFormData.class,
             KpiValueDefinitionFormData.StandardGroup.class);
@@ -100,7 +100,7 @@ public class KpiManagerController extends Controller {
                     kpiDefinitionListViews.put(kpiDefinition.objectType, new ArrayList<KpiDefinitionListView>());
                 }
 
-                kpiDefinitionListViews.get(kpiDefinition.objectType).add(new KpiDefinitionListView(kpiDefinition));
+                kpiDefinitionListViews.get(kpiDefinition.objectType).add(new KpiDefinitionListView(kpiDefinition, getKpiService()));
 
             }
 
@@ -123,7 +123,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         // create the table values
         List<KpiValueDefinitionListView> kpiValueDefinitionListView = new ArrayList<KpiValueDefinitionListView>();
@@ -189,7 +189,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         Form<KpiDefinitionFormData> form = kpiDefinitionFormTemplate.fill(new KpiDefinitionFormData(kpiDefinition));
 
@@ -209,7 +209,7 @@ public class KpiManagerController extends Controller {
         // get the KPI
         Long kpiDefinitionId = Long.valueOf(boundForm.data().get("id"));
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.kpi.edit.render(kpiDefinition, kpi, boundForm));
@@ -220,7 +220,7 @@ public class KpiManagerController extends Controller {
         kpiDefinitionFormData.fill(kpiDefinition);
         kpiDefinition.update();
 
-        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.edit.successful"));
 
@@ -242,7 +242,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiValueDefinition.getKpiDefinition().id);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         Form<KpiValueDefinitionFormData> form = null;
 
@@ -266,7 +266,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiValueDefinition.getKpiDefinition().id);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         // bind the form
         Form<KpiValueDefinitionFormData> boundForm = null;
@@ -300,7 +300,7 @@ public class KpiManagerController extends Controller {
             kpiValueDefinitionFormData.name.persist(getI18nMessagesPlugin());
         }
 
-        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.value.edit.successful"));
 
@@ -337,7 +337,7 @@ public class KpiManagerController extends Controller {
             kpiColorRule.order = newOrder;
             kpiColorRule.save();
 
-            reloadKpiDefinition(getKpiService(),kpiColorRule.kpiDefinition.uid);
+            reloadKpiDefinition(getKpiService(), kpiColorRule.kpiDefinition.uid);
 
         }
 
@@ -357,7 +357,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         // initiate the form with the template
         Form<KpiColorRuleFormData> form = kpiColorRuleFormTemplate;
@@ -386,7 +386,7 @@ public class KpiManagerController extends Controller {
         // get the KPI
         Long kpiDefinitionId = Long.valueOf(boundForm.data().get("kpiDefinitionId"));
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.kpi.manageRule.render(kpiDefinition, kpi, boundForm, Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
@@ -422,7 +422,7 @@ public class KpiManagerController extends Controller {
 
         kpiColorRuleFormData.renderLabel.persist(getI18nMessagesPlugin());
 
-        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
 
         return redirect(controllers.admin.routes.KpiManagerController.view(kpiDefinition.id));
     }
@@ -439,7 +439,7 @@ public class KpiManagerController extends Controller {
 
         kpiColorRule.doDelete();
 
-        reloadKpiDefinition(getKpiService(),kpiColorRule.kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(), kpiColorRule.kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.rule.delete"));
 
@@ -461,7 +461,7 @@ public class KpiManagerController extends Controller {
         kpiDefinition.schedulerStartTime = null;
         kpiDefinition.save();
 
-        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.scheduler.delete"));
 
@@ -480,7 +480,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         Form<KpiSchedulerFormData> form = kpiSchedulerFormTemplate.fill(new KpiSchedulerFormData(kpiDefinition));
 
@@ -498,7 +498,7 @@ public class KpiManagerController extends Controller {
         // get the KPI
         Long kpiDefinitionId = Long.valueOf(boundForm.data().get("id"));
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.kpi.editScheduler.render(kpiDefinition, kpi, boundForm));
@@ -509,7 +509,7 @@ public class KpiManagerController extends Controller {
         kpiSchedulerFormData.fill(kpiDefinition);
         kpiDefinition.update();
 
-        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.editscheduler.successful"));
 
@@ -583,7 +583,7 @@ public class KpiManagerController extends Controller {
         customExternalKpiFormData.additional1Name.persist(getI18nMessagesPlugin());
         customExternalKpiFormData.additional2Name.persist(getI18nMessagesPlugin());
 
-        reloadKpiDefinition(getKpiService(),kpiDefinition.uid);
+        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.create.successful"));
 
@@ -600,7 +600,7 @@ public class KpiManagerController extends Controller {
 
         // get the KPI
         KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
-        Kpi kpi = new Kpi(kpiDefinition,getKpiService());
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
 
         if (!kpiDefinition.isStandard) {
 

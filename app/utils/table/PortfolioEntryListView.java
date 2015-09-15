@@ -23,15 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import models.delivery.ReleasePortfolioEntry;
-import models.governance.LifeCycleMilestoneInstance;
-import models.pmo.Actor;
-import models.pmo.OrgUnit;
-import models.pmo.Portfolio;
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryReport;
-import models.pmo.PortfolioEntryType;
-import models.pmo.Stakeholder;
 import constants.IMafConstants;
 import controllers.core.CockpitController;
 import dao.governance.LifeCycleMilestoneDao;
@@ -50,6 +41,15 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.delivery.ReleasePortfolioEntry;
+import models.governance.LifeCycleMilestoneInstance;
+import models.pmo.Actor;
+import models.pmo.OrgUnit;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryReport;
+import models.pmo.PortfolioEntryType;
+import models.pmo.Stakeholder;
 
 /**
  * A portfolio entry list view is used to display an portfolio entry row in a
@@ -71,8 +71,8 @@ public class PortfolioEntryListView {
                 addColumnConfiguration("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", new TextFieldFilterComponent("*"), true,
                         false, SortStatusType.UNSORTED);
 
-                addColumnConfiguration("creationDate", "creationDate", "object.portfolio_entry.creation_date.label", new DateRangeFilterComponent(new Date(),
-                        new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.NONE);
+                addColumnConfiguration("creationDate", "creationDate", "object.portfolio_entry.creation_date.label",
+                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.NONE);
 
                 addColumnConfiguration("isPublic", "isPublic", "object.portfolio_entry.is_public.label", new CheckboxFilterComponent(true), false, false,
                         SortStatusType.NONE);
@@ -82,50 +82,57 @@ public class PortfolioEntryListView {
 
                 ISelectableValueHolderCollection<Long> portfolioEntryTypes = PortfolioEntryDao.getPETypeActiveAsVH();
                 if (portfolioEntryTypes != null && portfolioEntryTypes.getValues().size() > 0) {
-                    addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label", new SelectFilterComponent(
-                            portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes), true, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label",
+                            new SelectFilterComponent(portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes), true, false,
+                            SortStatusType.UNSORTED);
                 }
 
-                addColumnConfiguration("manager", "manager.id", "object.portfolio_entry.manager.label", new AutocompleteFilterComponent(
-                        controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
+                addColumnConfiguration("manager", "manager.id", "object.portfolio_entry.manager.label",
+                        new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
 
                 ISelectableValueHolderCollection<Long> sponsoringUnits = OrgUnitDao.getOrgUnitActiveCanSponsorAsVH();
                 if (sponsoringUnits != null && sponsoringUnits.getValues().size() > 0) {
-                    addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label", new SelectFilterComponent(
-                            sponsoringUnits.getValues().iterator().next().getValue(), sponsoringUnits), false, false, SortStatusType.NONE);
+                    addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label",
+                            new SelectFilterComponent(sponsoringUnits.getValues().iterator().next().getValue(), sponsoringUnits), false, false,
+                            SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> deliveryUnits = OrgUnitDao.getOrgUnitActiveCanDeliverAsVH();
                 if (deliveryUnits != null && deliveryUnits.getValues().size() > 0) {
-                    addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label", new SelectFilterComponent(
-                            deliveryUnits.getValues().iterator().next().getValue(), deliveryUnits), false, false, SortStatusType.NONE);
+                    addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label",
+                            new SelectFilterComponent(deliveryUnits.getValues().iterator().next().getValue(), deliveryUnits), false, false,
+                            SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> portfolios = PortfolioDao.getPortfolioActiveAsVH();
                 if (portfolios != null && portfolios.getValues().size() > 0) {
-                    addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label", new SelectFilterComponent(portfolios
-                            .getValues().iterator().next().getValue(), portfolios), false, false, SortStatusType.NONE);
+                    addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label",
+                            new SelectFilterComponent(portfolios.getValues().iterator().next().getValue(), portfolios), false, false, SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessActiveAsVH();
                 if (lifeCycleProcesses != null && lifeCycleProcesses.getValues().size() > 0) {
                     addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
-                            "object.portfolio_entry.life_cycle_process.label", new SelectFilterComponent(lifeCycleProcesses.getValues().iterator().next()
-                                    .getValue(), lifeCycleProcesses), false, false, SortStatusType.NONE);
+                            "object.portfolio_entry.life_cycle_process.label",
+                            new SelectFilterComponent(lifeCycleProcesses.getValues().iterator().next().getValue(), lifeCycleProcesses), false, false,
+                            SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeActiveAsVH();
                 if (portfolioEntryReportStatusTypes != null && portfolioEntryReportStatusTypes.getValues().size() > 0) {
                     addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
-                            "object.portfolio_entry.status.label", new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next()
-                                    .getValue(), portfolioEntryReportStatusTypes), true, false, SortStatusType.NONE);
+                            "object.portfolio_entry.status.label",
+                            new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next().getValue(),
+                                    portfolioEntryReportStatusTypes),
+                            true, false, SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
                 if (lifeCycleMilestones != null && lifeCycleMilestones.getValues().size() > 0) {
                     addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
-                            "object.portfolio_entry.last_milestone.label", new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next()
-                                    .getValue(), lifeCycleMilestones), true, false, SortStatusType.NONE);
+                            "object.portfolio_entry.last_milestone.label",
+                            new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false,
+                            SortStatusType.NONE);
                 }
 
                 addColumnConfiguration("archived", "archived", "object.portfolio_entry.archived.label", new CheckboxFilterComponent(false), false, true,
@@ -202,8 +209,8 @@ public class PortfolioEntryListView {
                     @Override
                     public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
                         if (portfolioEntryView.portfolioEntryStatus != null) {
-                            return views.html.modelsparts.display_portfolio_entry_report_status_type.render(
-                                    portfolioEntryView.portfolioEntryStatus.portfolioEntryReportStatusType).body();
+                            return views.html.modelsparts.display_portfolio_entry_report_status_type
+                                    .render(portfolioEntryView.portfolioEntryStatus.portfolioEntryReportStatusType).body();
                         }
                         return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
                     }
@@ -243,19 +250,19 @@ public class PortfolioEntryListView {
                 addCustomAttributeColumns(PortfolioEntry.class);
 
                 addColumn("releasePortfolioEntry", "releasePortfolioEntry", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("releasePortfolioEntry", new StringFormatFormatter<PortfolioEntryListView>(
-                        "<a href=\"%s\"><span class=\"glyphicons glyphicons-log-book\"></span></a>",
-                        new StringFormatFormatter.Hook<PortfolioEntryListView>() {
-                            @Override
-                            public String convert(PortfolioEntryListView portfolioEntryListView) {
-                                if (portfolioEntryListView.releasePortfolioEntry.type.equals(ReleasePortfolioEntry.Type.NONE)) {
-                                    return null;
-                                } else {
-                                    return controllers.core.routes.ReleaseController.viewInitiative(
-                                            portfolioEntryListView.releasePortfolioEntry.getRelease().id, portfolioEntryListView.id).url();
-                                }
-                            }
-                        }));
+                setJavaColumnFormatter("releasePortfolioEntry",
+                        new StringFormatFormatter<PortfolioEntryListView>("<a href=\"%s\"><span class=\"glyphicons glyphicons-log-book\"></span></a>",
+                                new StringFormatFormatter.Hook<PortfolioEntryListView>() {
+                    @Override
+                    public String convert(PortfolioEntryListView portfolioEntryListView) {
+                        if (portfolioEntryListView.releasePortfolioEntry.type.equals(ReleasePortfolioEntry.Type.NONE)) {
+                            return null;
+                        } else {
+                            return controllers.core.routes.ReleaseController
+                                    .viewInitiative(portfolioEntryListView.releasePortfolioEntry.getRelease().id, portfolioEntryListView.id).url();
+                        }
+                    }
+                }));
                 setColumnCssClass("releasePortfolioEntry", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("releasePortfolioEntry", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 

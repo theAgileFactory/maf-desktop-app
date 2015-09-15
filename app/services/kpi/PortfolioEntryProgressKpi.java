@@ -19,9 +19,11 @@ package services.kpi;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
+import java.util.List;
 
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryPlanningPackage;
+import org.apache.commons.lang3.tuple.Pair;
+
 import constants.IMafConstants;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryDao;
@@ -29,6 +31,9 @@ import dao.timesheet.TimesheetDao;
 import framework.services.ServiceStaticAccessor;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
+import models.framework_models.kpi.KpiData;
+import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryPlanningPackage;
 
 /**
  * The "Portfolio entry progress" KPI computation class.
@@ -47,10 +52,9 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
 
         for (PortfolioEntryPlanningPackage planningPackage : portfolioEntry.planningPackages) {
 
-            BigDecimal days =
-                    PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsDaysByPlanningPackage(planningPackage)
-                            .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPlanningPackage(planningPackage))
-                            .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPlanningPackage(planningPackage));
+            BigDecimal days = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsDaysByPlanningPackage(planningPackage)
+                    .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPlanningPackage(planningPackage))
+                    .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPlanningPackage(planningPackage));
 
             denominator = denominator.add(days);
 
@@ -83,10 +87,9 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
 
         for (PortfolioEntryPlanningPackage planningPackage : portfolioEntry.planningPackages) {
 
-            BigDecimal days =
-                    PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsDaysByPlanningPackage(planningPackage)
-                            .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPlanningPackage(planningPackage))
-                            .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPlanningPackage(planningPackage));
+            BigDecimal days = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsDaysByPlanningPackage(planningPackage)
+                    .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsDaysByPlanningPackage(planningPackage))
+                    .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPlanningPackage(planningPackage));
 
             switch (planningPackage.status) {
             case CLOSED:
@@ -126,10 +129,19 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
      * Get the on going fulfillment rate.
      */
     private BigDecimal getOnGoingRate() {
-        Integer percentage =
-                ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(
-                        IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE);
+        Integer percentage = ServiceStaticAccessor.getPreferenceManagerPlugin()
+                .getPreferenceValueAsInteger(IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE);
         return new BigDecimal(percentage / 100.0);
+    }
+
+    @Override
+    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+        return null;
+    }
+
+    @Override
+    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+        return null;
     }
 
 }

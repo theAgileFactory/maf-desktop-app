@@ -18,11 +18,16 @@
 package services.kpi;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
-import utils.finance.Totals;
+import org.apache.commons.lang3.tuple.Pair;
+
 import dao.pmo.PortfolioEntryDao;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
+import models.framework_models.kpi.KpiData;
+import utils.finance.Totals;
 
 /**
  * The "Deviation CAPEX" KPI computation class.
@@ -33,9 +38,8 @@ public class DeviationCapexKpi implements IKpiRunner {
 
     @Override
     public BigDecimal computeMain(Kpi kpi, Long objectId) {
-        Totals totals =
-                new Totals(0.0, PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false), 0.0, PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(
-                        objectId, false), 0.0, PortfolioEntryDao.getPEAsEngagedAmountByOpex(objectId, false));
+        Totals totals = new Totals(0.0, PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false), 0.0,
+                PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(objectId, false), 0.0, PortfolioEntryDao.getPEAsEngagedAmountByOpex(objectId, false));
         Double deviation = totals.getDeviationRate(false);
         if (deviation != null) {
             return new BigDecimal(totals.getDeviationRate(false));
@@ -51,13 +55,23 @@ public class DeviationCapexKpi implements IKpiRunner {
 
     @Override
     public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
-        return new BigDecimal(PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(objectId, false)
-                + PortfolioEntryDao.getPEAsEngagedAmountByOpex(objectId, false));
+        return new BigDecimal(
+                PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(objectId, false) + PortfolioEntryDao.getPEAsEngagedAmountByOpex(objectId, false));
     }
 
     @Override
     public String link(Long objectId) {
         return controllers.core.routes.PortfolioEntryFinancialController.status(objectId).url();
+    }
+
+    @Override
+    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+        return null;
+    }
+
+    @Override
+    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+        return null;
     }
 
 }

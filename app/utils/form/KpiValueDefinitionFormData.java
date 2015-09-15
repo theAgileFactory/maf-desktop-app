@@ -43,6 +43,9 @@ public class KpiValueDefinitionFormData {
     public MultiLanguagesString name;
 
     @Required(groups = { StandardGroup.class, CustomGroup.class })
+    public boolean isTrendDisplayed;
+
+    @Required(groups = { StandardGroup.class, CustomGroup.class })
     public String renderType;
 
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
@@ -59,8 +62,8 @@ public class KpiValueDefinitionFormData {
      * 
      * @param kpiValueDefinition
      *            the KPI value definition in the DB
-     * @param i18nMessagesPlugin   
-     *            the i18n manager 
+     * @param i18nMessagesPlugin
+     *            the i18n manager
      */
     public KpiValueDefinitionFormData(KpiValueDefinition kpiValueDefinition, II18nMessagesPlugin i18nMessagesPlugin) {
 
@@ -68,6 +71,7 @@ public class KpiValueDefinitionFormData {
         this.name = MultiLanguagesString.getByKey(kpiValueDefinition.name, i18nMessagesPlugin);
         this.renderType = kpiValueDefinition.renderType.name();
         this.renderPattern = kpiValueDefinition.renderPattern;
+        this.isTrendDisplayed = kpiValueDefinition.isTrendDisplayed;
 
     }
 
@@ -82,6 +86,8 @@ public class KpiValueDefinitionFormData {
     public void fill(KpiValueDefinition kpiValueDefinition, boolean updateName) {
 
         RenderType renderType = RenderType.valueOf(this.renderType);
+
+        kpiValueDefinition.isTrendDisplayed = this.isTrendDisplayed;
 
         kpiValueDefinition.renderType = renderType;
         if (renderType.equals(RenderType.PATTERN)) {

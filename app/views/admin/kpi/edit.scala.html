@@ -15,9 +15,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+
+@import framework.services.kpi.Kpi
+
 @(
     kpiDefinition: models.framework_models.kpi.KpiDefinition,
-    kpi: framework.services.kpi.Kpi,
+    kpi: Kpi,
     kpiDefinitionForm: Form[utils.form.KpiDefinitionFormData]
 )
 
@@ -32,7 +35,7 @@
     Seq(
         ("admin.kpi.breadcrumb", controllers.admin.routes.KpiManagerController.index().url),
         ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
-        (kpi.getValueName(framework.services.kpi.Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
+        (kpi.getValueName(Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
         ("admin.kpi.edit.title", null)
     )
 ) {
