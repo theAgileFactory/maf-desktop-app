@@ -255,9 +255,9 @@ public class RequirementListView {
     public RequirementSeverity requirementSeverity;
     public Actor author;
     public Integer storyPoints;
-    public Integer initialEstimation;
-    public Integer effort;
-    public Integer remainingEffort;
+    public Double initialEstimation;
+    public Double effort;
+    public Double remainingEffort;
     public Boolean isScoped;
     public Iteration iteration;
     public Release release;
