@@ -147,13 +147,15 @@ public class PortfolioEntryStatusReportingController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result exportStatusReport(Long id) {
 
-        Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateName());
+        Pair<String, Format> reportNameAndFormat = getReportStatusTemplateNameAndFormat();
+
+        Reporting report = ReportingDao.getReportingByTemplate(reportNameAndFormat.getLeft());
 
         // construct the report parameters
         Map<String, Object> reportParameters = new HashMap<String, Object>();
-        reportParameters.put("REPORT_" + getReportStatusTemplateName().toUpperCase() + "_PORTFOLIO_ENTRY", id);
+        reportParameters.put("REPORT_" + reportNameAndFormat.getLeft().toUpperCase() + "_PORTFOLIO_ENTRY", id);
 
-        getReportingUtils().generate(ctx(), report, getI18nMessagesPlugin().getCurrentLanguage().getCode(), Format.PDF, reportParameters);
+        getReportingUtils().generate(ctx(), report, getI18nMessagesPlugin().getCurrentLanguage().getCode(), reportNameAndFormat.getRight(), reportParameters);
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
 
@@ -266,7 +268,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                 hideColumnsForIssue);
 
         // get the report in order to know if it is active
-        Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateName());
+        Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateNameAndFormat().getLeft());
 
         return ok(views.html.core.portfolioentrystatusreporting.registers.render(portfolioEntry, filledReportsTable, reportsPagination, filledRisksTable,
                 risksPagination, filledIssuesTable, issuesPagination, viewAllRisks, viewAllIssues, report.isActive, agreementLinks, agreementItem));
@@ -1307,18 +1309,19 @@ public class PortfolioEntryStatusReportingController extends Controller {
     }
 
     /**
-     * Get the template name for the status report.
+     * Get the template name and format for the status report.
      * 
-     * It is represented by the standard report if the corresponding preference
-     * is empty, or a custom report else.
+     * It is represented by the standard report in PDF if the corresponding
+     * preference is empty, or a custom report else.
      */
-    private String getReportStatusTemplateName() {
-        String customTemplateName = getPreferenceManagerPlugin()
+    private Pair<String, Format> getReportStatusTemplateNameAndFormat() {
+        String customTemplateNameAndFormat = getPreferenceManagerPlugin()
                 .getPreferenceValueAsString(IMafConstants.CUSTOM_REPORT_TEMPLATE_FOR_STATUS_REPORT_PREFERENCE);
-        if (customTemplateName == null || customTemplateName.equals("")) {
-            return "status_report";
+        if (customTemplateNameAndFormat == null || customTemplateNameAndFormat.equals("")) {
+            return Pair.of("status_report", Format.PDF);
         } else {
-            return customTemplateName;
+            String[] tmp = customTemplateNameAndFormat.split(",");
+            return Pair.of(tmp[0], Format.valueOf(tmp[1]));
         }
     }
 
