@@ -443,6 +443,14 @@ VALUES
 `system_permission_id`)
 VALUES
 (
+(select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
+(select system_permission.id from system_permission where system_permission.name='PARTNER_SYNDICATION_PERMISSION')
+);
+	INSERT INTO `system_level_role_type_has_system_permission`
+(`system_level_role_type_id`,
+`system_permission_id`)
+VALUES
+(
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_SIMULATOR_PERMISSION')
 );
