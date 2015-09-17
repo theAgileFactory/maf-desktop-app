@@ -55,6 +55,23 @@ public class Tour {
     }
 
     /**
+     * Apprend the query params to actions.
+     */
+    public String appendQueryParams() {
+        String r = "";
+        int nextIndex = 1;
+        for (Step step : this.steps) {
+            if (step.getElementForQueryParams() != null && step.getAttributeForQueryParams() != null) {
+                String value = "$(\"" + step.getElementForQueryParams() + "\").attr(\"" + step.getAttributeForQueryParams() + "\")";
+                r += "$(\"" + step.getElementForQueryParams() + "\").attr(\"" + step.getAttributeForQueryParams() + "\", " + value + " + \"?tourStep="
+                        + nextIndex + "&tourUid=" + this.uid + "\")";
+            }
+            nextIndex++;
+        }
+        return r;
+    }
+
+    /**
      * Get the uid.
      */
     public String getUid() {

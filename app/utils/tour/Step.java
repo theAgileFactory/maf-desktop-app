@@ -36,6 +36,9 @@ public class Step {
     private String placement;
     private String route;
 
+    private String elementForQueryParams;
+    private String attributeForQueryParams;
+
     /**
      * Construct a step.
      * 
@@ -58,6 +61,33 @@ public class Step {
         this.element = element;
         this.placement = placement != null ? placement : "bottom";
         this.route = route;
+    }
+
+    /**
+     * Set the query params to an action.
+     * 
+     * @param element
+     *            the element selector
+     * @param attribute
+     *            the attribute name of the element
+     */
+    public void setElemForQueryParams(String element, String attribute) {
+        this.elementForQueryParams = element;
+        this.attributeForQueryParams = attribute;
+    }
+
+    /**
+     * Get the element for query params.
+     */
+    public String getElementForQueryParams() {
+        return elementForQueryParams;
+    }
+
+    /**
+     * Get the attribute name for query params.
+     */
+    public String getAttributeForQueryParams() {
+        return attributeForQueryParams;
     }
 
     /**
@@ -110,4 +140,5 @@ public class Step {
 
         return null;
     }
+
 }

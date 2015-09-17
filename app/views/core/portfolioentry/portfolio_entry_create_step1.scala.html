@@ -38,7 +38,7 @@
                 </div>
             }
             
-            @helper.form(action = controllers.core.routes.PortfolioEntryController.processCreateStep1(), 'enctype -> "multipart/form-data") {
+            @helper.form(action = controllers.core.routes.PortfolioEntryController.processCreateStep1(), 'enctype -> "multipart/form-data", 'id -> "create-portfolio-entry-form") {
             
                 @parts.checkbox(newPortfolioEntryForm("isConfidential"), parts.Msg.asString("object.portfolio_entry.is_condfidential.label"), parts.Msg.asString("object.portfolio_entry.is_condfidential.help"))
                  
@@ -60,7 +60,7 @@
                 
                 @parts.file_field(newPortfolioEntryForm("scopeDescription"),Messages("object.portfolio_entry.scope_description.label"))
 
-                <input type="submit" value="@parts.Msg("button.submit")" class="btn btn-primary">
+                <input id="submit" type="submit" value="@parts.Msg("button.submit")" class="btn btn-primary">
             }
     
         </div>
