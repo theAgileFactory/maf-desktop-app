@@ -754,10 +754,10 @@ public class PluginManagerController extends Controller {
         try {
 
             IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
-            if (pluginInfo == null || !pluginInfo.getConfigurator().getActionDescriptors().containsKey(pluginActionIdentifier)) {
+            if (pluginInfo == null || pluginInfo.getActionDescriptors()==null || !pluginInfo.getActionDescriptors().containsKey(pluginActionIdentifier)) {
                 return badRequest();
             }
-            IPluginActionDescriptor pluginActionDescriptor = pluginInfo.getConfigurator().getActionDescriptors().get(pluginActionIdentifier);
+            IPluginActionDescriptor pluginActionDescriptor = pluginInfo.getActionDescriptors().get(pluginActionIdentifier);
             EventMessage eventMessage = new EventMessage();
             eventMessage.setPluginConfigurationId(pluginConfigurationId);
             eventMessage.setMessageType(MessageType.CUSTOM);

@@ -23,7 +23,6 @@ import javax.inject.Singleton;
 import constants.IMafConstants;
 import controllers.Assets.Asset;
 import dao.finance.CurrencyDAO;
-import framework.commons.DataType;
 import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.database.IDatabaseDependencyService;
 import framework.utils.Menu.ClickableMenuItem;
@@ -119,28 +118,6 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     @Override
     public Call getRouteForDeleteAttachedFile(Long attachmentId) {
         return controllers.routes.Application.deleteFileAttachment(attachmentId);
-    }
-
-    @Override
-    public Call getRouteForPluginConfiguratorControllerDoGetCustom(Long pluginConfigurationId, String actionId) {
-        return framework.services.plugins.routes.PluginConfiguratorController.doGetForCustomConfiguratorController(pluginConfigurationId, actionId);
-    }
-
-    @Override
-    public Call getRouteForPluginConfiguratorControllerDoGetRegistration(Long pluginConfigurationId, DataType dataType, Long objectId, String actionId) {
-        return framework.services.plugins.routes.PluginConfiguratorController.doGetForRegistrationConfiguratorController(pluginConfigurationId,
-                dataType.getDataName(), objectId, actionId);
-    }
-
-    @Override
-    public Call getRouteForPluginConfiguratorControllerDoPostCustom(Long pluginConfigurationId, String actionId) {
-        return framework.services.plugins.routes.PluginConfiguratorController.doPostForCustomConfiguratorController(pluginConfigurationId, actionId);
-    }
-
-    @Override
-    public Call getRouteForPluginConfiguratorControllerDoPostRegistration(Long pluginConfigurationId, DataType dataType, Long objectId, String actionId) {
-        return framework.services.plugins.routes.PluginConfiguratorController.doPostForRegistrationConfiguratorController(pluginConfigurationId,
-                dataType.getDataName(), objectId, actionId);
     }
 
     @Override

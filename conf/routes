@@ -696,12 +696,6 @@ POST    /admin/data-syndication/agreement/link/initiative/accept/new       contr
 POST    /admin/data-syndication/agreement/link/initiative/accept/existing  controllers.admin.DataSyndicationController.acceptAgreementLinkExistingPE()
 GET     /admin/data-syndication/agreement/link/reject      controllers.admin.DataSyndicationController.rejectAgreementLink(agreementLinkId: Long)
 
-#Configurators routes
-GET    /plugin/custcfg/:actionId/get/:id                      framework.services.plugins.PluginConfiguratorController.doGetForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)
-POST   /plugin/custcfg/:actionId/post/:id                     framework.services.plugins.PluginConfiguratorController.doPostForCustomConfiguratorController(id: java.lang.Long, actionId: java.lang.String)
-GET    /plugin/regcfg/:data/:actionId/get/:id/:objectId       framework.services.plugins.PluginConfiguratorController.doGetForRegistrationConfiguratorController(id: java.lang.Long, data: java.lang.String, objectId: java.lang.Long, actionId: java.lang.String)
-POST   /plugin/regcfg/:data/:actionId/post/:id/:objectId      framework.services.plugins.PluginConfiguratorController.doPostForRegistrationConfiguratorController(id: java.lang.Long, data: java.lang.String, objectId: java.lang.Long, actionId: java.lang.String)
-
 #System owner administration
 GET    /admin/systemowner/info                      controllers.admin.SystemOwnerController.info()
 

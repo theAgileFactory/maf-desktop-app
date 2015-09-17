@@ -740,11 +740,10 @@ public class Application extends Controller {
                     idZoneData.pluginMenuDesriptors = new HashMap<Long, Pair<String, IPluginMenuDescriptor>>();
                     Map<Long, IPluginInfo> pluginInfos = ServiceStaticAccessor.getPluginManagerService().getRegisteredPluginDescriptors();
                     for (Long pluginConfigirationId : pluginInfos.keySet()) {
-                        if (pluginInfos.get(pluginConfigirationId).getConfigurator() != null
-                                && pluginInfos.get(pluginConfigirationId).getConfigurator().getMenuDescriptor() != null) {
+                        if (pluginInfos.get(pluginConfigirationId).getMenuDescriptor() != null) {
                             IPluginInfo pluginInfo = pluginInfos.get(pluginConfigirationId);
                             idZoneData.pluginMenuDesriptors.put(pluginConfigirationId,
-                                    Pair.of(pluginInfo.getDescriptor().getIdentifier(), pluginInfo.getConfigurator().getMenuDescriptor()));
+                                    Pair.of(pluginInfo.getDescriptor().getIdentifier(), pluginInfo.getMenuDescriptor()));
                         }
                     }
                     idZoneData.logoutUrl = controllers.sso.routes.Authenticator.customLogout().url();
