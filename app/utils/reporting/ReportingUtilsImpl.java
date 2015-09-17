@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -87,7 +88,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
     private ISysAdminUtils sysAdminUtils;
     private Configuration configuration;
     private Environment environment;
-    
+
     private static Logger.ALogger log = Logger.of(ReportingUtilsImpl.class);
 
     public Map<String, JasperReport> jasperReports = null;
@@ -100,32 +101,34 @@ public class ReportingUtilsImpl implements IReportingUtils {
 
     /**
      * Creates a new ReportingUtilsImpl
+     * 
      * @param lifecycle
      *            the play application lifecycle listener
      * @param configuration
      *            the play application configuration
-     * @param environment 
+     * @param environment
      *            the play environment
-     * @param userSessionManagerPlugin the user session manager
-     * @param personalStoragePlugin the personal storage manager
-     * @param notificationManagerPlugin the notification manager
-     * @param sysAdminUtils the sysadmin utilities
+     * @param userSessionManagerPlugin
+     *            the user session manager
+     * @param personalStoragePlugin
+     *            the personal storage manager
+     * @param notificationManagerPlugin
+     *            the notification manager
+     * @param sysAdminUtils
+     *            the sysadmin utilities
      * @param databaseDependencyService
      */
     @Inject
-    public ReportingUtilsImpl(ApplicationLifecycle lifecycle, Configuration configuration,Environment environment,
-            IUserSessionManagerPlugin userSessionManagerPlugin,
-            IPersonalStoragePlugin personalStoragePlugin,
-            INotificationManagerPlugin notificationManagerPlugin,
-            ISysAdminUtils sysAdminUtils,
-            IDatabaseDependencyService databaseDependencyService) {
+    public ReportingUtilsImpl(ApplicationLifecycle lifecycle, Configuration configuration, Environment environment,
+            IUserSessionManagerPlugin userSessionManagerPlugin, IPersonalStoragePlugin personalStoragePlugin,
+            INotificationManagerPlugin notificationManagerPlugin, ISysAdminUtils sysAdminUtils, IDatabaseDependencyService databaseDependencyService) {
         log.info("SERVICE>>> ReportingUtilsImpl starting...");
-        this.configuration=configuration;
-        this.environment=environment;
-        this.userSessionManagerPlugin=userSessionManagerPlugin;
-        this.personalStoragePlugin=personalStoragePlugin;
-        this.notificationManagerPlugin=notificationManagerPlugin;
-        this.sysAdminUtils=sysAdminUtils;
+        this.configuration = configuration;
+        this.environment = environment;
+        this.userSessionManagerPlugin = userSessionManagerPlugin;
+        this.personalStoragePlugin = personalStoragePlugin;
+        this.notificationManagerPlugin = notificationManagerPlugin;
+        this.sysAdminUtils = sysAdminUtils;
         loadDefinitions();
         lifecycle.addStopHook(() -> {
             log.info("SERVICE>>> ReportingUtilsImpl stopping...");
@@ -165,6 +168,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
         // set the locale
         Locale locale = new Locale(language, "");
         parameters.put(JRParameter.REPORT_LOCALE, locale);
+        parameters.put(JRParameter.REPORT_TIME_ZONE, TimeZone.getTimeZone("Europe/Paris"));
 
         // set the report folder as the relative path (for the resources)
         SimpleFileResolver fileResolver = new SimpleFileResolver(getReportFolder(report));
@@ -294,12 +298,10 @@ public class ReportingUtilsImpl implements IReportingUtils {
     @Override
     public Connection getDataAdapter() {
         try {
-            return DriverManager.getConnection(
-                    getConfiguration().getString("db.default.url"), 
-                    getConfiguration().getString("db.default.username"),
+            return DriverManager.getConnection(getConfiguration().getString("db.default.url"), getConfiguration().getString("db.default.username"),
                     getConfiguration().getString("db.default.password"));
         } catch (SQLException e) {
-            log.error("Unable to initialize the access to the database for the reports",e);
+            log.error("Unable to initialize the access to the database for the reports", e);
         }
         return null;
     }
@@ -319,15 +321,15 @@ public class ReportingUtilsImpl implements IReportingUtils {
                     JasperDesign jasperDesign = JRXmlLoader.load(reportFile);
                     JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
                     jasperReports.put(report.template, jasperReport);
-                    if(log.isDebugEnabled()){
+                    if (log.isDebugEnabled()) {
                         log.debug("the jasper report " + report.template + " has been loaded");
                     }
                 } catch (Exception e) {
-                    log.error("Error while loading the report "+report.template,e.getMessage());
+                    log.error("Error while loading the report " + report.template, e.getMessage());
                 }
 
             } else {
-                log.error("Jasper report " + report.template+" not found !");
+                log.error("Jasper report " + report.template + " not found !");
             }
         }
 
