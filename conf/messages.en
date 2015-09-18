@@ -1644,7 +1644,7 @@ object.data_syndication_agreement.table.empty=There is no agreement
 
 object.data_syndication_agreement_link.agreement.label=Agreement
 object.data_syndication_agreement_link.name.label=Relation name
-object.data_syndication_agreement_link.description.label=de: Description
+object.data_syndication_agreement_link.description.label=Description
 object.data_syndication_agreement_link.data_type.label=Data type
 object.data_syndication_agreement_link.object.label=Object
 object.data_syndication_agreement_link.items.label=Synchronized items
