@@ -1,6 +1,7 @@
 package services.database;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import framework.services.database.AbstractDatabaseDependencyServiceImpl;
 import framework.services.database.IDatabaseDependencyService;
@@ -14,6 +15,7 @@ import play.inject.ApplicationLifecycle;
  * A concrete implementation for the {@link AbstractDatabaseDependencyServiceImpl} and {@link IDatabaseDependencyService}
  * @author Pierre-Yves Cloux
  */
+@Singleton
 public class DatabaseDependencyServiceImpl extends AbstractDatabaseDependencyServiceImpl {
 
     @Inject
@@ -27,13 +29,7 @@ public class DatabaseDependencyServiceImpl extends AbstractDatabaseDependencySer
     }
 
     @Override
-    public void patchBeforeEbean(ALogger log) {
-        log.info("Patching the database before Ebean is activated");
+    public void patch(ALogger log) {
+        log.info("Patching the database");
     }
-    
-    @Override
-    public void patchAfterEbean(ALogger log) {
-        log.info("Patching the database after Ebean is activated");
-    }
-
 }
