@@ -4,8 +4,9 @@
 
 GET    /switch-perspective         framework.utils.TopMenuBarController.switchPerspective(key)
 
-#GET    /ext/*path                  framework.services.ext.ExtensionController.perform(path)
-#POST   /ext/*path                  framework.services.ext.ExtensionController.perform(path)
+#Custom router method
+GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)
+POST   /ext/*path                  framework.services.router.CustomRouterController.perform(path)
 
 #Application controller
 GET    /                           controllers.Application.index()
