@@ -123,7 +123,7 @@
             </div>
         </div>
     </div>
-    @if(pluginInfo.getDescriptor().getConfigurationBlockDescriptors()!=null){
+    
     <div class="row">
         <div class="col-md-12">
              <div class="panel panel-default">
@@ -131,12 +131,20 @@
                     @parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.title")
                 </div>
                 <div class="panel-body">
-                @parts.table.tableview(configurationBlocksTable)
+                @if(pluginInfo.hasCustomConfigurator()){
+                	<p>
+                	<a class="btn btn-primary" href="@pluginInfo.getLinkToCustomConfiguration()">@parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.custom.button")</a>
+                	</p>
+                }
+                @if(pluginInfo.getDescriptor().getConfigurationBlockDescriptors()!=null
+                && pluginInfo.getDescriptor().getConfigurationBlockDescriptors().size()!=0){
+                	@parts.table.tableview(configurationBlocksTable)
+                }
                 </div>
             </div>
         </div>
     </div>
-    }
+
     <div class="row">
         <div class="col-md-12">
              <div class="panel panel-default">

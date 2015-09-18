@@ -3027,6 +3027,7 @@ admin.plugin_manager.configuration.view.panel.admin.start.success=Plugin {0} sta
 admin.plugin_manager.configuration.view.panel.admin.start.error=Plugin {0} konnte nicht starten, weiter Informationen im Error Log
 admin.plugin_manager.configuration.view.panel.admin.stop.success=Plugin {0} wird gestoppt, dies kann etwas dauern..
 admin.plugin_manager.configuration.view.panel.configuration.title=Plugin Konfiguration
+admin.plugin_manager.configuration.view.panel.configuration.custom.button=Erweiterte Konfiguration
 admin.plugin_manager.configuration.view.panel.log.title=Plugin Log
 admin.plugin_manager.configuration.view.panel.log.refresh.help=Aktualisieren
 admin.plugin_manager.configuration.view.panel.log.flush.help=Log löschen
