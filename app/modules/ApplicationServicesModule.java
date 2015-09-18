@@ -17,9 +17,6 @@ import controllers.sso.Authenticator;
 import framework.commons.IFrameworkConstants;
 import framework.commons.IFrameworkConstants.AuthenticationMode;
 import framework.modules.FrameworkModule;
-import framework.patcher.IPatchLog;
-import framework.patcher.PatchManager;
-import framework.patcher.PatcherException;
 import framework.security.IAuthenticator;
 import framework.security.IInstanceAccessSupervisor;
 import framework.security.ISecurityService;
@@ -45,7 +42,6 @@ import framework.services.audit.IAuditLoggerService;
 import framework.services.configuration.I18nMessagesPluginImpl;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.IImplementationDefinedObjectService;
-import framework.services.database.DatabaseDependencyServiceImpl;
 import framework.services.database.IDatabaseDependencyService;
 import framework.services.ext.ExtensionManagerServiceImpl;
 import framework.services.ext.IExtensionManagerService;
@@ -86,6 +82,7 @@ import security.SecurityServiceImpl;
 import services.bizdockapi.BizdockApiClientImpl;
 import services.bizdockapi.IBizdockApiClient;
 import services.configuration.ImplementationDefinedObjectImpl;
+import services.database.DatabaseDependencyServiceImpl;
 import services.datasyndication.DataSyndicationServiceImpl;
 import services.datasyndication.IDataSyndicationService;
 import services.echannel.EchannelServiceImpl;
@@ -253,29 +250,6 @@ public class ApplicationServicesModule extends FrameworkModule {
         MafDataType.add(IMafConstants.Requirement, "models.delivery.Requirement", false, true);
         MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true);
         MafDataType.add(IMafConstants.WorkOrder, "models.finance.WorkOrder", false, true);
-    }
-
-    /**
-     * Execute the patches.
-     */
-    private void runPatchBeforeStart() {
-        try {
-            PatchManager patchManager = new PatchManager("com.agifac.maf.desktop.patcher", "before_start_status.log", new IPatchLog() {
-                @Override
-                public void warn(String message) {
-                    log.warn("PATCH - " + message);
-                }
-
-                @Override
-                public void info(String message) {
-                    log.info("PATCH - " + message);
-                }
-            });
-            patchManager.execute();
-        } catch (PatcherException e) {
-            // Halt the execution of the application startup
-            throw new RuntimeException(e);
-        }
     }
 
     private Configuration getConfiguration() {
