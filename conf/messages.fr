@@ -26,7 +26,7 @@ js.kpi=KPI
 # plugin
 #----------------------
 
-plugin.failed.start=Le démarrage du plugin {0} a échoué, la cause est >>> {1}
+plugin.failed.start=Le démarrage du plugin {0} a échoué, la cause est: {1}
 plugin.success.start=Le plugin {0} a démarré.
 plugin.failed.stop=L''arrêt du plugin {0} a échoué, veuillez donner l''ID suivant à votre administrateur {1}
 plugin.success.stop=Le plugin {0} a été arrêté.
@@ -335,7 +335,7 @@ idzone.my.logout=Se déconnecter
 #----------------------
 
 excel.export.success.title=Nouveau fichier Excel d''exportation
-excel.export.success.message=L''export "{0}" a été correctement généré dans votre espace de stockage personnel
+excel.export.success.message=L''export "{0}" a été correctement généré dans votre espace de stockage personnel.
 excel.export.failure.title=Erreur d''exportation Excel
 excel.export.failure.message=Une erreur est survenue lors de la génération d''un fichier Excel, veuillez contacter votre administrateur (ou réessayer ultérieurement).
 
@@ -366,7 +366,7 @@ tour.top_menu_bar.step3.content=La feuille de route vous montre les initiatives 
 tour.top_menu_bar.step4.title=Cockpit
 tour.top_menu_bar.step4.content=Votre cockpit contient toutes les informations qui vous concernent, par exemple vos initiatives en tant que responsable ou les membres de votre équipe.
 tour.top_menu_bar.step14.title=Architecture
-tour.top_menu_bar.step14.content=Le module architecture vous permet de gérer des blocs applicatifs liés à des outils de build ou de gestion de versions.
+tour.top_menu_bar.step14.content=Le module architecture vous permet de gérer des blocs applicatifs de manière hierarchique.
 tour.top_menu_bar.step5.title=Nouveau
 tour.top_menu_bar.step5.content=Le menu Nouveau vous permet de créer tout type de données selon vos permissions.
 tour.top_menu_bar.step6.title=Gouvernance
@@ -700,7 +700,7 @@ data_syndication.post_data.error.E1001=Impossible de se conntecter à l''instanc
 data_syndication.post_data.error.E1002=Impossible de lire l''objet du partenaire (où les données doivent être postée).
 data_syndication.post_data.error.E1003=L''objet de provisionnement ou celui du partenaire n''existe pas, mais il a été impossible de supprimer la relation d''agrément.
 data_syndication.post_data.error.E1004=Impossible de poster les données à syndiquer dans l''instance du partenaire.
-data_syndication.post_data.error.E2001=Le type de donnée n''est actuellement pas géré par BizDock.
+data_syndication.post_data.error.E2001=Le type de donnée n''est actuellement pas géré.
 data_syndication.post_data.error.E2002=L''objet de provisionnement n''existe pas, la relation d''agrément a été supprimée.
 data_syndication.post_data.error.E2003=L''objet du partenaire n''existe pas, la relation d''agrément a été supprimée.
 data_syndication.post_data.error.E2004=L''objet de provisionnement ou celui du partenaire n''est pas actif, la synchronisation n''est pas faite.
@@ -801,7 +801,7 @@ object.custom_attribute_definition.name.label=Nom
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
 object.custom_attribute_definition.is_displayed.label=Affiché
-object.custom_attribute_definition.is_displayed.help=Cocher cette case pour afficher l''attribut personnalisé dans les tables correspondantes.
+object.custom_attribute_definition.is_displayed.help=Cocher cette case pour afficher l''attribut personnalisé dans les tables.
 object.custom_attribute_definition.table.empty=Il n''existe aucun attribut personnalisé.
 
 #----------------------
@@ -1631,7 +1631,7 @@ object.data_syndication_agreement.creation_date.label=Date
 object.data_syndication_agreement.partner.label=Partenaire
 object.data_syndication_agreement.contact_name.label=Contact
 object.data_syndication_agreement.contact_email.label=E-mail
-object.data_syndication_agreement.name.label=Nom de l''agrément
+object.data_syndication_agreement.name.label=Titre de l''agrément
 object.data_syndication_agreement.ref_id.label=Référence
 object.data_syndication_agreement.start_date.label=Date de début
 object.data_syndication_agreement.end_date.label=Date de fin
@@ -1646,7 +1646,7 @@ object.data_syndication_agreement.status.SUSPENDED.label=Suspendu
 object.data_syndication_agreement.status.CANCELLED.label=Annulé
 object.data_syndication_agreement.items.label=Eléments autorisés
 object.data_syndication_agreement.process.label=Traiter la requête
-object.data_syndication_agreement.suspend.confirm=Etes-vous sûr(e) de vouloir suspendre cet agrément? Toutes les synchronisations correspondantes seront également suspendues.
+object.data_syndication_agreement.suspend.confirm=Etes-vous sûr(e) de vouloir suspendre cet agrément? Tous les échanges de données seront également suspendus.
 object.data_syndication_agreement.cancel.confirm=Etes-vous sûr(e) de vouloir annuler cet agrément? Cette action est définitive.
 object.data_syndication_agreement.table.empty=Aucun agrément.
 
@@ -2484,17 +2484,17 @@ core.portfolio_entry_status_reporting.event.delete.successful=L''évènement a �
 # portfolio entry: data syndication
 #----------------------
 
-core.portfolio_entry_data_syndication.index.no_link_no_master=Il n''existe aucun agrément de provisionnement pour cette instance BizDock. \
-Veuillez suivre ce <a href="{0}">lien</a> pour créer un nouvel agrément (des permissions particulières sont requises).
+core.portfolio_entry_data_syndication.index.no_link_no_master=Il n''existe aucun agrément disponible. \
+<a href="{0}">Créer un nouvel agréément</a> (des permissions particulières sont requises).
 core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" n''est actuellement pas partagé avec une autre instance BizDock. Veuillez sélectionner un partenaire pour soumettre une demande de partage.
-core.portfolio_entry_data_syndication.index.with_link.slave.title=Consomme les données depuis
-core.portfolio_entry_data_syndication.index.with_link.slave.no_data="{0}" n''est pas provisionné par une autre instance BizDock.
-core.portfolio_entry_data_syndication.index.with_link.master.title=Fournit les données à
-core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" ne provisionne pas une autre instance BizDock.
+core.portfolio_entry_data_syndication.index.with_link.slave.title=Données provenant de
+core.portfolio_entry_data_syndication.index.with_link.slave.no_data=Aucune donnée reçue.
+core.portfolio_entry_data_syndication.index.with_link.master.title=Données fournies à
+core.portfolio_entry_data_syndication.index.with_link.master.no_data=Aucune donnée fournise.
 
 core.portfolio_entry_data_syndication.link.view.title=Détails
 core.portfolio_entry_data_syndication.link.admin.title=Administration
-core.portfolio_entry_data_syndication.link.admin.trigger.label=Synchroniser les données
+core.portfolio_entry_data_syndication.link.admin.trigger.label=Pousser les données
 core.portfolio_entry_data_syndication.link.admin.cancel.label=Annuler la relation
 core.portfolio_entry_data_syndication.link.no_action.label=Aucune action disponible
 
@@ -3101,22 +3101,22 @@ admin.api_manager.apibrowser.simulator.application.select.label=Application test
 #data syndication
 admin.data_syndication.communication_error=Une erreur de communication avec le serveur s''est produite. Veuillez contacter votre administrateur pour plus d''information.
 
-admin.data_syndication.master_agreements.header=Un agrément de provisionnement est un contrat avec l''un de vos partenaires afin de partager des données BizDock avec lui. \
+admin.data_syndication.master_agreements.header=Un agrément de provisionnement est un contrat avec l''un de vos partenaires afin de lui communiquer des données de BizDock. \
 En créant un agrément de provisionnement, aucune donnée ne sera directement partagée, vous devrez les définir spécifiquement.
 admin.data_syndication.master_agreements.partner_contract=Contrats avec vos partenaires
 
-admin.data_syndication.consumer_agreements.header=Un agrément de consommation est un contrat avec l''un de vos partenaire afin de charger ses données BizDock dans votre instance.
+admin.data_syndication.consumer_agreements.header=Un agrément de consommation est un contrat avec l''un de vos partenaire afin de recevoir ses données BizDock dans votre instance.
 admin.data_syndication.consumer_agreements.partner_contract=Contrats avec vos partenaires
 
 admin.data_syndication.view_agreement.details=Détails
 admin.data_syndication.view_agreement.links=Relations
 
-admin.data_syndication.search_partner.title=Rechercher un partenaire dans le catalogue BizDock
+admin.data_syndication.search_partner.title=Rechercher un partenaire
 admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
 admin.data_syndication.search_partner.keywords.placeholder=Nom du partenaire
 admin.data_syndication.search_partner_result.title=Résultats de la recherche
 admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de lui soumettre une demande d''agrément.
-admin.data_syndication.search_partner_no_result.header=Le partenaire que vous tentez de trouver n''a actuellement pas d''instance BizDock. Vous avez la possibilité de l''inviter pour qu''il se crée une instance BizDock gratuite, l''agrément sera automatiquement créé.
+admin.data_syndication.search_partner_no_result.header=Le partenaire que vous tentez de trouver n''a pas été trouvé. Vous avez la possibilité de l''inviter pour qu''il se crée une instance BizDock gratuite, l''agrément sera automatiquement créé.
 
 admin.data_syndication.submit_agreement.title=Soumettre une requête d''agrément de provisionnement
 admin.data_syndication.submit_agreement.success=La requête d''agrément a été soumise. Le partenaire doit maintenant la valider.

@@ -26,7 +26,7 @@ js.kpi=KPI
 # plugin
 #----------------------
 
-plugin.failed.start=The plugin {0} failed to start, reported cause is >>> {1}
+plugin.failed.start=The plugin {0} failed to start, reported cause is: {1}
 plugin.success.start=The plugin {0} started successfully
 plugin.failed.stop=The plugin {0} has reported an error while stopping, please communicate the following id to your administrator {1}
 plugin.success.stop=The plugin {0} has been stopped
@@ -88,7 +88,7 @@ form.input.image.required=Please provide an image in one of the following format
 form.input.image.error.max_width=Please provide an image with a width equals or lesser than {0} px.
 form.input.image.error.max_height=Please provide an image with a height equals or lesser than {0} px.
 form.input.password.invalid=The password is not valid (must be at least 8 characters long)
-form.input.password.error.insufficient_strength=The password you choose is not strong enough
+form.input.password.error.insufficient_strength=The password is not strong enough
 form.input.oldpassword.invalid=Invalid old password
 form.input.confirmationpassword.invalid=The password is different from the control password
 form.input.url.invalid=Invalid URL
@@ -173,7 +173,7 @@ authentication.standalone.reset.mail.label=Enter your mail address
 authentication.standalone.reset.submit.label=Request password reset
 authentication.standalone.reset.cancel.label=Cancel
 authentication.standalone.reset.success.message=You password has been reset, you''ll receive an e-mail soon.
-authentication.standalone.reset.mail.validation.message=The e-mail provided is invalid.
+authentication.standalone.reset.mail.validation.message=The e-mail is not valid.
 authentication.standalone.reset.mail.unknown.message=Unknown e-mail address
 
 #----------------------
@@ -209,8 +209,8 @@ chart.empty=The chart is empty.
 #----------------------
 
 password.strength.title=Password strength
-password.strength.explanation=Use at least 8 characters. Don’t use a password from another web site.
-password.strength.message=Weak passwords won''t be accepted
+password.strength.explanation=Use at least 8 characters.
+password.strength.message=Weak passwords won''t be accepted.
 password.strength.weak=Weak
 password.strength.average=OK
 password.strength.ok=Strong
@@ -354,7 +354,7 @@ tour.top_menu_bar.step3.content=The roadmap shows all active initiatives (accord
 tour.top_menu_bar.step4.title=Cockpit
 tour.top_menu_bar.step4.content=You cockpit contains all information that concerns you, for example your initiatives as manager or your team''s members.
 tour.top_menu_bar.step14.title=Architecture
-tour.top_menu_bar.step14.content=The architecture module allows you to manage application blocks related to build tools or versioning systems.
+tour.top_menu_bar.step14.content=The architecture module allows you to model application blocks in a hierarchical manner.
 tour.top_menu_bar.step5.title=New
 tour.top_menu_bar.step5.content=The New menu allows you to create any type of data according to your permissions.
 tour.top_menu_bar.step6.title=Governance
@@ -487,7 +487,7 @@ kpi.portfolio_entry_progress.additional2.name=Consumed days
 kpi.release_burndown.main.name=Remaining effort
 kpi.release_burndown.additional1.name=Effort made
 kpi.release_burndown.additional2.name=Estimation
-kpi.release_burndown.static_trend_line.name=Theoretical chart
+kpi.release_burndown.static_trend_line.name=Theoretical remaining effort
 
 #----------------------
 # standard reports
@@ -642,7 +642,7 @@ preference.smtp_user_preference.description=The SMTP server username
 preference.smtp_password_preference.name=Password
 preference.smtp_password_preference.description=The SMTP server password
 preference.notification_sending_system_preference.name=Notifications sending system
-preference.notification_sending_system_preference.description=The system used to send the notifications. It could be either by BizDock notifications or by email.
+preference.notification_sending_system_preference.description=It could be either by BizDock notifications or email.
 
 #----------------------
 # authentication
@@ -661,12 +661,12 @@ licenses_management.cannot_create_user=This is not possible to create a new user
 # data syndication
 #----------------------
 
-data_syndication.submit_agreement.notification.title=Partner agreement request to validate
-data_syndication.submit_agreement.notification.message=A new partner agreement request is pending. Please click <a href="{0}">here</a> to consult this request and process the decision.
+data_syndication.submit_agreement.notification.title=Partner agreement request
+data_syndication.submit_agreement.notification.message=A new partner agreement request is pending. Please click <a href="{0}">here</a> to consult this request.
 data_syndication.accept_agreement.notification.title=Partner agreement request accepted
-data_syndication.accept_agreement.notification.message=A submitted agreement request has been accepted by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
+data_syndication.accept_agreement.notification.message=An agreement has been accepted by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
 data_syndication.reject_agreement.notification.title=Partner agreement request rejected
-data_syndication.reject_agreement.notification.message=A submitted agreement request has been rejected by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
+data_syndication.reject_agreement.notification.message=A agreement request has been rejected by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
 data_syndication.cancel_agreement.notification.title=Partner agreement cancelled
 data_syndication.cancel_agreement.notification.message=An agreement has been cancelled by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
 data_syndication.suspend_agreement.notification.title=Partner agreement suspended
@@ -676,16 +676,16 @@ data_syndication.restart_agreement.notification.message=An agreement has been re
 data_syndication.submit_agreement_link.notification.title=Partner relation request to validate
 data_syndication.submit_agreement_link.notification.message=A new partner relation request is pending. Please click <a href="{0}">here</a> to consult this request and process the decision.
 data_syndication.accept_agreement_link.notification.title=Partner relation request accepted
-data_syndication.accept_agreement_link.notification.message=A submitted relation request has been accepted by your partner. You can consult the relation details by clicking <a href="{0}">here</a>.
+data_syndication.accept_agreement_link.notification.message=A relation request has been accepted by your partner. You can consult the relation details by clicking <a href="{0}">here</a>.
 data_syndication.reject_agreement_link.notification.title=Partner relation request rejected
-data_syndication.reject_agreement_link.notification.message=A submitted relation request has been rejected by your partner. You can consult the relation details by clicking <a href="{0}">here</a>.
+data_syndication.reject_agreement_link.notification.message=A relation request has been rejected by your partner. You can consult the relation details by clicking <a href="{0}">here</a>.
 data_syndication.cancel_agreement_link.notification.title=Partner relation cancelled
 data_syndication.cancel_agreement_link.notification.message=An agreement relation has been cancelled by your partner. You can consult the corresponding agreement details by clicking <a href="{0}">here</a>.
 data_syndication.delete_agreement_link.notification.title=Partner relation deleted
 data_syndication.delete_agreement_link.notification.message=The agreement relation {0} has been deleted because you or your partner has deleted the corresponding resource.
 
 data_syndication.post_data.error.E1001=Impossible the reach the partner instance.
-data_syndication.post_data.error.E1002=Impossible to get the corresponding partner object (where to post the data).
+data_syndication.post_data.error.E1002=Impossible to get the corresponding partner object.
 data_syndication.post_data.error.E1003=The master or the partner object is not existing but it was impossible to delete the agreement relation.
 data_syndication.post_data.error.E1004=Impossible to post the syndicated data in the partner instance.
 data_syndication.post_data.error.E2001=The data type is currently not managed by BizDock.
@@ -694,7 +694,7 @@ data_syndication.post_data.error.E2003=The partner object is not existing, the a
 data_syndication.post_data.error.E2004=The master or the partner object is not active, the synchronization is not done.
 
 data_syndication.display_date.no_table=The data can be only obtained in Excel.
-data_syndication.display_date.export_as_excel.request.success=Your request to export the data as Excel has been correctly submitted. You will be notified when the file will be ready.
+data_syndication.display_date.export_as_excel.request.success=Your request to export the data as Excel has been correctly registered. You will be notified when the file will be ready.
 
 ########################
 # Objects
@@ -789,7 +789,7 @@ object.custom_attribute_definition.name.label=Name
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
 object.custom_attribute_definition.is_displayed.label=Displayed
-object.custom_attribute_definition.is_displayed.help=Check this box to display the custom attributes in the corresponding tables.
+object.custom_attribute_definition.is_displayed.help=Check this box to display the custom attribute in the corresponding tables.
 object.custom_attribute_definition.table.empty=There is currently no custom attribute.
 
 #----------------------
@@ -1609,7 +1609,7 @@ object.data_syndication_agreement_item.models.pmo.PortfolioEntry.TIMESHEET.label
 object.data_syndication_partner.customer_logo.label=Logo
 object.data_syndication_partner.customer_name.label=Name
 object.data_syndication_partner.customer_description.label=Description
-object.data_syndication_partner.customer_website.label=Corporate website
+object.data_syndication_partner.customer_website.label=Website
 
 #----------------------
 # dataSyndicationAgreement
@@ -1619,7 +1619,7 @@ object.data_syndication_agreement.creation_date.label=Date
 object.data_syndication_agreement.partner.label=Partner
 object.data_syndication_agreement.contact_name.label=Contact
 object.data_syndication_agreement.contact_email.label=E-mail
-object.data_syndication_agreement.name.label=Agreement name
+object.data_syndication_agreement.name.label=Agreement title
 object.data_syndication_agreement.ref_id.label=Ref ID
 object.data_syndication_agreement.start_date.label=Start date
 object.data_syndication_agreement.end_date.label=End date
@@ -1634,8 +1634,8 @@ object.data_syndication_agreement.status.SUSPENDED.label=Suspended
 object.data_syndication_agreement.status.CANCELLED.label=Cancelled
 object.data_syndication_agreement.items.label=Authorized items
 object.data_syndication_agreement.process.label=Process the request
-object.data_syndication_agreement.suspend.confirm=Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
-object.data_syndication_agreement.cancel.confirm=Are you sure you want to cancel this agreement? This action is definitive and couldn\''t be reverted.
+object.data_syndication_agreement.suspend.confirm=Are you sure you want to suspend this agreement? All corresponding data exchanges will also be suspended.
+object.data_syndication_agreement.cancel.confirm=Are you sure you want to cancel this agreement? This action is final and couldn\''t be reverted.
 object.data_syndication_agreement.table.empty=There is no agreement
 
 #----------------------
@@ -1643,14 +1643,14 @@ object.data_syndication_agreement.table.empty=There is no agreement
 #----------------------
 
 object.data_syndication_agreement_link.agreement.label=Agreement
-object.data_syndication_agreement_link.name.label=Relation name
+object.data_syndication_agreement_link.name.label=Relation title
 object.data_syndication_agreement_link.description.label=Description
 object.data_syndication_agreement_link.data_type.label=Data type
 object.data_syndication_agreement_link.object.label=Object
 object.data_syndication_agreement_link.items.label=Synchronized items
 object.data_syndication_agreement_link.status.label=Status
 object.data_syndication_agreement_link.process.label=Process the request
-object.data_syndication_agreement_link.cancel.confirm=Are you sure you want to cancel this agreement relation? This action is definitive and couldn\''t be reverted.
+object.data_syndication_agreement_link.cancel.confirm=Are you sure you want to cancel this agreement relation? This action is final and couldn\''t be reverted.
 object.data_syndication_agreement_link.table.empty=There is no agreement relation
 
 ########################
@@ -2468,13 +2468,13 @@ core.portfolio_entry_status_reporting.event.delete.successful=The event has been
 # portfolio entry: data syndication
 #----------------------
 
-core.portfolio_entry_data_syndication.index.no_link_no_master=There is no master agreements registered for this BizDock instance. \
-Please follow this <a href="{0}">link</a>to create a new agreement (specific permissions are required).
+core.portfolio_entry_data_syndication.index.no_link_no_master=There is no registered agreement \
+<a href="{0}">Create a new agreement</a> (Admin permissions required).
 core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" is currently not shared with another BizDock instance. Simply select a partner to request a new relation.
-core.portfolio_entry_data_syndication.index.with_link.slave.title=Consume data from
-core.portfolio_entry_data_syndication.index.with_link.slave.no_data="{0}" is not provisioned by another BizDock instance.
-core.portfolio_entry_data_syndication.index.with_link.master.title=Provide data to
-core.portfolio_entry_data_syndication.index.with_link.master.no_data="{0}" does not provide data to another BizDock instance.
+core.portfolio_entry_data_syndication.index.with_link.slave.title=Data from
+core.portfolio_entry_data_syndication.index.with_link.slave.no_data=No received data.
+core.portfolio_entry_data_syndication.index.with_link.master.title=Data to
+core.portfolio_entry_data_syndication.index.with_link.master.no_data=No pushed data.
 
 core.portfolio_entry_data_syndication.link.view.title=Details
 core.portfolio_entry_data_syndication.link.admin.title=Administration
@@ -2484,7 +2484,7 @@ core.portfolio_entry_data_syndication.link.no_action.label=No available action
 
 core.portfolio_entry_data_syndication.link.cancel.success=The relation has been successfully cancelled.
 
-core.portfolio_entry_data_syndication.link.synchronize.success=The data have been pushed in the partner instance.
+core.portfolio_entry_data_syndication.link.synchronize.success=The data have been pushed to the partner.
 
 core.portfolio_entry_data_syndication.link.submit.title=Submit a relation request
 core.portfolio_entry_data_syndication.link.submit.agreement.title=Details of the agreement
@@ -3089,42 +3089,41 @@ admin.api_manager.apibrowser.simulator.application.select.label=Tested applicati
 #data syndication
 admin.data_syndication.communication_error=A communication error with the server has occurred. Please contact your administrator for more information.
 
-admin.data_syndication.master_agreements.header=A master agreement is a contract with one of your partners in order to share BizDock data with him. \
-By creating a new agreement, no data are directly shared, you need to specifically define them just after.
+admin.data_syndication.master_agreements.header=A master agreement is a contract with one of your partners in order to push BizDock data to him.
 admin.data_syndication.master_agreements.partner_contract=Partner contracts
 
-admin.data_syndication.consumer_agreements.header=A consumer agreement is a contract with one of your partners in order to load his BizDock data in your instance.
+admin.data_syndication.consumer_agreements.header=A consumer agreement is a contract with one of your partners in order to receive BizDock data from him.
 admin.data_syndication.consumer_agreements.partner_contract=Partner contracts
 
 admin.data_syndication.view_agreement.details=Details
 admin.data_syndication.view_agreement.links=Relations
 
-admin.data_syndication.search_partner.title=Search for a partner into the BizDock catalog
+admin.data_syndication.search_partner.title=Search for a partner
 admin.data_syndication.search_partner.error=Please enter a partner name
 admin.data_syndication.search_partner.keywords.placeholder=Partner name
 admin.data_syndication.search_partner_result.title=Search results
 admin.data_syndication.search_partner_result.header=Please click on the wished partner in order to submit an agreement request.
-admin.data_syndication.search_partner_no_result.header=The partner you try to find has currently no BizDock instance. You can invite him to create a new free BizDock instance, the agreement will be automatically created.
+admin.data_syndication.search_partner_no_result.header=The partner you try to find was not found. You can invite him to create a new free BizDock instance.
 
 admin.data_syndication.submit_agreement.title=Submit a master agreement request
 admin.data_syndication.submit_agreement.success=The agreement request has been submitted. The partner should now validate it.
 
 admin.data_syndication.submit_agreement.no_slave.success=The invitation has been submitted. The partner should now validate it.
 
-admin.data_syndication.process_agreement.title=Process a consumer agreement request
+admin.data_syndication.process_agreement.title=Process an agreement request
 admin.data_syndication.process_agreement.already=The agreement request has been already processed.
-admin.data_syndication.process_agreement.accept.success=The consumer agreement request has been successfully approved.
-admin.data_syndication.process_agreement.reject.success=The consumer agreement request has been successfully rejected.
+admin.data_syndication.process_agreement.accept.success=The agreement request has been successfully approved.
+admin.data_syndication.process_agreement.reject.success=The agreement request has been successfully rejected.
 
 admin.data_syndication.suspend_agreement.success=The agreement has been successfully suspended.
 admin.data_syndication.restart_agreement.success=The agreement has been successfully restarted.
 admin.data_syndication.cancel_agreement.success=The agreement has been successfully cancelled.
 
-admin.data_syndication.process_agreement_link.title=Process a consumer agreement relation
+admin.data_syndication.process_agreement_link.title=Process a agreement relation
 admin.data_syndication.process_agreement_link.already=The agreement relation has been already processed.
 admin.data_syndication.process_agreement_link.pe.accept.new.title=Approve with a new initiative
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=New initiative with syndication
-admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=A new initiative has been assigned to you and is syndicated with a partner initiative.
+admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=A new initiative has been assigned to you.
 admin.data_syndication.process_agreement_link.pe.accept.new.success=The agreement relation has been successfully approved with a new initiative.
 admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approve with an existing initiative
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=An initiative has been syndicated

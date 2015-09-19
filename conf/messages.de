@@ -152,7 +152,7 @@ button.reset_to_default=Zurücksetzen auf Voreinstellungen
 button.save=Speichern
 button.search=Suche
 button.send=Senden
-button.share=de: Share
+button.share=Freigeben
 button.signin=Anmelden
 button.start=Start
 button.stop=Stop
@@ -308,7 +308,7 @@ custom_attribute.type.URL.label=URL
 # Notification
 #----------------------
 
-notification.sending_system.internal=de: BizDock notifications
+notification.sending_system.internal=BizDock Mitteilungen
 notification.sending_system.email=E-Mail
 
 ########################
@@ -366,7 +366,7 @@ tour.top_menu_bar.step3.content=Auf der Roadmap sehen Sie alle aktiven Initiativ
 tour.top_menu_bar.step4.title=Cockpit
 tour.top_menu_bar.step4.content=Im Cockpit finden Sie alle Informationen die Sie betreffen, zum Beispiel ihre Initiativen oder ihre Mitarbeiter.
 tour.top_menu_bar.step14.title=Architektur
-tour.top_menu_bar.step14.content=de: The architecture module allows you to manage application blocks related to build tools or versioning systems.
+tour.top_menu_bar.step14.content=Das Architektur Modul erlaubt Ihnen die Applicationsblöcke in einer Baumstrukture abzubilden.
 tour.top_menu_bar.step5.title=Neu
 tour.top_menu_bar.step5.content=Unter Neu legen Sie neue Initiativen und andere Objekte an, je nach ihren Zugriffsrechten.
 tour.top_menu_bar.step6.title=Unternehmensführung
@@ -496,10 +496,10 @@ kpi.portfolio_entry_progress.main.name=Fortschritt
 kpi.portfolio_entry_progress.additional1.name=Projektierte Tage
 kpi.portfolio_entry_progress.additional2.name=Verbrauchte Tage
 
-kpi.release_burndown.main.name=de: Remaining effort
-kpi.release_burndown.additional1.name=de: Effort made
-kpi.release_burndown.additional2.name=de: Estimation
-kpi.release_burndown.static_trend_line.name=de: Theoretical chart
+kpi.release_burndown.main.name=Restaufwand
+kpi.release_burndown.additional1.name=Ausgeführt
+kpi.release_burndown.additional2.name=Schätzung
+kpi.release_burndown.static_trend_line.name=Theoritischer Restaufwand
 
 #----------------------
 # standard reports
@@ -595,18 +595,18 @@ permission.timesheet_entry_permission.description=Eigenes Timesheet führen.
 permission.timesheet_approval_all_permission.description=Genehmigen und ablehnen aller Timesheet.
 permission.timesheet_approval_as_manager_permission.description=Timesheet der Untergebenen genehmigen und ablehnen.
 permission.timesheet_lock_all_permission.description=Blockieren und Freischalten aller Timesheet.
-permission.admin.system_owner.description=Instanzinformationen und Lizenzverwaltung (inkl. deren Zukauf)
+permission.admin.system_owner.description=Instanzinformationen und Lizenzverwaltung (inkl. deren Zukauf).
 permission.release_view_all_permission.description=Daten sämtliche Release einsehen.
 permission.release_view_as_manager_permission.description=Verantwortlicher kann Daten seiner Release einsehen.
 permission.release_edit_all_permission.description=Daten aller Release ändern.
 permission.release_edit_as_manager_permission.description=Verantwortlicher kann alle Daten seiner Release ändern.
-permission.api_manager_permission.description=API Schlüssel und Zugriff konfigurieren
-permission.api_tester_permission.description=Zugriff auf API Dokumentation und Test-Interface
-permission.roadmap_simulator_permission.description=Simulation der Kapazitäten-Scenario in der Roadmap
-permission.admin_custom_attribute_permission.description=Zusatzfelder konfigurieren
+permission.api_manager_permission.description=API Schlüssel und Zugriff konfigurieren.
+permission.api_tester_permission.description=Zugriff auf API Dokumentation und Test-Interface.
+permission.roadmap_simulator_permission.description=Simulation der Kapazitäten-Scenario in der Roadmap.
+permission.admin_custom_attribute_permission.description=Zusatzfelder konfigurieren.
 permission.architecture_permission.description=Um die Architektur-Modul verwenden (DevDock).
 permission.application_block_edit_all_permission.description=Um die Applikationsblöcke zu verwalten (DevDock).
-permission.partner_syndication_permission.description=de: Permission which allows a user to manage the data syndication with partners.
+permission.partner_syndication_permission.description=BizDock Partner verwalten.
 
 #----------------------
 # preferences
@@ -653,8 +653,8 @@ preference.smtp_user_preference.name=Benutzername
 preference.smtp_user_preference.description=Der SMTP-Server-Benutzernamen
 preference.smtp_password_preference.name=Passwort
 preference.smtp_password_preference.description=Der SMTP-Server-Passwort
-preference.notification_sending_system_preference.name=de: Notifications sending system
-preference.notification_sending_system_preference.description=de: The system used to send the notifications. It could be either by BizDock notifications or by email.
+preference.notification_sending_system_preference.name=System Mitteilungen
+preference.notification_sending_system_preference.description=Interne BizDock Mitteilung order via Email
 
 #----------------------
 # authentication
@@ -673,7 +673,7 @@ licenses_management.cannot_create_user=Neuer Benutzer kann nicht angelegt werden
 # data syndication
 #----------------------
 
-data_syndication.submit_agreement.notification.title=Partner agreement request to validate
+data_syndication.submit_agreement.notification.title= Partner agreement request to validate
 data_syndication.submit_agreement.notification.message=A new partner agreement request is pending. Please click <a href="{0}">here</a> to consult this request and process the decision.
 data_syndication.accept_agreement.notification.title=Partner agreement request accepted
 data_syndication.accept_agreement.notification.message=A submitted agreement request has been accepted by your partner. You can consult the agreement details by clicking <a href="{0}">here</a>.
@@ -696,17 +696,17 @@ data_syndication.cancel_agreement_link.notification.message=An agreement relatio
 data_syndication.delete_agreement_link.notification.title=Partner relation deleted
 data_syndication.delete_agreement_link.notification.message=The agreement relation {0} has been deleted because you or your partner has deleted the corresponding resource.
 
-data_syndication.post_data.error.E1001=de: Impossible the reach the partner instance.
-data_syndication.post_data.error.E1002=de: Impossible to get the corresponding partner object (where to post the data).
-data_syndication.post_data.error.E1003=de: The master or the partner object is not existing but it was impossible to delete the agreement relation.
-data_syndication.post_data.error.E1004=de: Impossible to post the syndicated data in the partner instance.
-data_syndication.post_data.error.E2001=de: The data type is currently not managed by BizDock.
-data_syndication.post_data.error.E2002=de: The master object is not existing, the agreement relation has been deleted.
-data_syndication.post_data.error.E2003=de: The partner object is not existing, the agreement relation has been deleted.
-data_syndication.post_data.error.E2004=de: The master or the partner object is not active, the synchronization is not done.
+data_syndication.post_data.error.E1001=Partner Instanz nicht erreichbar.
+data_syndication.post_data.error.E1002=Zugeordnetes Partner Objekt nicht gefunden.
+data_syndication.post_data.error.E1003=Master oder Partner Objekt existiert nicht und Verknüpfung könnte nicht gelöscht werden.
+data_syndication.post_data.error.E1004=Daten konnten nicht in die Partner Instanz geschrieben werden
+data_syndication.post_data.error.E2001=Dieser Datentyp kann nicht ausgetauscht werden.
+data_syndication.post_data.error.E2002=Master Objekt existiert nicht, Partner Vereinbarung wurde gelöscht.
+data_syndication.post_data.error.E2003=Partner Objekt existiert nicht, Partner Vereinbarung wurde gelöscht.
+data_syndication.post_data.error.E2004=Partner oder Master Objekt nicht aktiv, Datenaustausch nicht möglich.
 
-data_syndication.display_date.no_table=de: The data can be only obtained in Excel.
-data_syndication.display_date.export_as_excel.request.success=de: Your request to export the data as Excel has been correctly submitted. You will be notified when the file will be ready.
+data_syndication.display_date.no_table=Nur als Excel Download verfügbar.
+data_syndication.display_date.export_as_excel.request.success=Der Export wurde erfolgreich in Ihre persönliche Ablage gespeichert.
 
 ########################
 # Objects
@@ -993,7 +993,7 @@ object.timesheet_entry.timesheet_activity.label=Aktivität
 #----------------------
 
 object.timesheet_log.log_date.label=Datum
-object.timesheet_log.hours.label=de: Hours
+object.timesheet_log.hours.label=Stunden
 object.timesheet_log.table.empty=Keine Einträge
 
 #----------------------
@@ -1337,8 +1337,8 @@ object.requirement.severity.label=Gewichtung
 object.requirement.author.label=Autor
 object.requirement.story_points.label=Story points
 object.requirement.initial_estimation.label=Schätzung
-object.requirement.effort.label=de: Effort made
-object.requirement.remaining_effort.label=de: Remaining effort
+object.requirement.effort.label=Ausgeführt
+object.requirement.remaining_effort.label=Restaufwand
 object.requirement.is_scoped.label=Akzeptiert
 object.requirement.iteration.label=Iteration
 object.requirement.release.label=Release
@@ -1542,7 +1542,7 @@ object.kpi_value_definition.render_type.PATTERN.label=Formatierte Zahl
 object.kpi_value_definition.render_type.LABEL.label=Text (Farb)
 object.kpi_value_definition.render_pattern.label=Formatierung
 object.kpi_value_definition.render_pattern.invalid=Formatierung muss eingegeben werden wenn Sie formatiert Zahl gewählt haben.
-object.kpi_value_definition.is_trend_displayed.label=de: Displayed in trend
+object.kpi_value_definition.is_trend_displayed.label=Anzeige in Trend
 
 #----------------------
 # kpiColorRule
@@ -1618,10 +1618,10 @@ object.data_syndication_agreement_item.models.pmo.PortfolioEntry.TIMESHEET.label
 # dataSyndicationPartner
 #----------------------
 
-object.data_syndication_partner.customer_logo.label=de: Logo
+object.data_syndication_partner.customer_logo.label=Logo
 object.data_syndication_partner.customer_name.label=Name
 object.data_syndication_partner.customer_description.label=Beschreibung
-object.data_syndication_partner.customer_website.label=de: Corporate website
+object.data_syndication_partner.customer_website.label=Website
 
 #----------------------
 # dataSyndicationAgreement
@@ -1631,7 +1631,7 @@ object.data_syndication_agreement.creation_date.label=Datum
 object.data_syndication_agreement.partner.label=Partner
 object.data_syndication_agreement.contact_name.label=Kontakt
 object.data_syndication_agreement.contact_email.label=E-Mail
-object.data_syndication_agreement.name.label=de: Agreement name
+object.data_syndication_agreement.name.label=Titel der Vereinbarung
 object.data_syndication_agreement.ref_id.label=ID
 object.data_syndication_agreement.start_date.label=Begin Zeitraum
 object.data_syndication_agreement.end_date.label=Ende Zeitraum
@@ -1644,25 +1644,25 @@ object.data_syndication_agreement.status.REJECTED.label=Abgelehnt
 object.data_syndication_agreement.status.FINISHED.label=Abgeschlossen
 object.data_syndication_agreement.status.SUSPENDED.label=Suspendiert
 object.data_syndication_agreement.status.CANCELLED.label=Abgesagt
-object.data_syndication_agreement.items.label=de: Authorized items
-object.data_syndication_agreement.process.label=de: Process the request
-object.data_syndication_agreement.suspend.confirm=de: Are you sure you want to suspend this agreement? All corresponding synchronization will be also suspended.
-object.data_syndication_agreement.cancel.confirm=de: Are you sure you want to cancel this agreement? This action is definitive and couldn\''t be reverted.
+object.data_syndication_agreement.items.label=Objekte die ausgetauscht werden können
+object.data_syndication_agreement.process.label=Bearbeiten
+object.data_syndication_agreement.suspend.confirm=Vereinbarung aussetzen? Der Daten austausch wird unterbrochen.
+object.data_syndication_agreement.cancel.confirm=Vereinbarung löschen? Kann nicht rückgängig gemacht werden.
 object.data_syndication_agreement.table.empty=Kein Eintrag
 
 #----------------------
 # dataSyndicationAgreementLink
 #----------------------
 
-object.data_syndication_agreement_link.agreement.label=de: Agreement
-object.data_syndication_agreement_link.name.label=de: Relation name
+object.data_syndication_agreement_link.agreement.label=Vereinbarung
+object.data_syndication_agreement_link.name.label=Titel der Verbindung
 object.data_syndication_agreement_link.description.label=Beschreibung
-object.data_syndication_agreement_link.data_type.label=de: Data type
-object.data_syndication_agreement_link.object.label=de: Object
-object.data_syndication_agreement_link.items.label=de: Synchronized items
+object.data_syndication_agreement_link.data_type.label=Daten Typ
+object.data_syndication_agreement_link.object.label=Objekt
+object.data_syndication_agreement_link.items.label=Objekte die ausgetauscht werden
 object.data_syndication_agreement_link.status.label=Status
-object.data_syndication_agreement_link.process.label=de: Process the request
-object.data_syndication_agreement_link.cancel.confirm=de: Are you sure you want to cancel this agreement relation? This action is definitive and couldn\''t be reverted.
+object.data_syndication_agreement_link.process.label=Bearbeiten
+object.data_syndication_agreement_link.cancel.confirm=Verbindung löschen? Kann nicht rückgängig gemacht werden.
 object.data_syndication_agreement_link.table.empty=Kein Eintrag
 
 ########################
@@ -2115,7 +2115,7 @@ core.portfolio_entry.sidebar.status_reporting.events.label=Ereignisse
 core.portfolio_entry.sidebar.status_reporting.timesheets.label=Zeiterfassung
 core.portfolio_entry.sidebar.integration.label=Integration
 core.portfolio_entry.sidebar.integration.plugins.label=Plugins
-core.portfolio_entry.sidebar.integration.data_syndication.label=de: Partner syndication
+core.portfolio_entry.sidebar.integration.data_syndication.label=Partner Vereinbarungen
 core.portfolio_entry.breadcrump.manage=Verwalten
 core.portfolio_entry.breadcrump.view=Anzeigen
 core.portfolio_entry.breadcrump.new=Neu
@@ -2480,27 +2480,27 @@ core.portfolio_entry_status_reporting.event.delete.successful=Der Ereignis wurde
 # portfolio entry: data syndication
 #----------------------
 
-core.portfolio_entry_data_syndication.index.no_link_no_master=de: There is no master agreements registered for this BizDock instance. \
-Please follow this <a href="{0}">link</a>to create a new agreement (specific permissions are required).
-core.portfolio_entry_data_syndication.index.no_link_with_master=de: "{0}" is currently not shared with another BizDock instance. Simply select a partner to request a new relation.
-core.portfolio_entry_data_syndication.index.with_link.slave.title=de: Consume data from
-core.portfolio_entry_data_syndication.index.with_link.slave.no_data=de: "{0}" is not provisioned by another BizDock instance.
-core.portfolio_entry_data_syndication.index.with_link.master.title=de: Provide data to
-core.portfolio_entry_data_syndication.index.with_link.master.no_data=de: "{0}" does not provide data to another BizDock instance.
+core.portfolio_entry_data_syndication.index.no_link_no_master=Keine Partner Vereinbarung. \
+<a href="{0}">Neue Vereinbarung erstellen</a> (Admin Rechte erforderlich).
+core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" ist zur Zeit mit keinem Partner verbunden. Wählen Sie einen Partner für eine Verbindung.
+core.portfolio_entry_data_syndication.index.with_link.slave.title=Daten von
+core.portfolio_entry_data_syndication.index.with_link.slave.no_data=Keine Daten
+core.portfolio_entry_data_syndication.index.with_link.master.title=Daten nach
+core.portfolio_entry_data_syndication.index.with_link.master.no_data=Keine Daten
 
 core.portfolio_entry_data_syndication.link.view.title=Details
 core.portfolio_entry_data_syndication.link.admin.title=Verwalten
-core.portfolio_entry_data_syndication.link.admin.trigger.label=de: Push the data
-core.portfolio_entry_data_syndication.link.admin.cancel.label=de: Cancel the relation
-core.portfolio_entry_data_syndication.link.no_action.label=de: No available action
+core.portfolio_entry_data_syndication.link.admin.trigger.label=Daten senden
+core.portfolio_entry_data_syndication.link.admin.cancel.label=Verbindung löschen
+core.portfolio_entry_data_syndication.link.no_action.label=Keine Funktionen
 
-core.portfolio_entry_data_syndication.link.cancel.success=de: The relation has been successfully cancelled.
+core.portfolio_entry_data_syndication.link.cancel.success=Die Verbindung wurde gelöscht
 
-core.portfolio_entry_data_syndication.link.synchronize.success=de: The data have been pushed in the partner instance.
+core.portfolio_entry_data_syndication.link.synchronize.success=Daten zum Partner gesendet.
 
-core.portfolio_entry_data_syndication.link.submit.title=de: Submit a relation request
-core.portfolio_entry_data_syndication.link.submit.agreement.title=de: Details of the agreement
-core.portfolio_entry_data_syndication.link.submit.success=de: The relation request has been submitted. The partner should now validate it.
+core.portfolio_entry_data_syndication.link.submit.title=Verbindung erstellen
+core.portfolio_entry_data_syndication.link.submit.agreement.title=Details der Vereinbarung
+core.portfolio_entry_data_syndication.link.submit.success=Verbindungsanfrage gesendet. Der Partner muss sie nun bearbeiten.
 
 #----------------------
 # purchase order
@@ -2996,9 +2996,9 @@ admin.integration.breadcrumb=<i class="glyphicons glyphicons-cloud"></i>&nbsp;In
 admin.integration.sidebar.plugins=Plugins
 admin.integration.sidebar.plugins.active_plugins=Active Plugin
 admin.integration.sidebar.plugins.available_plugins=Verfügbare Plugin
-admin.integration.sidebar.data_syndication=de: Partner syndication
-admin.integration.sidebar.data_syndication.master_agreements=de: Master agreements
-admin.integration.sidebar.data_syndication.consumer_agreements=de: Consumer agreements
+admin.integration.sidebar.data_syndication=Partner Vereinbarungen
+admin.integration.sidebar.data_syndication.master_agreements=Master Vereinbarungen
+admin.integration.sidebar.data_syndication.consumer_agreements=Consumer Vereinbarungen
 admin.integration.sidebar.api=API
 admin.integration.sidebar.api.keys=API Schlüssel
 admin.integration.sidebar.api.browser=API Browser
@@ -3097,51 +3097,50 @@ Einige API benötigen spezielle Berechtigungen und können dadurch nicht geteste
 admin.api_manager.apibrowser.simulator.application.select.label=Anwendung getestet
 
 #data syndication
-admin.data_syndication.communication_error=de: A communication error with the server has occurred. Please contact your administrator for more information.
+admin.data_syndication.communication_error=Fehler: Server nicht erreichbar. Bitte aktualisieren Sie die Seite
 
-admin.data_syndication.master_agreements.header=de: A master agreement is a contract with one of your partners in order to share BizDock data with him. \
-By creating a new agreement, no data are directly shared, you need to specifically define them just after.
-admin.data_syndication.master_agreements.partner_contract=de: Partner contracts
+admin.data_syndication.master_agreements.header=Die Master Vereinbarung erlaubt es Daten automatisch an einen BizDock Partner zu senden.
+admin.data_syndication.master_agreements.partner_contract=Partner Vereinbarungen
 
-admin.data_syndication.consumer_agreements.header=de: A consumer agreement is a contract with one of your partners in order to load his BizDock data in your instance.
-admin.data_syndication.consumer_agreements.partner_contract=de: Partner contracts
+admin.data_syndication.consumer_agreements.header=Die Consumer Vereinbarung erlaubt es Daten automatisch von einen BizDock Partner zu erhalten.
+admin.data_syndication.consumer_agreements.partner_contract=Partner Vereinbarungen
 
 admin.data_syndication.view_agreement.details=Details
-admin.data_syndication.view_agreement.links=de: Relations
+admin.data_syndication.view_agreement.links=Verbindungen
 
-admin.data_syndication.search_partner.title=de: Search for a partner into the BizDock catalog
-admin.data_syndication.search_partner.error=de: Please enter a partner
-admin.data_syndication.search_partner.keywords.placeholder=de: Partner name
-admin.data_syndication.search_partner_result.title=de: Search results
-admin.data_syndication.search_partner_result.header=de: Please click on the wished partner in order to submit an agreement request.
-admin.data_syndication.search_partner_no_result.header=de: The partner you try to find has currently no BizDock instance. You can invite him to create a new free BizDock instance, the agreement will be automatically created.
+admin.data_syndication.search_partner.title=Partner in BizDock suchen
+admin.data_syndication.search_partner.error=Bitte Partner eingeben
+admin.data_syndication.search_partner.keywords.placeholder=Partner Name
+admin.data_syndication.search_partner_result.title=Suchresultat
+admin.data_syndication.search_partner_result.header=Bitte Partner eingeben
+admin.data_syndication.search_partner_no_result.header=Partner nicht in BizDock gefunden. Sie können Ihm eine Einladung senden für eine BizDock Instanz.
 
-admin.data_syndication.submit_agreement.title=de: Submit a master agreement request
-admin.data_syndication.submit_agreement.success=de: The agreement request has been submitted. The partner should now validate it.
+admin.data_syndication.submit_agreement.title=Vereinbarung erstellen
+admin.data_syndication.submit_agreement.success=Vereinbarung gesendet. Der Partner muss sie nun bearbeiten.
 
-admin.data_syndication.submit_agreement.no_slave.success=de: The invitation has been submitted. The partner should now validate it.
+admin.data_syndication.submit_agreement.no_slave.success=Einladung gesendet. Der Partner muss sie nun bearbeiten.
 
-admin.data_syndication.process_agreement.title=de: Process a consumer agreement request
-admin.data_syndication.process_agreement.already=de: The agreement request has been already processed.
-admin.data_syndication.process_agreement.accept.success=de: The consumer agreement request has been successfully approved.
-admin.data_syndication.process_agreement.reject.success=de: The consumer agreement request has been successfully rejected.
+admin.data_syndication.process_agreement.title=Vereinbarung bearbeiten
+admin.data_syndication.process_agreement.already=Vereinbarung bereits bearbeitet.
+admin.data_syndication.process_agreement.accept.success=Vereinbarung akzeptiert.
+admin.data_syndication.process_agreement.reject.success=Vereinbarung abgelehnt.
 
-admin.data_syndication.suspend_agreement.success=de: The agreement has been successfully suspended.
-admin.data_syndication.restart_agreement.success=de: The agreement has been successfully restarted.
-admin.data_syndication.cancel_agreement.success=de: The agreement has been successfully cancelled.
+admin.data_syndication.suspend_agreement.success=Vereinbarung ausgesetzt.
+admin.data_syndication.restart_agreement.success=Vereinbarung re-aktiviert.
+admin.data_syndication.cancel_agreement.success=Vereinbarung gelöscht.
 
-admin.data_syndication.process_agreement_link.title=de: Process a consumer agreement relation
-admin.data_syndication.process_agreement_link.already=de: The agreement relation has been already processed.
-admin.data_syndication.process_agreement_link.pe.accept.new.title=de: Approve with a new initiative
-admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=de: New initiative with syndication
-admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=de: A new initiative has been assigned to you and is syndicated with a partner initiative.
-admin.data_syndication.process_agreement_link.pe.accept.new.success=de: The agreement relation has been successfully approved with a new initiative.
-admin.data_syndication.process_agreement_link.pe.accept.existing.title=de: Approve with an existing initiative
-admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=de: An initiative has been syndicated
-admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=de: One of your initiatives has been syndicated with a partner initiative.
-admin.data_syndication.process_agreement_link.pe.accept.existing.success=de: The agreement relation has been successfully approved with an existing initiative.
-admin.data_syndication.process_agreement_link.reject.title=de: Reject the relation
-admin.data_syndication.process_agreement_link.reject.success=de: The agreement relation has been successfully rejected.
+admin.data_syndication.process_agreement_link.title=Verbindung bearbeiten
+admin.data_syndication.process_agreement_link.already=Verbindung bereits bearbeitet.
+admin.data_syndication.process_agreement_link.pe.accept.new.title=Akzeptieren mit neuer Initiative
+admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=Neue Initiative mit Verbindung
+admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=Eine neue Initiave wurde Ihnen zugeteilt.
+admin.data_syndication.process_agreement_link.pe.accept.new.success=Verbindung erstellt.
+admin.data_syndication.process_agreement_link.pe.accept.existing.title=Akzeptieren mit bestehender Initiative
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=Verbindung mit Initiative erstellt
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=Eine Initiative wurde mit eine Partner Initiative verbunden.
+admin.data_syndication.process_agreement_link.pe.accept.existing.success=Verbindung erstellt.
+admin.data_syndication.process_agreement_link.reject.title=Verbindung ablehnen
+admin.data_syndication.process_agreement_link.reject.success=Verbindung abgelehnt.
 
 #----------------------
 # KPI manager
