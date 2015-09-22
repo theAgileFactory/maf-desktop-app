@@ -168,7 +168,7 @@ public class DataSyndicationController extends Controller {
             Form<SearchPartnerForm> boundForm = searchPartnerFormTemplate.bindFromRequest();
 
             if (boundForm.hasErrors()) {
-                return ok(views.html.admin.datasyndication.search_partner.render(searchPartnerFormTemplate));
+                return ok(views.html.admin.datasyndication.search_partner.render(boundForm));
             }
 
             SearchPartnerForm searchPartnerForm = boundForm.get();
