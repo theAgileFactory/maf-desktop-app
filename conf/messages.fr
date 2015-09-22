@@ -2490,7 +2490,7 @@ core.portfolio_entry_data_syndication.index.no_link_with_master="{0}" n''est act
 core.portfolio_entry_data_syndication.index.with_link.slave.title=Données provenant de
 core.portfolio_entry_data_syndication.index.with_link.slave.no_data=Aucune donnée reçue.
 core.portfolio_entry_data_syndication.index.with_link.master.title=Données fournies à
-core.portfolio_entry_data_syndication.index.with_link.master.no_data=Aucune donnée fournise.
+core.portfolio_entry_data_syndication.index.with_link.master.no_data=Aucune donnée fournie.
 
 core.portfolio_entry_data_syndication.link.view.title=Détails
 core.portfolio_entry_data_syndication.link.admin.title=Administration
