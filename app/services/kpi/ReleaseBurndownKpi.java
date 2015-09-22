@@ -116,7 +116,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
      *            the number of hours
      */
     private BigDecimal convertInDays(BigDecimal hours) {
-        return hours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
+        return hours.setScale(2, BigDecimal.ROUND_HALF_UP).divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
     }
 
     @Override
