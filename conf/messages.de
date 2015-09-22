@@ -3137,7 +3137,7 @@ admin.data_syndication.process_agreement_link.pe.accept.new.notification.message
 admin.data_syndication.process_agreement_link.pe.accept.new.success=Verbindung erstellt.
 admin.data_syndication.process_agreement_link.pe.accept.existing.title=Akzeptieren mit bestehender Initiative
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=Verbindung mit Initiative erstellt
-admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=Eine Initiative wurde mit eine Partner Initiative verbunden.
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message="{0}" wurde mit Partner Initiative "{1}" verbunden.
 admin.data_syndication.process_agreement_link.pe.accept.existing.success=Verbindung erstellt.
 admin.data_syndication.process_agreement_link.reject.title=Verbindung ablehnen
 admin.data_syndication.process_agreement_link.reject.success=Verbindung abgelehnt.

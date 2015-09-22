@@ -3127,7 +3127,7 @@ admin.data_syndication.process_agreement_link.pe.accept.new.notification.message
 admin.data_syndication.process_agreement_link.pe.accept.new.success=The agreement relation has been successfully approved with a new initiative.
 admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approve with an existing initiative
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=An initiative has been syndicated
-admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message=One of your initiatives has been syndicated with a partner initiative.
+admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message="{0}" has been syndicated with the partner initiative "{1}".
 admin.data_syndication.process_agreement_link.pe.accept.existing.success=The agreement relation has been successfully approved with an existing initiative.
 admin.data_syndication.process_agreement_link.reject.title=Reject the relation
 admin.data_syndication.process_agreement_link.reject.success=The agreement relation has been successfully rejected.

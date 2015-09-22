@@ -867,7 +867,7 @@ public class DataSyndicationController extends Controller {
             ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                     controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
                     "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title",
-                    "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message");
+                    "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message", portfolioEntry.getName(), agreementLink.name);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.process_agreement_link.pe.accept.existing.success"));
 
