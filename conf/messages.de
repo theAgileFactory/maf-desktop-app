@@ -72,6 +72,12 @@ month.november=November
 month.december=Dezember
 
 #----------------------
+# units
+#----------------------
+
+unit.hours=Stunden
+
+#----------------------
 # form: messages, constraints and errors
 #----------------------
 

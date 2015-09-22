@@ -38,7 +38,7 @@
 
     <div class="row">
     
-        <div class="col-md-4">
+        <div class="col-md-6">
         
             <div class="panel panel-default">
                 
@@ -116,15 +116,15 @@
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.requirement.initial_estimation.label")</th>
-                                <td>@display_number(requirement.initialEstimation)</td>
+                                <td>@display_hours(requirement.initialEstimation)</td>
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.requirement.effort.label")</th>
-                                <td>@display_number(requirement.effort)</td>
+                                <td>@display_hours(requirement.effort)</td>
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.requirement.remaining_effort.label")</th>
-                                <td>@display_number(requirement.remainingEffort)</td>
+                                <td>@display_hours(requirement.remainingEffort)</td>
                             </tr>
                         </tbody>
                     </table>
@@ -137,7 +137,7 @@
         
         </div>
         
-        <div class="col-md-8">
+        <div class="col-md-6">
         
             <div class="panel panel-default">
                 

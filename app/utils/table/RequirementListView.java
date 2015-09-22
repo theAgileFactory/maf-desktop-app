@@ -25,6 +25,7 @@ import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
+import framework.utils.formats.HoursFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
@@ -202,13 +203,13 @@ public class RequirementListView {
                 setJavaColumnFormatter("storyPoints", new NumberFormatter<RequirementListView>());
 
                 addColumn("initialEstimation", "initialEstimation", "object.requirement.initial_estimation.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("initialEstimation", new NumberFormatter<RequirementListView>());
+                setJavaColumnFormatter("initialEstimation", new HoursFormatter<RequirementListView>());
 
                 addColumn("effort", "effort", "object.requirement.effort.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("effort", new NumberFormatter<RequirementListView>());
+                setJavaColumnFormatter("effort", new HoursFormatter<RequirementListView>());
 
                 addColumn("remainingEffort", "remainingEffort", "object.requirement.remaining_effort.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("remainingEffort", new NumberFormatter<RequirementListView>());
+                setJavaColumnFormatter("remainingEffort", new HoursFormatter<RequirementListView>());
 
                 addCustomAttributeColumns(Requirement.class);
 
