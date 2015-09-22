@@ -98,7 +98,7 @@
                         <a class="btn btn-success @startDisabled" href="@controllers.admin.routes.PluginManagerController.startPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-play"></i>&nbsp;@parts.Msg("button.start")</a>
                         <a class="btn btn-danger @stopDisabled" href="@controllers.admin.routes.PluginManagerController.stopPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-stop"></i>&nbsp;@parts.Msg("button.stop")</a>
                     </p>
-                    @if(pluginInfo.getConfigurator().getActionDescriptors()!=null){
+                    @if(pluginInfo.getConfigurator()!=null && pluginInfo.getConfigurator().getActionDescriptors()!=null){
                     <hr/>
                     <p class="text-center">
                         <small>@parts.Msg("admin.plugin_manager.configuration.view.panel.admin.action.title")</small><br/>
