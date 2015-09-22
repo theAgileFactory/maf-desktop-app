@@ -109,7 +109,7 @@ public class BizdockApiClientImpl implements IBizdockApiClient {
         }
 
         // construct the request
-        WSRequest request = WS.url(url).setHeader("Content-Type", "application/octet-stream");
+        WSRequest request = WS.url(url).setHeader("Content-Type", "application/json");
 
         request.setHeader(IApiConstants.APPLICATION_KEY_HEADER, applicationKey);
         request.setHeader(IApiConstants.SIGNATURE_HEADER, new String(signatureAsByte));
