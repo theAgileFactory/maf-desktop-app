@@ -3112,7 +3112,6 @@ admin.data_syndication.search_partner.title=Partner in BizDock suchen
 admin.data_syndication.search_partner.error=Bitte Partner eingeben
 admin.data_syndication.search_partner.keywords.placeholder=Partner Name
 admin.data_syndication.search_partner_result.title=Suchresultat
-admin.data_syndication.search_partner_result.header=Bitte Partner eingeben
 admin.data_syndication.search_partner_no_result.header=Partner nicht in BizDock gefunden. Sie können Ihm eine Einladung senden für eine BizDock Instanz.
 
 admin.data_syndication.submit_agreement.title=Vereinbarung erstellen

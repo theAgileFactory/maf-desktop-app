@@ -3102,7 +3102,6 @@ admin.data_syndication.search_partner.title=Search for a partner
 admin.data_syndication.search_partner.error=Please enter a partner name
 admin.data_syndication.search_partner.keywords.placeholder=Partner name
 admin.data_syndication.search_partner_result.title=Search results
-admin.data_syndication.search_partner_result.header=Please click on the wished partner in order to submit an agreement request.
 admin.data_syndication.search_partner_no_result.header=The partner you try to find was not found. You can invite him to create a new free BizDock instance.
 
 admin.data_syndication.submit_agreement.title=Submit a master agreement request

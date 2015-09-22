@@ -3115,7 +3115,6 @@ admin.data_syndication.search_partner.title=Rechercher un partenaire
 admin.data_syndication.search_partner.error=Veuillez saisir un partenaire
 admin.data_syndication.search_partner.keywords.placeholder=Nom du partenaire
 admin.data_syndication.search_partner_result.title=Résultats de la recherche
-admin.data_syndication.search_partner_result.header=Veuillez cliquer sur le partenaire souhaité afin de lui soumettre une demande d''agrément.
 admin.data_syndication.search_partner_no_result.header=Le partenaire que vous tentez de trouver n''a pas été trouvé. Vous avez la possibilité de l''inviter pour qu''il se crée une instance BizDock gratuite, l''agrément sera automatiquement créé.
 
 admin.data_syndication.submit_agreement.title=Soumettre une requête d''agrément de provisionnement
