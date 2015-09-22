@@ -136,7 +136,8 @@ public class ReportingController extends Controller {
 
             List<Reporting> reports;
             try {
-                reports = ReportingDynamicHelper.getReportsViewAllowedAsQuery(Expr.eq("reportingCategory.id", categoryId), null, getSecurityService()).findList();
+                reports = ReportingDynamicHelper.getReportsViewAllowedAsQuery(
+                        Expr.and(Expr.eq("isActive", true), Expr.eq("reportingCategory.id", categoryId)), null, getSecurityService()).findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log);
             }
@@ -173,10 +174,17 @@ public class ReportingController extends Controller {
         // get the report
         Reporting report = ReportingDao.getReportingById(id);
 
-        // load the form
-        Form<ReportingParamsFormData> form = formTemplate.fill(new ReportingParamsFormData(report, getI18nMessagesPlugin().getCurrentLanguage().getCode()));
+        if (report.isActive) {
 
-        return ok(views.html.core.reporting.parametrize.render(report, form));
+            // load the form
+            Form<ReportingParamsFormData> form = formTemplate
+                    .fill(new ReportingParamsFormData(report, getI18nMessagesPlugin().getCurrentLanguage().getCode()));
+
+            return ok(views.html.core.reporting.parametrize.render(report, form));
+
+        } else {
+            return ok(views.html.error.access_forbidden.render(""));
+        }
     }
 
     /**
@@ -193,32 +201,39 @@ public class ReportingController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         Reporting report = ReportingDao.getReportingById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, ReportingParamsFormData.class, report.template)) {
-            return ok(views.html.core.reporting.parametrize.render(report, boundForm));
-        }
+        if (report.isActive) {
 
-        ReportingParamsFormData reportingParamsFormData = boundForm.get();
+            if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, ReportingParamsFormData.class, report.template)) {
+                return ok(views.html.core.reporting.parametrize.render(report, boundForm));
+            }
 
-        // construct the report parameters
-        Map<String, Object> reportParameters = new HashMap<String, Object>();
-        Map<String, String> data = boundForm.data();
-        if (data != null) {
-            List<ICustomAttributeValue> customAttributeValues = null;
-            customAttributeValues = CustomAttributeDefinition.getOrderedCustomAttributeValues(ReportingParamsFormData.class, report.template, null);
-            if (customAttributeValues != null) {
-                for (ICustomAttributeValue customAttributeValue : customAttributeValues) {
-                    String fieldName = CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid);
-                    customAttributeValue.parse(data.get(fieldName));
-                    reportParameters.put(customAttributeValue.getDefinition().uuid, customAttributeValue.getValueAsObject());
+            ReportingParamsFormData reportingParamsFormData = boundForm.get();
+
+            // construct the report parameters
+            Map<String, Object> reportParameters = new HashMap<String, Object>();
+            Map<String, String> data = boundForm.data();
+            if (data != null) {
+                List<ICustomAttributeValue> customAttributeValues = null;
+                customAttributeValues = CustomAttributeDefinition.getOrderedCustomAttributeValues(ReportingParamsFormData.class, report.template, null);
+                if (customAttributeValues != null) {
+                    for (ICustomAttributeValue customAttributeValue : customAttributeValues) {
+                        String fieldName = CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid);
+                        customAttributeValue.parse(data.get(fieldName));
+                        reportParameters.put(customAttributeValue.getDefinition().uuid, customAttributeValue.getValueAsObject());
+                    }
                 }
             }
+
+            getReportingUtils().generate(ctx(), report, reportingParamsFormData.language, Reporting.Format.valueOf(reportingParamsFormData.format),
+                    reportParameters);
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
+
+            return redirect(controllers.core.routes.ReportingController.indexForCategory(report.reportingCategory.id));
+
+        } else {
+            return ok(views.html.error.access_forbidden.render(""));
         }
-
-        getReportingUtils().generate(ctx(), report, reportingParamsFormData.language, Reporting.Format.valueOf(reportingParamsFormData.format), reportParameters);
-
-        Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
-
-        return redirect(controllers.core.routes.ReportingController.indexForCategory(report.reportingCategory.id));
     }
 
     private IReportingUtils getReportingUtils() {
