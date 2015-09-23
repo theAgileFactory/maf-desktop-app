@@ -15,6 +15,7 @@ import models.framework_models.common.TextCustomAttributeValue;
 import play.Configuration;
 import play.Environment;
 import play.Logger.ALogger;
+import play.db.DBApi;
 import play.db.ebean.EbeanConfig;
 import play.inject.ApplicationLifecycle;
 
@@ -39,10 +40,13 @@ public class DatabaseDependencyServiceImpl extends AbstractDatabaseDependencySer
      *            the configuration service
      * @param ebeanConfig
      *            the eban configuration
+     * @param dbApi
+     *            the play database API (this must prevent the database API to
+     *            be closed before this service is stopped)
      */
     @Inject
-    public DatabaseDependencyServiceImpl(ApplicationLifecycle lifecycle, Environment environment, Configuration configuration, EbeanConfig ebeanConfig) {
-        super(lifecycle, environment, configuration, ebeanConfig);
+    public DatabaseDependencyServiceImpl(ApplicationLifecycle lifecycle, Environment environment, Configuration configuration, EbeanConfig ebeanConfig, DBApi dbApi) {
+        super(lifecycle, environment, configuration, ebeanConfig, dbApi);
     }
 
     @Override
