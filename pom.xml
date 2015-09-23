@@ -35,8 +35,8 @@
         <java.target>1.8</java.target>
         <scala.version>2.11</scala.version>
         <!-- Dependencies properties -->
-		<lib.app-framework.version>7.0.1-SNAPSHOT</lib.app-framework.version>
-		<maf.maf-desktop-datamodel.version>7.0.1-SNAPSHOT</maf.maf-desktop-datamodel.version>
+		<lib.app-framework.version>8.0.0</lib.app-framework.version>
+		<maf.maf-desktop-datamodel.version>8.0.0</maf.maf-desktop-datamodel.version>
 		<!--<maf.maf-desktop-patcher.version>1.0.0-SNAPSHOT</maf.maf-desktop-patcher.version>-->
         <!-- Plugin properties -->
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
