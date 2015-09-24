@@ -37,8 +37,6 @@ import play.i18n.Messages;
  */
 public class DataSyndicationAgreementNoSlaveSubmitFormData {
 
-    public String keywords;
-
     @Required
     @Email
     public String partnerEmail;

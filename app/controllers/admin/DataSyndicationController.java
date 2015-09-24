@@ -208,7 +208,7 @@ public class DataSyndicationController extends Controller {
                     return ok(views.html.admin.datasyndication.communication_error.render());
                 }
 
-                return ok(views.html.admin.datasyndication.search_partner_no_result.render(keywords, itemsAsVH, agreementNoSlaveSubmitFormTemplate));
+                return ok(views.html.admin.datasyndication.search_partner_no_result.render(itemsAsVH, agreementNoSlaveSubmitFormTemplate));
             } else {
 
                 List<DataSyndicationPartnerListView> dataSyndicationPartnerRows = new ArrayList<DataSyndicationPartnerListView>();
@@ -347,10 +347,7 @@ public class DataSyndicationController extends Controller {
                     return ok(views.html.admin.datasyndication.communication_error.render());
                 }
 
-                // get the initial keywords
-                String keywords = boundForm.data().get("keywords");
-
-                return ok(views.html.admin.datasyndication.search_partner_no_result.render(keywords, itemsAsVH, boundForm));
+                return ok(views.html.admin.datasyndication.search_partner_no_result.render(itemsAsVH, boundForm));
             }
 
             DataSyndicationAgreementNoSlaveSubmitFormData formData = boundForm.get();
