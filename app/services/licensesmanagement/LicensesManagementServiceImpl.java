@@ -124,6 +124,11 @@ public class LicensesManagementServiceImpl implements ILicensesManagementService
     }
 
     @Override
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    @Override
     public boolean canCreateUser() {
         if (this.isActive) {
             try {

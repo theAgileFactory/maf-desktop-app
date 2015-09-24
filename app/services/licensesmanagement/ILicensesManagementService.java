@@ -31,6 +31,11 @@ public interface ILicensesManagementService extends IInstanceAccessSupervisor {
     String NAME = "licensesManagementService";
 
     /**
+     * Return true if the licenses management is active.
+     */
+    boolean isActive();
+
+    /**
      * Return true if this is possible to create a new user.
      */
     boolean canCreateUser();

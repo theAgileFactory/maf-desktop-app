@@ -16,7 +16,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    keywords: String,
     items: framework.utils.ISelectableValueHolderCollection[Long],
     submitAgreementNoSlaveForm: Form[utils.form.DataSyndicationAgreementNoSlaveSubmitFormData]
 )
@@ -43,15 +42,6 @@
         
         @helper.form(action = controllers.admin.routes.DataSyndicationController.processSubmitAgreementNoSlave()) {
             <fieldset>
-
-                <div class="form-group ">
-                    <label for="startDate" class="control-label">@parts.Msg.asString("object.data_syndication_agreement.partner.label")</label>
-                    <div class="input-group">
-                        @keywords
-                    </div>
-                </div>
-                
-                <input type="hidden" name="keywords" value="@keywords" />
                 
                 @helper.inputText(submitAgreementNoSlaveForm("partnerEmail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.contact_email.label"), 'autofocus -> "autofocus")
                 

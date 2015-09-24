@@ -110,6 +110,9 @@ public interface JobDescriptors {
         @Inject
         private IEchannelService echannelService;
 
+        @Inject
+        private ILicensesManagementService licensesManagementService;
+
         @Override
         public String getId() {
             return "SendNotificationEvents";
@@ -143,44 +146,48 @@ public interface JobDescriptors {
         @Override
         public void trigger() {
 
-            Logger.info("start trigger " + this.getId());
+            if (licensesManagementService.isActive()) {
 
-            try {
+                Logger.info("start trigger " + this.getId());
 
-                List<NotificationEvent> notificationEvents = echannelService.getNotificationEventsToNotify();
-                for (NotificationEvent notificationEvent : notificationEvents) {
+                try {
 
-                    switch (notificationEvent.recipientsDescriptor.type) {
-                    case ACTORS:
-                        for (Long actorId : notificationEvent.recipientsDescriptor.actors) {
-                            ActorDao.sendNotificationWithContent(ActorDao.getActorById(actorId), NotificationCategory.getByCode(Code.INFORMATION),
-                                    notificationEvent.actionLink, notificationEvent.title, notificationEvent.message);
+                    List<NotificationEvent> notificationEvents = echannelService.getNotificationEventsToNotify();
+                    for (NotificationEvent notificationEvent : notificationEvents) {
+
+                        switch (notificationEvent.recipientsDescriptor.type) {
+                        case ACTORS:
+                            for (Long actorId : notificationEvent.recipientsDescriptor.actors) {
+                                ActorDao.sendNotificationWithContent(ActorDao.getActorById(actorId), NotificationCategory.getByCode(Code.INFORMATION),
+                                        notificationEvent.actionLink, notificationEvent.title, notificationEvent.message);
+                            }
+                            break;
+                        case PERMISSIONS:
+                            for (String permission : notificationEvent.recipientsDescriptor.permissions) {
+                                ServiceStaticAccessor.getNotificationManagerPlugin().sendNotificationWithPermission(permission,
+                                        NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.title, notificationEvent.message,
+                                        notificationEvent.actionLink);
+                            }
+                            break;
+                        case PRINCIPALS:
+                            for (String uid : notificationEvent.recipientsDescriptor.principals) {
+                                ActorDao.sendNotificationWithContent(uid, NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.actionLink,
+                                        notificationEvent.title, notificationEvent.message);
+                            }
+                            break;
+                        default:
+                            break;
+
                         }
-                        break;
-                    case PERMISSIONS:
-                        for (String permission : notificationEvent.recipientsDescriptor.permissions) {
-                            ServiceStaticAccessor.getNotificationManagerPlugin().sendNotificationWithPermission(permission,
-                                    NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.title, notificationEvent.message,
-                                    notificationEvent.actionLink);
-                        }
-                        break;
-                    case PRINCIPALS:
-                        for (String uid : notificationEvent.recipientsDescriptor.principals) {
-                            ActorDao.sendNotificationWithContent(uid, NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.actionLink,
-                                    notificationEvent.title, notificationEvent.message);
-                        }
-                        break;
-                    default:
-                        break;
-
                     }
+
+                } catch (Exception e) {
+                    Logger.error(this.getId() + " unexpected error", e);
                 }
 
-            } catch (Exception e) {
-                Logger.error(this.getId() + " unexpected error", e);
-            }
+                Logger.info("end trigger " + this.getId());
 
-            Logger.info("end trigger " + this.getId());
+            }
 
         }
 
@@ -237,22 +244,26 @@ public interface JobDescriptors {
         @Override
         public void trigger() {
 
-            Logger.info("start trigger " + this.getId());
+            if (dataSyndicationService.isActive()) {
 
-            try {
+                Logger.info("start trigger " + this.getId());
 
-                List<DataSyndicationAgreement> agreements = dataSyndicationService.getAgreementsAsSlave();
-                for (DataSyndicationAgreement agreement : agreements) {
-                    if (agreement.status.equals(DataSyndicationAgreement.Status.PENDING_INSTANCE)) {
-                        dataSyndicationService.acceptAgreement(agreement);
+                try {
+
+                    List<DataSyndicationAgreement> agreements = dataSyndicationService.getAgreementsAsSlave();
+                    for (DataSyndicationAgreement agreement : agreements) {
+                        if (agreement.status.equals(DataSyndicationAgreement.Status.PENDING_INSTANCE)) {
+                            dataSyndicationService.acceptAgreement(agreement);
+                        }
                     }
+
+                } catch (Exception e) {
+                    Logger.error(this.getId() + " unexpected error", e);
                 }
 
-            } catch (Exception e) {
-                Logger.error(this.getId() + " unexpected error", e);
-            }
+                Logger.info("end trigger " + this.getId());
 
-            Logger.info("end trigger " + this.getId());
+            }
 
         }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-02-27T16:17:39 -->
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-09-22T15:24:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="release_requirements_main" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="29e6deea-c212-408c-9b57-114f1e099fe7">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\ST.xml"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<style name="isDefect" style="row">
 		<conditionalStyle>
@@ -17,7 +17,7 @@
 		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="REPORT_RELEASE_REQUIREMENTS_RELEASE" class="java.lang.Long" isForPrompting="false">
-		<defaultValueExpression><![CDATA[1L]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[5L]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT 
@@ -76,7 +76,7 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 	<field name="story_points" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="initial_estimation" class="java.lang.Integer">
+	<field name="initial_estimation" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="external_ref_id" class="java.lang.String">
@@ -90,7 +90,7 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 	<variable name="totalStoryPoints" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{story_points}]]></variableExpression>
 	</variable>
-	<variable name="totalInitialEstimation" class="java.lang.Integer" calculation="Sum">
+	<variable name="totalInitialEstimation" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{initial_estimation}]]></variableExpression>
 	</variable>
 	<variable name="isScopedLabel" class="java.lang.String">
@@ -170,28 +170,27 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 				<textFieldExpression><![CDATA[str("label.status")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="495" y="0" width="30" height="20" uuid="2172ee65-be99-4944-9f0f-977c4525c32a">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="490" y="0" width="30" height="20" uuid="2172ee65-be99-4944-9f0f-977c4525c32a">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[str("label.story_points")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="525" y="0" width="30" height="20" uuid="45f684c2-9d09-4379-af5c-8523fc3f49fb">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="520" y="0" width="35" height="20" uuid="45f684c2-9d09-4379-af5c-8523fc3f49fb">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[str("label.initial_estimation")]]></textFieldExpression>
 			</textField>
@@ -248,11 +247,10 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 				<textFieldExpression><![CDATA[str("label.portfolio_entry")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="440" y="0" width="55" height="20" uuid="6ffe2d51-fe77-4374-8ac9-0b8e4606395a">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="440" y="0" width="50" height="20" uuid="6ffe2d51-fe77-4374-8ac9-0b8e4606395a">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
@@ -291,29 +289,28 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="isDefect" stretchType="RelativeToBandHeight" x="495" y="0" width="30" height="20" uuid="75d8c769-a27a-433c-a7d4-9fdd6f90e368">
+				<reportElement style="isDefect" stretchType="RelativeToBandHeight" x="490" y="0" width="30" height="20" uuid="75d8c769-a27a-433c-a7d4-9fdd6f90e368">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{story_points}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="isDefect" stretchType="RelativeToBandHeight" x="525" y="0" width="30" height="20" uuid="4cc2830c-2e98-4b14-8a9d-2835309fdd17">
+			<textField isStretchWithOverflow="true" pattern="0.00" isBlankWhenNull="true">
+				<reportElement style="isDefect" stretchType="RelativeToBandHeight" x="520" y="0" width="35" height="20" uuid="4cc2830c-2e98-4b14-8a9d-2835309fdd17">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{initial_estimation}]]></textFieldExpression>
@@ -345,7 +342,7 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 				<textFieldExpression><![CDATA[$F{pe_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="isDefect" stretchType="RelativeToBandHeight" x="440" y="0" width="55" height="20" uuid="11cb14c5-3c1f-4c55-b928-31984aee79a1">
+				<reportElement style="isDefect" stretchType="RelativeToBandHeight" x="440" y="0" width="50" height="20" uuid="11cb14c5-3c1f-4c55-b928-31984aee79a1">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -353,7 +350,6 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$V{isScopedLabel}]]></textFieldExpression>
 			</textField>
@@ -404,11 +400,10 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 		<band height="54" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="495" y="3" width="30" height="20" uuid="7d1ce792-1643-47e0-acb6-c9248f6603b5">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="490" y="3" width="30" height="20" uuid="7d1ce792-1643-47e0-acb6-c9248f6603b5">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -420,16 +415,16 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalStoryPoints}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="525" y="3" width="30" height="20" uuid="dd918da1-e35e-4387-84ca-201b2de12739">
+			<textField isStretchWithOverflow="true" pattern="0.00" isBlankWhenNull="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="520" y="3" width="35" height="20" uuid="dd918da1-e35e-4387-84ca-201b2de12739">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right">
@@ -438,11 +433,10 @@ WHERE pe.deleted = 0 AND r.deleted = 0]]>
 				<textFieldExpression><![CDATA[$V{totalInitialEstimation}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="3" width="495" height="20" uuid="a5749889-88ad-42d1-aa48-d280be9b716b">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="3" width="490" height="20" uuid="a5749889-88ad-42d1-aa48-d280be9b716b">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>

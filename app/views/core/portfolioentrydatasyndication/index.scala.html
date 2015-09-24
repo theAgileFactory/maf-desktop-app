@@ -80,7 +80,7 @@
                     <div class="panel-body ">
                     
                         @if(slaveAgreementLinks.size == 0) {
-                            <div class="alert alert-warning">@parts.Msg("core.portfolio_entry_data_syndication.index.with_link.slave.no_data", portfolioEntry.getName)</div>
+                            <div class="alert alert-warning">@parts.Msg("core.portfolio_entry_data_syndication.index.with_link.slave.no_data")</div>
                         }
                         
                         @for(slaveLink <- slaveAgreementLinks) {
@@ -131,7 +131,7 @@
                     <div class="panel-body ">
                     
                         @if(masterAgreementLinks.size == 0) {
-                            <div class="alert alert-warning">@parts.Msg("core.portfolio_entry_data_syndication.index.with_link.master.no_data", portfolioEntry.getName)</div>
+                            <div class="alert alert-warning">@parts.Msg("core.portfolio_entry_data_syndication.index.with_link.master.no_data")</div>
                         }
                     
                         @for(masterLink <- masterAgreementLinks) {

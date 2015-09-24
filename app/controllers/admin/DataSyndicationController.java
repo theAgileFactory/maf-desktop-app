@@ -168,7 +168,7 @@ public class DataSyndicationController extends Controller {
             Form<SearchPartnerForm> boundForm = searchPartnerFormTemplate.bindFromRequest();
 
             if (boundForm.hasErrors()) {
-                return ok(views.html.admin.datasyndication.search_partner.render(searchPartnerFormTemplate));
+                return ok(views.html.admin.datasyndication.search_partner.render(boundForm));
             }
 
             SearchPartnerForm searchPartnerForm = boundForm.get();
@@ -208,7 +208,7 @@ public class DataSyndicationController extends Controller {
                     return ok(views.html.admin.datasyndication.communication_error.render());
                 }
 
-                return ok(views.html.admin.datasyndication.search_partner_no_result.render(keywords, itemsAsVH, agreementNoSlaveSubmitFormTemplate));
+                return ok(views.html.admin.datasyndication.search_partner_no_result.render(itemsAsVH, agreementNoSlaveSubmitFormTemplate));
             } else {
 
                 List<DataSyndicationPartnerListView> dataSyndicationPartnerRows = new ArrayList<DataSyndicationPartnerListView>();
@@ -347,10 +347,7 @@ public class DataSyndicationController extends Controller {
                     return ok(views.html.admin.datasyndication.communication_error.render());
                 }
 
-                // get the initial keywords
-                String keywords = boundForm.data().get("keywords");
-
-                return ok(views.html.admin.datasyndication.search_partner_no_result.render(keywords, itemsAsVH, boundForm));
+                return ok(views.html.admin.datasyndication.search_partner_no_result.render(itemsAsVH, boundForm));
             }
 
             DataSyndicationAgreementNoSlaveSubmitFormData formData = boundForm.get();
@@ -808,7 +805,7 @@ public class DataSyndicationController extends Controller {
             ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                     controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
                     "admin.data_syndication.process_agreement_link.pe.accept.new.notification.title",
-                    "admin.data_syndication.process_agreement_link.pe.accept.new.notification.message");
+                    "admin.data_syndication.process_agreement_link.pe.accept.new.notification.message", agreementLink.name);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.process_agreement_link.pe.accept.new.success"));
 
@@ -867,7 +864,7 @@ public class DataSyndicationController extends Controller {
             ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                     controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
                     "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title",
-                    "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message");
+                    "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message", portfolioEntry.getName(), agreementLink.name);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.data_syndication.process_agreement_link.pe.accept.existing.success"));
 
