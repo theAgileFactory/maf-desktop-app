@@ -2,6 +2,7 @@ package handlers;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import controllers.ControllersUtils;
 import framework.handlers.AbstractErrorHandler;
@@ -29,6 +30,7 @@ import services.datasyndication.IDataSyndicationService;
  * Handler registered to deal with errors
  * @author Pierre-Yves Cloux
  */
+@Singleton
 public class MafHttpErrorHandler extends AbstractErrorHandler {
     private static Logger.ALogger log = Logger.of(MafHttpErrorHandler.class);
     

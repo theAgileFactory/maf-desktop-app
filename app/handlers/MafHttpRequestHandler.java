@@ -3,6 +3,7 @@ package handlers;
 import java.lang.reflect.Method;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import framework.handlers.AbstractRequestHandler;
 import framework.security.ISecurityService;
@@ -24,6 +25,7 @@ import services.datasyndication.IDataSyndicationService;
  * @author Johann Kohler
  *
  */
+@Singleton
 public class MafHttpRequestHandler extends AbstractRequestHandler {
 
     @Inject
