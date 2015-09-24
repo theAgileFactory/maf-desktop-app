@@ -20,9 +20,11 @@ package security.dynamic;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.FetchConfig;
 import com.avaje.ebean.OrderBy;
 
 import constants.IMafConstants;
+import dao.reporting.ReportingDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IUserAccount;
@@ -49,7 +51,8 @@ public class ReportingDynamicHelper {
      * @param securityService
      *            the security service
      */
-    public static ExpressionList<Reporting> getReportsViewAllowedAsQuery(Expression expression, OrderBy<Reporting> orderBy, ISecurityService securityService) throws AccountManagementException {
+    public static ExpressionList<Reporting> getReportsViewAllowedAsQuery(Expression expression, OrderBy<Reporting> orderBy, ISecurityService securityService)
+            throws AccountManagementException {
 
         IUserAccount userAccount = securityService.getCurrentUser();
 
@@ -57,14 +60,14 @@ public class ReportingDynamicHelper {
 
         // user has permission REPORTING_VIEW_ALL_PERMISSION
         // OR
-        if (securityService.restrict( IMafConstants.REPORTING_VIEW_ALL_PERMISSION,userAccount)) {
+        if (securityService.restrict(IMafConstants.REPORTING_VIEW_ALL_PERMISSION, userAccount)) {
             raw += "1 = '1' OR ";
         }
 
         // user has permission
         // REPORTING_VIEW_AS_VIEWER_PERMISSION AND
         // (the report is public OR the user has access to it)
-        if (securityService.restrict( IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION,userAccount)) {
+        if (securityService.restrict(IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION, userAccount)) {
             raw += "(isPublic = 1 OR reportingAuthorization.principals.uid='" + userAccount.getIdentifier() + "') OR ";
         }
 
@@ -73,10 +76,10 @@ public class ReportingDynamicHelper {
         ExpressionList<Reporting> expressionList;
 
         if (orderBy != null) {
-            expressionList = Reporting.find.where();
+            expressionList = ReportingDao.findReporting.fetch("reportingAuthorization.principals", new FetchConfig().lazy()).where();
             Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         } else {
-            expressionList = Reporting.find.where();
+            expressionList = ReportingDao.findReporting.fetch("reportingAuthorization.principals", new FetchConfig().lazy()).where();
         }
 
         expressionList = expressionList.eq("deleted", false);
@@ -99,7 +102,8 @@ public class ReportingDynamicHelper {
      */
     public static boolean isReportViewAllowed(Long reportingId, ISecurityService securityService) {
         try {
-            return getReportsViewAllowedAsQuery(Expr.eq("id", reportingId), null, securityService).query().setDistinct(true).findRowCount() > 0 ? true : false;
+            return getReportsViewAllowedAsQuery(Expr.eq("id", reportingId), null, securityService).query().setDistinct(true).findRowCount() > 0 ? true
+                    : false;
         } catch (AccountManagementException e) {
             Logger.error("ReportingDynamicHelper.isReportViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());
