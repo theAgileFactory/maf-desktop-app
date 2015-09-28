@@ -102,6 +102,11 @@ public class Authenticator extends AbstractAuthenticator {
                     public Call getCallbackRoute() {
                         return controllers.sso.routes.Authenticator.customCallback();
                     }
+                    
+                    @Override
+                    public Call getSamlCallbackRoute(){
+                        return controllers.sso.routes.Authenticator.samlCallback();
+                    }
 
                     @Override
                     public Call getDisplayStandaloneLoginFormRoute() {

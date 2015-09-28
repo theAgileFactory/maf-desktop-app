@@ -48,6 +48,8 @@ GET     /loginStandalone            controllers.sso.Authenticator.loginStandalon
 GET     /loginCasMaster             controllers.sso.Authenticator.loginCasMaster(redirect)
 GET     /loginFederated             controllers.sso.Authenticator.loginFederated(redirect)
 GET     /redirectToSavedUrl         controllers.sso.Authenticator.redirectToThePreviouslySavedUrl()
+GET     /samlCallback               controllers.sso.Authenticator.samlCallback()
+POST    /samlCallback               controllers.sso.Authenticator.samlCallback()
 GET     /callback                   controllers.sso.Authenticator.customCallback()
 POST    /callback                   controllers.sso.Authenticator.customCallback()
 GET     /logout                     controllers.sso.Authenticator.customLogout()
