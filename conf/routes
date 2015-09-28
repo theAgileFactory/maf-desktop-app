@@ -8,6 +8,9 @@ GET    /switch-perspective         framework.utils.TopMenuBarController.switchPe
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)
 POST   /ext/*path                  framework.services.router.CustomRouterController.perform(path)
 
+#Workspace management
+GET    /admin/workspace/config     controllers.admin.WorkspaceController.displayWorkspaceConfiguration()
+
 #Application controller
 GET    /                           controllers.Application.index()
 GET    /notification/redirect      controllers.Application.redirectForNotification(id: Long)
