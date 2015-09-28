@@ -41,7 +41,6 @@
         	@if(masterMode){
         		<legend>@parts.Msg("admin.user_manager.create.credentials.title")</legend>
             	@parts.checkbox(userAccountForm("administratorDefinedPassword"),parts.Msg.asString("admin.user_manager.create.admindefinedpassword.label"))
-            	<div class="row"> 
             	<div class="row" style="display: none;" id="passwordDefinitionArea">
             	    <div class="col-md-6">
             		@helper.inputPassword(userAccountForm("password"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.password.label"))
@@ -63,6 +62,8 @@
 				    </div>
             	</div>
             }
+        </fieldset>
+        <fieldset>
             <legend>@parts.Msg("admin.user_manager.create.basic_data.title")</legend>
             @helper.inputText(userAccountForm("uid"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.uid.label"))
             @helper.inputText(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label"))
