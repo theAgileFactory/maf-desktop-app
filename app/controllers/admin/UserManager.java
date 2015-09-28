@@ -592,7 +592,7 @@ public class UserManager extends Controller {
 
         Form<UserAccountFormData> userAccountFormLoaded = creationForm.fill(new UserAccountFormData());
         return ok(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
-                SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), userAccountFormLoaded));
+                SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), userAccountFormLoaded, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
     }
 
     /**
@@ -606,11 +606,10 @@ public class UserManager extends Controller {
         }
 
         try {
-
             Form<UserAccountFormData> boundForm = creationForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
-                        SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm));
+                        SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
             }
             UserAccountFormData accountDataForm = boundForm.get();
 
@@ -619,14 +618,28 @@ public class UserManager extends Controller {
             if (account != null) {
                 boundForm.reject("uid", Msg.get("object.user_account.uid.already_exists"));
                 return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
-                        SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm));
+                        SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
             }
 
             // Check if the mail already exists in the backend
             if (getAccountManagerPlugin().isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
                 boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
                 return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
-                        SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm));
+                        SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
+            }
+            
+            //If password mode is "manual" (not user selected), then check the provided password
+            if(accountDataForm.administratorDefinedPassword && getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()){
+                if (!accountDataForm.password.equals(accountDataForm.passwordCheck)) {
+                    boundForm.reject("password", Msg.get("form.input.confirmationpassword.invalid"));
+                    return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+                            SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
+                }
+                if (Utilities.getPasswordStrength(accountDataForm.password) < 1) {
+                    boundForm.reject("password", Msg.get("form.input.password.error.insufficient_strength"));
+                    return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+                            SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
+                }
             }
 
             // Remove the null values which may be present in the list (see the
@@ -646,20 +659,26 @@ public class UserManager extends Controller {
 
             // If in master mode, the password is managed by the system
             if (getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()) {
-                // Generate a random password
-                String password = RandomStringUtils.randomAlphanumeric(12);
-                String validationKey = getAccountManagerPlugin().getValidationKey(accountDataForm.uid, password);
-                getAccountManagerPlugin().updatePassword(accountDataForm.uid, password);
-
-                // Notify account creation & password setup
-                String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
-                        "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
-                EmailUtils.sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.create.mail.subject"),
-                        play.Configuration.root().getString("maf.email.from"),
-                        Utilities.renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
-                                play.Configuration.root().getString("maf.platformName"), accountDataForm.firstName + " " + accountDataForm.lastName,
-                                resetPasswordUrl, accountDataForm.uid).body(),
-                        accountDataForm.mail);
+                if(!accountDataForm.administratorDefinedPassword){
+                    // Generate a random password
+                    String password = RandomStringUtils.randomAlphanumeric(12);
+                    String validationKey = getAccountManagerPlugin().getValidationKey(accountDataForm.uid, password);
+                    getAccountManagerPlugin().updatePassword(accountDataForm.uid, password);
+    
+                    // Notify account creation & password setup
+                    String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
+                            "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
+                    EmailUtils.sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.create.mail.subject"),
+                            play.Configuration.root().getString("maf.email.from"),
+                            Utilities.renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                                    play.Configuration.root().getString("maf.platformName"), accountDataForm.firstName + " " + accountDataForm.lastName,
+                                    resetPasswordUrl, accountDataForm.uid).body(),
+                            accountDataForm.mail);
+                }else{
+                    //User password is defined by the administrator
+                    getAccountManagerPlugin().updatePassword(accountDataForm.uid, accountDataForm.password);
+                    getAccountManagerPlugin().resetValidationKey(accountDataForm.uid);
+                }
             }
 
             // check if there is an existing actor for the uid
@@ -1063,7 +1082,7 @@ public class UserManager extends Controller {
          */
         public UserAccountFormData() {
             super();
-
+            this.administratorDefinedPassword=false;
         }
 
         /**
@@ -1073,6 +1092,7 @@ public class UserManager extends Controller {
          *            the user account
          */
         public UserAccountFormData(IUserAccount userAccount) {
+            this.administratorDefinedPassword=false;
             this.uid = userAccount.getUid();
             this.firstName = userAccount.getFirstName();
             this.lastName = userAccount.getLastName();
@@ -1116,6 +1136,13 @@ public class UserManager extends Controller {
         @MaxLength(value = IModelConstants.MEDIUM_STRING, message = "object.user_account.last_name.invalid",
                 groups = { UserCreationGroup.class, BasicDataChangeGroup.class })
         public String lastName;
+        
+        
+        public boolean administratorDefinedPassword;
+        
+        public String password;
+        
+        public String passwordCheck;
 
         @Required(groups = { UserCreationGroup.class, BasicDataChangeGroup.class })
         public String preferredLanguage;

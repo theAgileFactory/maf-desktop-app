@@ -19,7 +19,8 @@
     title: String,
     allRoles: framework.utils.ISelectableValueHolderCollection[String],
     allUserAccountTypes: framework.utils.ISelectableValueHolderCollection[String],
-    userAccountForm: Form[controllers.admin.UserManager.UserAccountFormData]
+    userAccountForm: Form[controllers.admin.UserManager.UserAccountFormData],
+    masterMode: Boolean
 )
 
 @import helper._
@@ -37,6 +38,31 @@
     }
     @helper.form(action = controllers.admin.routes.UserManager.saveNewUser()) {
         <fieldset>
+        	@if(masterMode){
+        		<legend>@parts.Msg("admin.user_manager.create.credentials.title")</legend>
+            	@parts.checkbox(userAccountForm("administratorDefinedPassword"),parts.Msg.asString("admin.user_manager.create.admindefinedpassword.label"))
+            	<div class="row"> 
+            	<div class="row" style="display: none;" id="passwordDefinitionArea">
+            	    <div class="col-md-6">
+            		@helper.inputPassword(userAccountForm("password"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.password.label"))
+                    <br/>
+                    @helper.inputPassword(userAccountForm("passwordCheck"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.password_confirmation.label")) 
+            		</div>
+					<div class="col-md-6">
+				        <div class="panel panel-info">
+				          <div class="panel-heading"><strong>@parts.Msg("password.strength.title")</strong></div>
+				          <div class="panel-body">
+				            <p>@parts.Msg("password.strength.explanation")</p>
+				            <div class="progress">
+				              <div id="password_strength_progressbar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+				              </div>
+				            </div>
+				            <p><strong>@parts.Msg("password.strength.message")</strong></p>
+				          </div>
+				        </div>
+				    </div>
+            	</div>
+            }
             <legend>@parts.Msg("admin.user_manager.create.basic_data.title")</legend>
             @helper.inputText(userAccountForm("uid"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.uid.label"))
             @helper.inputText(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label"))
@@ -63,6 +89,43 @@ $(document).ready(function(){
             $("#rolesSelector").show();
         }
     });
+    
+    $("#administratorDefinedPassword").click(function(){
+    	var thisCheck=$(this);
+    	if(thisCheck.is(':checked')){
+    		$("#passwordDefinitionArea").show();
+    	}else{
+    		$("#passwordDefinitionArea").hide();
+    	}
+    });
+
+    $("#password").on("input",function(){
+        var passwd=$("#password").val();
+        var rating=maf_password_rating(passwd);
+        var message;
+        var percentage;
+        var displayClass;
+        switch(rating) {
+            case 0:
+                message='@parts.Msg("password.strength.weak")';
+                percentage=20;
+                displayClass="progress-bar-danger";
+                break;
+            case 1:
+                message='@parts.Msg("password.strength.average")';
+                percentage=55;
+                displayClass="progress-bar-info";
+                break;
+            default:
+                percentage=100;
+                message='@parts.Msg("password.strength.ok")';
+                displayClass="progress-bar-success";
+        } 
+        $("#password_strength_progressbar").html(message);
+        $("#password_strength_progressbar").attr('aria-valuenow',""+percentage);
+        $("#password_strength_progressbar").attr('style',"width: "+percentage+"%");
+        $("#password_strength_progressbar").removeClass().addClass("progress-bar").addClass(displayClass);
+    });
 });
-</script> 
+</script>
 }
