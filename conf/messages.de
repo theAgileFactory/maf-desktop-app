@@ -2746,6 +2746,8 @@ admin.user_manager.create.header=Füllen Sie bitte folgendes Formular aus um ein
 Definieren Sie eine Rolle für diesen Benutzer<br/>\
 Nach erfolgreicher Erstellung erhält der Benutzer eine E-mail.<br/>\
 <u>Info</u>: Dieser Prozess ist asynchron, die Erstellung kann einige Minuten in Anspruch nehmen.
+admin.user_manager.create.admindefinedpassword.label=Geben Sie ein Passwort im Namen dem Benutzer
+admin.user_manager.create.credentials.title=Passwort
 admin.user_manager.create.basic_data.title=Basisdaten
 admin.user_manager.create.success=Der Benutzer wurde hinzugefügt.
 admin.user_manager.create.mail.subject=Benutzerkonto hinzugefügt

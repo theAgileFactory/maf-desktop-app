@@ -2749,6 +2749,8 @@ admin.user_manager.edit_roles.header=Veuillez sélectioner le ou les rôle(s) de
 admin.user_manager.create.header=Veuillez remplir le formulaire ci-dessous pour créer un nouvel utilisateur.<br/>\
 Il est important de ne pas oublier de sélectioner son ou ses rôle(s).<br/>\
 Attention: la création de l''utilisateur dans les modules tiers peut prendre quelques minutes.
+admin.user_manager.create.credentials.title=Mot de passe
+admin.user_manager.create.admindefinedpassword.label=Choisir le mot de passe à la place de l'utilisateur
 admin.user_manager.create.basic_data.title=Informations principales
 admin.user_manager.create.success=L''utilisateur a été créé
 admin.user_manager.create.mail.subject=Le compte a été créé

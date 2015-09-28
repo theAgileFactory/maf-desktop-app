@@ -2735,6 +2735,8 @@ admin.user_manager.create.header=Please fill the form to create a new user.<br/>
 Please don''t forget to set the roles for this user.<br/>\
 Once the creation will be complete the user will be notified with an e-mail.<br/>\
 <u>NB</u>: since the user creation is asynchronous, you might have to wait a few moment before the creation is completed.
+admin.user_manager.create.credentials.title=Password
+admin.user_manager.create.admindefinedpassword.label=Enter a password on behalf of the user
 admin.user_manager.create.basic_data.title=Basic data
 admin.user_manager.create.success=The user has been created successfully.
 admin.user_manager.create.mail.subject=Account created
