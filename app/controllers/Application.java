@@ -427,7 +427,7 @@ public class Application extends Controller {
             lang = Context.current().lang().code() + ":";
         }
 
-        String wikiBaseUrl = Play.application().configuration().getString("maf.help.url").replace("%lang%", lang);
+        String wikiBaseUrl = getConfiguration().getString("maf.help.url").replace("%lang%", lang);
 
         HelpTarget helpTarget = HelpTarget.getByRoute(route);
 

@@ -262,7 +262,7 @@ public class AuditableController extends Controller {
                         @Override
                         public void run() {
                             // Find the files to be archived
-                            String logFilesPathAsString = Play.application().configuration().getString("maf.audit.log.location");
+                            String logFilesPathAsString = getConfiguration().getString("maf.audit.log.location");
                             File logFilesPath = new File(logFilesPathAsString);
                             File logDirectory = logFilesPath.getParentFile();
 

@@ -473,7 +473,7 @@ public class PortfolioEntryController extends Controller {
         // create the table
         Pagination<Attachment> attachmentPagination = new Pagination<Attachment>(
                 Attachment.getAttachmentsFromObjectTypeAndObjectIdAsExpressionList(PortfolioEntry.class, id), 5,
-                Play.application().configuration().getInt("maf.number_page_links"));
+                getConfiguration().getInt("maf.number_page_links"));
         attachmentPagination.setCurrentPage(attachmentPage);
         attachmentPagination.setPageQueryName("attachmentPage");
 

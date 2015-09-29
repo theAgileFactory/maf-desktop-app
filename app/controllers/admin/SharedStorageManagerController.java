@@ -219,7 +219,7 @@ public class SharedStorageManagerController extends Controller {
      */
     public Result uploadForm(String folderName, Boolean isInput) {
         return ok(views.html.admin.plugin.sharedstorage_upload.render(folderName, isInput,
-                Play.application().configuration().getInt("maf.sftp.store.maxfilenumber")));
+                getConfiguration().getInt("maf.sftp.store.maxfilenumber")));
     }
 
     /**
@@ -244,7 +244,7 @@ public class SharedStorageManagerController extends Controller {
             return redirectToIndexAsPromiseWithErrorMessage(null);
         }
         int numberOfFiles = files != null ? files.length : 0;
-        if (numberOfFiles >= Play.application().configuration().getInt("maf.sftp.store.maxfilenumber")) {
+        if (numberOfFiles >= getConfiguration().getInt("maf.sftp.store.maxfilenumber")) {
             return redirectToIndexAsPromiseWithErrorMessage(Msg.get("admin.shared_storage.upload.error.max_number"));
         }
 
