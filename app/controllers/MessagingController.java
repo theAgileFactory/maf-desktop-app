@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import models.framework_models.account.Notification;
 import models.framework_models.account.Principal;
 import models.framework_models.parent.IModelConstants;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.MaxLength;
@@ -34,6 +35,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.table.MessageListView;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Table;
@@ -50,6 +52,10 @@ public class MessagingController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(MessagingController.class);
     private static Form<NotificationMessage> notificationMessageForm = Form.form(NotificationMessage.class);
@@ -89,7 +95,7 @@ public class MessagingController extends Controller {
             Utilities.sendSuccessFlashMessage(Messages.get("messaging.send.success", notificationMessage.title));
             return redirect(routes.MessagingController.index());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -135,5 +141,13 @@ public class MessagingController extends Controller {
 
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

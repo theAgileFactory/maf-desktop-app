@@ -81,6 +81,7 @@ import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryType;
+import play.Configuration;
 import play.Logger;
 import play.Play;
 import play.data.Form;
@@ -124,6 +125,8 @@ public class PortfolioEntryController extends Controller {
     private ISecurityService securityService;
     @Inject
     private II18nMessagesPlugin messagesPlugin;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -219,7 +222,7 @@ public class PortfolioEntryController extends Controller {
                 Logger.error("impossible to rollback the attachment creation", exp);
             }
             log.error(String.format("Failure while creating the portfolio entry", newPortfolioEntryFormData.toString()));
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
         // Check if the PortfolioEntry object has some custom attributes (if yes
@@ -736,7 +739,7 @@ public class PortfolioEntryController extends Controller {
         try {
             FileAttachmentHelper.saveAsAttachement("document", PortfolioEntry.class, portfolioEntry.id, getAttachmentManagerPlugin());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
         // success message
@@ -1057,5 +1060,7 @@ public class PortfolioEntryController extends Controller {
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }
-
+    private Configuration getConfiguration() {
+        return configuration;
+    }
 }

@@ -36,6 +36,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.storage.ISharedStorageService;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -45,6 +46,7 @@ import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import framework.utils.formats.StringFormatFormatter.Hook;
+import play.Configuration;
 import play.Logger;
 import play.Play;
 import play.libs.F.Function0;
@@ -66,6 +68,10 @@ import play.mvc.Result;
 public class SharedStorageManagerController extends Controller {
     @Inject
     private ISharedStorageService sharedStorageService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
 
     public static final int MAX_FILE_SIZE = 2 * 1024 * 1024;
 
@@ -130,7 +136,7 @@ public class SharedStorageManagerController extends Controller {
             return ok(views.html.admin.plugin.sharedstorage_display.render(Msg.get("admin.integration.sidebar.shared_storage"), loadedInputFileTable,
                     loadedOutputFileTable));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -174,7 +180,7 @@ public class SharedStorageManagerController extends Controller {
                     response().setHeader("Content-disposition", "attachment; filename=" + getSharedStorageService().getFile(fileName).getName());
                     return ok(getSharedStorageService().getFileAsStream(fileName));
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -197,7 +203,7 @@ public class SharedStorageManagerController extends Controller {
                     Utilities.sendSuccessFlashMessage(Msg.get("admin.shared_storage.delete.success"));
                     return redirect(routes.SharedStorageManagerController.index());
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -362,5 +368,13 @@ public class SharedStorageManagerController extends Controller {
 
     private ISharedStorageService getSharedStorageService() {
         return sharedStorageService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

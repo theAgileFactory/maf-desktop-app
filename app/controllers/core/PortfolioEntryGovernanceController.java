@@ -37,6 +37,7 @@ import dao.governance.LifeCycleProcessDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FileAttachmentHelper;
@@ -61,6 +62,7 @@ import models.governance.ProcessTransitionRequest;
 import models.pmo.Actor;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -90,6 +92,10 @@ public class PortfolioEntryGovernanceController extends Controller {
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryGovernanceController.class);
 
@@ -368,7 +374,7 @@ public class PortfolioEntryGovernanceController extends Controller {
                 String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 actor = ActorDao.getActorByUid(uid);
             } catch (Exception e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
             }
 
             if (actor == null) {
@@ -386,7 +392,7 @@ public class PortfolioEntryGovernanceController extends Controller {
                         ProcessTransitionRequest.class, processTransitionRequest.id);
             } catch (Exception e) {
                 processTransitionRequest.doDelete();
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
             }
 
             // notification
@@ -463,7 +469,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
             } catch (Exception e) {
                 Ebean.rollbackTransaction();
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
             }
 
             // if exists, add the the description document file
@@ -635,7 +641,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
         } catch (Exception e) {
             Ebean.rollbackTransaction();
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
         }
 
         /*
@@ -708,6 +714,14 @@ public class PortfolioEntryGovernanceController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

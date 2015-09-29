@@ -50,6 +50,7 @@ import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -70,6 +71,7 @@ import models.pmo.PortfolioEntry;
 import models.sql.ActorHierarchy;
 import models.timesheet.TimesheetActivityAllocatedActor;
 import models.timesheet.TimesheetReport;
+import play.Configuration;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -100,6 +102,11 @@ public class CockpitController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
+    @Inject
+    private Configuration configuration;
+
     
     private static Logger.ALogger log = Logger.of(CockpitController.class);
 
@@ -485,7 +492,7 @@ public class CockpitController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
     }
@@ -602,7 +609,7 @@ public class CockpitController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -1062,5 +1069,13 @@ public class CockpitController extends Controller {
      */
     public static enum MenuItemType {
         MY_INITIATIVES, MY_PORTFOLIOS, MY_EMPLOYEES, MY_ORG_UNITS, MY_BUDGET_BUCKETS, MY_RELEASES, MY_EMPLOYEE_CARD;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

@@ -58,6 +58,7 @@ import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.api.IPluginMenuDescriptor;
@@ -82,6 +83,7 @@ import models.framework_models.common.DynamicSingleItemCustomAttributeValue;
 import models.framework_models.common.HelpTarget;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.Play;
 import play.libs.F.Promise;
@@ -124,6 +126,11 @@ public class Application extends Controller {
     private IPersonalStoragePlugin personalStoragePlugin;
     @Inject
     private IDataSyndicationService dataSyndicationService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
+
 
     private static Logger.ALogger log = Logger.of(Application.class);
 
@@ -162,7 +169,7 @@ public class Application extends Controller {
             return ok(views.html.home.notifications_list.render(Msg.get("notifications.list.title"), t.getLeft(), t.getRight(), filterConfig));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -186,7 +193,7 @@ public class Application extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -360,7 +367,7 @@ public class Application extends Controller {
         try {
             portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(orderBy, getSecurityService()).setMaxRows(5).findList();
         } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // get the profile info
@@ -368,7 +375,7 @@ public class Application extends Controller {
         try {
             account = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
         return ok(views.html.home.index.render(Msg.get("main.application.title.header"), notificationsTable, portfolioEntries, account, hasActor));
     }
@@ -701,7 +708,7 @@ public class Application extends Controller {
 
         } catch (Exception e) {
             log.error("Unable to create the excel file", e);
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -862,5 +869,13 @@ public class Application extends Controller {
      */
     private IDataSyndicationService getDataSyndicationService() {
         return dataSyndicationService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

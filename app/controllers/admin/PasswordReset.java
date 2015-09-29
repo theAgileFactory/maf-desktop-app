@@ -20,6 +20,7 @@ package controllers.admin;
 import javax.inject.Inject;
 import javax.persistence.Transient;
 
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -28,6 +29,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import controllers.ControllersUtils;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Utilities;
 
@@ -50,6 +52,11 @@ import framework.utils.Utilities;
 public class PasswordReset extends Controller {
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
+    @Inject 
+    private Configuration configuration;
+    
     private static Logger.ALogger log = Logger.of(PasswordReset.class);
     public static final String CURRENT_USER_UID = "MAF_USER_ID";
     private static Form<PasswordFormData> passwordUpdateForm = Form.form(PasswordFormData.class);
@@ -113,7 +120,7 @@ public class PasswordReset extends Controller {
             session().clear();
             return redirect(controllers.routes.Application.index());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log,getConfiguration(),getMessagesPlugin());
         }
     }
 
@@ -135,5 +142,13 @@ public class PasswordReset extends Controller {
 
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

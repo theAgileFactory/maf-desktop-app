@@ -57,6 +57,7 @@ import framework.utils.TableExcelRenderer;
 import models.architecture.ApplicationBlock;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.libs.F.Function0;
@@ -87,6 +88,9 @@ public class ArchitectureController extends Controller {
     private II18nMessagesPlugin messagesPlugin;
     @Inject
     private ISysAdminUtils sysAdminUtils;
+    @Inject
+    private Configuration configuration;
+
 
     private static Logger.ALogger log = Logger.of(ArchitectureController.class);
 
@@ -156,10 +160,10 @@ public class ArchitectureController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
                 return redirect(controllers.core.routes.ArchitectureController.applicationBlocks(true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
             }
 
         }
@@ -189,7 +193,7 @@ public class ArchitectureController extends Controller {
 
         } catch (Exception e) {
 
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
 
         }
 
@@ -270,7 +274,7 @@ public class ArchitectureController extends Controller {
                     return ok(Json.newObject());
 
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
                 }
             }
         });
@@ -501,5 +505,9 @@ public class ArchitectureController extends Controller {
 
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

@@ -78,6 +78,7 @@ import models.pmo.PortfolioEntryRisk;
 import models.reporting.Reporting;
 import models.reporting.Reporting.Format;
 import models.timesheet.TimesheetLog;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.libs.F.Function0;
@@ -129,6 +130,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private ISecurityService securityService;
     @Inject
     private IDataSyndicationService dataSyndicationService;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryStatusReportingController.class);
 
@@ -321,10 +324,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(id, true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
         }
@@ -357,7 +360,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -425,7 +428,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     return ok(Json.newObject());
 
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -738,7 +741,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         try {
             FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryReport.class, report.id, getAttachmentManagerPlugin());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // success message
@@ -1018,7 +1021,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                 String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 portfolioEntryEvent.actor = ActorDao.getActorByUid(uid);
             } catch (Exception e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             portfolioEntryEventFormData.fill(portfolioEntryEvent);
@@ -1139,10 +1142,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(id, true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
         }
@@ -1175,7 +1178,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -1243,7 +1246,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     return ok(Json.newObject());
 
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -1359,6 +1362,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

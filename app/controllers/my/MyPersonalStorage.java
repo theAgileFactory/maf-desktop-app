@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
+import play.Configuration;
 import play.Logger;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
@@ -37,6 +38,7 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.utils.IColumnFormatter;
@@ -62,6 +64,10 @@ public class MyPersonalStorage extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IPersonalStoragePlugin personalStoragePlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(MyPersonalStorage.class);
 
@@ -113,7 +119,7 @@ public class MyPersonalStorage extends Controller {
             Table<PersonalStorageFile> loadedTable = tableFileTemplate.fill(files);
             return ok(views.html.my.personalstorage_display.render(Msg.get("my.personalstorage.tableview.title"), loadedTable));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -134,7 +140,7 @@ public class MyPersonalStorage extends Controller {
                     response().setHeader("Content-disposition", "attachment; filename=" + fileName);
                     return ok(getPersonalStoragePlugin().readFile(currentUserUid, fileName));
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -158,7 +164,7 @@ public class MyPersonalStorage extends Controller {
                     getPersonalStoragePlugin().deleteFile(currentUserUid, fileName);
                     return redirect(routes.MyPersonalStorage.index());
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -232,5 +238,13 @@ public class MyPersonalStorage extends Controller {
 
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

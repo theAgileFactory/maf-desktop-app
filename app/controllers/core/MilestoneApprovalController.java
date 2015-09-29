@@ -39,6 +39,7 @@ import dao.pmo.ActorDao;
 import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
@@ -58,6 +59,7 @@ import models.governance.LifeCycleMilestoneInstanceApprover;
 import models.governance.LifeCycleMilestoneInstanceStatusType;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -94,6 +96,11 @@ public class MilestoneApprovalController extends Controller {
     private IAttachmentManagerPlugin attachmentPluginManager;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
+
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -129,7 +136,7 @@ public class MilestoneApprovalController extends Controller {
             source = ow.writeValueAsString(events);
             source = source.replaceAll("\"statusClass\"", "\"class\"");
         } catch (JsonProcessingException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         return ok(views.html.core.milestoneapproval.overview.render(source));
@@ -172,7 +179,7 @@ public class MilestoneApprovalController extends Controller {
         try {
             userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // get the current actor
@@ -230,7 +237,7 @@ public class MilestoneApprovalController extends Controller {
         try {
             userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // get the current actor
@@ -421,7 +428,7 @@ public class MilestoneApprovalController extends Controller {
 
         } catch (Exception e) {
             Ebean.rollbackTransaction();
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // success message
@@ -544,6 +551,14 @@ public class MilestoneApprovalController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

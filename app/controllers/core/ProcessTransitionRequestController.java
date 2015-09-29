@@ -36,6 +36,7 @@ import dao.governance.ProcessTransitionRequestDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FileAttachmentHelper;
@@ -52,6 +53,7 @@ import models.governance.LifeCycleMilestoneInstanceApprover;
 import models.governance.ProcessTransitionRequest;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -81,6 +83,10 @@ public class ProcessTransitionRequestController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
@@ -153,7 +159,7 @@ public class ProcessTransitionRequestController extends Controller {
             }
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // get the milestone
@@ -294,7 +300,7 @@ public class ProcessTransitionRequestController extends Controller {
 
         } catch (Exception e) {
             Ebean.rollbackTransaction();
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // success message
@@ -350,5 +356,13 @@ public class ProcessTransitionRequestController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

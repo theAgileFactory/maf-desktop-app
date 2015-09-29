@@ -61,6 +61,7 @@ import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -89,6 +90,7 @@ import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryReport;
 import models.timesheet.TimesheetActivityAllocatedActor;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -124,6 +126,10 @@ public class RoadmapController extends Controller {
     private IPersonalStoragePlugin personalStoragePlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(RoadmapController.class);
 
@@ -180,10 +186,10 @@ public class RoadmapController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 return redirect(controllers.core.routes.RoadmapController.index(true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
         }
@@ -212,7 +218,7 @@ public class RoadmapController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -274,7 +280,7 @@ public class RoadmapController extends Controller {
                     return ok(Json.newObject());
 
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -439,7 +445,7 @@ public class RoadmapController extends Controller {
             return ok(views.html.core.roadmap.roadmap_view_planning.render(source));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -764,7 +770,7 @@ public class RoadmapController extends Controller {
                     new ArrayList<OrgUnitCapacity>(orgUnitCapacities.values()), new ArrayList<CompetencyCapacity>(competencyCapacities.values())));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -956,7 +962,7 @@ public class RoadmapController extends Controller {
                     new SimpleDateFormat("MMMM").format(cal.getTime()), new ArrayList<CapacityDetails>(capacityDetailsRows.values()), basicBarChart));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -1556,6 +1562,14 @@ public class RoadmapController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

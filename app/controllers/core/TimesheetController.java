@@ -44,6 +44,7 @@ import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Msg;
 import framework.utils.Utilities;
@@ -57,6 +58,7 @@ import models.timesheet.TimesheetActivityType;
 import models.timesheet.TimesheetEntry;
 import models.timesheet.TimesheetLog;
 import models.timesheet.TimesheetReport;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -73,6 +75,10 @@ import utils.form.TimesheetReportApprovalFormData;
 public class TimesheetController extends Controller {
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(TimesheetController.class);
 
@@ -278,7 +284,7 @@ public class TimesheetController extends Controller {
 
             } catch (Exception e) {
                 Ebean.rollbackTransaction();
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.fill.save.successful"));
@@ -286,7 +292,7 @@ public class TimesheetController extends Controller {
             return redirect(controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -338,7 +344,7 @@ public class TimesheetController extends Controller {
 
                 } catch (Exception e) {
                     Ebean.rollbackTransaction();
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
             Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.fill.weekly.copy.successful"));
@@ -639,5 +645,13 @@ public class TimesheetController extends Controller {
 
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

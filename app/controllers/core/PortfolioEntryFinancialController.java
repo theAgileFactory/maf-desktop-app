@@ -38,6 +38,7 @@ import framework.highcharts.pattern.BasicBar;
 import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
@@ -50,6 +51,7 @@ import models.finance.PurchaseOrderLineItem;
 import models.finance.WorkOrder;
 import models.governance.LifeCycleInstancePlanning;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -79,6 +81,10 @@ public class PortfolioEntryFinancialController extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
@@ -215,7 +221,7 @@ public class PortfolioEntryFinancialController extends Controller {
             try {
                 userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
             } catch (Exception e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             // if the user hasn't the permission
@@ -992,5 +998,13 @@ public class PortfolioEntryFinancialController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }
