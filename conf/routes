@@ -44,6 +44,7 @@ GET     /auth/check/:uuid           controllers.sso.StandaloneAuthenticationCont
 GET     /auth/resetForm             controllers.sso.StandaloneAuthenticationController.displayResetPasswordForm() 
 POST    /auth/performReset          controllers.sso.StandaloneAuthenticationController.triggerResetPassword(uuid: String)    
 GET     /not-accessible             controllers.sso.Authenticator.notAccessible()
+GET     /no-account                 controllers.sso.Authenticator.noFederatedAccount()
 GET     /loginStandalone            controllers.sso.Authenticator.loginStandalone(redirect)
 GET     /loginCasMaster             controllers.sso.Authenticator.loginCasMaster(redirect)
 GET     /loginFederated             controllers.sso.Authenticator.loginFederated(redirect)

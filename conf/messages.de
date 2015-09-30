@@ -667,6 +667,7 @@ preference.notification_sending_system_preference.description=Interne BizDock Mi
 #----------------------
 
 authentication.not_accessible=Instanz kann nicht geladen werden, bitte wenden Sie sich an den Administrator.
+authentication.no_account=Kein Benutzerkonto gefunden, bitte wenden Sie sich an den Administrator.
 
 #----------------------
 # licenses management
