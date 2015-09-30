@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(pageHtmlTitle: String, fluid: Boolean = true, showIdZone: Boolean = true)(header: Html)(content: Html)
+@(pageHtmlTitle: String, fluid: Boolean = true, showIdZone: Boolean = true, includeFrameworkLibraries: Boolean=true)(header: Html)(content: Html)
 
 @import commons._
 @import framework_views.parts
@@ -32,7 +32,7 @@
     models.framework_models.account.Preference.getPreferenceValueFromUuid(constants.IMafConstants.APPLICATION_LOGO_PREFERENCE, _cache, _usession, _accmngr);
 }
 
-@common(pageHtmlTitle) {
+@common(pageHtmlTitle, includeFrameworkLibraries) {
     @header
 }{
     @if(showIdZone) {

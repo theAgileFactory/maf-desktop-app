@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(pageHtmlTitle: String)(header: Html)(content: Html)
+@(pageHtmlTitle: String, includeFrameworkLibraries: Boolean=true)(header: Html)(content: Html)
 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -31,8 +31,9 @@
         <meta name="author" content="The Agile Factory">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        @if(includeFrameworkLibraries){
         @framework_views.parts.framework_required_includes(routes.Assets.versioned("").url)
-
+        }
         <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons.css")">
         <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-filetypes.css")">
         <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-social.css")">

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import framework.services.api.IApiControllerUtilsService;
 import framework.services.configuration.II18nMessagesPlugin;
 import play.libs.F.Promise;
@@ -15,6 +16,7 @@ import play.mvc.Result;
  * A controller for the management of collaborative workspaces
  * @author Pierre-Yves Cloux
  */
+@SubjectPresent
 public class WorkspaceController extends Controller{
     @Inject
     private IApiControllerUtilsService apiControllerUtilsService;

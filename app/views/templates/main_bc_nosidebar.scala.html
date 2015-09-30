@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(pageHtmlTitle: String, breadCrumb: Seq[(String, String)])(header: Html)(content: Html)
-@templates.main_nosidebar(pageHtmlTitle) {
+@(pageHtmlTitle: String, breadCrumb: Seq[(String, String)], includeFrameworkLibraries: Boolean=true)(header: Html)(content: Html)
+@templates.main_nosidebar(pageHtmlTitle,true, true, includeFrameworkLibraries) {
 @header
 }{
 @breadcrumb(breadCrumb)

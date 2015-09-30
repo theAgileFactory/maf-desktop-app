@@ -5,7 +5,6 @@
  */
 var workspaceApp = angular.module('workspaceApp', [
 	'ngRoute',
-	'commonServices',
 	'workspaceControllers'
 ]);
 workspaceApp.constant("Msg", _maf_Msg);
