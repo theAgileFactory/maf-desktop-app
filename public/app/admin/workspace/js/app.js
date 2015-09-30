@@ -5,14 +5,17 @@
  */
 var workspaceApp = angular.module('workspaceApp', [
 	'ngRoute',
+	'commonServices',
 	'workspaceControllers'
 ]);
+workspaceApp.constant("Msg", _maf_Msg);
+workspaceApp.constant("Routes", _maf_app_paths);
 
-workspaceApp.config(['$routeProvider',
-function($routeProvider) {
+workspaceApp.config(['$routeProvider','Routes',
+function($routeProvider, Routes) {
   $routeProvider.
     when('/home', {
-      templateUrl: _maf_app_rootpath+'partials/home.html',
+      templateUrl: Routes.basePath+'partials/home.html',
       controller: 'HomeCtrl'
     }).
     otherwise({

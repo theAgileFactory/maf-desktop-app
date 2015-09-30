@@ -30,7 +30,8 @@ public class WorkspaceController extends Controller{
      */
     public Promise<Result> display(){
         Map<String, String> messages=new HashMap<>();
-        messages.put("members.button.title", "Members");
+        messages.put("admin.workspace.admin.panel.title", "Workspace as administrator");
+        messages.put("admin.workspace.member.panel.title", "Workspace as member");
         return  Promise.promise(() -> ok(views.html.admin.workspace.edition.render("Title", getApiControllerUtilsService().convertAsJsonString(messages))));
     }
 

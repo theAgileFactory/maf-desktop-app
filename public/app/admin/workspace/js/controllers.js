@@ -5,7 +5,8 @@
  */
 var workspaceControllers = angular.module('workspaceControllers', []);
 
-workspaceControllers.controller('HomeCtrl', ['$scope',
-  function($scope) {
-    $scope.message = 'HellowWorld in BizDock';
+workspaceControllers.controller('HomeCtrl', ['$scope','Msg',
+  function($scope, Msg) {
+	$scope.workspaceAsAdminPanelTitle = Msg['admin.workspace.admin.panel.title'];
+    $scope.workspaceAsMemberPanelTitle = Msg['admin.workspace.member.panel.title'];
  }]);
