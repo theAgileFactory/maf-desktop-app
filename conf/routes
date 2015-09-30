@@ -9,7 +9,7 @@ GET    /ext/*path                  framework.services.router.CustomRouterControl
 POST   /ext/*path                  framework.services.router.CustomRouterController.perform(path)
 
 #Workspace management
-GET    /admin/workspace/config     controllers.admin.WorkspaceController.displayWorkspaceConfiguration()
+GET    /admin/workspace/config     controllers.admin.WorkspaceController.display()
 
 #Application controller
 GET    /                           controllers.Application.index()

@@ -16,7 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
  
- @(pageHtmlTitle: String)
+ @(pageHtmlTitle: String, i18messages: String)
  
  @templates.main_bc_nosidebar(
     pageHtmlTitle,
@@ -24,7 +24,13 @@
         ("admin.workspace",null)
     )
 ){
-	<script src="@routes.Assets.at("bower_components/jquery/dist/jquery.js")"></script>
+	<script type="text/javascript">
+	var _maf_app_rootpath="@routes.Assets.at("app/admin/workspace/")";
+	var _maf_Msg=@Html(i18messages);
+	var _maf_app_paths={
+		"homeRoute" : "@controllers.admin.routes.WorkspaceController.display()"
+	};
+	</script>
 	<script src="@routes.Assets.at("framework/lib/angular/angular.min.js")"></script>
 	<script src="@routes.Assets.at("framework/lib/angular/angular-animate.min.js")"></script>
 	<script src="@routes.Assets.at("framework/lib/angular/angular-route.min.js")"></script>
@@ -35,5 +41,9 @@
 	<script src="@routes.Assets.at("app/admin/workspace/js/filters.js")"></script>
 	<script src="@routes.Assets.at("app/admin/workspace/js/services.js")"></script>
 }{
+<div class="row" ng-app="workspaceApp">
+  <div ng-view class="col-md-12">
+  </div>
+</div>
 }
 
