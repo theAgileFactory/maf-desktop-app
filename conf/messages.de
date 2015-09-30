@@ -2088,7 +2088,7 @@ core.portfolio.delete.confirmation.message=Sind Sie sicher, dass Sie dieses Port
 core.portfolio.delete.successful=Portfolio wurde gelöscht.
 
 #manage stakeholder
-core.portfolio_stakeholder.manage.title=Verwalten ein Projektbeteiligte
+core.portfolio_stakeholder.manage.title=Verwalten einer Projektbeteiligte
 core.portfolio_stakeholder.add.successful=Der Projektbeteiligte wurde erstellt
 core.portfolio_stakeholder.edit.successful=Der Projektbeteiligte wurde aktualisiert
 
@@ -2105,7 +2105,7 @@ core.portfolio_entry.sidebar.view.label=Details
 core.portfolio_entry.sidebar.financial.label=Finanzen
 core.portfolio_entry.sidebar.financial.status.label=Status
 core.portfolio_entry.sidebar.financial.details.label=Details
-core.portfolio_entry.sidebar.stakeholders.label=Projektbeteiligten
+core.portfolio_entry.sidebar.stakeholders.label=Projektbeteiligte
 core.portfolio_entry.sidebar.governance.label=Unternehmensführung
 core.portfolio_entry.sidebar.delivery.label=Lieferung
 core.portfolio_entry.sidebar.delivery.requirements.label=Anforderungen
@@ -2753,7 +2753,7 @@ admin.user_manager.create.mail.subject=Benutzerkonto hinzugefügt
 admin.user_manager.create.actor.header=Der angelegte Benutzer ist nicht mit einem Mitarbeiter verbunden. Sie können mit den Benutzerdaten einen neuen Mitarbeiter anlegen oder einen bestehen Mitarbeiter auswählen. Sie können den Mitarbeiter auch später anlegen.
 admin.user_manager.create.actor.create.title=Mitarbeiter anlegen
 admin.user_manager.create.actor.create.header=Benutzerdaten (Vorname, Nachname und E-mail) werden benutzt um den Mitarbeiter zu erstellen.
-admin.user_manager.create.actor.create.successful=Der Mitarbeiter wurde angelegt um mit dem Benutzer verbunden.
+admin.user_manager.create.actor.create.successful=Der Mitarbeiter wurde angelegt und mit dem Benutzer verbunden.
 admin.user_manager.create.actor.select.title=Bestehenden Mitarbeiter auswählen
 admin.user_manager.create.actor.select.header=Wählen Sie ein Mitarbeiter, der noch nicht verbunden ist.
 admin.user_manager.create.actor.select.label=Mitarbeiter
