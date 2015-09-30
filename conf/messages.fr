@@ -667,6 +667,7 @@ preference.notification_sending_system_preference.description=Le sytème utilis�
 #----------------------
 
 authentication.not_accessible=Votre instance n''est pas accessible, veuillez contacter votre administrateur pour plus d''information.
+authentication.no_account=Aucun compte valide trouvé, veuillez contacter votre administrateur.
 
 #----------------------
 # licenses management

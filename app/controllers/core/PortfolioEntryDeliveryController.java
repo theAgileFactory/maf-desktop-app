@@ -62,6 +62,7 @@ import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
 import models.delivery.RequirementStatus.Type;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -87,6 +88,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     private II18nMessagesPlugin messagesPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -156,10 +159,10 @@ public class PortfolioEntryDeliveryController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
                 return redirect(controllers.core.routes.PortfolioEntryDeliveryController.requirements(id, true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
             }
 
         }
@@ -208,7 +211,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(filledTable, pagination));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -553,10 +556,10 @@ public class PortfolioEntryDeliveryController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
                 return redirect(controllers.core.routes.PortfolioEntryDeliveryController.iterations(id, true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
             }
 
         }
@@ -590,7 +593,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
     }
@@ -899,6 +902,10 @@ public class PortfolioEntryDeliveryController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

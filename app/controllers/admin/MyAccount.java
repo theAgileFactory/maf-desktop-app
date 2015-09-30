@@ -28,10 +28,12 @@ import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IAuthenticationAccountReaderPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.EmailUtils;
 import framework.utils.Msg;
 import framework.utils.Utilities;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Email;
@@ -57,6 +59,10 @@ public class MyAccount extends Controller {
     private IAuthenticationAccountReaderPlugin authenticationReader;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject 
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(MyAccount.class);
     private static Form<UserAccountFormData> basicDataUpdateForm = Form.form(UserAccountFormData.class, UserAccountFormData.BasicDataChangeGroup.class);
@@ -74,7 +80,7 @@ public class MyAccount extends Controller {
             return ok(views.html.admin.myaccount.myaccount_display.render(Messages.get("my.my_profile.sidebar.details"),
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), account));
         } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -90,7 +96,7 @@ public class MyAccount extends Controller {
             return ok(views.html.admin.myaccount.myaccount_editbasicdata.render(Messages.get("my.my_profile.sidebar.update_data"),
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -109,7 +115,7 @@ public class MyAccount extends Controller {
             return ok(views.html.admin.myaccount.myaccount_editmail.render(Msg.get("my.my_profile.sidebar.update_email"),
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -127,7 +133,7 @@ public class MyAccount extends Controller {
             return ok(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_password"),
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -150,7 +156,7 @@ public class MyAccount extends Controller {
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_data.successful"));
             return redirect(controllers.admin.routes.MyAccount.display());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -200,7 +206,7 @@ public class MyAccount extends Controller {
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_email.successful"));
             return redirect(controllers.admin.routes.MyAccount.display());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -228,7 +234,7 @@ public class MyAccount extends Controller {
                 return ok(views.html.admin.myaccount.myaccount_emailvalidation.render(Messages.get("my.my_profile.update_email.validation.title"), false));
             }
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -274,7 +280,7 @@ public class MyAccount extends Controller {
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_password.successful"));
             return redirect(controllers.admin.routes.MyAccount.display());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -398,6 +404,14 @@ public class MyAccount extends Controller {
 
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

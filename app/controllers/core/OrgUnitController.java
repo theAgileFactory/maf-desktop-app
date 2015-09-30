@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
@@ -44,6 +46,7 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -61,6 +64,7 @@ import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntry;
 import models.timesheet.TimesheetActivityAllocatedActor;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -88,6 +92,11 @@ import utils.table.TimesheetActivityAllocatedActorListView;
  * @author Johann Kohler
  */
 public class OrgUnitController extends Controller {
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
+    
     private static Logger.ALogger log = Logger.of(OrgUnitController.class);
 
     public static Form<OrgUnitFormData> formTemplate = Form.form(OrgUnitFormData.class);
@@ -499,7 +508,7 @@ public class OrgUnitController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -529,7 +538,7 @@ public class OrgUnitController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -720,5 +729,13 @@ public class OrgUnitController extends Controller {
      */
     public static enum MenuItemType {
         OVERVIEW, INITIATIVES, ALLOCATION;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

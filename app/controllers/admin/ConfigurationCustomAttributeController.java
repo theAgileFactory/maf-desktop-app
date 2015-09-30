@@ -30,6 +30,7 @@ import models.framework_models.common.CustomAttributeItemOption;
 import models.framework_models.common.CustomAttributeMultiItemOption;
 import models.framework_models.common.ICustomAttributeValue;
 import models.framework_models.common.ICustomAttributeValue.AttributeType;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -74,6 +75,8 @@ public class ConfigurationCustomAttributeController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     /**
      * Display the list of custom attributes for a data type. It's possible to
@@ -97,7 +100,7 @@ public class ConfigurationCustomAttributeController extends Controller {
         try {
             customAttributeDefinitions = CustomAttributeDefinition.getOrderedCustomAttributeDefinitions(Class.forName(dataType.getDataTypeClassName()));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         List<CustomAttributeListView> customAttributeListView = new ArrayList<CustomAttributeListView>();
@@ -144,7 +147,7 @@ public class ConfigurationCustomAttributeController extends Controller {
                 customAttributeToReverse = CustomAttributeDefinition.getNext(Class.forName(customAttribute.objectType), customAttribute.order);
             }
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         if (customAttributeToReverse != null) {
@@ -232,7 +235,7 @@ public class ConfigurationCustomAttributeController extends Controller {
             try {
                 customAttribute.order = CustomAttributeDefinition.getLastOrder(Class.forName(customAttribute.objectType)) + 1;
             } catch (Exception e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
             customAttribute.uuid = "CUSTOM_ATTRIBUTE_" + dataType.getDataName() + "_" + customAttribute.order;
 
@@ -602,6 +605,10 @@ public class ConfigurationCustomAttributeController extends Controller {
 
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

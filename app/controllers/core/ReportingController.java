@@ -47,6 +47,7 @@ import models.framework_models.common.CustomAttributeDefinition;
 import models.framework_models.common.ICustomAttributeValue;
 import models.reporting.Reporting;
 import models.reporting.ReportingCategory;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -70,6 +71,8 @@ public class ReportingController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(ReportingController.class);
 
@@ -139,7 +142,7 @@ public class ReportingController extends Controller {
                 reports = ReportingDynamicHelper.getReportsViewAllowedAsQuery(
                         Expr.and(Expr.eq("isActive", true), Expr.eq("reportingCategory.id", categoryId)), null, getSecurityService()).findList();
             } catch (AccountManagementException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             List<ReportingListView> reportingListView = new ArrayList<ReportingListView>();
@@ -246,5 +249,9 @@ public class ReportingController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

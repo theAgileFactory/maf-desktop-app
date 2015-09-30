@@ -27,12 +27,13 @@ import services.datasyndication.IDataSyndicationService;
 
 /**
  * Handler registered to deal with errors
+ * 
  * @author Pierre-Yves Cloux
  */
 @Singleton
 public class MafHttpErrorHandler extends AbstractErrorHandler {
     private static Logger.ALogger log = Logger.of(MafHttpErrorHandler.class);
-    
+
     @Inject
     private IDataSyndicationService dataSyndicationService;
     @Inject
@@ -43,14 +44,23 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     private INotificationManagerPlugin notificationService;
 
     @Inject
-    public MafHttpErrorHandler(Configuration configuration, Environment environment, OptionalSourceMapper optionalSourceMapper, Provider<Router> providerRouter) {
+    public MafHttpErrorHandler(Configuration configuration, Environment environment, OptionalSourceMapper optionalSourceMapper,
+            Provider<Router> providerRouter) {
         super(configuration, environment, optionalSourceMapper, providerRouter);
     }
 
     @Override
     public Promise<Result> onClientError(RequestHeader requestHeader, int statusCode, String error) {
         injectCommonServicesIncontext(Http.Context.current());
-        if(statusCode == play.mvc.Http.Status.NOT_FOUND) {
+        if (statusCode == play.mvc.Http.Status.NOT_FOUND) {
+            try {
+                Promise<Result> result = getCustomRouterNotificationService().notify(Controller.ctx());
+                if (result != null) {
+                    return result;
+                }
+            } catch (Exception e) {
+                log.warn("Error while calling the custom router", e);
+            }
             return Promise.promise(new Function0<Result>() {
                 public Result apply() throws Throwable {
                     if (requestHeader.path().startsWith(AbstractApiController.STANDARD_API_ROOT_URI)) {
@@ -61,7 +71,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
                 }
             });
         }
-        if(statusCode == play.mvc.Http.Status.BAD_REQUEST) {
+        if (statusCode == play.mvc.Http.Status.BAD_REQUEST) {
             injectCommonServicesIncontext(Http.Context.current());
             return Promise.promise(new Function0<Result>() {
                 public Result apply() throws Throwable {
@@ -74,9 +84,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
 
             });
         }
-        return Promise.<Result>pure(
-                play.mvc.Results.status(statusCode, "an unexpected error occured: " + error)
-        );
+        return Promise.<Result> pure(play.mvc.Results.status(statusCode, "an unexpected error occured: " + error));
     }
 
     @Override
@@ -84,7 +92,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         injectCommonServicesIncontext(Http.Context.current());
         return Promise.promise(new Function0<Result>() {
             public Result apply() throws Throwable {
-                return (Result) ControllersUtils.logAndReturnUnexpectedError((Exception) t, log);
+                return (Result) ControllersUtils.logAndReturnUnexpectedError((Exception) t, log, getConfiguration(), getMessagesPlugin());
             }
         });
     }
@@ -100,6 +108,5 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     private IApiControllerUtilsService getApiControllerUtilsService() {
         return apiControllerUtilsService;
     }
-
 
 }

@@ -44,6 +44,7 @@ import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -61,6 +62,7 @@ import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.Actor;
+import play.Configuration;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -96,6 +98,10 @@ public class UserManager extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(UserManager.class);
     private static Form<UserSeachFormData> userSearchForm = Form.form(UserSeachFormData.class);
@@ -188,7 +194,7 @@ public class UserManager extends Controller {
                 }
                 foundUser = userAccount;
             } catch (AccountManagementException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         }
         if (searchFormData.searchType.equals(MAIL_SEARCH_OPTION)) {
@@ -204,7 +210,7 @@ public class UserManager extends Controller {
                 }
                 foundUser = userAccount;
             } catch (AccountManagementException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         }
         if (searchFormData.searchType.equals(FULLNAME_SEARCH_OPTION)) {
@@ -238,7 +244,7 @@ public class UserManager extends Controller {
                 }
                 foundUser = userAccounts.get(0); // Only one user
             } catch (AccountManagementException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         }
         return ok(views.html.admin.usermanager.usermanager_display.render(Msg.get("admin.user_manager.sidebar.search"),
@@ -262,7 +268,7 @@ public class UserManager extends Controller {
                 return displayUserSearchForm();
             }
         } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
         return ok(views.html.admin.usermanager.usermanager_display.render(Msg.get("admin.user_manager.sidebar.search"),
                 getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), userAccount));
@@ -285,7 +291,7 @@ public class UserManager extends Controller {
             return ok(views.html.admin.usermanager.usermanager_editbasicdata.render(Msg.get("admin.user_manager.edit_basic_data.title"),
                     userAccountFormLoaded));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -306,7 +312,7 @@ public class UserManager extends Controller {
             return ok(views.html.admin.usermanager.usermanager_editaccounttype.render(Msg.get("admin.user_manager.edit_account_type.title"),
                     IUserAccount.AccountType.getValueHolder(), userAccountFormLoaded));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -328,7 +334,7 @@ public class UserManager extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -348,7 +354,7 @@ public class UserManager extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -368,7 +374,7 @@ public class UserManager extends Controller {
             Form<UserAccountFormData> userAccountFormLoaded = mailUpdateForm.fill(new UserAccountFormData(account));
             return ok(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_email.title"), userAccountFormLoaded));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -396,7 +402,7 @@ public class UserManager extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -411,7 +417,7 @@ public class UserManager extends Controller {
             resetUserPasswordFromUid(uid, true);
             return redirect(controllers.admin.routes.UserManager.displayUser(uid));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -509,7 +515,7 @@ public class UserManager extends Controller {
             return ok(views.html.admin.usermanager.usermanager_editroles.render(Msg.get("admin.user_manager.edit_roles.title"),
                     SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), userAccountFormLoaded));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -533,7 +539,7 @@ public class UserManager extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.update.success"));
             return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -555,14 +561,14 @@ public class UserManager extends Controller {
                 return displayUserSearchForm();
             }
         } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         try {
             getAccountManagerPlugin().updateActivationStatus(uid, activationStatus);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.user_manager.change_status.success", uid));
         } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         // Notify the user with the lock/unlock action
@@ -689,7 +695,7 @@ public class UserManager extends Controller {
                 return redirect(controllers.admin.routes.UserManager.displayUser(accountDataForm.uid));
             }
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -727,7 +733,7 @@ public class UserManager extends Controller {
             return redirect(controllers.admin.routes.UserManager.displayUser(uid));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -870,7 +876,7 @@ public class UserManager extends Controller {
                     Msg.get("admin.user_manager.delete.notification.message", uid, new Date().toString()),
                     controllers.admin.routes.UserManager.displayUserSearchForm().url());
         } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
         return redirect(routes.UserManager.displayUserSearchForm());
     }
@@ -1160,5 +1166,13 @@ public class UserManager extends Controller {
      */
     public static enum MenuItemType {
         NONE, SEARCH, CREATE;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

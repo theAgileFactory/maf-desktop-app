@@ -102,6 +102,11 @@ public class Authenticator extends AbstractAuthenticator {
                     public Call getCallbackRoute() {
                         return controllers.sso.routes.Authenticator.customCallback();
                     }
+                    
+                    @Override
+                    public Call getSamlCallbackRoute(){
+                        return controllers.sso.routes.Authenticator.samlCallback();
+                    }
 
                     @Override
                     public Call getDisplayStandaloneLoginFormRoute() {
@@ -112,19 +117,27 @@ public class Authenticator extends AbstractAuthenticator {
                     public Call getNotAccessibleRoute() {
                         return controllers.sso.routes.Authenticator.notAccessible();
                     }
+                    
+                    @Override
+                    public Call getNoFederatedAccount() {
+                        return controllers.sso.routes.Authenticator.noFederatedAccount();
+                    }
                 });
-    }
-
-    /**
-     * Not accessible page (license).
-     */
-    public Result notAccessible() {
-        return ok(views.html.sso.not_accessible.render());
     }
 
     @Override
     public Result getFederatedLogoutDisplay() {
         return ok(views.html.sso.federated_logout
                 .render(getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE, "maf.public.url")));
+    }
+
+    @Override
+    public Result notAccessible() {
+        return ok(views.html.sso.not_accessible.render());
+    }
+    
+    @Override
+    public Result noFederatedAccount(){
+        return ok(views.html.sso.no_account.render());
     }
 }

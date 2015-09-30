@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
 
 import models.framework_models.account.Principal;
+import play.Configuration;
 import play.Logger;
 import play.Play;
 import play.mvc.Controller;
@@ -54,6 +55,8 @@ public class SystemOwnerController extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private IPluginManagerService pluginManagerService;
+    @Inject
+    private Configuration configuration;
     
     private static Logger.ALogger log = Logger.of(SystemOwnerController.class);
     /**
@@ -111,7 +114,7 @@ public class SystemOwnerController extends Controller {
 
         String authenticationMode = "Slave";
         // Check master mode for authentication
-        if (Play.application().configuration().getBoolean("maf.ic_ldap_master")) {
+        if (getConfiguration().getBoolean("maf.ic_ldap_master")) {
             authenticationMode = "Master";
         }
 
@@ -248,5 +251,9 @@ public class SystemOwnerController extends Controller {
         public String name;
         public String version;
         public String isAvailable;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

@@ -43,6 +43,7 @@ import framework.utils.Table;
 import framework.utils.Utilities;
 import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.account.SystemPermission;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -67,6 +68,8 @@ public class ConfigurationController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(ConfigurationController.class);
 
@@ -166,7 +169,7 @@ public class ConfigurationController extends Controller {
 
             } catch (Exception e) {
                 Ebean.rollbackTransaction();
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         } else {
             return ok(views.html.admin.config.systempreferences.edit.render(requestData));
@@ -219,7 +222,7 @@ public class ConfigurationController extends Controller {
                 Ebean.commitTransaction();
             } catch (Exception e) {
                 Ebean.rollbackTransaction();
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         } else {
             return ok(views.html.admin.config.smtp.edit.render(requestData));
@@ -431,5 +434,9 @@ public class ConfigurationController extends Controller {
      */
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

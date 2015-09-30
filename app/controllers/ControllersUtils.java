@@ -19,10 +19,12 @@ package controllers;
 
 import java.util.UUID;
 
+import play.Configuration;
 import play.Logger;
 import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Utilities;
 
@@ -44,14 +46,19 @@ public abstract class ControllersUtils {
      * 
      * @return a Result to be diplayed
      */
-    public static Result logAndReturnUnexpectedError(Exception e, Logger.ALogger log) {
-        String uuid = UUID.randomUUID().toString();
-        log.error("Unexpected error with uuid " + uuid, e);
-        if (Play.application().configuration().getBoolean("maf.unexpected.error.trace")) {
-            String stackTrace = Utilities.getExceptionAsString(e);
-            return Controller.internalServerError(views.html.error.unexpected_error_with_stacktrace.render(Msg.get("unexpected.error.title"), uuid,
-                    stackTrace));
+    public static Result logAndReturnUnexpectedError(Exception e, Logger.ALogger log, Configuration configuration, II18nMessagesPlugin messagePlugin) {
+        try{
+            String uuid = UUID.randomUUID().toString();
+            log.error("Unexpected error with uuid " + uuid, e);
+            if (configuration.getBoolean("maf.unexpected.error.trace")) {
+                String stackTrace = Utilities.getExceptionAsString(e);
+                return Controller.internalServerError(views.html.error.unexpected_error_with_stacktrace.render(messagePlugin.get("unexpected.error.title"), uuid,
+                        stackTrace));
+            }
+            return Controller.internalServerError(views.html.error.unexpected_error.render(messagePlugin.get("unexpected.error.title"), uuid));
+        }catch(Exception exp){
+            System.err.println("Unexpected error in logAndReturnUnexpectedError : prevent looping");
+            return Controller.internalServerError("Unexpected error");
         }
-        return Controller.internalServerError(views.html.error.unexpected_error.render(Msg.get("unexpected.error.title"), uuid));
     }
 }

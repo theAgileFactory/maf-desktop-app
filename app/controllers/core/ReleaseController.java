@@ -52,6 +52,7 @@ import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -73,6 +74,7 @@ import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.libs.F.Function0;
@@ -110,6 +112,10 @@ public class ReleaseController extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(ReleaseController.class);
 
@@ -156,10 +162,10 @@ public class ReleaseController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 return redirect(controllers.core.routes.ReleaseController.list(true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
         }
@@ -225,7 +231,7 @@ public class ReleaseController extends Controller {
                     return ok(Json.newObject());
 
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
                 }
             }
         });
@@ -255,7 +261,7 @@ public class ReleaseController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -361,7 +367,7 @@ public class ReleaseController extends Controller {
             return ok(views.html.core.release.planning.render(source));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
     }
@@ -648,6 +654,14 @@ public class ReleaseController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

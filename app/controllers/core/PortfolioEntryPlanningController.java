@@ -95,6 +95,7 @@ import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackageGroup;
 import models.pmo.PortfolioEntryPlanningPackagePattern;
 import models.pmo.Stakeholder;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -139,7 +140,8 @@ public class PortfolioEntryPlanningController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private ISecurityService securityService;
-
+    @Inject
+    private Configuration configuration;
     @Inject
     private IDataSyndicationService dataSyndicationService;
 
@@ -615,10 +617,10 @@ public class PortfolioEntryPlanningController extends Controller {
         } catch (Exception e) {
 
             if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log);
+                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
                 return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id, true));
             } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
             }
 
         }
@@ -653,7 +655,7 @@ public class PortfolioEntryPlanningController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
     }
@@ -840,7 +842,7 @@ public class PortfolioEntryPlanningController extends Controller {
                             PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
                 }
             } catch (ParseException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
             }
         }
 
@@ -1094,7 +1096,7 @@ public class PortfolioEntryPlanningController extends Controller {
         try {
             FileAttachmentHelper.saveAsAttachement("document", PortfolioEntryPlanningPackage.class, planningPackage.id, getAttachmentManagerPlugin());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
         // success message
@@ -2099,6 +2101,10 @@ public class PortfolioEntryPlanningController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
 }

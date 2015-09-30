@@ -655,6 +655,7 @@ preference.notification_sending_system_preference.description=It could be either
 #----------------------
 
 authentication.not_accessible=The instance is not accessible, please contact your administrator for more information.
+authentication.no_account=No account found, please contact your administrator
 
 #----------------------
 # licenses management

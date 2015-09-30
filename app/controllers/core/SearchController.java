@@ -36,6 +36,7 @@ import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -46,6 +47,7 @@ import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -70,6 +72,10 @@ import utils.table.PurchaseOrderListView;
 public class SearchController extends Controller {   
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
     
     private static Form<SearchFormData> formTemplate = Form.form(SearchFormData.class);
     private static Logger.ALogger log = Logger.of(SearchController.class);
@@ -146,7 +152,7 @@ public class SearchController extends Controller {
             try {
                 portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService()).findList();
             } catch (AccountManagementException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             List<PortfolioEntryListView> portfolioEntryListView = new ArrayList<PortfolioEntryListView>();
@@ -178,7 +184,7 @@ public class SearchController extends Controller {
                         Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), Expr.ilike("refId", keywords + "%")), null, getSecurityService())
                         .findList();
             } catch (AccountManagementException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             if (portfolios != null && portfolios.size() > 0) {
@@ -262,7 +268,7 @@ public class SearchController extends Controller {
                 budgetBuckets = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(
                         Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), null, getSecurityService()).findList();
             } catch (AccountManagementException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             List<BudgetBucketListView> budgetBucketsListView = new ArrayList<BudgetBucketListView>();
@@ -317,5 +323,13 @@ public class SearchController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

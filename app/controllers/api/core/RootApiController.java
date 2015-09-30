@@ -36,6 +36,7 @@ import framework.services.api.server.ApiAuthentication;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.services.remote.IAdPanelManagerService;
+import play.Configuration;
 import play.Play;
 import play.libs.Json;
 import play.mvc.Result;
@@ -82,6 +83,8 @@ public class RootApiController extends ApiController {
     private IKpiService kpiService;
     @Inject
     private IReportingUtils reportingUtils;
+    @Inject
+    private Configuration Configuration;
 
     /**
      * Get the status of the instance.
@@ -93,7 +96,7 @@ public class RootApiController extends ApiController {
 
             RootResponse response = new RootResponse();
             response.attributes = new HashMap<String, JsonNode>();
-            response.attributes.put("platform.name", Json.toJson(Play.application().configuration().getString("maf.platformName")));
+            response.attributes.put("platform.name", Json.toJson(getConfiguration().getString("maf.platformName")));
             return getJsonSuccessResponse(response);
 
         } catch (Exception e) {
@@ -389,6 +392,10 @@ public class RootApiController extends ApiController {
 
     private IReportingUtils getReportingUtils() {
         return reportingUtils;
+    }
+
+    private Configuration getConfiguration() {
+        return Configuration;
     }
 
 }

@@ -36,6 +36,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
+import play.Configuration;
 import play.Logger;
 import play.Play;
 import play.data.Form;
@@ -54,6 +55,7 @@ import framework.commons.DataType;
 import framework.services.ServiceStaticAccessor;
 import framework.services.audit.Auditable;
 import framework.services.audit.IAuditLoggerService;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -87,6 +89,10 @@ public class AuditableController extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private IAuditLoggerService auditLoggerService;
+    @Inject
+    private II18nMessagesPlugin messagesPlugin;
+    @Inject
+    private Configuration configuration;
 
     // Set to true for activating the search box
     public static final boolean PICKER_OBJECTCLASS_SEARCH = false;
@@ -129,7 +135,7 @@ public class AuditableController extends Controller {
             Table<Auditable> table = tableTemplate.fill(getAuditLoggerService().getAllActiveAuditable());
             return ok(views.html.admin.audit.auditable_table.render(Messages.get("admin.auditable.list.title"), table));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -145,7 +151,7 @@ public class AuditableController extends Controller {
             Utilities.sendSuccessFlashMessage(Messages.get("admin.auditable.delete.success"));
             return redirect(routes.AuditableController.listAuditable());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -167,7 +173,7 @@ public class AuditableController extends Controller {
                 return redirect(routes.AuditableController.listAuditable());
             }
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -180,7 +186,7 @@ public class AuditableController extends Controller {
             Form<Auditable> loadedForm = auditableForm.fill(auditable);
             return ok(views.html.admin.audit.auditable_form.render(Messages.get("admin.auditable.manage.title"), loadedForm));
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -198,7 +204,7 @@ public class AuditableController extends Controller {
             Utilities.sendSuccessFlashMessage(Messages.get("admin.auditable.manage.success", auditable));
             return redirect(routes.AuditableController.listAuditable());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -224,7 +230,7 @@ public class AuditableController extends Controller {
                     response().setHeader("Content-disposition", "attachment; filename=export.xlsx");
                     return ok(excelFile);
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
                 }
             }
         });
@@ -256,7 +262,7 @@ public class AuditableController extends Controller {
                         @Override
                         public void run() {
                             // Find the files to be archived
-                            String logFilesPathAsString = Play.application().configuration().getString("maf.audit.log.location");
+                            String logFilesPathAsString = getConfiguration().getString("maf.audit.log.location");
                             File logFilesPath = new File(logFilesPathAsString);
                             File logDirectory = logFilesPath.getParentFile();
 
@@ -317,7 +323,7 @@ public class AuditableController extends Controller {
 
                     return ok(Json.newObject());
                 } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log);
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
                 }
             }
         });
@@ -395,5 +401,13 @@ public class AuditableController extends Controller {
 
     private IAuditLoggerService getAuditLoggerService() {
         return auditLoggerService;
+    }
+
+    private II18nMessagesPlugin getMessagesPlugin() {
+        return messagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }

@@ -43,6 +43,7 @@ import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.ext.api.IExtensionDescriptor.IPluginConfigurationBlockDescriptor;
 import framework.services.ext.api.IExtensionDescriptor.IPluginConfigurationBlockDescriptor.ConfigurationBlockEditionType;
 import framework.services.ext.api.IExtensionDescriptor.IPluginDescriptor;
@@ -67,6 +68,7 @@ import models.framework_models.plugin.PluginConfigurationBlock;
 import models.framework_models.plugin.PluginDefinition;
 import models.framework_models.plugin.PluginIdentificationLink;
 import models.framework_models.plugin.PluginLog;
+import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
@@ -96,6 +98,10 @@ public class PluginManagerController extends Controller {
     private IEventBroadcastingService eventBroadcastingService;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(PluginManagerController.class);
 
@@ -538,7 +544,7 @@ public class PluginManagerController extends Controller {
             return ok(views.html.framework_views.parts.table.dynamic_tableview.render(table, pagination));
 
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log);
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
     }
 
@@ -975,5 +981,13 @@ public class PluginManagerController extends Controller {
      */
     public static enum MenuItemType {
         PLUGINS, DATA_SYNDICATION, API, SHARED_STORAGE;
+    }
+
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    private Configuration getConfiguration() {
+        return configuration;
     }
 }
