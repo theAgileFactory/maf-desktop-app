@@ -18,11 +18,22 @@
  
  @(pageHtmlTitle: String)
  
- @templates.main_nosidebar(
+ @templates.main_bc_nosidebar(
     pageHtmlTitle,
-    true,
-    true
+    Seq(
+        ("admin.workspace",null)
+    )
 ){
+	<script src="@routes.Assets.at("bower_components/jquery/dist/jquery.js")"></script>
+	<script src="@routes.Assets.at("framework/lib/angular/angular.min.js")"></script>
+	<script src="@routes.Assets.at("framework/lib/angular/angular-animate.min.js")"></script>
+	<script src="@routes.Assets.at("framework/lib/angular/angular-route.min.js")"></script>
+	<script src="@routes.Assets.at("framework/lib/angular/angular-resource.min.js")"></script>
+	<script src="@routes.Assets.at("app/admin/workspace/js/app.js")"></script>
+	<script src="@routes.Assets.at("app/admin/workspace/js/animations.js")"></script>
+	<script src="@routes.Assets.at("app/admin/workspace/js/controllers.js")"></script>
+	<script src="@routes.Assets.at("app/admin/workspace/js/filters.js")"></script>
+	<script src="@routes.Assets.at("app/admin/workspace/js/services.js")"></script>
 }{
 }
 

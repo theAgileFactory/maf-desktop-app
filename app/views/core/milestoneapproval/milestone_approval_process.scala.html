@@ -43,7 +43,8 @@
         (portfolioEntry.getName, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
         (milestoneInstance.lifeCycleMilestone.getShortName, null)
     )
-) {
+){
+}{
     <div style="font-size: 1.5em;">
         @for(s <- status) {
             @Html(s)

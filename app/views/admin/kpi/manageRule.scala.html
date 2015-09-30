@@ -39,7 +39,8 @@
         (kpi.getValueName(Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
         ("admin.kpi.rule.manage.title", null)
     )
-) {
+){
+}{
 
     @framework_views.parts.framework_code_editor_includes(routes.Assets.versioned("").url, framework.commons.IFrameworkConstants.Syntax.JAVASCRIPT)
     

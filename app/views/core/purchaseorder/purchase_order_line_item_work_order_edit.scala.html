@@ -39,7 +39,8 @@
 @templates.main_bc_nosidebar(
     parts.Msg.asString("core.purchase_order.title"),
     breadcrump
-) {
+){
+}{
 
     <p>@parts.Msg("core.purchase_order.line_item.work_order.edit.maximumamount", modelsparts.display_amount(lineItem.getRemainingAmount(workOrder), false, lineItem.currency))</p>
     

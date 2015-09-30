@@ -36,7 +36,8 @@
         ("core.process_transition_request.review_milestone_request_list.breadcrumb", controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0).url),
         ("core.process_transition_request.process_milestone_request.title", null)
     )
-) {
+){
+}{
     <div style="font-size: 1.5em;">
         @for(s <- status) {
             @Html(s)

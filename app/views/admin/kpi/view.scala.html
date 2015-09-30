@@ -35,7 +35,8 @@
         ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
         (kpi.getValueName(Kpi.DataType.MAIN), null)
     )
-) {
+){
+}{
     
     @framework_views.parts.framework_code_editor_includes(routes.Assets.versioned("").url, framework.commons.IFrameworkConstants.Syntax.JAVASCRIPT)
     
