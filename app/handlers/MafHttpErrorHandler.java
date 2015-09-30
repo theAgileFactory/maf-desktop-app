@@ -53,14 +53,6 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     public Promise<Result> onClientError(RequestHeader requestHeader, int statusCode, String error) {
         injectCommonServicesIncontext(Http.Context.current());
         if (statusCode == play.mvc.Http.Status.NOT_FOUND) {
-            try {
-                Promise<Result> result = getCustomRouterNotificationService().notify(Controller.ctx());
-                if (result != null) {
-                    return result;
-                }
-            } catch (Exception e) {
-                log.warn("Error while calling the custom router", e);
-            }
             return Promise.promise(new Function0<Result>() {
                 public Result apply() throws Throwable {
                     if (requestHeader.path().startsWith(AbstractApiController.STANDARD_API_ROOT_URI)) {
