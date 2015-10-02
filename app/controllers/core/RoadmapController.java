@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
@@ -114,10 +113,9 @@ import utils.table.PortfolioEntryListView;
  */
 @Restrict({ @Group(IMafConstants.ROADMAP_DISPLAY_PERMISSION) })
 public class RoadmapController extends Controller {
+
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
-    @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
     @Inject
@@ -148,35 +146,15 @@ public class RoadmapController extends Controller {
      * 
      * Note: the list of portfolio entries depends of the last filter
      * configuration.
-     * 
-     * @param reset
-     *            define if the filter must be reseted
      */
-    public Result index(Boolean reset) {
+
+    public Result index() {
 
         try {
 
-            FilterConfig<PortfolioEntryListView> filterConfig = null;
-
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the portfolio entries (except if
-             * the reset flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences();
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = PortfolioEntryListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = PortfolioEntryListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall());
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> t = getTable(filterConfig);
@@ -185,12 +163,7 @@ public class RoadmapController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-                return redirect(controllers.core.routes.RoadmapController.index(true));
-            } else {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-            }
 
         }
     }
@@ -203,19 +176,20 @@ public class RoadmapController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString());
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.parseResponse(json);
+                // get the table
+                Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> t = getTable(filterConfig);
 
-            // get the table
-            Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> t = getTable(filterConfig);
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -237,8 +211,7 @@ public class RoadmapController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    JsonNode json = request().body().asJson();
-                    FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.parseResponse(json);
+                    FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
 
                     OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
                     ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
@@ -272,7 +245,7 @@ public class RoadmapController extends Controller {
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
-                                        controllers.core.routes.RoadmapController.index(false).url());
+                                        controllers.core.routes.RoadmapController.index().url());
                             }
                         }
                     });
@@ -305,25 +278,9 @@ public class RoadmapController extends Controller {
 
         try {
 
-            FilterConfig<PortfolioEntryListView> filterConfig = null;
-
-            /*
-             * we try to get the last configured filter of the sign-in user
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences();
-            if (!StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = PortfolioEntryListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = PortfolioEntryListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall());
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
 
             OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
             ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
@@ -456,13 +413,12 @@ public class RoadmapController extends Controller {
 
         try {
 
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
+
             ObjectMapper mapper = new ObjectMapper();
             List<String> ids = new ArrayList<>();
-
-            String backedUpFilter = getFilterConfigurationFromPreferences();
-
-            JsonNode json = mapper.readTree(backedUpFilter);
-            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.parseResponse(json);
 
             OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
             ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
@@ -968,23 +924,6 @@ public class RoadmapController extends Controller {
     }
 
     /**
-     * Store the filter configuration in the user preferences.
-     * 
-     * @param filterConfigAsJson
-     *            the filter configuration as a json string
-     */
-    private void storeFilterConfigFromPreferences(String filterConfigAsJson) {
-        getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.ROADMAP_FILTER_STORAGE_PREFERENCE, filterConfigAsJson);
-    }
-
-    /**
-     * Retrieve the filter configuration from the user preferences.
-     */
-    private String getFilterConfigurationFromPreferences() {
-        return getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.ROADMAP_FILTER_STORAGE_PREFERENCE);
-    }
-
-    /**
      * Get the portfolio entry table and a filter config.
      * 
      * @param filterConfig
@@ -993,34 +932,40 @@ public class RoadmapController extends Controller {
     private Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> getTable(FilterConfig<PortfolioEntryListView> filterConfig)
             throws AccountManagementException {
 
-        OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
+        try {
 
-        ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(),
-                orderBy, getSecurityService());
+            OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
 
-        Pagination<PortfolioEntry> pagination = new Pagination<PortfolioEntry>(expressionList.findList().size(), expressionList);
+            ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
+                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
-        pagination.setCurrentPage(filterConfig.getCurrentPage());
+            Pagination<PortfolioEntry> pagination = new Pagination<PortfolioEntry>(expressionList.findList().size(), expressionList);
 
-        List<PortfolioEntryListView> portfolioEntryListView = new ArrayList<PortfolioEntryListView>();
-        for (PortfolioEntry portfolioEntry : pagination.getListOfObjects()) {
-            portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
+            pagination.setCurrentPage(filterConfig.getCurrentPage());
+
+            List<PortfolioEntryListView> portfolioEntryListView = new ArrayList<PortfolioEntryListView>();
+            for (PortfolioEntry portfolioEntry : pagination.getListOfObjects()) {
+                portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
+            }
+
+            Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fillForFilterConfig(portfolioEntryListView,
+                    getColumnsToHide(filterConfig));
+
+            if (getSecurityService().restrict(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
+
+                table.addAjaxRowAction(Msg.get("core.roadmap.simulator.capacity_kpis"),
+                        controllers.core.routes.RoadmapController.simulatorKpisFragment().url(), "simulator-kpis");
+                table.addLinkRowAction(Msg.get("core.roadmap.simulator.capacity_forecast"),
+                        controllers.core.routes.RoadmapController.simulatorCapacityForecast().url());
+
+                table.setAllIdsUrl(controllers.core.routes.RoadmapController.getAllIds().url());
+            }
+
+            return Pair.of(table, pagination);
+
+        } catch (AccountManagementException e) {
+            return null;
         }
-
-        Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fillForFilterConfig(portfolioEntryListView,
-                getColumnsToHide(filterConfig));
-
-        if (getSecurityService().restrict(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
-
-            table.addAjaxRowAction(Msg.get("core.roadmap.simulator.capacity_kpis"), controllers.core.routes.RoadmapController.simulatorKpisFragment().url(),
-                    "simulator-kpis");
-            table.addLinkRowAction(Msg.get("core.roadmap.simulator.capacity_forecast"),
-                    controllers.core.routes.RoadmapController.simulatorCapacityForecast().url());
-
-            table.setAllIdsUrl(controllers.core.routes.RoadmapController.getAllIds().url());
-        }
-
-        return Pair.of(table, pagination);
 
     }
 
@@ -1540,26 +1485,37 @@ public class RoadmapController extends Controller {
         }
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
-    }
-
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the system admin utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }

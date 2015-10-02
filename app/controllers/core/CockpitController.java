@@ -150,8 +150,8 @@ public class CockpitController extends Controller {
             portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
         }
 
-        Table<PortfolioEntryListView> asManagerTable =
-                PortfolioEntryListView.templateTable.fill(portfolioEntryListView, PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
+        Table<PortfolioEntryListView> asManagerTable = PortfolioEntryListView.templateTable.fill(portfolioEntryListView,
+                PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
 
         /**
          * get the portfolio entries for which the current actor is a
@@ -168,8 +168,8 @@ public class CockpitController extends Controller {
                     .add(new PortfolioEntryListView(portfolioEntry, StakeholderDao.getStakeholderAsListByActorAndPE(actorId, portfolioEntry.id)));
         }
 
-        Table<PortfolioEntryListView> asStakeholderTable =
-                PortfolioEntryListView.templateTable.fill(portfolioEntryListView, PortfolioEntryListView.getHideNonDefaultColumns(false, true, true));
+        Table<PortfolioEntryListView> asStakeholderTable = PortfolioEntryListView.templateTable.fill(portfolioEntryListView,
+                PortfolioEntryListView.getHideNonDefaultColumns(false, true, true));
 
         return ok(views.html.core.cockpit.cockpit_myinitiatives_list.render(asManagerTable, asManagerPagination, viewAllAsManager, asStakeholderTable,
                 asStakeholderPagination));
@@ -253,7 +253,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
@@ -290,7 +290,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
@@ -332,8 +332,8 @@ public class CockpitController extends Controller {
                 Long portfolioEntryId = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
                 PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryId);
 
-                String packageName =
-                        allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.getName() + " / " : "";
+                String packageName = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.getName() + " / "
+                        : "";
 
                 SourceItem item = new SourceItem(allocatedActor.actor.getNameHumanReadable(), portfolioEntry.getName());
 
@@ -357,12 +357,12 @@ public class CockpitController extends Controller {
                     cssClass += "warning";
                 }
 
-                SourceDataValue dataValue =
-                        new SourceDataValue(controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id).url(), null, null, null,
-                                null);
+                SourceDataValue dataValue = new SourceDataValue(controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id).url(),
+                        null, null, null, null);
 
-                item.values.add(new SourceValue(from, to, "", packageName
-                        + views.html.framework_views.parts.formats.display_number.render(allocatedActor.days, null, false).body(), cssClass, dataValue));
+                item.values.add(new SourceValue(from, to, "",
+                        packageName + views.html.framework_views.parts.formats.display_number.render(allocatedActor.days, null, false).body(), cssClass,
+                        dataValue));
 
                 items.add(item);
 
@@ -396,12 +396,11 @@ public class CockpitController extends Controller {
 
                 cssClass += "info";
 
-                SourceDataValue dataValue =
-                        new SourceDataValue(controllers.core.routes.ActorController.allocationDetails(allocatedActivity.actor.id, 0, 0, false).url(), null,
-                                null, null, null);
+                SourceDataValue dataValue = new SourceDataValue(
+                        controllers.core.routes.ActorController.allocationDetails(allocatedActivity.actor.id, 0, 0, false).url(), null, null, null, null);
 
-                item.values.add(new SourceValue(from, to, "", views.html.framework_views.parts.formats.display_number.render(allocatedActivity.days, null,
-                        false).body(), cssClass, dataValue));
+                item.values.add(new SourceValue(from, to, "",
+                        views.html.framework_views.parts.formats.display_number.render(allocatedActivity.days, null, false).body(), cssClass, dataValue));
 
                 items.add(item);
             }
@@ -431,7 +430,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
@@ -442,17 +441,20 @@ public class CockpitController extends Controller {
 
         // construct the portfolio entry table
 
-        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig;
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
+                .getCurrent(uid, request());
 
-        Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> portfolioEntryTable =
-                getPortfolioEntryAllocationsTable(actorId, portfolioEntryFilter);
+        Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> portfolioEntryTable = getPortfolioEntryAllocationsTable(
+                actorId, portfolioEntryFilter);
 
         // construct the activity table
 
-        FilterConfig<TimesheetActivityAllocatedActorListView> activityFilter = TimesheetActivityAllocatedActorListView.filterConfig;
+        FilterConfig<TimesheetActivityAllocatedActorListView> activityFilter = TimesheetActivityAllocatedActorListView.filterConfig.getCurrent(uid,
+                request());
 
-        Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> activityTable =
-                getActivityAllocationsTable(actorId, activityFilter);
+        Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> activityTable = getActivityAllocationsTable(actorId,
+                activityFilter);
 
         return ok(views.html.core.cockpit.cockpit_subordinates_allocations_details.render(portfolioEntryTable.getLeft(), portfolioEntryTable.getRight(),
                 portfolioEntryFilter, activityTable.getLeft(), activityTable.getRight(), activityFilter));
@@ -478,18 +480,22 @@ public class CockpitController extends Controller {
                 return redirect(controllers.routes.Application.index());
             }
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
+                    .persistCurrentInDefault(uid, request());
 
-            // fill the filter config
-            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig =
-                    PortfolioEntryResourcePlanAllocatedActorListView.filterConfig.parseResponse(json);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // get the table
-            Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t =
-                    getPortfolioEntryAllocationsTable(actorId, filterConfig);
+                // get the table
+                Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getPortfolioEntryAllocationsTable(
+                        actorId, filterConfig);
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
@@ -505,20 +511,16 @@ public class CockpitController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
-
             // fill the filter config
-            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig =
-                    PortfolioEntryResourcePlanAllocatedActorListView.filterConfig.parseResponse(json);
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
+                    .persistCurrentInDefault(uid, request());
 
             // get the current actor
-            
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
-            ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList =
-                    filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByManager(actor.id, true));
+            ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig
+                    .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByManager(actor.id, true));
 
             List<String> ids = new ArrayList<>();
             for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : expressionList.findList()) {
@@ -543,7 +545,7 @@ public class CockpitController extends Controller {
         try {
 
             // get the current actor
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
@@ -596,17 +598,22 @@ public class CockpitController extends Controller {
                 return redirect(controllers.routes.Application.index());
             }
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig = TimesheetActivityAllocatedActorListView.filterConfig
+                    .persistCurrentInDefault(uid, request());
 
-            // fill the filter config
-            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig = TimesheetActivityAllocatedActorListView.filterConfig.parseResponse(json);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // get the table
-            Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> t =
-                    getActivityAllocationsTable(actorId, filterConfig);
+                // get the table
+                Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> t = getActivityAllocationsTable(actorId,
+                        filterConfig);
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
@@ -624,7 +631,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
@@ -669,8 +676,8 @@ public class CockpitController extends Controller {
         Set<String> hideColumnsForSubmittedReports = new HashSet<String>();
         hideColumnsForSubmittedReports.add("reminderActionLink");
 
-        Table<TimesheetReportListView> submittedReportsFilledTable =
-                TimesheetReportListView.templateTable.fill(submittedReportListView, hideColumnsForSubmittedReports);
+        Table<TimesheetReportListView> submittedReportsFilledTable = TimesheetReportListView.templateTable.fill(submittedReportListView,
+                hideColumnsForSubmittedReports);
 
         return ok(views.html.core.cockpit.cockpit_subordinates_timesheet.render(lateReportsFilledTable, submittedReportsFilledTable));
     }
@@ -690,7 +697,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
@@ -742,7 +749,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
@@ -856,7 +863,7 @@ public class CockpitController extends Controller {
          */
         Long actorId = null;
         try {
-            
+
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
@@ -889,7 +896,7 @@ public class CockpitController extends Controller {
      *            the current menu item type, useful to select the correct item
      * @param securityService
      *            the security service
-     * @throws AccountManagementException 
+     * @throws AccountManagementException
      */
     public static SideBar getSideBar(MenuItemType currentType, ISecurityService securityService) throws AccountManagementException {
 
@@ -901,24 +908,20 @@ public class CockpitController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.portfolios", controllers.core.routes.CockpitController.portfolios(0, 0, false),
                 "glyphicons glyphicons-sort", currentType.equals(MenuItemType.MY_PORTFOLIOS)));
 
-        HeaderMenuItem employeesMenu =
-                new HeaderMenuItem("core.cockpit.sidebar.subordinates", "glyphicons glyphicons-pawn", currentType.equals(MenuItemType.MY_EMPLOYEES));
+        HeaderMenuItem employeesMenu = new HeaderMenuItem("core.cockpit.sidebar.subordinates", "glyphicons glyphicons-pawn",
+                currentType.equals(MenuItemType.MY_EMPLOYEES));
 
-        ClickableMenuItem employeesOverviewMenu =
-                new ClickableMenuItem("core.cockpit.sidebar.subordinates.members", controllers.core.routes.CockpitController.subordinates(),
-                        "glyphicons glyphicons-list", false);
+        ClickableMenuItem employeesOverviewMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.members",
+                controllers.core.routes.CockpitController.subordinates(), "glyphicons glyphicons-list", false);
 
-        ClickableMenuItem employeesAllocationMenu =
-                new ClickableMenuItem("core.cockpit.sidebar.subordinates.allocations_overview",
-                        controllers.core.routes.CockpitController.subordinatesAllocations(), "glyphicons glyphicons-radar", false);
+        ClickableMenuItem employeesAllocationMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.allocations_overview",
+                controllers.core.routes.CockpitController.subordinatesAllocations(), "glyphicons glyphicons-radar", false);
 
-        ClickableMenuItem employeesAllocationDetailsMenu =
-                new ClickableMenuItem("core.cockpit.sidebar.subordinates.allocations_details",
-                        controllers.core.routes.CockpitController.subordinatesAllocationsDetails(), "glyphicons glyphicons-zoom-in", false);
+        ClickableMenuItem employeesAllocationDetailsMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.allocations_details",
+                controllers.core.routes.CockpitController.subordinatesAllocationsDetails(), "glyphicons glyphicons-zoom-in", false);
 
-        ClickableMenuItem employeesTimesheetMenu =
-                new ClickableMenuItem("core.cockpit.sidebar.subordinates.timesheet", controllers.core.routes.CockpitController.subordinatesTimesheet(),
-                        "glyphicons glyphicons-clock", false);
+        ClickableMenuItem employeesTimesheetMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.timesheet",
+                controllers.core.routes.CockpitController.subordinatesTimesheet(), "glyphicons glyphicons-clock", false);
         ArrayList<String[]> list = new ArrayList<String[]>();
         list.add(new String[] { IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION });
         list.add(new String[] { IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION });
@@ -936,8 +939,9 @@ public class CockpitController extends Controller {
 
         if (securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
                 || securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
-            sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.budget_buckets", controllers.core.routes.CockpitController.budgetBuckets(0, 0,
-                    false, false), "glyphicons glyphicons-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
+            sideBar.addMenuItem(
+                    new ClickableMenuItem("core.cockpit.sidebar.budget_buckets", controllers.core.routes.CockpitController.budgetBuckets(0, 0, false, false),
+                            "glyphicons glyphicons-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
         }
 
         if (securityService.restrict(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
@@ -947,13 +951,13 @@ public class CockpitController extends Controller {
         }
 
         try {
-            
+
             String uid = ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
-            ClickableMenuItem myEmployeeCardMenu =
-                    new ClickableMenuItem("core.cockpit.sidebar.my_allocations", controllers.core.routes.ActorController.allocation(actor.id),
-                            "glyphicons glyphicons-address-book", currentType.equals(MenuItemType.MY_EMPLOYEE_CARD));
+            ClickableMenuItem myEmployeeCardMenu = new ClickableMenuItem("core.cockpit.sidebar.my_allocations",
+                    controllers.core.routes.ActorController.allocation(actor.id), "glyphicons glyphicons-address-book",
+                    currentType.equals(MenuItemType.MY_EMPLOYEE_CARD));
             myEmployeeCardMenu.setIsImportant(true);
             sideBar.addMenuItem(myEmployeeCardMenu);
 
@@ -973,11 +977,11 @@ public class CockpitController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>>
-            getPortfolioEntryAllocationsTable(Long actorId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig) {
+    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getPortfolioEntryAllocationsTable(
+            Long actorId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig) {
 
-        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList =
-                filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByManager(actorId, true));
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig
+                .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByManager(actorId, true));
         filterConfig.updateWithSortExpression(expressionList);
 
         Pagination<PortfolioEntryResourcePlanAllocatedActor> pagination = new Pagination<PortfolioEntryResourcePlanAllocatedActor>(expressionList);
@@ -992,8 +996,8 @@ public class CockpitController extends Controller {
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
 
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> table =
-                PortfolioEntryResourcePlanAllocatedActorListView.templateTable.fillForFilterConfig(listView, columnsToHide);
+        Table<PortfolioEntryResourcePlanAllocatedActorListView> table = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
+                .fillForFilterConfig(listView, columnsToHide);
 
         table.addAjaxRowAction(Msg.get("core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm"),
                 controllers.core.routes.CockpitController.confirmPortfolioEntryAllocations().url(), "confirm-result");
@@ -1020,11 +1024,11 @@ public class CockpitController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> getActivityAllocationsTable(
-            Long actorId, FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig) {
+    private Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> getActivityAllocationsTable(Long actorId,
+            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig) {
 
-        ExpressionList<TimesheetActivityAllocatedActor> expressionList =
-                filterConfig.updateWithSearchExpression(TimesheetDao.getTimesheetActivityAllocatedActorAsExprByManager(actorId, true));
+        ExpressionList<TimesheetActivityAllocatedActor> expressionList = filterConfig
+                .updateWithSearchExpression(TimesheetDao.getTimesheetActivityAllocatedActorAsExprByManager(actorId, true));
         filterConfig.updateWithSortExpression(expressionList);
 
         Pagination<TimesheetActivityAllocatedActor> pagination = new Pagination<TimesheetActivityAllocatedActor>(expressionList);
@@ -1039,8 +1043,8 @@ public class CockpitController extends Controller {
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
 
-        Table<TimesheetActivityAllocatedActorListView> table =
-                TimesheetActivityAllocatedActorListView.templateTable.fillForFilterConfig(listView, columnsToHide);
+        Table<TimesheetActivityAllocatedActorListView> table = TimesheetActivityAllocatedActorListView.templateTable.fillForFilterConfig(listView,
+                columnsToHide);
 
         table.setLineAction(new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
             @Override
@@ -1053,10 +1057,16 @@ public class CockpitController extends Controller {
 
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }

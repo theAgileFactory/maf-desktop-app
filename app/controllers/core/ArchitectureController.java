@@ -28,19 +28,15 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.architecture.ArchitectureDao;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -76,8 +72,7 @@ import utils.table.ApplicationBlockListView;
  * @author Johann Kohler
  */
 public class ArchitectureController extends Controller {
-    @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
+
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
@@ -128,30 +123,15 @@ public class ArchitectureController extends Controller {
 
     /**
      * Display the application blocks as a list.
-     * 
-     * @param reset
-     *            define if the filter should be reseted
      */
     @Restrict({ @Group(IMafConstants.ARCHITECTURE_PERMISSION) })
-    public Result applicationBlocks(Boolean reset) {
+    public Result applicationBlocks() {
 
         try {
 
-            FilterConfig<ApplicationBlockListView> filterConfig = null;
-
-            String backedUpFilter = getFilterConfigurationFromPreferences();
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = ApplicationBlockListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                filterConfig = ApplicationBlockListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall());
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.getCurrent(uid, request());
 
             Pair<Table<ApplicationBlockListView>, Pagination<ApplicationBlock>> table = getApplicationBlocksTable(filterConfig);
 
@@ -159,13 +139,7 @@ public class ArchitectureController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-                return redirect(controllers.core.routes.ArchitectureController.applicationBlocks(true));
-            } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-            }
-
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -177,19 +151,20 @@ public class ArchitectureController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString());
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.parseResponse(json);
+                // get the table
+                Pair<Table<ApplicationBlockListView>, Pagination<ApplicationBlock>> t = getApplicationBlocksTable(filterConfig);
 
-            // get the table
-            Pair<Table<ApplicationBlockListView>, Pagination<ApplicationBlock>> t = getApplicationBlocksTable(filterConfig);
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+            }
 
         } catch (Exception e) {
 
@@ -197,23 +172,6 @@ public class ArchitectureController extends Controller {
 
         }
 
-    }
-
-    /**
-     * Store the filter configuration in the user preferences.
-     * 
-     * @param filterConfigAsJson
-     *            the filter configuration as a json string
-     */
-    private void storeFilterConfigFromPreferences(String filterConfigAsJson) {
-        getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.APPLICATION_BLOCK_FILTER_STORAGE_PREFERENCE, filterConfigAsJson);
-    }
-
-    /**
-     * Retrieve the filter configuration from the user preferences.
-     */
-    private String getFilterConfigurationFromPreferences() {
-        return getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.APPLICATION_BLOCK_FILTER_STORAGE_PREFERENCE);
     }
 
     /**
@@ -232,8 +190,7 @@ public class ArchitectureController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    JsonNode json = request().body().asJson();
-                    FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.parseResponse(json);
+                    FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.persistCurrentInDefault(uid, request());
 
                     ExpressionList<ApplicationBlock> expressionList = filterConfig.updateWithSearchExpression(ArchitectureDao.getApplicationBlockAsExpr());
                     filterConfig.updateWithSortExpression(expressionList);
@@ -483,26 +440,37 @@ public class ArchitectureController extends Controller {
         }
     }
 
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
-    }
-
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the personal storage plugin.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the system admin utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }

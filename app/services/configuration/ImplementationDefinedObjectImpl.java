@@ -45,8 +45,8 @@ import play.mvc.Call;
  */
 @Singleton
 public class ImplementationDefinedObjectImpl implements IImplementationDefinedObjectService {
+
     private static Logger.ALogger log = Logger.of(ImplementationDefinedObjectImpl.class);
-    private static final String DEVDOCK_PERSPECTIVE_KEY = "devdock";
 
     /**
      * An enumeration which contains the top level menu entries.
@@ -91,9 +91,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     }
 
     /**
-     * Return the default currency for the system
-     * 
-     * @return
+     * Return the default currency for the system.
      */
     @Override
     public String getDefaultCurrencyCode() {
@@ -128,6 +126,41 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     @Override
     public Call getRouteForSwitchingTopMenuBarPerspective(String key) {
         return framework.utils.routes.TopMenuBarController.switchPerspective(key);
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationCreate() {
+        return framework.utils.routes.FilterConfigController.filterConfigurationCreate();
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationSave() {
+        return framework.utils.routes.FilterConfigController.filterConfigurationSave();
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationChange() {
+        return framework.utils.routes.FilterConfigController.filterConfigurationChange();
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationEdit() {
+        return framework.utils.routes.FilterConfigController.filterConfigurationEdit();
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationDelete() {
+        return framework.utils.routes.FilterConfigController.filterConfigurationDelete();
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationShare() {
+        return framework.utils.routes.FilterConfigController.filterConfigurationShare();
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationSearchPrincipal() {
+        return framework.utils.routes.FilterConfigController.filterConfigurationSearchPrincipal();
     }
 
     @Override
@@ -276,7 +309,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
 
         ClickableMenuItem viewReleasesMenuItem = new ClickableMenuItem(TopMenus.DELIVERY.name(1), "topmenubar.delivery.releases.menu.label",
-                controllers.core.routes.ReleaseController.list(false), "glyphicons glyphicons-git-branch", false);
+                controllers.core.routes.ReleaseController.list(), "glyphicons glyphicons-git-branch", false);
         viewReleasesMenuItem.setAuthorizedPermissions(
                 Utilities.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
         deliveryMenuItem.addSubMenuItem(viewReleasesMenuItem);
@@ -416,7 +449,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
      */
     private void defineRoadmapMenu(String perspectiveKey) {
         ClickableMenuItem roadmapMenuItem = new ClickableMenuItem(TopMenus.ROADMAP.name(), "topmenubar.roadmap.menu.label",
-                controllers.core.routes.RoadmapController.index(false), "glyphicons glyphicons-road", false);
+                controllers.core.routes.RoadmapController.index(), "glyphicons glyphicons-road", false);
         roadmapMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ROADMAP_DISPLAY_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(roadmapMenuItem);

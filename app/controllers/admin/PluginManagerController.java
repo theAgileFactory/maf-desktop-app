@@ -32,7 +32,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -53,6 +52,7 @@ import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.IPluginManagerService.PluginStatus;
 import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
+import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
@@ -92,6 +92,8 @@ import play.mvc.Result;
  * @author Pierre-Yves Cloux
  */
 public class PluginManagerController extends Controller {
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IPluginManagerService pluginManagerService;
     @Inject
@@ -205,11 +207,12 @@ public class PluginManagerController extends Controller {
                     SortStatusType.DESC);
             addColumnConfiguration("isError", "isError", "object.plugin_log.is_error.label", new CheckboxFilterComponent(true), true, true,
                     SortStatusType.UNSORTED);
-            addColumnConfiguration("event", "event", "object.plugin_log.event.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+            addColumnConfiguration("event", "event", "object.plugin_log.event.label", new TextFieldFilterComponent("*"), true, false,
+                    SortStatusType.UNSORTED);
             addColumnConfiguration("logMessage", "logMessage", "object.plugin_log.log_message.label", new TextFieldFilterComponent("*"), true, false,
                     SortStatusType.UNSORTED);
-            addColumnConfiguration("transactionId", "transactionId", "object.plugin_log.transaction_id.label", new TextFieldFilterComponent("*"), false, false,
-                    SortStatusType.UNSORTED);
+            addColumnConfiguration("transactionId", "transactionId", "object.plugin_log.transaction_id.label", new TextFieldFilterComponent("*"), false,
+                    false, SortStatusType.UNSORTED);
             addColumnConfiguration("dataType", "dataType", "object.plugin_log.data_type.label", new TextFieldFilterComponent("*"), false, false,
                     SortStatusType.UNSORTED);
             addColumnConfiguration("internalId", "internalId", "object.plugin_log.internal_id.label", new TextFieldFilterComponent("*"), false, false,
@@ -253,9 +256,12 @@ public class PluginManagerController extends Controller {
     }
 
     /**
-     * Distribute the plugin image
+     * Distribute the plugin image.
      * 
-     * @return
+     * @param identifier
+     *            the image identifier
+     * @param isBigImage
+     *            true for the big image, esle the small
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Promise<Result> image(String identifier, boolean isBigImage) {
@@ -282,7 +288,8 @@ public class PluginManagerController extends Controller {
     /**
      * Display the overview display for the plugins.<br/>
      * It consists in a list of plugins with their status (started/stopped).
-     * @throws AccountManagementException 
+     * 
+     * @throws AccountManagementException
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION), @Group(IMafConstants.API_MANAGER_PERMISSION),
             @Group(IMafConstants.PARTNER_SYNDICATION_PERMISSION) })
@@ -329,10 +336,10 @@ public class PluginManagerController extends Controller {
 
         // Select the definitions to be displayed (remove the mono instance
         // plugins which are already registered)
-        Map<String,Pair<Boolean,IPluginDescriptor>> pluginDescriptors = getPluginManagerService().getAllPluginDescriptors();
+        Map<String, Pair<Boolean, IPluginDescriptor>> pluginDescriptors = getPluginManagerService().getAllPluginDescriptors();
         List<Pair<Boolean, IPluginDescriptor>> plugins = new ArrayList<>();
         for (String key : pluginDescriptors.keySet()) {
-            Pair<Boolean, IPluginDescriptor> record=pluginDescriptors.get(key);
+            Pair<Boolean, IPluginDescriptor> record = pluginDescriptors.get(key);
             IPluginDescriptor pluginDescriptor = record.getRight();
             if (!(registeredDefinitions.contains(pluginDescriptor.getIdentifier()) && !pluginDescriptor.multiInstanceAllowed())) {
                 plugins.add(Pair.of(record.getLeft(), pluginDescriptor));
@@ -504,15 +511,20 @@ public class PluginManagerController extends Controller {
         }
 
         // Plugin logs
-        ExpressionList<PluginLog> pluginLogExpressionList = pluginLogsFilterConfig
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        FilterConfig<PluginLog> filterConfig = pluginLogsFilterConfig.getCurrent(uid, request());
+
+        ExpressionList<PluginLog> pluginLogExpressionList = filterConfig
                 .updateWithSearchExpression(PluginLog.getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
-        pluginLogsFilterConfig.updateWithSortExpression(pluginLogExpressionList);
+        filterConfig.updateWithSortExpression(pluginLogExpressionList);
+
         Pagination<PluginLog> pluginLogsPagination = new Pagination<PluginLog>(pluginLogExpressionList);
-        pluginLogsPagination.setCurrentPage(pluginLogsFilterConfig.getCurrentPage());
-        Table<PluginLog> pluginLogsTable = pluginLogsTableTemplate.fill(pluginLogsPagination.getListOfObjects(), pluginLogsFilterConfig.getColumnsToHide());
+        pluginLogsPagination.setCurrentPage(filterConfig.getCurrentPage());
+
+        Table<PluginLog> pluginLogsTable = pluginLogsTableTemplate.fill(pluginLogsPagination.getListOfObjects(), filterConfig.getColumnsToHide());
 
         return ok(views.html.admin.plugin.pluginmanager_configuration_details.render(configuration.name, pluginConfigurationId, pluginInfo,
-                configurationBlocksTableTemplate.fill(configurationBlocks), pluginLogsPagination, pluginLogsTable, pluginLogsFilterConfig));
+                configurationBlocksTableTemplate.fill(configurationBlocks), pluginLogsPagination, pluginLogsTable, filterConfig));
     }
 
     /**
@@ -525,23 +537,28 @@ public class PluginManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result filterPluginLogs(Long pluginConfigurationId) {
 
-        JsonNode json = request().body().asJson();
-
         try {
 
-            FilterConfig<PluginLog> filledFilterConfig = pluginLogsFilterConfig.parseResponse(json);
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PluginLog> filledFilterConfig = pluginLogsFilterConfig.persistCurrentInDefault(uid, request());
 
-            ExpressionList<PluginLog> pluginLogExpressionList = filledFilterConfig
-                    .updateWithSearchExpression(PluginLog.getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
+            if (filledFilterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            filledFilterConfig.updateWithSortExpression(pluginLogExpressionList);
+                ExpressionList<PluginLog> pluginLogExpressionList = filledFilterConfig
+                        .updateWithSearchExpression(PluginLog.getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
 
-            Pagination<PluginLog> pagination = new Pagination<PluginLog>(pluginLogExpressionList);
-            pagination.setCurrentPage(filledFilterConfig.getCurrentPage());
+                filledFilterConfig.updateWithSortExpression(pluginLogExpressionList);
 
-            Table<PluginLog> table = pluginLogsTableTemplate.fill(pagination.getListOfObjects(), filledFilterConfig.getColumnsToHide());
+                Pagination<PluginLog> pagination = new Pagination<PluginLog>(pluginLogExpressionList);
+                pagination.setCurrentPage(filledFilterConfig.getCurrentPage());
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(table, pagination));
+                Table<PluginLog> table = pluginLogsTableTemplate.fill(pagination.getListOfObjects(), filledFilterConfig.getColumnsToHide());
+
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(table, pagination));
+
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -816,16 +833,32 @@ public class PluginManagerController extends Controller {
         return registeredDefinitions;
     }
 
+    /**
+     * Get the plugin manager service.
+     */
     private IPluginManagerService getPluginManagerService() {
         return pluginManagerService;
     }
 
+    /**
+     * Get the event broadcasting service.
+     */
     private IEventBroadcastingService getEventBroadcastingService() {
         return eventBroadcastingService;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    /**
+     * Get the user session manager service.
+     */
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 
     /**

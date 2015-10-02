@@ -29,7 +29,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -47,6 +46,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -96,6 +96,10 @@ public class OrgUnitController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+
     
     private static Logger.ALogger log = Logger.of(OrgUnitController.class);
 
@@ -464,15 +468,17 @@ public class OrgUnitController extends Controller {
 
         // construct the actors portfolio entry table
 
-        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> actorsPortfolioEntryFilter;
-        actorsPortfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig;
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> actorsPortfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
+                .getCurrent(uid, request());
 
         Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> actorsPortfolioEntryTable;
         actorsPortfolioEntryTable = getActorsPEAllocTable(id, actorsPortfolioEntryFilter);
 
         // construct the actors activity table
 
-        FilterConfig<TimesheetActivityAllocatedActorListView> actorsActivityFilter = TimesheetActivityAllocatedActorListView.filterConfig;
+        FilterConfig<TimesheetActivityAllocatedActorListView> actorsActivityFilter = TimesheetActivityAllocatedActorListView.filterConfig.getCurrent(uid,
+                request());
 
         Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> actorsActivityTable;
         actorsActivityTable = getActorsActivityAllocTable(id, actorsActivityFilter);
@@ -494,18 +500,22 @@ public class OrgUnitController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
-
-            // fill the filter config
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
-                    .parseResponse(json);
+                    .persistCurrentInDefault(uid, request());
 
-            // get the table
-            Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getActorsPEAllocTable(id,
-                    filterConfig);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+                // get the table
+                Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getActorsPEAllocTable(
+                        id, filterConfig);
+
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -525,17 +535,22 @@ public class OrgUnitController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig = TimesheetActivityAllocatedActorListView.filterConfig
+                    .persistCurrentInDefault(uid, request());
 
-            // fill the filter config
-            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig = TimesheetActivityAllocatedActorListView.filterConfig.parseResponse(json);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // get the table
-            Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> t = getActorsActivityAllocTable(id,
-                    filterConfig);
+                // get the table
+                Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> t = getActorsActivityAllocTable(id,
+                        filterConfig);
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -719,6 +734,13 @@ public class OrgUnitController extends Controller {
 
         return Pair.of(table, pagination);
 
+    }
+
+    /**
+     * Get the user session manager service.
+     */
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 
     /**

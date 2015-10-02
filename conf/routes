@@ -11,6 +11,14 @@ POST   /ext/*path                  framework.services.router.CustomRouterControl
 #Workspace management
 GET    /admin/workspace/config     controllers.admin.WorkspaceController.display()
 
+POST    /filter-configuration/create            framework.utils.FilterConfigController.filterConfigurationCreate()
+POST    /filter-configuration/save              framework.utils.FilterConfigController.filterConfigurationSave()
+POST    /filter-configuration/change            framework.utils.FilterConfigController.filterConfigurationChange()
+POST    /filter-configuration/edit              framework.utils.FilterConfigController.filterConfigurationEdit()
+POST    /filter-configuration/delete            framework.utils.FilterConfigController.filterConfigurationDelete()
+POST    /filter-configuration/share             framework.utils.FilterConfigController.filterConfigurationShare()
+GET     /filter-configuration/principal/search  framework.utils.FilterConfigController.filterConfigurationSearchPrincipal()
+
 #Application controller
 GET    /                           controllers.Application.index()
 GET    /notification/redirect      controllers.Application.redirectForNotification(id: Long)
@@ -194,7 +202,7 @@ GET    /cockpit/releases                                          controllers.co
 # Core: Roadmap
 #-------------------
 
-GET    /roadmap                                  controllers.core.RoadmapController.index(reset: Boolean ?= false)
+GET    /roadmap                                  controllers.core.RoadmapController.index()
 POST   /roadmap/filter                           controllers.core.RoadmapController.indexFilter()
 GET    /roadmap/planning/view                    controllers.core.RoadmapController.viewPlanning()
 POST   /roadmap/export                           controllers.core.RoadmapController.exportAsExcel()
@@ -277,13 +285,13 @@ GET    /portfolio-entry/governance/process/change/process  controllers.core.Port
 # Core: PortfolioEntryDelivery
 #-------------------
 
-GET    /portfolio-entry/requirements                      controllers.core.PortfolioEntryDeliveryController.requirements(id: Long, reset: Boolean ?= false)
+GET    /portfolio-entry/requirements                      controllers.core.PortfolioEntryDeliveryController.requirements(id: Long)
 POST   /portfolio-entry/requirements/filter               controllers.core.PortfolioEntryDeliveryController.requirementsFilter(id: Long)
 GET    /portfolio-entry/requirements/status               controllers.core.PortfolioEntryDeliveryController.requirementsStatus(id: Long)
 GET    /portfolio-entry/requirement/view                  controllers.core.PortfolioEntryDeliveryController.viewRequirement(id: Long, requirementId: Long)
 GET    /portfolio-entry/requirement/edit                  controllers.core.PortfolioEntryDeliveryController.editRequirement(id: Long, requirementId: Long)
 POST   /portfolio-entry/requirement/edit                  controllers.core.PortfolioEntryDeliveryController.processEditRequirement()
-GET    /portfolio-entry/iterations                        controllers.core.PortfolioEntryDeliveryController.iterations(id: Long, reset: Boolean ?= false)
+GET    /portfolio-entry/iterations                        controllers.core.PortfolioEntryDeliveryController.iterations(id: Long)
 POST   /portfolio-entry/iterations/filter                 controllers.core.PortfolioEntryDeliveryController.iterationsFilter(id: Long)
 GET    /portfolio-entry/iteration/view                    controllers.core.PortfolioEntryDeliveryController.viewIteration(id: Long, iterationId: Long)
 GET    /portfolio-entry/iteration/edit                    controllers.core.PortfolioEntryDeliveryController.editIteration(id: Long, iterationId: Long ?= 0)
@@ -299,7 +307,7 @@ GET    /portfolio-entry/release/unassign                  controllers.core.Portf
 
 GET    /portfolio-entry/planning                                               controllers.core.PortfolioEntryPlanningController.overview(id: Long)
 POST   /portfolio-entry/planning                                               controllers.core.PortfolioEntryPlanningController.overviewChangeConf(id: Long)
-GET    /portfolio-entry/packages                                               controllers.core.PortfolioEntryPlanningController.packages(id: Long, reset: Boolean ?= false)
+GET    /portfolio-entry/packages                                               controllers.core.PortfolioEntryPlanningController.packages(id: Long)
 POST   /portfolio-entry/packages/filter                                        controllers.core.PortfolioEntryPlanningController.packagesFilter(id: Long)
 GET    /portfolio-entry/package/view                                           controllers.core.PortfolioEntryPlanningController.viewPackage(id: Long, planningPackageId: Long)
 GET    /portfolio-entry/package/manage                                         controllers.core.PortfolioEntryPlanningController.managePackage(id: Long, planningPackageId: Long ?= 0)
@@ -345,13 +353,13 @@ GET    /portfolio-entry/report/delete             controllers.core.PortfolioEntr
 GET    /portfolio-entry/report/attachment/create  controllers.core.PortfolioEntryStatusReportingController.createReportAttachment(id: Long, reportId: Long)
 POST   /portfolio-entry/report/attachment/create  controllers.core.PortfolioEntryStatusReportingController.processCreateReportAttachment()
 GET    /portfolio-entry/report/attachment/delete  controllers.core.PortfolioEntryStatusReportingController.deleteReportAttachment(id: Long, reportId: Long, attachmentId: Long)
-GET    /portfolio-entry/events                    controllers.core.PortfolioEntryStatusReportingController.events(id: Long, reset: Boolean ?= false)
+GET    /portfolio-entry/events                    controllers.core.PortfolioEntryStatusReportingController.events(id: Long)
 POST   /portfolio-entry/events/filter             controllers.core.PortfolioEntryStatusReportingController.eventsFilter(id: Long)
 POST   /portfolio-entry/events/export             controllers.core.PortfolioEntryStatusReportingController.exportEventsAsExcel(id: Long)
 GET    /portfolio-entry/event/manage              controllers.core.PortfolioEntryStatusReportingController.manageEvent(id: Long, eventId: Long ?= 0)
 POST   /portfolio-entry/event/manage              controllers.core.PortfolioEntryStatusReportingController.processManageEvent()
 GET    /portfolio-entry/event/delete              controllers.core.PortfolioEntryStatusReportingController.deleteEvent(id: Long, eventId: Long ?= 0)
-GET    /portfolio-entry/timesheets                controllers.core.PortfolioEntryStatusReportingController.timesheets(id: Long, reset: Boolean ?= false)
+GET    /portfolio-entry/timesheets                controllers.core.PortfolioEntryStatusReportingController.timesheets(id: Long)
 POST   /portfolio-entry/timesheets/filter         controllers.core.PortfolioEntryStatusReportingController.timesheetsFilter(id: Long)
 POST   /portfolio-entry/timesheets/export         controllers.core.PortfolioEntryStatusReportingController.exportTimesheetsAsExcel(id: Long)
 
@@ -463,7 +471,7 @@ POST   /reporting/generate                     controllers.core.ReportingControl
 # Core: Release
 #-------------------
 
-GET    /releases                               controllers.core.ReleaseController.list(reset: Boolean ?= false)
+GET    /releases                               controllers.core.ReleaseController.list()
 POST   /releases/filter                        controllers.core.ReleaseController.listFilter()
 POST   /releases/export                        controllers.core.ReleaseController.exportListAsExcel()
 GET    /releases/planning                      controllers.core.ReleaseController.planning()
@@ -480,7 +488,7 @@ GET    /release/delete                         controllers.core.ReleaseControlle
 #-------------------
 
 GET    /architecture                                           controllers.core.ArchitectureController.index(applicationBlockId: java.lang.Long ?= null)
-GET    /architecture/application-blocks                        controllers.core.ArchitectureController.applicationBlocks(reset: Boolean ?= false)
+GET    /architecture/application-blocks                        controllers.core.ArchitectureController.applicationBlocks()
 POST   /architecture/application-blocks/filter                 controllers.core.ArchitectureController.applicationBlocksFilter()
 POST   /architecture/application-blocks/export                 controllers.core.ArchitectureController.applicationBlocksAsExcel()
 GET    /architecture/application-block/manage/fragment         controllers.core.ArchitectureController.manageApplicationBlockFragment(parentId: java.lang.Long ?= null, order: java.lang.Integer ?= null, id: java.lang.Long ?= null)

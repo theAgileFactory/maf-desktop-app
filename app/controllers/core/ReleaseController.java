@@ -31,13 +31,11 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -105,8 +103,6 @@ public class ReleaseController extends Controller {
     @Inject
     private IPersonalStoragePlugin personalStoragePlugin;
     @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
-    @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
     @Inject
     private ISysAdminUtils sysAdminUtils;
@@ -123,36 +119,15 @@ public class ReleaseController extends Controller {
 
     /**
      * Display the list of authorized releases for the sign user.
-     * 
-     * @param reset
-     *            define if the filter must be reseted
      */
     @Restrict({ @Group(IMafConstants.RELEASE_VIEW_ALL_PERMISSION), @Group(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION) })
-    public Result list(Boolean reset) {
+    public Result list() {
 
         try {
 
-            FilterConfig<ReleaseListView> filterConfig = null;
-
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the releases (except if the
-             * reset flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences();
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = ReleaseListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = ReleaseListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall());
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<ReleaseListView>, Pagination<Release>> t = getReleasesTable(filterConfig);
@@ -161,12 +136,7 @@ public class ReleaseController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-                return redirect(controllers.core.routes.ReleaseController.list(true));
-            } else {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-            }
 
         }
 
@@ -188,9 +158,7 @@ public class ReleaseController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-
-                    JsonNode json = request().body().asJson();
-                    FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.parseResponse(json);
+                    FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.getCurrent(uid, request());
 
                     OrderBy<Release> orderBy = filterConfig.getSortExpression();
                     ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy,
@@ -223,7 +191,7 @@ public class ReleaseController extends Controller {
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
-                                        controllers.core.routes.ReleaseController.list(false).url());
+                                        controllers.core.routes.ReleaseController.list().url());
                             }
                         }
                     });
@@ -246,19 +214,20 @@ public class ReleaseController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString());
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.parseResponse(json);
+                // get the table
+                Pair<Table<ReleaseListView>, Pagination<Release>> t = getReleasesTable(filterConfig);
 
-            // get the table
-            Pair<Table<ReleaseListView>, Pagination<Release>> t = getReleasesTable(filterConfig);
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -275,27 +244,10 @@ public class ReleaseController extends Controller {
     public Result planning() {
 
         try {
-            FilterConfig<ReleaseListView> filterConfig = null;
 
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the releases (except if the
-             * reset flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences();
-            if (!StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = ReleaseListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = ReleaseListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall());
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.getCurrent(uid, request());
 
             OrderBy<Release> orderBy = filterConfig.getSortExpression();
             ExpressionList<Release> expressionList = ReleaseDynamicHelper.getReleasesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy,
@@ -397,23 +349,6 @@ public class ReleaseController extends Controller {
 
         return Pair.of(table, pagination);
 
-    }
-
-    /**
-     * Store the filter configuration in the user preferences.
-     * 
-     * @param filterConfigAsJson
-     *            the filter configuration as a json string
-     */
-    private void storeFilterConfigFromPreferences(String filterConfigAsJson) {
-        getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.RELEASES_FILTER_STORAGE_PREFERENCE, filterConfigAsJson);
-    }
-
-    /**
-     * Retrieve the filter configuration from the user preferences.
-     */
-    private String getFilterConfigurationFromPreferences() {
-        return getPreferenceManagerPlugin().getPreferenceValueAsString(IMafConstants.RELEASES_FILTER_STORAGE_PREFERENCE);
     }
 
     /**
@@ -599,7 +534,7 @@ public class ReleaseController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.release.delete.successful"));
 
-        return redirect(controllers.core.routes.ReleaseController.list(false));
+        return redirect(controllers.core.routes.ReleaseController.list());
     }
 
     /**
@@ -612,7 +547,7 @@ public class ReleaseController extends Controller {
 
         SideBar sideBar = new SideBar();
 
-        sideBar.addMenuItem(new ClickableMenuItem("topmenubar.delivery.releases.menu.label", controllers.core.routes.ReleaseController.list(false),
+        sideBar.addMenuItem(new ClickableMenuItem("topmenubar.delivery.releases.menu.label", controllers.core.routes.ReleaseController.list(),
                 "glyphicons glyphicons-git-branch", currentType.equals(MenuItemType.LIST)));
 
         sideBar.addMenuItem(new ClickableMenuItem("core.release.list.planning.title", controllers.core.routes.ReleaseController.planning(),
@@ -632,26 +567,37 @@ public class ReleaseController extends Controller {
         LIST, PLANNING;
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
-    }
-
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the system admin utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }

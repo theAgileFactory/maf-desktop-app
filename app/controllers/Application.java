@@ -162,7 +162,9 @@ public class Application extends Controller {
 
         try {
 
-            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig;
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.getCurrent(uid, request());
 
             Pair<Table<NotificationListView>, Pagination<Notification>> t = getNotificationsTable(filterConfig);
 
@@ -181,16 +183,20 @@ public class Application extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // fill the filter config
-            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.parseResponse(json);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // get the table
-            Pair<Table<NotificationListView>, Pagination<Notification>> t = getNotificationsTable(filterConfig);
+                // get the table
+                Pair<Table<NotificationListView>, Pagination<Notification>> t = getNotificationsTable(filterConfig);
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -259,11 +265,9 @@ public class Application extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
-
-            // fill the filter config
-            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.parseResponse(json);
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.getCurrent(uid, request());
 
             String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
