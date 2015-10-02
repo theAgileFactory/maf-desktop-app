@@ -9,7 +9,7 @@
 			<fileNamePattern>application.%d{yyyy-MM-dd}.log</fileNamePattern>
 		</rollingPolicy>
 		<encoder>
-			<pattern>%date - [%level] - from %logger in %thread %n%message%n%xException%n</pattern>
+			<pattern>%date - [%level] - from %logger in %thread : %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
 		</encoder>
 	</appender>
 
@@ -20,7 +20,7 @@
 			<maxHistory>60</maxHistory>
 		</rollingPolicy>
 		<encoder>
-			<pattern>%date - [%level] - from %logger in %thread %n%message%n%xException%n</pattern>
+			<pattern>%date - [%level] - from %logger in %thread %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
 		</encoder>
 	</appender>
 	
@@ -31,14 +31,13 @@
             <maxHistory>10</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%date;%level;%thread;%message%xException%n</pattern>
+            <pattern>%date - [%level] - from %logger in %thread %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
         </encoder>
     </appender>
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%coloredLevel %logger{15} - %message%n%xException{5}
-			</pattern>
+			<pattern>%date - [%level] - from %logger in %thread : %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
 		</encoder>
 	</appender>
 
