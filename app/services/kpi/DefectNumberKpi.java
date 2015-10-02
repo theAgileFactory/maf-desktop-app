@@ -52,7 +52,7 @@ public class DefectNumberKpi implements IKpiRunner {
 
     @Override
     public String link(Long objectId) {
-        return controllers.core.routes.PortfolioEntryDeliveryController.requirements(objectId, false).url();
+        return controllers.core.routes.PortfolioEntryDeliveryController.requirements(objectId).url();
     }
 
     @Override

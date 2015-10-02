@@ -29,7 +29,7 @@
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
-        ("core.portfolio_entry.sidebar.delivery.requirements.label", controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id, false).url),
+        ("core.portfolio_entry.sidebar.delivery.requirements.label", controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id).url),
         (requirement.getName, null)
     )
 }
@@ -154,6 +154,6 @@
     
     </div>
     
-    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id, "")">@parts.Msg("button.back")</a>
+    <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id)">@parts.Msg("button.back")</a>
 
 }

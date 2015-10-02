@@ -639,7 +639,7 @@ public class PortfolioEntryController extends Controller {
         // update the licenses number
         getLicensesManagementService().updateConsumedPortfolioEntries();
 
-        return redirect(controllers.core.routes.RoadmapController.index(false));
+        return redirect(controllers.core.routes.RoadmapController.index());
     }
 
     /**
@@ -960,13 +960,13 @@ public class PortfolioEntryController extends Controller {
                     currentType.equals(MenuItemType.DELIVERY));
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.requirements.label",
-                    controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntryId, false), "glyphicons glyphicons-log-book", false));
+                    controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntryId), "glyphicons glyphicons-log-book", false));
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.requirements_status.label",
                     controllers.core.routes.PortfolioEntryDeliveryController.requirementsStatus(portfolioEntryId), "glyphicons glyphicons-charts", false));
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.iterations.label",
-                    controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntryId, false), "glyphicons glyphicons-history", false));
+                    controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntryId), "glyphicons glyphicons-history", false));
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.releases.label",
                     controllers.core.routes.PortfolioEntryDeliveryController.releases(portfolioEntryId), "glyphicons glyphicons-git-branch", false));
@@ -980,7 +980,7 @@ public class PortfolioEntryController extends Controller {
                     controllers.core.routes.PortfolioEntryPlanningController.overview(portfolioEntryId), "glyphicons glyphicons-radar", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.packages.label",
-                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId, false), "glyphicons glyphicons-package", false));
+                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId), "glyphicons glyphicons-package", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.resources.label",
                     controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryId), "glyphicons glyphicons-address-book", false));
@@ -995,12 +995,10 @@ public class PortfolioEntryController extends Controller {
                     "glyphicons glyphicons-inbox", false));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.events.label",
-                    controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId, false), "glyphicons glyphicons-bullhorn",
-                    false));
+                    controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId), "glyphicons glyphicons-bullhorn", false));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.timesheets.label",
-                    controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntryId, false), "glyphicons glyphicons-clock",
-                    false));
+                    controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntryId), "glyphicons glyphicons-clock", false));
 
             sideBar.addMenuItem(reportingMenu);
 
@@ -1037,26 +1035,44 @@ public class PortfolioEntryController extends Controller {
         OVERVIEW, VIEW, FINANCIAL, STAKEHOLDERS, GOVERNANCE, PLANNING, DELIVERY, REPORTING, INTEGRATION;
     }
 
+    /**
+     * Get the licenses management service.
+     */
     private ILicensesManagementService getLicensesManagementService() {
         return licensesManagementService;
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the plugin manager service.
+     */
     private IPluginManagerService getPluginManagerService() {
         return pluginManagerService;
     }
 
+    /**
+     * Get the attachment manager service.
+     */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }

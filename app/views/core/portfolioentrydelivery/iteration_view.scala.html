@@ -29,7 +29,7 @@
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
-        ("core.portfolio_entry.sidebar.delivery.iterations.label", controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id, false).url),
+        ("core.portfolio_entry.sidebar.delivery.iterations.label", controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id).url),
         (iteration.getName, null)
     )
 }

@@ -216,6 +216,24 @@ filter.table.excel.failure=Fehler: Excel-Export fehlgeschlagen
 filter.table.ajax.error.message=Fehler: Server nicht erreichbar. Bitte aktualisieren Sie die Seite
 filter.table.empty.textfilter=Alle
 
+object.filter_configuration.name.default.label=de: Default
+object.filter_configuration.name.title=de: Filter name
+object.filter_configuration.name.error=de: The name should not be empty
+object.filter_configuration.delete.confirmation=de: Are you sure you want to delete this filter?
+
+object.filter_configuration.share.title=de: Share the filter
+object.filter_configuration.share.header=de: Share the filter with a BizDock user. A notification will be automatically sent to him.
+object.filter_configuration.share.recipient=de: Recipient
+object.filter_configuration.share.successful=de: The filter has been successfully shared
+object.filter_configuration.share.notification.title=de: Shared filter
+object.filter_configuration.share.notification.message=de: A BizDock user has shared a filter with you.
+
+object.filter_configuration.shared_filter.title=de: Filter <strong>{0}</strong> from the user <strong>{1}</strong>
+object.filter_configuration.shared_filter.not_found=de: The shared filter is not existing. The default filter has been loaded.
+
+object.filter_configuration.no_more_compatible.page_load=de: The filter configuration is no more compatible with the table: the initial configuration has been reloaded.
+object.filter_configuration.no_more_compatible.dynamic=de: The selected filter configuration is no more compatible with the table: it is recommended to delete the filter and refresh the page.
+
 #----------------------
 # chart
 #----------------------

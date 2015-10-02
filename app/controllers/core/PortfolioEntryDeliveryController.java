@@ -24,13 +24,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
@@ -43,8 +40,8 @@ import framework.highcharts.pattern.BasicBar;
 import framework.highcharts.pattern.DistributedDonut;
 import framework.highcharts.pattern.RangeLine;
 import framework.security.ISecurityService;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
@@ -82,14 +79,16 @@ import utils.table.RequirementListView;
  * @author Johann Kohler
  */
 public class PortfolioEntryDeliveryController extends Controller {
-    @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
+
     @Inject
     private II18nMessagesPlugin messagesPlugin;
     @Inject
     private ISecurityService securityService;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -102,39 +101,19 @@ public class PortfolioEntryDeliveryController extends Controller {
      * 
      * @param id
      *            the portfolio entry id
-     * @param reset
-     *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result requirements(Long id, Boolean reset) {
+    public Result requirements(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         try {
 
-            FilterConfig<RequirementListView> filterConfig = null;
-
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the requirements (except if the
-             * reset flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences(IMafConstants.REQUIREMENTS_FILTER_STORAGE_PREFERENCE);
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = RequirementListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = RequirementListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall(), IMafConstants.REQUIREMENTS_FILTER_STORAGE_PREFERENCE);
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<RequirementListView> filterConfig = RequirementListView.filterConfig.getCurrent(uid, request());
 
             ExpressionList<Requirement> expressionList = filterConfig.updateWithSearchExpression(RequirementDAO.getRequirementAsExprByPE(id));
             filterConfig.updateWithSortExpression(expressionList);
@@ -158,12 +137,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-                return redirect(controllers.core.routes.PortfolioEntryDeliveryController.requirements(id, true));
-            } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-            }
+               return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
 
         }
 
@@ -181,34 +155,35 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<RequirementListView> filterConfig = RequirementListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString(), IMafConstants.REQUIREMENTS_FILTER_STORAGE_PREFERENCE);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<RequirementListView> filterConfig = RequirementListView.filterConfig.parseResponse(json);
+                ExpressionList<Requirement> expressionList = filterConfig.updateWithSearchExpression(RequirementDAO.getRequirementAsExprByPE(id));
+                filterConfig.updateWithSortExpression(expressionList);
 
-            ExpressionList<Requirement> expressionList = filterConfig.updateWithSearchExpression(RequirementDAO.getRequirementAsExprByPE(id));
-            filterConfig.updateWithSortExpression(expressionList);
+                Pagination<Requirement> pagination = new Pagination<Requirement>(expressionList);
+                pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-            Pagination<Requirement> pagination = new Pagination<Requirement>(expressionList);
-            pagination.setCurrentPage(filterConfig.getCurrentPage());
+                List<RequirementListView> requirementListView = new ArrayList<RequirementListView>();
+                for (Requirement requirement : pagination.getListOfObjects()) {
+                    requirementListView.add(new RequirementListView(requirement));
+                }
 
-            List<RequirementListView> requirementListView = new ArrayList<RequirementListView>();
-            for (Requirement requirement : pagination.getListOfObjects()) {
-                requirementListView.add(new RequirementListView(requirement));
+                Set<String> hideColumns = filterConfig.getColumnsToHide();
+                if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+                    hideColumns.add("editActionLink");
+                }
+
+                Table<RequirementListView> filledTable = RequirementListView.templateTable.fillForFilterConfig(requirementListView, hideColumns);
+
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(filledTable, pagination));
+
             }
-
-            Set<String> hideColumns = filterConfig.getColumnsToHide();
-            if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
-                hideColumns.add("editActionLink");
-            }
-
-            Table<RequirementListView> filledTable = RequirementListView.templateTable.fillForFilterConfig(requirementListView, hideColumns);
-
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(filledTable, pagination));
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
@@ -290,8 +265,8 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         DistributedDonut distributedDonutSeverity = new DistributedDonut(getMessagesPlugin());
 
-        DistributedDonut.Elem blockerElem =
-                new DistributedDonut.Elem(Msg.get("core.portfolio_entry_delivery.requirement.status.severity.blocker.true.label"));
+        DistributedDonut.Elem blockerElem = new DistributedDonut.Elem(
+                Msg.get("core.portfolio_entry_delivery.requirement.status.severity.blocker.true.label"));
         double blockerTotal = 0;
         for (Type type : Type.values()) {
             Double count = Double.valueOf(RequirementDAO.getRequirementDefectsAsExprByPEAndStatusType(id, type, true).findRowCount());
@@ -305,8 +280,8 @@ public class PortfolioEntryDeliveryController extends Controller {
             distributedDonutSeverity.addElem(blockerElem);
         }
 
-        DistributedDonut.Elem nonBlockerElem =
-                new DistributedDonut.Elem(Msg.get("core.portfolio_entry_delivery.requirement.status.severity.blocker.false.label"));
+        DistributedDonut.Elem nonBlockerElem = new DistributedDonut.Elem(
+                Msg.get("core.portfolio_entry_delivery.requirement.status.severity.blocker.false.label"));
         double nonBlockerTotal = 0;
         for (Type type : Type.values()) {
             Double count = Double.valueOf(RequirementDAO.getRequirementDefectsAsExprByPEAndStatusType(id, type, false).findRowCount());
@@ -339,8 +314,8 @@ public class PortfolioEntryDeliveryController extends Controller {
             for (RequirementSeverity requirementSeverity : RequirementDAO.getRequirementSeverityAsList()) {
                 BasicBar.Elem elem = new BasicBar.Elem(requirementSeverity.getName());
                 for (Type type : Type.values()) {
-                    elem.addValue(Double.valueOf(RequirementDAO.getRequirementDefectsAsExprByPEAndStatusTypeAndSeverity(id, type, requirementSeverity.id)
-                            .findRowCount()));
+                    elem.addValue(Double.valueOf(
+                            RequirementDAO.getRequirementDefectsAsExprByPEAndStatusTypeAndSeverity(id, type, requirementSeverity.id).findRowCount()));
                 }
                 basicBarSeverity.addElem(elem);
             }
@@ -448,7 +423,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.requirement.edit.successful"));
 
-        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id, false));
+        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id));
     }
 
     /**
@@ -456,39 +431,19 @@ public class PortfolioEntryDeliveryController extends Controller {
      * 
      * @param id
      *            the portfolio entry id
-     * @param reset
-     *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result iterations(Long id, Boolean reset) {
+    public Result iterations(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         try {
 
-            FilterConfig<IterationListView> filterConfig = null;
-
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the iterations (except if the
-             * reset flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences(IMafConstants.ITERATIONS_FILTER_STORAGE_PREFERENCE);
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = IterationListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = IterationListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall(), IMafConstants.ITERATIONS_FILTER_STORAGE_PREFERENCE);
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<IterationListView> filterConfig = IterationListView.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<IterationListView>, Pagination<Iteration>> t = getIterationsTable(id, filterConfig);
@@ -555,12 +510,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-                return redirect(controllers.core.routes.PortfolioEntryDeliveryController.iterations(id, true));
-            } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-            }
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
 
         }
 
@@ -578,19 +528,20 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<IterationListView> filterConfig = IterationListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString(), IMafConstants.ITERATIONS_FILTER_STORAGE_PREFERENCE);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<IterationListView> filterConfig = IterationListView.filterConfig.parseResponse(json);
+                // get the table
+                Pair<Table<IterationListView>, Pagination<Iteration>> t = getIterationsTable(id, filterConfig);
 
-            // get the table
-            Pair<Table<IterationListView>, Pagination<Iteration>> t = getIterationsTable(id, filterConfig);
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
@@ -605,11 +556,8 @@ public class PortfolioEntryDeliveryController extends Controller {
      *            the portfolio entry id
      * @param filterConfig
      *            the filter config.
-     * @param securityService
-     *           the security service
      */
-    private Pair<Table<IterationListView>, Pagination<Iteration>> getIterationsTable(Long portfolioEntryId,
-            FilterConfig<IterationListView> filterConfig) {
+    private Pair<Table<IterationListView>, Pagination<Iteration>> getIterationsTable(Long portfolioEntryId, FilterConfig<IterationListView> filterConfig) {
 
         ExpressionList<Iteration> expressionList = filterConfig.updateWithSearchExpression(IterationDAO.getIterationAllAsExprByPE(portfolioEntryId));
         filterConfig.updateWithSortExpression(expressionList);
@@ -728,7 +676,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.iteration.edit.successful"));
 
-        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.iterations(id, false));
+        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.iterations(id));
 
     }
 
@@ -860,28 +808,6 @@ public class PortfolioEntryDeliveryController extends Controller {
     }
 
     /**
-     * Store the filter configuration in the user preferences.
-     * 
-     * @param filterConfigAsJson
-     *            the filter configuration as a json string
-     * @param preferenceName
-     *            the preference name
-     */
-    private void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
-        getPreferenceManagerPlugin().updatePreferenceValue(preferenceName, filterConfigAsJson);
-    }
-
-    /**
-     * Retrieve the filter configuration from the user preferences.
-     * 
-     * @param preferenceName
-     *            the preference name
-     */
-    private String getFilterConfigurationFromPreferences(String preferenceName) {
-        return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
-    }
-
-    /**
      * Get the requirements' relation types as a value holder collection.
      */
     private static ISelectableValueHolderCollection<String> getRequirementsRelationTypesAsValueHolderCollection() {
@@ -892,20 +818,29 @@ public class PortfolioEntryDeliveryController extends Controller {
         return types;
     }
 
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
-    }
-
+    /**
+     * Get the messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+     /**
+     * Get the user session manager service.
+     */
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return userSessionManagerPlugin;
     }
 
 }

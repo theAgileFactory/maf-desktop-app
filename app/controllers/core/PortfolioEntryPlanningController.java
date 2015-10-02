@@ -31,12 +31,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -55,7 +53,6 @@ import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
@@ -130,8 +127,6 @@ import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
  */
 public class PortfolioEntryPlanningController extends Controller {
 
-    @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private II18nMessagesPlugin messagesPlugin;
     @Inject
@@ -499,39 +494,19 @@ public class PortfolioEntryPlanningController extends Controller {
      * 
      * @param id
      *            the portfolio entry id
-     * @param reset
-     *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result packages(Long id, Boolean reset) {
+    public Result packages(Long id) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         try {
 
-            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = null;
-
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the requirements (except if the
-             * reset flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences(IMafConstants.PACKAGES_FILTER_STORAGE_PREFERENCE);
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = PortfolioEntryPlanningPackageListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = PortfolioEntryPlanningPackageListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall(), IMafConstants.PACKAGES_FILTER_STORAGE_PREFERENCE);
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = PortfolioEntryPlanningPackageListView.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig,
@@ -616,12 +591,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-                return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id, true));
-            } else {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-            }
 
         }
 
@@ -639,20 +609,22 @@ public class PortfolioEntryPlanningController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = PortfolioEntryPlanningPackageListView.filterConfig.persistCurrentInDefault(uid,
+                    request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString(), IMafConstants.PACKAGES_FILTER_STORAGE_PREFERENCE);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = PortfolioEntryPlanningPackageListView.filterConfig.parseResponse(json);
+                // get the table
+                Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig,
+                        getMessagesPlugin());
 
-            // get the table
-            Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig,
-                    getMessagesPlugin());
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
@@ -939,7 +911,7 @@ public class PortfolioEntryPlanningController extends Controller {
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, planningPackage.id);
 
-        return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id, false));
+        return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id));
 
     }
 
@@ -1014,7 +986,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.package.groups.successful"));
 
-        return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id, false));
+        return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id));
     }
 
     /**
@@ -1042,7 +1014,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.package.delete.successful"));
 
-        return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id, false));
+        return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id));
 
     }
 
@@ -1968,35 +1940,6 @@ public class PortfolioEntryPlanningController extends Controller {
     }
 
     /**
-     * Store the filter configuration in the user preferences.
-     * 
-     * @param filterConfigAsJson
-     *            the filter configuration as a json string
-     * @param preferenceName
-     *            the name of the preference
-     */
-    private void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
-        getPreferenceManagerPlugin().updatePreferenceValue(preferenceName, filterConfigAsJson);
-    }
-
-    /**
-     * Retrieve the filter configuration from the user preferences.
-     * 
-     * @param preferenceName
-     *            the name of the preference
-     */
-    private String getFilterConfigurationFromPreferences(String preferenceName) {
-        return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
-    }
-
-    /**
-     * Get the preference manager service.
-     */
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
-    }
-
-    /**
      * Get the message service.
      */
     private II18nMessagesPlugin getMessagesPlugin() {
@@ -2099,6 +2042,9 @@ public class PortfolioEntryPlanningController extends Controller {
         return dataSyndicationService;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }

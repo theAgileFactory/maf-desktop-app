@@ -122,7 +122,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
 
     @Override
     public String link(Long objectId) {
-        return controllers.core.routes.PortfolioEntryPlanningController.packages(objectId, false).url();
+        return controllers.core.routes.PortfolioEntryPlanningController.packages(objectId).url();
     }
 
     /**

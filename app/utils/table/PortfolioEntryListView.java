@@ -32,6 +32,7 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -69,7 +70,7 @@ public class PortfolioEntryListView {
             {
 
                 addColumnConfiguration("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", new TextFieldFilterComponent("*"), true,
-                        false, SortStatusType.UNSORTED);
+                        false, SortStatusType.ASC);
 
                 addColumnConfiguration("creationDate", "creationDate", "object.portfolio_entry.creation_date.label",
                         new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.NONE);

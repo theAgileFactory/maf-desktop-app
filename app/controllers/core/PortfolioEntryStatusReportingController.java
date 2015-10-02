@@ -32,12 +32,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
@@ -282,39 +279,19 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * 
      * @param id
      *            the portfolio entry id
-     * @param reset
-     *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result events(Long id, Boolean reset) {
+    public Result events(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         try {
 
-            FilterConfig<PortfolioEntryEventListView> filterConfig = null;
-
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the events (except if the reset
-             * flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences(IMafConstants.EVENTS_FILTER_STORAGE_PREFERENCE);
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = PortfolioEntryEventListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = PortfolioEntryEventListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall(), IMafConstants.EVENTS_FILTER_STORAGE_PREFERENCE);
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<PortfolioEntryEventListView>, Pagination<PortfolioEntryEvent>> t = getEventsTable(id, filterConfig);
@@ -323,12 +300,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-                return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(id, true));
-            } else {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-            }
 
         }
     }
@@ -345,19 +317,20 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString(), IMafConstants.EVENTS_FILTER_STORAGE_PREFERENCE);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.parseResponse(json);
+                // get the table
+                Pair<Table<PortfolioEntryEventListView>, Pagination<PortfolioEntryEvent>> t = getEventsTable(id, filterConfig);
 
-            // get the table
-            Pair<Table<PortfolioEntryEventListView>, Pagination<PortfolioEntryEvent>> t = getEventsTable(id, filterConfig);
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -384,8 +357,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    JsonNode json = request().body().asJson();
-                    FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.parseResponse(json);
+                    FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.getCurrent(uid, request());
 
                     ExpressionList<PortfolioEntryEvent> expressionList = filterConfig
                             .updateWithSearchExpression(PortfolioEntryEventDao.getPEEventAsExprByPE(id));
@@ -420,7 +392,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
-                                        controllers.core.routes.PortfolioEntryStatusReportingController.events(id, false).url());
+                                        controllers.core.routes.PortfolioEntryStatusReportingController.events(id).url());
                             }
                         }
                     });
@@ -1048,7 +1020,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryEvent.class, portfolioEntryEvent.id);
 
-        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryEventFormData.id, false));
+        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryEventFormData.id));
     }
 
     /**
@@ -1076,7 +1048,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.event.delete.successful"));
 
-        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(id, false));
+        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(id));
 
     }
 
@@ -1085,39 +1057,19 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * 
      * @param id
      *            the portfolio entry id
-     * @param reset
-     *            define if the filter should be reseted
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result timesheets(Long id, Boolean reset) {
+    public Result timesheets(Long id) {
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         try {
 
-            FilterConfig<TimesheetLogListView> filterConfig = null;
-
-            /*
-             * we try to get the last filter configuration of the sign-in user,
-             * if it exists we use it to filter the timesheet logs (except if
-             * the reset flag is to true)
-             */
-            String backedUpFilter = getFilterConfigurationFromPreferences(IMafConstants.PORTFOLIO_ENTRY_TIMESHEETS_FILTER_STORAGE_PREFERENCE);
-            if (!reset && !StringUtils.isBlank(backedUpFilter)) {
-
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode json = mapper.readTree(backedUpFilter);
-                filterConfig = TimesheetLogListView.filterConfig.parseResponse(json);
-
-            } else {
-
-                // get a copy of the default filter config
-                filterConfig = TimesheetLogListView.filterConfig;
-                storeFilterConfigFromPreferences(filterConfig.marshall(), IMafConstants.PORTFOLIO_ENTRY_TIMESHEETS_FILTER_STORAGE_PREFERENCE);
-
-            }
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> t = getTimesheetsTable(id, filterConfig);
@@ -1141,12 +1093,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         } catch (Exception e) {
 
-            if (reset.equals(false)) {
-                ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-                return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(id, true));
-            } else {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-            }
+return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
 
         }
     }
@@ -1163,19 +1110,20 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         try {
 
-            // get the json
-            JsonNode json = request().body().asJson();
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.persistCurrentInDefault(uid, request());
 
-            // store the filter config
-            storeFilterConfigFromPreferences(json.toString(), IMafConstants.PORTFOLIO_ENTRY_TIMESHEETS_FILTER_STORAGE_PREFERENCE);
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
 
-            // fill the filter config
-            FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.parseResponse(json);
+                // get the table
+                Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> t = getTimesheetsTable(id, filterConfig);
 
-            // get the table
-            Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> t = getTimesheetsTable(id, filterConfig);
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
-            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+            }
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -1202,8 +1150,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    JsonNode json = request().body().asJson();
-                    FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.parseResponse(json);
+                    FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.getCurrent(uid, request());
 
                     ExpressionList<TimesheetLog> expressionList = filterConfig
                             .updateWithSearchExpression(TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(id));
@@ -1238,7 +1185,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                             } catch (IOException e) {
                                 log.error("Unable to export the excel file", e);
                                 getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
-                                        controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(id, false).url());
+                                        controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(id).url());
                             }
                         }
                     });
@@ -1288,30 +1235,6 @@ public class PortfolioEntryStatusReportingController extends Controller {
     }
 
     /**
-     * Store the filter configuration in the user preferences.
-     * 
-     * @param filterConfigAsJson
-     *            the filter configuration as a json string
-     * @param preferenceName
-     *            the name of the preference
-     */
-    private void storeFilterConfigFromPreferences(String filterConfigAsJson, String preferenceName) {
-
-        getPreferenceManagerPlugin().updatePreferenceValue(preferenceName, filterConfigAsJson);
-    }
-
-    /**
-     * Retrieve the filter configuration from the user preferences.
-     * 
-     * @param preferenceName
-     *            the name of the preference
-     */
-    private String getFilterConfigurationFromPreferences(String preferenceName) {
-
-        return getPreferenceManagerPlugin().getPreferenceValueAsString(preferenceName);
-    }
-
-    /**
      * Get the template name and format for the status report.
      * 
      * It is represented by the standard report in PDF if the corresponding
@@ -1328,38 +1251,65 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
     }
 
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the preference manager service.
+     */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
     }
 
+    /**
+     * Get the reporting utils.
+     */
     private IReportingUtils getReportingUtils() {
         return reportingUtils;
     }
 
+    /**
+     * Get the system admin utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the attachment manager service.
+     */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
