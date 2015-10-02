@@ -129,6 +129,11 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     }
 
     @Override
+    public boolean isFilterConfigurationActive() {
+        return true;
+    }
+
+    @Override
     public Call getRouteForFilterConfigurationCreate() {
         return framework.utils.routes.FilterConfigController.filterConfigurationCreate();
     }
