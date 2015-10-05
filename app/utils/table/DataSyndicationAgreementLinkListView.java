@@ -113,6 +113,21 @@ public class DataSyndicationAgreementLinkListView {
                 setColumnCssClass("processActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("processActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
+                this.setLineAction(new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
+                    @Override
+                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+
+                        // manage here specifically each data type
+
+                        if (dataSyndicationAgreementLinkListView.dataType.equals(PortfolioEntry.class.getName())) {
+                            return controllers.core.routes.PortfolioEntryDataSyndicationController
+                                    .viewAgreementLink(dataSyndicationAgreementLinkListView.objectId, dataSyndicationAgreementLinkListView.id).url();
+                        }
+
+                        return null;
+                    }
+                });
+
                 setEmptyMessageKey("object.data_syndication_agreement_link.table.empty");
 
             }
