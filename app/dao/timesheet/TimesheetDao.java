@@ -363,6 +363,18 @@ public abstract class TimesheetDao {
     }
 
     /**
+     * Get the active timesheet logs of a portfolio entry.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry
+     */
+    public static ExpressionList<TimesheetLog> getTimesheetLogActiveAsExprByPortfolioEntry(Long portfolioEntryId) {
+        return findTimesheetLog.where().eq("deleted", false).ne("hours", 0).eq("timesheetEntry.deleted", false)
+                .eq("timesheetEntry.portfolioEntry.id", portfolioEntryId).eq("timesheetEntry.timesheetReport.deleted", false).disjunction()
+                .eq("timesheetEntry.timesheetReport.status", Status.APPROVED).eq("timesheetEntry.timesheetReport.status", Status.LOCKED);
+    }
+
+    /**
      * Get a timesheet report by id.
      * 
      * @param id

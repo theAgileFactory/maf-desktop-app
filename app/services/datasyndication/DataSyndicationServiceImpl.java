@@ -633,7 +633,7 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                 } else if (agreementItem.descriptor.equals("TIMESHEET")) {
                     data.add(Arrays.asList("object.timesheet_report.actor.label", "object.timesheet_log.log_date.label", "object.timesheet_log.hours.label",
                             "object.timesheet_report.status.label", "object.timesheet_entry.planning_package.label"));
-                    for (TimesheetLog timesheetLog : TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(agreementLink.masterObjectId).findList()) {
+                    for (TimesheetLog timesheetLog : TimesheetDao.getTimesheetLogActiveAsExprByPortfolioEntry(agreementLink.masterObjectId).findList()) {
                         String planningPackageName = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage != null
                                 ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.getName() : null;
                         String status = "object.timesheet_report.status." + timesheetLog.timesheetEntry.timesheetReport.status.name() + ".label";
