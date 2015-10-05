@@ -3,7 +3,7 @@
 	<conversionRule conversionWord="coloredLevel"
 		converterClass="play.api.Logger$ColoredLevel" />
 
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${application.home}/logs/application.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>application.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -13,7 +13,7 @@
 		</encoder>
 	</appender>
 
-	<appender name="FILE_AUDIT" class="ch.qos.logback.core.FileAppender">
+	<appender name="FILE_AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${application.home}/logs/audit.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>audit.%d{yyyy-MM-dd}.log</fileNamePattern>
