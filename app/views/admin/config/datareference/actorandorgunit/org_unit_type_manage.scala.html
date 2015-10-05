@@ -55,6 +55,8 @@
                     ""
                 )
                 
+                @helper.inputText(orgUnitTypeForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit_type.ref_id.label"))
+                
                 @parts.multi_languages_input_text(orgUnitTypeForm("name"), parts.Msg.asString("object.org_unit_type.name.label"))
 
                 @parts.multi_languages_input_text(orgUnitTypeForm("description"), parts.Msg.asString("object.org_unit_type.description.label"))

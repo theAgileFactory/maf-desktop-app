@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.OrgUnitType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.OrgUnitType;
 
 /**
  * An org unit type list view is used to display an org unit type row in a
@@ -41,6 +41,9 @@ public class OrgUnitTypeListView {
 
             setIdFieldName("id");
 
+            addColumn("refId", "refId", "object.org_unit_type.ref_id.label", Table.ColumnDef.SorterType.NONE);
+            setJavaColumnFormatter("refId", new ObjectFormatter<OrgUnitTypeListView>());
+
             addColumn("name", "name", "object.org_unit_type.name.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("name", new ObjectFormatter<OrgUnitTypeListView>());
 
@@ -51,13 +54,13 @@ public class OrgUnitTypeListView {
             setJavaColumnFormatter("selectable", new BooleanFormatter<OrgUnitTypeListView>());
 
             addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<OrgUnitTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<OrgUnitTypeListView>() {
-                        @Override
-                        public String convert(OrgUnitTypeListView orgUnitTypeListView) {
-                            return controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageOrgUnitType(orgUnitTypeListView.id).url();
-                        }
-                    }));
+            setJavaColumnFormatter("editActionLink",
+                    new StringFormatFormatter<OrgUnitTypeListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<OrgUnitTypeListView>() {
+                @Override
+                public String convert(OrgUnitTypeListView orgUnitTypeListView) {
+                    return controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageOrgUnitType(orgUnitTypeListView.id).url();
+                }
+            }));
             setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
             setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -65,8 +68,8 @@ public class OrgUnitTypeListView {
             setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<OrgUnitTypeListView>() {
                 @Override
                 public String apply(OrgUnitTypeListView orgUnitTypeListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
                     String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteOrgUnitType(orgUnitTypeListView.id).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 }
@@ -91,6 +94,8 @@ public class OrgUnitTypeListView {
 
     public String description;
 
+    public String refId;
+
     public boolean selectable;
 
     /**
@@ -104,6 +109,7 @@ public class OrgUnitTypeListView {
         this.id = orgUnitType.id;
         this.name = orgUnitType.name;
         this.description = orgUnitType.description;
+        this.refId = orgUnitType.refId;
         this.selectable = orgUnitType.selectable;
 
     }

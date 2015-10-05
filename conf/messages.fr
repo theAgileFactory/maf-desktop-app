@@ -882,6 +882,7 @@ object.actor_type.table.empty=Il n''existe aucun type d''employé.
 
 object.org_unit_type.name.label=Nom
 object.org_unit_type.description.label=Description
+object.org_unit_type.ref_id.label=No de réf.
 object.org_unit_type.selectable.label=Sélectionnable
 object.org_unit_type.table.empty=Il n''existe aucun type d''unité d''organisation.
 

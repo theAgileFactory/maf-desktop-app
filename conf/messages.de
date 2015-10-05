@@ -882,6 +882,7 @@ object.actor_type.table.empty=Keine Einträge
 
 object.org_unit_type.name.label=Name
 object.org_unit_type.description.label=Beschreibung
+object.org_unit_type.ref_id.label=ID
 object.org_unit_type.selectable.label=Aktiviert
 object.org_unit_type.table.empty=Keine Einträge
 
