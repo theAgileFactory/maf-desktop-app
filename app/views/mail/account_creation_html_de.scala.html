@@ -16,30 +16,68 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(masterMode: Boolean, platformName: String ,name: String , url: String, login: String)
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>@platformName: Benutzerkonto hinzugefügt</title>
-    </head>
-    <body>
-    <p>Sehr geehrte Dame, sehr geehrter Herr @name,</p>
-        <div style="margin-left: 20px;margin-top: 40px;margin-bottom: 40px;">
-            <p>
-            Ihr Konto @platformName (login: @login) wurde angelegt.<br/>
-            </p>
-            @if(masterMode){
-            <p>
-            Bitte definieren Sie nun Ihr Passwort:<br/>
-            <a style="font-weight: bold;" href="@url">Passwort ändern</a>
-            <p>
+
+@template("BizDock: Benutzerkonto hinzugefügt") {
+
+    <table width="600" align="center" border="0" cellpadding="0" cellspacing="0" class="devicewidth">
+        <tbody>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: #282828; text-align:left; line-height: 24px;">
+                    Sehr geehrte Dame, sehr geehrter Herr @name,
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    Ihr Konto BizDock (login: @login) wurde angelegt.
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            @if(masterMode) {
+                <tr>
+                    <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                        Bitte definieren Sie nun Ihr Passwort:
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="200" height="32" bgcolor="#666666" align="left" valign="middle" border="0" cellpadding="0" cellspacing="0" style="border-radius:3px;" st-button="learnmore">
+                            <tbody>
+                                <tr>
+                                    <td height="9" align="center" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td height="14" width="200px" align="center" valign="middle" style="font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight:bold;color: #ffffff; text-align:center; line-height: 14px; ; -webkit-text-size-adjust:none;" st-title="fulltext-btn">
+                                        <a style="text-decoration: none;color: #ffffff; text-align:center;" href="@url">Passwort ändern &raquo;</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="9" align="center" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                </tr>
             }
-        </div>
-        <p>
-        Mit freundlichen Grüssen,
-        </p>
-        <p>
-        Ihr @platformName Administrator
-        </p>
-        </body>
-    </html>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    Mit freundlichen Grüssen<br/><strong>BizDock</strong> Team
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    
+}

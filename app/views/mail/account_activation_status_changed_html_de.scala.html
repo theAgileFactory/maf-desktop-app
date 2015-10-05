@@ -16,32 +16,45 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(platformName: String ,name: String, activationStatus: Boolean)
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>@platformName: Benutzerkonto Status veränderts</title>
-    </head>
-    <body>
-    <p>Sehr geehrte Dame, sehr geehrter Herr @name,</p>
-    <div style="margin-left: 20px;margin-top: 40px;margin-bottom: 40px;">
-        <p>
-        @if(!activationStatus){
-            Ihr Konto wurde freigeschalten.<br/>
-        Sie können sich nun unter Verwendung des alten Passwortes bei @platformName anmelden.     
-        }else{
-        Ihr Konto wurde gesperrt.<br/>
-        Sie können sich nicht mehr bei @platformName anmelden.<br/>
-        Bitte kontaktieren Sie Ihren Administrator falls Sie den Grund für diesen Status nicht kennen.
-        }
-        <p>
-        
-    </div>
-    <p>
-     Mit freundlichen Grüssen,
-    </p>
-    <p>
-    Ihr @platformName Administrator
-    </p>
-    </body>
-</html>
+
+@import framework_views.parts.formats.display_url
+@import modelsparts.display_amount
+
+@template("BizDock: Benutzerkonto Status veränderts") {
+
+    <table width="600" align="center" border="0" cellpadding="0" cellspacing="0" class="devicewidth">
+        <tbody>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: #282828; text-align:left; line-height: 24px;">
+                    Sehr geehrte Dame, sehr geehrter Herr @name,
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    @if(!activationStatus){
+                        Ihr Konto wurde freigeschalten.<br/>
+                        Sie können sich nun unter Verwendung des alten Passwortes bei BizDock anmelden.
+                    }else{
+                        Ihr Konto wurde gesperrt.<br/>
+                        Sie können sich nicht mehr bei BizDock anmelden.<br/>
+                        Bitte kontaktieren Sie Ihren Administrator falls Sie den Grund für diesen Status nicht kennen.
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    Mit freundlichen Grüssen<br/><strong>BizDock</strong> Team
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+}

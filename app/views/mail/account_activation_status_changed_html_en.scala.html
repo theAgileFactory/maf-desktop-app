@@ -16,32 +16,45 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(platformName: String ,name: String, activationStatus: Boolean)
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>@platformName account activation status changed</title>
-    </head>
-    <body>
-    <p>Dear @name,</p>
-    <div style="margin-left: 20px;margin-top: 40px;margin-bottom: 40px;">
-        <p>
-        @if(!activationStatus){
-            Your account has been un-locked.<br/>
-            You can now connect to @platformName using the previous password.
-        }else{
-            Your account has been locked.<br/>
-            You cannot connect anymore to @platformName.<br/>
-            Please contact your administrator if you don't know the reason for this status change.
-        }
-        <p>
-        
-    </div>
-    <p>
-    Best regards,
-    </p>
-    <p>
-    @platformName administrator
-    </p>
-    </body>
-</html>
+
+@import framework_views.parts.formats.display_url
+@import modelsparts.display_amount
+
+@template("BizDock account activation status changed") {
+
+    <table width="600" align="center" border="0" cellpadding="0" cellspacing="0" class="devicewidth">
+        <tbody>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: #282828; text-align:left; line-height: 24px;">
+                    Dear @name,
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    @if(!activationStatus){
+                        Your account has been unlocked.<br/>
+                        You can now connect to BizDock using the previous password.
+                    }else{
+                        Your account has been locked.<br/>
+                        You cannot connect anymore to BizDock.<br/>
+                        Please contact your administrator if you don't know the reason for this status change.
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    Best regards<br/><strong>BizDock</strong> Team
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+}

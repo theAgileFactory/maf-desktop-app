@@ -2731,18 +2731,18 @@ admin.user_manager.view.action.delete.help=Benutzer löschen
 admin.user_manager.view.action.edit_account_type.help=Konto-type bearbeiten
 
 #delete user
-admin.user_manager.delete.confirmation=Sind Sie sicher, dass Sie den Benutzer "{0}" löschen wollen?
+admin.user_manager.delete.confirmation=Sind Sie sicher, dass Sie den Benutzer {0} löschen wollen?
 admin.user_manager.delete.success=Benutzer {0} gelöscht !
 admin.user_manager.delete.notification.title=Benutzer wird gelöscht
 admin.user_manager.delete.notification.message=Benutzer "{0}" wird um {1} gelöscht, bitte warten Sie einige Minuten bevor Sie einen Benutzer mit diesem Login erstellen.
 
 #reset password
-admin.user_manager.reset_password.confirmation=Sind Sie sicher, dass Sie das Password für den Benutzer "{0}" zurücksetzen wollen?
+admin.user_manager.reset_password.confirmation=Sind Sie sicher, dass Sie das Password für den Benutzer {0} zurücksetzen wollen?
 admin.user_manager.reset_password.success=Passwort vergessen
 admin.user_manager.reset_password.mail.subject=Passwort ändern
 
 #change status
-admin.user_manager.change_status.confirmation=Sind Sie sicher, dass Sie den Status von Benutzer "{0}" ändern wollen?
+admin.user_manager.change_status.confirmation=Sind Sie sicher, dass Sie den Status von Benutzer {0} ändern wollen?
 admin.user_manager.change_status.success=Benuzterstatus gespeichert!
 admin.user_manager.change_status.mail.subject=Benutzerkonto Status geändert
 

@@ -16,32 +16,45 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(platformName: String ,name: String, activationStatus: Boolean)
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>La statut de votre compte @platformName a changé</title>
-    </head>
-    <body>
-    <p>Bonjour @name,</p>
-    <div style="margin-left: 20px;margin-top: 40px;margin-bottom: 40px;">
-        <p>
-        @if(!activationStatus){
-           Votre compte a été activé<br/>
-           Vous pouvez dès maintenant vous connecter à @platformName en utilisant votre mot de passe habituel.
-        }else{
-            Votre compte a été désactivé<br/>
-            Il n'est plus possible de vous connecter à @platformName.<br/>
-            Veuillez contacter votre administrateur pour toute question.
-        }
-        <p>
-        
-    </div>
-    <p>
-    Salutations,
-    </p>
-    <p>
-    Administateur @platformName
-    </p>
-    </body>
-</html>
+
+@import framework_views.parts.formats.display_url
+@import modelsparts.display_amount
+
+@template("La statut de votre compte BizDock a changé") {
+
+    <table width="600" align="center" border="0" cellpadding="0" cellspacing="0" class="devicewidth">
+        <tbody>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: #282828; text-align:left; line-height: 24px;">
+                    Bonjour @name,
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    @if(!activationStatus){
+                       Votre compte a été activé<br/>
+                       Vous pouvez dès maintenant vous connecter à BizDock en utilisant votre mot de passe habituel.
+                    }else{
+                        Votre compte a été désactivé<br/>
+                        Il n'est plus possible de vous connecter à BizDock.<br/>
+                        Veuillez contacter votre administrateur pour toute question.
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family: Helvetica, arial, sans-serif; font-size: 14px; color: #282828; text-align:left; line-height: 24px;">
+                    Salutations<br/>L'équipe <strong>BizDock</strong>
+                </td>
+            </tr>
+            <tr>
+                <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+}
