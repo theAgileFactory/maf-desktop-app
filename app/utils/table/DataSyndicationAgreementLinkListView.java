@@ -117,11 +117,15 @@ public class DataSyndicationAgreementLinkListView {
                     @Override
                     public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
 
-                        // manage here specifically each data type
+                        if (dataSyndicationAgreementLinkListView.objectId != null) {
 
-                        if (dataSyndicationAgreementLinkListView.dataType.equals(PortfolioEntry.class.getName())) {
-                            return controllers.core.routes.PortfolioEntryDataSyndicationController
-                                    .viewAgreementLink(dataSyndicationAgreementLinkListView.objectId, dataSyndicationAgreementLinkListView.id).url();
+                            // manage here specifically each data type
+
+                            if (dataSyndicationAgreementLinkListView.dataType.equals(PortfolioEntry.class.getName())) {
+                                return controllers.core.routes.PortfolioEntryDataSyndicationController
+                                        .viewAgreementLink(dataSyndicationAgreementLinkListView.objectId, dataSyndicationAgreementLinkListView.id).url();
+                            }
+
                         }
 
                         return null;
