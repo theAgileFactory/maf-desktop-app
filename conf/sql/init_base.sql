@@ -1623,10 +1623,10 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.e
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.external', 'de', 'Extern');
 
 -- Table `org_unit_type`
-insert into org_unit_type(id, name, description, deleted, selectable, last_update) values (1, 'org_unit_type.name.country', 'org_unit_type.description.country', 0, 1, CURRENT_TIMESTAMP);
-insert into org_unit_type(id, name, description, deleted, selectable, last_update) values (2, 'org_unit_type.name.division', 'org_unit_type.description.division', 0, 1, CURRENT_TIMESTAMP);
-insert into org_unit_type(id, name, description, deleted, selectable, last_update) values (3, 'org_unit_type.name.department', 'org_unit_type.description.department', 0, 1, CURRENT_TIMESTAMP);
-insert into org_unit_type(id, name, description, deleted, selectable, last_update) values (4, 'org_unit_type.name.team', 'org_unit_type.description.team', 0, 1, CURRENT_TIMESTAMP);
+insert into org_unit_type(id, ref_id, name, description, deleted, selectable, last_update) values (1,'COUNTRY','org_unit_type.name.country', 'org_unit_type.description.country', 0, 1, CURRENT_TIMESTAMP);
+insert into org_unit_type(id, ref_id, name, description, deleted, selectable, last_update) values (2,'DIVISION','org_unit_type.name.division', 'org_unit_type.description.division', 0, 1, CURRENT_TIMESTAMP);
+insert into org_unit_type(id, ref_id, name, description, deleted, selectable, last_update) values (3,'DEPARTMENT','org_unit_type.name.department', 'org_unit_type.description.department', 0, 1, CURRENT_TIMESTAMP);
+insert into org_unit_type(id, ref_id, name, description, deleted, selectable, last_update) values (4,'TEAM','org_unit_type.name.team', 'org_unit_type.description.team', 0, 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.country','en','Country');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.country','fr','Pays');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.country','de','Land');
@@ -1667,7 +1667,7 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_t
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'de', 'Aktualisieren');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'en', 'A company project');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'fr', 'Un projet d''entreprise');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'de', 'Ein Unternehmensprojekt');	
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'de', 'Ein Unternehmensprojekt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.enhancement', 'en', 'Enhancement of an existing IT platform');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.enhancement', 'fr', 'Evolution d''une plateforme existante');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.enhancement', 'de', 'Verbesserung einer IT-Plattform');
