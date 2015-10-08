@@ -1821,6 +1821,8 @@ my.personalstorage.file.size.label=Taille
 
 #roadmap
 core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Feuille de route
+core.roadmap.no_portfolio_entry.info=Une initiative représente le cycle de vie entier d''un projet, de son idée à sa conception. La feuille de route liste toutes les initiatives selon les permissions de l''utilisateur BizDock.
+core.roadmap.no_portfolio_entry.create=Créer votre première initiative
 
 #planning
 core.roadmap.planning.title=Agenda
@@ -2657,6 +2659,8 @@ core.org_unit.actor_allocated_activity.add.successful=L''activité a été affec
 core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
 
 #list and planning
+core.release.list.no_release.info=Une release est une verion étuiquetée d''un déploiement. Il est possible d''enregistrer des initiatives à une release afin qu''elle contienne un ensemble d''exigences.
+core.release.list.no_release.create=Créer votre première release
 core.release.list.planning.title=Agenda
 core.release.list.planning.no_source=Il n''existe aucune release à afficher: les filtres configurés sont trop spécifiques.
 core.release.list.planning.phase.full=Réalisation et Déploiement
@@ -2692,6 +2696,8 @@ core.architecture.breadcrumb=<i class="glyphicons glyphicons-globe-af"></i>&nbsp
 
 #index
 core.architecture.index.application_block.tree.title=Blocs applicatifs
+core.architecture.index.application_block.no_application_block.info=Un bloc applicatif est un module ou un système d''une application. Il est structuré en hiérarchie (arbre).
+core.architecture.index.application_block.no_application_block.create=Créer votre premier bloc applicatif
 
 #application block
 core.architecture.application_block.view.details.title=Détails

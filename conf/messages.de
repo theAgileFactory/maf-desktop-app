@@ -1817,6 +1817,8 @@ my.personalstorage.file.size.label=Grösse
 
 #roadmap
 core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
+core.roadmap.no_portfolio_entry.info=de: An initiative represents the full life cycle of a project, from its idea to its conception. The roadmap is listing all the inititiaves based on the permissions of the BizDock user.
+core.roadmap.no_portfolio_entry.create=de: Create your first initiative
 
 #planning
 core.roadmap.planning.title=Gantt-Diagramm
@@ -2653,6 +2655,8 @@ core.org_unit.actor_allocated_activity.add.successful=Zuweisung wurde hinzugefü
 core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
 
 #list and planning
+core.release.list.no_release.info=de: A release is a tagged version of a rollout. It is possible to register initiatives to a release in order it includes a set of requirements.
+core.release.list.no_release.create=de: Create your first release
 core.release.list.planning.title=Gantt-Diagramm
 core.release.list.planning.no_source=Keine Daten
 core.release.list.planning.phase.full=Erstellen und Liefern
@@ -2688,6 +2692,8 @@ core.architecture.breadcrumb=<i class="glyphicons glyphicons-globe-af"></i>&nbsp
 
 #index
 core.architecture.index.application_block.tree.title=Applikationsblöcke
+core.architecture.index.application_block.no_application_block.info=de: An application block is a module or a system of an application. It is structured with a hierarchy (tree).
+core.architecture.index.application_block.no_application_block.create=de: Create your first application block
 
 #application block
 core.architecture.application_block.view.details.title=Details

@@ -16,6 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
+    existReleases: Boolean,
     table: framework.utils.Table[utils.table.ReleaseListView], 
     pagination: framework.utils.Pagination[models.delivery.Release],
     filterConfig: framework.utils.FilterConfig[utils.table.ReleaseListView]
@@ -37,12 +38,26 @@
 
 @template(controllers.core.ReleaseController.MenuItemType.LIST, breadcrump){
 
-    @parts.table.filtered_tableview(
-        table, 
-        pagination, 
-        filterConfig, 
-        controllers.core.routes.ReleaseController.listFilter().url,
-        controllers.core.routes.ReleaseController.exportListAsExcel().url
-    )
+    @if(existReleases) {
+    
+        @parts.table.filtered_tableview(
+            table, 
+            pagination, 
+            filterConfig, 
+            controllers.core.routes.ReleaseController.listFilter().url,
+            controllers.core.routes.ReleaseController.exportListAsExcel().url
+        )
+    
+    } else {
+    
+        <div class="alert alert-info">
+            <span class="glyphicons glyphicons-circle-info"></span>
+            @parts.Msg("core.release.list.no_release.info")
+        </div>
+        <a href="@controllers.core.routes.ReleaseController.create().url" class="btn btn-lg btn-success">
+            <span class="glyphicons glyphicons-git-branch"></span> @parts.Msg("core.release.list.no_release.create")
+        </a>
+    
+    }
 
 }

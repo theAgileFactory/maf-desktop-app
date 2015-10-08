@@ -20,18 +20,17 @@ package dao.delivery;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
+
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Pagination;
 import models.delivery.Release;
 import models.delivery.ReleasePortfolioEntry;
 import models.delivery.ReleasePortfolioEntry.Type;
 import models.delivery.ReleasePortfolioEntryId;
 import models.delivery.Requirement;
-import com.avaje.ebean.Model.Finder;
-
-import com.avaje.ebean.ExpressionList;
-
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Pagination;
 
 /**
  * DAO for the {@link Release}, {@link ReleasePortfolioEntry},
@@ -48,6 +47,13 @@ public abstract class ReleaseDAO {
      * Default constructor.
      */
     public ReleaseDAO() {
+    }
+
+    /**
+     * Get all releases as an expression list.
+     */
+    public static ExpressionList<Release> getReleaseAsExpr() {
+        return ReleaseDAO.findRelease.where().eq("deleted", false);
     }
 
     /**

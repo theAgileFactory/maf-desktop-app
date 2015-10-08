@@ -33,36 +33,38 @@
     dao.architecture.ArchitectureDao.getApplicationBlockAncestorsFromRoot(applicationBlock.id)
 }
 
-    <h4>
-        @if(applicationBlock != null) {
-            <a href="#" id="bc-application-block-root">@parts.Msg("core.architecture.application_block.view.root.label")</a>
-            <script>
-                $("#bc-application-block-root").click(function(e) {
-                    e.preventDefault();
-                    applicationBlockTree.setCurrentIdAndLoadClickAction(null);
-                });
-            </script>
-            @for((ab, index) <- ancestors.zipWithIndex) {
-                /
-                @if(index < ancestors.size - 1) {
-                    <a href="#" id="bc-application-block-@ab.getId">
-                        @ab.getName
-                    </a>
-                    <script>
-                        $("#bc-application-block-@ab.getId").click(function(e) {
-                            e.preventDefault();
-                            applicationBlockTree.setCurrentIdAndLoadClickAction(@ab.getId);
-                        });
-                    </script>
-                } else {
-                    @ab.getName 
+    @if(applicationBlock != null || applicationBlocks.size > 0) {
+        <h4>
+            @if(applicationBlock != null) {
+                <a href="#" id="bc-application-block-root">@parts.Msg("core.architecture.application_block.view.root.label")</a>
+                <script>
+                    $("#bc-application-block-root").click(function(e) {
+                        e.preventDefault();
+                        applicationBlockTree.setCurrentIdAndLoadClickAction(null);
+                    });
+                </script>
+                @for((ab, index) <- ancestors.zipWithIndex) {
+                    /
+                    @if(index < ancestors.size - 1) {
+                        <a href="#" id="bc-application-block-@ab.getId">
+                            @ab.getName
+                        </a>
+                        <script>
+                            $("#bc-application-block-@ab.getId").click(function(e) {
+                                e.preventDefault();
+                                applicationBlockTree.setCurrentIdAndLoadClickAction(@ab.getId);
+                            });
+                        </script>
+                    } else {
+                        @ab.getName 
+                    }
+    
                 }
-
+            } else {
+                @parts.Msg("core.architecture.application_block.view.root.label")
             }
-        } else {
-            @parts.Msg("core.architecture.application_block.view.root.label")
-        }
-    </h4>
+        </h4>
+    }
     
     @if(applicationBlocks.size > 0) {
     
@@ -102,7 +104,19 @@
             
     } else {
         @if(applicationBlock == null) {
-            <br/>@parts.Msg("object.application_block.table.empty")
+            <div class="alert alert-info">
+                <span class="glyphicons glyphicons-circle-info"></span>
+                @parts.Msg("core.architecture.index.application_block.no_application_block.info")
+            </div>
+            <a href="#" id="create-first-application-block" class="btn btn-lg btn-success">
+                <span class="glyphicons glyphicons-hdd"></span> @parts.Msg("core.architecture.index.application_block.no_application_block.create")
+            </a>
+            <script>
+            $("#create-first-application-block").click(function(e) {
+                e.preventDefault();
+                $("#_taf-tree-header-add-root").click();
+            });
+            </script>
         }
     }
 

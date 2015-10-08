@@ -49,7 +49,6 @@ import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -125,6 +124,8 @@ public class ReleaseController extends Controller {
 
         try {
 
+            boolean existReleases = ReleaseDAO.getReleaseAsExpr().findRowCount() > 0 ? true : false;
+
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             FilterConfig<ReleaseListView> filterConfig = ReleaseListView.filterConfig.getCurrent(uid, request());
@@ -132,11 +133,11 @@ public class ReleaseController extends Controller {
             // get the table
             Pair<Table<ReleaseListView>, Pagination<Release>> t = getReleasesTable(filterConfig);
 
-            return ok(views.html.core.release.list.render(t.getLeft(), t.getRight(), filterConfig));
+            return ok(views.html.core.release.list.render(existReleases, t.getLeft(), t.getRight(), filterConfig));
 
         } catch (Exception e) {
 
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
 
         }
 

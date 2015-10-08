@@ -59,7 +59,6 @@ import framework.highcharts.pattern.BasicBar;
 import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -152,6 +151,8 @@ public class RoadmapController extends Controller {
 
         try {
 
+            boolean existPortfolioEntries = PortfolioEntryDao.getPEAsExpr(true).findRowCount() > 0 ? true : false;
+
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
@@ -159,11 +160,11 @@ public class RoadmapController extends Controller {
             // get the table
             Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> t = getTable(filterConfig);
 
-            return ok(views.html.core.roadmap.roadmap_index.render(t.getLeft(), t.getRight(), filterConfig));
+            return ok(views.html.core.roadmap.roadmap_index.render(existPortfolioEntries, t.getLeft(), t.getRight(), filterConfig));
 
         } catch (Exception e) {
 
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
 
         }
     }
