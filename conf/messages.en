@@ -1805,7 +1805,7 @@ my.personalstorage.file.size.label=Size
 
 #roadmap
 core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
-core.roadmap.no_portfolio_entry.info=An initiative represents the full life cycle of a project, from its idea to its conception. The roadmap is listing all the inititiaves based on the permissions of the BizDock user.
+core.roadmap.no_portfolio_entry.info=An initiative represents initially a demand / idea that can eventually end up in a project and enhancement. The roadmap is listing all the inititiaves based on your permissions.
 core.roadmap.no_portfolio_entry.create=Create your first initiative
 
 #planning
@@ -2643,7 +2643,7 @@ core.org_unit.actor_allocated_activity.add.successful=The activity has been allo
 core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
 
 #list and planning
-core.release.list.no_release.info=A release is a tagged version of a rollout. It is possible to register initiatives to a release in order it includes a set of requirements.
+core.release.list.no_release.info=A release reprensents an artifact that would be rolled out. It is possible to register initiatives to a release in order it includes a set of requirements.
 core.release.list.no_release.create=Create your first release
 core.release.list.planning.title=Planning
 core.release.list.planning.no_source=There is no release to display: the configured filters are too much specific.
@@ -2680,7 +2680,7 @@ core.architecture.breadcrumb=<i class="glyphicons glyphicons-globe-af"></i>&nbsp
 
 #index
 core.architecture.index.application_block.tree.title=Application blocks
-core.architecture.index.application_block.no_application_block.info=An application block is a module or a system of an application. It is structured with a hierarchy (tree).
+core.architecture.index.application_block.no_application_block.info=An application block is a module or a system of an application. It is structured via a hierarchy.
 core.architecture.index.application_block.no_application_block.create=Create your first application block
 
 #application block
