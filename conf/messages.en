@@ -2007,8 +2007,8 @@ core.milestone_approval.breadcrumb=<i class="glyphicons glyphicons-thumbs-up"></
 
 #planning
 core.milestone.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Milestone planning
-core.milestone.planning.header=Please find below <span class="label label-success">Passed</span>,  <span class="label label-danger">Rejected</span> and <span class="label label-warning">Pending</span> milestones for all active, non-conceptual and public initiatives.<br/>\
-By clicking on a date, a short summary of all milestones (for this date) is displayed; and by clicking on a bullet, a complete summary of the corresponding milestone is displayed.
+core.milestone.planning.header=Please find below <span class="label label-success">Passed</span>,  <span class="label label-danger">Rejected</span> and <span class="label label-warning">Pending</span> milestones for all public initiatives.<br/>\
+By clicking on a date, a short summary of all milestones is displayed; and by clicking on a bullet, a complete summary of the corresponding milestone is available.
 core.milestone.planning.today=Today
 core.milestone.planning.modal.approvers=Approvers
 

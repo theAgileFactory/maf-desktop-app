@@ -2018,8 +2018,8 @@ core.milestone_approval.breadcrumb=<i class="glyphicons glyphicons-thumbs-up"></
 
 #planning
 core.milestone.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Meilensteinplanung
-core.milestone.planning.header=Untenstehend finden Sie die Liste der Meilensteine (<span class="label label-success">Akzeptierte</span>, <span class="label label-danger">Abgelehnte</span> und <span class="label label-warning">Anstehende</span>) für die aktiven, angestossenen und öffentlichen Initiativen.<br/>\
-Indem Sie auf das Datum klicken, finden Sie eine Uebersicht über aller Meilensteine (bis zu diesem Datum); klicken Sie auf einen Aufzählungspunkt, erhalten Sie eine Uebersicht über den entsprechenden Meilenstein.
+core.milestone.planning.header=Untenstehend finden Sie die Liste der Meilensteine (<span class="label label-success">Akzeptierte</span>, <span class="label label-danger">Abgelehnte</span> und <span class="label label-warning">Anstehende</span>) für die öffentlichen Initiativen.<br/>\
+Indem Sie auf das Datum klicken, finden Sie eine Uebersicht über aller Meilensteine; klicken Sie auf einen Aufzählungspunkt, erhalten Sie eine Uebersicht über den entsprechenden Meilenstein.
 core.milestone.planning.today=Heute
 core.milestone.planning.modal.approvers=Genehmiger
 

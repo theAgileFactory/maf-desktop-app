@@ -2023,8 +2023,8 @@ core.milestone_approval.breadcrumb=<i class="glyphicons glyphicons-thumbs-up"></
 
 #planning
 core.milestone.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Agenda des jalons
-core.milestone.planning.header=Vous trouvez ci-dessous la liste des jalons <span class="label label-success">Passé</span>,  <span class="label label-danger">Rejeté</span> et <span class="label label-warning">En attente</span> pour les initiatives actives, non-conceptuelles et publiques.<br/>\
-En cliquant sur une date, un bref résumé de tous les jalons (pour cette date) est affiché; et en cliquant sur une puce, un résumé complet du jalon correspondant est affiché.
+core.milestone.planning.header=Vous trouvez ci-dessous la liste des jalons <span class="label label-success">Passé</span>,  <span class="label label-danger">Rejeté</span> et <span class="label label-warning">En attente</span> pour les initiatives publiques.<br/>\
+En cliquant sur une date, un bref résumé de tous les jalons est affiché; et en cliquant sur une puce, un résumé complet du jalon correspondant est disponible.
 core.milestone.planning.today=Aujourd''hui
 core.milestone.planning.modal.approvers=Approbateurs
 
