@@ -40,6 +40,14 @@ public interface IEchannelService {
     String NAME = "echannelService";
 
     /**
+     * Generate an SSO token for echannel.
+     * 
+     * @param uid
+     *            the username
+     */
+    String generateSSOToken(String uid) throws EchannelException;
+
+    /**
      * Create a notification event in order to notify some users of another
      * instance.
      * 

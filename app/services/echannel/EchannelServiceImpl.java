@@ -83,6 +83,8 @@ public class EchannelServiceImpl implements IEchannelService {
 
     private static final String ACTION_PATTERN = "/{domain}/{action}";
 
+    private static final String GENERATE_SSO_TOKEN_ACTION = "generate-sso-token";
+
     private static final String NOTIFICATION_EVENT_ACTION = "notification-event";
 
     private static final String CAN_CREATE_USER_ACTION = "can-create-user";
@@ -163,6 +165,20 @@ public class EchannelServiceImpl implements IEchannelService {
         this.mapper = mapper;
 
         Logger.info("SERVICE>>> EchannelServiceImpl started");
+    }
+
+    @Override
+    public String generateSSOToken(String uid) throws EchannelException {
+
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair("uid", uid));
+
+        JsonNode response = this.call(HttpMethod.GET, GENERATE_SSO_TOKEN_ACTION, queryParams, null);
+        if (response != null) {
+            return response.asText();
+        }
+
+        return null;
     }
 
     @Override

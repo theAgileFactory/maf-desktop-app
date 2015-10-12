@@ -33,6 +33,7 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import play.Configuration;
+import play.cache.CacheApi;
 import play.mvc.Call;
 import play.mvc.Result;
 
@@ -66,12 +67,12 @@ public class Authenticator extends AbstractAuthenticator {
      * @throws MalformedURLException
      */
     @Inject
-    public Authenticator(Configuration configuration, IUserSessionManagerPlugin userSessionManagerPlugin, IAccountManagerPlugin accountManagerPlugin,
-            IAuthenticationAccountReaderPlugin authenticationAccountReader, IInstanceAccessSupervisor instanceAccessSupervisor,
-            IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin i18nMessagesPlugin,
+    public Authenticator(Configuration configuration, CacheApi cache, IUserSessionManagerPlugin userSessionManagerPlugin,
+            IAccountManagerPlugin accountManagerPlugin, IAuthenticationAccountReaderPlugin authenticationAccountReader,
+            IInstanceAccessSupervisor instanceAccessSupervisor, IPreferenceManagerPlugin preferenceManagerPlugin, II18nMessagesPlugin i18nMessagesPlugin,
             @Named("AuthenticatonMode") AuthenticationMode authenticationMode) throws MalformedURLException {
-        super(configuration, userSessionManagerPlugin, accountManagerPlugin, authenticationAccountReader, instanceAccessSupervisor, preferenceManagerPlugin,
-                i18nMessagesPlugin, authenticationMode, new IAuthenticationLocalRoutes() {
+        super(configuration, cache, userSessionManagerPlugin, accountManagerPlugin, authenticationAccountReader, instanceAccessSupervisor,
+                preferenceManagerPlugin, i18nMessagesPlugin, authenticationMode, new IAuthenticationLocalRoutes() {
 
                     @Override
                     public Call getRedirectToThePreviouslySavedUrl() {
@@ -102,9 +103,9 @@ public class Authenticator extends AbstractAuthenticator {
                     public Call getCallbackRoute() {
                         return controllers.sso.routes.Authenticator.customCallback();
                     }
-                    
+
                     @Override
-                    public Call getSamlCallbackRoute(){
+                    public Call getSamlCallbackRoute() {
                         return controllers.sso.routes.Authenticator.samlCallback();
                     }
 
@@ -117,7 +118,7 @@ public class Authenticator extends AbstractAuthenticator {
                     public Call getNotAccessibleRoute() {
                         return controllers.sso.routes.Authenticator.notAccessible();
                     }
-                    
+
                     @Override
                     public Call getNoFederatedAccount() {
                         return controllers.sso.routes.Authenticator.noFederatedAccount();
@@ -135,9 +136,9 @@ public class Authenticator extends AbstractAuthenticator {
     public Result notAccessible() {
         return ok(views.html.sso.not_accessible.render());
     }
-    
+
     @Override
-    public Result noFederatedAccount(){
+    public Result noFederatedAccount() {
         return ok(views.html.sso.no_account.render());
     }
 }
