@@ -38,6 +38,8 @@ POST   /shortcut/delete            controllers.Application.deleteShortcut()
 GET    /tour/end                   controllers.Application.endTour(tourUid: String)
 GET    /adpanel/:page              controllers.Application.getAdPanelContent(page: String)
 GET    /data-syndication/export-as-excel controllers.Application.exportDataSyndicationAsExcel(redirect: String, agreementLinkId: Long, agreementItemId: Long)
+GET    /echannel/home              controllers.Application.echannelHomeUrl()
+GET    /echannel/instance-view     controllers.Application.echannelInstanceViewUrl()
 
 #Messaging
 GET    /messaging                  controllers.MessagingController.index()

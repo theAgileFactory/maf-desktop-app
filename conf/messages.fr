@@ -351,7 +351,8 @@ idzone.notifications.not_read.empty=Pas de nouvelle notification
 idzone.notifications.view_all=Voir toutes les notifications
 idzone.my.myaccount=Mon profil
 idzone.my.personalspace=Mon espace de stockage
-idzone.my.support=Support
+idzone.my.support=Aide en ligne
+idzone.my.echannel=Facturation et support
 idzone.my.logout=Se déconnecter
 
 #----------------------
