@@ -32,12 +32,25 @@
     models.framework_models.account.Preference.getPreferenceValueFromUuid(constants.IMafConstants.APPLICATION_LOGO_PREFERENCE, _cache, _usession, _accmngr);
 }
 
+@instanceInfo=@{
+    try {
+        _echannelService.getInstanceInfo();
+    } catch {
+        case e: Exception => null;
+    }
+}
+
+
+
 @common(pageHtmlTitle, includeFrameworkLibraries) {
     @header
 }{
     @if(showIdZone) {
         @topmenubar(routes.Application.index.url){
             @applicationLogo.renderDisplay()
+            @if(instanceInfo != null && instanceInfo.isTrial ) {
+                &nbsp; <a class="btn btn-success" href="@routes.Application.echannelInstanceViewUrl().url">@parts.Msg("button.activate")</a>
+            }
         }{
             @if(idZoneData!=null) {
                 <div class="btn-group" id="menu-messages">
@@ -97,6 +110,7 @@
                         }
                         <li class="divider"></li>
                         <li><a href="@play.Play.application().configuration().getString("maf.support.url")" target="_blank"><i class="glyphicons glyphicons-life-preserver glyphicons-button-small"></i>&nbsp; @parts.Msg("idzone.my.support")</a></li>
+                        <li><a href="@controllers.routes.Application.echannelHomeUrl().url" target="_blank"><i class="glyphicons glyphicons-invoice glyphicons-button-small"></i>&nbsp; @parts.Msg("idzone.my.echannel")</a></li>
                         <li class="divider"></li>
                         <li><a href="@idZoneData.logoutUrl"><i class="glyphicons glyphicons-power glyphicons-button-small"></i>&nbsp; @parts.Msg("idzone.my.logout")</a></li>
                     </ul>
