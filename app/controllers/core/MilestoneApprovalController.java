@@ -101,7 +101,6 @@ public class MilestoneApprovalController extends Controller {
     @Inject
     private Configuration configuration;
 
-
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
     private static Form<ProcessMilestoneApprovalFormData> processMilestoneApprovalFormTemplate = Form.form(ProcessMilestoneApprovalFormData.class);
@@ -123,7 +122,7 @@ public class MilestoneApprovalController extends Controller {
     @Restrict({ @Group(IMafConstants.MILESTONE_OVERVIEW_PERMISSION) })
     public Result overview() {
 
-        List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceActiveAndPublicPEAsList();
+        List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstancePublicPEAsList();
 
         List<MilestoneInstanceEvent> events = new ArrayList<MilestoneInstanceEvent>();
         for (LifeCycleMilestoneInstance milestoneInstance : milestoneInstances) {

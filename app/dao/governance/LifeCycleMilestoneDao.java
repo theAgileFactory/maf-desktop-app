@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 
 import dao.pmo.PortfolioEntryDao;
 import framework.utils.DefaultSelectableValueHolder;
@@ -39,7 +40,6 @@ import models.governance.LifeCycleMilestoneInstanceStatusType;
 import models.governance.LifeCyclePhase;
 import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.PortfolioEntry;
-import com.avaje.ebean.Model.Finder;
 
 /**
  * DAO for the {@link LifeCycleMilestone} and {@link LifeCycleMilestoneInstance}
@@ -61,7 +61,7 @@ public abstract class LifeCycleMilestoneDao {
     public static Finder<Long, LifeCycleMilestoneInstanceStatusType> findLifeCycleMilestoneInstanceStatusType = new Finder<>(
             LifeCycleMilestoneInstanceStatusType.class);
 
-    public static Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>( LifeCyclePhase.class);
+    public static Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>(LifeCyclePhase.class);
 
     /**
      * Default constructor.
@@ -402,13 +402,12 @@ public abstract class LifeCycleMilestoneDao {
     }
 
     /**
-     * Get all milestone instances for active and public portfolio entries.
+     * Get all milestone instances for public portfolio entries.
      */
-    public static List<LifeCycleMilestoneInstance> getLCMilestoneInstanceActiveAndPublicPEAsList() {
+    public static List<LifeCycleMilestoneInstance> getLCMilestoneInstancePublicPEAsList() {
 
         return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("lifeCycleInstance.deleted", false).eq("lifeCycleInstance.isActive", true)
-                .eq("lifeCycleInstance.portfolioEntry.deleted", false).eq("lifeCycleInstance.portfolioEntry.isPublic", true)
-                .eq("lifeCycleInstance.portfolioEntry.archived", false).findList();
+                .eq("lifeCycleInstance.portfolioEntry.deleted", false).eq("lifeCycleInstance.portfolioEntry.isPublic", true).findList();
 
     }
 
