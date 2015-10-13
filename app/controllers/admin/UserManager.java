@@ -45,11 +45,11 @@ import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.email.IEmailService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
-import framework.utils.EmailUtils;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolder;
 import framework.utils.Msg;
@@ -102,6 +102,8 @@ public class UserManager extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IEmailService emailService;
 
     private static Logger.ALogger log = Logger.of(UserManager.class);
     private static Form<UserSeachFormData> userSearchForm = Form.form(UserSeachFormData.class);
@@ -493,7 +495,7 @@ public class UserManager extends Controller {
         // Send an e-mail for reseting password
         String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
                 "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(userAccount.getUid(), validationKey).url();
-        EmailUtils.sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.reset_password.mail.subject"),
+        emailService.sendEmail(Msg.get("admin.user_manager.reset_password.mail.subject"),
                 play.Configuration.root().getString("maf.email.from"),
                 Utilities.renderViewI18n("views.html.mail.account_password_reset_html", play.Configuration.root().getString("maf.platformName"),
                         userAccount.getFirstName() + " " + userAccount.getLastName(), resetPasswordUrl).body(),
@@ -573,8 +575,8 @@ public class UserManager extends Controller {
 
         // Notify the user with the lock/unlock action
         try {
-            EmailUtils
-                    .sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.change_status.mail.subject"),
+            emailService
+                    .sendEmail(Msg.get("admin.user_manager.change_status.mail.subject"),
                             play.Configuration.root().getString("maf.email.from"),
                             Utilities.renderViewI18n("views.html.mail.account_activation_status_changed_html",
                                     play.Configuration.root().getString("maf.platformName"), userAccount.getFirstName() + " " + userAccount.getLastName(),
@@ -674,7 +676,7 @@ public class UserManager extends Controller {
                     // Notify account creation & password setup
                     String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
                             "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
-                    EmailUtils.sendEmail(getPreferenceManagerPlugin(), Msg.get("admin.user_manager.create.mail.subject"),
+                    emailService.sendEmail(Msg.get("admin.user_manager.create.mail.subject"),
                             play.Configuration.root().getString("maf.email.from"),
                             Utilities.renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
                                     play.Configuration.root().getString("maf.platformName"), accountDataForm.firstName + " " + accountDataForm.lastName,

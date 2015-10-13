@@ -43,6 +43,8 @@ import framework.services.configuration.I18nMessagesPluginImpl;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.database.IDatabaseDependencyService;
+import framework.services.email.EmailServiceImpl;
+import framework.services.email.IEmailService;
 import framework.services.ext.ExtensionManagerServiceImpl;
 import framework.services.ext.IExtensionManagerService;
 import framework.services.ext.ILinkGenerationService;
@@ -157,6 +159,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(ICustomRouterNotificationService.class).to(CustomRouterServiceImpl.class).asEagerSingleton();
         bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
         bind(IBizdockApiClient.class).to(BizdockApiClientImpl.class).asEagerSingleton();
+        bind(IEmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
 
         // Initialize with a defined list of jobs
         List<IJobDescriptor> jobs = new ArrayList<>();

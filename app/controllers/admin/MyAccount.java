@@ -30,6 +30,7 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.email.IEmailService;
 import framework.utils.EmailUtils;
 import framework.utils.Msg;
 import framework.utils.Utilities;
@@ -63,6 +64,8 @@ public class MyAccount extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IEmailService emailService;
     
     private static Logger.ALogger log = Logger.of(MyAccount.class);
     private static Form<UserAccountFormData> basicDataUpdateForm = Form.form(UserAccountFormData.class, UserAccountFormData.BasicDataChangeGroup.class);
@@ -192,8 +195,7 @@ public class MyAccount extends Controller {
             }
 
             // Send an e-mail for validation
-            EmailUtils.sendEmail(
-                    getPreferenceManagerPlugin(),
+            emailService.sendEmail(
                     Msg.get("my.my_profile.update_email.message.subject"),
                     play.Configuration.root().getString("maf.email.from"),
                     Utilities.renderViewI18n(
