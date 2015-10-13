@@ -40,6 +40,7 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.api.AbstractApiController;
 import play.Configuration;
 import play.Logger;
+import play.cache.CacheApi;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Function;
 import play.libs.F.Promise;
@@ -51,6 +52,7 @@ import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
 import services.datasyndication.models.DataSyndicationPartner;
+import services.echannel.models.InstanceInfo;
 import services.echannel.models.NotificationEvent;
 import services.echannel.models.RecipientsDescriptor;
 import services.echannel.request.AcceptDataSyndicationAgreementLinkRequest;
@@ -77,11 +79,16 @@ public class EchannelServiceImpl implements IEchannelService {
     private String echannelApiUrl;
     private String apiSecretKey;
 
+    private CacheApi cache;
     private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private ObjectMapper mapper;
 
     private static final String ACTION_PATTERN = "/{domain}/{action}";
+
+    private static final String INSTANCE_INFO_ACTION = "instance-info";
+
+    private static final String GENERATE_SSO_TOKEN_ACTION = "generate-sso-token";
 
     private static final String NOTIFICATION_EVENT_ACTION = "notification-event";
 
@@ -139,17 +146,21 @@ public class EchannelServiceImpl implements IEchannelService {
      *            the Play life cycle service
      * @param configuration
      *            the Play configuration service
+     * @param cache
+     *            the Play cache service
      * @param preferenceManagerPlugin
      *            the preference service
      */
 
     @Inject
-    public EchannelServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IPreferenceManagerPlugin preferenceManagerPlugin) {
+    public EchannelServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, CacheApi cache,
+            IPreferenceManagerPlugin preferenceManagerPlugin) {
         Logger.info("SERVICE>>> EchannelServiceImpl starting...");
 
         this.echannelApiUrl = configuration.getString(Config.ECHANNEL_API_URL.getConfigurationKey());
         this.apiSecretKey = null;
 
+        this.cache = cache;
         this.preferenceManagerPlugin = preferenceManagerPlugin;
 
         lifecycle.addStopHook(() -> {
@@ -163,6 +174,38 @@ public class EchannelServiceImpl implements IEchannelService {
         this.mapper = mapper;
 
         Logger.info("SERVICE>>> EchannelServiceImpl started");
+    }
+
+    @Override
+    public InstanceInfo getInstanceInfo() throws EchannelException {
+
+        InstanceInfo instanceInfo = (InstanceInfo) cache.get("echannel.instance_info");
+
+        if (instanceInfo == null) {
+
+            JsonNode response = this.call(HttpMethod.GET, INSTANCE_INFO_ACTION, null, null);
+            instanceInfo = getMapper().convertValue(response, InstanceInfo.class);
+
+            cache.set("echannel.instance_info", instanceInfo, 60 * 60 * 24);
+
+        }
+
+        return instanceInfo;
+
+    }
+
+    @Override
+    public String generateSSOToken(String uid) throws EchannelException {
+
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair("uid", uid));
+
+        JsonNode response = this.call(HttpMethod.GET, GENERATE_SSO_TOKEN_ACTION, queryParams, null);
+        if (response != null) {
+            return response.asText();
+        }
+
+        return null;
     }
 
     @Override

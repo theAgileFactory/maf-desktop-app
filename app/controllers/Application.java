@@ -20,6 +20,8 @@ package controllers;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -85,7 +87,6 @@ import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
 import play.Configuration;
 import play.Logger;
-import play.Play;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
@@ -93,6 +94,9 @@ import play.mvc.Result;
 import scala.concurrent.duration.Duration;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import services.datasyndication.IDataSyndicationService;
+import services.echannel.IEchannelService;
+import services.echannel.IEchannelService.EchannelException;
+import services.echannel.models.InstanceInfo;
 import utils.table.NotificationListView;
 import utils.tour.TourUtils;
 
@@ -130,9 +134,85 @@ public class Application extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-
+    @Inject
+    private IEchannelService echannelService;
 
     private static Logger.ALogger log = Logger.of(Application.class);
+
+    private static final String ECHANNEL_BIZDOCK_SSO_ACTION = "/callback?client_name=BizDockSSOClient&token=$0&redirect=$1";
+    private static final String ECHANNEL_INSTANCE_VIEW_ACTION = "/instance/view?instanceId=$0";
+
+    /**
+     * Get the echannel instance view URL with SSO.
+     */
+    @SubjectPresent
+    public Result echannelInstanceViewUrl() {
+
+        String viewInstanceUrl = configuration.getString("maf.echannel.base_url") + ECHANNEL_INSTANCE_VIEW_ACTION;
+
+        String url = null;
+        try {
+            InstanceInfo instanceInfo = echannelService.getInstanceInfo();
+            url = viewInstanceUrl.replace("$0", String.valueOf(instanceInfo.id));
+        } catch (EchannelException e) {
+            Logger.error("impossible to get the instance info", e);
+        }
+
+        return redirect(getEchannelUrl(url));
+
+    }
+
+    /**
+     * Get the echannel home URL with SSO.
+     */
+    @SubjectPresent
+    public Result echannelHomeUrl() {
+
+        String homeUrl = configuration.getString("maf.echannel.base_url");
+
+        String url = null;
+        try {
+            InstanceInfo instanceInfo = echannelService.getInstanceInfo();
+            url = homeUrl.replace("$0", String.valueOf(instanceInfo.id));
+        } catch (EchannelException e) {
+            Logger.error("impossible to get the instance info", e);
+        }
+
+        return redirect(getEchannelUrl(url));
+
+    }
+
+    /**
+     * Get the eChannel URL with SSO if possible.
+     * 
+     * If the SSO is not possible then returns simply the resource URL.
+     * 
+     * @param url
+     *            the resource eChannel URL
+     */
+    private String getEchannelUrl(String url) {
+
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        String token = null;
+        try {
+            token = echannelService.generateSSOToken(uid);
+        } catch (EchannelException e) {
+            Logger.info("No possible to get an SSO token for eChannel for the user " + uid + ". Message is: " + e.getMessage());
+        }
+
+        if (token == null) {
+            return url;
+        } else {
+            String ssoUrl = configuration.getString("maf.echannel.base_url") + ECHANNEL_BIZDOCK_SSO_ACTION;
+            ssoUrl = ssoUrl.replace("$0", token);
+            try {
+                ssoUrl = ssoUrl.replace("$1", URLEncoder.encode(url, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                Logger.warn("impossible to encode the URL " + url);
+            }
+            return ssoUrl;
+        }
+    }
 
     /**
      * Redirect the user to the link of a notification and set it as read.

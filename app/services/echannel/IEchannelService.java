@@ -25,6 +25,7 @@ import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationApiKey;
 import services.datasyndication.models.DataSyndicationPartner;
+import services.echannel.models.InstanceInfo;
 import services.echannel.models.NotificationEvent;
 import services.echannel.models.RecipientsDescriptor;
 import services.echannel.request.LoginEventRequest.ErrorCode;
@@ -38,6 +39,19 @@ import services.echannel.request.LoginEventRequest.ErrorCode;
 public interface IEchannelService {
 
     String NAME = "echannelService";
+
+    /**
+     * Get general information about the instance.
+     */
+    InstanceInfo getInstanceInfo() throws EchannelException;
+
+    /**
+     * Generate an SSO token for echannel.
+     * 
+     * @param uid
+     *            the username
+     */
+    String generateSSOToken(String uid) throws EchannelException;
 
     /**
      * Create a notification event in order to notify some users of another

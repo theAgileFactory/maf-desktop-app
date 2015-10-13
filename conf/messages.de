@@ -351,7 +351,8 @@ idzone.notifications.not_read.empty=Keine neuen Mitteilungen
 idzone.notifications.view_all=Alle Mitteilungen
 idzone.my.myaccount=Mein Profil
 idzone.my.personalspace=Persönliche Ablage
-idzone.my.support=Support
+idzone.my.support=de: Online help
+idzone.my.echannel=de: Billing and support
 idzone.my.logout=Abmelden
 
 #----------------------

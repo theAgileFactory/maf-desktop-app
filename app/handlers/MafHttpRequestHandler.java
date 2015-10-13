@@ -18,6 +18,7 @@ import play.mvc.Http.Context;
 import play.mvc.Http.Request;
 import play.mvc.Result;
 import services.datasyndication.IDataSyndicationService;
+import services.echannel.IEchannelService;
 
 /**
  * Overriding of the default request handler.
@@ -39,6 +40,9 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
 
     @Inject
     private INotificationManagerPlugin notificationService;
+
+    @Inject
+    private IEchannelService echannelService;
 
     /**
      * Default constructor.
@@ -82,5 +86,6 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
         context.args.put(IDataSyndicationService.class.getName(), dataSyndicationService);
         context.args.put(ISecurityService.class.getName(), securityService);
         context.args.put(INotificationManagerPlugin.class.getName(), notificationService);
+        context.args.put(IEchannelService.class.getName(), echannelService);
     }
 }

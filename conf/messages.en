@@ -339,7 +339,8 @@ idzone.notifications.not_read.empty=No new notification
 idzone.notifications.view_all=View all notifications
 idzone.my.myaccount=My profile
 idzone.my.personalspace=My personal space
-idzone.my.support=Support
+idzone.my.support=Online help
+idzone.my.echannel=Billing and support
 idzone.my.logout=Sign out
 
 #----------------------
