@@ -220,6 +220,14 @@ object.filter_configuration.name.default.label=Défaut
 object.filter_configuration.name.title=Nom du filtre
 object.filter_configuration.name.error=Le nom du filtre ne doit pas être vide
 object.filter_configuration.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer ce filtre?
+object.filter_configuration.stored_filters=Filtres sauvés
+
+object.filter_configuration.action.reload=Recharger
+object.filter_configuration.action.save=Enregistrer
+object.filter_configuration.action.save_as=Enregistrer sous
+object.filter_configuration.action.edit=Renommer
+object.filter_configuration.action.share=Partager
+object.filter_configuration.action.delete=Supprimer
 
 object.filter_configuration.share.title=Partager le filtre
 object.filter_configuration.share.header=Partager le filtre avec un utilisateur BizDock. Une notification lui sera automatiquement envoyée.
