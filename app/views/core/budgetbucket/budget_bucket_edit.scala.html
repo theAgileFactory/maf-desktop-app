@@ -26,6 +26,10 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.BudgetBucket])
+}
+
 @templates.main_bc_nosidebar(
     parts.Msg.asString("core.budget_bucket.title"),
     Seq(
@@ -43,38 +47,54 @@
         }
     
         @helper.form(action = controllers.core.routes.BudgetBucketController.save()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@budgetBucket.id"/>
-                
-                @parts.checkbox(
-                    budgetBucketForm("isActive"), 
-                    parts.Msg.asString("object.budget_bucket.is_active.label"), 
-                    parts.Msg.asString("object.budget_bucket.is_active.help")
-                )
-            
-                @parts.checkbox(
-                    budgetBucketForm("isApproved"), 
-                    parts.Msg.asString("object.budget_bucket.is_approved.label"), 
-                    parts.Msg.asString("object.budget_bucket.is_approved.help")
-                )
-            
-                @helper.inputText(budgetBucketForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.ref_id.label"), 'autofocus -> "autofocus")
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@budgetBucket.id"/>
+                        
+                        @parts.checkbox(
+                            budgetBucketForm("isActive"), 
+                            parts.Msg.asString("object.budget_bucket.is_active.label"), 
+                            parts.Msg.asString("object.budget_bucket.is_active.help")
+                        )
+                    
+                        @parts.checkbox(
+                            budgetBucketForm("isApproved"), 
+                            parts.Msg.asString("object.budget_bucket.is_approved.label"), 
+                            parts.Msg.asString("object.budget_bucket.is_approved.help")
+                        )
+                    
+                        @helper.inputText(budgetBucketForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.ref_id.label"), 'autofocus -> "autofocus")
+        
+                        @helper.inputText(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
+                        
+                        @parts.singlevalue_picker(
+                            budgetBucketForm("owner"), 
+                            parts.Msg.asString("object.budget_bucket.owner.label"),
+                            controllers.routes.PickerController.actor().url
+                        )
 
-                @helper.inputText(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='@controllers.core.routes.BudgetBucketController.view(budgetBucket.id)'>@parts.Msg("button.cancel")</a>
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @parts.singlevalue_picker(
-                    budgetBucketForm("owner"), 
-                    parts.Msg.asString("object.budget_bucket.owner.label"),
-                    controllers.routes.PickerController.actor().url
-                )
-                
-                @parts.extended_attributes_input(budgetBucketForm, classOf[models.finance.BudgetBucket], budgetBucket.id)
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.core.routes.BudgetBucketController.view(budgetBucket.id)'>@parts.Msg("button.cancel")</a>
-                
-            </fieldset>
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(budgetBucketForm, classOf[models.finance.BudgetBucket], budgetBucket.id)
+                </div>
+
+            </div>
+            }
+                    
        }
     </div> 
    

@@ -25,6 +25,10 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.BudgetBucket])
+}
+
 @templates.main_bc_nosidebar(
     parts.Msg.asString("core.budget_bucket.new.title"),
     Seq(
@@ -41,30 +45,47 @@
         }
     
         @helper.form(action = controllers.core.routes.BudgetBucketController.createSubmit()) {
-            <fieldset>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+        
+                        <input type="hidden" name="isActive" value="true"/>
+                    
+                        @parts.checkbox(
+                            budgetBucketForm("isApproved"), 
+                            parts.Msg.asString("object.budget_bucket.is_approved.label"), 
+                            parts.Msg.asString("object.budget_bucket.is_approved.help")
+                        )
+                    
+                        @helper.inputText(budgetBucketForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.ref_id.label"), 'autofocus -> "autofocus")
+        
+                        @helper.inputText(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
+                        
+                        @parts.singlevalue_picker(
+                            budgetBucketForm("owner"), 
+                            parts.Msg.asString("object.budget_bucket.owner.label"),
+                            controllers.routes.PickerController.actor().url
+                        )
 
-                <input type="hidden" name="isActive" value="true"/>
-            
-                @parts.checkbox(
-                    budgetBucketForm("isApproved"), 
-                    parts.Msg.asString("object.budget_bucket.is_approved.label"), 
-                    parts.Msg.asString("object.budget_bucket.is_approved.help")
-                )
-            
-                @helper.inputText(budgetBucketForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.ref_id.label"), 'autofocus -> "autofocus")
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
+                
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(budgetBucketForm, classOf[models.finance.BudgetBucket], null)
+                </div>
 
-                @helper.inputText(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
-                
-                @parts.singlevalue_picker(
-                    budgetBucketForm("owner"), 
-                    parts.Msg.asString("object.budget_bucket.owner.label"),
-                    controllers.routes.PickerController.actor().url
-                )
-                
-                @parts.extended_attributes_input(budgetBucketForm, classOf[models.finance.BudgetBucket], null)
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
-            </fieldset>
+            </div>
+            }
+
        }
     </div> 
    
