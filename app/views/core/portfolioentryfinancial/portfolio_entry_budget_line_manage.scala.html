@@ -28,6 +28,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryBudgetLine])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -48,45 +52,61 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryFinancialController.processManageBudgetLine()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
 
-                @if(budgetLineForm("budgetLineId").value!=null) {
-                    <input type="hidden" name="budgetLineId" value="@budgetLineForm("budgetLineId").value"/>
-                }
-                
-                @parts.checkbox(
-                    budgetLineForm("isOpex"), 
-                    parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.label"), 
-                    parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.help")
-                )
-                
-                @helper.inputText(budgetLineForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.ref_id.label"), 'autofocus -> "autofocus")
-                
-                @helper.inputText(budgetLineForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.name.label"))
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+        
+                        @if(budgetLineForm("budgetLineId").value!=null) {
+                            <input type="hidden" name="budgetLineId" value="@budgetLineForm("budgetLineId").value"/>
+                        }
+                        
+                        @parts.checkbox(
+                            budgetLineForm("isOpex"), 
+                            parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.label"), 
+                            parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.help")
+                        )
+                        
+                        @helper.inputText(budgetLineForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.ref_id.label"), 'autofocus -> "autofocus")
+                        
+                        @helper.inputText(budgetLineForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.name.label"))
+        
+                        @helper.inputText(budgetLineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.amount.label"))
+                        
+                        @parts.dropdownlist(budgetLineForm("currency"), parts.Msg.asString("object.portfolio_entry_budget_line.currency.label"), currencies, null, false)
+        
+                        @parts.singlevalue_picker(
+                            budgetLineForm("budgetBucket"), 
+                            parts.Msg.asString("object.portfolio_entry_budget_line.budget_bucket.label"),
+                            controllers.routes.PickerController.budgetBucket().url
+                        )
 
-                @helper.inputText(budgetLineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.amount.label"))
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                        
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @parts.dropdownlist(budgetLineForm("currency"), parts.Msg.asString("object.portfolio_entry_budget_line.currency.label"), currencies, null, false)
+                <div class="col-md-6">
+                    @if(budgetLineForm("budgetLineId").value!=null) {
+                        @parts.extended_attributes_input(budgetLineForm, classOf[models.finance.PortfolioEntryBudgetLine], Long.parseLong(budgetLineForm("budgetLineId").value))
+                    } else {
+                        @parts.extended_attributes_input(budgetLineForm, classOf[models.finance.PortfolioEntryBudgetLine], null)
+                    }
+                </div>
 
-                @parts.singlevalue_picker(
-                    budgetLineForm("budgetBucket"), 
-                    parts.Msg.asString("object.portfolio_entry_budget_line.budget_bucket.label"),
-                    controllers.routes.PickerController.budgetBucket().url
-                )
-
-                @if(budgetLineForm("budgetLineId").value!=null) {
-                    @parts.extended_attributes_input(budgetLineForm, classOf[models.finance.PortfolioEntryBudgetLine], Long.parseLong(budgetLineForm("budgetLineId").value))
-                } else {
-                    @parts.extended_attributes_input(budgetLineForm, classOf[models.finance.PortfolioEntryBudgetLine], null)
-                }
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
-                
-                
-            </fieldset>
+            </div>
+            }
+                    
         }
 
     </div> 
