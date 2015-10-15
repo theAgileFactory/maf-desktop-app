@@ -83,7 +83,6 @@ import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryType;
 import play.Configuration;
 import play.Logger;
-import play.Play;
 import play.data.Form;
 import play.i18n.Messages;
 import play.libs.Json;
@@ -511,29 +510,10 @@ public class PortfolioEntryController extends Controller {
         // construct the form
         Form<PortfolioEntryEditFormData> portfolioEntryForm = portfolioEntryEditFormData.fill(new PortfolioEntryEditFormData(portfolioEntry));
 
-        return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm, PortfolioEntryDao.getPETypeActiveAsVH()));
-    }
-
-    /**
-     * Form to edit the custom attributes of portfolio entry.
-     * 
-     * @param id
-     *            the portfolio entry id
-     */
-    @With(CheckPortfolioEntryExists.class)
-    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result editCustomAttr(Long id) {
-
-        // get the portfolioEntry
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
-
-        // construct the form
-        Form<EmptyEditFormData> customAttributeForm = emptyFormTemplate.fill(new EmptyEditFormData(portfolioEntry.id));
-
         // add the custom attributes
-        CustomAttributeFormAndDisplayHandler.fillWithValues(customAttributeForm, PortfolioEntry.class, id);
+        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryForm, PortfolioEntry.class, id);
 
-        return ok(views.html.core.portfolioentry.portfolio_entry_custom_attr_edit.render(portfolioEntry, customAttributeForm));
+        return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm, PortfolioEntryDao.getPETypeActiveAsVH()));
     }
 
     /**
@@ -550,7 +530,7 @@ public class PortfolioEntryController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors()) {
+        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class)) {
             return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, boundForm, PortfolioEntryDao.getPETypeActiveAsVH()));
         }
 
@@ -560,43 +540,17 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry updPortfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryFormData.id);
         portfolioEntryFormData.fill(updPortfolioEntry);
         updPortfolioEntry.update();
-        // updPortfolioEntry.saveManyToManyAssociations("deliveryUnits");
 
         // update the licenses number (because the flag is archived is used for
         // the computation and could be modified)
         getLicensesManagementService().updateConsumedPortfolioEntries();
 
+        // save the custom attributes
+        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, id);
+
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.edit.successful"));
 
         return redirect(controllers.core.routes.PortfolioEntryController.view(portfolioEntryFormData.id, 0));
-    }
-
-    /**
-     * Process the update of the custom attributes of a portfolio entry.
-     */
-    @With(CheckPortfolioEntryExists.class)
-    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result processEditCustomAttr() {
-
-        // bind the form
-        Form<EmptyEditFormData> boundForm = emptyFormTemplate.bindFromRequest();
-
-        // get the portfolioEntry
-        Long id = Long.valueOf(boundForm.data().get("id"));
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
-
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class)) {
-            return ok(views.html.core.portfolioentry.portfolio_entry_custom_attr_edit.render(portfolioEntry, boundForm));
-        }
-
-        EmptyEditFormData emptyEditFormData = boundForm.get();
-
-        // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, emptyEditFormData.id);
-
-        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.edit.successful"));
-
-        return redirect(controllers.core.routes.PortfolioEntryController.view(emptyEditFormData.id, 0));
     }
 
     /**
@@ -1076,6 +1030,7 @@ public class PortfolioEntryController extends Controller {
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }
+
     private Configuration getConfiguration() {
         return configuration;
     }

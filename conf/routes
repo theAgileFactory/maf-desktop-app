@@ -224,8 +224,6 @@ GET    /portfolio-entry/overview           controllers.core.PortfolioEntryContro
 GET    /portfolio-entry/view               controllers.core.PortfolioEntryController.view(id: Long, attachmentPage: Integer ?= 0)
 GET    /portfolio-entry/edit               controllers.core.PortfolioEntryController.edit(id: Long)
 POST   /portfolio-entry/edit               controllers.core.PortfolioEntryController.processEdit()
-GET    /portfolio-entry/custom-attr/edit   controllers.core.PortfolioEntryController.editCustomAttr(id: Long)
-POST   /portfolio-entry/custom-attr/edit   controllers.core.PortfolioEntryController.processEditCustomAttr()
 GET    /portfolio-entry/plugin/config      controllers.core.PortfolioEntryController.pluginConfig(id: Long)
 GET    /portfolio-entry/delete             controllers.core.PortfolioEntryController.delete(id: Long)
 GET    /portfolio-entry/portfolios/edit    controllers.core.PortfolioEntryController.editPortfolios(id: Long)

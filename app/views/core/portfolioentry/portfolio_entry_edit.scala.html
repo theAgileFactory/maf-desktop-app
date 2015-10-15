@@ -28,6 +28,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntry])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -40,62 +44,82 @@
     <span id="portfolio-entry-@(portfolioEntry.id)-edit"></span>
 
     <div class="maf-form">
+    
         @if(portfolioEntryForm.hasErrors()){
             <div class="alert alert-danger">
                 <strong>@parts.Msg("standard.form.error.title")</strong><br/>
             </div>
         }
-    
+        
         @helper.form(action = controllers.core.routes.PortfolioEntryController.processEdit()) {
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+        
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        @parts.checkbox(
+                            portfolioEntryForm("isConfidential"), 
+                            parts.Msg.asString("object.portfolio_entry.is_condfidential.label"), 
+                            parts.Msg.asString("object.portfolio_entry.is_condfidential.help")
+                        )
+                        
+                        @parts.checkbox(
+                            portfolioEntryForm("isActive"), 
+                            parts.Msg.asString("object.portfolio_entry.is_active.label"), 
+                            ""
+                        )
+        
+                        @helper.inputText(portfolioEntryForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"), 'autofocus -> "autofocus")
+                        
+                        @helper.textarea(portfolioEntryForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
+                        
+                        @parts.dropdownlist(portfolioEntryForm("portfolioEntryType"), parts.Msg.asString("object.portfolio_entry.type.label"), portfolioEntryTypes, null, false)
+        
+                        @helper.inputText(portfolioEntryForm("governanceId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.governance_id.label"))
+                        
+                        @helper.inputText(portfolioEntryForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.erp_ref_id.label"))
+                        
+                        @parts.singlevalue_picker(
+                            portfolioEntryForm("manager"), 
+                            parts.Msg.asString("object.portfolio_entry.manager.label"),
+                            controllers.routes.PickerController.manager().url
+                        )
+                        
+                        @parts.singlevalue_picker(
+                            portfolioEntryForm("sponsoringUnit"), 
+                            parts.Msg.asString("object.portfolio_entry.sponsoring_unit.label"),
+                            controllers.routes.PickerController.sponsoringUnit().url
+                        )
+                        
+                        @parts.multivalue_picker(
+                            portfolioEntryForm("deliveryUnits"), 
+                            parts.Msg.asString("object.portfolio_entry.delivery_units.label"),
+                            controllers.routes.PickerController.deliveryUnits().url
+                        )
+                        
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
 
-            <fieldset>
+                    </fieldset>
+               
+                @if(hasExtendedAttributes) {
+                </div>
+                
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(portfolioEntryForm, classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
+                </div>
 
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
-                
-                @parts.checkbox(
-                    portfolioEntryForm("isConfidential"), 
-                    parts.Msg.asString("object.portfolio_entry.is_condfidential.label"), 
-                    parts.Msg.asString("object.portfolio_entry.is_condfidential.help")
-                )
-                
-                @parts.checkbox(
-                    portfolioEntryForm("isActive"), 
-                    parts.Msg.asString("object.portfolio_entry.is_active.label"), 
-                    ""
-                )
-
-                @helper.inputText(portfolioEntryForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"), 'autofocus -> "autofocus")
-                
-                @helper.textarea(portfolioEntryForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
-                
-                @parts.dropdownlist(portfolioEntryForm("portfolioEntryType"), parts.Msg.asString("object.portfolio_entry.type.label"), portfolioEntryTypes, null, false)
-
-                @helper.inputText(portfolioEntryForm("governanceId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.governance_id.label"))
-                
-                @helper.inputText(portfolioEntryForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.erp_ref_id.label"))
-                
-                @parts.singlevalue_picker(
-                    portfolioEntryForm("manager"), 
-                    parts.Msg.asString("object.portfolio_entry.manager.label"),
-                    controllers.routes.PickerController.manager().url
-                )
-                
-                @parts.singlevalue_picker(
-                    portfolioEntryForm("sponsoringUnit"), 
-                    parts.Msg.asString("object.portfolio_entry.sponsoring_unit.label"),
-                    controllers.routes.PickerController.sponsoringUnit().url
-                )
-                
-                @parts.multivalue_picker(
-                    portfolioEntryForm("deliveryUnits"), 
-                    parts.Msg.asString("object.portfolio_entry.delivery_units.label"),
-                    controllers.routes.PickerController.deliveryUnits().url
-                )
-
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
-            </fieldset>
-       }
+            </div>
+            }
+       
+        }
+       
     </div> 
    
 }
