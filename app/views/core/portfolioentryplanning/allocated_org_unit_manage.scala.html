@@ -27,6 +27,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -47,69 +51,85 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.processManageAllocatedOrgUnit()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        @if(allocatedOrgUnitForm("allocatedOrgUnitId").value!=null) {
+                            <input type="hidden" name="allocatedOrgUnitId" value="@allocatedOrgUnitForm("allocatedOrgUnitId").value"/>
+                        }
+                        
+                         @parts.checkbox(
+                            allocatedOrgUnitForm("isConfirmed"), 
+                            parts.Msg.asString("object.allocated_resource.is_confirmed.label")
+                        )
+                        
+                        @parts.singlevalue_picker(
+                            allocatedOrgUnitForm("orgUnit"), 
+                            parts.Msg.asString("object.allocated_resource.org_unit.label"),
+                            controllers.routes.PickerController.deliveryUnitsOfPortfolioEntry().url,
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                        )
+                        
+                        @helper.inputText(allocatedOrgUnitForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
+                        
+                        @parts.singlevalue_picker(
+                            allocatedOrgUnitForm("portfolioEntryPlanningPackage"), 
+                            parts.Msg.asString("object.allocated_resource.package.label"),
+                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                        )
+                        
+                        @parts.checkbox(
+                            allocatedOrgUnitForm("followPackageDates"), 
+                            parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
+                        )
+                        
+                        @parts.dateinput(allocatedOrgUnitForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
+                        
+                        @parts.dateinput(allocatedOrgUnitForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
+                        
+                        @allocated_resource_manage_js()
+                        
+                        <script>
+        
+                        $('#@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id').change(function() { 
+                            maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id');
+                        });
+                        $('#@allocatedOrgUnitForm("followPackageDates").id').change(function() { 
+                            maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id') 
+                        });
+        
+                        maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id');
+                        
+                        </script>
+                        
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @if(allocatedOrgUnitForm("allocatedOrgUnitId").value!=null) {
-                    <input type="hidden" name="allocatedOrgUnitId" value="@allocatedOrgUnitForm("allocatedOrgUnitId").value"/>
-                }
-                
-                 @parts.checkbox(
-                    allocatedOrgUnitForm("isConfirmed"), 
-                    parts.Msg.asString("object.allocated_resource.is_confirmed.label")
-                )
-                
-                @parts.singlevalue_picker(
-                    allocatedOrgUnitForm("orgUnit"), 
-                    parts.Msg.asString("object.allocated_resource.org_unit.label"),
-                    controllers.routes.PickerController.deliveryUnitsOfPortfolioEntry().url,
-                    Seq("portfolioEntryId" -> portfolioEntry.id.toString)
-                )
-                
-                @helper.inputText(allocatedOrgUnitForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
-                
-                @parts.singlevalue_picker(
-                    allocatedOrgUnitForm("portfolioEntryPlanningPackage"), 
-                    parts.Msg.asString("object.allocated_resource.package.label"),
-                    controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                    Seq("portfolioEntryId" -> portfolioEntry.id.toString)
-                )
-                
-                @parts.checkbox(
-                    allocatedOrgUnitForm("followPackageDates"), 
-                    parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
-                )
-                
-                @parts.dateinput(allocatedOrgUnitForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
-                
-                @parts.dateinput(allocatedOrgUnitForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
+                <div class="col-md-6">
+                    @if(allocatedOrgUnitForm("allocatedOrgUnitId").value!=null) {
+                        @parts.extended_attributes_input(allocatedOrgUnitForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit], Long.parseLong(allocatedOrgUnitForm("allocatedOrgUnitId").value))
+                    } else {
+                        @parts.extended_attributes_input(allocatedOrgUnitForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit], null)
+                    }
+                </div>
 
-                @if(allocatedOrgUnitForm("allocatedOrgUnitId").value!=null) {
-                    @parts.extended_attributes_input(allocatedOrgUnitForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit], Long.parseLong(allocatedOrgUnitForm("allocatedOrgUnitId").value))
-                } else {
-                    @parts.extended_attributes_input(allocatedOrgUnitForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit], null)
-                }
-                
-                @allocated_resource_manage_js()
-                
-                <script>
+            </div>
+            }
 
-                $('#@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id').change(function() { 
-                    maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id');
-                });
-                $('#@allocatedOrgUnitForm("followPackageDates").id').change(function() { 
-                    maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id') 
-                });
-
-                maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id');
-                
-                </script>
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
-                
-            </fieldset>
         }
 
     </div> 

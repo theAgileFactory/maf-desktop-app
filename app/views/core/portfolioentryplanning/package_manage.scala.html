@@ -30,6 +30,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntryPlanningPackage])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -50,47 +54,62 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.processManagePackage(), 'enctype -> "multipart/form-data") {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        @if(planningPackageForm("planningPackageId").value!=null) {
+                            <input type="hidden" name="planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
+                        }
+                        
+                        @parts.checkbox(
+                            planningPackageForm("isImportant"), 
+                            parts.Msg.asString("object.portfolio_entry_planning_package.is_important.label")
+                        )
+                        
+                        @helper.inputText(planningPackageForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
+                        
+                        @helper.textarea(planningPackageForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))
+                        
+                        @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageGroup"), parts.Msg.asString("object.portfolio_entry_planning_package.group.label"), groups, null, false)
+                        
+                        @parts.dateinput(planningPackageForm("startDate"), parts.Msg.asString("object.portfolio_entry_planning_package.start_date.label"))
+                        
+                        @parts.dateinput(planningPackageForm("endDate"), parts.Msg.asString("object.portfolio_entry_planning_package.end_date.label"))
+                        
+                        @parts.radiobuttongroup(planningPackageForm("cssClass"), parts.Msg.asString("object.portfolio_entry_planning_package.css_class.label"), selectableCssClasses)
+                        
+                        @parts.dropdownlist(planningPackageForm("status"), parts.Msg.asString("object.portfolio_entry_planning_package.status.label"), status, null, false)
+                        
+                        @if(planningPackageForm("planningPackageId").value==null) {
+                            @parts.file_field(planningPackageForm("document"),Messages("object.attachment.document.label"))
+                        }
+
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @if(planningPackageForm("planningPackageId").value!=null) {
-                    <input type="hidden" name="planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
-                }
-                
-                @parts.checkbox(
-                    planningPackageForm("isImportant"), 
-                    parts.Msg.asString("object.portfolio_entry_planning_package.is_important.label")
-                )
-                
-                @helper.inputText(planningPackageForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
-                
-                @helper.textarea(planningPackageForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))
-                
-                @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageGroup"), parts.Msg.asString("object.portfolio_entry_planning_package.group.label"), groups, null, false)
-                
-                @parts.dateinput(planningPackageForm("startDate"), parts.Msg.asString("object.portfolio_entry_planning_package.start_date.label"))
-                
-                @parts.dateinput(planningPackageForm("endDate"), parts.Msg.asString("object.portfolio_entry_planning_package.end_date.label"))
-                
-                @parts.radiobuttongroup(planningPackageForm("cssClass"), parts.Msg.asString("object.portfolio_entry_planning_package.css_class.label"), selectableCssClasses)
-                
-                @parts.dropdownlist(planningPackageForm("status"), parts.Msg.asString("object.portfolio_entry_planning_package.status.label"), status, null, false)
-                
-                @if(planningPackageForm("planningPackageId").value==null) {
-                    @parts.file_field(planningPackageForm("document"),Messages("object.attachment.document.label"))
-                }
-                
-                @if(planningPackageForm("planningPackageId").value!=null) {
-                    @parts.extended_attributes_input(planningPackageForm, classOf[models.pmo.PortfolioEntryPlanningPackage], Long.parseLong(planningPackageForm("planningPackageId").value))
-                } else {
-                    @parts.extended_attributes_input(planningPackageForm, classOf[models.pmo.PortfolioEntryPlanningPackage], null)
-                }
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
-                
-            </fieldset>
+                <div class="col-md-6">
+                    @if(planningPackageForm("planningPackageId").value!=null) {
+                        @parts.extended_attributes_input(planningPackageForm, classOf[models.pmo.PortfolioEntryPlanningPackage], Long.parseLong(planningPackageForm("planningPackageId").value))
+                    } else {
+                        @parts.extended_attributes_input(planningPackageForm, classOf[models.pmo.PortfolioEntryPlanningPackage], null)
+                    }
+                </div>
+
+            </div>
+            }
         }
 
     </div> 

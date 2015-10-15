@@ -27,6 +27,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedCompetency])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -47,70 +51,86 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.processManageAllocatedCompetency()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
-                
-                @if(allocatedCompetencyForm("allocatedCompetencyId").value!=null) {
-                    <input type="hidden" name="allocatedCompetencyId" value="@allocatedCompetencyForm("allocatedCompetencyId").value"/>
-                }
-                
-                 @parts.checkbox(
-                    allocatedCompetencyForm("isConfirmed"), 
-                    parts.Msg.asString("object.allocated_resource.is_confirmed.label")
-                )
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        @if(allocatedCompetencyForm("allocatedCompetencyId").value!=null) {
+                            <input type="hidden" name="allocatedCompetencyId" value="@allocatedCompetencyForm("allocatedCompetencyId").value"/>
+                        }
+                        
+                         @parts.checkbox(
+                            allocatedCompetencyForm("isConfirmed"), 
+                            parts.Msg.asString("object.allocated_resource.is_confirmed.label")
+                        )
+        
+                        @parts.dropdownlist(
+                            allocatedCompetencyForm("competency"), 
+                            parts.Msg.asString("object.allocated_resource.competency.label"), 
+                            dao.pmo.ActorDao.getCompetencyActiveAsVH(),
+                            null,
+                            false
+                        )
+                        
+                        @helper.inputText(allocatedCompetencyForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
+                        
+                        @parts.singlevalue_picker(
+                            allocatedCompetencyForm("portfolioEntryPlanningPackage"), 
+                            parts.Msg.asString("object.allocated_resource.package.label"),
+                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                        )
+                        
+                        @parts.checkbox(
+                            allocatedCompetencyForm("followPackageDates"), 
+                            parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
+                        )
+                        
+                        @parts.dateinput(allocatedCompetencyForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
+                        
+                        @parts.dateinput(allocatedCompetencyForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
 
-                @parts.dropdownlist(
-                    allocatedCompetencyForm("competency"), 
-                    parts.Msg.asString("object.allocated_resource.competency.label"), 
-                    dao.pmo.ActorDao.getCompetencyActiveAsVH(),
-                    null,
-                    false
-                )
+                        @allocated_resource_manage_js()
+                        
+                        <script>
+        
+                        $('#@allocatedCompetencyForm("portfolioEntryPlanningPackage").id').change(function() { 
+                            maf_recomputeFields('@allocatedCompetencyForm("portfolioEntryPlanningPackage").id', '@allocatedCompetencyForm("followPackageDates").id', '@allocatedCompetencyForm("startDate").id', '@allocatedCompetencyForm("endDate").id');
+                        });
+                        $('#@allocatedCompetencyForm("followPackageDates").id').change(function() { 
+                            maf_recomputeFields('@allocatedCompetencyForm("portfolioEntryPlanningPackage").id', '@allocatedCompetencyForm("followPackageDates").id', '@allocatedCompetencyForm("startDate").id', '@allocatedCompetencyForm("endDate").id') 
+                        });
+        
+                        maf_recomputeFields('@allocatedCompetencyForm("portfolioEntryPlanningPackage").id', '@allocatedCompetencyForm("followPackageDates").id', '@allocatedCompetencyForm("startDate").id', '@allocatedCompetencyForm("endDate").id');
+                        
+                        </script>
+                        
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @helper.inputText(allocatedCompetencyForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
-                
-                @parts.singlevalue_picker(
-                    allocatedCompetencyForm("portfolioEntryPlanningPackage"), 
-                    parts.Msg.asString("object.allocated_resource.package.label"),
-                    controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                    Seq("portfolioEntryId" -> portfolioEntry.id.toString)
-                )
-                
-                @parts.checkbox(
-                    allocatedCompetencyForm("followPackageDates"), 
-                    parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
-                )
-                
-                @parts.dateinput(allocatedCompetencyForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
-                
-                @parts.dateinput(allocatedCompetencyForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
+                <div class="col-md-6">
+                    @if(allocatedCompetencyForm("allocatedCompetencyId").value!=null) {
+                        @parts.extended_attributes_input(allocatedCompetencyForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedCompetency], Long.parseLong(allocatedCompetencyForm("allocatedCompetencyId").value))
+                    } else {
+                        @parts.extended_attributes_input(allocatedCompetencyForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedCompetency], null)
+                    }
+                </div>
 
-                @if(allocatedCompetencyForm("allocatedCompetencyId").value!=null) {
-                    @parts.extended_attributes_input(allocatedCompetencyForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedCompetency], Long.parseLong(allocatedCompetencyForm("allocatedCompetencyId").value))
-                } else {
-                    @parts.extended_attributes_input(allocatedCompetencyForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedCompetency], null)
-                }
-                
-                @allocated_resource_manage_js()
-                
-                <script>
+            </div>
+            }
 
-                $('#@allocatedCompetencyForm("portfolioEntryPlanningPackage").id').change(function() { 
-                    maf_recomputeFields('@allocatedCompetencyForm("portfolioEntryPlanningPackage").id', '@allocatedCompetencyForm("followPackageDates").id', '@allocatedCompetencyForm("startDate").id', '@allocatedCompetencyForm("endDate").id');
-                });
-                $('#@allocatedCompetencyForm("followPackageDates").id').change(function() { 
-                    maf_recomputeFields('@allocatedCompetencyForm("portfolioEntryPlanningPackage").id', '@allocatedCompetencyForm("followPackageDates").id', '@allocatedCompetencyForm("startDate").id', '@allocatedCompetencyForm("endDate").id') 
-                });
-
-                maf_recomputeFields('@allocatedCompetencyForm("portfolioEntryPlanningPackage").id', '@allocatedCompetencyForm("followPackageDates").id', '@allocatedCompetencyForm("startDate").id', '@allocatedCompetencyForm("endDate").id');
-                
-                </script>
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
-                
-            </fieldset>
         }
 
     </div> 
