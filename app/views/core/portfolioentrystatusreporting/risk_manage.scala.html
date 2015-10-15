@@ -29,6 +29,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntryRisk])
+}
+
 @breadcrump=@{
     if(isRisk) {
         Seq(
@@ -55,68 +59,84 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryStatusReportingController.processManageRisk()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
-                
-                @if(portfolioEntryRiskForm("riskId").value!=null){
-                    <input type="hidden" name="riskId" value="@portfolioEntryRiskForm("riskId").value"/>
-                }
-                
-                <input type="hidden" name="isRisk" value="@isRisk"/>
-                
-                @parts.checkbox(
-                    portfolioEntryRiskForm("isActive"), 
-                    parts.Msg.asString("object.portfolio_entry_risk.is_active.label"), 
-                    parts.Msg.asString("object.portfolio_entry_risk.is_active.help")
-                )
-                
-                @helper.inputText(portfolioEntryRiskForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.name.label"), 'autofocus -> "autofocus")
-                
-                @helper.textarea(portfolioEntryRiskForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.description.label"))
-                
-                @parts.dropdownlist(portfolioEntryRiskForm("riskType"), parts.Msg.asString("object.portfolio_entry_risk.type.label"), riskTypes, null, false)
-                
-                @if(isRisk) {
-                    @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.target_date.label"))
-                } else {
-                    @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.due_date.label"))
-                }
-                
-                @if(isRisk) {
-                
-                    @parts.checkbox(
-                        portfolioEntryRiskForm("isMitigated"), 
-                        parts.Msg.asString("object.portfolio_entry_risk.is_mitigated.label")
-                    )
-                
-                    @helper.textarea(portfolioEntryRiskForm("mitigationComment"), 'onKeyPress -> "maf_checkIsMitigated();", '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.mitigation_comment.label"))
-                
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
                         
-                    <script type="text/javascript">
-                        function maf_checkIsMitigated(){
-                            $('#@portfolioEntryRiskForm("isMitigated").id').attr('checked', true);
+                        @if(portfolioEntryRiskForm("riskId").value!=null){
+                            <input type="hidden" name="riskId" value="@portfolioEntryRiskForm("riskId").value"/>
                         }
-                    </script>
-                }
+                        
+                        <input type="hidden" name="isRisk" value="@isRisk"/>
+                        
+                        @parts.checkbox(
+                            portfolioEntryRiskForm("isActive"), 
+                            parts.Msg.asString("object.portfolio_entry_risk.is_active.label"), 
+                            parts.Msg.asString("object.portfolio_entry_risk.is_active.help")
+                        )
+                        
+                        @helper.inputText(portfolioEntryRiskForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.name.label"), 'autofocus -> "autofocus")
+                        
+                        @helper.textarea(portfolioEntryRiskForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.description.label"))
+                        
+                        @parts.dropdownlist(portfolioEntryRiskForm("riskType"), parts.Msg.asString("object.portfolio_entry_risk.type.label"), riskTypes, null, false)
+                        
+                        @if(isRisk) {
+                            @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.target_date.label"))
+                        } else {
+                            @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.due_date.label"))
+                        }
+                        
+                        @if(isRisk) {
+                        
+                            @parts.checkbox(
+                                portfolioEntryRiskForm("isMitigated"), 
+                                parts.Msg.asString("object.portfolio_entry_risk.is_mitigated.label")
+                            )
+                        
+                            @helper.textarea(portfolioEntryRiskForm("mitigationComment"), 'onKeyPress -> "maf_checkIsMitigated();", '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.mitigation_comment.label"))
+                        
+                                
+                            <script type="text/javascript">
+                                function maf_checkIsMitigated(){
+                                    $('#@portfolioEntryRiskForm("isMitigated").id').attr('checked', true);
+                                }
+                            </script>
+                        }
+                        
+                        @parts.singlevalue_picker(
+                            portfolioEntryRiskForm("owner"), 
+                            parts.Msg.asString("object.portfolio_entry_risk.owner.label"),
+                            controllers.routes.PickerController.owner().url
+                        )
+
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                        
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @parts.singlevalue_picker(
-                    portfolioEntryRiskForm("owner"), 
-                    parts.Msg.asString("object.portfolio_entry_risk.owner.label"),
-                    controllers.routes.PickerController.owner().url
-                )
-                
-                @if(portfolioEntryRiskForm("riskId").value!=null) {
-                    @parts.extended_attributes_input(portfolioEntryRiskForm, classOf[models.pmo.PortfolioEntryRisk], Long.parseLong(portfolioEntryRiskForm("riskId").value))
-                } else {
-                    @parts.extended_attributes_input(portfolioEntryRiskForm, classOf[models.pmo.PortfolioEntryRisk], null)
-                }
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
-                
-                
-            </fieldset>
+                <div class="col-md-6">
+                    @if(portfolioEntryRiskForm("riskId").value!=null) {
+                        @parts.extended_attributes_input(portfolioEntryRiskForm, classOf[models.pmo.PortfolioEntryRisk], Long.parseLong(portfolioEntryRiskForm("riskId").value))
+                    } else {
+                        @parts.extended_attributes_input(portfolioEntryRiskForm, classOf[models.pmo.PortfolioEntryRisk], null)
+                    }
+                </div>
+
+            </div>
+            }
+                    
         }
 
     </div> 

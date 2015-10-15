@@ -28,6 +28,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntryEvent])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -46,28 +50,44 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryStatusReportingController.processManageEvent()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
-                
-                @if(portfolioEntryEventForm("eventId").value!=null){
-                    <input type="hidden" name="eventId" value="@portfolioEntryEventForm("eventId").value"/>
-                }
-                
-                @parts.dropdownlist(portfolioEntryEventForm("type"), parts.Msg.asString("object.portfolio_entry_event.type.label"), eventTypes, null, false)
-                
-                @helper.textarea(portfolioEntryEventForm("message"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_event.message.label"))
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        @if(portfolioEntryEventForm("eventId").value!=null){
+                            <input type="hidden" name="eventId" value="@portfolioEntryEventForm("eventId").value"/>
+                        }
+                        
+                        @parts.dropdownlist(portfolioEntryEventForm("type"), parts.Msg.asString("object.portfolio_entry_event.type.label"), eventTypes, null, false)
+                        
+                        @helper.textarea(portfolioEntryEventForm("message"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_event.message.label"))
 
-                @if(portfolioEntryEventForm("eventId").value!=null) {
-                    @parts.extended_attributes_input(portfolioEntryEventForm, classOf[models.pmo.PortfolioEntryEvent], Long.parseLong(portfolioEntryEventForm("eventId").value))
-                } else {
-                    @parts.extended_attributes_input(portfolioEntryEventForm, classOf[models.pmo.PortfolioEntryEvent], null)
-                }
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                <div class="col-md-6">
+                    @if(portfolioEntryEventForm("eventId").value!=null) {
+                        @parts.extended_attributes_input(portfolioEntryEventForm, classOf[models.pmo.PortfolioEntryEvent], Long.parseLong(portfolioEntryEventForm("eventId").value))
+                    } else {
+                        @parts.extended_attributes_input(portfolioEntryEventForm, classOf[models.pmo.PortfolioEntryEvent], null)
+                    }
+                </div>
 
-            </fieldset>
+            </div>
+            }
+                    
         }
 
     </div> 

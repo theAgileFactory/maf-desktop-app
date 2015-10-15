@@ -28,6 +28,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntryReport])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -46,33 +50,49 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryStatusReportingController.processManageReport(), 'enctype -> "multipart/form-data") {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
-                
-                @if(portfolioEntryReportForm("reportId").value!=null){
-                    <input type="hidden" name="reportId" value="@portfolioEntryReportForm("reportId").value"/>
-                }
-                
-                @parts.radiobuttongroup(portfolioEntryReportForm("status"), parts.Msg.asString("object.portfolio_entry_report.status.label"), selectablePortfolioEntryReportStatusTypes)
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        @if(portfolioEntryReportForm("reportId").value!=null){
+                            <input type="hidden" name="reportId" value="@portfolioEntryReportForm("reportId").value"/>
+                        }
+                        
+                        @parts.radiobuttongroup(portfolioEntryReportForm("status"), parts.Msg.asString("object.portfolio_entry_report.status.label"), selectablePortfolioEntryReportStatusTypes)
+        
+                        @helper.textarea(portfolioEntryReportForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_report.comments.label"))
+                        
+                        @if(portfolioEntryReportForm("reportId").value==null) {
+                            @parts.file_field(portfolioEntryReportForm("document"),Messages("object.attachment.document.label"))
+                        }
 
-                @helper.textarea(portfolioEntryReportForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_report.comments.label"))
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                        
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @if(portfolioEntryReportForm("reportId").value==null) {
-                    @parts.file_field(portfolioEntryReportForm("document"),Messages("object.attachment.document.label"))
-                }
-                
-                @if(portfolioEntryReportForm("reportId").value!=null) {
-                    @parts.extended_attributes_input(portfolioEntryReportForm, classOf[models.pmo.PortfolioEntryReport], Long.parseLong(portfolioEntryReportForm("reportId").value))
-                } else {
-                    @parts.extended_attributes_input(portfolioEntryReportForm, classOf[models.pmo.PortfolioEntryReport], null)
-                }
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
-                
-                
-            </fieldset>
+                <div class="col-md-6">
+                    @if(portfolioEntryReportForm("reportId").value!=null) {
+                        @parts.extended_attributes_input(portfolioEntryReportForm, classOf[models.pmo.PortfolioEntryReport], Long.parseLong(portfolioEntryReportForm("reportId").value))
+                    } else {
+                        @parts.extended_attributes_input(portfolioEntryReportForm, classOf[models.pmo.PortfolioEntryReport], null)
+                    }
+                </div>
+
+            </div>
+            }
+                    
         }
 
     </div> 
