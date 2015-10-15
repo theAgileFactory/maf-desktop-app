@@ -29,6 +29,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.delivery.Requirement])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -48,20 +52,36 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processEditRequirement()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+        
+                        <input type="hidden" name="requirementId" value="@requirementForm("requirementId").value"/>
+                        
+                        @parts.dropdownlist(requirementForm("release"), parts.Msg.asString("object.requirement.release.label"), releases, parts.Msg.asString("object.requirement.release.help"), false)
 
-                <input type="hidden" name="requirementId" value="@requirementForm("requirementId").value"/>
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @parts.dropdownlist(requirementForm("release"), parts.Msg.asString("object.requirement.release.label"), releases, parts.Msg.asString("object.requirement.release.help"), false)
-                
-                @parts.extended_attributes_input(requirementForm, classOf[models.delivery.Requirement], Long.parseLong(requirementForm("requirementId").value))
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(requirementForm, classOf[models.delivery.Requirement], Long.parseLong(requirementForm("requirementId").value))
+                </div>
 
-            </fieldset>
+            </div>
+            }
+                    
         }
 
     </div> 

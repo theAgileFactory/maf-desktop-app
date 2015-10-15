@@ -28,6 +28,10 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.delivery.Iteration])
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -46,21 +50,37 @@
         }
         
         @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processEditIteration()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
-                <input type="hidden" name="iterationId" value="@iterationForm("iterationId").value"/>
-                
-                @helper.inputText(iterationForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.iteration.story_points.label"), 'autofocus -> "autofocus")
-                
-                @parts.dropdownlist(iterationForm("release"), parts.Msg.asString("object.iteration.release.label"), releases, parts.Msg.asString("object.iteration.release.help"), false)
-                
-                @parts.extended_attributes_input(iterationForm, classOf[models.delivery.Iteration], Long.parseLong(iterationForm("iterationId").value))
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        <input type="hidden" name="iterationId" value="@iterationForm("iterationId").value"/>
+                        
+                        @helper.inputText(iterationForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.iteration.story_points.label"), 'autofocus -> "autofocus")
+                        
+                        @parts.dropdownlist(iterationForm("release"), parts.Msg.asString("object.iteration.release.label"), releases, parts.Msg.asString("object.iteration.release.help"), false)
 
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-            </fieldset>
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(iterationForm, classOf[models.delivery.Iteration], Long.parseLong(iterationForm("iterationId").value))
+                </div>
+
+            </div>
+            }
+                    
         }
 
     </div> 
