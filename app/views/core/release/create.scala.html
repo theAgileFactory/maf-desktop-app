@@ -25,6 +25,10 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.delivery.Release])
+}
+
 @templates.main_bc_nosidebar(
     parts.Msg.asString("core.release.create.title"),
     Seq(
@@ -42,32 +46,47 @@
     
         @helper.form(action = controllers.core.routes.ReleaseController.saveCreate()) {
         
-            <fieldset>
-            
-                <input type="hidden" name="isActive" value="true"/>
-                
-                @helper.inputText(releaseForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.name.label"), 'autofocus -> "autofocus")
-                
-                @helper.textarea(releaseForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.release.description.label"))
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
 
-                @helper.inputText(releaseForm("capacity"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.capacity.label"))
-                
-                @parts.dateinput(releaseForm("cutOffDate"), parts.Msg.asString("object.release.cut_off_date.label"))
-                
-                @parts.dateinput(releaseForm("endTestsDate"), parts.Msg.asString("object.release.end_tests_date.label"))
-                
-                @parts.dateinput(releaseForm("deploymentDate"), parts.Msg.asString("object.release.deployment_date.label"))
-                
-                @parts.singlevalue_picker(
-                    releaseForm("manager"), 
-                    parts.Msg.asString("object.release.manager.label"),
-                    controllers.routes.PickerController.manager().url
-                )
-                
-                @parts.extended_attributes_input(releaseForm, classOf[models.delivery.Release], null)
+                    <fieldset>
+                    
+                        <input type="hidden" name="isActive" value="true"/>
+                        
+                        @helper.inputText(releaseForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.name.label"), 'autofocus -> "autofocus")
+                        
+                        @helper.textarea(releaseForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.release.description.label"))
+        
+                        @helper.inputText(releaseForm("capacity"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.capacity.label"))
+                        
+                        @parts.dateinput(releaseForm("cutOffDate"), parts.Msg.asString("object.release.cut_off_date.label"))
+                        
+                        @parts.dateinput(releaseForm("endTestsDate"), parts.Msg.asString("object.release.end_tests_date.label"))
+                        
+                        @parts.dateinput(releaseForm("deploymentDate"), parts.Msg.asString("object.release.deployment_date.label"))
+                        
+                        @parts.singlevalue_picker(
+                            releaseForm("manager"), 
+                            parts.Msg.asString("object.release.manager.label"),
+                            controllers.routes.PickerController.manager().url
+                        )
 
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
-            </fieldset>
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
+                
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(releaseForm, classOf[models.delivery.Release], null)
+                </div>
+
+            </div>
+            }
+                    
        }
     </div> 
    
