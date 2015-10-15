@@ -21,11 +21,9 @@ import java.util.UUID;
 
 import play.Configuration;
 import play.Logger;
-import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Msg;
 import framework.utils.Utilities;
 
 /**
