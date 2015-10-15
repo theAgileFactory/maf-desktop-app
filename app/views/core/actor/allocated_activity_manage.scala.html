@@ -26,6 +26,10 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.timesheet.TimesheetActivityAllocatedActor])
+}
+
 @actor_template(parts.Msg.asString("core.actor.allocated_activity.manage.breadcrumb"), actor){
     
     <div class="maf-form">
@@ -34,72 +38,88 @@
                 <strong>@parts.Msg("standard.form.error.title")</strong><br/>
             </div>
         }
-        
+
         @helper.form(action = controllers.core.routes.ActorController.processManageAllocatedActivity()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@actor.id"/>
-                
-                <input type="hidden" name="actorId" value="@actor.id"/>
-                
-                @if(allocatedActivityForm("allocatedActivityId").value!=null) {
-                    <input type="hidden" name="allocatedActivityId" value="@allocatedActivityForm("allocatedActivityId").value"/>
-                }
-                
-                @parts.dropdownlist(
-                    allocatedActivityForm("timesheetActivityType"), 
-                    parts.Msg.asString("object.allocated_resource.timesheet_activity.label"), 
-                    dao.timesheet.TimesheetDao.getTimesheetActivityTypeAsVH,
-                    null,
-                    false
-                )
-                
-                <div class="form-group ">
-                    <select name="timesheetActivity" id="timesheetActivity" class="form-control">
-                    </select>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@actor.id"/>
+                        
+                        <input type="hidden" name="actorId" value="@actor.id"/>
+                        
+                        @if(allocatedActivityForm("allocatedActivityId").value!=null) {
+                            <input type="hidden" name="allocatedActivityId" value="@allocatedActivityForm("allocatedActivityId").value"/>
+                        }
+                        
+                        @parts.dropdownlist(
+                            allocatedActivityForm("timesheetActivityType"), 
+                            parts.Msg.asString("object.allocated_resource.timesheet_activity.label"), 
+                            dao.timesheet.TimesheetDao.getTimesheetActivityTypeAsVH,
+                            null,
+                            false
+                        )
+                        
+                        <div class="form-group ">
+                            <select name="timesheetActivity" id="timesheetActivity" class="form-control">
+                            </select>
+                        </div>
+                        
+                        <script>
+                            function maf_loadActivityType(timesheetActivity) {
+                                timesheetActivity = (typeof timesheetActivity === "undefined") ? null : timesheetActivity;
+                                $.ajax({
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: 'json',
+                                    url: "@controllers.core.routes.ActorController.getActivities().url",
+                                    data: JSON.stringify({'activityTypeId' : $("#timesheetActivityType").val()}),
+                                    cache : false
+                                }).done(function(result) {
+                                    $("#timesheetActivity").find('option').remove();
+                                    for (i = 0; i < result.length; ++i) {
+                                        var selected = "";
+                                        if (timesheetActivity != null && timesheetActivity == result[i].value) {
+                                            selected = "selected"; 
+                                        }
+                                        $("#timesheetActivity").append('<option value="' + result[i].value + '" ' + selected + '>' + result[i].text + '</option>');
+                                    }
+                                });
+                            }
+                            maf_loadActivityType(@allocatedActivityForm("timesheetActivity").value);
+                            $("#timesheetActivityType").change(function() { maf_loadActivityType(); });
+                        </script>
+        
+                        @helper.inputText(allocatedActivityForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
+                        
+                        @parts.dateinput(allocatedActivityForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
+                        
+                        @parts.dateinput(allocatedActivityForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
+
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='@controllers.core.routes.ActorController.allocationDetails(actor.id)'>@parts.Msg("button.cancel")</a>
+                        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
                 </div>
                 
-                <script>
-                    function maf_loadActivityType(timesheetActivity) {
-                        timesheetActivity = (typeof timesheetActivity === "undefined") ? null : timesheetActivity;
-                        $.ajax({
-                            type: 'POST',
-                            contentType: "application/json; charset=utf-8",
-                            dataType: 'json',
-                            url: "@controllers.core.routes.ActorController.getActivities().url",
-                            data: JSON.stringify({'activityTypeId' : $("#timesheetActivityType").val()}),
-                            cache : false
-                        }).done(function(result) {
-                            $("#timesheetActivity").find('option').remove();
-                            for (i = 0; i < result.length; ++i) {
-                                var selected = "";
-                                if (timesheetActivity != null && timesheetActivity == result[i].value) {
-                                    selected = "selected"; 
-                                }
-                                $("#timesheetActivity").append('<option value="' + result[i].value + '" ' + selected + '>' + result[i].text + '</option>');
-                            }
-                        });
+                <div class="col-md-6">
+                    @if(allocatedActivityForm("allocatedActivityId").value!=null) {
+                        @parts.extended_attributes_input(allocatedActivityForm, classOf[models.timesheet.TimesheetActivityAllocatedActor], Long.parseLong(allocatedActivityForm("allocatedActivityId").value))
+                    } else {
+                        @parts.extended_attributes_input(allocatedActivityForm, classOf[models.timesheet.TimesheetActivityAllocatedActor], null)
                     }
-                    maf_loadActivityType(@allocatedActivityForm("timesheetActivity").value);
-                    $("#timesheetActivityType").change(function() { maf_loadActivityType(); });
-                </script>
+                </div>
 
-                @helper.inputText(allocatedActivityForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
-                
-                @parts.dateinput(allocatedActivityForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
-                
-                @parts.dateinput(allocatedActivityForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
+            </div>
+            }
 
-                @if(allocatedActivityForm("allocatedActivityId").value!=null) {
-                    @parts.extended_attributes_input(allocatedActivityForm, classOf[models.timesheet.TimesheetActivityAllocatedActor], Long.parseLong(allocatedActivityForm("allocatedActivityId").value))
-                } else {
-                    @parts.extended_attributes_input(allocatedActivityForm, classOf[models.timesheet.TimesheetActivityAllocatedActor], null)
-                }
-
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.core.routes.ActorController.allocationDetails(actor.id)'>@parts.Msg("button.cancel")</a>
-                
-            </fieldset>
         }
 
     </div> 
