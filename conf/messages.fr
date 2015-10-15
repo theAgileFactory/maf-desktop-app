@@ -640,6 +640,7 @@ permission.admin_custom_attribute_permission.description=Autorise un utilisateur
 permission.architecture_permission.description=Autorise un utilisateur à utiliser le module d''architecture (DevDock).
 permission.application_block_edit_all_permission.description=Autorise un utilisateur à gérer les blocs applicatifs (DevDock).
 permission.partner_syndication_permission.description=Autorise un utilisateur à gérer la syndication des données avec des partenaires.
+permission.admin_translation_key_edit_permission.description=Autorise un utilisateur à mettre à jour les traductions de BizDock.
 
 #----------------------
 # preferences
