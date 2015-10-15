@@ -27,6 +27,10 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.Actor])
+}
+
 @actor_template(parts.Msg.asString("core.actor.breadcrumb.edit"), actor){
 
     <div class="maf-form">
@@ -37,54 +41,70 @@
         }
     
         @helper.form(action = controllers.core.routes.ActorController.save()) {
-            <fieldset>
-            
-                <input type="hidden" name="id" value="@actor.id"/>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="id" value="@actor.id"/>
+                        
+                        @parts.checkbox(
+                            actorForm("isActive"), 
+                            parts.Msg.asString("object.actor.is_active.label"), 
+                            parts.Msg.asString("object.actor.is_active.help")
+                        )
+                        
+                        @helper.inputText(actorForm("employeeId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.employee_id.label"), 'autofocus -> "autofocus")
+                        
+                        @helper.inputText(actorForm("firstName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.first_name.label"))
+                        
+                        @helper.inputText(actorForm("lastName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.last_name.label"))
+                        
+                        @helper.inputText(actorForm("uid"), '_showConstraints -> false, '_help -> parts.Msg.asString("object.actor.uid.help"), '_label -> parts.Msg.asString("object.actor.uid.label"))
+        
+                        @helper.inputText(actorForm("title"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.title.label"))
+                        
+                        @helper.inputText(actorForm("mail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mail.label"))
+                        
+                        @helper.inputText(actorForm("mobilePhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mobile_phone.label"))
+                        
+                        @helper.inputText(actorForm("fixPhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.fix_phone.label"))
+                        
+                        @parts.dropdownlist(actorForm("actorType"), parts.Msg.asString("object.actor.type.label"), actorTypes, null, false)
+                        
+                        @helper.inputText(actorForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.erp_ref_id.label"))
+        
+                        @parts.singlevalue_picker(
+                            actorForm("orgUnit"), 
+                            parts.Msg.asString("object.actor.org_unit.label"),
+                            controllers.routes.PickerController.orgUnit().url
+                        )
+        
+                        @parts.singlevalue_picker(
+                            actorForm("manager"), 
+                            parts.Msg.asString("object.actor.manager.label"),
+                            controllers.routes.PickerController.manager().url
+                        )
+                        
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.update")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.ActorController.view(actor.id)">@parts.Msg("button.cancel")</a>
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @parts.checkbox(
-                    actorForm("isActive"), 
-                    parts.Msg.asString("object.actor.is_active.label"), 
-                    parts.Msg.asString("object.actor.is_active.help")
-                )
-                
-                @helper.inputText(actorForm("employeeId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.employee_id.label"), 'autofocus -> "autofocus")
-                
-                @helper.inputText(actorForm("firstName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.first_name.label"))
-                
-                @helper.inputText(actorForm("lastName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.last_name.label"))
-                
-                @helper.inputText(actorForm("uid"), '_showConstraints -> false, '_help -> parts.Msg.asString("object.actor.uid.help"), '_label -> parts.Msg.asString("object.actor.uid.label"))
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(actorForm, classOf[models.pmo.Actor], actor.id)
+                </div>
 
-                @helper.inputText(actorForm("title"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.title.label"))
-                
-                @helper.inputText(actorForm("mail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mail.label"))
-                
-                @helper.inputText(actorForm("mobilePhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mobile_phone.label"))
-                
-                @helper.inputText(actorForm("fixPhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.fix_phone.label"))
-                
-                @parts.dropdownlist(actorForm("actorType"), parts.Msg.asString("object.actor.type.label"), actorTypes, null, false)
-                
-                @helper.inputText(actorForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.erp_ref_id.label"))
-
-                @parts.singlevalue_picker(
-                    actorForm("orgUnit"), 
-                    parts.Msg.asString("object.actor.org_unit.label"),
-                    controllers.routes.PickerController.orgUnit().url
-                )
-
-                @parts.singlevalue_picker(
-                    actorForm("manager"), 
-                    parts.Msg.asString("object.actor.manager.label"),
-                    controllers.routes.PickerController.manager().url
-                )
-                
-                @parts.extended_attributes_input(actorForm, classOf[models.pmo.Actor], actor.id)
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.update")" />
-                <a class="btn btn-default" href="@controllers.core.routes.ActorController.view(actor.id)">@parts.Msg("button.cancel")</a>
-            </fieldset>
-       }
+            </div>
+            }
+                    
+        }
     </div> 
    
 }
