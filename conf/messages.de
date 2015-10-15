@@ -2182,7 +2182,6 @@ core.portfolio_entry.overview.milestones.panel.title=Nächste Meilensteine
 
 #view
 core.portfolio_entry.view.details.title=Details
-core.portfolio_entry.view.extended.title=Benutzerdefiniert Attribut
 core.portfolio_entry.view.portfolios.title=Portfolio(s)
 core.portfolio_entry.view.dependencies.title=Abhängigkeiten
 core.portfolio_entry.view.attachments.title=Dokumente
@@ -2239,7 +2238,6 @@ core.portfolio_entry_financial.view.status.table.status.label=Status
 
 #view budget line
 core.portfolio_entry_financial.budget_line.view.title=Budget Eintrag
-core.portfolio_entry_financial.budget_line.view.extended.title=Benutzerdefiniert Attribut
 
 #manage budget line
 core.portfolio_entry_financial.budget_line.manage.title=Budget Eintrag bearbeiten

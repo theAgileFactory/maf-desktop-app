@@ -2171,7 +2171,6 @@ core.portfolio_entry.overview.milestones.panel.title=Next milestones
 
 #view
 core.portfolio_entry.view.details.title=Details
-core.portfolio_entry.view.extended.title=Custom attribute(s)
 core.portfolio_entry.view.portfolios.title=Portfolio(s)
 core.portfolio_entry.view.dependencies.title=Dependencies
 core.portfolio_entry.view.attachments.title=Attachment documents
@@ -2228,7 +2227,6 @@ core.portfolio_entry_financial.view.status.table.status.label=Status
 
 #view budget line
 core.portfolio_entry_financial.budget_line.view.title=Budget line details
-core.portfolio_entry_financial.budget_line.view.extended.title=Custom attribute(s)
 
 #manage budget line
 core.portfolio_entry_financial.budget_line.manage.title=Manage a budget line

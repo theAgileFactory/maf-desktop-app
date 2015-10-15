@@ -37,10 +37,6 @@
     )
 }
 
-@hasExtendedAttributes=@{
-    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntry])
-}
-
 @portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.VIEW, breadcrump){
 
     <span id="portfolio-entry-@(portfolioEntry.id)-details"></span>
@@ -115,27 +111,12 @@
                             </tr>
                         </tbody>
                     </table>
+                    
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
 
                 </div>
 
             </div>
-            
-            @if(hasExtendedAttributes) {
-            
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @parts.Msg("core.portfolio_entry.view.extended.title")
-                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <div class="pull-right">
-                                <a href="@controllers.core.routes.PortfolioEntryController.editCustomAttr(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
-                            </div>
-                        }
-                    </div>
-                    <div class="panel-body">
-                        @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
-                    </div>
-                </div>
-            }
             
         </div>
         
