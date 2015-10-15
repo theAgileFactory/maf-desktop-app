@@ -26,6 +26,9 @@
 @import framework_views.parts
 @import views.html.modelsparts._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.architecture.ApplicationBlock])
+}
 
     <div class="maf-form">
         @if(applicationBlockForm.hasErrors()){
@@ -35,67 +38,83 @@
         }
         
         @helper.form(action = controllers.core.routes.ArchitectureController.manageApplicationBlockProcessFragment(), 'id -> "manage-application-block-form") {
-            <fieldset>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                        
+                        @if(applicationBlockForm("id").value!=null){
+                            <input type="hidden" name="id" value="@applicationBlockForm("id").value"/>
+                        }
+                        
+                        <input type="hidden" name="order" value="@applicationBlockForm("order").value"/>
+                        
+                        <input type="hidden" name="parentId" value="@applicationBlockForm("parentId").value"/>
+        
+                        <div class="form-group ">
+                            <label class="control-label">@parts.Msg("object.application_block.parent.label")</label>
+                            <div class="">@parts.formats.display_object(if (parent != null) parent.getName else null)</div>
+                        </div>
+        
+                        @if(applicationBlockForm("id").value!=null){
+                            @parts.checkbox(
+                                applicationBlockForm("archived"), 
+                                parts.Msg.asString("object.application_block.archived.label"),
+                                parts.Msg.asString("object.application_block.archived.help")
+                            )
+                            
+                            @if(hasChildren) {
+                            <script>
+                                $("#archived").change(function(e) {
+                                    if ($(this).prop('checked')) {
+                                        if(!confirm("@parts.Msg("object.application_block.archived.confirmation.message")")) {
+                                            $(this).prop('checked', false);
+                                        }
+                                    }
+                                })
+                            </script>
+                            }
+                            
+                        } else {
+                            <input type="hidden" name="archived" value="@applicationBlockForm("archived").value"/>
+                        }
+                        
+                        @helper.inputText(applicationBlockForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.ref_id.label"), 'autofocus -> "autofocus")
+            
+                        @helper.inputText(applicationBlockForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.name.label"))
+        
+                        @helper.textarea(applicationBlockForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.description.label"))
+                        
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href='#' id="cancel-link">@parts.Msg("button.cancel")</a>
+                        
+                        <script>
+                            $("#cancel-link").click(function(e) {
+                                e.preventDefault();
+                                applicationBlockTree.setCurrentIdAndLoadClickAction(@if(parent != null) { @parent.getId } else { null });
+                            });
+                        </script>
+        
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @if(applicationBlockForm("id").value!=null){
-                    <input type="hidden" name="id" value="@applicationBlockForm("id").value"/>
-                }
-                
-                <input type="hidden" name="order" value="@applicationBlockForm("order").value"/>
-                
-                <input type="hidden" name="parentId" value="@applicationBlockForm("parentId").value"/>
-
-                <div class="form-group ">
-                    <label class="control-label">@parts.Msg("object.application_block.parent.label")</label>
-                    <div class="">@parts.formats.display_object(if (parent != null) parent.getName else null)</div>
+                <div class="col-md-6">
+                    @if(applicationBlockForm("id").value!=null) {
+                        @parts.extended_attributes_input(applicationBlockForm, classOf[models.architecture.ApplicationBlock], Long.parseLong(applicationBlockForm("id").value))
+                    } else {
+                        @parts.extended_attributes_input(applicationBlockForm, classOf[models.architecture.ApplicationBlock], null)
+                    }
                 </div>
 
-                @if(applicationBlockForm("id").value!=null){
-                    @parts.checkbox(
-                        applicationBlockForm("archived"), 
-                        parts.Msg.asString("object.application_block.archived.label"),
-                        parts.Msg.asString("object.application_block.archived.help")
-                    )
+            </div>
+            }
                     
-                    @if(hasChildren) {
-                    <script>
-                        $("#archived").change(function(e) {
-                            if ($(this).prop('checked')) {
-                                if(!confirm("@parts.Msg("object.application_block.archived.confirmation.message")")) {
-                                    $(this).prop('checked', false);
-                                }
-                            }
-                        })
-                    </script>
-                    }
-                    
-                } else {
-                    <input type="hidden" name="archived" value="@applicationBlockForm("archived").value"/>
-                }
-                
-                @helper.inputText(applicationBlockForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.ref_id.label"), 'autofocus -> "autofocus")
-    
-                @helper.inputText(applicationBlockForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.name.label"))
-
-                @helper.textarea(applicationBlockForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.description.label"))
-
-                @if(applicationBlockForm("id").value!=null) {
-                    @parts.extended_attributes_input(applicationBlockForm, classOf[models.architecture.ApplicationBlock], Long.parseLong(applicationBlockForm("id").value))
-                } else {
-                    @parts.extended_attributes_input(applicationBlockForm, classOf[models.architecture.ApplicationBlock], null)
-                }
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='#' id="cancel-link">@parts.Msg("button.cancel")</a>
-                
-                <script>
-                    $("#cancel-link").click(function(e) {
-                        e.preventDefault();
-                        applicationBlockTree.setCurrentIdAndLoadClickAction(@if(parent != null) { @parent.getId } else { null });
-                    });
-                </script>
-
-            </fieldset>
         }
         
         <script>

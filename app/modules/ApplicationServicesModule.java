@@ -229,6 +229,7 @@ public class ApplicationServicesModule extends FrameworkModule {
      */
     private void initDataTypes() {
         MafDataType.add(IMafConstants.Actor, "models.pmo.Actor", true, true);
+        MafDataType.add(IMafConstants.ApplicationBlock, "models.architecture.ApplicationBlock", false, true);
         MafDataType.add(IMafConstants.BudgetBucket, "models.finance.BudgetBucket", false, true);
         MafDataType.add(IMafConstants.BudgetBucketLine, "models.finance.BudgetBucketLine", false, false);
         MafDataType.add(IMafConstants.CostCenter, "models.finance.CostCenter", false, false);
