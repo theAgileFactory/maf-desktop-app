@@ -26,6 +26,10 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.OrgUnit])
+}
+
 @templates.main_bc_nosidebar(
     parts.Msg.asString("core.org_unit.new.title"),
     Seq(
@@ -42,44 +46,59 @@
         }
     
         @helper.form(action = controllers.core.routes.OrgUnitController.save()) {
-            <fieldset>
-            
-                <input type="hidden" name="isActive" value="true"/>
+        
+            @if(hasExtendedAttributes) {
+            <div class="row">
+        
+                <div class="col-md-6">
+            }
+        
+                    <fieldset>
+                    
+                        <input type="hidden" name="isActive" value="true"/>
+                        
+                        @parts.checkbox(
+                            orgUnitForm("canSponsor"), 
+                            parts.Msg.asString("object.org_unit.can_sponsor.label"), 
+                            parts.Msg.asString("object.org_unit.can_sponsor.help")
+                        )
+                        
+                        @parts.checkbox(
+                            orgUnitForm("canDeliver"), 
+                            parts.Msg.asString("object.org_unit.can_deliver.label"), 
+                            parts.Msg.asString("object.org_unit.can_deliver.help")
+                        )
+                        
+                        @helper.inputText(orgUnitForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.ref_id.label"), 'autofocus -> "autofocus")
+                        
+                        @helper.inputText(orgUnitForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.name.label"))
+                        
+                        @parts.dropdownlist(orgUnitForm("orgUnitType"), parts.Msg.asString("object.org_unit.type.label"), orgUnitTypes, null, false)
+                        
+                        @parts.singlevalue_picker(
+                            orgUnitForm("manager"), 
+                            parts.Msg.asString("object.org_unit.manager.label"),
+                            controllers.routes.PickerController.manager().url
+                        )
+                        
+                        @parts.singlevalue_picker(
+                            orgUnitForm("parent"), 
+                            parts.Msg.asString("object.org_unit.parent.label"),
+                            controllers.routes.PickerController.orgUnit().url
+                        )
+
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
+                    </fieldset>
+                    
+                @if(hasExtendedAttributes) {
+                </div>
                 
-                @parts.checkbox(
-                    orgUnitForm("canSponsor"), 
-                    parts.Msg.asString("object.org_unit.can_sponsor.label"), 
-                    parts.Msg.asString("object.org_unit.can_sponsor.help")
-                )
-                
-                @parts.checkbox(
-                    orgUnitForm("canDeliver"), 
-                    parts.Msg.asString("object.org_unit.can_deliver.label"), 
-                    parts.Msg.asString("object.org_unit.can_deliver.help")
-                )
-                
-                @helper.inputText(orgUnitForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.ref_id.label"), 'autofocus -> "autofocus")
-                
-                @helper.inputText(orgUnitForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.name.label"))
-                
-                @parts.dropdownlist(orgUnitForm("orgUnitType"), parts.Msg.asString("object.org_unit.type.label"), orgUnitTypes, null, false)
-                
-                @parts.singlevalue_picker(
-                    orgUnitForm("manager"), 
-                    parts.Msg.asString("object.org_unit.manager.label"),
-                    controllers.routes.PickerController.manager().url
-                )
-                
-                @parts.singlevalue_picker(
-                    orgUnitForm("parent"), 
-                    parts.Msg.asString("object.org_unit.parent.label"),
-                    controllers.routes.PickerController.orgUnit().url
-                )
-                
-                @parts.extended_attributes_input(orgUnitForm, classOf[models.pmo.OrgUnit], null)
-                
-                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
-            </fieldset>
+                <div class="col-md-6">
+                    @parts.extended_attributes_input(orgUnitForm, classOf[models.pmo.OrgUnit], null)
+                </div>
+
+            </div>
+            }
        }
     </div> 
    
