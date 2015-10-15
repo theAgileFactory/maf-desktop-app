@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(title: String, userAccountForm: Form[controllers.admin.UserManager.UserAccountFormData]) 
+@(userAccountForm: Form[controllers.admin.UserManager.UserAccountFormData]) 
 
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
 
-@usermanager_template(title, controllers.admin.UserManager.MenuItemType.SEARCH) {
+@usermanager_template("admin.user_manager.edit_email.title", controllers.admin.UserManager.MenuItemType.SEARCH) {
 <div class="maf-form">
     @if(userAccountForm.hasErrors()){
         <div class="alert alert-danger">

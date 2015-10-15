@@ -117,7 +117,7 @@ public class MyPersonalStorage extends Controller {
                 files.add(new PersonalStorageFile(file));
             }
             Table<PersonalStorageFile> loadedTable = tableFileTemplate.fill(files);
-            return ok(views.html.my.personalstorage_display.render(Msg.get("my.personalstorage.tableview.title"), loadedTable));
+            return ok(views.html.my.personalstorage_display.render(loadedTable));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }

@@ -149,7 +149,7 @@ public class UserManager extends Controller {
      */
     public Result displayUserSearchForm() {
         Form<UserSeachFormData> userSearchFormLoaded = userSearchForm.fill(new UserSeachFormData());
-        return ok(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), userSearchFormLoaded));
+        return ok(views.html.admin.usermanager.usermanager_search.render(userSearchFormLoaded));
     }
 
     /**
@@ -159,7 +159,7 @@ public class UserManager extends Controller {
     public Result findUser() {
         Form<UserSeachFormData> boundForm = userSearchForm.bindFromRequest();
         if (boundForm.hasErrors()) {
-            return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
+            return badRequest(views.html.admin.usermanager.usermanager_search.render(boundForm));
         }
 
         UserSeachFormData searchFormData = boundForm.get();
@@ -168,18 +168,18 @@ public class UserManager extends Controller {
         if (searchFormData.searchType.equals(UID_SEARCH_OPTION)
                 && (searchFormData.uid == null || searchFormData.uid.trim().equals("") || searchFormData.uid.indexOf('*') != -1)) {
             boundForm.reject("uid", Msg.get("error.required"));
-            return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
+            return badRequest(views.html.admin.usermanager.usermanager_search.render(boundForm));
         }
         // Reject if search by UID but no uid
         if (searchFormData.searchType.equals(MAIL_SEARCH_OPTION)
                 && (searchFormData.mail == null || searchFormData.mail.trim().equals("") || searchFormData.mail.indexOf('*') != -1)) {
             boundForm.reject("mail", Msg.get("error.required"));
-            return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
+            return badRequest(views.html.admin.usermanager.usermanager_search.render(boundForm));
         }
         // Reject if search by full name but no full name
         if (searchFormData.searchType.equals(FULLNAME_SEARCH_OPTION) && (searchFormData.fullName == null || searchFormData.fullName.trim().equals(""))) {
             boundForm.reject("fullName", Msg.get("error.required"));
-            return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
+            return badRequest(views.html.admin.usermanager.usermanager_search.render(boundForm));
         }
 
         IUserAccount foundUser = null;
@@ -192,7 +192,7 @@ public class UserManager extends Controller {
                 IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromUid(searchFormData.uid);
                 if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                     boundForm.reject("uid", Msg.get("admin.user_manager.search.not_found", searchFormData.uid));
-                    return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
+                    return badRequest(views.html.admin.usermanager.usermanager_search.render(boundForm));
                 }
                 foundUser = userAccount;
             } catch (AccountManagementException e) {
@@ -208,7 +208,7 @@ public class UserManager extends Controller {
                 IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromEmail(searchFormData.mail);
                 if (userAccount == null || userAccount.isMarkedForDeletion() || !userAccount.isDisplayed()) {
                     boundForm.reject("mail", Msg.get("admin.user_manager.search.not_found", searchFormData.mail));
-                    return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
+                    return badRequest(views.html.admin.usermanager.usermanager_search.render(boundForm));
                 }
                 foundUser = userAccount;
             } catch (AccountManagementException e) {
@@ -224,7 +224,7 @@ public class UserManager extends Controller {
                 List<IUserAccount> userAccounts = getAccountManagerPlugin().getUserAccountsFromName(searchFormData.fullName);
                 if (userAccounts == null || userAccounts.size() == 0) {
                     boundForm.reject("fullName", Msg.get("admin.user_manager.search.not_found", searchFormData.fullName));
-                    return badRequest(views.html.admin.usermanager.usermanager_search.render(Msg.get("admin.user_manager.sidebar.search"), boundForm));
+                    return badRequest(views.html.admin.usermanager.usermanager_search.render(boundForm));
                 }
                 if (userAccounts.size() > 1) {
                     // Filter the accounts marked for deletion
@@ -241,16 +241,14 @@ public class UserManager extends Controller {
                     });
                     Table<IUserAccount> foundUserAccountsTable = tableTemplate.fill(userAccounts);
                     // Multiple user found, display the selection list
-                    return ok(views.html.admin.usermanager.usermanager_search_results.render(Msg.get("admin.user_manager.search.result.title"),
-                            foundUserAccountsTable));
+                    return ok(views.html.admin.usermanager.usermanager_search_results.render(foundUserAccountsTable));
                 }
                 foundUser = userAccounts.get(0); // Only one user
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         }
-        return ok(views.html.admin.usermanager.usermanager_display.render(Msg.get("admin.user_manager.sidebar.search"),
-                getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), foundUser));
+        return ok(views.html.admin.usermanager.usermanager_display.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), foundUser));
     }
 
     /**
@@ -272,7 +270,7 @@ public class UserManager extends Controller {
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
-        return ok(views.html.admin.usermanager.usermanager_display.render(Msg.get("admin.user_manager.sidebar.search"),
+        return ok(views.html.admin.usermanager.usermanager_display.render(
                 getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), userAccount));
     }
 
@@ -290,8 +288,7 @@ public class UserManager extends Controller {
                 return displayUserSearchForm();
             }
             Form<UserAccountFormData> userAccountFormLoaded = basicDataUpdateForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.usermanager.usermanager_editbasicdata.render(Msg.get("admin.user_manager.edit_basic_data.title"),
-                    userAccountFormLoaded));
+            return ok(views.html.admin.usermanager.usermanager_editbasicdata.render(userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
@@ -311,8 +308,7 @@ public class UserManager extends Controller {
                 return displayUserSearchForm();
             }
             Form<UserAccountFormData> userAccountFormLoaded = changeAccountTypeForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.usermanager.usermanager_editaccounttype.render(Msg.get("admin.user_manager.edit_account_type.title"),
-                    IUserAccount.AccountType.getValueHolder(), userAccountFormLoaded));
+            return ok(views.html.admin.usermanager.usermanager_editaccounttype.render(IUserAccount.AccountType.getValueHolder(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
@@ -325,7 +321,7 @@ public class UserManager extends Controller {
         try {
             Form<UserAccountFormData> boundForm = changeAccountTypeForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.usermanager.usermanager_editaccounttype.render(Msg.get("admin.user_manager.edit_basic_data.title"),
+                return badRequest(views.html.admin.usermanager.usermanager_editaccounttype.render(
                         IUserAccount.AccountType.getValueHolder(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
@@ -348,7 +344,7 @@ public class UserManager extends Controller {
             Form<UserAccountFormData> boundForm = basicDataUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
                 return badRequest(
-                        views.html.admin.usermanager.usermanager_editbasicdata.render(Msg.get("admin.user_manager.edit_basic_data.title"), boundForm));
+                        views.html.admin.usermanager.usermanager_editbasicdata.render(boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
             getAccountManagerPlugin().updateBasicUserData(accountDataForm.uid, accountDataForm.firstName, accountDataForm.lastName);
@@ -374,7 +370,7 @@ public class UserManager extends Controller {
                 return displayUserSearchForm();
             }
             Form<UserAccountFormData> userAccountFormLoaded = mailUpdateForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_email.title"), userAccountFormLoaded));
+            return ok(views.html.admin.usermanager.usermanager_editmail.render(userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
@@ -387,7 +383,7 @@ public class UserManager extends Controller {
         try {
             Form<UserAccountFormData> boundForm = mailUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_email.title"), boundForm));
+                return badRequest(views.html.admin.usermanager.usermanager_editmail.render(boundForm));
             }
 
             UserAccountFormData accountDataForm = boundForm.get();
@@ -396,7 +392,7 @@ public class UserManager extends Controller {
                 IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromEmail(accountDataForm.mail);
                 if (userAccount == null || !userAccount.getUid().equals(accountDataForm.uid)) {
                     boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
-                    return badRequest(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_email.title"), boundForm));
+                    return badRequest(views.html.admin.usermanager.usermanager_editmail.render(boundForm));
                 }
             }
 
@@ -514,7 +510,7 @@ public class UserManager extends Controller {
 
             IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(uid);
             Form<UserAccountFormData> userAccountFormLoaded = rolesUpdateForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.usermanager.usermanager_editroles.render(Msg.get("admin.user_manager.edit_roles.title"),
+            return ok(views.html.admin.usermanager.usermanager_editroles.render(
                     SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -529,7 +525,7 @@ public class UserManager extends Controller {
 
             Form<UserAccountFormData> boundForm = rolesUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.usermanager.usermanager_editmail.render(Msg.get("admin.user_manager.edit_roles.title"), boundForm));
+                return badRequest(views.html.admin.usermanager.usermanager_editmail.render(boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
 
@@ -599,7 +595,7 @@ public class UserManager extends Controller {
         }
 
         Form<UserAccountFormData> userAccountFormLoaded = creationForm.fill(new UserAccountFormData());
-        return ok(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+        return ok(views.html.admin.usermanager.usermanager_create.render(
                 SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), userAccountFormLoaded, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
     }
 
@@ -616,7 +612,7 @@ public class UserManager extends Controller {
         try {
             Form<UserAccountFormData> boundForm = creationForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+                return badRequest(views.html.admin.usermanager.usermanager_create.render(
                         SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
             }
             UserAccountFormData accountDataForm = boundForm.get();
@@ -625,14 +621,14 @@ public class UserManager extends Controller {
             IUserAccount account = getAccountManagerPlugin().getUserAccountFromUid(accountDataForm.uid);
             if (account != null) {
                 boundForm.reject("uid", Msg.get("object.user_account.uid.already_exists"));
-                return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+                return badRequest(views.html.admin.usermanager.usermanager_create.render(
                         SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
             }
 
             // Check if the mail already exists in the backend
             if (getAccountManagerPlugin().isMailExistsInAuthenticationBackEnd(accountDataForm.mail)) {
                 boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
-                return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+                return badRequest(views.html.admin.usermanager.usermanager_create.render(
                         SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
             }
             
@@ -640,12 +636,12 @@ public class UserManager extends Controller {
             if(accountDataForm.administratorDefinedPassword && getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()){
                 if (!accountDataForm.password.equals(accountDataForm.passwordCheck)) {
                     boundForm.reject("password", Msg.get("form.input.confirmationpassword.invalid"));
-                    return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+                    return badRequest(views.html.admin.usermanager.usermanager_create.render(
                             SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
                 }
                 if (Utilities.getPasswordStrength(accountDataForm.password) < 1) {
                     boundForm.reject("password", Msg.get("form.input.password.error.insufficient_strength"));
-                    return badRequest(views.html.admin.usermanager.usermanager_create.render(Msg.get("admin.user_manager.sidebar.create"),
+                    return badRequest(views.html.admin.usermanager.usermanager_create.render(
                             SystemLevelRoleType.getAllActiveRolesAsValueHolderCollection(), IUserAccount.AccountType.getValueHolder(), boundForm, getAccountManagerPlugin().isAuthenticationRepositoryMasterMode()));
                 }
             }

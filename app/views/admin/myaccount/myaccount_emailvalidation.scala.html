@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(title: String, isValidationSuccessFull: Boolean) 
+@(isValidationSuccessFull: Boolean) 
 
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
 
-@templates.main_nosidebar(title) {
+@templates.main_nosidebar("my.my_profile.update_email.validation.title") {
 }{
 <h3>@parts.Msg("my.my_profile.update_email.validation.title")</h2>
     @if(isValidationSuccessFull){

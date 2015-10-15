@@ -133,7 +133,7 @@ public class AuditableController extends Controller {
     public Result listAuditable() {
         try {
             Table<Auditable> table = tableTemplate.fill(getAuditLoggerService().getAllActiveAuditable());
-            return ok(views.html.admin.audit.auditable_table.render(Messages.get("admin.auditable.list.title"), table));
+            return ok(views.html.admin.audit.auditable_table.render(table));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
@@ -167,7 +167,7 @@ public class AuditableController extends Controller {
             Auditable auditable = getAuditLoggerService().getAuditableFromObjectClass(objectClass);
             if (auditable != null) {
                 Form<Auditable> loadedForm = auditableForm.fill(auditable);
-                return ok(views.html.admin.audit.auditable_form.render(Messages.get("admin.auditable.manage.title"), loadedForm));
+                return ok(views.html.admin.audit.auditable_form.render(loadedForm));
             } else {
                 Utilities.sendErrorFlashMessage(Msg.get("admin.auditable.manage.not_found"));
                 return redirect(routes.AuditableController.listAuditable());
@@ -184,7 +184,7 @@ public class AuditableController extends Controller {
         try {
             Auditable auditable = new Auditable();
             Form<Auditable> loadedForm = auditableForm.fill(auditable);
-            return ok(views.html.admin.audit.auditable_form.render(Messages.get("admin.auditable.manage.title"), loadedForm));
+            return ok(views.html.admin.audit.auditable_form.render(loadedForm));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
@@ -197,7 +197,7 @@ public class AuditableController extends Controller {
         try {
             Form<Auditable> boundForm = auditableForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return ok(views.html.admin.audit.auditable_form.render(Messages.get("admin.auditable.manage.title"), boundForm));
+                return ok(views.html.admin.audit.auditable_form.render(boundForm));
             }
             Auditable auditable = boundForm.get();
             getAuditLoggerService().saveAuditable(auditable);

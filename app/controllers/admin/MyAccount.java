@@ -79,7 +79,7 @@ public class MyAccount extends Controller {
         try {
 
             IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
-            return ok(views.html.admin.myaccount.myaccount_display.render(Messages.get("my.my_profile.sidebar.details"),
+            return ok(views.html.admin.myaccount.myaccount_display.render(
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), account));
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -95,7 +95,7 @@ public class MyAccount extends Controller {
 
             IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
             Form<UserAccountFormData> userAccountFormLoaded = basicDataUpdateForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.myaccount.myaccount_editbasicdata.render(Messages.get("my.my_profile.sidebar.update_data"),
+            return ok(views.html.admin.myaccount.myaccount_editbasicdata.render(
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
                     userAccountFormLoaded));
         } catch (Exception e) {
@@ -115,7 +115,7 @@ public class MyAccount extends Controller {
             }
             IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
             Form<UserAccountFormData> userAccountFormLoaded = mailUpdateForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.myaccount.myaccount_editmail.render(Msg.get("my.my_profile.sidebar.update_email"),
+            return ok(views.html.admin.myaccount.myaccount_editmail.render(
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
                     userAccountFormLoaded));
         } catch (Exception e) {
@@ -134,7 +134,7 @@ public class MyAccount extends Controller {
                 throw new Exception("Not allowed to update password if the system is not in master mode");
             }
             Form<UserAccountFormData> userAccountFormLoaded = passwordUpdateForm.fill(new UserAccountFormData());
-            return ok(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_password"),
+            return ok(views.html.admin.myaccount.myaccount_editpassword.render(
                     getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
                     userAccountFormLoaded));
         } catch (Exception e) {
@@ -151,7 +151,7 @@ public class MyAccount extends Controller {
 
             Form<UserAccountFormData> boundForm = basicDataUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.myaccount.myaccount_editbasicdata.render(Messages.get("my.my_profile.sidebar.update_data"),
+                return badRequest(views.html.admin.myaccount.myaccount_editbasicdata.render(
                         getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
@@ -179,7 +179,7 @@ public class MyAccount extends Controller {
             }
             Form<UserAccountFormData> boundForm = mailUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.myaccount.myaccount_editmail.render(Messages.get("my.my_profile.sidebar.update_email"),
+                return badRequest(views.html.admin.myaccount.myaccount_editmail.render(
                         getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
@@ -192,7 +192,7 @@ public class MyAccount extends Controller {
                 String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 if (!userAccount.getUid().equals(currentUserUid)) {
                     boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
-                    return badRequest(views.html.admin.myaccount.myaccount_editmail.render(Messages.get("my.my_profile.sidebar.update_email"),
+                    return badRequest(views.html.admin.myaccount.myaccount_editmail.render(
                             getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
                             boundForm));
                 }
@@ -236,9 +236,9 @@ public class MyAccount extends Controller {
             String newEmailAddress = getAccountManagerPlugin().checkValidationKey(currentUserUid, validationKey);
             if (newEmailAddress != null) {
                 getAccountManagerPlugin().updateMail(currentUserUid, newEmailAddress);
-                return ok(views.html.admin.myaccount.myaccount_emailvalidation.render(Messages.get("my.my_profile.update_email.validation.title"), true));
+                return ok(views.html.admin.myaccount.myaccount_emailvalidation.render(true));
             } else {
-                return ok(views.html.admin.myaccount.myaccount_emailvalidation.render(Messages.get("my.my_profile.update_email.validation.title"), false));
+                return ok(views.html.admin.myaccount.myaccount_emailvalidation.render(false));
             }
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -257,7 +257,7 @@ public class MyAccount extends Controller {
             }
             Form<UserAccountFormData> boundForm = passwordUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
                         getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
@@ -266,20 +266,20 @@ public class MyAccount extends Controller {
             if (accountDataForm.oldPasswordCheck == null
                     || !getAuthenticationReader().checkPassword(getUserSessionManagerPlugin().getUserSessionId(ctx()), accountDataForm.oldPasswordCheck)) {
                 boundForm.reject("oldPasswordCheck", Msg.get("form.input.oldpassword.invalid"));
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
                         getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
             // New password does not match check
             if (!accountDataForm.password.equals(accountDataForm.passwordCheck)) {
                 boundForm.reject("password", Msg.get("form.input.confirmationpassword.invalid"));
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
                         getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
             if (Utilities.getPasswordStrength(accountDataForm.password) < 1) {
                 boundForm.reject("password", Msg.get("form.input.password.error.insufficient_strength"));
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(Messages.get("my.my_profile.sidebar.update_data"),
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
                         getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 

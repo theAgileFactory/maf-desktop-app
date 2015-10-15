@@ -15,18 +15,17 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(title: String, 
-    objectForm: Form[framework.services.audit.Auditable])
+@(objectForm: Form[framework.services.audit.Auditable])
 
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
 
 @templates.main_bc_nosidebar(
-    title,
+    "admin.auditable.manage.title",
     Seq(
         ("admin.auditable.breadcrumb", controllers.admin.routes.AuditableController.listAuditable().url),
-        (title, null)
+        ("admin.auditable.manage.title", null)
     )
 ){
 }{

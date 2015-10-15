@@ -16,7 +16,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    title: String,
     allRoles: framework.utils.ISelectableValueHolderCollection[String],
     allUserAccountTypes: framework.utils.ISelectableValueHolderCollection[String],
     userAccountForm: Form[controllers.admin.UserManager.UserAccountFormData],
@@ -27,7 +26,7 @@
 @import bootstrap3._
 @import framework_views.parts
 
-@usermanager_template(title, controllers.admin.UserManager.MenuItemType.CREATE) {
+@usermanager_template("admin.user_manager.sidebar.create", controllers.admin.UserManager.MenuItemType.CREATE) {
 <blockquote>@parts.Msg("admin.user_manager.create.header")</blockquote>
 <div class="maf-form">
     @if(userAccountForm.hasErrors()){

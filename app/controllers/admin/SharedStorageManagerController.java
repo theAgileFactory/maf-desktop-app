@@ -133,8 +133,7 @@ public class SharedStorageManagerController extends Controller {
 
             Table<SharedStorageFile> loadedInputFileTable = getSharedStorageFiles(getSharedStorageService(), IMafConstants.INPUT_FOLDER_NAME);
             Table<SharedStorageFile> loadedOutputFileTable = getSharedStorageFiles(getSharedStorageService(), IMafConstants.OUTPUT_FOLDER_NAME);
-            return ok(views.html.admin.plugin.sharedstorage_display.render(Msg.get("admin.integration.sidebar.shared_storage"), loadedInputFileTable,
-                    loadedOutputFileTable));
+            return ok(views.html.admin.plugin.sharedstorage_display.render(loadedInputFileTable, loadedOutputFileTable));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }

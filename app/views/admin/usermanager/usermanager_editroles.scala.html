@@ -16,7 +16,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    title: String, 
     allRoles: framework.utils.ISelectableValueHolderCollection[String],
     userAccountForm: Form[controllers.admin.UserManager.UserAccountFormData]
 )
@@ -25,7 +24,7 @@
 @import bootstrap3._
 @import framework_views.parts
 
-@usermanager_template(title, controllers.admin.UserManager.MenuItemType.SEARCH) {
+@usermanager_template("admin.user_manager.edit_roles.title", controllers.admin.UserManager.MenuItemType.SEARCH) {
 <blockquote>@parts.Msg("admin.user_manager.edit_roles.header")</blockquote>
 <div class="maf-form">
     @if(userAccountForm.hasErrors()){

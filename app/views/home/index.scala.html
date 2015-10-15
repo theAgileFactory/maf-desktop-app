@@ -16,7 +16,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    title: String,
     notificationsTable: framework.utils.Table[utils.table.NotificationListView],
     portfolioEntries: List[models.pmo.PortfolioEntry],
     userAccount: framework.services.account.IUserAccount,
@@ -28,7 +27,7 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
-@templates.main_nosidebar(title) { 
+@templates.main_nosidebar("main.application.title.header") { 
 
 }{
 <div class="row">

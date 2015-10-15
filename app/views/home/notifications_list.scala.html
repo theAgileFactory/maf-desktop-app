@@ -16,7 +16,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    title: String, 
     table: framework.utils.Table[utils.table.NotificationListView], 
     pagination: framework.utils.Pagination[models.framework_models.account.Notification],
     filterConfig: framework.utils.FilterConfig[utils.table.NotificationListView]
@@ -25,7 +24,7 @@
 @import framework_views.parts
 
 @templates.main_bc_nosidebar(
-    title,
+    "notifications.list.title",
     Seq(
         ("notifications.breadcrumb",null)
     )

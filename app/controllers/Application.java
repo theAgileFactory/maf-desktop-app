@@ -248,7 +248,7 @@ public class Application extends Controller {
 
             Pair<Table<NotificationListView>, Pagination<Notification>> t = getNotificationsTable(filterConfig);
 
-            return ok(views.html.home.notifications_list.render(Msg.get("notifications.list.title"), t.getLeft(), t.getRight(), filterConfig));
+            return ok(views.html.home.notifications_list.render(t.getLeft(), t.getRight(), filterConfig));
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -461,7 +461,7 @@ public class Application extends Controller {
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
-        return ok(views.html.home.index.render(Msg.get("main.application.title.header"), notificationsTable, portfolioEntries, account, hasActor));
+        return ok(views.html.home.index.render(notificationsTable, portfolioEntries, account, hasActor));
     }
 
     /**

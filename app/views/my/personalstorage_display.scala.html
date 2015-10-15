@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(title: String, fileTable: framework.utils.Table[controllers.my.MyPersonalStorage.PersonalStorageFile])
+@(fileTable: framework.utils.Table[controllers.my.MyPersonalStorage.PersonalStorageFile])
 
 @import framework_views.parts
 
 @templates.main_bc_nosidebar(
-    title,
+    "my.personalstorage.tableview.title",
     Seq(
         ("my.personalstorage.tableview.breadcrumb",null)
     )
