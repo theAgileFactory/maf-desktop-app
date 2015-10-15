@@ -30,7 +30,6 @@ import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.table.MessageListView;
@@ -92,7 +91,7 @@ public class MessagingController extends Controller {
             NotificationMessage notificationMessage = boundForm.get();
             getNotificationManagerPlugin().sendMessage(getUserSessionManagerPlugin().getUserSessionId(ctx()), notificationMessage.principalUids, notificationMessage.title,
                     notificationMessage.message);
-            Utilities.sendSuccessFlashMessage(Messages.get("messaging.send.success", notificationMessage.title));
+            Utilities.sendSuccessFlashMessage(getI18nMessagesPlugin().get("messaging.send.success", notificationMessage.title));
             return redirect(routes.MessagingController.index());
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
