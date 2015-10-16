@@ -652,8 +652,6 @@ preference.governance_reviewed_requests_display_duration.description=Wieviele Ta
 preference.governance_reviewed_requests_display_duration.name=Anzeige bearbeiteter Anfragen
 preference.financial_use_purchase_order_preference.description=Wenn Integration mit ERP aktiv ist.
 preference.financial_use_purchase_order_preference.name=Aufträge benutzen
-preference.roadmap_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default roadmap view.
-preference.roadmap_filter_storage_preference.name=Stores the JSON configuration of the roadmap filter
 preference.application_logo_preference.description=Logo, welches links oben auf jeder Seite erscheint.<br/>Dateiformate: gif, jpeg, png.<br/>Maximale Höhe: 50 px.
 preference.application_logo_preference.name=Logo
 preference.homepage_logo_preference.description=Logo erscheint auf der Homepage (wenn kein Drittanbieter-Modul vorhanden ist).<br/>Dateiformate: gif, jpeg, png.<br/>Maximale Breite: 100 px.<br/>Maximale Höhe: 100 px.
@@ -664,10 +662,6 @@ preference.timesheet_reminder_limit_preference.description=Maximale Anzahl versp
 preference.timesheet_reminder_limit_preference.name=Timesheet Mahnungslimit
 preference.timesheet_hours_per_day.description=Erwartete Anzahl Stunden pro Tag.
 preference.timesheet_hours_per_day.name=Stunden pro Tag
-preference.requirements_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default requirements view.
-preference.requirements_filter_storage_preference.name=Stores the JSON configuration of the requirements filter
-preference.packages_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default packages view.
-preference.packages_filter_storage_preference.name=Stores the JSON configuration of the packages filter
 preference.package_status_on_going_fulfillment_percentage.name=Erfüllungsprozent wenn Paket "Im Gange"
 preference.package_status_on_going_fulfillment_percentage.description=Prozent des Paketwertes wenn der Status "Im Gange" ist (Packet gestartet wurde)
 preference.api_authz_mode_preference.name=Authentifizierung
@@ -3028,6 +3022,24 @@ admin.configuration.custom_attribute.item.manage.title=Option bearbeiten
 admin.configuration.custom_attribute.item.add.successful=Option inzugefügt.
 admin.configuration.custom_attribute.item.edit.successful=Option aktualisiert.
 admin.configuration.custom_attribute.item.delete.successful=Option entfernt.
+
+#----------------------
+# configuration: translations
+#----------------------
+
+#helpers
+admin.configuration.translations.title=de: Translations
+admin.configuration.translations.key.label=de: Key
+admin.configuration.translations.value.label=de: Translation
+
+#search
+admin.configuration.translations.search.title=de: Search translations
+admin.configuration.translations.search.no_result=de: No translation was found, please provide another keyword.
+admin.configuration.translations.search_result.title=de: Translations found
+
+#edit
+admin.configuration.translations.edit.title=de: Edit a translation
+admin.configuration.translations.edit.successful=de: The translation has been updated.
 
 #----------------------
 # integration

@@ -554,6 +554,12 @@ POST   /admin/config/custom-attribute/item/manage                   controllers.
 GET    /admin/config/custom-attribute/item/delete                   controllers.admin.ConfigurationCustomAttributeController.deleteItem(id: Long, itemId: Long ?= 0)
 GET    /admin/config/custom-attribute/delete                        controllers.admin.ConfigurationCustomAttributeController.delete(id: Long)
 
+GET    /admin/config/translation/search                            controllers.admin.ConfigurationController.searchTranslations()
+POST   /admin/config/translation/search                            controllers.admin.ConfigurationController.processSearchTranslations()
+GET    /admin/config/translation/search/results                    controllers.admin.ConfigurationController.searchResultsTranslations(keywords: String)
+GET    /admin/config/translation/edit                              controllers.admin.ConfigurationController.editTranslation(key: String, keywords: String)
+POST   /admin/config/translation/edit                              controllers.admin.ConfigurationController.processEditTranslation()
+
 GET    /admin/config/roles                                          controllers.admin.ConfigurationController.roles()
 GET    /admin/config/roles/manage                                   controllers.admin.ConfigurationController.manageRole(roleTypeId: Long ?= 0)
 POST   /admin/config/roles/manage                                   controllers.admin.ConfigurationController.processManageRole()

@@ -652,8 +652,6 @@ preference.governance_reviewed_requests_display_duration.description=Nombre de j
 preference.governance_reviewed_requests_display_duration.name=Echéances des requêtes
 preference.financial_use_purchase_order_preference.description=Si les bons de commande sont activés alors le système les utilise pour engager les ordres de travail.
 preference.financial_use_purchase_order_preference.name=Utilisation des bons de commande
-preference.roadmap_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default roadmap view.
-preference.roadmap_filter_storage_preference.name=Stores the JSON configuration of the roadmap filter
 preference.application_logo_preference.description=Logo qui est affiché en haut à gauche de chaque page.<br/>Formats autorisés: gif, jpeg ou png.<br/>Hauteur maximale: 50 px.
 preference.application_logo_preference.name=Logo de l''application
 preference.homepage_logo_preference.description=Logo qui est affiché sur la page d''accueil (si aucun module tiers n''est activé).<br/>Formats autorisés: gif, jpeg ou png.<br/>Largeur maximals: 100px.<br/>Hauteur maximale: 100 px.
@@ -664,10 +662,6 @@ preference.timesheet_reminder_limit_preference.description=La limite de rappel e
 preference.timesheet_reminder_limit_preference.name=Limite de rappel pour les feuilles de temps en retard
 preference.timesheet_hours_per_day.description=Définis le nombre attendu d''heures pour un jour lors du remplissage d''une feuille de temps.
 preference.timesheet_hours_per_day.name=Nombre d''heures par jour
-preference.requirements_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default requirements view.
-preference.requirements_filter_storage_preference.name=Stores the JSON configuration of the requirements filter
-preference.packages_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default packages view.
-preference.packages_filter_storage_preference.name=Stores the JSON configuration of the packages filter
 preference.package_status_on_going_fulfillment_percentage.name=Pourcentage d''accomplissement du statut "En cours" des livrables
 preference.package_status_on_going_fulfillment_percentage.description=Valeur en pourcent de l''accomplissement d''un livrable lorsque son statut est "En cours".
 preference.api_authz_mode_preference.name=Mode d''authentification des APIs
@@ -3029,6 +3023,24 @@ admin.configuration.custom_attribute.item.manage.title=Gérer une option
 admin.configuration.custom_attribute.item.add.successful=L''option a été ajoutée.
 admin.configuration.custom_attribute.item.edit.successful=L''option a été mise à jour.
 admin.configuration.custom_attribute.item.delete.successful=L''option a été supprimée.
+
+#----------------------
+# configuration: translations
+#----------------------
+
+#helpers
+admin.configuration.translations.title=Traductions
+admin.configuration.translations.key.label=Clé
+admin.configuration.translations.value.label=Traduction
+
+#search
+admin.configuration.translations.search.title=Rechercher des traductions
+admin.configuration.translations.search.no_result=Aucune traduction trouvée, veuillez fournir un autre mot clé.
+admin.configuration.translations.search_result.title=Traductions trouvées
+
+#edit
+admin.configuration.translations.edit.title=Mettre à jour une traduction
+admin.configuration.translations.edit.successful=La traduction a été mise à jour.
 
 #----------------------
 # integration

@@ -640,8 +640,6 @@ preference.governance_reviewed_requests_display_duration.description=How many da
 preference.governance_reviewed_requests_display_duration.name=Display of reviewed requests
 preference.financial_use_purchase_order_preference.description=If true then the system use the purchase orders to engage amount of work orders.
 preference.financial_use_purchase_order_preference.name=Use purchase order
-preference.roadmap_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default roadmap view.
-preference.roadmap_filter_storage_preference.name=Stores the JSON configuration of the roadmap filter
 preference.application_logo_preference.description=Logo that is displayed on the top left of each page.<br/>Authorized formats: gif, jpeg or png.<br/>Max height: 50 px.
 preference.application_logo_preference.name=Application logo
 preference.homepage_logo_preference.description=Logo that is displayed on the homepage (if no third party module is available).<br/>Authorized formats: gif, jpeg or png.<br/>Max width: 100 px.<br/>Max height: 100 px.
@@ -652,10 +650,6 @@ preference.timesheet_reminder_limit_preference.description=The reminder limit is
 preference.timesheet_reminder_limit_preference.name=Reminder limit for late timesheets
 preference.timesheet_hours_per_day.description=Defines the expected number of hours for a day when filling a timesheet.
 preference.timesheet_hours_per_day.name=Number of hours per day
-preference.requirements_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default requirements view.
-preference.requirements_filter_storage_preference.name=Stores the JSON configuration of the requirements filter
-preference.packages_filter_storage_preference.description=Stores the JSON representation of the filter configuration for the default packages view.
-preference.packages_filter_storage_preference.name=Stores the JSON configuration of the packages filter
 preference.package_status_on_going_fulfillment_percentage.name=Completion percentage for "On-going" status of packages
 preference.package_status_on_going_fulfillment_percentage.description=The percentage value of a package''s completion when its status is "On-going".
 preference.api_authz_mode_preference.name=API authenticaton mode
@@ -3017,6 +3011,24 @@ admin.configuration.custom_attribute.item.manage.title=Manage an option
 admin.configuration.custom_attribute.item.add.successful=The option has been added successfully.
 admin.configuration.custom_attribute.item.edit.successful=The option has been updated.
 admin.configuration.custom_attribute.item.delete.successful=The option has been removed.
+
+#----------------------
+# configuration: translations
+#----------------------
+
+#helpers
+admin.configuration.translations.title=Translations
+admin.configuration.translations.key.label=Key
+admin.configuration.translations.value.label=Translation
+
+#search
+admin.configuration.translations.search.title=Search translations
+admin.configuration.translations.search.no_result=No translation was found, please provide another keyword.
+admin.configuration.translations.search_result.title=Translations found
+
+#edit
+admin.configuration.translations.edit.title=Edit a translation
+admin.configuration.translations.edit.successful=The translation has been updated.
 
 #----------------------
 # integration
