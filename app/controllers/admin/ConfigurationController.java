@@ -29,6 +29,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.ControllersUtils;
+import controllers.api.core.RootApiController;
 import framework.commons.IFrameworkConstants;
 import framework.commons.message.EventMessage;
 import framework.commons.message.SystemLevelRoleTypeEventMessage;
@@ -36,16 +37,23 @@ import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.configuration.Language;
 import framework.services.plugins.IEventBroadcastingService;
 import framework.utils.Msg;
+import framework.utils.MultiLanguagesString;
+import framework.utils.MultiLanguagesStringValidator;
 import framework.utils.PreferenceFormAndDisplayHandler;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import framework.utils.formats.ObjectFormatter;
+import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.account.SystemPermission;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
+import play.data.validation.Constraints.Required;
+import play.data.validation.Constraints.ValidateWith;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.form.RoleFormData;
@@ -76,6 +84,9 @@ public class ConfigurationController extends Controller {
     private static Form<PrefsData> systemPreferencesFormTemplate = Form.form(PrefsData.class);
 
     private static Form<RoleFormData> roleFormTemplate = Form.form(RoleFormData.class);
+
+    private static Form<TranslationSearchFormData> translationSearchFormTemplate = Form.form(TranslationSearchFormData.class);
+    private static Form<TranslationFormData> translationFormTemplate = Form.form(TranslationFormData.class);
 
     private static List<String> editableFieldsValues = new ArrayList<String>() {
         private static final long serialVersionUID = -3636216975014360486L;
@@ -112,7 +123,8 @@ public class ConfigurationController extends Controller {
      * 
      * @throws AccountManagementException
      */
-    @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION), @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) })
+    @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION), @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION),
+            @Group(IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) })
     public Result index() throws AccountManagementException {
 
         if (getSecurityService().restrict(IMafConstants.ADMIN_CONFIGURATION_PERMISSION)) {
@@ -121,6 +133,10 @@ public class ConfigurationController extends Controller {
 
         if (getSecurityService().restrict(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION)) {
             return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.list(IMafConstants.PortfolioEntry));
+        }
+
+        if (getSecurityService().restrict(IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION)) {
+            return redirect(controllers.admin.routes.ConfigurationController.searchTranslations());
         }
 
         return unauthorized();
@@ -391,13 +407,140 @@ public class ConfigurationController extends Controller {
     }
 
     /**
+     * Form to search translations.
+     */
+    @Restrict({ @Group(IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) })
+    public Result searchTranslations() {
+        return ok(views.html.admin.config.translations.search.render(translationSearchFormTemplate));
+    }
+
+    /**
+     * Process the form to search translations.
+     */
+    @Restrict({ @Group(IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) })
+    public Result processSearchTranslations() {
+
+        // bind the form
+        Form<TranslationSearchFormData> boundForm = translationSearchFormTemplate.bindFromRequest();
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.admin.config.translations.search.render(boundForm));
+        }
+
+        TranslationSearchFormData translationSearchForm = boundForm.get();
+
+        List<String> keys = this.getI18nMessagesPlugin().findAuthorizedKeys(translationSearchForm.keywords);
+
+        if (keys.size() == 0) {
+            boundForm.reject("keywords", Msg.get("admin.configuration.translations.search.no_result"));
+            return ok(views.html.admin.config.translations.search.render(boundForm));
+
+        } else {
+            return ok(views.html.admin.config.translations.search_result.render(getTranslationsTable(keys, translationSearchForm.keywords)));
+        }
+
+    }
+
+    /**
+     * Search results of translations.
+     * 
+     * @param keywords
+     *            the search keywords
+     */
+    @Restrict({ @Group(IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) })
+    public Result searchResultsTranslations(String keywords) {
+
+        List<String> keys = this.getI18nMessagesPlugin().findAuthorizedKeys(keywords);
+
+        if (keys.size() == 0) {
+            return redirect(controllers.admin.routes.ConfigurationController.searchTranslations());
+        } else {
+            return ok(views.html.admin.config.translations.search_result.render(getTranslationsTable(keys, keywords)));
+        }
+
+    }
+
+    /**
+     * Get the translations table.
+     * 
+     * @param keys
+     *            the keys
+     * @param keywords
+     *            the original search keywords
+     */
+    private Table<TranslationListView> getTranslationsTable(List<String> keys, String keywords) {
+        List<TranslationListView> translationRows = new ArrayList<TranslationListView>();
+        for (String key : keys) {
+            translationRows.add(new TranslationListView(key, keywords));
+        }
+        return TranslationListView.templateTable.fill(translationRows);
+    }
+
+    /**
+     * Form to edit a translation.
+     * 
+     * @param key
+     *            the translation key
+     * @param keywords
+     *            the original search keywords
+     */
+    @Restrict({ @Group(IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) })
+    public Result editTranslation(String key, String keywords) {
+
+        if (!this.getI18nMessagesPlugin().isAuthorizedKey(key)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        Form<TranslationFormData> translationForm = translationFormTemplate.fill(new TranslationFormData(key, keywords, getI18nMessagesPlugin()));
+
+        return ok(views.html.admin.config.translations.edit.render(translationForm));
+    }
+
+    /**
+     * Process the form to edit a translation.
+     */
+    @Restrict({ @Group(IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) })
+    public Result processEditTranslation() {
+
+        // bind the form
+        Form<TranslationFormData> boundForm = translationFormTemplate.bindFromRequest();
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.admin.config.translations.edit.render(boundForm));
+        }
+
+        TranslationFormData translationFormData = boundForm.get();
+
+        if (!this.getI18nMessagesPlugin().isAuthorizedKey(translationFormData.key)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        for (int i = 0; i < getI18nMessagesPlugin().getValidLanguageList().size(); i++) {
+            Language language = getI18nMessagesPlugin().getValidLanguageList().get(i);
+            String value = translationFormData.value.getValues().get(i);
+            if (value != null && !value.equals("")) {
+                getI18nMessagesPlugin().add(translationFormData.key, value, language.getCode());
+            } else {
+                getI18nMessagesPlugin().delete(translationFormData.key, language.getCode());
+            }
+        }
+
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.translations.edit.successful"));
+
+        RootApiController.flushFilters();
+
+        return redirect(controllers.admin.routes.ConfigurationController.searchResultsTranslations(translationFormData.keywords));
+
+    }
+
+    /**
      * The menu item type.
      * 
      * @author Johann Kohler
      * 
      */
     public static enum MenuItemType {
-        SYSTEM_PREFERENCES, SMTP, ROLES, REFERENCE_DATA, CUSTOM_ATTRIBUTES;
+        SYSTEM_PREFERENCES, SMTP, ROLES, REFERENCE_DATA, CUSTOM_ATTRIBUTES, TRANSLATIONS;
     }
 
     /**
@@ -436,7 +579,134 @@ public class ConfigurationController extends Controller {
         return securityService;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * An translation list view is used to display a translation row in a table.
+     * 
+     * @author Johann Kohler
+     *
+     */
+    public static class TranslationListView {
+
+        public static Table<TranslationListView> templateTable = new Table<TranslationListView>() {
+            {
+                setIdFieldName("id");
+
+                addColumn("id", "id", "admin.configuration.translations.key.label", Table.ColumnDef.SorterType.NONE);
+
+                addColumn("value", "value", "admin.configuration.translations.value.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("value", new ObjectFormatter<TranslationListView>());
+
+                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("editActionLink",
+                        new StringFormatFormatter<TranslationListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<TranslationListView>() {
+                    @Override
+                    public String convert(TranslationListView translationListView) {
+                        return controllers.admin.routes.ConfigurationController.editTranslation(translationListView.id, translationListView.keywords).url();
+                    }
+                }));
+                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+            }
+        };
+
+        public String id;
+        public String value;
+        public String keywords;
+
+        /**
+         * Default constructor.
+         */
+        public TranslationListView() {
+        }
+
+        /**
+         * Default constructor.
+         * 
+         * @param key
+         *            the i18n key
+         * @param keywords
+         *            the original search keywords
+         */
+        public TranslationListView(String key, String keywords) {
+            this.id = key;
+            this.value = Msg.get(key);
+            this.keywords = keywords;
+        }
+    }
+
+    /**
+     * The translation search form data is used to display the fields of the
+     * search form.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TranslationSearchFormData {
+
+        /**
+         * Default constructor.
+         */
+        public TranslationSearchFormData() {
+        }
+
+        /**
+         * Construct with initial value.
+         * 
+         * @param keywords
+         *            the keywords
+         */
+        public TranslationSearchFormData(String keywords) {
+            this.keywords = keywords;
+        }
+
+        @Required
+        public String keywords;
+
+    }
+
+    /**
+     * Form to edit a translation.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TranslationFormData {
+
+        public String key;
+
+        public String keywords;
+
+        @Required
+        @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+        public MultiLanguagesString value;
+
+        /**
+         * Default constructor.
+         */
+        public TranslationFormData() {
+        }
+
+        /**
+         * Construct the form data with a DB entry.
+         * 
+         * @param key
+         *            the i18n key
+         * @param keywords
+         *            the original search keywords
+         * @param i18nMessagesPlugin
+         *            the i18n manager
+         */
+        public TranslationFormData(String key, String keywords, II18nMessagesPlugin i18nMessagesPlugin) {
+            this.key = key;
+            this.keywords = keywords;
+            this.value = MultiLanguagesString.getByKey(key, i18nMessagesPlugin);
+        }
+
     }
 }

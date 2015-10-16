@@ -1,0 +1,59 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    translationSearchForm: Form[controllers.admin.ConfigurationController.TranslationSearchFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@breadcrump=@{
+    Seq(
+        ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.translations.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.translations.title", controllers.admin.ConfigurationController.MenuItemType.TRANSLATIONS, breadcrump){
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading ">
+            @parts.Msg("admin.configuration.translations.search.title")
+        </div>
+        <div class="panel-body">
+            @helper.form(action = controllers.admin.routes.ConfigurationController.processSearchTranslations(), 'class -> "form-inline") {
+                <fieldset>
+                    <div class="form-group">
+                        <input type="text" name='@translationSearchForm("keywords").name' value='@translationSearchForm("keywords").value' id='@translationSearchForm("keywords").id' class="form-control" autofocus="autofocus">
+                        <span class="help-block text-muted"></span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default">@parts.Msg("button.search")</button>
+                        <span class="help-block"></span>
+                    </div>
+                    <br/><span class="text-danger"><strong>@{translationSearchForm("keywords").error.map { error => parts.Msg(error.message) }}</strong></span>
+                </fieldset>
+            }
+        </div>
+    </div>
+    
+}

@@ -222,7 +222,8 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         HeaderMenuItem adminMenuItem = new HeaderMenuItem(TopMenus.ADMIN.name(), "topmenubar.admin.menu.label", "glyphicons glyphicons-king", false);
         adminMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
                 IMafConstants.ADMIN_AUDIT_LOG_PERMISSION, IMafConstants.REPORTING_ADMINISTRATION_PERMISSION, IMafConstants.ADMIN_CONFIGURATION_PERMISSION,
-                IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION, IMafConstants.ADMIN_KPI_MANAGER_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
+                IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION, IMafConstants.ADMIN_KPI_MANAGER_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION,
+                IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION));
         if (perspectiveKey == null) {
             TopMenuBar.getInstance().addMenuItem(adminMenuItem);
         } else {
@@ -239,8 +240,8 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         ClickableMenuItem systemPreferenceMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(2), "topmenubar.admin.configuration.menu.label",
                 controllers.admin.routes.ConfigurationController.index(), "glyphicons glyphicons-classic-hammer", false);
         adminMenuItem.addSubMenuItem(systemPreferenceMenuItem);
-        systemPreferenceMenuItem.setAuthorizedPermissions(
-                Utilities.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION));
+        systemPreferenceMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_CONFIGURATION_PERMISSION,
+                IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION, IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION));
 
         // Integration
         ClickableMenuItem pluginManagerMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(3), "topmenubar.admin.integration.menu.label",

@@ -39,6 +39,8 @@ import framework.services.api.server.ApiSignatureServiceImpl;
 import framework.services.api.server.IApiSignatureService;
 import framework.services.audit.AuditLoggerServiceImpl;
 import framework.services.audit.IAuditLoggerService;
+import framework.services.configuration.DefaultI18nMessages;
+import framework.services.configuration.I18nMessages;
 import framework.services.configuration.I18nMessagesPluginImpl;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.IImplementationDefinedObjectService;
@@ -141,6 +143,8 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(ILinkGenerationService.class).to(ExtensionManagerServiceImpl.class);
 
         bind(II18nMessagesPlugin.class).to(I18nMessagesPluginImpl.class).asEagerSingleton();
+        bind(I18nMessages.class).to(DefaultI18nMessages.class).asEagerSingleton();
+
         bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
         bind(IPreferenceManagerPlugin.class).to(DefaultPreferenceManagementPlugin.class).asEagerSingleton();
         bind(IPersonalStoragePlugin.class).to(PersonalStoragePluginImpl.class).asEagerSingleton();

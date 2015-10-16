@@ -100,6 +100,14 @@
     customAttributeItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) :: Nil);
     sidebarInstance.addMenuItem(customAttributeItem);
     
+    val translationsItem = new ClickableMenuItem(
+        "admin.configuration.translations.title",
+        controllers.admin.routes.ConfigurationController.searchTranslations().url,
+        "glyphicons glyphicons-translate",
+        menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.TRANSLATIONS));
+    translationsItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) :: Nil);
+    sidebarInstance.addMenuItem(translationsItem);
+    
     sidebarInstance
 }
 
