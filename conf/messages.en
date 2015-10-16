@@ -2233,7 +2233,6 @@ core.portfolio_entry_financial.budget_line.delete.successful=The budget line has
 
 #view work order
 core.portfolio_entry_financial.work_order.view.details.title=Details of the work order
-core.portfolio_entry_financial.work_order.view.extended.title=Custom attribute(s)
 core.portfolio_entry_financial.work_order.view.lineitem.title=Purchase order
 
 #manage work order

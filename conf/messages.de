@@ -2244,7 +2244,6 @@ core.portfolio_entry_financial.budget_line.delete.successful=Der Eintrag wurde e
 
 #view work order
 core.portfolio_entry_financial.work_order.view.details.title=Auftrag Details
-core.portfolio_entry_financial.work_order.view.extended.title=Benutzerdefiniert Attribut
 core.portfolio_entry_financial.work_order.view.lineitem.title=Bestellung
 
 #manage work order

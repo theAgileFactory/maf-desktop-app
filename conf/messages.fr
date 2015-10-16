@@ -2249,7 +2249,6 @@ core.portfolio_entry_financial.budget_line.delete.successful=La ligne de budget 
 
 #view work order
 core.portfolio_entry_financial.work_order.view.details.title=Détails de l''ordre de travail
-core.portfolio_entry_financial.work_order.view.extended.title=Attribut(s) personnalisé(s)
 core.portfolio_entry_financial.work_order.view.lineitem.title=Bon de commande
 
 #manage work order
