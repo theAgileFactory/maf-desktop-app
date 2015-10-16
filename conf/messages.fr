@@ -164,6 +164,7 @@ button.start=Démarrer
 button.stop=Arrêter
 button.submit=Soumettre
 button.update=Mettre à jour
+button.upgrade_from_trial=Activer la version d''essai
 button.upload=Télécharger
 button.open=Ouvrir
 

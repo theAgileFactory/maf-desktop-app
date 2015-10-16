@@ -164,6 +164,7 @@ button.start=Start
 button.stop=Stop
 button.submit=Einreichen
 button.update=Aktualisieren
+button.upgrade_from_trial=de: Upgrade from trial
 button.upload=Hochladen
 button.open=Offen
 

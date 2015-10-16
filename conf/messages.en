@@ -152,6 +152,7 @@ button.start=Start
 button.stop=Stop
 button.submit=Submit
 button.update=Update
+button.upgrade_from_trial=Upgrade from trial
 button.upload=Upload
 button.open=Open
 

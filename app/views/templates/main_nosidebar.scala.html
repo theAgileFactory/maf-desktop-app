@@ -47,9 +47,10 @@
 }{
     @if(showIdZone) {
         @topmenubar(routes.Application.index.url){
-            @applicationLogo.renderDisplay()
             @if(instanceInfo != null && instanceInfo.isTrial ) {
-                &nbsp; <a class="btn btn-success" href="@routes.Application.echannelInstanceViewUrl().url">@parts.Msg("button.activate")</a>
+                <a class="btn btn-success" href="@routes.Application.echannelInstanceViewUrl().url">@parts.Msg("button.upgrade_from_trial")</a>
+            } else {
+                @applicationLogo.renderDisplay()
             }
         }{
             @if(idZoneData!=null) {
