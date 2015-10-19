@@ -236,7 +236,6 @@ object.filter_configuration.share.with_notification.header=de: Send a notificati
 object.filter_configuration.share.manually.title=de: Manually
 object.filter_configuration.share.manually.header=de: Send the above link manually.
 object.filter_configuration.share.recipient=de: Recipient
-object.filter_configuration.share.successful=de: The filter has been successfully shared
 object.filter_configuration.share.notification.title=de: Shared filter
 object.filter_configuration.share.notification.message=de: {0} has shared a filter with you.
 
