@@ -205,7 +205,7 @@ filter.table.excel.failure=Error : Unable to export the Excel file.
 filter.table.ajax.error.message=Failed to communicate with the server, please refresh the page.
 filter.table.empty.textfilter=All
 
-object.filter_configuration.name.default.label=Default
+object.filter_configuration.name.default.label=Default filter
 object.filter_configuration.name.title=Filter name
 object.filter_configuration.name.error=The name should not be empty
 object.filter_configuration.delete.confirmation=Are you sure you want to delete this filter?
@@ -219,14 +219,16 @@ object.filter_configuration.action.share=Share
 object.filter_configuration.action.delete=Delete
 
 object.filter_configuration.share.title=Share the filter
-object.filter_configuration.share.header=Share the filter with a BizDock user. A notification will be automatically sent to him.
+object.filter_configuration.share.with_notification.title=With a notification
+object.filter_configuration.share.with_notification.header=Send a notification to another BizDock user with a link to this filter.
+object.filter_configuration.share.manually.title=Manually
+object.filter_configuration.share.manually.header=Send the above link manually.
 object.filter_configuration.share.recipient=Recipient
 object.filter_configuration.share.successful=The filter has been successfully shared
 object.filter_configuration.share.notification.title=Shared filter
-object.filter_configuration.share.notification.message=A BizDock user has shared a filter with you.
+object.filter_configuration.share.notification.message={0} has shared a filter with you.
 
-object.filter_configuration.shared_filter.title=Filter <strong>{0}</strong> from the user <strong>{1}</strong>
-object.filter_configuration.shared_filter.not_found=The shared filter is not existing. The default filter has been loaded.
+object.filter_configuration.shared_filter.not_found=The shared filter is no more existing. The default filter has been loaded.
 
 object.filter_configuration.no_more_compatible.page_load=The filter configuration is no more compatible with the table: the initial configuration has been reloaded.
 object.filter_configuration.no_more_compatible.dynamic=The selected filter configuration is no more compatible with the table: it is recommended to delete the filter and refresh the page.

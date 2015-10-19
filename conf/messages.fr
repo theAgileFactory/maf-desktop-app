@@ -217,7 +217,7 @@ filter.table.excel.failure=Erreur: impossible de créer le fichier Excel
 filter.table.ajax.error.message=Problème de communication avec le serveur, veuillez rafraichir la page.
 filter.table.empty.textfilter=Tout
 
-object.filter_configuration.name.default.label=Défaut
+object.filter_configuration.name.default.label=Filter par défaut
 object.filter_configuration.name.title=Nom du filtre
 object.filter_configuration.name.error=Le nom du filtre ne doit pas être vide
 object.filter_configuration.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer ce filtre?
@@ -231,14 +231,16 @@ object.filter_configuration.action.share=Partager
 object.filter_configuration.action.delete=Supprimer
 
 object.filter_configuration.share.title=Partager le filtre
-object.filter_configuration.share.header=Partager le filtre avec un utilisateur BizDock. Une notification lui sera automatiquement envoyée.
+object.filter_configuration.share.with_notification.title=Par notification
+object.filter_configuration.share.with_notification.header=Envoyer une notification contenant un lien vers ce filtre à un autre utilisateur BizDock
+object.filter_configuration.share.manually.title=Manuellement
+object.filter_configuration.share.manually.header=Envoyer le lien ci-dessous manuellement.
 object.filter_configuration.share.recipient=Destinataire
 object.filter_configuration.share.successful=Le filtre a été partagé.
 object.filter_configuration.share.notification.title=Filtre partagé
-object.filter_configuration.share.notification.message=Un utilisateur BizDock a partagé un filtre avec vous.
+object.filter_configuration.share.notification.message={0} a partagé un filtre avec vous.
 
-object.filter_configuration.shared_filter.title=Filtre <strong>{0}</strong> de l''utilisateur <strong>{1}</strong>
-object.filter_configuration.shared_filter.not_found=Le filtre partagé n''existe pas. Le filtre par défaut a été chargé.
+object.filter_configuration.shared_filter.not_found=Le filtre partagé n''existe plus. Le filtre par défaut a été chargé.
 
 object.filter_configuration.no_more_compatible.page_load=La configuration du filtre n''est plus compatible avec la table: la configuration initiales a été chargée.
 object.filter_configuration.no_more_compatible.dynamic=Le filtre sélectionné n''est plus compatible avec la table: il est recommandé de supprimer le filtre et de refraichir la page.
