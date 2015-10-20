@@ -64,10 +64,10 @@
         </fieldset>
         <fieldset>
             <legend>@parts.Msg("admin.user_manager.create.basic_data.title")</legend>
-            @helper.inputText(userAccountForm("uid"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.uid.label"))
-            @helper.inputText(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label"))
-            @helper.inputText(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
-            @helper.inputText(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
+            @parts.input_text(userAccountForm("uid"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.uid.label"))
+            @parts.input_text(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label"))
+            @parts.input_text(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
+            @parts.input_text(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
             @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguagesAsValueHolderCollection, null, false)
             @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes,null,false)
             <div id="rolesSelector">

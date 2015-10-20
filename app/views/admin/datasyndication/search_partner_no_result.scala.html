@@ -43,11 +43,11 @@
         @helper.form(action = controllers.admin.routes.DataSyndicationController.processSubmitAgreementNoSlave()) {
             <fieldset>
                 
-                @helper.inputText(submitAgreementNoSlaveForm("partnerEmail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.contact_email.label"), 'autofocus -> "autofocus")
+                @parts.input_text(submitAgreementNoSlaveForm("partnerEmail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.contact_email.label"), 'autofocus -> "autofocus")
                 
-                @helper.inputText(submitAgreementNoSlaveForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.ref_id.label"))
+                @parts.input_text(submitAgreementNoSlaveForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.ref_id.label"))
                 
-                @helper.inputText(submitAgreementNoSlaveForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.name.label"))
+                @parts.input_text(submitAgreementNoSlaveForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.name.label"))
                 
                 @parts.dateinput(submitAgreementNoSlaveForm("startDate"), parts.Msg.asString("object.data_syndication_agreement.start_date.label"))
                 

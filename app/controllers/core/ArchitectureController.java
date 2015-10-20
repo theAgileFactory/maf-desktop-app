@@ -86,7 +86,6 @@ public class ArchitectureController extends Controller {
     @Inject
     private Configuration configuration;
 
-
     private static Logger.ALogger log = Logger.of(ArchitectureController.class);
 
     public static Form<ApplicationBlockFormData> applicationBlockFormTemplate = Form.form(ApplicationBlockFormData.class);
@@ -115,10 +114,15 @@ public class ArchitectureController extends Controller {
     public Result viewApplicationBlockFragment(Long applicationBockId) {
 
         ApplicationBlock applicationBlock = applicationBockId != null ? ArchitectureDao.getApplicationBlockById(applicationBockId) : null;
+
+        // construct the corresponding form data (for the custom attributes)
+        ApplicationBlockFormData applicationBlockFormData = applicationBlock != null ? new ApplicationBlockFormData(applicationBlock) : null;
+
         List<ApplicationBlock> applicationBlocks = applicationBlock != null ? ArchitectureDao.getApplicationBlockActiveAsListByParent(applicationBlock.id)
                 : ArchitectureDao.getApplicationBlockActiveRootsAsList();
 
-        return ok(views.html.core.architecture.application_block_view_fragment.render("applicationBlockTree", applicationBlock, applicationBlocks));
+        return ok(views.html.core.architecture.application_block_view_fragment.render("applicationBlockTree", applicationBlock, applicationBlockFormData,
+                applicationBlocks));
     }
 
     /**

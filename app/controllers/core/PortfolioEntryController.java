@@ -433,6 +433,9 @@ public class PortfolioEntryController extends Controller {
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        // construct the corresponding form data (for the custom attributes)
+        PortfolioEntryEditFormData portfolioEntryEditFormData = new PortfolioEntryEditFormData(portfolioEntry);
+
         // get the last milestone
         LifeCycleMilestoneInstance lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
 
@@ -489,8 +492,8 @@ public class PortfolioEntryController extends Controller {
 
         Table<AttachmentListView> attachmentFilledTable = AttachmentListView.templateTable.fill(attachmentsListView, hideColumns);
 
-        return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, lastMilestone, portfolioFilledTable, dependenciesFilledTable,
-                attachmentFilledTable, attachmentPagination));
+        return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, portfolioEntryEditFormData, lastMilestone, portfolioFilledTable,
+                dependenciesFilledTable, attachmentFilledTable, attachmentPagination));
 
     }
 

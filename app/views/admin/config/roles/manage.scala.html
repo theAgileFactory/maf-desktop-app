@@ -50,7 +50,7 @@
                     <input type="hidden" name="id" value="@roleForm("id").value"/>
                 }
 
-                @helper.inputText(roleForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.role.name.label"))
+                @parts.input_text(roleForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.role.name.label"))
 
                 @parts.multi_languages_input_text(roleForm("description"), parts.Msg.asString("object.role.description.label"))
                 

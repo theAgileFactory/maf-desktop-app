@@ -96,14 +96,14 @@
                             }
                         }
         
-                        @helper.inputText(workOrderForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(workOrderForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.name.label"), 'autofocus -> "autofocus")
                         
                         @helper.textarea(workOrderForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.description.label"))
         
                         @***if the purchase orders are disable or create case or the work order is not engaged then display the amount and currency fields***@
                         @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
                         
-                            @helper.inputText(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
+                            @parts.input_text(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
         
                             @parts.dropdownlist(workOrderForm("currency"), parts.Msg.asString("object.work_order.currency.label"), currencies, null, false)
                             
@@ -116,7 +116,7 @@
                         
                         @***if edit case and the work order is engaged and (the work order is shared or the purchase orders are disable) then the user can define the amount received***@
                         @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) && (workOrder.shared || !dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
-                            @helper.inputText(workOrderForm("amountReceived"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount_received.label"))
+                            @parts.input_text(workOrderForm("amountReceived"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount_received.label"))
                         }
                         
                         @parts.singlevalue_picker(

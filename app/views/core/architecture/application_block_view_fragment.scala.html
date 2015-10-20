@@ -18,6 +18,7 @@
 @(
     tafTreeJsVarName: String,
     applicationBlock: models.architecture.ApplicationBlock,
+    applicationBlockFormData: utils.form.ApplicationBlockFormData,
     applicationBlocks: List[models.architecture.ApplicationBlock]
 )
 
@@ -168,7 +169,7 @@
                         </tbody>
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.architecture.ApplicationBlock], applicationBlock.id)
+                    @parts.formats.display_extended_attributes(classOf[models.architecture.ApplicationBlock], applicationBlock.id, applicationBlockFormData)
                 </div>
             </div>
         </div>

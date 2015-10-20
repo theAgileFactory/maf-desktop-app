@@ -48,9 +48,9 @@
                     @parts.Msg("admin.user_manager.search.by_full_name.label")
                 </label>
             </div>
-            @helper.inputText(userSearchForm("uid"),'_showConstraints -> false, '_label -> parts.Msg.asString("admin.user_manager.search.by_uid.label"))
-            @helper.inputText(userSearchForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("admin.user_manager.search.by_mail.label"))  
-            @helper.inputText(userSearchForm("fullName"),'_showConstraints -> false, '_label -> parts.Msg.asString("admin.user_manager.search.by_full_name.label"))
+            @parts.input_text(userSearchForm("uid"),'_showConstraints -> false, '_label -> parts.Msg.asString("admin.user_manager.search.by_uid.label"))
+            @parts.input_text(userSearchForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("admin.user_manager.search.by_mail.label"))  
+            @parts.input_text(userSearchForm("fullName"),'_showConstraints -> false, '_label -> parts.Msg.asString("admin.user_manager.search.by_full_name.label"))
         </fieldset>
         <br/>
         <input type="submit" value="@parts.Msg("button.search")" class="btn btn-primary">

@@ -17,7 +17,8 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    portfolioEntryRisk: models.pmo.PortfolioEntryRisk
+    portfolioEntryRisk: models.pmo.PortfolioEntryRisk,
+    portfolioEntryRiskFormData: utils.form.PortfolioEntryRiskFormData
 )
 
 @import framework_views.parts
@@ -109,7 +110,7 @@
                 </tbody>
             </table>
             
-            @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryRisk], portfolioEntryRisk.id)
+            @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryRisk], portfolioEntryRisk.id, portfolioEntryRiskFormData)
         </div>
     </div>
     

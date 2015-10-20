@@ -17,6 +17,7 @@
  *@
 @(
     release: models.delivery.Release,
+    releaseFormData: utils.form.ReleaseFormData,
     table: framework.utils.Table[utils.table.PortfolioEntryListView],
     pagination: framework.utils.Pagination[models.pmo.PortfolioEntry]
 )
@@ -106,7 +107,7 @@
                         </tbody>
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.delivery.Release], release.id)
+                    @parts.formats.display_extended_attributes(classOf[models.delivery.Release], release.id, releaseFormData)
                     
                 </div>
             </div>

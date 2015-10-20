@@ -17,7 +17,8 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    budgetLine: models.finance.PortfolioEntryBudgetLine
+    budgetLine: models.finance.PortfolioEntryBudgetLine,
+    portfolioEntryBudgetLineFormData: utils.form.PortfolioEntryBudgetLineFormData
 )
 
 @import framework_views.parts
@@ -90,7 +91,7 @@
                 </tbody>
             </table>
             
-            @parts.formats.display_extended_attributes(classOf[models.finance.PortfolioEntryBudgetLine], budgetLine.id)
+            @parts.formats.display_extended_attributes(classOf[models.finance.PortfolioEntryBudgetLine], budgetLine.id, portfolioEntryBudgetLineFormData)
 
         </div>
     </div>

@@ -62,7 +62,7 @@
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
                         <input type="hidden" name="iterationId" value="@iterationForm("iterationId").value"/>
                         
-                        @helper.inputText(iterationForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.iteration.story_points.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(iterationForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.iteration.story_points.label"), 'autofocus -> "autofocus")
                         
                         @parts.dropdownlist(iterationForm("release"), parts.Msg.asString("object.iteration.release.label"), releases, parts.Msg.asString("object.iteration.release.help"), false)
 

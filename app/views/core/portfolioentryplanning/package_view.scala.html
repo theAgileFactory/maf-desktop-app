@@ -18,6 +18,7 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     planningPackage: models.pmo.PortfolioEntryPlanningPackage,
+    portfolioEntryPlanningPackageFormData: utils.form.PortfolioEntryPlanningPackageFormData,
     allocatedResourcesDays: java.math.BigDecimal,
     timesheetsDays: java.math.BigDecimal,
     attachmentsTable: framework.utils.Table[utils.table.AttachmentListView]
@@ -104,7 +105,7 @@
                         </tbody>
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryPlanningPackage], planningPackage.id)
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryPlanningPackage], planningPackage.id, portfolioEntryPlanningPackageFormData)
                     
                 </div>
             </div>

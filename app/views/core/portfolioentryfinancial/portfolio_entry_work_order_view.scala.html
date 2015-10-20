@@ -17,7 +17,8 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    workOrder: models.finance.WorkOrder
+    workOrder: models.finance.WorkOrder,
+    workOrderFormData: utils.form.WorkOrderFormData
 )
 
 @import framework_views.parts
@@ -116,7 +117,7 @@
                 </tbody>
             </table>
             
-            @parts.formats.display_extended_attributes(classOf[models.finance.WorkOrder], workOrder.id)
+            @parts.formats.display_extended_attributes(classOf[models.finance.WorkOrder], workOrder.id, workOrderFormData)
             
         </div>
     </div>

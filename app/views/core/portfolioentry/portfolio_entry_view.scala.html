@@ -17,6 +17,7 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry, 
+    portfolioEntryFormData: utils.form.PortfolioEntryEditFormData,
     lastMilestone: models.governance.LifeCycleMilestoneInstance,
     portfolioTable: framework.utils.Table[utils.table.PortfolioListView],
     dependenciesTable: framework.utils.Table[utils.table.PortfolioEntryDependencyListView],
@@ -112,7 +113,7 @@
                         </tbody>
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntry], portfolioEntry.id, portfolioEntryFormData)
 
                 </div>
 

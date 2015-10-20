@@ -58,11 +58,11 @@
                     parts.Msg.asString("object.budget_bucket_line.is_opex.help")
                 )
                 
-                @helper.inputText(lineForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.ref_id.label"), 'autofocus -> "autofocus")
+                @parts.input_text(lineForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.ref_id.label"), 'autofocus -> "autofocus")
                 
-                @helper.inputText(lineForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.name.label"))
+                @parts.input_text(lineForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.name.label"))
 
-                @helper.inputText(lineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.amount.label"))
+                @parts.input_text(lineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.amount.label"))
                 
                 @parts.dropdownlist(lineForm("currency"), parts.Msg.asString("object.budget_bucket_line.currency.label"), currencies, null, false)
 

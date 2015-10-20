@@ -54,7 +54,7 @@
                         }
                         @helper.form(action = controllers.routes.MessagingController.sendMessage()) {
                             <fieldset>
-                                @helper.inputText(objectForm("title"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.message.title.label"))
+                                @parts.input_text(objectForm("title"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.message.title.label"))
                                 @helper.textarea(objectForm("message"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.message.message.label"))
                                 @parts.multivalue_picker(objectForm("principalUids"),parts.Msg.asString("object.message.principaluids.label"),controllers.routes.PickerController.principalsUid().url)
                                 <input type="submit" value="@parts.Msg("button.send")" class="btn btn-primary">

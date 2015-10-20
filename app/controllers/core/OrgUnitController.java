@@ -100,7 +100,6 @@ public class OrgUnitController extends Controller {
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
 
-    
     private static Logger.ALogger log = Logger.of(OrgUnitController.class);
 
     public static Form<OrgUnitFormData> formTemplate = Form.form(OrgUnitFormData.class);
@@ -122,6 +121,9 @@ public class OrgUnitController extends Controller {
         // get the orgUnit
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
 
+        // construct the corresponding form data (for the custom attributes)
+        OrgUnitFormData orgUnitFormData = new OrgUnitFormData(orgUnit);
+
         // construct the children table
         List<OrgUnitListView> orgUnitListView = new ArrayList<OrgUnitListView>();
         for (OrgUnit child : OrgUnitDao.getOrgUnitActiveAsListByParent(id)) {
@@ -141,7 +143,7 @@ public class OrgUnitController extends Controller {
         columnsToHideForActors.add("isActive");
         Table<ActorListView> actorsTable = ActorListView.templateTable.fill(actorListView, columnsToHideForActors);
 
-        return ok(views.html.core.orgunit.org_unit_view.render(orgUnit, childrenTable, actorsTable));
+        return ok(views.html.core.orgunit.org_unit_view.render(orgUnit, orgUnitFormData, childrenTable, actorsTable));
     }
 
     /**

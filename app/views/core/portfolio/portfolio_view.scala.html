@@ -17,6 +17,7 @@
  *@
 @(
     portfolio: models.pmo.Portfolio,
+    portfolioFormData: utils.form.PortfolioFormData,
     portfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryListView],
     portfolioEntryPagination: framework.utils.Pagination[models.pmo.PortfolioEntry],
     stakeholderTable: framework.utils.Table[utils.table.PortfolioStakeholderListView],
@@ -92,7 +93,7 @@
                         
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.pmo.Portfolio], portfolio.id)
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.Portfolio], portfolio.id, portfolioFormData)
                     
                 </div>
                 

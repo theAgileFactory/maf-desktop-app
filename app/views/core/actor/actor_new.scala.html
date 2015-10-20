@@ -57,25 +57,25 @@
                     
                         <input type="hidden" name="isActive" value="true"/>
                         
-                        @helper.inputText(actorForm("employeeId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.employee_id.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(actorForm("employeeId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.employee_id.label"), 'autofocus -> "autofocus")
                         
-                        @helper.inputText(actorForm("firstName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.first_name.label"))
+                        @parts.input_text(actorForm("firstName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.first_name.label"))
                         
-                        @helper.inputText(actorForm("lastName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.last_name.label"))
+                        @parts.input_text(actorForm("lastName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.last_name.label"))
                         
-                        @helper.inputText(actorForm("uid"), '_showConstraints -> false, '_help -> parts.Msg.asString("object.actor.uid.help"), '_label -> parts.Msg.asString("object.actor.uid.label"))
+                        @parts.input_text(actorForm("uid"), '_showConstraints -> false, '_help -> parts.Msg.asString("object.actor.uid.help"), '_label -> parts.Msg.asString("object.actor.uid.label"))
                         
-                        @helper.inputText(actorForm("title"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.title.label"))
+                        @parts.input_text(actorForm("title"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.title.label"))
                         
-                        @helper.inputText(actorForm("mail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mail.label"))
+                        @parts.input_text(actorForm("mail"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mail.label"))
                         
-                        @helper.inputText(actorForm("mobilePhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mobile_phone.label"))
+                        @parts.input_text(actorForm("mobilePhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.mobile_phone.label"))
                         
-                        @helper.inputText(actorForm("fixPhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.fix_phone.label"))
+                        @parts.input_text(actorForm("fixPhone"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.fix_phone.label"))
                         
                         @parts.dropdownlist(actorForm("actorType"), parts.Msg.asString("object.actor.type.label"), actorTypes, null, false)
                         
-                        @helper.inputText(actorForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.erp_ref_id.label"))
+                        @parts.input_text(actorForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.erp_ref_id.label"))
         
                         @parts.singlevalue_picker(
                             actorForm("orgUnit"), 

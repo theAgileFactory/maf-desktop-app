@@ -75,15 +75,15 @@
                             ""
                         )
         
-                        @helper.inputText(portfolioEntryForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(portfolioEntryForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"), 'autofocus -> "autofocus")
                         
                         @helper.textarea(portfolioEntryForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
                         
                         @parts.dropdownlist(portfolioEntryForm("portfolioEntryType"), parts.Msg.asString("object.portfolio_entry.type.label"), portfolioEntryTypes, null, false)
         
-                        @helper.inputText(portfolioEntryForm("governanceId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.governance_id.label"))
+                        @parts.input_text(portfolioEntryForm("governanceId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.governance_id.label"))
                         
-                        @helper.inputText(portfolioEntryForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.erp_ref_id.label"))
+                        @parts.input_text(portfolioEntryForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.erp_ref_id.label"))
                         
                         @parts.singlevalue_picker(
                             portfolioEntryForm("manager"), 

@@ -41,7 +41,7 @@
                 <input type="hidden" name="identifier" value="@pluginRegistrationForm("identifier").value"/>
                 <input type="hidden" name="definitionName" value="@pluginRegistrationForm("definitionName").value"/>
                 
-                @helper.inputText(pluginRegistrationForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.plugin_configuration.name.label"), 'autofocus -> "autofocus")
+                @parts.input_text(pluginRegistrationForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.plugin_configuration.name.label"), 'autofocus -> "autofocus")
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
                 <a class="btn btn-default" href="@controllers.admin.routes.PluginManagerController.registration()">@parts.Msg("button.cancel")</a>

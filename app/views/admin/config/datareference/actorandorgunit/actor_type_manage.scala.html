@@ -55,7 +55,7 @@
                     ""
                 )
                 
-                @helper.inputText(actorTypeForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor_type.ref_id.label"))
+                @parts.input_text(actorTypeForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor_type.ref_id.label"))
 
                 @parts.multi_languages_input_text(actorTypeForm("name"), parts.Msg.asString("object.actor_type.name.label"))
 

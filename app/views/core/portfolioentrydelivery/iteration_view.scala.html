@@ -17,7 +17,8 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    iteration: models.delivery.Iteration
+    iteration: models.delivery.Iteration,
+    iterationFormData: utils.form.IterationFormData
 )
 
 @import framework_views.parts.formats._
@@ -92,7 +93,7 @@
                         </tbody>
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.delivery.Iteration], iteration.id)
+                    @parts.formats.display_extended_attributes(classOf[models.delivery.Iteration], iteration.id, iterationFormData)
                     
                 </div>
                 

@@ -67,9 +67,9 @@
                 
                 @parts.dropdownlist(lifeCyclePhaseForm("endMilestone"), parts.Msg.asString("object.life_cycle_phase.end_milestone.label"), milestones, null, false)
                 
-                @helper.inputText(lifeCyclePhaseForm("gapDaysStart"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.life_cycle_phase.gap_days_start.label"))
+                @parts.input_text(lifeCyclePhaseForm("gapDaysStart"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.life_cycle_phase.gap_days_start.label"))
                 
-                @helper.inputText(lifeCyclePhaseForm("gapDaysEnd"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.life_cycle_phase.gap_days_end.label"))
+                @parts.input_text(lifeCyclePhaseForm("gapDaysEnd"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.life_cycle_phase.gap_days_end.label"))
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(lifeCycleProcess.id)'>@parts.Msg("button.cancel")</a>

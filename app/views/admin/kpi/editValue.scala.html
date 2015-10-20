@@ -75,7 +75,7 @@
                 
                 @parts.dropdownlist(kpiValueDefinitionForm("renderType"), parts.Msg.asString("object.kpi_value_definition.render_type.label"), renderTypes, null, false)
                 
-                @helper.inputText(kpiValueDefinitionForm("renderPattern"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.kpi_value_definition.render_pattern.label"))
+                @parts.input_text(kpiValueDefinitionForm("renderPattern"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.kpi_value_definition.render_pattern.label"))
                 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href="@controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url">@parts.Msg("button.cancel")</a>

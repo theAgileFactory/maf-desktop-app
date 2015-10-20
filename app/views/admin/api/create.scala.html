@@ -37,7 +37,7 @@
             @helper.form(action = controllers.admin.routes.ApiManagerController.saveRegistration()) {
             <fieldset>
                 @parts.checkbox(appConfigForm("testable"), parts.Msg.asString("object.api_registration.testable.label"))
-                @helper.inputText(appConfigForm("applicationName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.api_registration.name.label"), 'autofocus -> "autofocus")
+                @parts.input_text(appConfigForm("applicationName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.api_registration.name.label"), 'autofocus -> "autofocus")
                 @helper.textarea(appConfigForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.api_registration.description.label"))
                 @helper.textarea(appConfigForm("authorizations"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.api_registration.authorizations.label"), 'rows -> "15")
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />

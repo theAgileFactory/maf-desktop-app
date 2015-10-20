@@ -17,6 +17,7 @@
  *@
 @(
     orgUnit: models.pmo.OrgUnit,
+    orgUnitFormData: utils.form.OrgUnitFormData,
     childrenTable: framework.utils.Table[utils.table.OrgUnitListView],
     actorsTable: framework.utils.Table[utils.table.ActorListView]
 )
@@ -93,7 +94,7 @@
                         </tbody>
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.pmo.OrgUnit], orgUnit.id)
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.OrgUnit], orgUnit.id, orgUnitFormData)
                 </div>
                 
             </div>

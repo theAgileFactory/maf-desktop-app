@@ -95,7 +95,7 @@
                             $("#timesheetActivityType").change(function() { maf_loadActivityType(); });
                         </script>
         
-                        @helper.inputText(allocatedActivityForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(allocatedActivityForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
                         @parts.dateinput(allocatedActivityForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
                         

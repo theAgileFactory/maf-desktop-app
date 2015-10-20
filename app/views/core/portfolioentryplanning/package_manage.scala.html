@@ -74,7 +74,7 @@
                             parts.Msg.asString("object.portfolio_entry_planning_package.is_important.label")
                         )
                         
-                        @helper.inputText(planningPackageForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(planningPackageForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
                         
                         @helper.textarea(planningPackageForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))
                         

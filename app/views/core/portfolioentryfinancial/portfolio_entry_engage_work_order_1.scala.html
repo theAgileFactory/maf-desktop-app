@@ -47,7 +47,7 @@
                 <input type="hidden" name="id" value="@portfolioEntry.id"/>
                 <input type="hidden" name="workOrderId" value="@workOrder.id"/>
                 
-                @helper.inputText(selectorForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("core.portfolio_entry_financial.work_order.engage.step1.amount.label"), 'autofocus -> "autofocus")
+                @parts.input_text(selectorForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("core.portfolio_entry_financial.work_order.engage.step1.amount.label"), 'autofocus -> "autofocus")
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.confirm")" />
                 <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>

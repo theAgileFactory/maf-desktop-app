@@ -64,11 +64,11 @@
                             parts.Msg.asString("object.release.is_active.label")
                         )
                         
-                        @helper.inputText(releaseForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(releaseForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.name.label"), 'autofocus -> "autofocus")
                         
                         @helper.textarea(releaseForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.release.description.label"))
         
-                        @helper.inputText(releaseForm("capacity"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.capacity.label"))
+                        @parts.input_text(releaseForm("capacity"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.capacity.label"))
                         
                         @parts.dateinput(releaseForm("cutOffDate"), parts.Msg.asString("object.release.cut_off_date.label"))
                         

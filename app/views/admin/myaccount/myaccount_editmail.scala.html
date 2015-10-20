@@ -32,7 +32,7 @@
         }
         @helper.form(action = controllers.admin.routes.MyAccount.saveEmail()) {
             <fieldset>
-                @helper.inputText(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label")) 
+                @parts.input_text(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label")) 
             </fieldset>
 
             <input type="submit" value="@parts.Msg("button.update")" class="btn btn-primary">

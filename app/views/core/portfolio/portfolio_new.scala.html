@@ -57,7 +57,7 @@
                     
                         <input type="hidden" name="isActive" value="true"/>
                         
-                        @helper.inputText(portfolioForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(portfolioForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.name.label"), 'autofocus -> "autofocus")
                         
                         @parts.dropdownlist(portfolioForm("portfolioType"), parts.Msg.asString("object.portfolio.type.label"), portfolioTypes, null, false)
                         

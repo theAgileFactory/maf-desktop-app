@@ -300,7 +300,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         } catch (Exception e) {
 
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
 
         }
     }
@@ -461,6 +461,9 @@ public class PortfolioEntryStatusReportingController extends Controller {
         // get the portfolio entry report
         PortfolioEntryReport portfolioEntryReport = PortfolioEntryReportDao.getPEReportById(reportId);
 
+        // construct the corresponding form data (for the custom attributes)
+        PortfolioEntryReportFormData portfolioEntryReportFormData = new PortfolioEntryReportFormData(portfolioEntryReport);
+
         // security: the portfolioEntry must be related to the object
         if (!portfolioEntryReport.portfolioEntry.id.equals(id)) {
             return forbidden(views.html.error.access_forbidden.render(""));
@@ -489,7 +492,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         Table<AttachmentListView> attachmentsTable = AttachmentListView.templateTable.fill(attachmentsListView, hideColumns);
 
-        return ok(views.html.core.portfolioentrystatusreporting.report_view.render(portfolioEntry, portfolioEntryReport, attachmentsTable));
+        return ok(views.html.core.portfolioentrystatusreporting.report_view.render(portfolioEntry, portfolioEntryReport, portfolioEntryReportFormData,
+                attachmentsTable));
     }
 
     /**
@@ -777,12 +781,15 @@ public class PortfolioEntryStatusReportingController extends Controller {
         // get the portfolioEntry risk
         PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskDao.getPERiskById(riskId);
 
+        // construct the corresponding form data (for the custom attributes)
+        PortfolioEntryRiskFormData portfolioEntryRiskFormData = new PortfolioEntryRiskFormData(portfolioEntryRisk);
+
         // security: the portfolioEntry must be related to the object
         if (!portfolioEntryRisk.portfolioEntry.id.equals(id)) {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
-        return ok(views.html.core.portfolioentrystatusreporting.risk_view.render(portfolioEntry, portfolioEntryRisk));
+        return ok(views.html.core.portfolioentrystatusreporting.risk_view.render(portfolioEntry, portfolioEntryRisk, portfolioEntryRiskFormData));
     }
 
     /**
@@ -1093,7 +1100,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         } catch (Exception e) {
 
-return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
 
         }
     }

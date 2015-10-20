@@ -591,7 +591,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         } catch (Exception e) {
 
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
 
         }
 
@@ -688,6 +688,9 @@ public class PortfolioEntryPlanningController extends Controller {
         // get the planning package
         PortfolioEntryPlanningPackage planningPackage = PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(planningPackageId);
 
+        // construct the corresponding form data (for the custom attributes)
+        PortfolioEntryPlanningPackageFormData portfolioEntryPlanningPackageFormData = new PortfolioEntryPlanningPackageFormData(planningPackage);
+
         // security: the portfolioEntry must be related to the object
         if (!planningPackage.portfolioEntry.id.equals(id)) {
             return forbidden(views.html.error.access_forbidden.render(""));
@@ -726,8 +729,8 @@ public class PortfolioEntryPlanningController extends Controller {
 
         Table<AttachmentListView> attachmentsTable = AttachmentListView.templateTable.fill(attachmentsListView, hideColumns);
 
-        return ok(views.html.core.portfolioentryplanning.package_view.render(portfolioEntry, planningPackage, allocatedResourcesDays, timesheetsDays,
-                attachmentsTable));
+        return ok(views.html.core.portfolioentryplanning.package_view.render(portfolioEntry, planningPackage, portfolioEntryPlanningPackageFormData,
+                allocatedResourcesDays, timesheetsDays, attachmentsTable));
     }
 
     /**

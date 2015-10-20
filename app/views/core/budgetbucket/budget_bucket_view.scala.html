@@ -17,6 +17,7 @@
  *@
 @(
     budgetBucket: models.finance.BudgetBucket,
+    budgetBucketFormData: utils.form.BudgetBucketFormData,
     budgetBucketLineTable: framework.utils.Table[utils.table.BudgetBucketLineListView],
     budgetBucketLinePagination: framework.utils.Pagination[models.finance.BudgetBucketLine],
     initiativeBudgetLineTable: framework.utils.Table[utils.table.PortfolioEntryBudgetLineListView],
@@ -98,7 +99,7 @@
                             </tbody>
                         </table>
                         
-                        @parts.formats.display_extended_attributes(classOf[models.finance.BudgetBucket], budgetBucket.id)
+                        @parts.formats.display_extended_attributes(classOf[models.finance.BudgetBucket], budgetBucket.id, budgetBucketFormData)
                     </div>
                 </div>
             </div>

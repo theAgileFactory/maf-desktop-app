@@ -89,7 +89,8 @@ public class PortfolioController extends Controller {
 
         // get the late milestones
         List<PortfolioMilestoneListView> portfolioMilestoneListView = new ArrayList<PortfolioMilestoneListView>();
-        for (PlannedLifeCycleMilestoneInstance plannedMilestoneInstance : LifeCyclePlanningDao.getPlannedLCMilestoneInstanceNotApprovedAsListOfPortfolio(id)) {
+        for (PlannedLifeCycleMilestoneInstance plannedMilestoneInstance : LifeCyclePlanningDao
+                .getPlannedLCMilestoneInstanceNotApprovedAsListOfPortfolio(id)) {
             portfolioMilestoneListView.add(new PortfolioMilestoneListView(plannedMilestoneInstance));
         }
         Table<PortfolioMilestoneListView> filledMilestoneTable = PortfolioMilestoneListView.templateTable.fill(portfolioMilestoneListView);
@@ -114,6 +115,9 @@ public class PortfolioController extends Controller {
         // get the portfolio
         Portfolio portfolio = PortfolioDao.getPortfolioById(id);
 
+        // construct the corresponding form data (for the custom attributes)
+        PortfolioFormData portfolioFormData = new PortfolioFormData(portfolio);
+
         // get the portfolio entries
         Pagination<PortfolioEntry> portfolioEntryPagination = PortfolioEntryDao.getPEAsPaginationByPortfolio(id, false);
         portfolioEntryPagination.setCurrentPage(portfolioEntryPage);
@@ -124,8 +128,8 @@ public class PortfolioController extends Controller {
             portfolioEntriesView.add(new PortfolioEntryListView(portfolioEntry));
         }
 
-        Table<PortfolioEntryListView> filledPortfolioEntryTable =
-                PortfolioEntryListView.templateTable.fill(portfolioEntriesView, PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
+        Table<PortfolioEntryListView> filledPortfolioEntryTable = PortfolioEntryListView.templateTable.fill(portfolioEntriesView,
+                PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
 
         // get the stakeholders
         Pagination<Stakeholder> stakeholderPagination = StakeholderDao.getStakeholderAsPaginationByPortfolio(id);
@@ -144,11 +148,11 @@ public class PortfolioController extends Controller {
             hideColumnsForStakeholder.add("removeActionLink");
         }
 
-        Table<PortfolioStakeholderListView> filledStakeholderTable =
-                PortfolioStakeholderListView.templateTable.fill(stakeholdersListView, hideColumnsForStakeholder);
+        Table<PortfolioStakeholderListView> filledStakeholderTable = PortfolioStakeholderListView.templateTable.fill(stakeholdersListView,
+                hideColumnsForStakeholder);
 
-        return ok(views.html.core.portfolio.portfolio_view.render(portfolio, filledPortfolioEntryTable, portfolioEntryPagination, filledStakeholderTable,
-                stakeholderPagination));
+        return ok(views.html.core.portfolio.portfolio_view.render(portfolio, portfolioFormData, filledPortfolioEntryTable, portfolioEntryPagination,
+                filledStakeholderTable, stakeholderPagination));
     }
 
     /**

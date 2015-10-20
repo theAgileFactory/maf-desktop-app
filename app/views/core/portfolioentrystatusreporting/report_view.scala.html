@@ -18,6 +18,7 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     report: models.pmo.PortfolioEntryReport,
+    portfolioEntryReportFormData: utils.form.PortfolioEntryReportFormData,
     attachmentsTable: framework.utils.Table[utils.table.AttachmentListView]
 )
 
@@ -76,7 +77,7 @@
                         </tbody>
                     </table>
 
-                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryReport], report.id)
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryReport], report.id, portfolioEntryReportFormData)
                     
                 </div>
                 

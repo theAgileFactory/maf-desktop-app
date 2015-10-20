@@ -57,7 +57,7 @@
                 <input type="hidden" name="lineItemId" value="@lineItem.id"/>
                 <input type="hidden" name="workOrderId" value="@workOrderForm("workOrderId").value"/>
 
-                @helper.inputText(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
+                @parts.input_text(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.core.routes.PurchaseOrderController.viewLineItem(lineItem.id).url'>@parts.Msg("button.cancel")</a>

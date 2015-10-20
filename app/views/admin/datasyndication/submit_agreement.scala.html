@@ -49,9 +49,9 @@
                     </div>
                 </div>
                 
-                @helper.inputText(submitAgreementForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.ref_id.label"), 'autofocus -> "autofocus")
+                @parts.input_text(submitAgreementForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.ref_id.label"), 'autofocus -> "autofocus")
                 
-                @helper.inputText(submitAgreementForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.name.label"))
+                @parts.input_text(submitAgreementForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.name.label"))
                 
                 @parts.dateinput(submitAgreementForm("startDate"), parts.Msg.asString("object.data_syndication_agreement.start_date.label"))
                 

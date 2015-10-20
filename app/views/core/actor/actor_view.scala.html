@@ -17,6 +17,7 @@
  *@
 @(
     actor: models.pmo.Actor,
+    actorFormData: utils.form.ActorFormData,
     actorTable: framework.utils.Table[utils.table.ActorListView],
     competenciesTable: framework.utils.Table[utils.table.CompetencyListView],
     existCompetencies: Boolean
@@ -121,7 +122,7 @@
                         </tbody>
                     </table>
                     
-                    @parts.formats.display_extended_attributes(classOf[models.pmo.Actor], actor.id)
+                    @parts.formats.display_extended_attributes(classOf[models.pmo.Actor], actor.id, actorFormData)
                     
                 </div>
                 

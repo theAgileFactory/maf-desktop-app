@@ -82,7 +82,7 @@
                             parts.Msg.asString("object.portfolio_entry_risk.is_active.help")
                         )
                         
-                        @helper.inputText(portfolioEntryRiskForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(portfolioEntryRiskForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.name.label"), 'autofocus -> "autofocus")
                         
                         @helper.textarea(portfolioEntryRiskForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.description.label"))
                         

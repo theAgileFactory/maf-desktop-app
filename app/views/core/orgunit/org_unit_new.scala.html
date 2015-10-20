@@ -69,9 +69,9 @@
                             parts.Msg.asString("object.org_unit.can_deliver.help")
                         )
                         
-                        @helper.inputText(orgUnitForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.ref_id.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(orgUnitForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.ref_id.label"), 'autofocus -> "autofocus")
                         
-                        @helper.inputText(orgUnitForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.name.label"))
+                        @parts.input_text(orgUnitForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.name.label"))
                         
                         @parts.dropdownlist(orgUnitForm("orgUnitType"), parts.Msg.asString("object.org_unit.type.label"), orgUnitTypes, null, false)
                         

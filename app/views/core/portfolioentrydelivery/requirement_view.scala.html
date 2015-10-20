@@ -17,7 +17,8 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    requirement: models.delivery.Requirement
+    requirement: models.delivery.Requirement,
+    requirementFormData: utils.form.RequirementFormData
 )
 
 @import framework_views.parts.formats._
@@ -129,7 +130,7 @@
                         </tbody>
                     </table>
 
-                    @parts.formats.display_extended_attributes(classOf[models.delivery.Requirement], requirement.id)
+                    @parts.formats.display_extended_attributes(classOf[models.delivery.Requirement], requirement.id, requirementFormData)
                     
                 </div>
                 

@@ -43,7 +43,7 @@
             
                 @parts.checkbox(newPortfolioEntryForm("isConfidential"), parts.Msg.asString("object.portfolio_entry.is_condfidential.label"), parts.Msg.asString("object.portfolio_entry.is_condfidential.help"))
                  
-                @helper.inputText(newPortfolioEntryForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
+                @parts.input_text(newPortfolioEntryForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
                 
                 @helper.textarea(newPortfolioEntryForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
                 

@@ -62,9 +62,9 @@
                             parts.Msg.asString("object.budget_bucket.is_approved.help")
                         )
                     
-                        @helper.inputText(budgetBucketForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.ref_id.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(budgetBucketForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.ref_id.label"), 'autofocus -> "autofocus")
         
-                        @helper.inputText(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
+                        @parts.input_text(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
                         
                         @parts.singlevalue_picker(
                             budgetBucketForm("owner"), 

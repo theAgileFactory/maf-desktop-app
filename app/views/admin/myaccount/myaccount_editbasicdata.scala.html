@@ -32,8 +32,8 @@
         }
         @helper.form(action = controllers.admin.routes.MyAccount.saveBasicData()) {
             <fieldset>
-                @helper.inputText(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
-                @helper.inputText(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
+                @parts.input_text(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
+                @parts.input_text(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
                 @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguagesAsValueHolderCollection, null, false)
             </fieldset>
             

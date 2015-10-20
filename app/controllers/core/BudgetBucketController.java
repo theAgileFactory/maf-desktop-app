@@ -76,6 +76,9 @@ public class BudgetBucketController extends Controller {
         // get the budget bucket
         BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
 
+        // construct the corresponding form data (for the custom attributes)
+        BudgetBucketFormData budgetBucketFormData = new BudgetBucketFormData(budgetBucket);
+
         // initialize the totals
         Double opexTotalBudget = 0.0;
         Double capexTotalBudget = 0.0;
@@ -108,8 +111,8 @@ public class BudgetBucketController extends Controller {
         for (PortfolioEntryBudgetLine budgetLine : initiativeBudgetLinesPagination.getListOfObjects()) {
             initiativeBudgetLineListView.add(new PortfolioEntryBudgetLineListView(budgetLine));
         }
-        Table<PortfolioEntryBudgetLineListView> initiativeBudgetLinesTable =
-                PortfolioEntryBudgetLineListView.templateTable.fill(initiativeBudgetLineListView, hideColumnsForInitiativeBudgetTable);
+        Table<PortfolioEntryBudgetLineListView> initiativeBudgetLinesTable = PortfolioEntryBudgetLineListView.templateTable.fill(initiativeBudgetLineListView,
+                hideColumnsForInitiativeBudgetTable);
 
         // compute the total budgets
         opexTotalBudget = BudgetBucketDAO.getBudgetAsAmountByBucketAndOpex(id, true);
@@ -133,8 +136,8 @@ public class BudgetBucketController extends Controller {
         opexElem.addValue(opexTotalInitiativeBudget);
         basicBar.addElem(opexElem);
 
-        return ok(views.html.core.budgetbucket.budget_bucket_view.render(budgetBucket, budgetBucketLinesTable, budgetBucketLinesPagination,
-                initiativeBudgetLinesTable, initiativeBudgetLinesPagination, basicBar));
+        return ok(views.html.core.budgetbucket.budget_bucket_view.render(budgetBucket, budgetBucketFormData, budgetBucketLinesTable,
+                budgetBucketLinesPagination, initiativeBudgetLinesTable, initiativeBudgetLinesPagination, basicBar));
     }
 
     /**

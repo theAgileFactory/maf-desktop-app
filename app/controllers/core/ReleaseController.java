@@ -366,6 +366,9 @@ public class ReleaseController extends Controller {
 
         Release release = ReleaseDAO.getReleaseById(id);
 
+        // construct the corresponding form data (for the custom attributes)
+        ReleaseFormData releaseFormData = new ReleaseFormData(release);
+
         // get the initiatives
         Pagination<PortfolioEntry> pagination = PortfolioEntryDao.getPEAsPaginationByRelease(id);
         pagination.setCurrentPage(page);
@@ -381,7 +384,7 @@ public class ReleaseController extends Controller {
 
         Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fill(portfolioEntryListView, columnsToHide);
 
-        return ok(views.html.core.release.view.render(release, table, pagination));
+        return ok(views.html.core.release.view.render(release, releaseFormData, table, pagination));
 
     }
 

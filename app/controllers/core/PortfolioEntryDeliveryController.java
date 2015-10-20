@@ -89,7 +89,6 @@ public class PortfolioEntryDeliveryController extends Controller {
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
 
-
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
     public static Form<RequirementFormData> formTemplate = Form.form(RequirementFormData.class);
@@ -137,7 +136,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         } catch (Exception e) {
 
-               return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
 
         }
 
@@ -344,12 +343,15 @@ public class PortfolioEntryDeliveryController extends Controller {
         // get the requirement
         Requirement requirement = RequirementDAO.getRequirementById(requirementId);
 
+        // construct the corresponding form data (for the custom attributes)
+        RequirementFormData requirementFormData = new RequirementFormData(requirement);
+
         // security: the portfolioEntry must be related to the object
         if (!requirement.portfolioEntry.id.equals(id)) {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
-        return ok(views.html.core.portfolioentrydelivery.requirement_view.render(portfolioEntry, requirement));
+        return ok(views.html.core.portfolioentrydelivery.requirement_view.render(portfolioEntry, requirement, requirementFormData));
     }
 
     /**
@@ -596,15 +598,18 @@ public class PortfolioEntryDeliveryController extends Controller {
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        // get the requirement
+        // get the iteration
         Iteration iteration = IterationDAO.getIterationById(iterationId);
+
+        // construct the corresponding form data (for the custom attributes)
+        IterationFormData iterationFormData = new IterationFormData(iteration);
 
         // security: the portfolioEntry must be related to the object
         if (!iteration.portfolioEntry.id.equals(id)) {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
-        return ok(views.html.core.portfolioentrydelivery.iteration_view.render(portfolioEntry, iteration));
+        return ok(views.html.core.portfolioentrydelivery.iteration_view.render(portfolioEntry, iteration, iterationFormData));
     }
 
     /**
@@ -836,7 +841,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         return configuration;
     }
 
-     /**
+    /**
      * Get the user session manager service.
      */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {

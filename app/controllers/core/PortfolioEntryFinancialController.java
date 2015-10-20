@@ -85,7 +85,7 @@ public class PortfolioEntryFinancialController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    
+
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
     public static Form<PortfolioEntryBudgetLineFormData> budgetLineFormTemplate = Form.form(PortfolioEntryBudgetLineFormData.class);
@@ -156,8 +156,7 @@ public class PortfolioEntryFinancialController extends Controller {
                 || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("selectLineItemActionLink");
         }
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
-                || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("engageWorkOrder");
         }
         hideColumnsForCostToCompleteTable.add("amountReceived");
@@ -175,8 +174,7 @@ public class PortfolioEntryFinancialController extends Controller {
         if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
             hideColumnsForEngagedTable.add("shared");
         }
-        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")
-                || PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "") || PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
             hideColumnsForEngagedTable.add("deleteActionLink");
         }
 
@@ -304,7 +302,11 @@ public class PortfolioEntryFinancialController extends Controller {
         // get the budget line
         PortfolioEntryBudgetLine budgetLine = PortfolioEntryBudgetDAO.getPEBudgetLineById(budgetLineId);
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_view.render(portfolioEntry, budgetLine));
+        // construct the corresponding form data (for the custom attributes)
+        PortfolioEntryBudgetLineFormData portfolioEntryBudgetLineFormData = new PortfolioEntryBudgetLineFormData(budgetLine);
+
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_view.render(portfolioEntry, budgetLine,
+                portfolioEntryBudgetLineFormData));
     }
 
     /**
@@ -459,7 +461,10 @@ public class PortfolioEntryFinancialController extends Controller {
         // get the work order
         WorkOrder workOrder = WorkOrderDAO.getWorkOrderById(workOrderId);
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_view.render(portfolioEntry, workOrder));
+        // construct the corresponding form data (for the custom attributes)
+        WorkOrderFormData workOrderFormData = new WorkOrderFormData(workOrder);
+
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_view.render(portfolioEntry, workOrder, workOrderFormData));
     }
 
     /**
@@ -621,8 +626,8 @@ public class PortfolioEntryFinancialController extends Controller {
         WorkOrder workOrder = WorkOrderDAO.getWorkOrderById(workOrderId);
 
         // initiate the form
-        Form<EngageWorkOrderAmountSelectorFormData> selectorForm = engageWorkOrderAmountSelectorFormTemplate.fill(new EngageWorkOrderAmountSelectorFormData(
-                workOrder));
+        Form<EngageWorkOrderAmountSelectorFormData> selectorForm = engageWorkOrderAmountSelectorFormTemplate
+                .fill(new EngageWorkOrderAmountSelectorFormData(workOrder));
 
         return ok(views.html.core.portfolioentryfinancial.portfolio_entry_engage_work_order_1.render(portfolioEntry, workOrder, selectorForm));
     }
@@ -666,7 +671,8 @@ public class PortfolioEntryFinancialController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.engage.successful"));
 
         if (remainingAmount > 0) {
-            return redirect(controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
+            return redirect(
+                    controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
         } else {
             return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
         }
@@ -914,7 +920,8 @@ public class PortfolioEntryFinancialController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.line_item_select.successful"));
 
         if (remainingAmount > 0) {
-            return redirect(controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
+            return redirect(
+                    controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
         } else {
             return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
         }
