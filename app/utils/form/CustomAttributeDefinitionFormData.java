@@ -17,12 +17,17 @@
  */
 package utils.form;
 
-import models.framework_models.common.CustomAttributeDefinition;
-import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
+import java.util.ArrayList;
+import java.util.List;
+
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.MultiLanguagesString;
 import framework.utils.MultiLanguagesStringValidator;
+import models.framework_models.common.CustomAttributeDefinition;
+import play.data.validation.Constraints.Required;
+import play.data.validation.Constraints.ValidateWith;
+import play.data.validation.ValidationError;
+import play.i18n.Messages;
 
 /**
  * An custom attribute definition form data is used to manage the fields when
@@ -35,6 +40,7 @@ public class CustomAttributeDefinitionFormData {
     public Long id;
     public String objectType;
     public String uuid;
+    public boolean canAddConditionalRule;
 
     public String configuration;
 
@@ -49,6 +55,10 @@ public class CustomAttributeDefinitionFormData {
 
     public boolean isDisplayed;
 
+    public String conditionalRuleFieldId;
+
+    public String conditionalRuleFieldValue;
+
     /**
      * Default constructor.
      */
@@ -56,11 +66,26 @@ public class CustomAttributeDefinitionFormData {
     }
 
     /**
+     * Validate the dates.
+     */
+    public List<ValidationError> validate() {
+
+        List<ValidationError> errors = new ArrayList<>();
+
+        if ((conditionalRuleFieldId.equals("") && !conditionalRuleFieldValue.equals(""))
+                || (!conditionalRuleFieldId.equals("") && conditionalRuleFieldValue.equals(""))) {
+            errors.add(new ValidationError("conditionalRuleFieldId", Messages.get("object.custom_attribute_definition.conditional_rule.invalid")));
+        }
+
+        return errors.isEmpty() ? null : errors;
+    }
+
+    /**
      * Construct the form data with a DB entry.
      * 
      * @param customAttribute
      *            the custom attribute definition in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public CustomAttributeDefinitionFormData(CustomAttributeDefinition customAttribute, II18nMessagesPlugin i18nMessagesPlugin) {
@@ -74,6 +99,11 @@ public class CustomAttributeDefinitionFormData {
         this.name = MultiLanguagesString.getByKey(customAttribute.name, i18nMessagesPlugin);
         this.description = MultiLanguagesString.getByKey(customAttribute.description, i18nMessagesPlugin);
         this.isDisplayed = customAttribute.isDisplayed;
+
+        if (customAttribute.hasValidConditionalRule()) {
+            this.conditionalRuleFieldId = customAttribute.getConditionalRuleFieldId();
+            this.conditionalRuleFieldValue = customAttribute.getConditionalRuleValue();
+        }
 
     }
 
@@ -90,6 +120,12 @@ public class CustomAttributeDefinitionFormData {
         customAttribute.name = this.name.getKeyIfValue();
         customAttribute.description = this.description.getKeyIfValue();
         customAttribute.isDisplayed = this.isDisplayed;
+
+        if (customAttribute.isAuthorizedAttributeTypeForConditionalRule() && !conditionalRuleFieldId.equals("") && !conditionalRuleFieldValue.equals("")) {
+            customAttribute.conditionalRule = conditionalRuleFieldId + "=" + conditionalRuleFieldValue;
+        } else {
+            customAttribute.conditionalRule = null;
+        }
 
     }
 

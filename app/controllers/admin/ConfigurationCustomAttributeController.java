@@ -25,6 +25,20 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.ControllersUtils;
+import controllers.api.core.RootApiController;
+import framework.commons.DataType;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolder;
+import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.framework_models.common.CustomAttributeDefinition;
 import models.framework_models.common.CustomAttributeItemOption;
 import models.framework_models.common.CustomAttributeMultiItemOption;
@@ -40,20 +54,6 @@ import utils.form.CustomAttributeDefinitionFormData;
 import utils.form.CustomAttributeItemFormData;
 import utils.table.CustomAttributeItemListView;
 import utils.table.CustomAttributeListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import constants.IMafConstants;
-import controllers.ControllersUtils;
-import controllers.api.core.RootApiController;
-import framework.commons.DataType;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.ISelectableValueHolder;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * Manage the custom attributes.
@@ -77,7 +77,7 @@ public class ConfigurationCustomAttributeController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    
+
     /**
      * Display the list of custom attributes for a data type. It's possible to
      * switch to another data type.
@@ -188,16 +188,27 @@ public class ConfigurationCustomAttributeController extends Controller {
 
         Form<CustomAttributeDefinitionFormData> customAttributeForm = customAttributeFormTemplate;
 
+        String uuid = null;
+        boolean canAddConditionalRule = true;
+
         // edit case: inject values
         if (!id.equals(Long.valueOf(0))) {
 
             CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
+            uuid = customAttribute.uuid;
+            canAddConditionalRule = customAttribute.isAuthorizedAttributeTypeForConditionalRule();
 
             customAttributeForm = customAttributeFormTemplate.fill(new CustomAttributeDefinitionFormData(customAttribute, getI18nMessagesPlugin()));
 
         }
 
-        return ok(views.html.admin.config.customattribute.manage.render(dataType, customAttributeForm));
+        try {
+            return ok(views.html.admin.config.customattribute.manage.render(dataType, customAttributeForm, canAddConditionalRule,
+                    CustomAttributeDefinition.getConditionalRuleAuthorizedFields(Class.forName(objectType), uuid)));
+        } catch (ClassNotFoundException e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+        }
+
     }
 
     /**
@@ -215,8 +226,21 @@ public class ConfigurationCustomAttributeController extends Controller {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
+        // get the uuid
+        String uuid = request().body().asFormUrlEncoded().get("uuid")[0];
+
+        // get canAddConditionalRule
+        boolean canAddConditionalRule = Boolean.valueOf(request().body().asFormUrlEncoded().get("canAddConditionalRule")[0]);
+
         if (boundForm.hasErrors()) {
-            return ok(views.html.admin.config.customattribute.manage.render(dataType, boundForm));
+
+            try {
+                return ok(views.html.admin.config.customattribute.manage.render(dataType, boundForm, canAddConditionalRule,
+                        CustomAttributeDefinition.getConditionalRuleAuthorizedFields(Class.forName(objectType), uuid)));
+            } catch (ClassNotFoundException e) {
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+            }
+
         }
 
         CustomAttributeDefinitionFormData customAttributeDefinitionFormData = boundForm.get();

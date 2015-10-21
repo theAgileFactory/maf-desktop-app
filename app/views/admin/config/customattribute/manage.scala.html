@@ -17,7 +17,9 @@
  *@
 @(
     dataType: framework.commons.DataType,
-    customAttributeForm: Form[utils.form.CustomAttributeDefinitionFormData]
+    customAttributeForm: Form[utils.form.CustomAttributeDefinitionFormData],
+    canAddConditionalRule: Boolean,
+    conditionalRuleAuthorizedFields: Map[String, String]
 )
 
 @import helper._
@@ -49,6 +51,8 @@
             <fieldset>
 
                 <input type="hidden" name="objectType" value="@dataType.getDataTypeClassName"/>
+                <input type="hidden" name="uuid" value="@customAttributeForm("uuid").value"/>
+                <input type="hidden" name="canAddConditionalRule" value="@canAddConditionalRule"/>
     
                 @if(customAttributeForm("id").value!=null) {
                     <input type="hidden" name="id" value="@customAttributeForm("id").value"/>
@@ -74,6 +78,30 @@
                 @parts.multi_languages_input_text(customAttributeForm("name"), parts.Msg.asString("object.custom_attribute_definition.name.label"))
 
                 @parts.multi_languages_input_text(customAttributeForm("description"), parts.Msg.asString("object.custom_attribute_definition.description.label"))
+                
+                @if(canAddConditionalRule) {
+                    <div class="form-group @if(customAttributeForm("conditionalRuleFieldId").hasErrors) {has-error}">
+                        <label class="control-label" for="domain">
+                            @parts.Msg("object.custom_attribute_definition.conditional_rule.label") 
+                        </label>
+    
+                        <div class="input-group">
+                            <select class="form-control" id="conditionalRuleFieldId" name="conditionalRuleFieldId">
+                                <option value=""></option>
+                                @for((key, value) <- conditionalRuleAuthorizedFields) {
+                                    <option value="@key" @if(customAttributeForm("conditionalRuleFieldId").value!=null && !customAttributeForm("conditionalRuleFieldId").value.isEmpty && customAttributeForm("conditionalRuleFieldId").value.equals(key)){selected="selected"}>@parts.Msg(value)</option>
+                                }
+                            </select>
+                            <span class="input-group-addon">=</span>
+                            <input type="text" class="form-control" id="conditionalRuleFieldValue" name="conditionalRuleFieldValue" value="@customAttributeForm("conditionalRuleFieldValue").value">
+                        </div>
+                                    
+                        <span class="help-block">@parts.Msg("object.custom_attribute_definition.conditional_rule.help")<br/><strong>@{customAttributeForm("conditionalRuleFieldId").error.map { error => parts.Msg(error.message) }}</strong></span>
+                    </div>
+                } else {
+                    <input type="hidden" name="conditionalRuleFieldId" value=""/>
+                    <input type="hidden" name="conditionalRuleFieldValue" value=""/>
+                }
 
                 @parts.code_editor(
                     customAttributeForm("configuration"), 

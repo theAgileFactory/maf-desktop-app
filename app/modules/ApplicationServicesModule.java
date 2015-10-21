@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.name.Names;
 
 import be.objectify.deadbolt.java.cache.HandlerCache;
@@ -229,35 +230,52 @@ public class ApplicationServicesModule extends FrameworkModule {
     }
 
     /**
-     * Register the data types to be used in various place of the application
+     * Register the data types to be used in various place of the application.
      */
     private void initDataTypes() {
-        MafDataType.add(IMafConstants.Actor, "models.pmo.Actor", true, true);
-        MafDataType.add(IMafConstants.ApplicationBlock, "models.architecture.ApplicationBlock", false, true);
-        MafDataType.add(IMafConstants.BudgetBucket, "models.finance.BudgetBucket", false, true);
+        MafDataType.add(IMafConstants.Actor, "models.pmo.Actor", true, true,
+                ImmutableMap.<String, String> builder().put("employeeId", "object.actor.employee_id.label").put("title", "object.actor.title.label")
+                        .put("isActive", "object.actor.is_active.label").put("mail", "object.actor.mail.label").put("actorType", "object.actor.type.label")
+                        .put("erpRefId", "object.actor.erp_ref_id.label").build());
+        MafDataType.add(IMafConstants.ApplicationBlock, "models.architecture.ApplicationBlock", false, true,
+                ImmutableMap.<String, String> builder().put("archived", "object.application_block.archived.label")
+                        .put("refId", "object.application_block.ref_id.label").put("name", "object.application_block.name.label").build());
+
+        MafDataType.add(IMafConstants.BudgetBucket, "models.finance.BudgetBucket", false, true,
+                ImmutableMap.<String, String> builder().put("refId", "object.budget_bucket.ref_id.label").put("name", "object.budget_bucket.name.label")
+                        .put("isApproved", "object.budget_bucket.is_approved.label").put("isActive", "object.budget_bucket.is_active.label").build());
         MafDataType.add(IMafConstants.BudgetBucketLine, "models.finance.BudgetBucketLine", false, false);
         MafDataType.add(IMafConstants.CostCenter, "models.finance.CostCenter", false, false);
-        MafDataType.add(IMafConstants.Iteration, "models.delivery.Iteration", false, true);
-        MafDataType.add(IMafConstants.OrgUnit, "models.pmo.OrgUnit", true, true);
+        MafDataType.add(IMafConstants.Iteration, "models.delivery.Iteration", false, true, ImmutableMap.<String, String> builder().put("", "").build());
+        MafDataType.add(IMafConstants.OrgUnit, "models.pmo.OrgUnit", true, true,
+                ImmutableMap.<String, String> builder().put("refId", "object.org_unit.ref_id.label").put("name", "object.org_unit.name.label")
+                        .put("isActive", "object.org_unit.is_active.label").put("canSponsor", "object.org_unit.can_sponsor.label")
+                        .put("canDeliver", "object.org_unit.can_deliver.label").put("orgUnitType", "object.org_unit.type.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryBudget, "models.finance.PortfolioEntryBudget", false, false);
-        MafDataType.add(IMafConstants.PortfolioEntryBudgetLine, "models.finance.PortfolioEntryBudgetLine", true, true);
+        MafDataType.add(IMafConstants.PortfolioEntryBudgetLine, "models.finance.PortfolioEntryBudgetLine", true, true,
+                ImmutableMap.<String, String> builder().put("", "").build());
         MafDataType.add(IMafConstants.PortfolioEntryEvent, "models.pmo.PortfolioEntryEvent", false, true);
-        MafDataType.add(IMafConstants.PortfolioEntry, "models.pmo.PortfolioEntry", true, true);
-        MafDataType.add(IMafConstants.PortfolioEntryPlanningPackage, "models.pmo.PortfolioEntryPlanningPackage", false, true);
-        MafDataType.add(IMafConstants.PortfolioEntryReport, "models.pmo.PortfolioEntryReport", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntry, "models.pmo.PortfolioEntry", true, true, ImmutableMap.<String, String> builder().put("", "").build());
+        MafDataType.add(IMafConstants.PortfolioEntryPlanningPackage, "models.pmo.PortfolioEntryPlanningPackage", false, true,
+                ImmutableMap.<String, String> builder().put("", "").build());
+        MafDataType.add(IMafConstants.PortfolioEntryReport, "models.pmo.PortfolioEntryReport", false, true,
+                ImmutableMap.<String, String> builder().put("", "").build());
         MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedActor, "models.finance.PortfolioEntryResourcePlanAllocatedActor", false, true);
         MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedOrgUnit, "models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit", false, true);
         MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedCompetency, "models.finance.PortfolioEntryResourcePlanAllocatedCompetency", false,
                 true);
-        MafDataType.add(IMafConstants.PortfolioEntryRisk, "models.pmo.PortfolioEntryRisk", false, true);
-        MafDataType.add(IMafConstants.Portfolio, "models.pmo.Portfolio", true, true);
+        MafDataType.add(IMafConstants.PortfolioEntryRisk, "models.pmo.PortfolioEntryRisk", false, true,
+                ImmutableMap.<String, String> builder().put("", "").build());
+        MafDataType.add(IMafConstants.Portfolio, "models.pmo.Portfolio", true, true,
+                ImmutableMap.<String, String> builder().put("name", "object.portfolio.name.label").put("isActive", "object.portfolio.is_active.label")
+                        .put("portfolioType", "object.portfolio.type.label").build());
         MafDataType.add(IMafConstants.Stakeholder, "models.pmo.Stakeholder", true, false);
         MafDataType.add(IMafConstants.PurchaseOrderLineItem, "models.finance.PurchaseOrderLineItem", true, false);
         MafDataType.add(IMafConstants.PurchaseOrder, "models.finance.PurchaseOrder", true, false);
-        MafDataType.add(IMafConstants.Release, "models.delivery.Release", false, true);
-        MafDataType.add(IMafConstants.Requirement, "models.delivery.Requirement", false, true);
+        MafDataType.add(IMafConstants.Release, "models.delivery.Release", false, true, ImmutableMap.<String, String> builder().put("", "").build());
+        MafDataType.add(IMafConstants.Requirement, "models.delivery.Requirement", false, true, ImmutableMap.<String, String> builder().put("", "").build());
         MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true);
-        MafDataType.add(IMafConstants.WorkOrder, "models.finance.WorkOrder", false, true);
+        MafDataType.add(IMafConstants.WorkOrder, "models.finance.WorkOrder", false, true, ImmutableMap.<String, String> builder().put("", "").build());
     }
 
     private Configuration getConfiguration() {
