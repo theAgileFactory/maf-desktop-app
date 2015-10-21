@@ -833,6 +833,9 @@ object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
 object.custom_attribute_definition.is_displayed.label=Affiché
 object.custom_attribute_definition.is_displayed.help=Cocher cette case pour afficher l''attribut personnalisé dans les tables.
+object.custom_attribute_definition.conditional_rule.label=Règle conditionnelle
+object.custom_attribute_definition.conditional_rule.help=Règle pour limiter l''activation de l''attribut personnalisé selon la valeur d''un autre attribut. Pas disponible pour le type "Menu déroulant à choix multiple".
+object.custom_attribute_definition.conditional_rule.invalid=La règle n''est pas correctement paramétrée, veuillez choisir un attribut et saisir une valeur.
 object.custom_attribute_definition.table.empty=Il n''existe aucun attribut personnalisé.
 
 #----------------------

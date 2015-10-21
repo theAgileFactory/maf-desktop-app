@@ -821,6 +821,9 @@ object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
 object.custom_attribute_definition.is_displayed.label=Displayed
 object.custom_attribute_definition.is_displayed.help=Check this box to display the custom attribute in the corresponding tables.
+object.custom_attribute_definition.conditional_rule.label=Conditional rule
+object.custom_attribute_definition.conditional_rule.help=Rule to limit the activation of the custom attribute according to the value of another attribute. Not available for "multi dropdown" type.
+object.custom_attribute_definition.conditional_rule.invalid=The rule is not correctly settled, please select an attribute and set a value.
 object.custom_attribute_definition.table.empty=There is currently no custom attribute.
 
 #----------------------

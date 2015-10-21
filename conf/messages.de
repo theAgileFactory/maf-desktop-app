@@ -833,6 +833,9 @@ object.custom_attribute_definition.description.label=Beschreibung
 object.custom_attribute_definition.configuration.label=Konfiguration
 object.custom_attribute_definition.is_displayed.label=Anzeigen
 object.custom_attribute_definition.is_displayed.help=Die Zusatzfelder werden in den entsprechenden Tabellen angezeigt.
+object.custom_attribute_definition.conditional_rule.label=de: Conditional rule
+object.custom_attribute_definition.conditional_rule.help=de: Rule to limit the activation of the custom attribute according to the value of another attribute. Not available for "multi dropdown" type.
+object.custom_attribute_definition.conditional_rule.invalid=de: The rule is not correctly settled, please select an attribute and set a value.
 object.custom_attribute_definition.table.empty=Die Zusatzfelder definiert
 
 #----------------------
