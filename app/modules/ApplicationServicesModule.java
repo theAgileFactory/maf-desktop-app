@@ -257,7 +257,8 @@ public class ApplicationServicesModule extends FrameworkModule {
                         .put("name", "object.portfolio_entry_budget_line.name.label").put("isOpex", "object.portfolio_entry_budget_line.is_opex.label")
                         .put("currency", "object.portfolio_entry_budget_line.currency.label").put("amount", "object.portfolio_entry_budget_line.amount.label")
                         .build());
-        MafDataType.add(IMafConstants.PortfolioEntryEvent, "models.pmo.PortfolioEntryEvent", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntryEvent, "models.pmo.PortfolioEntryEvent", false, true,
+                ImmutableMap.<String, String> builder().put("type", "object.portfolio_entry_event.type.label").build());
         MafDataType.add(IMafConstants.PortfolioEntry, "models.pmo.PortfolioEntry", true, true,
                 ImmutableMap.<String, String> builder().put("isConfidential", "object.portfolio_entry.is_condfidential.label")
                         .put("isActive", "object.portfolio_entry.is_active.label").put("name", "object.portfolio_entry.name.label")
@@ -270,10 +271,19 @@ public class ApplicationServicesModule extends FrameworkModule {
                         .put("status", "object.portfolio_entry_planning_package.status.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryReport, "models.pmo.PortfolioEntryReport", false, true,
                 ImmutableMap.<String, String> builder().put("status", "object.portfolio_entry_report.status.label").build());
-        MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedActor, "models.finance.PortfolioEntryResourcePlanAllocatedActor", false, true);
-        MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedOrgUnit, "models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit", false, true);
+        MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedActor, "models.finance.PortfolioEntryResourcePlanAllocatedActor", false, true,
+                ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label")
+                        .put("isConfirmed", "object.allocated_resource.is_confirmed.label")
+                        .put("followPackageDates", "object.allocated_resource.follow_package_dates.label").build());
+        MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedOrgUnit, "models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit", false, true,
+                ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label")
+                        .put("isConfirmed", "object.allocated_resource.is_confirmed.label")
+                        .put("followPackageDates", "object.allocated_resource.follow_package_dates.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedCompetency, "models.finance.PortfolioEntryResourcePlanAllocatedCompetency", false,
-                true);
+                true,
+                ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label")
+                        .put("isConfirmed", "object.allocated_resource.is_confirmed.label")
+                        .put("followPackageDates", "object.allocated_resource.follow_package_dates.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryRisk, "models.pmo.PortfolioEntryRisk", false, true,
                 ImmutableMap.<String, String> builder().put("isActive", "object.portfolio_entry_risk.is_active.label")
                         .put("name", "object.portfolio_entry_risk.name.label").put("riskType", "object.portfolio_entry_risk.type.label").build());
@@ -287,12 +297,14 @@ public class ApplicationServicesModule extends FrameworkModule {
                 ImmutableMap.<String, String> builder().put("isActive", "object.release.is_active.label").put("name", "object.release.name.label")
                         .put("capacity", "object.release.capacity.label").build());
         MafDataType.add(IMafConstants.Requirement, "models.delivery.Requirement", false, true);
-        MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true);
+        MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true,
+                ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label").build());
         MafDataType.add(IMafConstants.WorkOrder, "models.finance.WorkOrder", false, true,
                 ImmutableMap.<String, String> builder().put("name", "object.work_order.name.label").put("currency", "object.work_order.currency.label")
                         .put("amount", "object.work_order.amount.label").put("isOpex", "object.work_order.is_opex.label")
                         .put("shared", "object.work_order.shared.label").put("amountReceived", "object.work_order.amount_received.label")
                         .put("followPackageDates", "object.work_order.follow_package_dates.label").build());
+
     }
 
     private Configuration getConfiguration() {
