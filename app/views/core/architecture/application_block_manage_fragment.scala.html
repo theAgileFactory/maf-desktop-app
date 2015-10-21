@@ -80,7 +80,7 @@
                             }
                             
                         } else {
-                            <input type="hidden" name="archived" value="@applicationBlockForm("archived").value"/>
+                            <input type="hidden" id="archived" data-primitive="true" name="archived" value="@applicationBlockForm("archived").value"/>
                         }
                         
                         @parts.input_text(applicationBlockForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.ref_id.label"), 'autofocus -> "autofocus")

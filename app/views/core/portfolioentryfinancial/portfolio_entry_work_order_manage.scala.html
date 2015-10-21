@@ -76,8 +76,8 @@
                         
                         @***if edit case and the work order is engaged then the user can not update the isOpex and shared fields***@
                         @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
-                            <input type="hidden" name="isOpex" value="@workOrderForm("isOpex").value"/>
-                            <input type="hidden" name="shared" value="@workOrderForm("shared").value"/>
+                            <input type="hidden" id="isOpex" data-primitive="true" name="isOpex" value="@workOrderForm("isOpex").value"/>
+                            <input type="hidden" id="shared" data-primitive="true" name="shared" value="@workOrderForm("shared").value"/>
                         } else {
                             @parts.checkbox(
                                 workOrderForm("isOpex"), 
@@ -86,7 +86,7 @@
                             )
                             
                             @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
-                                <input type="hidden" name="shared" value="0"/>
+                                <input type="hidden" id="shared" data-primitive="true" name="shared" value="false"/>
                             } else {
                                 @parts.checkbox(
                                     workOrderForm("shared"), 
@@ -109,8 +109,8 @@
                             
                         } else {
                         
-                            <input type="hidden" name="currency" value="@workOrderForm("currency").value"/>
-                            <input type="hidden" name="amount" value="@workOrderForm("amount").value"/>
+                            <input type="hidden" id="currency" data-primitive="true" name="currency" value="@workOrderForm("currency").value"/>
+                            <input type="hidden" id="amount" data-primitive="true" name="amount" value="@workOrderForm("amount").value"/>
                             
                         }
                         
