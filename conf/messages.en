@@ -830,6 +830,7 @@ object.custom_attribute_definition.table.empty=There is currently no custom attr
 # customAttributeItem
 #----------------------
 
+object.custom_attribute_item.id.label=ID
 object.custom_attribute_item.name.label=Name
 object.custom_attribute_item.description.label=Description
 object.custom_attribute_item.table.empty=There is currently no option.

@@ -50,16 +50,17 @@ public class CustomAttributeItemListView {
                     @Override
                     public String apply(CustomAttributeItemListView customAttributeItemListView, Object value) {
                         return "<a href=\""
-                                + controllers.admin.routes.ConfigurationCustomAttributeController.changeItemOrder(
-                                        customAttributeItemListView.customAttributeId, customAttributeItemListView.id, false).url()
-                                + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;"
-                                + "<a href=\""
-                                + controllers.admin.routes.ConfigurationCustomAttributeController.changeItemOrder(
-                                        customAttributeItemListView.customAttributeId, customAttributeItemListView.id, true).url()
+                                + controllers.admin.routes.ConfigurationCustomAttributeController
+                                        .changeItemOrder(customAttributeItemListView.customAttributeId, customAttributeItemListView.id, false).url()
+                                + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;" + "<a href=\""
+                                + controllers.admin.routes.ConfigurationCustomAttributeController
+                                        .changeItemOrder(customAttributeItemListView.customAttributeId, customAttributeItemListView.id, true).url()
                                 + "\"><span class=\"glyphicons glyphicons-up-arrow\"></span></a>";
                     }
                 });
                 setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
+
+                addColumn("id", "id", "object.custom_attribute_item.id.label", Table.ColumnDef.SorterType.NONE);
 
                 addColumn("name", "name", "object.custom_attribute_item.name.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("name", new ObjectFormatter<CustomAttributeItemListView>());
@@ -67,12 +68,12 @@ public class CustomAttributeItemListView {
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("editActionLink", new StringFormatFormatter<CustomAttributeItemListView>(IMafConstants.EDIT_URL_FORMAT,
                         new StringFormatFormatter.Hook<CustomAttributeItemListView>() {
-                            @Override
-                            public String convert(CustomAttributeItemListView customAttributeItemListView) {
-                                return controllers.admin.routes.ConfigurationCustomAttributeController.manageItem(
-                                        customAttributeItemListView.customAttributeId, customAttributeItemListView.id).url();
-                            }
-                        }));
+                    @Override
+                    public String convert(CustomAttributeItemListView customAttributeItemListView) {
+                        return controllers.admin.routes.ConfigurationCustomAttributeController
+                                .manageItem(customAttributeItemListView.customAttributeId, customAttributeItemListView.id).url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
@@ -80,11 +81,10 @@ public class CustomAttributeItemListView {
                 setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<CustomAttributeItemListView>() {
                     @Override
                     public String apply(CustomAttributeItemListView customAttributeItemListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.admin.routes.ConfigurationCustomAttributeController.deleteItem(customAttributeItemListView.customAttributeId,
-                                        customAttributeItemListView.id).url();
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = controllers.admin.routes.ConfigurationCustomAttributeController
+                                .deleteItem(customAttributeItemListView.customAttributeId, customAttributeItemListView.id).url();
                         return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     }
                 });

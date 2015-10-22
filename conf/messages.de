@@ -842,6 +842,7 @@ object.custom_attribute_definition.table.empty=Die Zusatzfelder definiert
 # customAttributeItem
 #----------------------
 
+object.custom_attribute_item.id.label=ID
 object.custom_attribute_item.name.label=Name
 object.custom_attribute_item.description.label=Beschreibung
 object.custom_attribute_item.table.empty=Kein Eintrag
