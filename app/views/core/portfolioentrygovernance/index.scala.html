@@ -18,7 +18,8 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     processInstance: models.governance.LifeCycleInstance,
-    table: framework.utils.Table[utils.table.GovernanceListView]
+    table: framework.utils.Table[utils.table.GovernanceListView],
+    hasPlanning: Boolean
 )
 
 @import be.objectify.deadbolt.java.views.html._
@@ -43,7 +44,9 @@
             @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                 <div class="pull-right">
                     <a href="@controllers.core.routes.PortfolioEntryGovernanceController.changeLifeCycleProcess(portfolioEntry.id)"><span class="glyphicons glyphicons-retweet-2 glyphicons-panel"></span></a>
-                    &nbsp;<a href="@controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                    @if(hasPlanning) {
+                        &nbsp;<a href="@controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                    }
                 </div>
             }
         </div>

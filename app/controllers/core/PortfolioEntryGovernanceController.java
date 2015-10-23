@@ -96,7 +96,7 @@ public class PortfolioEntryGovernanceController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    
+
     private static Logger.ALogger log = Logger.of(PortfolioEntryGovernanceController.class);
 
     private static Form<PlannedDatesFormData> plannedDatesFormTemplate = Form.form(PlannedDatesFormData.class);
@@ -134,7 +134,10 @@ public class PortfolioEntryGovernanceController extends Controller {
 
         Table<GovernanceListView> filledTable = GovernanceListView.templateTable.fill(governanceListView, hideColumnsForGovernance);
 
-        return ok(views.html.core.portfolioentrygovernance.index.render(portfolioEntry, activeLifeCycleProcessInstance, filledTable));
+        // define if the initiative has a governance planning
+        boolean hasPlanning = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(id).size() > 0;
+
+        return ok(views.html.core.portfolioentrygovernance.index.render(portfolioEntry, activeLifeCycleProcessInstance, filledTable, hasPlanning));
     }
 
     /**
@@ -157,14 +160,13 @@ public class PortfolioEntryGovernanceController extends Controller {
         LifeCycleMilestone lifeCycleMilestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
 
         // get the milestone instances
-        List<LifeCycleMilestoneInstance> lifeCycleMilestoneInstances =
-                LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(id, milestoneId, "DESC");
+        List<LifeCycleMilestoneInstance> lifeCycleMilestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(id, milestoneId,
+                "DESC");
 
         // initiate the tables
         List<Table<MilestoneApproverListView>> approversTables = new ArrayList<Table<MilestoneApproverListView>>();
         List<Table<PortfolioEntryBudgetLineListView>> budgetLinesTables = new ArrayList<Table<PortfolioEntryBudgetLineListView>>();
-        List<Table<PortfolioEntryResourcePlanAllocatedResourceListView>> resourcesTables =
-                new ArrayList<Table<PortfolioEntryResourcePlanAllocatedResourceListView>>();
+        List<Table<PortfolioEntryResourcePlanAllocatedResourceListView>> resourcesTables = new ArrayList<Table<PortfolioEntryResourcePlanAllocatedResourceListView>>();
         List<Attachment> attachments = new ArrayList<Attachment>();
 
         // columns to hide
@@ -186,7 +188,8 @@ public class PortfolioEntryGovernanceController extends Controller {
 
             /** if exists, get the description document */
 
-            List<Attachment> attachment = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+            List<Attachment> attachment = FileAttachmentHelper.getFileAttachmentsForDisplay(LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id,
+                    getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
             if (attachment != null && attachment.size() > 0) {
                 attachments.add(attachment.get(0));
             } else {
@@ -230,23 +233,19 @@ public class PortfolioEntryGovernanceController extends Controller {
             if (lifeCycleMilestoneInstance.isPassed) {
 
                 // initiate the list view
-                List<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourceListView =
-                        new ArrayList<PortfolioEntryResourcePlanAllocatedResourceListView>();
+                List<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourceListView = new ArrayList<PortfolioEntryResourcePlanAllocatedResourceListView>();
 
                 // add the lines
                 SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
-                List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors =
-                        lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedActors;
+                List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedActors;
                 for (PortfolioEntryResourcePlanAllocatedActor resource : allocatedActors) {
                     sortableCollection.addObject(new DateSortableObject(resource.endDate, resource));
                 }
-                List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies =
-                        lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedCompetencies;
+                List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedCompetencies;
                 for (PortfolioEntryResourcePlanAllocatedCompetency resource : allocatedCompetencies) {
                     sortableCollection.addObject(new DateSortableObject(resource.endDate, resource));
                 }
-                List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits =
-                        lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedOrgUnits;
+                List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedOrgUnits;
                 for (PortfolioEntryResourcePlanAllocatedOrgUnit resource : allocatedOrgUnits) {
                     sortableCollection.addObject(new DateSortableObject(resource.endDate, resource));
                 }
@@ -255,19 +254,19 @@ public class PortfolioEntryGovernanceController extends Controller {
                         PortfolioEntryResourcePlanAllocatedActor allocatedActor = (PortfolioEntryResourcePlanAllocatedActor) dateSortableObject.getObject();
                         allocatedResourceListView.add(new PortfolioEntryResourcePlanAllocatedResourceListView(allocatedActor));
                     } else if (dateSortableObject.getObject() instanceof PortfolioEntryResourcePlanAllocatedOrgUnit) {
-                        PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit =
-                                (PortfolioEntryResourcePlanAllocatedOrgUnit) dateSortableObject.getObject();
+                        PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = (PortfolioEntryResourcePlanAllocatedOrgUnit) dateSortableObject
+                                .getObject();
                         allocatedResourceListView.add(new PortfolioEntryResourcePlanAllocatedResourceListView(allocatedOrgUnit));
                     } else if (dateSortableObject.getObject() instanceof PortfolioEntryResourcePlanAllocatedCompetency) {
-                        PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency =
-                                (PortfolioEntryResourcePlanAllocatedCompetency) dateSortableObject.getObject();
+                        PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency = (PortfolioEntryResourcePlanAllocatedCompetency) dateSortableObject
+                                .getObject();
                         allocatedResourceListView.add(new PortfolioEntryResourcePlanAllocatedResourceListView(allocatedCompetency));
                     }
                 }
 
                 // add the table
-                resourcesTables.add(PortfolioEntryResourcePlanAllocatedResourceListView.templateTable.fill(allocatedResourceListView,
-                        columnsToHideForResource));
+                resourcesTables
+                        .add(PortfolioEntryResourcePlanAllocatedResourceListView.templateTable.fill(allocatedResourceListView, columnsToHideForResource));
 
             } else {
                 resourcesTables.add(null);
@@ -313,8 +312,8 @@ public class PortfolioEntryGovernanceController extends Controller {
 
         // get the last planned date
         LifeCycleInstancePlanning planning = LifeCyclePlanningDao.getLCInstancePlanningAsLastByPE(id);
-        PlannedLifeCycleMilestoneInstance plannedDate =
-                LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id, milestoneId);
+        PlannedLifeCycleMilestoneInstance plannedDate = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id,
+                milestoneId);
 
         Form<RequestMilestoneFormData> form = requestMilestoneFormTemplate.fill(new RequestMilestoneFormData());
 
@@ -352,11 +351,11 @@ public class PortfolioEntryGovernanceController extends Controller {
 
             // get the last planned date
             LifeCycleInstancePlanning planning = LifeCyclePlanningDao.getLCInstancePlanningAsLastByPE(id);
-            PlannedLifeCycleMilestoneInstance plannedDate =
-                    LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id, milestoneId);
+            PlannedLifeCycleMilestoneInstance plannedDate = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id,
+                    milestoneId);
 
-            return badRequest(views.html.core.portfolioentrygovernance.milestone_request.render(portfolioEntry, lifeCycleMilestone, boundForm, status,
-                    plannedDate));
+            return badRequest(
+                    views.html.core.portfolioentrygovernance.milestone_request.render(portfolioEntry, lifeCycleMilestone, boundForm, status, plannedDate));
         }
 
         // get the form values
@@ -374,7 +373,7 @@ public class PortfolioEntryGovernanceController extends Controller {
                 String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 actor = ActorDao.getActorByUid(uid);
             } catch (Exception e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             if (actor == null) {
@@ -392,13 +391,12 @@ public class PortfolioEntryGovernanceController extends Controller {
                         ProcessTransitionRequest.class, processTransitionRequest.id);
             } catch (Exception e) {
                 processTransitionRequest.doDelete();
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             // notification
-            String url =
-                    controllers.core.routes.ProcessTransitionRequestController.processMilestoneRequest(requestMilestoneFormData.id,
-                            processTransitionRequest.id).url();
+            String url = controllers.core.routes.ProcessTransitionRequestController
+                    .processMilestoneRequest(requestMilestoneFormData.id, processTransitionRequest.id).url();
             for (Portfolio portfolio : portfolioEntry.portfolios) {
                 ActorDao.sendNotification(portfolio.manager, NotificationCategory.getByCode(Code.REQUEST_REVIEW), url,
                         "core.portfolio_entry_governance.milestone.request.approval.notification.title",
@@ -411,7 +409,8 @@ public class PortfolioEntryGovernanceController extends Controller {
             // if exists, add the the description document file
             if (FileAttachmentHelper.hasFileField("descriptionDocument")) {
                 try {
-                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", ProcessTransitionRequest.class, processTransitionRequest.id, getAttachmentManagerPlugin());
+                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", ProcessTransitionRequest.class, processTransitionRequest.id,
+                            getAttachmentManagerPlugin());
                 } catch (Exception e) {
                     Utilities.sendErrorFlashMessage(Msg.get("object.process_transition_request.description_document.error"));
                 }
@@ -469,13 +468,14 @@ public class PortfolioEntryGovernanceController extends Controller {
 
             } catch (Exception e) {
                 Ebean.rollbackTransaction();
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
             // if exists, add the the description document file
             if (FileAttachmentHelper.hasFileField("descriptionDocument")) {
                 try {
-                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id,getAttachmentManagerPlugin());
+                    FileAttachmentHelper.saveAsAttachement("descriptionDocument", LifeCycleMilestoneInstance.class, lifeCycleMilestoneInstance.id,
+                            getAttachmentManagerPlugin());
                 } catch (Exception e) {
                     Utilities.sendErrorFlashMessage(Msg.get("object.process_transition_request.description_document.error"));
                 }
@@ -546,8 +546,8 @@ public class PortfolioEntryGovernanceController extends Controller {
             Logger.debug(plannedDateFormData.plannedDateId + ": " + plannedDateFormData.plannedDate);
 
             if (plannedDateFormData.plannedDateId != null) {
-                PlannedLifeCycleMilestoneInstance updPlannedLifeCycleMilestoneInstance =
-                        LifeCyclePlanningDao.getPlannedLCMilestoneInstanceById(plannedDateFormData.plannedDateId);
+                PlannedLifeCycleMilestoneInstance updPlannedLifeCycleMilestoneInstance = LifeCyclePlanningDao
+                        .getPlannedLCMilestoneInstanceById(plannedDateFormData.plannedDateId);
                 plannedDateFormData.fill(updPlannedLifeCycleMilestoneInstance);
                 updPlannedLifeCycleMilestoneInstance.update();
             }
@@ -641,7 +641,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
         } catch (Exception e) {
             Ebean.rollbackTransaction();
-            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(),getI18nMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
         /*
@@ -653,9 +653,10 @@ public class PortfolioEntryGovernanceController extends Controller {
         for (Portfolio portfolio : portfolioEntry.portfolios) {
             actors.add(portfolio.manager);
         }
-        ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY), controllers.core.routes.PortfolioEntryGovernanceController
-                .index(portfolioEntry.id).url(), "core.portfolio_entry_governance.process.change.notification.title",
-                "core.portfolio_entry_governance.process.change.notification.message", portfolioEntry.getName(), lifeCycleProcess.getName());
+        ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
+                "core.portfolio_entry_governance.process.change.notification.title", "core.portfolio_entry_governance.process.change.notification.message",
+                portfolioEntry.getName(), lifeCycleProcess.getName());
 
         // success message
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.process.change.successful"));
