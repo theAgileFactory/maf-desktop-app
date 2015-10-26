@@ -1131,7 +1131,7 @@ object.portfolio_entry_planning_package.is_important.label=Wichtig
 object.portfolio_entry_planning_package.name.label=Name
 object.portfolio_entry_planning_package.description.label=Beschreibung
 object.portfolio_entry_planning_package.group.label=Gruppe
-object.portfolio_entry_planning_package.css_class.label=Farbe
+object.portfolio_entry_planning_package.type.label=Typ
 object.portfolio_entry_planning_package.status.label=Status
 object.portfolio_entry_planning_package.status.NOT_STARTED.label=Nicht gestartet
 object.portfolio_entry_planning_package.status.ON_GOING.label=Im Gange
@@ -1140,6 +1140,15 @@ object.portfolio_entry_planning_package.allocated_resources_days.label=Zugeteilt
 object.portfolio_entry_planning_package.timesheets_days.label=Arbeitstage
 object.portfolio_entry_planning_package.table.empty=Kein Planungspakete eingetragen
 object.portfolio_entry_planning_package.pattern.table.empty=Kein Planungspaket-Muster.
+
+#----------------------
+# portfolioEntryPlanningType
+#----------------------
+
+object.portfolio_entry_planning_package_type.name.label=Name
+object.portfolio_entry_planning_package_type.is_active.label=Aktiv
+object.portfolio_entry_planning_package_type.css_class.label=Farbe
+object.portfolio_entry_planning_package_type.table.empty=Kein Ereignis eingetragen
 
 #----------------------
 # portfolioEntryPlanningPackageGroup
@@ -2868,6 +2877,7 @@ admin.configuration.reference_data.requirements.priorities.title=Priorität
 admin.configuration.reference_data.requirements.severities.title=Gewichtung
 admin.configuration.reference_data.planning_packages.title=Planungspaket
 admin.configuration.reference_data.planning_packages.groups.title=Paketgruppe
+admin.configuration.reference_data.planning_packages.types.title=de: Package types
 admin.configuration.reference_data.planning_packages.patterns.title=Paket-Muster
 admin.configuration.reference_data.register.title=Berichterstattung
 admin.configuration.reference_data.register.risktypes.title=Risiko Typen
@@ -2969,6 +2979,12 @@ admin.configuration.reference_data.package_group.manage.title=Planungseinheit Gr
 admin.configuration.reference_data.package_group.add.successful=Gruppe hinzugefügt.
 admin.configuration.reference_data.package_group.edit.successful=Gruppe aktualisiert.
 admin.configuration.reference_data.package_group.delete.successful=Gruppe entfernt.
+
+#manage package type
+admin.configuration.reference_data.package_type.manage.title=de: Manage a package type
+admin.configuration.reference_data.package_type.add.successful=de: The package type has been added successfully.
+admin.configuration.reference_data.package_type.edit.successful=de: The package type has been updated.
+admin.configuration.reference_data.package_type.delete.successful=de: The package type has been removed.
 
 #manage package pattern
 admin.configuration.reference_data.package_pattern.manage.title=Packet-Muster bearbeiten

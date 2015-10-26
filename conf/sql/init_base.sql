@@ -1727,6 +1727,32 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_r
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.amber', 'fr', 'Le projet est associé à des incidents ou risques qui sont connus et modérés.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.amber', 'de', 'Projekt hat bekannte Risiken und/oder Probleme welche berücksichtig werden.');
 
+-- Table portfolio_entry_planning_package_type
+INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.default', '1', 'default');
+INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.info', '1', 'info');
+INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.primary', '1', 'primary');
+INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.success', '1', 'success');
+INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.warning', '1', 'warning');
+INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.danger', '1', 'danger');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.default', 'en', 'Gray');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.default', 'fr', 'Gris');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.default', 'de', 'Grau');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.info', 'en', 'Cyan');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.info', 'fr', 'Cyan');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.info', 'de', 'Türkis');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.primary', 'en', 'Blue');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.primary', 'fr', 'Bleu');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.primary', 'de', 'Blau');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.success', 'en', 'Green');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.success', 'fr', 'Vert');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.success', 'de', 'Grün');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.warning', 'en', 'Amber');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.warning', 'fr', 'Orange');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.warning', 'de', 'Orange');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.danger', 'en', 'Red');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.danger', 'fr', 'Rouge');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.danger', 'de', 'Rot');
+
 -- Table portfolio_entry_risk_type
 insert into portfolio_entry_risk_type(id, name, description, deleted, selectable, last_update) values(1, 'portfolio_entry_risk_type.name.budget', 'portfolio_entry_risk_type.description.budget', 0, 1, CURRENT_TIMESTAMP);
 insert into portfolio_entry_risk_type(id, name, description, deleted, selectable, last_update) values(2, 'portfolio_entry_risk_type.name.resource', 'portfolio_entry_risk_type.description.resource', 0, 1, CURRENT_TIMESTAMP);

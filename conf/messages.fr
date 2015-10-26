@@ -1131,7 +1131,7 @@ object.portfolio_entry_planning_package.is_important.label=Important
 object.portfolio_entry_planning_package.name.label=Nom
 object.portfolio_entry_planning_package.description.label=Description
 object.portfolio_entry_planning_package.group.label=Groupe
-object.portfolio_entry_planning_package.css_class.label=Couleur
+object.portfolio_entry_planning_package.type.label=Type
 object.portfolio_entry_planning_package.status.label=Statut
 object.portfolio_entry_planning_package.status.NOT_STARTED.label=Non commencé
 object.portfolio_entry_planning_package.status.ON_GOING.label=En cours
@@ -1140,6 +1140,15 @@ object.portfolio_entry_planning_package.allocated_resources_days.label=Jours des
 object.portfolio_entry_planning_package.timesheets_days.label=Jours des feuilles de temps
 object.portfolio_entry_planning_package.table.empty=Il n''existe aucun livrable.
 object.portfolio_entry_planning_package.pattern.table.empty=Il n''existe aucun modèle de livrable.
+
+#----------------------
+# portfolioEntryPlanningType
+#----------------------
+
+object.portfolio_entry_planning_package_type.name.label=Nom
+object.portfolio_entry_planning_package_type.is_active.label=Actif
+object.portfolio_entry_planning_package_type.css_class.label=Couleur
+object.portfolio_entry_planning_package_type.table.empty=Aucun type
 
 #----------------------
 # portfolioEntryPlanningPackageGroup
@@ -2869,6 +2878,7 @@ admin.configuration.reference_data.requirements.priorities.title=Priorités
 admin.configuration.reference_data.requirements.severities.title=Gravités
 admin.configuration.reference_data.planning_packages.title=Livrables
 admin.configuration.reference_data.planning_packages.groups.title=Groupes de livrables
+admin.configuration.reference_data.planning_packages.types.title=Types de livrables
 admin.configuration.reference_data.planning_packages.patterns.title=Modèles de livrables
 admin.configuration.reference_data.register.title=Registres
 admin.configuration.reference_data.register.risktypes.title=Types de risque
@@ -2970,6 +2980,12 @@ admin.configuration.reference_data.package_group.manage.title=Gérer un groupe d
 admin.configuration.reference_data.package_group.add.successful=Le groupe de livrables a été ajouté.
 admin.configuration.reference_data.package_group.edit.successful=Le groupe de livrables a été mis à jour.
 admin.configuration.reference_data.package_group.delete.successful=Le groupe de livrables a été supprimé.
+
+#manage package type
+admin.configuration.reference_data.package_type.manage.title=Gérer un type de livrables
+admin.configuration.reference_data.package_type.add.successful=Le type de livrables a été ajouté.
+admin.configuration.reference_data.package_type.edit.successful=Le type de livrables a été mis à jour.
+admin.configuration.reference_data.package_type.delete.successful=Le type de livrables a été supprimé.
 
 #manage package pattern
 admin.configuration.reference_data.package_pattern.manage.title=Gérer un modèle de livrables
