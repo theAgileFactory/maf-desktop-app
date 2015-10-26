@@ -698,7 +698,7 @@ authentication.no_account=Aucun compte valide trouvé, veuillez contacter votre 
 #----------------------
 
 licenses_management.cannot_create_portfolio_entry=Impossible de créer une nouvelle initiative car vous avez consommé toutes les licences disponibles. Veuillez contacter votre administrateur pour plus d''information.
-licenses_management.cannot_create_user=Impossible de créer une nouvel utilisateur car vous avez consommé toutes les licences disponibles. Veuillez contacter votre administrateur pour plus d''information.
+licenses_management.cannot_create_user=Impossible de créer une nouvel utilisateur (excepté un VIEWER) car vous avez consommé toutes les licences disponibles. Veuillez contacter votre administrateur pour plus d''information.
 
 #----------------------
 # data syndication

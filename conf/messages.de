@@ -698,7 +698,7 @@ authentication.no_account=Kein Benutzerkonto gefunden, bitte wenden Sie sich an 
 #----------------------
 
 licenses_management.cannot_create_portfolio_entry=Neue Initiative kann nicht angelegt werden, Ihre Lizenz ist aufgebraucht. Bitte wenden Sie sich an den Administrator für weitere Auskünfte.
-licenses_management.cannot_create_user=Neuer Benutzer kann nicht angelegt werden, Ihre Lizenz ist aufgebraucht. Bitte wenden Sie sich an den Administrator für weitere Auskünfte.
+licenses_management.cannot_create_user=de: This is not possible to create a new user (except a VIEWER) because you have consumed all available licenses. Please contact your administrator for more information.
 
 #----------------------
 # data syndication

@@ -686,7 +686,7 @@ authentication.no_account=No account found, please contact your administrator
 #----------------------
 
 licenses_management.cannot_create_portfolio_entry=This is not possible to create a new initiative because you have consumed all available licenses. Please contact your administrator for more information.
-licenses_management.cannot_create_user=This is not possible to create a new user because you have consumed all available licenses. Please contact your administrator for more information.
+licenses_management.cannot_create_user=This is not possible to create a new user (except a VIEWER) because you have consumed all available licenses. Please contact your administrator for more information.
 
 #----------------------
 # data syndication
