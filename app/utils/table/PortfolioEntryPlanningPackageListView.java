@@ -27,7 +27,6 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Color;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
@@ -41,6 +40,7 @@ import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackageGroup;
+import models.pmo.PortfolioEntryPlanningPackageType;
 
 /**
  * A portfolio entry planning package list view is used to display an portfolio
@@ -80,8 +80,14 @@ public class PortfolioEntryPlanningPackageListView {
                             new NoneFilterComponent(), false, false, SortStatusType.NONE);
                 }
 
-                addColumnConfiguration("color", "color", "object.portfolio_entry_planning_package.css_class.label", new NoneFilterComponent(), false, false,
-                        SortStatusType.NONE);
+                ISelectableValueHolderCollection<Long> types = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH();
+                if (types != null && types.getValues().size() > 0) {
+                    addColumnConfiguration("type", "portfolioEntryPlanningPackageType.id", "object.portfolio_entry_planning_package.type.label",
+                            new SelectFilterComponent(types.getValues().iterator().next().getValue(), types), false, false, SortStatusType.NONE);
+                } else {
+                    addColumnConfiguration("type", "portfolioEntryPlanningPackageType.id", "object.portfolio_entry_planning_package.type.label",
+                            new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                }
 
                 ISelectableValueHolderCollection<String> status = PortfolioEntryPlanningController.getPackageStatusAsValueHolderCollection();
                 if (status != null && status.getValues().size() > 0) {
@@ -135,8 +141,13 @@ public class PortfolioEntryPlanningPackageListView {
                     }
                 });
 
-                addColumn("color", "color", "object.portfolio_entry_planning_package.css_class.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("color", new ObjectFormatter<PortfolioEntryPlanningPackageListView>());
+                addColumn("type", "type", "object.portfolio_entry_planning_package.type.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryPlanningPackageListView>() {
+                    @Override
+                    public String apply(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView, Object value) {
+                        return views.html.modelsparts.display_portfolio_entry_planning_package_type.render(portfolioEntryPlanningPackageListView.type).body();
+                    }
+                });
 
                 addColumn("status", "status", "object.portfolio_entry_planning_package.status.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("status", new ObjectFormatter<PortfolioEntryPlanningPackageListView>());
@@ -206,7 +217,7 @@ public class PortfolioEntryPlanningPackageListView {
     public Date startDate;
     public Date endDate;
     public PortfolioEntryPlanningPackageGroup group;
-    public String color;
+    public PortfolioEntryPlanningPackageType type;
     public String status;
     public BigDecimal allocatedResourcesDays;
     public BigDecimal timesheetsDays;
@@ -225,7 +236,7 @@ public class PortfolioEntryPlanningPackageListView {
         this.portfolioEntryId = portfolioEntryPlanningPackage.portfolioEntry.id;
 
         this.name = portfolioEntryPlanningPackage.name;
-        this.color = Color.getLabel(portfolioEntryPlanningPackage.cssClass, messagesPlugin);
+        this.type = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType;
 
         this.startDate = portfolioEntryPlanningPackage.startDate;
 

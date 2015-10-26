@@ -22,11 +22,14 @@ import java.util.List;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 
+import framework.utils.CssValueForValueHolder;
+import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackageGroup;
 import models.pmo.PortfolioEntryPlanningPackagePattern;
+import models.pmo.PortfolioEntryPlanningPackageType;
 
 /**
  * DAO for the {@link PortfolioEntryPlanningPackage} and
@@ -44,6 +47,9 @@ public abstract class PortfolioEntryPlanningPackageDao {
 
     public static Finder<Long, PortfolioEntryPlanningPackagePattern> findPortfolioEntryPlanningPackagePattern = new Finder<>(
             PortfolioEntryPlanningPackagePattern.class);
+
+    public static Finder<Long, PortfolioEntryPlanningPackageType> findPortfolioEntryPlanningPackageType = new Finder<>(
+            PortfolioEntryPlanningPackageType.class);
 
     /**
      * Default constructor.
@@ -247,6 +253,52 @@ public abstract class PortfolioEntryPlanningPackageDao {
         } else {
             return lastPackagePattern.order;
         }
+    }
+
+    /**
+     * Get a portfolio entry planning package type by id.
+     * 
+     * @param id
+     *            the planning package type id
+     */
+    public static PortfolioEntryPlanningPackageType getPEPlanningPackageTypeById(Long id) {
+        return findPortfolioEntryPlanningPackageType.where().eq("deleted", false).eq("id", id).findUnique();
+    }
+
+    /**
+     * Get all types.
+     */
+    public static List<PortfolioEntryPlanningPackageType> getPEPlanningPackageTypeAsList() {
+        return findPortfolioEntryPlanningPackageType.where().eq("deleted", false).findList();
+    }
+
+    /**
+     * Get the active types.
+     */
+    public static List<PortfolioEntryPlanningPackageType> getPEPlanningPackageTypeActiveAsList() {
+        return findPortfolioEntryPlanningPackageType.where().eq("deleted", false).eq("isActive", true).findList();
+    }
+
+    /**
+     * Get active types as a value holder collection.
+     */
+    public static ISelectableValueHolderCollection<Long> getPEPlanningPackageTypeActiveAsVH() {
+        return new DefaultSelectableValueHolderCollection<>(getPEPlanningPackageTypeActiveAsList());
+    }
+
+    /**
+     * Get active types as a value holder collection with the CSS
+     * implementation.
+     */
+    public static DefaultSelectableValueHolderCollection<CssValueForValueHolder> getPEPlanningPackageTypeActiveAsCssVH() {
+        DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryReportStatusTypes;
+        selectablePortfolioEntryReportStatusTypes = new DefaultSelectableValueHolderCollection<>();
+        for (PortfolioEntryPlanningPackageType type : getPEPlanningPackageTypeActiveAsList()) {
+            selectablePortfolioEntryReportStatusTypes.add(new DefaultSelectableValueHolder<>(
+                    new CssValueForValueHolder(String.valueOf(type.id), type.getName(), type.cssClass), String.valueOf(type.id)));
+
+        }
+        return selectablePortfolioEntryReportStatusTypes;
     }
 
 }

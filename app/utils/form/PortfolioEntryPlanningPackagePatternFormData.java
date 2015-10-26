@@ -17,6 +17,7 @@
  */
 package utils.form;
 
+import dao.pmo.PortfolioEntryPlanningPackageDao;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntryPlanningPackagePattern;
 import play.data.validation.Constraints.MaxLength;
@@ -42,7 +43,7 @@ public class PortfolioEntryPlanningPackagePatternFormData {
     public String description;
 
     @Required
-    public String cssClass;
+    public Long type;
 
     public boolean isImportant;
 
@@ -65,7 +66,7 @@ public class PortfolioEntryPlanningPackagePatternFormData {
 
         this.name = packagePattern.name;
         this.description = packagePattern.description;
-        this.cssClass = packagePattern.cssClass;
+        this.type = packagePattern.portfolioEntryPlanningPackageType.id;
         this.isImportant = packagePattern.isImportant;
 
     }
@@ -80,7 +81,7 @@ public class PortfolioEntryPlanningPackagePatternFormData {
 
         packagePattern.name = this.name;
         packagePattern.description = this.description;
-        packagePattern.cssClass = this.cssClass;
+        packagePattern.portfolioEntryPlanningPackageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(this.type);
         packagePattern.isImportant = this.isImportant;
 
     }

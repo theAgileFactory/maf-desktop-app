@@ -16,7 +16,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    packageGroupsTable: framework.utils.Table[utils.table.PortfolioEntryPlanningPackageGroupListView]
+    packageGroupsTable: framework.utils.Table[utils.table.PortfolioEntryPlanningPackageGroupListView],
+    packageTypesTable: framework.utils.Table[utils.table.PortfolioEntryPlanningPackageTypeListView]
 )
 
 @import helper._
@@ -46,6 +47,21 @@
     
         <div class="panel-body">
             @parts.table.tableview(packageGroupsTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.planning_packages.types.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationPlanningPackageController.managePlanningPackageType().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(packageTypesTable)
         </div>
     </div>
     

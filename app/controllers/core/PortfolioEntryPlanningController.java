@@ -56,7 +56,7 @@ import framework.services.ServiceStaticAccessor;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.Color;
+import framework.utils.CssValueForValueHolder;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
@@ -555,12 +555,12 @@ public class PortfolioEntryPlanningController extends Controller {
                     if (from != null) {
 
                         to = JqueryGantt.cleanToDate(from, to);
-                        cssClass = planningPackage.cssClass;
+                        cssClass = planningPackage.portfolioEntryPlanningPackageType.cssClass;
 
                     } else {
 
                         from = to;
-                        cssClass = "diamond diamond-" + planningPackage.cssClass;
+                        cssClass = "diamond diamond-" + planningPackage.portfolioEntryPlanningPackageType.cssClass;
 
                     }
 
@@ -772,7 +772,10 @@ public class PortfolioEntryPlanningController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(planningPackageForm, PortfolioEntryPlanningPackage.class, null);
         }
 
-        return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
+        DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryPlanningPackageTypes = PortfolioEntryPlanningPackageDao
+                .getPEPlanningPackageTypeActiveAsCssVH();
+
+        return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, selectablePortfolioEntryPlanningPackageTypes,
                 planningPackageForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
     }
 
@@ -790,10 +793,12 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryPlanningPackageTypes = PortfolioEntryPlanningPackageDao
+                .getPEPlanningPackageTypeActiveAsCssVH();
+
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class)) {
-            return ok(
-                    views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
-                            boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, selectablePortfolioEntryPlanningPackageTypes, boundForm,
+                    PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
 
         PortfolioEntryPlanningPackageFormData planningPackageFormData = boundForm.get();
@@ -802,9 +807,8 @@ public class PortfolioEntryPlanningController extends Controller {
         if (!planningPackageFormData.startDate.equals("") && planningPackageFormData.endDate.equals("")) {
             // the start date cannot be filled alone
             boundForm.reject("startDate", Msg.get("object.portfolio_entry_planning_package.start_date.invalid"));
-            return ok(
-                    views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, Color.getColorsAsValueHolderCollection(getMessagesPlugin()),
-                            boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, selectablePortfolioEntryPlanningPackageTypes, boundForm,
+                    PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
         if (!planningPackageFormData.startDate.equals("") && !planningPackageFormData.endDate.equals("")) {
             // the end date should be after the start date
@@ -812,9 +816,8 @@ public class PortfolioEntryPlanningController extends Controller {
                 if (Utilities.getDateFormat(null).parse(planningPackageFormData.startDate)
                         .after(Utilities.getDateFormat(null).parse(planningPackageFormData.endDate))) {
                     boundForm.reject("endDate", Msg.get("object.portfolio_entry_planning_package.end_date.invalid"));
-                    return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry,
-                            Color.getColorsAsValueHolderCollection(getMessagesPlugin()), boundForm,
-                            PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+                    return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, selectablePortfolioEntryPlanningPackageTypes,
+                            boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
                 }
             } catch (ParseException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());

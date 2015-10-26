@@ -19,16 +19,16 @@ package utils.form;
 
 import java.text.ParseException;
 
+import dao.pmo.PortfolioEntryPlanningPackageDao;
+import framework.utils.FileField;
+import framework.utils.FileFieldOptionalValidator;
+import framework.utils.Utilities;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackage.Status;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
-import dao.pmo.PortfolioEntryPlanningPackageDao;
-import framework.utils.FileField;
-import framework.utils.FileFieldOptionalValidator;
-import framework.utils.Utilities;
 
 /**
  * An portfolio entry planning package form data is used to manage the fields
@@ -55,7 +55,7 @@ public class PortfolioEntryPlanningPackageFormData {
     public String endDate;
 
     @Required
-    public String cssClass;
+    public Long type;
 
     public boolean isImportant;
 
@@ -87,14 +87,13 @@ public class PortfolioEntryPlanningPackageFormData {
 
         this.name = portfolioEntryPlanningPackage.name;
         this.description = portfolioEntryPlanningPackage.description;
-        this.startDate =
-                portfolioEntryPlanningPackage.startDate != null ? Utilities.getDateFormat(null).format(portfolioEntryPlanningPackage.startDate) : null;
+        this.startDate = portfolioEntryPlanningPackage.startDate != null ? Utilities.getDateFormat(null).format(portfolioEntryPlanningPackage.startDate)
+                : null;
         this.endDate = portfolioEntryPlanningPackage.endDate != null ? Utilities.getDateFormat(null).format(portfolioEntryPlanningPackage.endDate) : null;
-        this.cssClass = portfolioEntryPlanningPackage.cssClass;
+        this.type = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType.id;
         this.isImportant = portfolioEntryPlanningPackage.isImportant;
-        this.portfolioEntryPlanningPackageGroup =
-                portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup != null ? portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup.id
-                        : null;
+        this.portfolioEntryPlanningPackageGroup = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup != null
+                ? portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup.id : null;
         this.status = portfolioEntryPlanningPackage.status.name();
 
     }
@@ -122,13 +121,12 @@ public class PortfolioEntryPlanningPackageFormData {
             portfolioEntryPlanningPackage.endDate = null;
         }
 
-        portfolioEntryPlanningPackage.cssClass = this.cssClass;
+        portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(this.type);
 
         portfolioEntryPlanningPackage.isImportant = this.isImportant;
 
-        portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup =
-                this.portfolioEntryPlanningPackageGroup != null ? PortfolioEntryPlanningPackageDao
-                        .getPEPlanningPackageGroupById(this.portfolioEntryPlanningPackageGroup) : null;
+        portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup = this.portfolioEntryPlanningPackageGroup != null
+                ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupById(this.portfolioEntryPlanningPackageGroup) : null;
 
         portfolioEntryPlanningPackage.status = Status.valueOf(this.status);
 

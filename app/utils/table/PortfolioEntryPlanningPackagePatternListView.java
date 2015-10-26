@@ -19,16 +19,16 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.PortfolioEntryPlanningPackagePattern;
 import constants.IMafConstants;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Color;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.PortfolioEntryPlanningPackagePattern;
+import models.pmo.PortfolioEntryPlanningPackageType;
 
 /**
  * A portfolio entry planning package pattern list view is used to display a
@@ -49,10 +49,9 @@ public class PortfolioEntryPlanningPackagePatternListView {
                     return "<a href=\""
                             + controllers.admin.routes.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternListView.id, false)
                                     .url()
-                            + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;"
-                            + "<a href=\""
-                            + controllers.admin.routes.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternListView.id, true)
-                                    .url() + "\"><span class=\"glyphicons glyphicons-up-arrow\"></span></a>";
+                            + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;" + "<a href=\""
+                            + controllers.admin.routes.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternListView.id, true).url()
+                            + "\"><span class=\"glyphicons glyphicons-up-arrow\"></span></a>";
                 }
             });
             setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -66,18 +65,24 @@ public class PortfolioEntryPlanningPackagePatternListView {
             addColumn("description", "description", "object.portfolio_entry_planning_package.description.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
 
-            addColumn("color", "color", "object.portfolio_entry_planning_package.css_class.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("color", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
+            addColumn("type", "type", "object.portfolio_entry_planning_package.type.label", Table.ColumnDef.SorterType.NONE);
+            setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
+                @Override
+                public String apply(PortfolioEntryPlanningPackagePatternListView portfolioEntryPlanningPackagePatternListView, Object value) {
+                    return views.html.modelsparts.display_portfolio_entry_planning_package_type.render(portfolioEntryPlanningPackagePatternListView.type)
+                            .body();
+                }
+            });
 
             addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackagePatternListView>(IMafConstants.EDIT_URL_FORMAT,
                     new StringFormatFormatter.Hook<PortfolioEntryPlanningPackagePatternListView>() {
-                        @Override
-                        public String convert(PortfolioEntryPlanningPackagePatternListView packagePatternListView) {
-                            return controllers.admin.routes.ConfigurationPlanningPackageController.managePackagePattern(
-                                    packagePatternListView.packageGroupId, packagePatternListView.id).url();
-                        }
-                    }));
+                @Override
+                public String convert(PortfolioEntryPlanningPackagePatternListView packagePatternListView) {
+                    return controllers.admin.routes.ConfigurationPlanningPackageController
+                            .managePackagePattern(packagePatternListView.packageGroupId, packagePatternListView.id).url();
+                }
+            }));
             setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
             setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
@@ -85,8 +90,8 @@ public class PortfolioEntryPlanningPackagePatternListView {
             setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
                 @Override
                 public String apply(PortfolioEntryPlanningPackagePatternListView packagePatternListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
                     String url = controllers.admin.routes.ConfigurationPlanningPackageController.deletePackagePattern(packagePatternListView.id).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 }
@@ -114,7 +119,7 @@ public class PortfolioEntryPlanningPackagePatternListView {
 
     public boolean isImportant;
 
-    public String color;
+    public PortfolioEntryPlanningPackageType type;
 
     /**
      * Construct a list view with a DB entry.
@@ -124,9 +129,7 @@ public class PortfolioEntryPlanningPackagePatternListView {
      * @param messagesPlugin
      *            the i18n service
      */
-    public PortfolioEntryPlanningPackagePatternListView(
-            PortfolioEntryPlanningPackagePattern packagePattern,
-            II18nMessagesPlugin messagesPlugin) {
+    public PortfolioEntryPlanningPackagePatternListView(PortfolioEntryPlanningPackagePattern packagePattern, II18nMessagesPlugin messagesPlugin) {
 
         this.id = packagePattern.id;
         this.packageGroupId = packagePattern.portfolioEntryPlanningPackageGroup.id;
@@ -134,7 +137,7 @@ public class PortfolioEntryPlanningPackagePatternListView {
         this.name = packagePattern.name;
         this.description = packagePattern.description;
         this.isImportant = packagePattern.isImportant;
-        this.color = Color.getLabel(packagePattern.cssClass, messagesPlugin);
+        this.type = packagePattern.portfolioEntryPlanningPackageType;
 
     }
 }

@@ -17,7 +17,7 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    selectableCssClasses: framework.utils.ISelectableValueHolderCollection[framework.utils.CssValueForValueHolder],
+    selectablePortfolioEntryPlanningPackageTypes: framework.utils.ISelectableValueHolderCollection[framework.utils.CssValueForValueHolder],
     planningPackageForm: Form[utils.form.PortfolioEntryPlanningPackageFormData],
     groups: framework.utils.ISelectableValueHolderCollection[_],
     status: framework.utils.ISelectableValueHolderCollection[_]
@@ -84,7 +84,7 @@
                         
                         @parts.dateinput(planningPackageForm("endDate"), parts.Msg.asString("object.portfolio_entry_planning_package.end_date.label"))
                         
-                        @parts.radiobuttongroup(planningPackageForm("cssClass"), parts.Msg.asString("object.portfolio_entry_planning_package.css_class.label"), selectableCssClasses)
+                        @parts.radiobuttongroup(planningPackageForm("type"), parts.Msg.asString("object.portfolio_entry_planning_package.type.label"), selectablePortfolioEntryPlanningPackageTypes)
                         
                         @parts.dropdownlist(planningPackageForm("status"), parts.Msg.asString("object.portfolio_entry_planning_package.status.label"), status, null, false)
                         

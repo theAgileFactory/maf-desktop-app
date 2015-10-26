@@ -22,15 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.pmo.PortfolioEntryPlanningPackageGroup;
-import models.pmo.PortfolioEntryPlanningPackagePattern;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import utils.form.PortfolioEntryPlanningPackageGroupFormData;
-import utils.form.PortfolioEntryPlanningPackagePatternFormData;
-import utils.table.PortfolioEntryPlanningPackageGroupListView;
-import utils.table.PortfolioEntryPlanningPackagePatternListView;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
@@ -38,9 +29,23 @@ import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
+import framework.utils.CssValueForValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.pmo.PortfolioEntryPlanningPackageGroup;
+import models.pmo.PortfolioEntryPlanningPackagePattern;
+import models.pmo.PortfolioEntryPlanningPackageType;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import utils.form.PortfolioEntryPlanningPackageGroupFormData;
+import utils.form.PortfolioEntryPlanningPackagePatternFormData;
+import utils.form.PortfolioEntryPlanningPackageTypeFormData;
+import utils.table.PortfolioEntryPlanningPackageGroupListView;
+import utils.table.PortfolioEntryPlanningPackagePatternListView;
+import utils.table.PortfolioEntryPlanningPackageTypeListView;
 
 /**
  * Manage the planning packages reference data.
@@ -54,7 +59,8 @@ public class ConfigurationPlanningPackageController extends Controller {
     private static Form<PortfolioEntryPlanningPackageGroupFormData> packageGroupFormTemplate = Form.form(PortfolioEntryPlanningPackageGroupFormData.class);
     private static Form<PortfolioEntryPlanningPackagePatternFormData> packagePatternFormTemplate = Form
             .form(PortfolioEntryPlanningPackagePatternFormData.class);
-    
+    private static Form<PortfolioEntryPlanningPackageTypeFormData> packageTypeFormTemplate = Form.form(PortfolioEntryPlanningPackageTypeFormData.class);
+
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
 
@@ -63,6 +69,8 @@ public class ConfigurationPlanningPackageController extends Controller {
      */
     public Result list() {
 
+        // groups
+
         List<PortfolioEntryPlanningPackageGroup> packageGroups = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupAsList();
 
         List<PortfolioEntryPlanningPackageGroupListView> packageGroupListView = new ArrayList<PortfolioEntryPlanningPackageGroupListView>();
@@ -70,10 +78,21 @@ public class ConfigurationPlanningPackageController extends Controller {
             packageGroupListView.add(new PortfolioEntryPlanningPackageGroupListView(packageGroup));
         }
 
-        Table<PortfolioEntryPlanningPackageGroupListView> packageGroupsTable =
-                PortfolioEntryPlanningPackageGroupListView.templateTable.fill(packageGroupListView);
+        Table<PortfolioEntryPlanningPackageGroupListView> packageGroupsTable = PortfolioEntryPlanningPackageGroupListView.templateTable
+                .fill(packageGroupListView);
 
-        return ok(views.html.admin.config.datareference.planning_package.list.render(packageGroupsTable));
+        // types
+        List<PortfolioEntryPlanningPackageType> packagesTypes = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeAsList();
+
+        List<PortfolioEntryPlanningPackageTypeListView> packagesTypesListView = new ArrayList<PortfolioEntryPlanningPackageTypeListView>();
+        for (PortfolioEntryPlanningPackageType packagesType : packagesTypes) {
+            packagesTypesListView.add(new PortfolioEntryPlanningPackageTypeListView(packagesType, getI18nMessagesPlugin()));
+        }
+
+        Table<PortfolioEntryPlanningPackageTypeListView> packagesTypesTable = PortfolioEntryPlanningPackageTypeListView.templateTable
+                .fill(packagesTypesListView);
+
+        return ok(views.html.admin.config.datareference.planning_package.list.render(packageGroupsTable, packagesTypesTable));
     }
 
     /**
@@ -94,8 +113,8 @@ public class ConfigurationPlanningPackageController extends Controller {
             packagePatternListView.add(new PortfolioEntryPlanningPackagePatternListView(packagePattern, getI18nMessagesPlugin()));
         }
 
-        Table<PortfolioEntryPlanningPackagePatternListView> packagePatternsTable =
-                PortfolioEntryPlanningPackagePatternListView.templateTable.fill(packagePatternListView);
+        Table<PortfolioEntryPlanningPackagePatternListView> packagePatternsTable = PortfolioEntryPlanningPackagePatternListView.templateTable
+                .fill(packagePatternListView);
 
         return ok(views.html.admin.config.datareference.planning_package.package_group_view.render(packageGroup, packagePatternsTable));
 
@@ -186,6 +205,92 @@ public class ConfigurationPlanningPackageController extends Controller {
     }
 
     /**
+     * Edit or create a planning package type.
+     * 
+     * @param planningPackageTypeId
+     *            the planning package type id (set 0 for create case)
+     */
+    public Result managePlanningPackageType(Long planningPackageTypeId) {
+
+        Form<PortfolioEntryPlanningPackageTypeFormData> packageTypeForm = packageTypeFormTemplate;
+
+        // edit case: inject values
+        if (!planningPackageTypeId.equals(Long.valueOf(0))) {
+
+            PortfolioEntryPlanningPackageType planningPackageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(planningPackageTypeId);
+
+            packageTypeForm = packageTypeFormTemplate.fill(new PortfolioEntryPlanningPackageTypeFormData(planningPackageType, getI18nMessagesPlugin()));
+
+        }
+
+        return ok(views.html.admin.config.datareference.planning_package.package_type_manage.render(packageTypeForm,
+                Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
+
+    }
+
+    /**
+     * Process the edit/create form of a planning package type.
+     */
+    public Result processManagePlanningPackageType() {
+
+        // bind the form
+        Form<PortfolioEntryPlanningPackageTypeFormData> boundForm = packageTypeFormTemplate.bindFromRequest();
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.admin.config.datareference.planning_package.package_type_manage.render(boundForm,
+                    Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
+        }
+
+        PortfolioEntryPlanningPackageTypeFormData planningPackageTypeFormData = boundForm.get();
+
+        PortfolioEntryPlanningPackageType packageType = null;
+
+        if (planningPackageTypeFormData.id == null) { // create case
+
+            packageType = new PortfolioEntryPlanningPackageType();
+
+            planningPackageTypeFormData.fill(packageType);
+            packageType.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_type.add.successful"));
+
+        } else { // edit case
+
+            packageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(planningPackageTypeFormData.id);
+
+            planningPackageTypeFormData.fill(packageType);
+            packageType.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_type.edit.successful"));
+        }
+
+        planningPackageTypeFormData.name.persist(getI18nMessagesPlugin());
+
+        RootApiController.flushFilters();
+
+        return redirect(controllers.admin.routes.ConfigurationPlanningPackageController.list());
+    }
+
+    /**
+     * Delete a planning package type.
+     * 
+     * @param planningPackageTypeId
+     *            the planning package type id
+     */
+    public Result deletePlanningPackageType(Long planningPackageTypeId) {
+
+        PortfolioEntryPlanningPackageType packageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(planningPackageTypeId);
+
+        packageType.doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_type.delete.successful"));
+
+        RootApiController.flushFilters();
+
+        return redirect(controllers.admin.routes.ConfigurationPlanningPackageController.list());
+    }
+
+    /**
      * Change the order of a package pattern.
      * 
      * @param packagePatternId
@@ -199,13 +304,11 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         PortfolioEntryPlanningPackagePattern packagePatternToReverse = null;
         if (isDecrement) {
-            packagePatternToReverse =
-                    PortfolioEntryPlanningPackageDao.getPEPlanningPackagePatternPreviousByGroup(packagePattern.portfolioEntryPlanningPackageGroup.id,
-                            packagePattern.order);
+            packagePatternToReverse = PortfolioEntryPlanningPackageDao
+                    .getPEPlanningPackagePatternPreviousByGroup(packagePattern.portfolioEntryPlanningPackageGroup.id, packagePattern.order);
         } else {
-            packagePatternToReverse =
-                    PortfolioEntryPlanningPackageDao.getPEPlanningPackagePatternNextByGroup(packagePattern.portfolioEntryPlanningPackageGroup.id,
-                            packagePattern.order);
+            packagePatternToReverse = PortfolioEntryPlanningPackageDao
+                    .getPEPlanningPackagePatternNextByGroup(packagePattern.portfolioEntryPlanningPackageGroup.id, packagePattern.order);
         }
 
         if (packagePatternToReverse != null) {
@@ -220,8 +323,8 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         }
 
-        return redirect(controllers.admin.routes.ConfigurationPlanningPackageController
-                .viewPackageGroup(packagePattern.portfolioEntryPlanningPackageGroup.id));
+        return redirect(
+                controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packagePattern.portfolioEntryPlanningPackageGroup.id));
 
     }
 
@@ -250,8 +353,11 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         }
 
+        DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryPlanningPackageTypes = PortfolioEntryPlanningPackageDao
+                .getPEPlanningPackageTypeActiveAsCssVH();
+
         return ok(views.html.admin.config.datareference.planning_package.package_pattern_manage.render(packageGroup, packagePatternForm,
-                Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
+                selectablePortfolioEntryPlanningPackageTypes));
     }
 
     /**
@@ -267,8 +373,12 @@ public class ConfigurationPlanningPackageController extends Controller {
         PortfolioEntryPlanningPackageGroup packageGroup = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupById(packageGroupId);
 
         if (boundForm.hasErrors()) {
+
+            DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryPlanningPackageTypes = PortfolioEntryPlanningPackageDao
+                    .getPEPlanningPackageTypeActiveAsCssVH();
+
             return ok(views.html.admin.config.datareference.planning_package.package_pattern_manage.render(packageGroup, boundForm,
-                    Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
+                    selectablePortfolioEntryPlanningPackageTypes));
         }
 
         PortfolioEntryPlanningPackagePatternFormData packagePatternFormData = boundForm.get();
@@ -317,8 +427,8 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         RootApiController.flushFilters();
 
-        return redirect(controllers.admin.routes.ConfigurationPlanningPackageController
-                .viewPackageGroup(packagePattern.portfolioEntryPlanningPackageGroup.id));
+        return redirect(
+                controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packagePattern.portfolioEntryPlanningPackageGroup.id));
     }
 
     private II18nMessagesPlugin getI18nMessagesPlugin() {

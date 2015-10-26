@@ -18,7 +18,7 @@
 @(
     packageGroup: models.pmo.PortfolioEntryPlanningPackageGroup,
     packagePatternForm: Form[utils.form.PortfolioEntryPlanningPackagePatternFormData],
-    selectableCssClasses: framework.utils.ISelectableValueHolderCollection[framework.utils.CssValueForValueHolder]
+    selectablePortfolioEntryPlanningPackageTypes: framework.utils.ISelectableValueHolderCollection[framework.utils.CssValueForValueHolder]
 )
 
 @import helper._
@@ -65,7 +65,7 @@
                 
                 @helper.textarea(packagePatternForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))
                 
-                @parts.radiobuttongroup(packagePatternForm("cssClass"), parts.Msg.asString("object.portfolio_entry_planning_package.css_class.label"), selectableCssClasses)
+                @parts.radiobuttongroup(packagePatternForm("type"), parts.Msg.asString("object.portfolio_entry_planning_package.type.label"), selectablePortfolioEntryPlanningPackageTypes)
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packageGroup.id)'>@parts.Msg("button.cancel")</a>
