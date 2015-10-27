@@ -43,6 +43,8 @@ public class PortfolioEntryPlanningPackageTypeListView {
 
             setIdFieldName("id");
 
+            addColumn("id", "id", "object.portfolio_entry_planning_package_type.id.label", Table.ColumnDef.SorterType.NONE);
+
             addColumn("name", "name", "object.portfolio_entry_planning_package_type.name.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackageTypeListView>());
 

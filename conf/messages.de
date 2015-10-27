@@ -1145,6 +1145,7 @@ object.portfolio_entry_planning_package.pattern.table.empty=Kein Planungspaket-M
 # portfolioEntryPlanningType
 #----------------------
 
+object.portfolio_entry_planning_package_type.id.label=ID
 object.portfolio_entry_planning_package_type.name.label=Name
 object.portfolio_entry_planning_package_type.is_active.label=Aktiv
 object.portfolio_entry_planning_package_type.css_class.label=Farbe
