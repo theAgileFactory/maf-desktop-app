@@ -1017,21 +1017,7 @@ public class PortfolioEntryPlanningController extends Controller {
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        // get the planning packages
-        List<PortfolioEntryPlanningPackage> portfolioEntryPlanningPackages = PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsListByPE(id);
-        List<Long> objectIds = new ArrayList<>();
-        for (PortfolioEntryPlanningPackage portfolioEntryPlanningPackage : portfolioEntryPlanningPackages) {
-            objectIds.add(portfolioEntryPlanningPackage.id);
-        }
-
-        // construct the form
-        Form<PortfolioEntryPlanningPackagesFormData> portfolioEntryPlanningPackagesForm = planningPackagesFormDataTemplate
-                .fill(new PortfolioEntryPlanningPackagesFormData(portfolioEntryPlanningPackages, id));
-
-        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryPlanningPackagesForm, PortfolioEntryPlanningPackage.class, null,
-                "planningPackagesFormData", objectIds);
-
-        return ok(views.html.core.portfolioentryplanning.packages_manage.render(portfolioEntry, portfolioEntryPlanningPackagesForm,
+        return ok(views.html.core.portfolioentryplanning.packages_manage.render(portfolioEntry, getPortfolioEntryPlanningPackagesForm(id),
                 PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
 
     }
@@ -1042,7 +1028,53 @@ public class PortfolioEntryPlanningController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageAllPackages() {
-        return TODO;
+
+        // bind the form
+        Form<PortfolioEntryPlanningPackagesFormData> boundForm = planningPackagesFormDataTemplate.bindFromRequest();
+
+        // get the portfolioEntry
+        Long id = Long.valueOf(boundForm.data().get("id"));
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        if (boundForm.hasErrors()) {
+
+            return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, boundForm,
+                    PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+        }
+
+        PortfolioEntryPlanningPackagesFormData portfolioEntryPlanningPackagesFormData = boundForm.get();
+
+        // TODO see savePlanning + editPackage
+
+        return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, getPortfolioEntryPlanningPackagesForm(id),
+                PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+    }
+
+    /**
+     * Get the filled planning packages form.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     */
+    private Form<PortfolioEntryPlanningPackagesFormData> getPortfolioEntryPlanningPackagesForm(Long portfolioEntryId) {
+
+        // get the planning packages
+        List<PortfolioEntryPlanningPackage> portfolioEntryPlanningPackages = PortfolioEntryPlanningPackageDao
+                .getPEPlanningPackageAsListByPE(portfolioEntryId);
+        List<Long> objectIds = new ArrayList<>();
+        for (PortfolioEntryPlanningPackage portfolioEntryPlanningPackage : portfolioEntryPlanningPackages) {
+            objectIds.add(portfolioEntryPlanningPackage.id);
+        }
+
+        // construct the form
+        Form<PortfolioEntryPlanningPackagesFormData> portfolioEntryPlanningPackagesForm = planningPackagesFormDataTemplate
+                .fill(new PortfolioEntryPlanningPackagesFormData(portfolioEntryPlanningPackages, portfolioEntryId));
+
+        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryPlanningPackagesForm, PortfolioEntryPlanningPackage.class, null,
+                "planningPackagesFormData", objectIds);
+
+        return portfolioEntryPlanningPackagesForm;
+
     }
 
     /**

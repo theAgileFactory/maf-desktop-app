@@ -1,0 +1,142 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    packagesForm: Form[utils.form.PortfolioEntryPlanningPackagesFormData],
+    types: framework.utils.ISelectableValueHolderCollection[_],
+    status: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+@import java.lang.Integer; var index=0
+
+@if(packagesForm.hasErrors()){
+    <div class="alert alert-danger">
+        <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+    </div>
+}
+
+<form id="planning-packages-form" method="POST" action="#">
+
+    <fieldset>
+
+        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>@parts.Msg("object.portfolio_entry_planning_package.name.label")</th>
+                    <th>@parts.Msg("object.portfolio_entry_planning_package.start_date.label")</th>
+                    <th>@parts.Msg("object.portfolio_entry_planning_package.end_date.label")</th>
+                    <th>@parts.Msg("object.portfolio_entry_planning_package.type.label")</th>
+                    <th>@parts.Msg("object.portfolio_entry_planning_package.status.label")</th>
+                    @for(customAttributeDefinition <- models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeDefinitions(classOf[models.pmo.PortfolioEntryPlanningPackage])) {
+                        @if(customAttributeDefinition.isDisplayed || customAttributeDefinition.isRequired) {
+                            <th>@parts.Msg(customAttributeDefinition.getName)</th>
+                        }
+                    }
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @repeat(packagesForm("planningPackagesFormData")) { planningPackageForm =>
+
+                    <tr>
+                        <td>
+                            <input type="hidden" name="planningPackagesFormData[@index].planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
+                            <input type="hidden" name="planningPackagesFormData[@index].description" value="@planningPackageForm("description").value"/>
+                            <input type="hidden" name="planningPackagesFormData[@index].isImportant" value="@planningPackageForm("isImportant").value"/>
+                            <input type="hidden" name="planningPackagesFormData[@index].portfolioEntryPlanningPackageGroup" value="@planningPackageForm("portfolioEntryPlanningPackageGroup").value"/>
+                            
+                            @parts.input_text(planningPackageForm("name"), '_showConstraints -> false, '_label -> "")
+                        </td>
+                        <td>
+                            @parts.dateinput(planningPackageForm("startDate"), "")
+                        </td>
+                        <td>
+                            @parts.dateinput(planningPackageForm("endDate"), "")
+                        </td>
+                        <td>
+                            @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageType"), "", types, null, false)
+                        </td>
+                        <td>
+                            @parts.dropdownlist(planningPackageForm("status"), "", status, null, false)
+                        </td>
+
+                        @defining(models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeValues(classOf[models.pmo.PortfolioEntryPlanningPackage], Long.parseLong(planningPackageForm("planningPackageId").value.get))) { customAttributeValues =>
+                            @if(customAttributeValues!=null && customAttributeValues.size()!=0) {
+                                @for(customAttributeValue <- customAttributeValues) {
+                                    @if(customAttributeValue.getDefinition.isDisplayed || customAttributeValue.getDefinition.isRequired) {
+                                        <td>
+                                            @customAttributeValue.renderFormField(planningPackageForm(framework.utils.CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)))
+                                        </td>
+                                    }
+                                }
+                            }
+                        }
+                        
+                        <td style="padding-top: 13px;" class="text-right"><a href="#TODO"><span class="glyphicons glyphicons-bin"></span></a></td>
+
+                    </tr>
+                    
+                    @{index = index + 1}
+                }
+                
+            </tbody>
+        </table>
+
+        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+    </fieldset>
+
+</form>
+
+<script>
+    $('#planning-packages-form').find("label").hide();
+    
+    // checkbox case: the label should be displayed because it contains the input
+    $('#planning-packages-form').find("input[type=checkbox]").parent().find("strong").html('');
+    $('#planning-packages-form').find("input[type=checkbox]").parent().show();
+    
+    $( "#planning-packages-form").submit(function( event ) {
+    	
+    	//TODO waiting icon
+
+        event.preventDefault();
+        event.stopPropagation();
+        
+        $.ajax({
+            type: 'POST',
+            url: '@controllers.core.routes.PortfolioEntryPlanningController.processManageAllPackages().url',
+            data: $(this).serializeArray(),
+            cache : false,
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert("TODO fatal");
+            }
+        }).done(function(result) {
+        	//TODO success message
+            $('#planning-packages-container').html(result);
+        });
+
+    });
+</script>

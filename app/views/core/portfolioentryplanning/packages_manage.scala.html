@@ -29,10 +29,6 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 
-@hasExtendedAttributes=@{
-    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntryPlanningPackage])
-}
-
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -56,97 +52,10 @@
 
         <div class="panel-body">
     
-            <div class="maf-form" id="planning-packages-form">
-            
-                @if(packagesForm.hasErrors()){
-                    <div class="alert alert-danger">
-                        <strong>@parts.Msg("standard.form.error.title")</strong><br/>
-                    </div>
-                }
-                
-                @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.processManageAllPackages()) {
-                
-                    <fieldset>
-        
-                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
-
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>@parts.Msg("object.portfolio_entry_planning_package.name.label")</th>
-                                    <th>@parts.Msg("object.portfolio_entry_planning_package.start_date.label")</th>
-                                    <th>@parts.Msg("object.portfolio_entry_planning_package.end_date.label")</th>
-                                    <th>@parts.Msg("object.portfolio_entry_planning_package.type.label")</th>
-                                    <th>@parts.Msg("object.portfolio_entry_planning_package.status.label")</th>
-                                    @for(customAttributeDefinition <- models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeDefinitions(classOf[models.pmo.PortfolioEntryPlanningPackage])) {
-                                        @if(customAttributeDefinition.isDisplayed || customAttributeDefinition.isRequired) {
-                                            <th>@parts.Msg(customAttributeDefinition.getName)</th>
-                                        }
-                                    }
-                                    <th>&nbsp;</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @repeat(packagesForm("planningPackagesFormData")) { planningPackageForm =>
-                                
-                                    <tr>
-                                        <td>
-                                            <input type="hidden" name="planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
-                                            <input type="hidden" name="description" value="@planningPackageForm("description").value"/>
-                                            <input type="hidden" name="isImportant" value="@planningPackageForm("isImportant").value"/>
-                                            <input type="hidden" name="portfolioEntryPlanningPackageGroup" value="@planningPackageForm("portfolioEntryPlanningPackageGroup").value"/>
-                                            
-                                            @parts.input_text(planningPackageForm("name"), '_showConstraints -> false, '_label -> "")
-                                        </td>
-                                        <td>
-                                            @parts.dateinput(planningPackageForm("startDate"), "")
-                                        </td>
-                                        <td>
-                                            @parts.dateinput(planningPackageForm("endDate"), "")
-                                        </td>
-                                        <td>
-                                            @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageType"), "", types, null, false)
-                                        </td>
-                                        <td>
-                                            @parts.dropdownlist(planningPackageForm("status"), "", status, null, false)
-                                        </td>
-
-                                        @defining(models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeValues(classOf[models.pmo.PortfolioEntryPlanningPackage], Long.parseLong(planningPackageForm("planningPackageId").value.get))) { customAttributeValues =>
-                                            @if(customAttributeValues!=null && customAttributeValues.size()!=0) {
-                                                @for(customAttributeValue <- customAttributeValues) {
-                                                    @if(customAttributeValue.getDefinition.isDisplayed || customAttributeValue.getDefinition.isRequired) {
-                                                        <td>
-                                                            @customAttributeValue.renderFormField(planningPackageForm(framework.utils.CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)))
-                                                        </td>
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        
-                                        <td style="padding-top: 13px;" class="text-right"><a href="#TODO"><span class="glyphicons glyphicons-bin"></span></a></td>
-
-                                    </tr>
-                                }
-                                
-                            </tbody>
-                        </table>
-        
-                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
-                    </fieldset>
-
-                }
-        
+            <div class="maf-form" id="planning-packages-container">
+                @packages_manage_form_fragment(portfolioEntry, packagesForm, types, status)
             </div> 
-            
-            <script>
-                $('#planning-packages-form').find("label").hide();
-                
-                // checkbox case: the label should be displayed because it contains the input
-                $('#planning-packages-form').find("input[type=checkbox]").parent().find("strong").html('');
-                $('#planning-packages-form').find("input[type=checkbox]").parent().show();
-            </script>
-    
+
         </div>
     
     </div>
