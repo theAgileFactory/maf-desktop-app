@@ -2436,6 +2436,9 @@ core.portfolio_entry_planning.package.edit.successful=Planungseinheit wurde aktu
 #delete package
 core.portfolio_entry_planning.package.delete.successful=Planungseinheit wurde entfernt.
 
+#manage all packages
+core.portfolio_entry_planning.packages.manage.title=de: Manage all packages
+
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Mitarbeiter
 core.portfolio_entry_planning.resources.general.title=Zuweisungsanfragen

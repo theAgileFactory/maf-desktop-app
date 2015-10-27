@@ -2440,6 +2440,9 @@ core.portfolio_entry_planning.package.edit.successful=Le livrable a été mis à
 #delete package
 core.portfolio_entry_planning.package.delete.successful=Le livrable a été supprimé.
 
+#manage all packages
+core.portfolio_entry_planning.packages.manage.title=Gérer les livrables
+
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Employés affectés
 core.portfolio_entry_planning.resources.general.title=Requêtes d''affectation

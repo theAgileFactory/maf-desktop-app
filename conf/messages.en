@@ -2424,6 +2424,9 @@ core.portfolio_entry_planning.package.edit.successful=The package has been updat
 #delete package
 core.portfolio_entry_planning.package.delete.successful=The package has been removed.
 
+#manage all packages
+core.portfolio_entry_planning.packages.manage.title=Manage all packages
+
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Allocated employees
 core.portfolio_entry_planning.resources.general.title=Allocation requests
