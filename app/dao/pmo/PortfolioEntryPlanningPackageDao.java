@@ -74,7 +74,7 @@ public abstract class PortfolioEntryPlanningPackageDao {
      *            the portfolio entry id
      */
     public static ExpressionList<PortfolioEntryPlanningPackage> getPEPlanningPackageAsExprByPE(Long portfolioEntryId) {
-        return findPortfolioEntryPlanningPackage.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId);
+        return findPortfolioEntryPlanningPackage.orderBy("endDate").where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId);
     }
 
     /**
