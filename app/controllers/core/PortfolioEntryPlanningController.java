@@ -19,7 +19,6 @@ package controllers.core;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,6 +108,7 @@ import utils.SortableCollection.ISortableObject;
 import utils.form.AttachmentFormData;
 import utils.form.PortfolioEntryPlanningPackageFormData;
 import utils.form.PortfolioEntryPlanningPackageGroupsFormData;
+import utils.form.PortfolioEntryPlanningPackagesFormData;
 import utils.form.PortfolioEntryResourcePlanAllocatedActorFormData;
 import utils.form.PortfolioEntryResourcePlanAllocatedCompetencyFormData;
 import utils.form.PortfolioEntryResourcePlanAllocatedOrgUnitFormData;
@@ -157,6 +157,7 @@ public class PortfolioEntryPlanningController extends Controller {
     public static Form<PortfolioEntryResourcePlanAllocatedActorFormData> reallocateCompetencyFormTemplate = Form
             .form(PortfolioEntryResourcePlanAllocatedActorFormData.class, PortfolioEntryResourcePlanAllocatedActorFormData.ReallocateGroup.class);
     private static Form<AttachmentFormData> attachmentFormTemplate = Form.form(AttachmentFormData.class);
+    private static Form<PortfolioEntryPlanningPackagesFormData> planningPackagesFormDataTemplate = Form.form(PortfolioEntryPlanningPackagesFormData.class);
 
     /**
      * Display global gantt chart of the initiative.
@@ -803,27 +804,6 @@ public class PortfolioEntryPlanningController extends Controller {
 
         PortfolioEntryPlanningPackageFormData planningPackageFormData = boundForm.get();
 
-        // check the dates
-        if (!planningPackageFormData.startDate.equals("") && planningPackageFormData.endDate.equals("")) {
-            // the start date cannot be filled alone
-            boundForm.reject("startDate", Msg.get("object.portfolio_entry_planning_package.start_date.invalid"));
-            return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, selectablePortfolioEntryPlanningPackageTypes, boundForm,
-                    PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
-        }
-        if (!planningPackageFormData.startDate.equals("") && !planningPackageFormData.endDate.equals("")) {
-            // the end date should be after the start date
-            try {
-                if (Utilities.getDateFormat(null).parse(planningPackageFormData.startDate)
-                        .after(Utilities.getDateFormat(null).parse(planningPackageFormData.endDate))) {
-                    boundForm.reject("endDate", Msg.get("object.portfolio_entry_planning_package.end_date.invalid"));
-                    return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, selectablePortfolioEntryPlanningPackageTypes,
-                            boundForm, PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
-                }
-            } catch (ParseException e) {
-                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
-            }
-        }
-
         PortfolioEntryPlanningPackage planningPackage = null;
 
         if (planningPackageFormData.planningPackageId == null) { // create case
@@ -1022,6 +1002,43 @@ public class PortfolioEntryPlanningController extends Controller {
 
         return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id));
 
+    }
+
+    /**
+     * Form to manage all planning packages.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result manageAllPackages(Long id) {
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the planning packages
+        List<PortfolioEntryPlanningPackage> portfolioEntryPlanningPackages = PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsListByPE(id);
+
+        // construct the form
+        Form<PortfolioEntryPlanningPackagesFormData> portfolioEntryPlanningPackagesFormData = planningPackagesFormDataTemplate
+                .fill(new PortfolioEntryPlanningPackagesFormData(portfolioEntryPlanningPackages, id));
+
+        return ok(views.html.core.portfolioentryplanning.packages_manage.render(portfolioEntry, portfolioEntryPlanningPackagesFormData,
+                PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+
+    }
+
+    /**
+     * Process the form to manage all planning packages.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result processManageAllPackages() {
+        return TODO;
     }
 
     /**

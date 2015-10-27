@@ -18,17 +18,22 @@
 package utils.form;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.FileField;
 import framework.utils.FileFieldOptionalValidator;
+import framework.utils.Msg;
 import framework.utils.Utilities;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackage.Status;
+import play.Logger;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import play.data.validation.ValidationError;
 
 /**
  * An portfolio entry planning package form data is used to manage the fields
@@ -66,6 +71,32 @@ public class PortfolioEntryPlanningPackageFormData {
 
     @ValidateWith(value = FileFieldOptionalValidator.class, message = "form.input.file_field.error")
     public FileField document;
+
+    /**
+     * Form validation.
+     */
+    public List<ValidationError> validate() {
+
+        List<ValidationError> errors = new ArrayList<>();
+
+        // check the dates
+        if (!this.startDate.equals("") && this.endDate.equals("")) {
+            // the start date cannot be filled alone
+            errors.add(new ValidationError("startDate", Msg.get("object.portfolio_entry_planning_package.start_date.invalid")));
+        }
+        if (!this.startDate.equals("") && !this.endDate.equals("")) {
+            // the end date should be after the start date
+            try {
+                if (Utilities.getDateFormat(null).parse(this.startDate).after(Utilities.getDateFormat(null).parse(this.endDate))) {
+                    errors.add(new ValidationError("endDate", Msg.get("object.portfolio_entry_planning_package.end_date.invalid")));
+                }
+            } catch (ParseException e) {
+                Logger.error("Impossible to parse the planning package date when validate them", e);
+            }
+        }
+
+        return errors.isEmpty() ? null : errors;
+    }
 
     /**
      * Default constructor.

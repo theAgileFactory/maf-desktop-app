@@ -1,0 +1,119 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    packagesForm: Form[utils.form.PortfolioEntryPlanningPackagesFormData],
+    types: framework.utils.ISelectableValueHolderCollection[_],
+    status: framework.utils.ISelectableValueHolderCollection[_]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@hasExtendedAttributes=@{
+    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntryPlanningPackage])
+}
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.planning.packages.label", controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id).url),
+        ("core.portfolio_entry_planning.packages.manage.title", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.PLANNING, breadcrump){
+    
+    <div class="maf-form" id="planning-packages-form">
+    
+        @if(packagesForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+        
+        @helper.form(action = controllers.core.routes.PortfolioEntryPlanningController.processManageAllPackages()) {
+        
+                    <fieldset>
+        
+                        <input type="hidden" name="id" value="@portfolioEntry.id"/>
+
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th>@parts.Msg("object.portfolio_entry_planning_package.name.label")</th>
+                                    <th>@parts.Msg("object.portfolio_entry_planning_package.start_date.label")</th>
+                                    <th>@parts.Msg("object.portfolio_entry_planning_package.end_date.label")</th>
+                                    <th>@parts.Msg("object.portfolio_entry_planning_package.type.label")</th>
+                                    <th>@parts.Msg("object.portfolio_entry_planning_package.status.label")</th>
+                                    
+                                    <!-- TODO CA (required or displayed) -->
+                                    
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @repeat(packagesForm("planningPackagesFormData")) { planningPackageForm =>
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" name="planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
+                                                <input type="hidden" name="description" value="@planningPackageForm("description").value"/>
+                                                <input type="hidden" name="isImportant" value="@planningPackageForm("isImportant").value"/>
+                                                <input type="hidden" name="portfolioEntryPlanningPackageGroup" value="@planningPackageForm("portfolioEntryPlanningPackageGroup").value"/>
+                                                
+                                                @parts.input_text(planningPackageForm("name"), '_showConstraints -> false, '_label -> "")
+                                            </td>
+                                            <td>
+                                                @parts.dateinput(planningPackageForm("startDate"), "")
+                                            </td>
+                                            <td>
+                                                @parts.dateinput(planningPackageForm("endDate"), "")
+                                            </td>
+                                            <td>
+                                                @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageType"), "", types, null, false)
+                                            </td>
+                                            <td>
+                                                @parts.dropdownlist(planningPackageForm("status"), "", status, null, false)
+                                            </td>
+                                            
+                                            <!-- TODO CA -->
+                                            
+                                            <th><a href="#TODO"><span class="glyphicons glyphicons-bin"></span></a></th>
+
+                                        </tr>
+                                }
+                                
+                            </tbody>
+                        </table>
+        
+                        <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                        <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+                    </fieldset>
+        
+        
+        
+           
+        }
+
+    </div> 
+   
+}
