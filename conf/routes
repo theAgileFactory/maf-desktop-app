@@ -813,10 +813,14 @@ GET     /api/core/portfolio-entry-type/:id                                 contr
 GET     /api/core/portfolio-entry-event-type/find                          controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-event-type/:id                           controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypeById(id: Long)
 
+#PortfolioEntryPlanningPackageType
+GET     /api/core/portfolio-entry-planning-package-type/find               controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.getPortfolioEntryPlanningPackageTypesList(isActive: java.lang.Boolean ?= null)
+
 #PortfolioEntryPlanningPackageGroup
 GET     /api/core/portfolio-entry-planning-package-group/find              controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackageGroupsList(isActive: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-planning-package-group/:id               controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackageGroupById(id: Long)
 GET     /api/core/portfolio-entry-planning-package-group/:id/pattern/find  controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackagePatternsList(id: Long)
+
 
 #PortfolioEntryReportStatusType
 GET     /api/core/portfolio-entry-report-status-type/find                  controllers.api.core.PortfolioEntryReportStatusTypeApiController.getPortfolioEntryReportStatusTypesList(selectable: java.lang.Boolean ?= null)
@@ -919,6 +923,7 @@ GET     /api-docs/api/core/portfolio                                      framew
 GET     /api-docs/api/core/portfolio-type                                 framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-type")
 GET     /api-docs/api/core/portfolio-entry                                framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry")
 GET     /api-docs/api/core/portfolio-entry-event-type                     framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-event-type")
+GET     /api-docs/api/core/portfolio-entry-planning-package-type          framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-planning-package-type")
 GET     /api-docs/api/core/portfolio-entry-planning-package-group         framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-planning-package-group")
 GET     /api-docs/api/core/portfolio-entry-report-status-type             framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-report-status-type")
 GET     /api-docs/api/core/portfolio-entry-type                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/portfolio-entry-type")
