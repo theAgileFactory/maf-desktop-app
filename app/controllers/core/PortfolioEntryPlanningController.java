@@ -1019,10 +1019,17 @@ public class PortfolioEntryPlanningController extends Controller {
 
         // get the planning packages
         List<PortfolioEntryPlanningPackage> portfolioEntryPlanningPackages = PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsListByPE(id);
+        List<Long> objectIds = new ArrayList<>();
+        for (PortfolioEntryPlanningPackage portfolioEntryPlanningPackage : portfolioEntryPlanningPackages) {
+            objectIds.add(portfolioEntryPlanningPackage.id);
+        }
 
         // construct the form
         Form<PortfolioEntryPlanningPackagesFormData> portfolioEntryPlanningPackagesForm = planningPackagesFormDataTemplate
                 .fill(new PortfolioEntryPlanningPackagesFormData(portfolioEntryPlanningPackages, id));
+
+        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryPlanningPackagesForm, PortfolioEntryPlanningPackage.class, null,
+                "planningPackagesFormData", objectIds);
 
         return ok(views.html.core.portfolioentryplanning.packages_manage.render(portfolioEntry, portfolioEntryPlanningPackagesForm,
                 PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
@@ -1031,9 +1038,6 @@ public class PortfolioEntryPlanningController extends Controller {
 
     /**
      * Process the form to manage all planning packages.
-     * 
-     * @param id
-     *            the portfolio entry id
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
