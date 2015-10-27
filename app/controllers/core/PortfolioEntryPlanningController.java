@@ -1036,6 +1036,8 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        // TODO validate also CA
+
         if (boundForm.hasErrors()) {
 
             return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, boundForm,

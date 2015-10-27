@@ -17,10 +17,17 @@
  */
 package utils.form;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import framework.utils.Msg;
+import framework.utils.Utilities;
 import models.pmo.PortfolioEntryPlanningPackage;
+import play.Logger;
+import play.data.validation.ValidationError;
 
 /**
  * Form to manage all planning packages.
@@ -32,6 +39,7 @@ public class PortfolioEntryPlanningPackagesFormData {
     // the portfolio entry id
     public Long id;
 
+    @Valid
     public List<PortfolioEntryPlanningPackageFormData> planningPackagesFormData = new ArrayList<PortfolioEntryPlanningPackageFormData>();
 
     /**
@@ -55,6 +63,43 @@ public class PortfolioEntryPlanningPackagesFormData {
         for (PortfolioEntryPlanningPackage portfolioEntryPlanningPackage : portfolioEntryPlanningPackages) {
             planningPackagesFormData.add(new PortfolioEntryPlanningPackageFormData(portfolioEntryPlanningPackage));
         }
+
+    }
+
+    /**
+     * Form validation.
+     */
+    public List<ValidationError> validate() {
+
+        List<ValidationError> errors = new ArrayList<>();
+
+        int i = 0;
+        for (PortfolioEntryPlanningPackageFormData planningPackageFormData : planningPackagesFormData) {
+
+            // check the dates
+            if (!planningPackageFormData.startDate.equals("") && planningPackageFormData.endDate.equals("")) {
+                // the start date cannot be filled alone
+                errors.add(new ValidationError("planningPackagesFormData[" + i + "].startDate",
+                        Msg.get("object.portfolio_entry_planning_package.start_date.invalid")));
+            }
+            if (!planningPackageFormData.startDate.equals("") && !planningPackageFormData.endDate.equals("")) {
+                // the end date should be after the start date
+                try {
+                    if (Utilities.getDateFormat(null).parse(planningPackageFormData.startDate)
+                            .after(Utilities.getDateFormat(null).parse(planningPackageFormData.endDate))) {
+                        errors.add(new ValidationError("planningPackagesFormData[" + i + "].endDate",
+                                Msg.get("object.portfolio_entry_planning_package.end_date.invalid")));
+                    }
+                } catch (ParseException e) {
+                    Logger.error("Impossible to parse the planning package date when validate them", e);
+                }
+            }
+
+            i++;
+
+        }
+
+        return errors.isEmpty() ? null : errors;
 
     }
 

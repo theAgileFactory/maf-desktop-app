@@ -30,12 +30,6 @@
 @import views.html.modelsparts._
 @import java.lang.Integer; var index=0
 
-@if(packagesForm.hasErrors()){
-    <div class="alert alert-danger">
-        <strong>@parts.Msg("standard.form.error.title")</strong><br/>
-    </div>
-}
-
 <form id="planning-packages-form" method="POST" action="#">
 
     <fieldset>
@@ -43,6 +37,19 @@
         <input type="hidden" name="id" value="@portfolioEntry.id"/>
 
         <table class="table table-condensed">
+            <colgroup>
+                <col class="col-md-2">
+                <col class="col-md-2">
+                <col class="col-md-2">
+                <col class="col-md-1">
+                <col class="col-md-1">
+                @for(customAttributeDefinition <- models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeDefinitions(classOf[models.pmo.PortfolioEntryPlanningPackage])) {
+                    @if(customAttributeDefinition.isDisplayed || customAttributeDefinition.isRequired) {
+                        <col class="col-md-1">
+                    }
+                }
+                <col style="width: 1%;">
+            </colgroup>
             <thead>
                 <tr>
                     <th>@parts.Msg("object.portfolio_entry_planning_package.name.label")</th>
@@ -119,8 +126,8 @@
     $('#planning-packages-form').find("input[type=checkbox]").parent().show();
     
     $( "#planning-packages-form").submit(function( event ) {
-    	
-    	//TODO waiting icon
+        
+        //TODO waiting icon
 
         event.preventDefault();
         event.stopPropagation();
@@ -134,7 +141,7 @@
                 alert("TODO fatal");
             }
         }).done(function(result) {
-        	//TODO success message
+            //TODO success message
             $('#planning-packages-container').html(result);
         });
 
