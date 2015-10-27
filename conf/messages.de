@@ -2438,6 +2438,7 @@ core.portfolio_entry_planning.package.delete.successful=Planungseinheit wurde en
 
 #manage all packages
 core.portfolio_entry_planning.packages.manage.title=de: Manage all packages
+core.portfolio_entry_planning.packages.manage.successful=de: The packages has been updated.
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Mitarbeiter

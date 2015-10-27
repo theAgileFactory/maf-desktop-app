@@ -68,13 +68,24 @@ public abstract class PortfolioEntryPlanningPackageDao {
     }
 
     /**
+     * Get all planning packages of a portfolio entry as an ordered (by end
+     * date) list.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     */
+    public static List<PortfolioEntryPlanningPackage> getPEPlanningPackageOrderedAsListByPE(Long portfolioEntryId) {
+        return findPortfolioEntryPlanningPackage.orderBy("endDate").where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).findList();
+    }
+
+    /**
      * Get all planning packages of a portfolio entry as expression list.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
      */
     public static ExpressionList<PortfolioEntryPlanningPackage> getPEPlanningPackageAsExprByPE(Long portfolioEntryId) {
-        return findPortfolioEntryPlanningPackage.orderBy("endDate").where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId);
+        return findPortfolioEntryPlanningPackage.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId);
     }
 
     /**

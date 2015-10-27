@@ -114,6 +114,7 @@
 
         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
         <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
+        &nbsp;<span id="planning-packages-process"></span>
     </fieldset>
 
 </form>
@@ -127,7 +128,7 @@
     
     $( "#planning-packages-form").submit(function( event ) {
         
-        //TODO waiting icon
+        $("#planning-packages-process").html('<img src="@framework.utils.Utilities.getAjaxWaitImageUrl()"/>');
 
         event.preventDefault();
         event.stopPropagation();
@@ -136,14 +137,12 @@
             type: 'POST',
             url: '@controllers.core.routes.PortfolioEntryPlanningController.processManageAllPackages().url',
             data: $(this).serializeArray(),
-            cache : false,
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert("TODO fatal");
-            }
+            cache : false
+        }).fail(function(xhr) {
+            $('#planning-packages-container').html(xhr.responseText);
         }).done(function(result) {
-            //TODO success message
             $('#planning-packages-container').html(result);
+            $("#planning-packages-process").html("<span class='text-success'><strong>@parts.Msg("core.portfolio_entry_planning.packages.manage.successful")</strong></span>");
         });
-
     });
 </script>

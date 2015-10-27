@@ -1040,7 +1040,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         if (boundForm.hasErrors()) {
 
-            return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, boundForm,
+            return badRequest(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, boundForm,
                     PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
 
@@ -1062,7 +1062,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         // get the planning packages
         List<PortfolioEntryPlanningPackage> portfolioEntryPlanningPackages = PortfolioEntryPlanningPackageDao
-                .getPEPlanningPackageAsListByPE(portfolioEntryId);
+                .getPEPlanningPackageOrderedAsListByPE(portfolioEntryId);
         List<Long> objectIds = new ArrayList<>();
         for (PortfolioEntryPlanningPackage portfolioEntryPlanningPackage : portfolioEntryPlanningPackages) {
             objectIds.add(portfolioEntryPlanningPackage.id);
