@@ -1021,10 +1021,10 @@ public class PortfolioEntryPlanningController extends Controller {
         List<PortfolioEntryPlanningPackage> portfolioEntryPlanningPackages = PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsListByPE(id);
 
         // construct the form
-        Form<PortfolioEntryPlanningPackagesFormData> portfolioEntryPlanningPackagesFormData = planningPackagesFormDataTemplate
+        Form<PortfolioEntryPlanningPackagesFormData> portfolioEntryPlanningPackagesForm = planningPackagesFormDataTemplate
                 .fill(new PortfolioEntryPlanningPackagesFormData(portfolioEntryPlanningPackages, id));
 
-        return ok(views.html.core.portfolioentryplanning.packages_manage.render(portfolioEntry, portfolioEntryPlanningPackagesFormData,
+        return ok(views.html.core.portfolioentryplanning.packages_manage.render(portfolioEntry, portfolioEntryPlanningPackagesForm,
                 PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
 
     }
