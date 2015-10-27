@@ -20,10 +20,6 @@ package controllers.api.core;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-import models.pmo.PortfolioEntryPlanningPackageGroup;
-import models.pmo.PortfolioEntryPlanningPackagePattern;
-import play.mvc.Result;
-
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -35,6 +31,9 @@ import controllers.api.ApiController;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
+import models.pmo.PortfolioEntryPlanningPackageGroup;
+import models.pmo.PortfolioEntryPlanningPackagePattern;
+import play.mvc.Result;
 
 /**
  * The API controller for the {@link PortfolioEntryPlanningPackageGroup}.

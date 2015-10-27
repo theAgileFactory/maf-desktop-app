@@ -301,4 +301,18 @@ public abstract class PortfolioEntryPlanningPackageDao {
         return selectablePortfolioEntryReportStatusTypes;
     }
 
+    /**
+     * Get the portfolio entry planning package types list with filter.
+     * 
+     * @param isActive
+     *            true to return only active package type, false only
+     *            non-active, null all.
+     **/
+    public static List<PortfolioEntryPlanningPackageType> getPEPlanningPackageTypeAsListByFilter(Boolean isActive) {
+        if (isActive != null) {
+            return findPortfolioEntryPlanningPackageType.where().eq("deleted", false).eq("isActive", isActive).findList();
+        }
+        return getPEPlanningPackageTypeAsList();
+    }
+
 }

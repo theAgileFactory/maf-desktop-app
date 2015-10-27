@@ -55,7 +55,7 @@ public class PortfolioEntryPlanningPackageFormData {
     public String endDate;
 
     @Required
-    public Long type;
+    public Long portfolioEntryPlanningPackageType;
 
     public boolean isImportant;
 
@@ -90,7 +90,7 @@ public class PortfolioEntryPlanningPackageFormData {
         this.startDate = portfolioEntryPlanningPackage.startDate != null ? Utilities.getDateFormat(null).format(portfolioEntryPlanningPackage.startDate)
                 : null;
         this.endDate = portfolioEntryPlanningPackage.endDate != null ? Utilities.getDateFormat(null).format(portfolioEntryPlanningPackage.endDate) : null;
-        this.type = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType.id;
+        this.portfolioEntryPlanningPackageType = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType.id;
         this.isImportant = portfolioEntryPlanningPackage.isImportant;
         this.portfolioEntryPlanningPackageGroup = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup != null
                 ? portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup.id : null;
@@ -121,7 +121,8 @@ public class PortfolioEntryPlanningPackageFormData {
             portfolioEntryPlanningPackage.endDate = null;
         }
 
-        portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(this.type);
+        portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType = PortfolioEntryPlanningPackageDao
+                .getPEPlanningPackageTypeById(this.portfolioEntryPlanningPackageType);
 
         portfolioEntryPlanningPackage.isImportant = this.isImportant;
 

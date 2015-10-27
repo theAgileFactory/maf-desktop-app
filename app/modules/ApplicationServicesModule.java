@@ -268,6 +268,7 @@ public class ApplicationServicesModule extends FrameworkModule {
                 ImmutableMap.<String, String> builder().put("name", "object.portfolio_entry_planning_package.name.label")
                         .put("isImportant", "object.portfolio_entry_planning_package.is_important.label")
                         .put("portfolioEntryPlanningPackageGroup", "object.portfolio_entry_planning_package.group.label")
+                        .put("portfolioEntryPlanningPackageType", "object.portfolio_entry_planning_package.type.label")
                         .put("status", "object.portfolio_entry_planning_package.status.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryReport, "models.pmo.PortfolioEntryReport", false, true,
                 ImmutableMap.<String, String> builder().put("status", "object.portfolio_entry_report.status.label").build());
