@@ -815,6 +815,7 @@ GET     /api/core/portfolio-entry-event-type/:id                           contr
 
 #PortfolioEntryPlanningPackageType
 GET     /api/core/portfolio-entry-planning-package-type/find               controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.getPortfolioEntryPlanningPackageTypesList(isActive: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry-planning-package-type/:id                controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.getPortfolioEntryPlanningPackageTypeById(id: Long)
 
 #PortfolioEntryPlanningPackageGroup
 GET     /api/core/portfolio-entry-planning-package-group/find              controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackageGroupsList(isActive: java.lang.Boolean ?= null)

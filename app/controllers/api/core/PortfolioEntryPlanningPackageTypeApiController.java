@@ -17,6 +17,7 @@
  */
 package controllers.api.core;
 
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 import com.wordnik.swagger.annotations.Api;
@@ -57,6 +58,33 @@ public class PortfolioEntryPlanningPackageTypeApiController extends ApiControlle
     public Result getPortfolioEntryPlanningPackageTypesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive) {
         try {
             return getJsonSuccessResponse(PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeAsListByFilter(isActive));
+        } catch (Exception e) {
+            return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
+        }
+    }
+
+    /**
+     * Get a portfolio entry planning package type by id.
+     * 
+     * @param id
+     *            the portfolio entry planning package type id
+     */
+    @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
+    @ApiOperation(value = "Get the specified Portfolio Entry Planning Package Type",
+            notes = "Return the Portfolio Entry Planning Package Type with the specified id", response = PortfolioEntryPlanningPackageType.class,
+            httpMethod = "GET")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
+            @ApiResponse(code = 404, message = "not found", response = ApiError.class),
+            @ApiResponse(code = 500, message = "error", response = ApiError.class) })
+    public Result getPortfolioEntryPlanningPackageTypeById(
+            @ApiParam(value = "portfolio entry planning package type id", required = true) @PathParam("id") Long id) {
+
+        try {
+            if (PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(id) == null) {
+                return getJsonErrorResponse(new ApiError(404, "The Portfolio Entry Planning Package Type with the specified id is not found"));
+            }
+            return getJsonSuccessResponse(PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(id));
+
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
         }
