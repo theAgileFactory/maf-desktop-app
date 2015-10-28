@@ -1018,8 +1018,25 @@ public class PortfolioEntryPlanningController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         return ok(views.html.core.portfolioentryplanning.packages_manage.render(portfolioEntry, getPortfolioEntryPlanningPackagesForm(id),
-                PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+                PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection(),
+                PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsExprByPE(id).findRowCount()));
 
+    }
+
+    /**
+     * Add a row (a planning package) in the manage all packages table.
+     * 
+     * This method simply returns the render for the row (no add in the DB is
+     * done).
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result addRowForManageAllPackages(Long id) {
+        return ok(views.html.core.portfolioentryplanning.packages_manage_form_row_fragment.render(planningPackagesFormDataTemplate,
+                PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
     }
 
     /**
@@ -1036,15 +1053,21 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        // TODO validate also CA
-
-        if (boundForm.hasErrors()) {
-
+        boolean hasCustomAttributeErrors = CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class, null,
+                "planningPackagesFormData");
+        if (boundForm.hasErrors() || hasCustomAttributeErrors) {
             return badRequest(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, boundForm,
                     PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
 
         PortfolioEntryPlanningPackagesFormData portfolioEntryPlanningPackagesFormData = boundForm.get();
+
+        for (PortfolioEntryPlanningPackageFormData planningPackageFormData : portfolioEntryPlanningPackagesFormData.planningPackagesFormData) {
+            Logger.error("id: " + planningPackageFormData.planningPackageId);
+        }
+
+        // TODO check the indexes of the planningPackagesFormData correspond to
+        // the indexes of the form
 
         // TODO see savePlanning + editPackage
 

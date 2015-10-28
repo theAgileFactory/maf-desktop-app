@@ -19,7 +19,8 @@
     portfolioEntry: models.pmo.PortfolioEntry,
     packagesForm: Form[utils.form.PortfolioEntryPlanningPackagesFormData],
     types: framework.utils.ISelectableValueHolderCollection[_],
-    status: framework.utils.ISelectableValueHolderCollection[_]
+    status: framework.utils.ISelectableValueHolderCollection[_],
+    countPackage: Integer
 )
 
 @import helper._
@@ -46,7 +47,7 @@
             &nbsp;
             
             <div class="pull-right">
-                <a href="#TODO"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                <a id="packages-manage-add-row" href="#"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
             </div>
         </div>
 
@@ -59,5 +60,28 @@
         </div>
     
     </div>
+    
+    <script>
+    var countPackages = @countPackage;
+    
+    $( "#packages-manage-add-row").click(function( event ) {
+
+        event.preventDefault();
+        event.stopPropagation();
+        
+        $.ajax({
+            type: 'GET',
+            url: '@controllers.core.routes.PortfolioEntryPlanningController.addRowForManageAllPackages(portfolioEntry.id).url',
+            cache : false
+        }).fail(function(xhr) {
+            alert("unexpected error");
+        }).done(function(result) {
+            result = result.replace(/planningPackagesFormData_0/g, 'planningPackagesFormData_' + countPackages);
+            result = result.replace(/planningPackagesFormData\[0\]/g, 'planningPackagesFormData[' + countPackages + ']');
+            countPackages++;
+            $('#planning-packages-table-body').append(result);
+        });
+    });
+    </script>
    
 }

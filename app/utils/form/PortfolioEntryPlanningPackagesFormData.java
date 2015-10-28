@@ -40,7 +40,7 @@ public class PortfolioEntryPlanningPackagesFormData {
     public Long id;
 
     @Valid
-    public List<PortfolioEntryPlanningPackageFormData> planningPackagesFormData = new ArrayList<PortfolioEntryPlanningPackageFormData>();
+    public List<PortfolioEntryPlanningPackageFormData> planningPackagesFormData = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -49,7 +49,7 @@ public class PortfolioEntryPlanningPackagesFormData {
     }
 
     /**
-     * Construct the form data with a DB entry.
+     * Construct the form data with a list of packages.
      * 
      * @param portfolioEntryPlanningPackages
      *            the existing planning packages

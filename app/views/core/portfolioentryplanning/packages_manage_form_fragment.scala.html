@@ -28,7 +28,6 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
-@import java.lang.Integer; var index=0
 
 <form id="planning-packages-form" method="POST" action="#">
 
@@ -48,7 +47,6 @@
                         <col class="col-md-1">
                     }
                 }
-                <col style="width: 1%;">
             </colgroup>
             <thead>
                 <tr>
@@ -62,53 +60,10 @@
                             <th>@parts.Msg(customAttributeDefinition.getName)</th>
                         }
                     }
-                    <th>&nbsp;</th>
                 </tr>
             </thead>
-            <tbody>
-                @repeat(packagesForm("planningPackagesFormData")) { planningPackageForm =>
-
-                    <tr>
-                        <td>
-                            <input type="hidden" name="planningPackagesFormData[@index].planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
-                            <input type="hidden" name="planningPackagesFormData[@index].description" value="@planningPackageForm("description").value"/>
-                            <input type="hidden" name="planningPackagesFormData[@index].isImportant" value="@planningPackageForm("isImportant").value"/>
-                            <input type="hidden" name="planningPackagesFormData[@index].portfolioEntryPlanningPackageGroup" value="@planningPackageForm("portfolioEntryPlanningPackageGroup").value"/>
-                            
-                            @parts.input_text(planningPackageForm("name"), '_showConstraints -> false, '_label -> "")
-                        </td>
-                        <td>
-                            @parts.dateinput(planningPackageForm("startDate"), "")
-                        </td>
-                        <td>
-                            @parts.dateinput(planningPackageForm("endDate"), "")
-                        </td>
-                        <td>
-                            @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageType"), "", types, null, false)
-                        </td>
-                        <td>
-                            @parts.dropdownlist(planningPackageForm("status"), "", status, null, false)
-                        </td>
-
-                        @defining(models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeValues(classOf[models.pmo.PortfolioEntryPlanningPackage], Long.parseLong(planningPackageForm("planningPackageId").value.get))) { customAttributeValues =>
-                            @if(customAttributeValues!=null && customAttributeValues.size()!=0) {
-                                @for(customAttributeValue <- customAttributeValues) {
-                                    @if(customAttributeValue.getDefinition.isDisplayed || customAttributeValue.getDefinition.isRequired) {
-                                        <td>
-                                            @customAttributeValue.renderFormField(planningPackageForm(framework.utils.CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)))
-                                        </td>
-                                    }
-                                }
-                            }
-                        }
-                        
-                        <td style="padding-top: 13px;" class="text-right"><a href="#TODO"><span class="glyphicons glyphicons-bin"></span></a></td>
-
-                    </tr>
-                    
-                    @{index = index + 1}
-                }
-                
+            <tbody id="planning-packages-table-body">
+                @packages_manage_form_row_fragment(packagesForm, types, status)
             </tbody>
         </table>
 
@@ -120,12 +75,6 @@
 </form>
 
 <script>
-    $('#planning-packages-form').find("label").hide();
-    
-    // checkbox case: the label should be displayed because it contains the input
-    $('#planning-packages-form').find("input[type=checkbox]").parent().find("strong").html('');
-    $('#planning-packages-form').find("input[type=checkbox]").parent().show();
-    
     $( "#planning-packages-form").submit(function( event ) {
         
         $("#planning-packages-process").html('<img src="@framework.utils.Utilities.getAjaxWaitImageUrl()"/>');
