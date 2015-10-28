@@ -316,6 +316,7 @@ GET    /portfolio-entry/package/groups/add                                     c
 POST   /portfolio-entry/package/groups/add                                     controllers.core.PortfolioEntryPlanningController.processAddPackageGroups()
 GET    /portfolio-entry/package/delete                                         controllers.core.PortfolioEntryPlanningController.deletePackage(id: Long, planningPackageId: Long)
 GET    /portfolio-entry/packages/manage                                        controllers.core.PortfolioEntryPlanningController.manageAllPackages(id: Long)
+GET    /portfolio-entry/packages/manage/add-row                                controllers.core.PortfolioEntryPlanningController.addRowForManageAllPackages(id: Long)
 POST   /portfolio-entry/packages/manage                                        controllers.core.PortfolioEntryPlanningController.processManageAllPackages()
 GET    /portfolio-entry/package/attachment/create                              controllers.core.PortfolioEntryPlanningController.createPackageAttachment(id: Long, planningPackageId: Long)
 POST   /portfolio-entry/package/attachment/create                              controllers.core.PortfolioEntryPlanningController.processCreatePackageAttachment()
