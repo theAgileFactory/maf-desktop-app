@@ -1063,7 +1063,8 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, null, "", objectIds);
+        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, null, "planningPackagesFormData",
+                objectIds);
 
         return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, getPortfolioEntryPlanningPackagesForm(id),
                 PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
