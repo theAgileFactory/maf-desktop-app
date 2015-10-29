@@ -102,7 +102,8 @@ public class PortfolioEntryPlanningPackageFormData {
      * Default constructor.
      */
     public PortfolioEntryPlanningPackageFormData() {
-        status = Status.NOT_STARTED.name();
+        this.status = Status.NOT_STARTED.name();
+        this.isImportant = false;
     }
 
     /**

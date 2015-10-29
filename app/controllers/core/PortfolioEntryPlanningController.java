@@ -846,53 +846,10 @@ public class PortfolioEntryPlanningController extends Controller {
 
             Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.package.edit.successful"));
 
-            // if the dates have been changed, then we send a notification to
-            // the manager of each confirmed and "follow package dates"
-            // allocated resource
-            if ((oldStartDate == null && planningPackage.startDate != null) || (oldStartDate != null && !oldStartDate.equals(planningPackage.startDate))
-                    || (oldEndDate == null && planningPackage.endDate != null) || (oldEndDate != null && !oldEndDate.equals(planningPackage.endDate))) {
-                for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : planningPackage.portfolioEntryResourcePlanAllocatedActors) {
-                    if (allocatedActor.isConfirmed && allocatedActor.followPackageDates != null && allocatedActor.followPackageDates) {
-                        ActorDao.sendNotification(allocatedActor.actor.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                                controllers.core.routes.ActorController.allocation(allocatedActor.actor.id).url(),
-                                "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title",
-                                "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message",
-                                allocatedActor.actor.getNameHumanReadable());
-                    }
-                }
-            }
+            alertManagerDatesHaveChanged(oldStartDate, oldEndDate, planningPackage);
         }
 
-        // update the dates of the allocated resources that have the flag
-        // "follow package dates" to true.
-        for (PortfolioEntryResourcePlanAllocatedActor a : planningPackage.portfolioEntryResourcePlanAllocatedActors) {
-            if (a.followPackageDates != null && a.followPackageDates) {
-                a.startDate = planningPackage.startDate;
-                a.endDate = planningPackage.endDate;
-                a.save();
-            }
-        }
-        for (PortfolioEntryResourcePlanAllocatedOrgUnit oo : planningPackage.portfolioEntryResourcePlanAllocatedOrgUnits) {
-            if (oo.followPackageDates != null && oo.followPackageDates) {
-                oo.startDate = planningPackage.startDate;
-                oo.endDate = planningPackage.endDate;
-                oo.save();
-            }
-        }
-        for (PortfolioEntryResourcePlanAllocatedCompetency c : planningPackage.portfolioEntryResourcePlanAllocatedCompetencies) {
-            if (c.followPackageDates != null && c.followPackageDates) {
-                c.startDate = planningPackage.startDate;
-                c.endDate = planningPackage.endDate;
-                c.save();
-            }
-        }
-        for (WorkOrder o : planningPackage.workOrders) {
-            if (o.followPackageDates != null && o.followPackageDates) {
-                o.startDate = planningPackage.startDate;
-                o.dueDate = planningPackage.endDate;
-                o.save();
-            }
-        }
+        propagatePackageDates(planningPackage);
 
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, planningPackage.id);
@@ -1035,7 +992,11 @@ public class PortfolioEntryPlanningController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result addRowForManageAllPackages(Long id) {
-        return ok(views.html.core.portfolioentryplanning.packages_manage_form_row_fragment.render(planningPackagesFormDataTemplate,
+
+        Form<PortfolioEntryPlanningPackagesFormData> planningPackagesFormData = planningPackagesFormDataTemplate
+                .fill(new PortfolioEntryPlanningPackagesFormData());
+
+        return ok(views.html.core.portfolioentryplanning.packages_manage_form_row_fragment.render(planningPackagesFormData,
                 PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
     }
 
@@ -1053,26 +1014,123 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        boolean hasCustomAttributeErrors = CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class, null,
-                "planningPackagesFormData");
-        if (boundForm.hasErrors() || hasCustomAttributeErrors) {
+        CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class, null, "planningPackagesFormData");
+        if (boundForm.hasErrors()) {
             return badRequest(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, boundForm,
                     PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
 
         PortfolioEntryPlanningPackagesFormData portfolioEntryPlanningPackagesFormData = boundForm.get();
 
+        List<Long> objectIds = new ArrayList<Long>();
+
         for (PortfolioEntryPlanningPackageFormData planningPackageFormData : portfolioEntryPlanningPackagesFormData.planningPackagesFormData) {
-            Logger.error("id: " + planningPackageFormData.planningPackageId);
+
+            PortfolioEntryPlanningPackage planningPackage = null;
+
+            if (planningPackageFormData.planningPackageId == null) {
+
+                planningPackage = new PortfolioEntryPlanningPackage();
+
+                planningPackage.portfolioEntry = portfolioEntry;
+                planningPackageFormData.fill(planningPackage);
+
+                planningPackage.save();
+
+            } else {
+
+                planningPackage = PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(planningPackageFormData.planningPackageId);
+
+                Date oldStartDate = planningPackage.startDate;
+                Date oldEndDate = planningPackage.endDate;
+
+                // security: the portfolioEntry must be related to the object
+                if (!planningPackage.portfolioEntry.id.equals(id)) {
+                    return forbidden(views.html.error.access_forbidden.render(""));
+                }
+
+                planningPackageFormData.fill(planningPackage);
+                planningPackage.update();
+
+                alertManagerDatesHaveChanged(oldStartDate, oldEndDate, planningPackage);
+
+            }
+
+            propagatePackageDates(planningPackage);
+
+            objectIds.add(planningPackage.id);
+
         }
 
-        // TODO check the indexes of the planningPackagesFormData correspond to
-        // the indexes of the form
-
-        // TODO see savePlanning + editPackage
+        // save the custom attributes
+        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, null, "", objectIds);
 
         return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, getPortfolioEntryPlanningPackagesForm(id),
                 PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+    }
+
+    /**
+     * When edit a package, if the dates (start and end) have changed and the
+     * package contains confirmed allocated actors, then notify their manager.
+     * 
+     * @param oldStartDate
+     *            the start date before change
+     * @param oldEndDate
+     *            the end date before change
+     * @param planningPackage
+     *            the changed planning package
+     */
+    private void alertManagerDatesHaveChanged(Date oldStartDate, Date oldEndDate, PortfolioEntryPlanningPackage planningPackage) {
+        if ((oldStartDate == null && planningPackage.startDate != null) || (oldStartDate != null && !oldStartDate.equals(planningPackage.startDate))
+                || (oldEndDate == null && planningPackage.endDate != null) || (oldEndDate != null && !oldEndDate.equals(planningPackage.endDate))) {
+            for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : planningPackage.portfolioEntryResourcePlanAllocatedActors) {
+                if (allocatedActor.isConfirmed && allocatedActor.followPackageDates != null && allocatedActor.followPackageDates) {
+                    ActorDao.sendNotification(allocatedActor.actor.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                            controllers.core.routes.ActorController.allocation(allocatedActor.actor.id).url(),
+                            "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title",
+                            "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message", allocatedActor.actor.getNameHumanReadable());
+                }
+            }
+        }
+    }
+
+    /**
+     * Propagate the planning package dates to the related objects that follow
+     * the package dates.
+     * 
+     * @param planningPackage
+     *            the planning package
+     */
+    private void propagatePackageDates(PortfolioEntryPlanningPackage planningPackage) {
+
+        for (PortfolioEntryResourcePlanAllocatedActor a : planningPackage.portfolioEntryResourcePlanAllocatedActors) {
+            if (a.followPackageDates != null && a.followPackageDates) {
+                a.startDate = planningPackage.startDate;
+                a.endDate = planningPackage.endDate;
+                a.save();
+            }
+        }
+        for (PortfolioEntryResourcePlanAllocatedOrgUnit oo : planningPackage.portfolioEntryResourcePlanAllocatedOrgUnits) {
+            if (oo.followPackageDates != null && oo.followPackageDates) {
+                oo.startDate = planningPackage.startDate;
+                oo.endDate = planningPackage.endDate;
+                oo.save();
+            }
+        }
+        for (PortfolioEntryResourcePlanAllocatedCompetency c : planningPackage.portfolioEntryResourcePlanAllocatedCompetencies) {
+            if (c.followPackageDates != null && c.followPackageDates) {
+                c.startDate = planningPackage.startDate;
+                c.endDate = planningPackage.endDate;
+                c.save();
+            }
+        }
+        for (WorkOrder o : planningPackage.workOrders) {
+            if (o.followPackageDates != null && o.followPackageDates) {
+                o.startDate = planningPackage.startDate;
+                o.dueDate = planningPackage.endDate;
+                o.save();
+            }
+        }
     }
 
     /**

@@ -46,6 +46,7 @@ public class PortfolioEntryPlanningPackagesFormData {
      * Default constructor.
      */
     public PortfolioEntryPlanningPackagesFormData() {
+        planningPackagesFormData.add(new PortfolioEntryPlanningPackageFormData());
     }
 
     /**

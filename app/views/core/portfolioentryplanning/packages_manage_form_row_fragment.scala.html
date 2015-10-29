@@ -53,7 +53,7 @@
             @parts.dropdownlist(planningPackageForm("status"), "", status, null, false)
         </td>
 
-        @defining( if(!planningPackageForm("planningPackageId").value.equals(None)) Long.parseLong(planningPackageForm("planningPackageId").value.get) else null) { objectId =>
+        @defining( if(!planningPackageForm("planningPackageId").value.equals(None) && !planningPackageForm("planningPackageId").value.get.equals("")) Long.parseLong(planningPackageForm("planningPackageId").value.get) else null) { objectId =>
             @defining(models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeValues(classOf[models.pmo.PortfolioEntryPlanningPackage], objectId.asInstanceOf[Long])) { customAttributeValues =>
                 @if(customAttributeValues!=null && customAttributeValues.size()!=0) {
                     @for(customAttributeValue <- customAttributeValues) {
