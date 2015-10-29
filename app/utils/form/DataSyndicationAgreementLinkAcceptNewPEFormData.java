@@ -94,7 +94,7 @@ public class DataSyndicationAgreementLinkAcceptNewPEFormData {
             portfolioEntry.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
             portfolioEntry.save();
 
-            PortfolioEntryController.createLifeCycleProcessTree(LifeCycleProcessDao.getLCProcessById(this.lifeCycleProcessId), portfolioEntry);
+            PortfolioEntryController.createLifeCycleProcessTree(portfolioEntry, LifeCycleProcessDao.getLCProcessById(this.lifeCycleProcessId));
 
             Ebean.commitTransaction();
 

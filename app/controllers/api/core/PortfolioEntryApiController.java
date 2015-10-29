@@ -234,10 +234,10 @@ public class PortfolioEntryApiController extends ApiController {
             portfolioEntry.manager = ActorDao.getActorById(portfolioEntryRequest.managerId);
             portfolioEntry.portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryRequest.portfolioEntryTypeId);
             portfolioEntry.sponsoringUnit = OrgUnitDao.getOrgUnitById(portfolioEntryRequest.sponsoringUnitId);
-
             portfolioEntry.save();
+
             LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(portfolioEntryRequest.lifeCycleProcessId);
-            PortfolioEntryController.createLifeCycleProcessTree(lifeCycleProcess, portfolioEntry);
+            PortfolioEntryController.createLifeCycleProcessTree(portfolioEntry, lifeCycleProcess);
 
             getLicensesManagementService().updateConsumedPortfolioEntries();
 
@@ -519,8 +519,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public Result getPortfolioEntryResourcePlanAllocatedOrgUnitsList(
-            @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryResourcePlanAllocatedOrgUnitsList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The portfolio entry with the specified id is not found"));
@@ -570,8 +569,7 @@ public class PortfolioEntryApiController extends ApiController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public Result getPortfolioEntryResourcePlanAllocatedCompetenciesList(
-            @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+    public Result getPortfolioEntryResourcePlanAllocatedCompetenciesList(@ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The portfolio entry with the specified id is not found"));

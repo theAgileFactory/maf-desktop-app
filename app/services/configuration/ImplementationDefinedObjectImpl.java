@@ -394,7 +394,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
 
         ClickableMenuItem newInitiativeMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.initiative.menu.label",
-                controllers.core.routes.PortfolioEntryController.createStep1(), "glyphicons glyphicons-wallet", false);
+                controllers.core.routes.PortfolioEntryController.create(), "glyphicons glyphicons-wallet", false);
         newInitiativeMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
         newMenuItem.addSubMenuItem(newInitiativeMenuItem);
 

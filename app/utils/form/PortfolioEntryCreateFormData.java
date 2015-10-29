@@ -17,33 +17,21 @@
  */
 package utils.form;
 
+import framework.utils.FileField;
+import framework.utils.FileFieldOptionalValidator;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
-import framework.utils.FileField;
-import framework.utils.FileFieldOptionalValidator;
 
 /**
- * A portfolio entry create form data is used to manage the fields when
- * creating an portfolio entry.
+ * A portfolio entry create form data is used to manage the fields when creating
+ * an portfolio entry.
  * 
  * @author Johann Kohler
  */
 public class PortfolioEntryCreateFormData {
-
-    /**
-     * The fields of the step 1.
-     */
-    public interface Step1Group {
-    }
-
-    /**
-     * The fields for the step 2.
-     */
-    public interface Step2Group {
-    }
 
     /**
      * Default constructor.
@@ -63,31 +51,28 @@ public class PortfolioEntryCreateFormData {
 
     public boolean isConfidential;
 
-    @Required(groups = { Step1Group.class })
-    @MinLength(value = 3, groups = { Step1Group.class })
-    @MaxLength(value = IModelConstants.MEDIUM_STRING, groups = { Step1Group.class })
+    @Required
+    @MinLength(value = 3)
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String name;
 
-    @Required(groups = { Step1Group.class })
+    @Required
     @MaxLength(value = IModelConstants.XLARGE_STRING)
     public String description;
 
-    @Required(groups = { Step1Group.class })
+    @Required
     public Long manager;
 
     public Long portfolio;
 
-    @Required(groups = { Step1Group.class })
+    @Required
     public Long portfolioEntryType;
 
-    @Required(groups = { Step1Group.class })
+    @Required
     public Long requestedLifeCycleProcess;
 
-    @ValidateWith(value = FileFieldOptionalValidator.class, message = "form.input.file_field.error", groups = { Step1Group.class })
+    @ValidateWith(value = FileFieldOptionalValidator.class, message = "form.input.file_field.error")
     public FileField scopeDescription;
-
-    @Required(groups = { Step2Group.class })
-    public Long id;
 
     @Override
     public String toString() {

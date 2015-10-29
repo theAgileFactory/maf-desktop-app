@@ -66,7 +66,7 @@
                                         <a class="list-group-item" href="@controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url">@portfolioEntry.name</a>
                                     }
                                 } else {
-                                    <a class="list-group-item" href="@controllers.core.routes.PortfolioEntryController.createStep1().url">@parts.Msg("index.initiatives.create")</a>
+                                    <a class="list-group-item" href="@controllers.core.routes.PortfolioEntryController.create().url">@parts.Msg("index.initiatives.create")</a>
                                 }
                             </div>
                         </div>
@@ -148,7 +148,7 @@
                     </div>
                     <div class="list-group">
                         @restrict(la(as(constants.IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION))){
-                            <a class="list-group-item" href="@controllers.core.routes.PortfolioEntryController.createStep1().url">
+                            <a class="list-group-item" href="@controllers.core.routes.PortfolioEntryController.create().url">
                                 <span class="glyphicons glyphicons-gift"></span> @parts.Msg("index.intake.label") &nbsp;<small><i>@parts.Msg("index.intake.description")</i></small>
                             </a>
                         }

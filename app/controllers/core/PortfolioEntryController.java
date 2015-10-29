@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -84,6 +85,7 @@ import models.pmo.PortfolioEntryType;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
+import play.data.validation.ValidationError;
 import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -94,7 +96,6 @@ import security.dynamic.PortfolioEntryDynamicHelper;
 import services.licensesmanagement.ILicensesManagementService;
 import utils.MilestonesTrend;
 import utils.form.AttachmentFormData;
-import utils.form.EmptyEditFormData;
 import utils.form.PortfolioEntryCreateFormData;
 import utils.form.PortfolioEntryDependencyFormData;
 import utils.form.PortfolioEntryEditFormData;
@@ -129,13 +130,9 @@ public class PortfolioEntryController extends Controller {
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
-    private static Form<PortfolioEntryCreateFormData> portfolioEntryCreateFormDataStep1 = Form.form(PortfolioEntryCreateFormData.class,
-            PortfolioEntryCreateFormData.Step1Group.class);
-    private static Form<PortfolioEntryCreateFormData> portfolioEntryCreateFormDataStep2 = Form.form(PortfolioEntryCreateFormData.class,
-            PortfolioEntryCreateFormData.Step2Group.class);
+    private static Form<PortfolioEntryCreateFormData> portfolioEntryCreateFormTemplate = Form.form(PortfolioEntryCreateFormData.class);
     private static Form<PortfolioEntryEditFormData> portfolioEntryEditFormData = Form.form(PortfolioEntryEditFormData.class);
     private static Form<PortfolioEntryPortfoliosFormData> portfoliosFormTemplate = Form.form(PortfolioEntryPortfoliosFormData.class);
-    private static Form<EmptyEditFormData> emptyFormTemplate = Form.form(EmptyEditFormData.class);
     private static Form<AttachmentFormData> attachmentFormTemplate = Form.form(AttachmentFormData.class);
     public static Form<PortfolioEntryDependencyFormData> portfolioEntryDependencyFormTemplate = Form.form(PortfolioEntryDependencyFormData.class);
 
@@ -143,227 +140,108 @@ public class PortfolioEntryController extends Controller {
      * Form to create a new portfolio entry.
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
-    public Result createStep1() {
+    public Result create() {
 
         if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
         }
 
         Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(getUserSessionManagerPlugin().getUserSessionId(ctx()));
-        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormDataStep1.fill(new PortfolioEntryCreateFormData(actor.id));
-        return ok(views.html.core.portfolioentry.portfolio_entry_create_step1.render(filledForm));
+        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(actor.id));
+        return ok(views.html.core.portfolioentry.portfolio_entry_create.render(filledForm));
     }
 
     /**
      * Process the creation of a portfolio entry.
-     * 
-     * step 1: standard attributes
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
-    public Result processCreateStep1() {
+    public Result processCreate() {
 
         if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
-            return redirect(controllers.core.routes.PortfolioEntryController.createStep1());
+            return redirect(controllers.core.routes.PortfolioEntryController.create());
         }
 
-        Form<PortfolioEntryCreateFormData> boundForm = portfolioEntryCreateFormDataStep1.bindFromRequest();
+        Form<PortfolioEntryCreateFormData> boundForm = portfolioEntryCreateFormTemplate.bindFromRequest();
+
+        CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class);
         if (boundForm.hasErrors()) {
-            return badRequest(views.html.core.portfolioentry.portfolio_entry_create_step1.render(boundForm));
+
+            for (Entry<String, List<ValidationError>> error : boundForm.errors().entrySet()) {
+                for (ValidationError valError : error.getValue()) {
+                    Logger.error(error.getKey() + ": " + valError.message());
+                }
+            }
+
+            return badRequest(views.html.core.portfolioentry.portfolio_entry_create.render(boundForm));
         }
-        PortfolioEntryCreateFormData newPortfolioEntryFormData = boundForm.get();
-        Ebean.beginTransaction();
+
+        PortfolioEntryCreateFormData portfolioEntryCreateFormData = boundForm.get();
+
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         Long attachmentId = null;
-        Long portfolioEntryId = null;
         Portfolio portfolio = null;
+
+        Ebean.beginTransaction();
         try {
 
+            // Get the last governance id
             Integer lastGovernanceId = PortfolioEntryDao.getPEAsLastGovernanceId();
 
-            // we set the portfolio entry as deleted until the creation process
-            // is full-finished (all steps)
-            portfolioEntry.deleted = true;
+            // Get the request life cycle process
+            LifeCycleProcess requestedLifeCycleProcess = LifeCycleProcessDao.getLCProcessById(portfolioEntryCreateFormData.requestedLifeCycleProcess);
 
-            portfolioEntry.name = newPortfolioEntryFormData.name;
-            portfolioEntry.description = newPortfolioEntryFormData.description;
+            // Create the portfolio entry
+            portfolioEntry.name = portfolioEntryCreateFormData.name;
+            portfolioEntry.description = portfolioEntryCreateFormData.description;
             portfolioEntry.creationDate = new Date();
-            portfolioEntry.manager = ActorDao.getActorById(newPortfolioEntryFormData.manager);
-            portfolio = PortfolioDao.getPortfolioById(newPortfolioEntryFormData.portfolio);
+            portfolioEntry.manager = ActorDao.getActorById(portfolioEntryCreateFormData.manager);
+            portfolio = PortfolioDao.getPortfolioById(portfolioEntryCreateFormData.portfolio);
             portfolioEntry.portfolios = portfolio != null ? Arrays.asList(portfolio) : new ArrayList<Portfolio>();
-            portfolioEntry.isPublic = !newPortfolioEntryFormData.isConfidential;
-            PortfolioEntryType portfolioEntryType = PortfolioEntryDao.getPETypeById(newPortfolioEntryFormData.portfolioEntryType);
+            portfolioEntry.isPublic = !portfolioEntryCreateFormData.isConfidential;
+            PortfolioEntryType portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryCreateFormData.portfolioEntryType);
             portfolioEntry.portfolioEntryType = portfolioEntryType;
             portfolioEntry.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
-            log.info("Creation of the entry " + newPortfolioEntryFormData.name);
-
             portfolioEntry.save();
-            portfolioEntryId = portfolioEntry.id;
 
-            createLifeCycleProcessTree(LifeCycleProcessDao.getLCProcessById(newPortfolioEntryFormData.requestedLifeCycleProcess), portfolioEntry);
+            createLifeCycleProcessTree(portfolioEntry, requestedLifeCycleProcess);
 
             // if exists, Creation of the attachment
             if (FileAttachmentHelper.hasFileField("scopeDescription")) {
                 attachmentId = FileAttachmentHelper.saveAsAttachement("scopeDescription", PortfolioEntry.class, portfolioEntry.id,
                         getAttachmentManagerPlugin());
-                log.info("Attachment " + attachmentId + " created for entry " + portfolioEntryId);
             }
 
             Ebean.commitTransaction();
+
         } catch (Exception e) {
+
             Ebean.rollbackTransaction();
+
             try {
                 // Attempt to rollback the attachment creation
                 if (attachmentId != null) {
                     FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
                 }
-            } catch (Exception exp) {
-                Logger.error("impossible to rollback the attachment creation", exp);
+            } catch (Exception e1) {
+                Logger.error("impossible to rollback the attachment creation", e1);
             }
-            log.error(String.format("Failure while creating the portfolio entry", newPortfolioEntryFormData.toString()));
+
+            log.error(String.format("Failure while creating the portfolio entry", portfolioEntryCreateFormData.toString()));
+
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
-        // Check if the PortfolioEntry object has some custom attributes (if yes
-        // go to step 2, else end)
-        if (CustomAttributeFormAndDisplayHandler.hasCustomAttributes(PortfolioEntry.class)) {
-
-            if (log.isDebugEnabled()) {
-                log.debug("The PortFolioEntry object has some custom attributes, forward to step2");
-            }
-
-            newPortfolioEntryFormData.id = portfolioEntryId;
-            Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormDataStep2.fill(newPortfolioEntryFormData);
-            CustomAttributeFormAndDisplayHandler.fillWithValues(filledForm, PortfolioEntry.class, newPortfolioEntryFormData.id);
-            return ok(views.html.core.portfolioentry.portfolio_entry_create_step2.render(filledForm));
-
-        } else {
-
-            if (log.isDebugEnabled()) {
-                log.debug("No custom attribute defined for entry creation");
-            }
-
-            return finalizeCreateProcess(portfolioEntry);
-        }
-    }
-
-    /**
-     * Create the tree of appropriate LifeCycleObjects.
-     * <ul>
-     * <li>A process instance {@link LifeCycleInstance}</li>
-     * <li>A planning {@link LifeCycleInstancePlanning} (the first one)</li>
-     * <li>A list of {@link LifeCycleMilestoneInstance} (one for each possible
-     * milestone)</li>
-     * <li>A list of {@link PlannedLifeCycleMilestoneInstance} (one for each
-     * milestone)</li>
-     * </ul>
-     * 
-     * @param lifeCycleProcess
-     *            the life cycle process
-     * @param portfolioEntry
-     *            the portfolio entry
-     */
-    public static void createLifeCycleProcessTree(LifeCycleProcess lifeCycleProcess, PortfolioEntry portfolioEntry) {
-
-        // Creation of the life cycle tree
-        LifeCycleInstance lifeCycleInstance = new LifeCycleInstance();
-        lifeCycleInstance.defaults();
-        lifeCycleInstance.portfolioEntry = portfolioEntry;
-        LifeCycleProcess requestedLifeCycleProcess = lifeCycleProcess;
-        lifeCycleInstance.lifeCycleProcess = requestedLifeCycleProcess;
-
-        if (log.isDebugEnabled()) {
-            log.debug("Selected lifeCycleProcess is " + requestedLifeCycleProcess);
-        }
-
-        // Creation of the instance planning
-        List<LifeCycleInstancePlanning> plannings = new ArrayList<LifeCycleInstancePlanning>();
-        LifeCycleInstancePlanning planning = new LifeCycleInstancePlanning();
-        planning.version = 1;
-        planning.isFrozen = false;
-        planning.creationDate = new Date();
-        planning.lifeCycleInstance = lifeCycleInstance;
-        planning.plannedLifeCycleMilestoneInstance = new ArrayList<PlannedLifeCycleMilestoneInstance>();
-        planning.portfolioEntryBudget = new PortfolioEntryBudget();
-        planning.portfolioEntryResourcePlan = new PortfolioEntryResourcePlan();
-        planning.save();
-        plannings.add(planning);
-
-        // Creation of the milestone instances & plannings for each milestone
-        // instance
-        for (LifeCycleMilestone milestone : requestedLifeCycleProcess.lifeCycleMilestones) {
-            // Planned instance
-            PlannedLifeCycleMilestoneInstance plannedLifeCycleMilestoneInstance = new PlannedLifeCycleMilestoneInstance();
-            plannedLifeCycleMilestoneInstance.lifeCycleMilestone = milestone;
-            plannedLifeCycleMilestoneInstance.lifeCycleInstancePlanning = planning;
-            plannedLifeCycleMilestoneInstance.save();
-            if (log.isDebugEnabled()) {
-                log.debug("Added planned life cycle milestone for " + milestone);
-            }
-        }
-
-        lifeCycleInstance.lifeCycleInstancePlannings = plannings;
-        lifeCycleInstance.save();
-
-        portfolioEntry.activeLifeCycleInstance = lifeCycleInstance;
-        portfolioEntry.save();
-    }
-
-    /**
-     * Process the creation of a portfolio entry.
-     * 
-     * step 1: custom attributes
-     */
-    @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
-    public Result processCreateStep2() {
-
-        if (!getLicensesManagementService().canCreatePortfolioEntry()) {
-            Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
-            return redirect(controllers.core.routes.PortfolioEntryController.createStep1());
-        }
-
-        // bind the form
-        Form<PortfolioEntryCreateFormData> boundForm = portfolioEntryCreateFormDataStep2.bindFromRequest();
-
-        // check the custom attribute values
-        if (CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class)) {
-            return badRequest(views.html.core.portfolioentry.portfolio_entry_create_step2.render(boundForm));
-        }
-
-        PortfolioEntryCreateFormData newPortfolioEntryFormData = boundForm.get();
-
-        // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, newPortfolioEntryFormData.id);
-
-        // get the portfolio entry
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEDeletedById(newPortfolioEntryFormData.id);
-
-        return finalizeCreateProcess(portfolioEntry);
-    }
-
-    /**
-     * Finalize the portfolio entry create process (if success).
-     * 
-     * @param portfolioEntry
-     *            the created portfolio entry
-     */
-    private Result finalizeCreateProcess(PortfolioEntry portfolioEntry) {
-
-        // we set the deleted flag to false
-        portfolioEntry.deleted = false;
-        portfolioEntry.save();
+        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, portfolioEntry.id);
 
         getLicensesManagementService().updateConsumedPortfolioEntries();
 
         // send a notification to the portfolio manager (if it exists)
-        if (portfolioEntry.portfolios != null && portfolioEntry.portfolios.size() > 0) {
-            Portfolio portfolio = portfolioEntry.portfolios.get(0);
+        if (portfolio != null) {
             ActorDao.sendNotification(portfolio.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                     controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), "core.portfolio_entry.create.notification.title",
                     "core.portfolio_entry.create.notification.message", portfolio.name);
         }
-
-        Utilities.sendSuccessFlashMessage(Messages.get("core.portfolio_entry.create.success.message"));
 
         // send a notification to the initiative manager (if he is not the
         // current one)
@@ -375,8 +253,57 @@ public class PortfolioEntryController extends Controller {
 
         }
 
+        Utilities.sendSuccessFlashMessage(Messages.get("core.portfolio_entry.create.success.message"));
+
         return redirect(controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0));
 
+    }
+
+    /**
+     * Create the life cycle process tree for a portfolio entry.
+     * 
+     * @param portfolioEntry
+     *            the portfolio entry
+     * @param requestedLifeCycleProcess
+     *            the request life cycle process
+     */
+    public static void createLifeCycleProcessTree(PortfolioEntry portfolioEntry, LifeCycleProcess requestedLifeCycleProcess) {
+
+        // Create the life cycle tree
+        LifeCycleInstance lifeCycleInstance = new LifeCycleInstance();
+        lifeCycleInstance.defaults();
+        lifeCycleInstance.portfolioEntry = portfolioEntry;
+        lifeCycleInstance.lifeCycleProcess = requestedLifeCycleProcess;
+
+        // Create the instance planning
+        LifeCycleInstancePlanning planning = new LifeCycleInstancePlanning();
+        planning.version = 1;
+        planning.isFrozen = false;
+        planning.creationDate = new Date();
+        planning.lifeCycleInstance = lifeCycleInstance;
+        planning.plannedLifeCycleMilestoneInstance = new ArrayList<PlannedLifeCycleMilestoneInstance>();
+        planning.portfolioEntryBudget = new PortfolioEntryBudget();
+        planning.portfolioEntryResourcePlan = new PortfolioEntryResourcePlan();
+        planning.save();
+
+        // Create the dates of the planning
+        for (LifeCycleMilestone milestone : requestedLifeCycleProcess.lifeCycleMilestones) {
+            PlannedLifeCycleMilestoneInstance plannedLifeCycleMilestoneInstance = new PlannedLifeCycleMilestoneInstance();
+            plannedLifeCycleMilestoneInstance.lifeCycleMilestone = milestone;
+            plannedLifeCycleMilestoneInstance.lifeCycleInstancePlanning = planning;
+            plannedLifeCycleMilestoneInstance.save();
+        }
+
+        // Assign the planning to the life cycle process instance
+        List<LifeCycleInstancePlanning> plannings = new ArrayList<LifeCycleInstancePlanning>();
+        plannings.add(planning);
+        lifeCycleInstance.lifeCycleInstancePlannings = plannings;
+        lifeCycleInstance.save();
+
+        // Set the life cycle process instance as the active one of the
+        // portfolio entry
+        portfolioEntry.activeLifeCycleInstance = lifeCycleInstance;
+        portfolioEntry.save();
     }
 
     /**
