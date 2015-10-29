@@ -64,6 +64,7 @@
     <script>
     var countPackages = @countPackage;
     
+    
     $( "#packages-manage-add-row").click(function( event ) {
 
         event.preventDefault();
@@ -82,6 +83,21 @@
             $('#planning-packages-table-body').append(result);
         });
     });
+    
+    saveSerializeForm();
+    $(window).bind('beforeunload', function(e){
+        if($('#planning-packages-form').serialize()!=$('#planning-packages-form').data('serialize')) {
+            return true;
+        }
+        else {
+            e=null;
+        }
+    });
+    
+    function saveSerializeForm() {
+        $('#planning-packages-form').data('serialize', $('#planning-packages-form').serialize());
+    }
+    
     </script>
    
 }

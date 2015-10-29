@@ -92,6 +92,7 @@
         }).done(function(result) {
             $('#planning-packages-container').html(result);
             $("#planning-packages-process").html("<span class='text-success'><strong>@parts.Msg("core.portfolio_entry_planning.packages.manage.successful")</strong></span>");
+            saveSerializeForm();
         });
     });
 </script>
