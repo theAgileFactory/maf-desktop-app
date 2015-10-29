@@ -27,6 +27,7 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
+@import framework.utils.CustomAttributeFormAndDisplayHandler
 
 
 @repeat(packagesForm("planningPackagesFormData")) { planningPackageForm =>
@@ -59,8 +60,10 @@
                     @for(customAttributeValue <- customAttributeValues) {
                         @if(customAttributeValue.getDefinition.isDisplayed || customAttributeValue.getDefinition.isRequired) {
                             <td>
-                                @customAttributeValue.renderFormField(planningPackageForm(framework.utils.CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)))
+                                @customAttributeValue.renderFormField(planningPackageForm(CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)))
                             </td>
+                        } else {
+                            <input type="hidden" name="@planningPackageForm(CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)).name" value="@planningPackageForm(CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)).value"/>
                         }
                     }
                 }
