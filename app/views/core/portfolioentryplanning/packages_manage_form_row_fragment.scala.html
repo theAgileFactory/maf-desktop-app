@@ -55,19 +55,7 @@
         </td>
 
         @defining( if(!planningPackageForm("planningPackageId").value.equals(None) && !planningPackageForm("planningPackageId").value.get.equals("")) Long.parseLong(planningPackageForm("planningPackageId").value.get) else null) { objectId =>
-            @defining(models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeValues(classOf[models.pmo.PortfolioEntryPlanningPackage], objectId.asInstanceOf[Long])) { customAttributeValues =>
-                @if(customAttributeValues!=null && customAttributeValues.size()!=0) {
-                    @for(customAttributeValue <- customAttributeValues) {
-                        @if(customAttributeValue.getDefinition.isDisplayed || customAttributeValue.getDefinition.isRequired) {
-                            <td>
-                                @customAttributeValue.renderFormField(planningPackageForm(CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)))
-                            </td>
-                        } else {
-                            <input type="hidden" name="@planningPackageForm(CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)).name" value="@planningPackageForm(CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid)).value"/>
-                        }
-                    }
-                }
-            }
+            @parts.extended_attributes_input(planningPackageForm, classOf[models.pmo.PortfolioEntryPlanningPackage], objectId.asInstanceOf[Long], false, true, true)
         }
 
     </tr>
