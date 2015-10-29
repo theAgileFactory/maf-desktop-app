@@ -2172,14 +2172,10 @@ core.portfolio_entry.breadcrump.edit=Bearbeiten
 #create
 core.portfolio_entry.create.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Neue Initiative erstellen
 core.portfolio_entry.create.title=Neue Initiative erstellen
-core.portfolio_entry.create.step2.title=Zusätzliche Informationen
 core.portfolio_entry.create.success.message=Die Initiative wurde erstellt
 core.portfolio_entry.create.notification.title=Neue Initiative
 core.portfolio_entry.create.notification.message=Neue Initiative in Ihr Portfolio {0} erstellt.
 core.portfolio_entry.create.notification.manager.message=A new initiative has been assigned to you.
-core.portfolio_entry.create.help.portfolioentrytype.title=Definitionen der Initiative Typen
-core.portfolio_entry.create.help.lifecycleprocess.title=Definitionen der Lieferzyklen
-core.portfolio_entry.create.help.extendedattributes.title=Definitionen der benutzerdefinierten Attribute
 
 #overview
 core.portfolio_entry.overview.milestones_trend.panel.title=Meilenstein Trend

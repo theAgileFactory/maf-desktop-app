@@ -2177,14 +2177,10 @@ core.portfolio_entry.breadcrump.new=Nouveau
 #create
 core.portfolio_entry.create.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Soumettre une nouvelle initiative
 core.portfolio_entry.create.title=Soumettre une nouvelle initiative
-core.portfolio_entry.create.step2.title=Informations complémentaires
 core.portfolio_entry.create.success.message=Votre initiative a été soumise
 core.portfolio_entry.create.notification.title=Nouvelle initiative
 core.portfolio_entry.create.notification.message=Une nouvelle initiative a été ajoutée à votre portefeuille {0}
 core.portfolio_entry.create.notification.manager.message=Une nouvelle initiative vous a été assignée.
-core.portfolio_entry.create.help.portfolioentrytype.title=Définitions des types d''initiative
-core.portfolio_entry.create.help.lifecycleprocess.title=Définitions des processus de gouvernance
-core.portfolio_entry.create.help.extendedattributes.title=Définitions des attributs personnalisés
 
 #overview
 core.portfolio_entry.overview.milestones_trend.panel.title=Tendance des jalons

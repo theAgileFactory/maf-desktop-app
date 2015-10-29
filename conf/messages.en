@@ -2161,14 +2161,10 @@ core.portfolio_entry.breadcrump.new=New
 #create
 core.portfolio_entry.create.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Submit a new initiative
 core.portfolio_entry.create.title=Submit a new initiative
-core.portfolio_entry.create.step2.title=Additional information
 core.portfolio_entry.create.success.message=Your initiative has been submitted.
 core.portfolio_entry.create.notification.title=New initiative
 core.portfolio_entry.create.notification.message=A new initiative has been submitted in your portfolio {0}.
 core.portfolio_entry.create.notification.manager.message=A new initiative has been assigned to you.
-core.portfolio_entry.create.help.portfolioentrytype.title=Definitions of initiative types
-core.portfolio_entry.create.help.lifecycleprocess.title=Definitions of life cycle processes
-core.portfolio_entry.create.help.extendedattributes.title=Definitions of custom attributes
 
 #overview
 core.portfolio_entry.overview.milestones_trend.panel.title=Milestones trend
