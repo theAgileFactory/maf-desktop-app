@@ -90,6 +90,7 @@ form.input.date.error.after=Das Datum muss nach {0} sein
 form.input.date.error.before=Das Datum muss vor {0} sein
 form.input.multi_languages_string.required=Pflichfeld, mindestens eine Sprache
 form.input.multi_languages_string.required.error=Pflichfeld, mindestens eine Sprache
+form.input.multi_languages_string.max_length.error=de: The value is too long
 form.input.image.required=Bitte geben Sie ein Bild in einem der folgenden Formate: gif, jpeg oder png.
 form.input.image.error.max_width=Bitte geben Sie ein Bild mit einer Breite gleich oder kleiner als {0} px.
 form.input.image.error.max_height=Bitte geben Sie ein Bild mit einer Höhe gleich oder kleiner als {0} px.

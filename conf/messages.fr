@@ -90,6 +90,7 @@ form.input.date.error.after=La date doit être après le {0}.
 form.input.date.error.before=La date doit être avant le {0}.
 form.input.multi_languages_string.required=requis pour au moins une langue
 form.input.multi_languages_string.required.error=Ce champ est obligatoire pour au moins une langue
+form.input.multi_languages_string.max_length.error=La valeur est trop longue
 form.input.image.required=Veuillez fournir une image dans dans l''un de ces formats: gif, jpeg ou png.
 form.input.image.error.max_width=Veuillez fournir une image dont la largeur est égale ou inférieure à {0} px.
 form.input.image.error.max_height=Veuillez fournir une image dont la hauteur est égale ou inférieure à {0} px.
