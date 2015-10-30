@@ -224,19 +224,19 @@ object.filter_configuration.name.error=de: The name should not be empty
 object.filter_configuration.delete.confirmation=de: Are you sure you want to delete this filter?
 object.filter_configuration.stored_filters=de: Stored filters
 
-object.filter_configuration.action.reload=de: Reload
-object.filter_configuration.action.save=de: Save
-object.filter_configuration.action.save_as=de: Save as
-object.filter_configuration.action.edit=de: Rename
-object.filter_configuration.action.share=de: Share
-object.filter_configuration.action.delete=de: Delete
+object.filter_configuration.action.reload=Nachladen
+object.filter_configuration.action.save=Speichern
+object.filter_configuration.action.save_as=Speichern als
+object.filter_configuration.action.edit=Bearbeiten
+object.filter_configuration.action.share=Freigeben
+object.filter_configuration.action.delete=Löschen
 
 object.filter_configuration.share.title=de: Share the filter
 object.filter_configuration.share.with_notification.title=de: With a notification
 object.filter_configuration.share.with_notification.header=de: Send a notification to another BizDock user with a link to this filter.
-object.filter_configuration.share.manually.title=de: Manually
+object.filter_configuration.share.manually.title=Manuell
 object.filter_configuration.share.manually.header=de: Send the above link manually.
-object.filter_configuration.share.recipient=de: Recipient
+object.filter_configuration.share.recipient=Empfänger
 object.filter_configuration.share.notification.title=de: Shared filter
 object.filter_configuration.share.notification.message=de: {0} has shared a filter with you.
 
@@ -3051,9 +3051,9 @@ admin.configuration.custom_attribute.item.delete.successful=Option entfernt.
 #----------------------
 
 #helpers
-admin.configuration.translations.title=de: Translations
+admin.configuration.translations.title=Übersetzungen
 admin.configuration.translations.key.label=de: Key
-admin.configuration.translations.value.label=de: Translation
+admin.configuration.translations.value.label=Übersetzung
 
 #search
 admin.configuration.translations.search.title=de: Search translations
