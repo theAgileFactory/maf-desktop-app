@@ -104,7 +104,7 @@
                         
                         @helper.textarea(submitAgreementLinkForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement_link.description.label"))
 
-                        @parts.checkboxlist(submitAgreementLinkForm("itemIds"), parts.Msg.asString("object.data_syndication_agreement_link.items.label"), items)
+                        @parts.checkboxlist(submitAgreementLinkForm("itemIds"), "object.data_syndication_agreement_link.items.label", "", items)
                         
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntry.id).url">@parts.Msg("button.cancel")</a>

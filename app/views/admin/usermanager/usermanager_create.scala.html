@@ -72,7 +72,7 @@
             @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes,null,false)
             <div id="rolesSelector">
             <legend>@parts.Msg("object.user_account.roles.label")</legend>
-            @parts.checkboxlist(userAccountForm("systemLevelRoleTypes"), "", allRoles)
+            @parts.checkboxlist(userAccountForm("systemLevelRoleTypes"), "", "", allRoles)
             </div>
         </fieldset>
         <br/>

@@ -57,7 +57,7 @@
                 
                 @parts.dateinput(submitAgreementForm("endDate"), "object.data_syndication_agreement.end_date.label")
                 
-                @parts.checkboxlist(submitAgreementForm("itemIds"), parts.Msg.asString("object.data_syndication_agreement.items.label"), items)
+                @parts.checkboxlist(submitAgreementForm("itemIds"), "object.data_syndication_agreement.items.label", "", items)
                 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.admin.routes.DataSyndicationController.viewMasterAgreements()'>@parts.Msg("button.cancel")</a>

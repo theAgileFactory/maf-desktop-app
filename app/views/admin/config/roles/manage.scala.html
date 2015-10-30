@@ -54,7 +54,7 @@
 
                 @parts.multi_languages_input_text(roleForm("description"), parts.Msg.asString("object.role.description.label"))
                 
-                @parts.checkboxlist(roleForm("permissions"), parts.Msg.asString("object.role.permissions.label"), permissions)
+                @parts.checkboxlist(roleForm("permissions"), "object.role.permissions.label", "", permissions)
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationController.roles()'>@parts.Msg("button.cancel")</a>

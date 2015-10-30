@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -85,7 +84,6 @@ import models.pmo.PortfolioEntryType;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
-import play.data.validation.ValidationError;
 import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -166,13 +164,6 @@ public class PortfolioEntryController extends Controller {
 
         CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class);
         if (boundForm.hasErrors()) {
-
-            for (Entry<String, List<ValidationError>> error : boundForm.errors().entrySet()) {
-                for (ValidationError valError : error.getValue()) {
-                    Logger.error(error.getKey() + ": " + valError.message());
-                }
-            }
-
             return badRequest(views.html.core.portfolioentry.portfolio_entry_create.render(boundForm));
         }
 
