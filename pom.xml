@@ -42,7 +42,7 @@
         <ivy-maven-plugin.version>0.2.5</ivy-maven-plugin.version>
         <play2-maven-plugin.version>1.2.5</play2-maven-plugin.version>
         <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
-        <maven-site-plugin.version>3.0</maven-site-plugin.version>
+        <maven-site-plugin.version>3.4</maven-site-plugin.version>
         <wagon-ssh.version>2.2</wagon-ssh.version>
         <maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
         <maven-checkstyle-plugin.version>2.12.1</maven-checkstyle-plugin.version>
