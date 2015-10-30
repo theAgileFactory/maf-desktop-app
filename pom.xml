@@ -47,7 +47,7 @@
         <maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
         <maven-checkstyle-plugin.version>2.12.1</maven-checkstyle-plugin.version>
         <maven-pmd-plugin.version>3.5</maven-pmd-plugin.version>
-        <findbugs-maven-plugin.version>2.5.2</findbugs-maven-plugin.version>
+        <findbugs-maven-plugin.version>3.0.2</findbugs-maven-plugin.version>
         <maven-project-info-reports-plugin.version>2.4</maven-project-info-reports-plugin.version>
         <versions-maven-plugin.version>1.2</versions-maven-plugin.version>
 	</properties>
@@ -170,7 +170,7 @@
           							<configLocation>conf/checkstyle.xml</configLocation>
         						</configuration>
 						</plugin>
-						<!-- <plugin>
+						<plugin>
 								<groupId>org.apache.maven.plugins</groupId>
 								<artifactId>maven-pmd-plugin</artifactId>
 								<version>${maven-pmd-plugin.version}</version>
@@ -178,7 +178,7 @@
 									<linkXref>true</linkXref>
 									<targetJdk>${java.target}</targetJdk>
 								</configuration>
-						</plugin> -->
+						</plugin>
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>findbugs-maven-plugin</artifactId>
