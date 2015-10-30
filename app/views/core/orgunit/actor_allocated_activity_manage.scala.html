@@ -99,9 +99,9 @@
         
                         @parts.input_text(allocatedActivityForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
-                        @parts.dateinput(allocatedActivityForm("startDate"), parts.Msg.asString("object.allocated_resource.start_date.label"))
+                        @parts.dateinput(allocatedActivityForm("startDate"), "object.allocated_resource.start_date.label")
                         
-                        @parts.dateinput(allocatedActivityForm("endDate"), parts.Msg.asString("object.allocated_resource.end_date.label"))
+                        @parts.dateinput(allocatedActivityForm("endDate"), "object.allocated_resource.end_date.label")
         
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href='@controllers.core.routes.OrgUnitController.allocationDetails(orgUnit.id)'>@parts.Msg("button.cancel")</a>

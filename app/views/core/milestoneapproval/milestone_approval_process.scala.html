@@ -194,7 +194,7 @@
     
                                     @parts.dropdownlist(decisionForm("lifeCycleMilestoneInstanceStatusType"), parts.Msg.asString("object.life_cycle_milestone_instance.status.label"), statusTypes)
 
-                                    @parts.dateinput(decisionForm("passedDate"), parts.Msg.asString("object.life_cycle_milestone_instance.passed_date.label"))
+                                    @parts.dateinput(decisionForm("passedDate"), "object.life_cycle_milestone_instance.passed_date.label")
 
                                     @helper.textarea(decisionForm("comments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("object.life_cycle_milestone_instance.gate_comments.placeholder"))
     

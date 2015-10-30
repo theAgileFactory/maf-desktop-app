@@ -156,7 +156,7 @@
                                 <input type="hidden" name="requestId" value="@request.id"/>
                                 <input type="hidden" name="milestoneId" value="@milestone.id"/>
 
-                                @parts.dateinput(requestForm("passedDate"), parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.passed_date.label"))
+                                @parts.dateinput(requestForm("passedDate"), "core.process_transition_request.process_milestone_request.panel.form.passed_date.label")
 
                                 @parts.multivalue_picker(
                                     requestForm("approvers"), 

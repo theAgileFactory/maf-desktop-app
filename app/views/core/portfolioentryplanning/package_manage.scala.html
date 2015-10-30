@@ -80,9 +80,9 @@
                         
                         @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageGroup"), parts.Msg.asString("object.portfolio_entry_planning_package.group.label"), groups, null, false)
                         
-                        @parts.dateinput(planningPackageForm("startDate"), parts.Msg.asString("object.portfolio_entry_planning_package.start_date.label"))
+                        @parts.dateinput(planningPackageForm("startDate"), "object.portfolio_entry_planning_package.start_date.label")
                         
-                        @parts.dateinput(planningPackageForm("endDate"), parts.Msg.asString("object.portfolio_entry_planning_package.end_date.label"))
+                        @parts.dateinput(planningPackageForm("endDate"), "object.portfolio_entry_planning_package.end_date.label")
                         
                         @parts.radiobuttongroup(planningPackageForm("portfolioEntryPlanningPackageType"), parts.Msg.asString("object.portfolio_entry_planning_package.type.label"), selectablePortfolioEntryPlanningPackageTypes)
                         

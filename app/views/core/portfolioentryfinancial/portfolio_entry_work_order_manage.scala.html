@@ -131,9 +131,9 @@
                             parts.Msg.asString("object.work_order.follow_package_dates.label")
                         )
                         
-                        @parts.dateinput(workOrderForm("startDate"), parts.Msg.asString("object.work_order.start_date.label"))
+                        @parts.dateinput(workOrderForm("startDate"), "object.work_order.start_date.label")
                         
-                        @parts.dateinput(workOrderForm("dueDate"), parts.Msg.asString("object.work_order.due_date.label"))
+                        @parts.dateinput(workOrderForm("dueDate"), "object.work_order.due_date.label")
 
                         @views.html.core.portfolioentryplanning.allocated_resource_manage_js()
                         

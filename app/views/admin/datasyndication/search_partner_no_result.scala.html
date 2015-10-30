@@ -49,9 +49,9 @@
                 
                 @parts.input_text(submitAgreementNoSlaveForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement.name.label"))
                 
-                @parts.dateinput(submitAgreementNoSlaveForm("startDate"), parts.Msg.asString("object.data_syndication_agreement.start_date.label"))
+                @parts.dateinput(submitAgreementNoSlaveForm("startDate"), "object.data_syndication_agreement.start_date.label")
                 
-                @parts.dateinput(submitAgreementNoSlaveForm("endDate"), parts.Msg.asString("object.data_syndication_agreement.end_date.label"))
+                @parts.dateinput(submitAgreementNoSlaveForm("endDate"), "object.data_syndication_agreement.end_date.label")
                 
                 @parts.checkboxlist(submitAgreementNoSlaveForm("itemIds"), parts.Msg.asString("object.data_syndication_agreement.items.label"), items)
                 

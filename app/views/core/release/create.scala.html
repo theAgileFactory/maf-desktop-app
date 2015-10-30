@@ -62,11 +62,11 @@
         
                         @parts.input_text(releaseForm("capacity"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.release.capacity.label"))
                         
-                        @parts.dateinput(releaseForm("cutOffDate"), parts.Msg.asString("object.release.cut_off_date.label"))
+                        @parts.dateinput(releaseForm("cutOffDate"), "object.release.cut_off_date.label")
                         
-                        @parts.dateinput(releaseForm("endTestsDate"), parts.Msg.asString("object.release.end_tests_date.label"))
+                        @parts.dateinput(releaseForm("endTestsDate"), "object.release.end_tests_date.label")
                         
-                        @parts.dateinput(releaseForm("deploymentDate"), parts.Msg.asString("object.release.deployment_date.label"))
+                        @parts.dateinput(releaseForm("deploymentDate"), "object.release.deployment_date.label")
                         
                         @parts.singlevalue_picker(
                             releaseForm("manager"), 

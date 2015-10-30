@@ -89,9 +89,9 @@
                         @parts.dropdownlist(portfolioEntryRiskForm("riskType"), parts.Msg.asString("object.portfolio_entry_risk.type.label"), riskTypes, null, false)
                         
                         @if(isRisk) {
-                            @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.target_date.label"))
+                            @parts.dateinput(portfolioEntryRiskForm("targetDate"), "object.portfolio_entry_risk.target_date.label")
                         } else {
-                            @parts.dateinput(portfolioEntryRiskForm("targetDate"), parts.Msg.asString("object.portfolio_entry_risk.due_date.label"))
+                            @parts.dateinput(portfolioEntryRiskForm("targetDate"), "object.portfolio_entry_risk.due_date.label")
                         }
                         
                         @if(isRisk) {
