@@ -20,13 +20,14 @@ package utils.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.MultiLanguagesString;
 import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.account.SystemPermission;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.MultiLanguagesString;
 
 /**
  * A role form data is used to manage the fields when adding/editing a role.
@@ -41,6 +42,7 @@ public class RoleFormData {
     @MaxLength(value = IModelConstants.SMALL_STRING)
     public String name;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
     public MultiLanguagesString description;
 
     public List<Long> permissions = new ArrayList<Long>();
@@ -56,7 +58,7 @@ public class RoleFormData {
      * 
      * @param systemLevelRoleType
      *            the role in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public RoleFormData(SystemLevelRoleType systemLevelRoleType, II18nMessagesPlugin i18nMessagesPlugin) {

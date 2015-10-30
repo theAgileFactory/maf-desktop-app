@@ -17,13 +17,13 @@
  */
 package utils.form;
 
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
+import framework.utils.MultiLanguagesString;
 import models.framework_models.common.CustomAttributeItemOption;
 import models.framework_models.common.CustomAttributeMultiItemOption;
-import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
+import models.framework_models.parent.IModelConstants;
 
 /**
  * An custom attribute item form data is used to manage the fields when managing
@@ -36,10 +36,11 @@ public class CustomAttributeItemFormData {
     public Long id;
     public Long customAttributeDefinitionId;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
     public MultiLanguagesString description;
 
     /**
@@ -53,7 +54,7 @@ public class CustomAttributeItemFormData {
      * 
      * @param item
      *            the custom attribute item in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public CustomAttributeItemFormData(CustomAttributeItemOption item, II18nMessagesPlugin i18nMessagesPlugin) {
@@ -61,8 +62,8 @@ public class CustomAttributeItemFormData {
         this.id = item.id;
         this.customAttributeDefinitionId = item.customAttributeDefinition.id;
 
-        this.name = MultiLanguagesString.getByKey(item.name,i18nMessagesPlugin);
-        this.description = MultiLanguagesString.getByKey(item.description,i18nMessagesPlugin);
+        this.name = MultiLanguagesString.getByKey(item.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(item.description, i18nMessagesPlugin);
 
     }
 
@@ -71,7 +72,7 @@ public class CustomAttributeItemFormData {
      * 
      * @param item
      *            the custom attribute item in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public CustomAttributeItemFormData(CustomAttributeMultiItemOption item, II18nMessagesPlugin i18nMessagesPlugin) {
@@ -79,8 +80,8 @@ public class CustomAttributeItemFormData {
         this.id = item.id;
         this.customAttributeDefinitionId = item.customAttributeDefinition.id;
 
-        this.name = MultiLanguagesString.getByKey(item.name,i18nMessagesPlugin);
-        this.description = MultiLanguagesString.getByKey(item.description,i18nMessagesPlugin);
+        this.name = MultiLanguagesString.getByKey(item.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(item.description, i18nMessagesPlugin);
 
     }
 

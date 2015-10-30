@@ -21,11 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
 import models.framework_models.common.CustomAttributeDefinition;
+import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
 
@@ -47,10 +48,11 @@ public class CustomAttributeDefinitionFormData {
     @Required
     public String attributeType;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
     public MultiLanguagesString description;
 
     public boolean isDisplayed;

@@ -17,12 +17,13 @@
  */
 package utils.form;
 
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
+import framework.utils.MultiLanguagesString;
+import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntryEventType;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
 
 /**
  * A portfolio entry event type form data is used to manage the fields when
@@ -36,8 +37,8 @@ public class PortfolioEntryEventTypeFormData {
 
     public boolean selectable;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
 
     @Required
@@ -54,14 +55,14 @@ public class PortfolioEntryEventTypeFormData {
      * 
      * @param portfolioEntryEventType
      *            the portfolio entry event type in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public PortfolioEntryEventTypeFormData(PortfolioEntryEventType portfolioEntryEventType, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = portfolioEntryEventType.id;
         this.selectable = portfolioEntryEventType.selectable;
-        this.name = MultiLanguagesString.getByKey(portfolioEntryEventType.name,i18nMessagesPlugin);
+        this.name = MultiLanguagesString.getByKey(portfolioEntryEventType.name, i18nMessagesPlugin);
         this.bootstrapGlyphicon = portfolioEntryEventType.bootstrapGlyphicon;
 
     }

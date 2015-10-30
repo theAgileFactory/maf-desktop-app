@@ -17,12 +17,12 @@
  */
 package utils.form;
 
-import models.governance.LifeCycleProcess;
-import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
+import models.framework_models.parent.IModelConstants;
+import models.governance.LifeCycleProcess;
 
 /**
  * A life cycle process form data is used to manage the fields when managing a
@@ -34,14 +34,15 @@ public class LifeCycleProcessFormData {
 
     public Long id;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.SMALL_STRING)
     public MultiLanguagesString shortName;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
     public MultiLanguagesString description;
 
     public boolean isActive;
@@ -57,15 +58,15 @@ public class LifeCycleProcessFormData {
      * 
      * @param lifeCycleProcess
      *            the life cycle process in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public LifeCycleProcessFormData(LifeCycleProcess lifeCycleProcess, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = lifeCycleProcess.id;
-        this.shortName = MultiLanguagesString.getByKey(lifeCycleProcess.shortName,i18nMessagesPlugin);
-        this.name = MultiLanguagesString.getByKey(lifeCycleProcess.name,i18nMessagesPlugin);
-        this.description = MultiLanguagesString.getByKey(lifeCycleProcess.description,i18nMessagesPlugin);
+        this.shortName = MultiLanguagesString.getByKey(lifeCycleProcess.shortName, i18nMessagesPlugin);
+        this.name = MultiLanguagesString.getByKey(lifeCycleProcess.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(lifeCycleProcess.description, i18nMessagesPlugin);
         this.isActive = lifeCycleProcess.isActive;
 
     }

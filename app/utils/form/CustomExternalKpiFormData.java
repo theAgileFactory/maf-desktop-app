@@ -17,13 +17,14 @@
  */
 package utils.form;
 
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
 import models.framework_models.kpi.KpiDefinition;
 import models.framework_models.kpi.KpiValueDefinition;
 import models.framework_models.kpi.KpiValueDefinition.RenderType;
+import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 
 /**
  * Form to create a custom and external KPI.
@@ -34,16 +35,16 @@ public class CustomExternalKpiFormData {
 
     public String objectType;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString mainName;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString additional1Name;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString additional2Name;
 
     @Required

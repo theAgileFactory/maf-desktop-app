@@ -20,15 +20,16 @@ package utils.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.governance.LifeCycleMilestone;
-import models.pmo.Actor;
-import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
+import models.framework_models.parent.IModelConstants;
+import models.governance.LifeCycleMilestone;
+import models.pmo.Actor;
+import play.data.validation.Constraints.Required;
 
 /**
  * A life cycle process form data is used to manage the fields when managing a
@@ -42,14 +43,15 @@ public class LifeCycleMilestoneFormData {
 
     public Long lifeCycleProcessId;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.SMALL_STRING)
     public MultiLanguagesString shortName;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
     public MultiLanguagesString description;
 
     public boolean isReviewRequired;
@@ -72,15 +74,15 @@ public class LifeCycleMilestoneFormData {
      * 
      * @param lifeCycleMilestone
      *            the life cycle milestone in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public LifeCycleMilestoneFormData(LifeCycleMilestone lifeCycleMilestone, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.id = lifeCycleMilestone.id;
-        this.shortName = MultiLanguagesString.getByKey(lifeCycleMilestone.shortName,i18nMessagesPlugin);
-        this.name = MultiLanguagesString.getByKey(lifeCycleMilestone.name,i18nMessagesPlugin);
-        this.description = MultiLanguagesString.getByKey(lifeCycleMilestone.description,i18nMessagesPlugin);
+        this.shortName = MultiLanguagesString.getByKey(lifeCycleMilestone.shortName, i18nMessagesPlugin);
+        this.name = MultiLanguagesString.getByKey(lifeCycleMilestone.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(lifeCycleMilestone.description, i18nMessagesPlugin);
         this.isReviewRequired = lifeCycleMilestone.isReviewRequired;
         this.defaultStatusType = lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType.id;
         this.isActive = lifeCycleMilestone.isActive;

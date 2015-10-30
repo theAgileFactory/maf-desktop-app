@@ -39,9 +39,10 @@ import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
 import framework.services.plugins.IEventBroadcastingService;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.Msg;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
 import framework.utils.PreferenceFormAndDisplayHandler;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -49,11 +50,11 @@ import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.account.SystemLevelRoleType;
 import models.framework_models.account.SystemPermission;
+import models.framework_models.parent.IModelConstants;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.form.RoleFormData;
@@ -682,8 +683,8 @@ public class ConfigurationController extends Controller {
 
         public String keywords;
 
-        @Required
-        @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+        @MultiLanguagesStringRequired
+        @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
         public MultiLanguagesString value;
 
         /**

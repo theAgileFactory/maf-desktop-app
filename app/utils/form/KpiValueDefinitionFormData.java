@@ -18,14 +18,14 @@
 package utils.form;
 
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
 import models.framework_models.kpi.KpiValueDefinition;
 import models.framework_models.kpi.KpiValueDefinition.RenderType;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 
 /**
  * An KPI value definition form data is used to manage the fields when managing
@@ -38,8 +38,8 @@ public class KpiValueDefinitionFormData {
     public Long id;
     public String valueType;
 
-    @Required(groups = { CustomGroup.class })
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired(groups = { CustomGroup.class })
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING, groups = { CustomGroup.class })
     public MultiLanguagesString name;
 
     @Required(groups = { StandardGroup.class, CustomGroup.class })

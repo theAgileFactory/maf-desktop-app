@@ -17,12 +17,12 @@
  */
 package utils.form;
 
-import models.timesheet.TimesheetActivityType;
-import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
+import models.framework_models.parent.IModelConstants;
+import models.timesheet.TimesheetActivityType;
 
 /**
  * A timesheet activity type form data is used to manage the fields when
@@ -34,10 +34,11 @@ public class TimesheetActivityTypeFormData {
 
     public Long id;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
     public MultiLanguagesString description;
 
     /**
@@ -51,7 +52,7 @@ public class TimesheetActivityTypeFormData {
      * 
      * @param timesheetActivityType
      *            the timesheet activity type in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
     public TimesheetActivityTypeFormData(TimesheetActivityType timesheetActivityType, II18nMessagesPlugin i18nMessagesPlugin) {

@@ -17,10 +17,12 @@
  */
 package utils.form;
 
-import models.framework_models.kpi.KpiColorRule;
-import play.data.validation.Constraints.Required;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
 import framework.utils.MultiLanguagesString;
+import models.framework_models.kpi.KpiColorRule;
+import models.framework_models.parent.IModelConstants;
+import play.data.validation.Constraints.Required;
 
 /**
  * An KPI color rule form data is used to manage the fields when managing a KPI
@@ -40,6 +42,7 @@ public class KpiColorRuleFormData {
     @Required
     public String cssColor;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString renderLabel;
 
     /**
@@ -53,16 +56,16 @@ public class KpiColorRuleFormData {
      * 
      * @param kpiColorRule
      *            the KPI color rule in the DB
-     * @param i18nMessagesPlugin 
+     * @param i18nMessagesPlugin
      *            the i18n manager
      */
-    public KpiColorRuleFormData(KpiColorRule kpiColorRule,II18nMessagesPlugin i18nMessagesPlugin) {
+    public KpiColorRuleFormData(KpiColorRule kpiColorRule, II18nMessagesPlugin i18nMessagesPlugin) {
 
         this.kpiDefinitionId = kpiColorRule.kpiDefinition.id;
         this.kpiColorRuleId = kpiColorRule.id;
         this.rule = kpiColorRule.rule;
         this.cssColor = kpiColorRule.cssColor;
-        this.renderLabel = MultiLanguagesString.getByKey(kpiColorRule.renderLabel,i18nMessagesPlugin);
+        this.renderLabel = MultiLanguagesString.getByKey(kpiColorRule.renderLabel, i18nMessagesPlugin);
 
     }
 

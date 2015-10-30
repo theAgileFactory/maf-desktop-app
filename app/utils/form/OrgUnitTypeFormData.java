@@ -18,13 +18,13 @@
 package utils.form;
 
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
-import framework.utils.MultiLanguagesStringValidator;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.OrgUnitType;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.ValidateWith;
 
 /**
  * An org unit type form data is used to manage the fields when adding/editing
@@ -42,10 +42,11 @@ public class OrgUnitTypeFormData {
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String refId;
 
-    @Required
-    @ValidateWith(value = MultiLanguagesStringValidator.class, message = "form.input.multi_languages_string.required.error")
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
 
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
     public MultiLanguagesString description;
 
     /**
