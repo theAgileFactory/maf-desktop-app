@@ -79,7 +79,7 @@
                         
                         @helper.textarea(portfolioEntryForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
                         
-                        @parts.dropdownlist(portfolioEntryForm("portfolioEntryType"), parts.Msg.asString("object.portfolio_entry.type.label"), portfolioEntryTypes, null, false)
+                        @parts.dropdownlist(portfolioEntryForm("portfolioEntryType"), parts.Msg.asString("object.portfolio_entry.type.label"), portfolioEntryTypes)
         
                         @parts.input_text(portfolioEntryForm("governanceId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.governance_id.label"))
                         

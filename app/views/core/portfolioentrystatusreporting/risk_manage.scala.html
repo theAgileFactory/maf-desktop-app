@@ -86,7 +86,7 @@
                         
                         @helper.textarea(portfolioEntryRiskForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.description.label"))
                         
-                        @parts.dropdownlist(portfolioEntryRiskForm("riskType"), parts.Msg.asString("object.portfolio_entry_risk.type.label"), riskTypes, null, false)
+                        @parts.dropdownlist(portfolioEntryRiskForm("riskType"), parts.Msg.asString("object.portfolio_entry_risk.type.label"), riskTypes)
                         
                         @if(isRisk) {
                             @parts.dateinput(portfolioEntryRiskForm("targetDate"), "object.portfolio_entry_risk.target_date.label")

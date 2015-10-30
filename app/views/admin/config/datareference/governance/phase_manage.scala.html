@@ -63,9 +63,9 @@
                 
                 @parts.multi_languages_input_text(lifeCyclePhaseForm("name"), parts.Msg.asString("object.life_cycle_phase.name.label"))
 
-                @parts.dropdownlist(lifeCyclePhaseForm("startMilestone"), parts.Msg.asString("object.life_cycle_phase.start_milestone.label"), milestones, null, false)
+                @parts.dropdownlist(lifeCyclePhaseForm("startMilestone"), parts.Msg.asString("object.life_cycle_phase.start_milestone.label"), milestones)
                 
-                @parts.dropdownlist(lifeCyclePhaseForm("endMilestone"), parts.Msg.asString("object.life_cycle_phase.end_milestone.label"), milestones, null, false)
+                @parts.dropdownlist(lifeCyclePhaseForm("endMilestone"), parts.Msg.asString("object.life_cycle_phase.end_milestone.label"), milestones)
                 
                 @parts.input_text(lifeCyclePhaseForm("gapDaysStart"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.life_cycle_phase.gap_days_start.label"))
                 

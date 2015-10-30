@@ -73,7 +73,7 @@
                         
                         @parts.input_text(orgUnitForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.org_unit.name.label"))
                         
-                        @parts.dropdownlist(orgUnitForm("orgUnitType"), parts.Msg.asString("object.org_unit.type.label"), orgUnitTypes, null, false)
+                        @parts.dropdownlist(orgUnitForm("orgUnitType"), parts.Msg.asString("object.org_unit.type.label"), orgUnitTypes)
                         
                         @parts.singlevalue_picker(
                             orgUnitForm("manager"), 

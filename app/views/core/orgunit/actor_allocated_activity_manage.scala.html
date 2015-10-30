@@ -62,9 +62,7 @@
                         @parts.dropdownlist(
                             allocatedActivityForm("timesheetActivityType"), 
                             parts.Msg.asString("object.allocated_resource.timesheet_activity.label"), 
-                            dao.timesheet.TimesheetDao.getTimesheetActivityTypeAsVH,
-                            null,
-                            false
+                            dao.timesheet.TimesheetDao.getTimesheetActivityTypeAsVH
                         )
                         
                         <div class="form-group ">

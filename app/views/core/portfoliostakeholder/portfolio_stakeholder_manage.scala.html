@@ -61,9 +61,7 @@
                 @parts.dropdownlist(
                     stakeholderForm("stakeholderType"), 
                     parts.Msg.asString("object.stakeholder.role.label"), 
-                    dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPortfolioType(portfolio.portfolioType.id), 
-                    null,
-                    false
+                    dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPortfolioType(portfolio.portfolioType.id)
                 )
                 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

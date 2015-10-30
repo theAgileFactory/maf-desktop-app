@@ -50,7 +50,7 @@
                     <input type="hidden" name="id" value="@timesheetActivityForm("id").value"/>
                 }
                 
-                @parts.dropdownlist(timesheetActivityForm("type"), parts.Msg.asString("object.timesheet_activity.type.label"), types, null, false)
+                @parts.dropdownlist(timesheetActivityForm("type"), parts.Msg.asString("object.timesheet_activity.type.label"), types)
 
                 @parts.multi_languages_input_text(timesheetActivityForm("name"), parts.Msg.asString("object.timesheet_activity.name.label"))
 

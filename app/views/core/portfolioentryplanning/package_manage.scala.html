@@ -78,7 +78,7 @@
                         
                         @helper.textarea(planningPackageForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))
                         
-                        @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageGroup"), parts.Msg.asString("object.portfolio_entry_planning_package.group.label"), groups, null, false)
+                        @parts.dropdownlist(planningPackageForm("portfolioEntryPlanningPackageGroup"), parts.Msg.asString("object.portfolio_entry_planning_package.group.label"), groups)
                         
                         @parts.dateinput(planningPackageForm("startDate"), "object.portfolio_entry_planning_package.start_date.label")
                         
@@ -86,7 +86,7 @@
                         
                         @parts.radiobuttongroup(planningPackageForm("portfolioEntryPlanningPackageType"), parts.Msg.asString("object.portfolio_entry_planning_package.type.label"), selectablePortfolioEntryPlanningPackageTypes)
                         
-                        @parts.dropdownlist(planningPackageForm("status"), parts.Msg.asString("object.portfolio_entry_planning_package.status.label"), status, null, false)
+                        @parts.dropdownlist(planningPackageForm("status"), parts.Msg.asString("object.portfolio_entry_planning_package.status.label"), status)
                         
                         @if(planningPackageForm("planningPackageId").value==null) {
                             @parts.file_field(planningPackageForm("document"),Messages("object.attachment.document.label"))

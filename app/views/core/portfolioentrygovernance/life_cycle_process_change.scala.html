@@ -51,7 +51,7 @@
             
                 <input type="hidden" name="id" value="@portfolioEntry.id"/>
                 
-                @parts.dropdownlist(changeProcessForm("lifeCycleProcess"), "", lifeCycleProcesses, null, false)
+                @parts.dropdownlist(changeProcessForm("lifeCycleProcess"), "", lifeCycleProcesses)
                 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.change")" />
                 <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id)">@parts.Msg("button.cancel")</a>

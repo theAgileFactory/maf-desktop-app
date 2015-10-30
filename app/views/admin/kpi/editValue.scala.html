@@ -73,7 +73,7 @@
                     ""
                 )
                 
-                @parts.dropdownlist(kpiValueDefinitionForm("renderType"), parts.Msg.asString("object.kpi_value_definition.render_type.label"), renderTypes, null, false)
+                @parts.dropdownlist(kpiValueDefinitionForm("renderType"), parts.Msg.asString("object.kpi_value_definition.render_type.label"), renderTypes)
                 
                 @parts.input_text(kpiValueDefinitionForm("renderPattern"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.kpi_value_definition.render_pattern.label"))
                 

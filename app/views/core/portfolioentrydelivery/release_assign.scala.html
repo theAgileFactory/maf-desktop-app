@@ -55,7 +55,7 @@
                     controllers.routes.PickerController.activeRelease().url
                 )
                 
-                 @parts.dropdownlist(assignReleaseForm("type"), parts.Msg.asString("object.release.portfolio_entry.type.label"), types, null, false)
+                 @parts.dropdownlist(assignReleaseForm("type"), parts.Msg.asString("object.release.portfolio_entry.type.label"), types)
                 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryDeliveryController.releases(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>

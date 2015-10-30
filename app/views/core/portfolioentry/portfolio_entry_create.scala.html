@@ -62,9 +62,9 @@
                         
                         @parts.singlevalue_picker(newPortfolioEntryForm("portfolio"),parts.Msg.asString("object.portfolio_entry.portfolio.label"),controllers.routes.PickerController.portfolio().url)
                         
-                        @parts.dropdownlist(newPortfolioEntryForm("portfolioEntryType"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(), null, false)
+                        @parts.dropdownlist(newPortfolioEntryForm("portfolioEntryType"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH())
                         
-                        @parts.dropdownlist(newPortfolioEntryForm("requestedLifeCycleProcess"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH, null, false)
+                        @parts.dropdownlist(newPortfolioEntryForm("requestedLifeCycleProcess"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH)
                         
                         @parts.singlevalue_picker(
                             newPortfolioEntryForm("manager"), 

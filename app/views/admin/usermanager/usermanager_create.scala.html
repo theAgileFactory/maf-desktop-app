@@ -69,7 +69,7 @@
             @parts.input_text(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
             @parts.input_text(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
             @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguagesAsValueHolderCollection, null, false)
-            @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes,null,false)
+            @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes)
             <div id="rolesSelector">
             <legend>@parts.Msg("object.user_account.roles.label")</legend>
             @parts.checkboxlist(userAccountForm("systemLevelRoleTypes"), "", "", allRoles)

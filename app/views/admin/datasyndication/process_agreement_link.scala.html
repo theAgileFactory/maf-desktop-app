@@ -90,9 +90,9 @@
                             
                             @parts.input_text(agreementLinkAcceptNewPEForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
 
-                            @parts.dropdownlist(agreementLinkAcceptNewPEForm("portfolioEntryTypeId"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(), null, false)
+                            @parts.dropdownlist(agreementLinkAcceptNewPEForm("portfolioEntryTypeId"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH())
                 
-                            @parts.dropdownlist(agreementLinkAcceptNewPEForm("lifeCycleProcessId"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH, null, false)
+                            @parts.dropdownlist(agreementLinkAcceptNewPEForm("lifeCycleProcessId"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH)
                 
                             @parts.singlevalue_picker(
                                 agreementLinkAcceptNewPEForm("managerId"), 

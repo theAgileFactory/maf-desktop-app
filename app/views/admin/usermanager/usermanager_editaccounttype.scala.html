@@ -36,7 +36,7 @@
     @helper.form(action = controllers.admin.routes.UserManager.saveUserAccountType()) {
         <fieldset>
             <input type="hidden" name="uid" value="@userAccountForm("uid").value()"/>
-            @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes,null,false)
+            @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes)
         </fieldset>
         <br/>
         <input type="submit" value="@parts.Msg("button.update")" class="btn btn-primary">

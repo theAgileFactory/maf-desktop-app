@@ -50,7 +50,7 @@
                     <input type="hidden" name="id" value="@statusForm("id").value"/>
                 }
                 
-                @parts.dropdownlist(statusForm("type"), parts.Msg.asString("object.requirement_status.type.label"), statusTypes, null, false)
+                @parts.dropdownlist(statusForm("type"), parts.Msg.asString("object.requirement_status.type.label"), statusTypes)
 
                 @parts.multi_languages_input_text(statusForm("name"), parts.Msg.asString("object.requirement_status.name.label"))
 

@@ -79,9 +79,7 @@
                         @parts.dropdownlist(
                             allocatedActorForm("stakeholderType"), 
                             parts.Msg.asString("object.stakeholder.role.label"), 
-                            dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id), 
-                            null,
-                            false
+                            dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id)
                         )
                         
                         @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")

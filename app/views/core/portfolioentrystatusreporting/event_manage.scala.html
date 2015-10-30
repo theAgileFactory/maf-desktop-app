@@ -65,7 +65,7 @@
                             <input type="hidden" name="eventId" value="@portfolioEntryEventForm("eventId").value"/>
                         }
                         
-                        @parts.dropdownlist(portfolioEntryEventForm("type"), parts.Msg.asString("object.portfolio_entry_event.type.label"), eventTypes, null, false)
+                        @parts.dropdownlist(portfolioEntryEventForm("type"), parts.Msg.asString("object.portfolio_entry_event.type.label"), eventTypes)
                         
                         @helper.textarea(portfolioEntryEventForm("message"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_event.message.label"))
 

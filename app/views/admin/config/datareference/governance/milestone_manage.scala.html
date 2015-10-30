@@ -73,7 +73,7 @@
                     ""
                 )
 
-                @parts.dropdownlist(lifeCycleMilestoneForm("defaultStatusType"), parts.Msg.asString("object.life_cycle_milestone.default_status_type.label"), statusTypes, null, false)
+                @parts.dropdownlist(lifeCycleMilestoneForm("defaultStatusType"), parts.Msg.asString("object.life_cycle_milestone.default_status_type.label"), statusTypes)
 
                 @parts.multivalue_picker(
                     lifeCycleMilestoneForm("approvers"), 
