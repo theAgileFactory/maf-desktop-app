@@ -170,7 +170,7 @@
           							<configLocation>conf/checkstyle.xml</configLocation>
         						</configuration>
 						</plugin>
-						<plugin>
+						<!-- <plugin>
 								<groupId>org.apache.maven.plugins</groupId>
 								<artifactId>maven-pmd-plugin</artifactId>
 								<version>${maven-pmd-plugin.version}</version>
@@ -178,7 +178,7 @@
 									<linkXref>true</linkXref>
 									<targetJdk>${java.target}</targetJdk>
 								</configuration>
-						</plugin>
+						</plugin> -->
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>findbugs-maven-plugin</artifactId>
