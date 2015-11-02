@@ -81,6 +81,10 @@
 </div>  
 <script type="text/javascript">
 $(document).ready(function(){
+	if($("#administratorDefinedPassword").is(':checked')){
+		$("#passwordDefinitionArea").show();
+	}
+
     $("#accountType").change(function(){
         var selectedAccountType=$(this).val();
         if(selectedAccountType!='@framework.services.account.IUserAccount.AccountType.STANDARD.name()'){
