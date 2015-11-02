@@ -90,7 +90,7 @@ form.input.date.error.after=Das Datum muss nach {0} sein
 form.input.date.error.before=Das Datum muss vor {0} sein
 form.input.multi_languages_string.required=Pflichfeld, mindestens eine Sprache
 form.input.multi_languages_string.required.error=Pflichfeld, mindestens eine Sprache
-form.input.multi_languages_string.max_length.error=de: The value is too long
+form.input.multi_languages_string.max_length.error=Text zu lang
 form.input.image.required=Bitte geben Sie ein Bild in einem der folgenden Formate: gif, jpeg oder png.
 form.input.image.error.max_width=Bitte geben Sie ein Bild mit einer Breite gleich oder kleiner als {0} px.
 form.input.image.error.max_height=Bitte geben Sie ein Bild mit einer Höhe gleich oder kleiner als {0} px.
@@ -165,7 +165,7 @@ button.start=Start
 button.stop=Stop
 button.submit=Einreichen
 button.update=Aktualisieren
-button.upgrade_from_trial=de: Upgrade from trial
+button.upgrade_from_trial=Upgrade von der Testversion
 button.upload=Hochladen
 button.open=Offen
 
@@ -218,11 +218,11 @@ filter.table.excel.failure=Fehler: Excel-Export fehlgeschlagen
 filter.table.ajax.error.message=Fehler: Server nicht erreichbar. Bitte aktualisieren Sie die Seite
 filter.table.empty.textfilter=Alle
 
-object.filter_configuration.name.default.label=de: Default filter
-object.filter_configuration.name.title=de: Filter name
-object.filter_configuration.name.error=de: The name should not be empty
-object.filter_configuration.delete.confirmation=de: Are you sure you want to delete this filter?
-object.filter_configuration.stored_filters=de: Stored filters
+object.filter_configuration.name.default.label=Standardfilter
+object.filter_configuration.name.title=Filtername
+object.filter_configuration.name.error=Name ist ein Pflichtfeld
+object.filter_configuration.delete.confirmation=Diesen Filter löschen?
+object.filter_configuration.stored_filters=Gespeicherte Filter
 
 object.filter_configuration.action.reload=Nachladen
 object.filter_configuration.action.save=Speichern
@@ -231,19 +231,19 @@ object.filter_configuration.action.edit=Bearbeiten
 object.filter_configuration.action.share=Freigeben
 object.filter_configuration.action.delete=Löschen
 
-object.filter_configuration.share.title=de: Share the filter
-object.filter_configuration.share.with_notification.title=de: With a notification
-object.filter_configuration.share.with_notification.header=de: Send a notification to another BizDock user with a link to this filter.
+object.filter_configuration.share.title=Filter publizieren
+object.filter_configuration.share.with_notification.title=Mit Mitteilung
+object.filter_configuration.share.with_notification.header=Mitteilung and eine BizDock Benutzer senden, mit Link zu diesem Filter
 object.filter_configuration.share.manually.title=Manuell
-object.filter_configuration.share.manually.header=de: Send the above link manually.
+object.filter_configuration.share.manually.header=Link manuel senden.
 object.filter_configuration.share.recipient=Empfänger
-object.filter_configuration.share.notification.title=de: Shared filter
-object.filter_configuration.share.notification.message=de: {0} has shared a filter with you.
+object.filter_configuration.share.notification.title=Publizierte Filter
+object.filter_configuration.share.notification.message={0} hat Ihnen einen Filter gesandt.
 
-object.filter_configuration.shared_filter.not_found=de: The shared filter is no more existing. The default filter has been loaded.
+object.filter_configuration.shared_filter.not_found=Dieser Filter existert nicht mehr. Der Standartfilter wurde geladen.
 
-object.filter_configuration.no_more_compatible.page_load=de: The filter configuration is no more compatible with the table: the initial configuration has been reloaded.
-object.filter_configuration.no_more_compatible.dynamic=de: The selected filter configuration is no more compatible with the table: it is recommended to delete the filter and refresh the page.
+object.filter_configuration.no_more_compatible.page_load=Dieser Filter ist nicht mehr kompatibel mit der Tabelle: Grundkonfiguration wurde geladen.
+object.filter_configuration.no_more_compatible.dynamic=Dieser Filter ist nicht mehr kompatibel mit der Tabelle: Löschen Sie den Filter und laden Sie die Seite neu.
 
 #----------------------
 # chart
@@ -362,8 +362,8 @@ idzone.notifications.not_read.empty=Keine neuen Mitteilungen
 idzone.notifications.view_all=Alle Mitteilungen
 idzone.my.myaccount=Mein Profil
 idzone.my.personalspace=Persönliche Ablage
-idzone.my.support=de: Online help
-idzone.my.echannel=de: Billing and support
+idzone.my.support=Online-Hilfe
+idzone.my.echannel=Rechnungen und Hilfe
 idzone.my.logout=Abmelden
 
 #----------------------
@@ -643,7 +643,7 @@ permission.admin_custom_attribute_permission.description=Zusatzfelder konfigurie
 permission.architecture_permission.description=Um die Architektur-Modul verwenden (DevDock).
 permission.application_block_edit_all_permission.description=Um die Applikationsblöcke zu verwalten (DevDock).
 permission.partner_syndication_permission.description=BizDock Partner verwalten.
-permission.admin_translation_key_edit_permission.description=de: Permission which allows a user to edit the translations of BizDock.
+permission.admin_translation_key_edit_permission.description=Übersetzung von BizDock bearbeiten.
 
 #----------------------
 # preferences
@@ -699,7 +699,7 @@ authentication.no_account=Kein Benutzerkonto gefunden, bitte wenden Sie sich an 
 #----------------------
 
 licenses_management.cannot_create_portfolio_entry=Neue Initiative kann nicht angelegt werden, Ihre Lizenz ist aufgebraucht. Bitte wenden Sie sich an den Administrator für weitere Auskünfte.
-licenses_management.cannot_create_user=de: This is not possible to create a new user (except a VIEWER) because you have consumed all available licenses. Please contact your administrator for more information.
+licenses_management.cannot_create_user=Neuer Benutzer (ausser VIEWER) kann nicht angelegt werden - Lizenz ist aufgebraucht. Bitte kontaktieren Sie Ihren Administrator.
 
 #----------------------
 # data syndication
@@ -834,9 +834,9 @@ object.custom_attribute_definition.description.label=Beschreibung
 object.custom_attribute_definition.configuration.label=Konfiguration
 object.custom_attribute_definition.is_displayed.label=Anzeigen
 object.custom_attribute_definition.is_displayed.help=Die Zusatzfelder werden in den entsprechenden Tabellen angezeigt.
-object.custom_attribute_definition.conditional_rule.label=de: Conditional rule
-object.custom_attribute_definition.conditional_rule.help=de: Rule to limit the activation of the custom attribute according to the value of another attribute. Not available for "multi dropdown" type.
-object.custom_attribute_definition.conditional_rule.invalid=de: The rule is not correctly settled, please select an attribute and set a value.
+object.custom_attribute_definition.conditional_rule.label=Bedingung
+object.custom_attribute_definition.conditional_rule.help=Aktivierung von Zusatzfelder in Abhängigkeit eines anderen Attribut. Nicht für "multi dropdown" Typen.
+object.custom_attribute_definition.conditional_rule.invalid=Regel ungültig. Bitte wählen Sie ein Attribut und den Wert.
 object.custom_attribute_definition.table.empty=Die Zusatzfelder definiert
 
 #----------------------
@@ -1838,8 +1838,8 @@ my.personalstorage.file.size.label=Grösse
 
 #roadmap
 core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
-core.roadmap.no_portfolio_entry.info=de: An initiative represents initially a demand / idea that can eventually end up in a project and enhancement. The roadmap is listing all the inititiaves based on your permissions.
-core.roadmap.no_portfolio_entry.create=de: Create your first initiative
+core.roadmap.no_portfolio_entry.info=Eine Initiative ist eine Anforderung oder eine Idee aus welcher ein Projekt oder eine Erweiterung entstehen kann. Auf der Roadmap sehen Sie alle Initiativen entsprechend Ihren Zugriffsrechten.
+core.roadmap.no_portfolio_entry.create=Meine erste Initiative erstellen
 
 #planning
 core.roadmap.planning.title=Gantt-Diagramm
@@ -2434,8 +2434,8 @@ core.portfolio_entry_planning.package.edit.successful=Planungseinheit wurde aktu
 core.portfolio_entry_planning.package.delete.successful=Planungseinheit wurde entfernt.
 
 #manage all packages
-core.portfolio_entry_planning.packages.manage.title=de: Manage all packages
-core.portfolio_entry_planning.packages.manage.successful=de: The packages has been updated.
+core.portfolio_entry_planning.packages.manage.title=Packete verwalten
+core.portfolio_entry_planning.packages.manage.successful=Packete aktualisiert
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Mitarbeiter
@@ -2673,8 +2673,8 @@ core.org_unit.actor_allocated_activity.add.successful=Zuweisung wurde hinzugefü
 core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
 
 #list and planning
-core.release.list.no_release.info=de: A release reprensents an artifact that would be rolled out. It is possible to register initiatives to a release in order it includes a set of requirements.
-core.release.list.no_release.create=de: Create your first release
+core.release.list.no_release.info=Eine Release beinhaltet Elemente die geliefert werden können. Sie können Initiativen einer Release zuordnen um die Anforderungen zu erweitern.
+core.release.list.no_release.create=Meine erste Release erstellen
 core.release.list.planning.title=Gantt-Diagramm
 core.release.list.planning.no_source=Keine Daten
 core.release.list.planning.phase.full=Erstellen und Liefern
@@ -2710,12 +2710,12 @@ core.architecture.breadcrumb=<i class="glyphicons glyphicons-globe-af"></i>&nbsp
 
 #index
 core.architecture.index.application_block.tree.title=Applikationsblöcke
-core.architecture.index.application_block.no_application_block.info=de: An application block is a module or a system of an application. It is structured via a hierarchy.
-core.architecture.index.application_block.no_application_block.create=de: Create your first application block
+core.architecture.index.application_block.no_application_block.info=Ein Applikationsblock ist ein Modul oder ein System einer Applikation - mit einer hierarchischen Struktur.
+core.architecture.index.application_block.no_application_block.create=Meinen ersten Applikationsblock erstellen
 
 #application block
 core.architecture.application_block.view.details.title=Details
-core.architecture.application_block.view.root.label=Main
+core.architecture.application_block.view.root.label=Stamm
 
 ########################
 # Admin pages
@@ -2879,7 +2879,7 @@ admin.configuration.reference_data.requirements.priorities.title=Priorität
 admin.configuration.reference_data.requirements.severities.title=Gewichtung
 admin.configuration.reference_data.planning_packages.title=Planungspaket
 admin.configuration.reference_data.planning_packages.groups.title=Paketgruppe
-admin.configuration.reference_data.planning_packages.types.title=de: Package types
+admin.configuration.reference_data.planning_packages.types.title=Pakettypen
 admin.configuration.reference_data.planning_packages.patterns.title=Paket-Muster
 admin.configuration.reference_data.register.title=Berichterstattung
 admin.configuration.reference_data.register.risktypes.title=Risiko Typen
@@ -2983,16 +2983,16 @@ admin.configuration.reference_data.package_group.edit.successful=Gruppe aktualis
 admin.configuration.reference_data.package_group.delete.successful=Gruppe entfernt.
 
 #manage package type
-admin.configuration.reference_data.package_type.manage.title=de: Manage a package type
-admin.configuration.reference_data.package_type.add.successful=de: The package type has been added successfully.
-admin.configuration.reference_data.package_type.edit.successful=de: The package type has been updated.
-admin.configuration.reference_data.package_type.delete.successful=de: The package type has been removed.
+admin.configuration.reference_data.package_type.manage.title=Pakettypen bearbeiten
+admin.configuration.reference_data.package_type.add.successful=Pakettyp hinzugefügt.
+admin.configuration.reference_data.package_type.edit.successful=Pakettyp aktualisiert.
+admin.configuration.reference_data.package_type.delete.successful=Pakettyp entfernt.
 
 #manage package pattern
-admin.configuration.reference_data.package_pattern.manage.title=Packet-Muster bearbeiten
-admin.configuration.reference_data.package_pattern.add.successful=Packet-Muster hinzugefügt.
-admin.configuration.reference_data.package_pattern.edit.successful=Packet-Muster aktualisiert.
-admin.configuration.reference_data.package_pattern.delete.successful=Packet-Muster entfernt.
+admin.configuration.reference_data.package_pattern.manage.title=Paket-Muster bearbeiten
+admin.configuration.reference_data.package_pattern.add.successful=Paket-Muster hinzugefügt.
+admin.configuration.reference_data.package_pattern.edit.successful=Paket-Muster aktualisiert.
+admin.configuration.reference_data.package_pattern.delete.successful=Paket-Muster entfernt.
 
 #manage risk type
 admin.configuration.reference_data.risktype.manage.title=Risiko Typ bearbeiten
@@ -3052,17 +3052,17 @@ admin.configuration.custom_attribute.item.delete.successful=Option entfernt.
 
 #helpers
 admin.configuration.translations.title=Übersetzungen
-admin.configuration.translations.key.label=de: Key
+admin.configuration.translations.key.label=Schlüssel
 admin.configuration.translations.value.label=Übersetzung
 
 #search
-admin.configuration.translations.search.title=de: Search translations
-admin.configuration.translations.search.no_result=de: No translation was found, please provide another keyword.
-admin.configuration.translations.search_result.title=de: Translations found
+admin.configuration.translations.search.title=Übersetzung suchen
+admin.configuration.translations.search.no_result=Keine Übersetzung gefunden, bitte geben Sie einen anderen Schlüssel ein.
+admin.configuration.translations.search_result.title=Gefundene Übersetzungen
 
 #edit
-admin.configuration.translations.edit.title=de: Edit a translation
-admin.configuration.translations.edit.successful=de: The translation has been updated.
+admin.configuration.translations.edit.title=Übersetzung bearbeiten
+admin.configuration.translations.edit.successful=Übersetzung aktualisiert.
 
 #----------------------
 # integration
