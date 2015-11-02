@@ -9,7 +9,7 @@
 			<fileNamePattern>application.%d{yyyy-MM-dd}.log</fileNamePattern>
 		</rollingPolicy>
 		<encoder>
-			<pattern>%date - [%level] - from %logger in %thread : %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
+			<pattern>%date - [%level] - from %logger in %thread %message%n%xException%n</pattern>
 		</encoder>
 	</appender>
 
@@ -20,7 +20,7 @@
 			<maxHistory>60</maxHistory>
 		</rollingPolicy>
 		<encoder>
-			<pattern>%date - [%level] - from %logger in %thread %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
+			<pattern>%date - [%level] - from %logger in %thread %message%n%xException%n</pattern>
 		</encoder>
 	</appender>
 	
@@ -31,13 +31,13 @@
             <maxHistory>10</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%date - [%level] - from %logger in %thread %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
+            <pattern>%date - [%level] - from %logger in %thread %message%n%xException%n</pattern>
         </encoder>
     </appender>
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%date - [%level] - from %logger in %thread : %message%n%date - [%level] - from %logger in %thread %xException%n</pattern>
+			<pattern>%date - [%level] - from %logger in %thread : %message%n%xException%n</pattern>
 		</encoder>
 	</appender>
 
@@ -45,8 +45,7 @@
 	<logger name="application" level="INFO" />
 	<logger name="logger.tools" level="INFO" />
 	<logger name="be.objectify.deadbolt.java.ExecutionContextProvider" level="ERROR" />
-	<logger name="framework.services.ext" level="DEBUG" />
-	<logger name="framework.services.plugins" level="DEBUG" />
+	<logger name="framework.services.session" level="DEBUG" />
 	
 	<logger name="framework.services.audit.AuditLoggerServiceImpl" level="INFO">
 		<appender-ref ref="FILE_AUDIT" />
