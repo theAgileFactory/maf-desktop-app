@@ -63,6 +63,9 @@
     
     <script>
     var countPackages = @countPackage;
+    if (countPackages == 0) {
+        countPackages = 1;
+    }
     
     
     $( "#packages-manage-add-row").click(function( event ) {
