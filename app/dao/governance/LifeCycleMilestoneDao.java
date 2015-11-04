@@ -377,8 +377,8 @@ public abstract class LifeCycleMilestoneDao {
      * all milestone instances for which a vote/decision is required.
      */
     public static ExpressionList<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsExpr() {
-        return findLifeCycleMilestoneInstance.orderBy("passedDate DESC").where().eq("deleted", false).eq("isPassed", false).eq("lifeCycleInstance.isActive",
-                true);
+        return findLifeCycleMilestoneInstance.orderBy("passedDate DESC").where().eq("deleted", false).eq("isPassed", false)
+                .eq("lifeCycleInstance.isActive", true).eq("lifeCycleInstance.portfolioEntry.deleted", false);
     }
 
     /**
