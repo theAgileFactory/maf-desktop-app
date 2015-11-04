@@ -78,7 +78,8 @@
                 @parts.multi_languages_input_text(customAttributeForm("name"), parts.Msg.asString("object.custom_attribute_definition.name.label"))
 
                 @parts.multi_languages_input_text(customAttributeForm("description"), parts.Msg.asString("object.custom_attribute_definition.description.label"))
-                
+
+                @*
                 @if(canAddConditionalRule) {
                     <div class="form-group @if(customAttributeForm("conditionalRuleFieldId").hasErrors) {has-error}">
                         <label class="control-label" for="domain">
@@ -99,9 +100,10 @@
                         <span class="help-block">@parts.Msg("object.custom_attribute_definition.conditional_rule.help")<br/><strong>@{customAttributeForm("conditionalRuleFieldId").error.map { error => parts.Msg(error.message) }}</strong></span>
                     </div>
                 } else {
+                *@
                     <input type="hidden" name="conditionalRuleFieldId" value=""/>
                     <input type="hidden" name="conditionalRuleFieldValue" value=""/>
-                }
+                @* } *@
 
                 @parts.code_editor(
                     customAttributeForm("configuration"), 
