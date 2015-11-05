@@ -36,18 +36,6 @@
         <input type="hidden" name="id" value="@portfolioEntry.id"/>
 
         <table class="table table-condensed">
-            <colgroup>
-                <col class="col-md-2">
-                <col class="col-md-2">
-                <col class="col-md-2">
-                <col class="col-md-1">
-                <col class="col-md-1">
-                @for(customAttributeDefinition <- models.framework_models.common.CustomAttributeDefinition.getOrderedCustomAttributeDefinitions(classOf[models.pmo.PortfolioEntryPlanningPackage])) {
-                    @if(customAttributeDefinition.isDisplayed || customAttributeDefinition.isRequired) {
-                        <col class="col-md-1">
-                    }
-                }
-            </colgroup>
             <thead>
                 <tr>
                     <th>@parts.Msg("object.portfolio_entry_planning_package.name.label")</th>
