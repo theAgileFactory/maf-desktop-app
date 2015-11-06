@@ -51,7 +51,7 @@ import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
-import framework.services.ServiceStaticAccessor;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
@@ -139,6 +139,8 @@ public class PortfolioEntryPlanningController extends Controller {
     private Configuration configuration;
     @Inject
     private IDataSyndicationService dataSyndicationService;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -184,7 +186,7 @@ public class PortfolioEntryPlanningController extends Controller {
     public Result overview(Long id) {
 
         // load the overview configuration from the user preference
-        OverviewConfiguration conf = OverviewConfiguration.load();
+        OverviewConfiguration conf = OverviewConfiguration.load(this.getPreferenceManagerPlugin());
 
         // prepare the overview configuration form
         Form<OverviewConfiguration> overviewConfigurationForm = overviewConfigurationFormTemplate.fill(conf);
@@ -485,7 +487,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         OverviewConfiguration conf = boundForm.get();
 
-        OverviewConfiguration.store(conf);
+        OverviewConfiguration.store(this.getPreferenceManagerPlugin(), conf);
 
         return redirect(controllers.core.routes.PortfolioEntryPlanningController.overview(id));
     }
@@ -2097,6 +2099,13 @@ public class PortfolioEntryPlanningController extends Controller {
     }
 
     /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
+    }
+
+    /**
      * The configuration of the overview (gantt chart).
      * 
      * @author Johann Kohler
@@ -2132,13 +2141,15 @@ public class PortfolioEntryPlanningController extends Controller {
 
         /**
          * Load the configuration from a user preference.
+         * 
+         * @param preferenceManagerPlugin
+         *            the preference manager service
          */
-        public static OverviewConfiguration load() {
-            String overviewPreferenceAsJson = ServiceStaticAccessor.getPreferenceManagerPlugin()
-                    .getPreferenceValueAsString(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE);
+        public static OverviewConfiguration load(IPreferenceManagerPlugin preferenceManagerPlugin) {
+            String overviewPreferenceAsJson = preferenceManagerPlugin.getPreferenceValueAsString(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE);
             if (overviewPreferenceAsJson == null || overviewPreferenceAsJson.equals("")) {
                 OverviewConfiguration conf = new OverviewConfiguration(true);
-                store(conf);
+                store(preferenceManagerPlugin, conf);
                 return conf;
             } else {
                 try {
@@ -2146,7 +2157,7 @@ public class PortfolioEntryPlanningController extends Controller {
                 } catch (Exception e) {
                     Logger.error("impossible to parse the value of PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE", e);
                     OverviewConfiguration conf = new OverviewConfiguration(true);
-                    store(conf);
+                    store(preferenceManagerPlugin, conf);
                     return conf;
                 }
             }
@@ -2155,10 +2166,12 @@ public class PortfolioEntryPlanningController extends Controller {
         /**
          * Store the configuration in a user preference.
          * 
+         * @param preferenceManagerPlugin
+         *            the preference manager service
          * @param conf
          *            the overview configuration
          */
-        public static void store(OverviewConfiguration conf) {
+        public static void store(IPreferenceManagerPlugin preferenceManagerPlugin, OverviewConfiguration conf) {
             String json = "";
             try {
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -2166,7 +2179,7 @@ public class PortfolioEntryPlanningController extends Controller {
             } catch (JsonProcessingException e) {
                 Logger.error("impossible to jsonify the OverviewConfiguration", e);
             }
-            ServiceStaticAccessor.getPreferenceManagerPlugin().updatePreferenceValue(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE, json);
+            preferenceManagerPlugin.updatePreferenceValue(IMafConstants.PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE, json);
         }
 
     }
