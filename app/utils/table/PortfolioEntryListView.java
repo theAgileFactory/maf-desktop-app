@@ -85,6 +85,9 @@ public class PortfolioEntryListView {
                     addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label",
                             new SelectFilterComponent(portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes), true, false,
                             SortStatusType.UNSORTED);
+                } else {
+                    addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label", new NoneFilterComponent(),
+                            false, false, SortStatusType.NONE);
                 }
 
                 addColumnConfiguration("manager", "manager.id", "object.portfolio_entry.manager.label",
@@ -95,6 +98,9 @@ public class PortfolioEntryListView {
                     addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label",
                             new SelectFilterComponent(sponsoringUnits.getValues().iterator().next().getValue(), sponsoringUnits), false, false,
                             SortStatusType.NONE);
+                } else {
+                    addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label", new NoneFilterComponent(),
+                            false, false, SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> deliveryUnits = OrgUnitDao.getOrgUnitActiveCanDeliverAsVH();
@@ -102,12 +108,18 @@ public class PortfolioEntryListView {
                     addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label",
                             new SelectFilterComponent(deliveryUnits.getValues().iterator().next().getValue(), deliveryUnits), false, false,
                             SortStatusType.NONE);
+                } else {
+                    addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label", new NoneFilterComponent(),
+                            false, false, SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> portfolios = PortfolioDao.getPortfolioActiveAsVH();
                 if (portfolios != null && portfolios.getValues().size() > 0) {
                     addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label",
                             new SelectFilterComponent(portfolios.getValues().iterator().next().getValue(), portfolios), false, false, SortStatusType.NONE);
+                } else {
+                    addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label", new NoneFilterComponent(), false, false,
+                            SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessActiveAsVH();
@@ -116,6 +128,9 @@ public class PortfolioEntryListView {
                             "object.portfolio_entry.life_cycle_process.label",
                             new SelectFilterComponent(lifeCycleProcesses.getValues().iterator().next().getValue(), lifeCycleProcesses), false, false,
                             SortStatusType.NONE);
+                } else {
+                    addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
+                            "object.portfolio_entry.life_cycle_process.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeActiveAsVH();
@@ -125,6 +140,9 @@ public class PortfolioEntryListView {
                             new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next().getValue(),
                                     portfolioEntryReportStatusTypes),
                             true, false, SortStatusType.NONE);
+                } else {
+                    addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
+                            "object.portfolio_entry.status.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
                 }
 
                 ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
@@ -133,6 +151,9 @@ public class PortfolioEntryListView {
                             "object.portfolio_entry.last_milestone.label",
                             new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false,
                             SortStatusType.NONE);
+                } else {
+                    addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
+                            "object.portfolio_entry.last_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
                 }
 
                 addColumnConfiguration("archived", "archived", "object.portfolio_entry.archived.label", new CheckboxFilterComponent(false), false, true,
