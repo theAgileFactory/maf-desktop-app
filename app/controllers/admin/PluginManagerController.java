@@ -54,6 +54,7 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -733,7 +734,7 @@ public class PluginManagerController extends Controller {
         pluginConfigurationBlock.configuration = pluginConfigurationBlockObject.value != null ? pluginConfigurationBlockObject.value.getBytes() : null;
         pluginConfigurationBlock.save();
 
-        Utilities.sendSuccessFlashMessage(
+        Utilities.sendWarningFlashMessage(
                 Msg.get("admin.plugin_manager.configuration_block.edit.success", Msg.get(pluginConfigurationBlockDescriptor.getName())));
 
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
@@ -777,7 +778,7 @@ public class PluginManagerController extends Controller {
         try {
 
             IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
-            if (pluginInfo == null || pluginInfo.getActionDescriptors()==null || !pluginInfo.getActionDescriptors().containsKey(pluginActionIdentifier)) {
+            if (pluginInfo == null || pluginInfo.getActionDescriptors() == null || !pluginInfo.getActionDescriptors().containsKey(pluginActionIdentifier)) {
                 return badRequest();
             }
             IPluginActionDescriptor pluginActionDescriptor = pluginInfo.getActionDescriptors().get(pluginActionIdentifier);
