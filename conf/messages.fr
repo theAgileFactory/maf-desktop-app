@@ -218,7 +218,7 @@ filter.table.excel.failure=Erreur: impossible de créer le fichier Excel
 filter.table.ajax.error.message=Problème de communication avec le serveur, veuillez rafraichir la page.
 filter.table.empty.textfilter=Tout
 
-object.filter_configuration.name.default.label=Filter par défaut
+object.filter_configuration.name.default.label=Filtre par défaut
 object.filter_configuration.name.title=Nom du filtre
 object.filter_configuration.name.error=Le nom du filtre ne doit pas être vide
 object.filter_configuration.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer ce filtre?
