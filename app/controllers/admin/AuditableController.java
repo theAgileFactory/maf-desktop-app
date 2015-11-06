@@ -29,24 +29,10 @@ import java.util.zip.ZipOutputStream;
 
 import javax.inject.Inject;
 
-import models.framework_models.account.NotificationCategory;
-import models.framework_models.account.NotificationCategory.Code;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
-import play.Configuration;
-import play.Logger;
-import play.Play;
-import play.data.Form;
-import play.i18n.Messages;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
-import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
-import scala.concurrent.duration.Duration;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
@@ -71,6 +57,18 @@ import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.TableExcelRenderer;
 import framework.utils.Utilities;
+import models.framework_models.account.NotificationCategory;
+import models.framework_models.account.NotificationCategory.Code;
+import play.Configuration;
+import play.Logger;
+import play.data.Form;
+import play.i18n.Messages;
+import play.libs.F.Function0;
+import play.libs.F.Promise;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import scala.concurrent.duration.Duration;
 
 /**
  * The auditable controller.
@@ -271,8 +269,8 @@ public class AuditableController extends Controller {
                                 return;
                             }
 
-                            final String logFilePrefix = (logFilesPath.getName().indexOf('.') != -1 ? logFilesPath.getName().substring(0,
-                                    logFilesPath.getName().indexOf('.')) : logFilesPath.getName());
+                            final String logFilePrefix = (logFilesPath.getName().indexOf('.') != -1
+                                    ? logFilesPath.getName().substring(0, logFilesPath.getName().indexOf('.')) : logFilesPath.getName());
 
                             if (log.isDebugEnabled()) {
                                 log.debug("Audit log export : Selecting files to archive");
@@ -367,8 +365,8 @@ public class AuditableController extends Controller {
         // Add the current value if any (so that it could be displayed and
         // selected again)
         if (!StringUtils.isBlank(currentObjectClass)) {
-            selectableObjects
-                    .add(new DefaultSelectableValueHolder<String>(currentObjectClass, Msg.get(DataType.getDataTypeFromClassName(currentObjectClass).getLabel())));
+            selectableObjects.add(
+                    new DefaultSelectableValueHolder<String>(currentObjectClass, Msg.get(DataType.getDataTypeFromClassName(currentObjectClass).getLabel())));
         }
         return selectableObjects;
     }
