@@ -20,6 +20,7 @@
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
+@import views.html.commons._
 
 @usermanager_template("admin.user_manager.edit_basic_data.title", controllers.admin.UserManager.MenuItemType.SEARCH) {
 <blockquote>@parts.Msg("admin.user_manager.edit_basic_data.header")</blockquote>
@@ -35,7 +36,7 @@
             <input type="hidden" name="uid" value="@userAccountForm("uid").value()"/>
             @parts.input_text(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
             @parts.input_text(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
-            @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguagesAsValueHolderCollection, null, false)
+            @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), _messagesPluginService.getValidLanguagesAsValueHolderCollection, null, false)
         </fieldset>
         <br/>
         <input type="submit" value="@parts.Msg("button.update")" class="btn btn-primary">

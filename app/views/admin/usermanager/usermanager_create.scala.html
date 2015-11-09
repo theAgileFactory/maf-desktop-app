@@ -25,6 +25,7 @@
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
+@import views.html.commons._
 
 @usermanager_template("admin.user_manager.sidebar.create", controllers.admin.UserManager.MenuItemType.CREATE) {
 <blockquote>@parts.Msg("admin.user_manager.create.header")</blockquote>
@@ -37,29 +38,29 @@
     }
     @helper.form(action = controllers.admin.routes.UserManager.saveNewUser()) {
         <fieldset>
-        	@if(masterMode){
-        		<legend>@parts.Msg("admin.user_manager.create.credentials.title")</legend>
-            	@parts.checkbox(userAccountForm("administratorDefinedPassword"),parts.Msg.asString("admin.user_manager.create.admindefinedpassword.label"))
-            	<div class="row" style="display: none;" id="passwordDefinitionArea">
-            	    <div class="col-md-6">
-            		@helper.inputPassword(userAccountForm("password"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.password.label"))
+            @if(masterMode){
+                <legend>@parts.Msg("admin.user_manager.create.credentials.title")</legend>
+                @parts.checkbox(userAccountForm("administratorDefinedPassword"),parts.Msg.asString("admin.user_manager.create.admindefinedpassword.label"))
+                <div class="row" style="display: none;" id="passwordDefinitionArea">
+                    <div class="col-md-6">
+                    @helper.inputPassword(userAccountForm("password"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.password.label"))
                     <br/>
                     @helper.inputPassword(userAccountForm("passwordCheck"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.password_confirmation.label")) 
-            		</div>
-					<div class="col-md-6">
-				        <div class="panel panel-info">
-				          <div class="panel-heading"><strong>@parts.Msg("password.strength.title")</strong></div>
-				          <div class="panel-body">
-				            <p>@parts.Msg("password.strength.explanation")</p>
-				            <div class="progress">
-				              <div id="password_strength_progressbar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-				              </div>
-				            </div>
-				            <p><strong>@parts.Msg("password.strength.message")</strong></p>
-				          </div>
-				        </div>
-				    </div>
-            	</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-info">
+                          <div class="panel-heading"><strong>@parts.Msg("password.strength.title")</strong></div>
+                          <div class="panel-body">
+                            <p>@parts.Msg("password.strength.explanation")</p>
+                            <div class="progress">
+                              <div id="password_strength_progressbar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                              </div>
+                            </div>
+                            <p><strong>@parts.Msg("password.strength.message")</strong></p>
+                          </div>
+                        </div>
+                    </div>
+                </div>
             }
         </fieldset>
         <fieldset>
@@ -68,7 +69,7 @@
             @parts.input_text(userAccountForm("mail"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.email.label"))
             @parts.input_text(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
             @parts.input_text(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
-            @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguagesAsValueHolderCollection, null, false)
+            @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), _messagesPluginService.getValidLanguagesAsValueHolderCollection, null, false)
             @parts.dropdownlist(userAccountForm("accountType"), parts.Msg.asString("object.user_account.type.label"), allUserAccountTypes)
             <div id="rolesSelector">
             <legend>@parts.Msg("object.user_account.roles.label")</legend>
@@ -81,9 +82,9 @@
 </div>  
 <script type="text/javascript">
 $(document).ready(function(){
-	if($("#administratorDefinedPassword").is(':checked')){
-		$("#passwordDefinitionArea").show();
-	}
+    if($("#administratorDefinedPassword").is(':checked')){
+        $("#passwordDefinitionArea").show();
+    }
 
     $("#accountType").change(function(){
         var selectedAccountType=$(this).val();
@@ -95,12 +96,12 @@ $(document).ready(function(){
     });
     
     $("#administratorDefinedPassword").click(function(){
-    	var thisCheck=$(this);
-    	if(thisCheck.is(':checked')){
-    		$("#passwordDefinitionArea").show();
-    	}else{
-    		$("#passwordDefinitionArea").hide();
-    	}
+        var thisCheck=$(this);
+        if(thisCheck.is(':checked')){
+            $("#passwordDefinitionArea").show();
+        }else{
+            $("#passwordDefinitionArea").hide();
+        }
     });
 
     $("#password").on("input",function(){

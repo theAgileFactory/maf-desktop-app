@@ -23,8 +23,8 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import dao.pmo.ActorDao;
-import framework.services.ServiceStaticAccessor;
 import framework.services.job.IJobDescriptor;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.Msg;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
@@ -113,6 +113,9 @@ public interface JobDescriptors {
         @Inject
         private ILicensesManagementService licensesManagementService;
 
+        @Inject
+        private INotificationManagerPlugin notificationManagerPlugin;
+
         @Override
         public String getId() {
             return "SendNotificationEvents";
@@ -164,9 +167,8 @@ public interface JobDescriptors {
                             break;
                         case PERMISSIONS:
                             for (String permission : notificationEvent.recipientsDescriptor.permissions) {
-                                ServiceStaticAccessor.getNotificationManagerPlugin().sendNotificationWithPermission(permission,
-                                        NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.title, notificationEvent.message,
-                                        notificationEvent.actionLink);
+                                notificationManagerPlugin.sendNotificationWithPermission(permission, NotificationCategory.getByCode(Code.INFORMATION),
+                                        notificationEvent.title, notificationEvent.message, notificationEvent.actionLink);
                             }
                             break;
                         case PRINCIPALS:

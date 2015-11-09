@@ -20,6 +20,7 @@
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
+@import views.html.commons._
 
 @myaccount_template("my.my_profile.sidebar.details", masterMode, selfEmailUpdate, controllers.admin.MyAccount.MenuItemType.VIEW) {
     <table class="table table-condensed table-hover">
@@ -42,7 +43,7 @@
             <tr>
                 <th width="20%">
                     @parts.Msg("object.user_account.preferred_language.label")</th>
-                <td>@if(userAccount.getPreferredLanguage() != null) { @framework.services.ServiceStaticAccessor.getMessagesPlugin().getLanguageByCode(userAccount.getPreferredLanguage).getName }</td>
+                <td>@if(userAccount.getPreferredLanguage() != null) { @_messagesPluginService.getLanguageByCode(userAccount.getPreferredLanguage).getName }</td>
             </tr>
             <tr>
                 <th width="20%">

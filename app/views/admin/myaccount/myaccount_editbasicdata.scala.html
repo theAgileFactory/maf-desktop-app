@@ -20,6 +20,7 @@
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
+@import views.html.commons._
 
 @myaccount_template("my.my_profile.sidebar.update_data", masterMode, selfEmailUpdate, controllers.admin.MyAccount.MenuItemType.EDIT_DATA) {
     <blockquote>@parts.Msg("my.my_profile.update_data.header")</blockquote>
@@ -34,7 +35,7 @@
             <fieldset>
                 @parts.input_text(userAccountForm("firstName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.first_name.label"))
                 @parts.input_text(userAccountForm("lastName"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.user_account.last_name.label"))
-                @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguagesAsValueHolderCollection, null, false)
+                @parts.dropdownlist(userAccountForm("preferredLanguage"), parts.Msg.asString("object.user_account.preferred_language.label"), _messagesPluginService.getValidLanguagesAsValueHolderCollection, null, false)
             </fieldset>
             
             <input type="submit" value="@parts.Msg("button.update")" class="btn btn-primary">

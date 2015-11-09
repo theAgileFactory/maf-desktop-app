@@ -16,6 +16,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @()
+
+@import views.html.commons._
+
 <script>
 function removeURLParameter(url, parameter) {
     //prefer to use l.search if you have a location/link object
@@ -44,9 +47,9 @@ function removeURLParameter(url, parameter) {
     <div class="pull-left">&copy; <a href="http://www.the-agile-factory.com/">The Agile Factory</a></div>
     <div class="pull-right">
         <div class="btn-group dropup" id="lang-selector">
-        <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button">@framework.services.ServiceStaticAccessor.getMessagesPlugin().getCurrentLanguage().getName <span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button">@_messagesPluginService.getCurrentLanguage().getName <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right">
-            @for((language, index) <- framework.services.ServiceStaticAccessor.getMessagesPlugin().getValidLanguageList().zipWithIndex) {
+            @for((language, index) <- _messagesPluginService.getValidLanguageList().zipWithIndex) {
                 <li>
                     <a id="lang-@index" href="#">@language.getName</a>
                     <script>
