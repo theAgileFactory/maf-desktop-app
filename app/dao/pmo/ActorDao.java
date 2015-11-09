@@ -398,12 +398,14 @@ public abstract class ActorDao {
      * Return the actor associated with the specified uid. If not found, look
      * for a {@link Principal} with the same id to create a new actor.
      * 
+     * @param accountManagerPlugin
+     *            the account manager service
      * @param uid
      *            the uid
      * 
      * @return an actor or null if the actor is not found (nor any Principal)
      */
-    public static Actor getActorByUidOrCreateDefaultActor(String uid) {
+    public static Actor getActorByUidOrCreateDefaultActor(IAccountManagerPlugin accountManagerPlugin, String uid) {
         Actor actor = getActorByUid(uid);
         if (actor == null) {
             actor = getActorDeletedByUid(uid);
@@ -411,7 +413,6 @@ public abstract class ActorDao {
                 actor.deleted = false;
                 actor.save();
             } else {
-                IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
                 try {
                     IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(uid);
                     if (userAccount != null) {

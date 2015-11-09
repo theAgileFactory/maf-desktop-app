@@ -47,6 +47,7 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
+import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
@@ -125,6 +126,8 @@ public class PortfolioEntryController extends Controller {
     private II18nMessagesPlugin messagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -144,7 +147,7 @@ public class PortfolioEntryController extends Controller {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
         }
 
-        Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(getUserSessionManagerPlugin().getUserSessionId(ctx()));
+        Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(this.getAccountManagerPlugin(), getUserSessionManagerPlugin().getUserSessionId(ctx()));
         Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(actor.id));
         return ok(views.html.core.portfolioentry.portfolio_entry_create.render(filledForm));
     }
@@ -952,7 +955,17 @@ public class PortfolioEntryController extends Controller {
         return messagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the account manager service.
+     */
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return this.accountManagerPlugin;
     }
 }
