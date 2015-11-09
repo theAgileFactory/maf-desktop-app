@@ -33,10 +33,11 @@ import dao.finance.PurchaseOrderDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import framework.security.ISecurityService;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
+import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -69,29 +70,40 @@ import utils.table.PurchaseOrderListView;
  * @author Johann Kohler
  */
 @Restrict({ @Group(IMafConstants.SEARCH_PERMISSION) })
-public class SearchController extends Controller {   
+public class SearchController extends Controller {
+
     @Inject
     private ISecurityService securityService;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
+
     private static Form<SearchFormData> formTemplate = Form.form(SearchFormData.class);
     private static Logger.ALogger log = Logger.of(SearchController.class);
 
     /**
      * The list of searchable entity types, its depends of the user permissions.
-     * @param securityService the security service
+     * 
+     * @param accountManagerPlugin
+     *            the account manager service
+     * @param userSessionManagerPlugin
+     *            the user session manager service
+     * @param securityService
+     *            the security service
      */
-    public static DefaultSelectableValueHolderCollection<ObjectTypes> getObjectTypes(ISecurityService securityService) {
+    public static DefaultSelectableValueHolderCollection<ObjectTypes> getObjectTypes(IAccountManagerPlugin accountManagerPlugin,
+            IUserSessionManagerPlugin userSessionManagerPlugin, ISecurityService securityService) {
 
-        // get the current user
         IUserAccount userAccount = null;
         try {
-            userAccount = ServiceStaticAccessor.getAccountManagerPlugin().getUserAccountFromUid(ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx()));
+            userAccount = accountManagerPlugin.getUserAccountFromUid(userSessionManagerPlugin.getUserSessionId(ctx()));
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the user account");
+            Logger.error("Impossible to get the current in user", e);
         }
 
         DefaultSelectableValueHolderCollection<ObjectTypes> objectTypes = new DefaultSelectableValueHolderCollection<ObjectTypes>();
@@ -104,7 +116,8 @@ public class SearchController extends Controller {
 
         objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit")));
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && securityService.restrict(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION, userAccount)) {
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
+                && securityService.restrict(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION, userAccount)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order")));
         }
 
@@ -120,7 +133,9 @@ public class SearchController extends Controller {
      * Display the search form.
      */
     public Result index() {
-        return ok(views.html.core.search.index.render(formTemplate, getObjectTypes(getSecurityService()), null));
+        return ok(views.html.core.search.index.render(formTemplate,
+                getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(), getSecurityService()), null));
+
     }
 
     /**
@@ -132,7 +147,8 @@ public class SearchController extends Controller {
         Form<SearchFormData> boundForm = formTemplate.bindFromRequest();
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.core.search.index.render(boundForm, getObjectTypes(getSecurityService()), null));
+            return ok(views.html.core.search.index.render(boundForm,
+                    getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(), getSecurityService()), null));
         }
 
         SearchFormData searchFormData = boundForm.get();
@@ -181,8 +197,8 @@ public class SearchController extends Controller {
             List<Portfolio> portfolios = null;
             try {
                 portfolios = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(
-                        Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), Expr.ilike("refId", keywords + "%")), null, getSecurityService())
-                        .findList();
+                        Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), Expr.ilike("refId", keywords + "%")), null,
+                        getSecurityService()).findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
@@ -289,7 +305,8 @@ public class SearchController extends Controller {
             break;
         }
 
-        return ok(views.html.core.search.index.render(boundForm, getObjectTypes(getSecurityService()), "core.search.submit.noresult"));
+        return ok(views.html.core.search.index.render(boundForm,
+                getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(), getSecurityService()), "core.search.submit.noresult"));
     }
 
     /**
@@ -321,15 +338,38 @@ public class SearchController extends Controller {
         PORTFOLIO_ENTRY, ACTOR, PORTFOLIO, ORGUNIT, PURCHASE_ORDER, BUDGET_BUCKET;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the account manager service.
+     */
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return this.accountManagerPlugin;
+    }
+
+    /**
+     * Get the user session manager service.
+     */
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return this.userSessionManagerPlugin;
     }
 }
