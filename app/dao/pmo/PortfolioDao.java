@@ -20,23 +20,23 @@ package dao.pmo;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.pmo.Portfolio;
-import models.pmo.PortfolioType;
-import models.sql.TotalAmount;
-import com.avaje.ebean.Model.Finder;
-
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
 import dao.finance.CurrencyDAO;
 import dao.finance.PurchaseOrderDAO;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioType;
+import models.sql.TotalAmount;
 
 /**
  * DAO for the {@link Portfolio} and {@link PortfolioType} objects.
@@ -104,14 +104,13 @@ public abstract class PortfolioDao {
      */
     public static Double getPortfolioAsBudgetAmountByOpex(Long id, boolean isOpex) {
 
-        String sql =
-                "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl "
-                        + "JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id=peb.id "
-                        + "JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id "
-                        + "JOIN portfolio_entry pe ON lcip.life_cycle_instance_id = pe.active_life_cycle_instance_id "
-                        + "JOIN portfolio_has_portfolio_entry phpe ON pe.id = phpe.portfolio_entry_id " + "WHERE pebl.deleted=0 AND pebl.is_opex=" + isOpex
-                        + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' "
-                        + "AND peb.deleted=0 AND lcip.deleted=0 AND lcip.is_frozen=0 " + "AND pe.deleted=0 AND pe.archived=0 AND phpe.portfolio_id=" + id;
+        String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl "
+                + "JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id=peb.id "
+                + "JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id "
+                + "JOIN portfolio_entry pe ON lcip.life_cycle_instance_id = pe.active_life_cycle_instance_id "
+                + "JOIN portfolio_has_portfolio_entry phpe ON pe.id = phpe.portfolio_entry_id " + "WHERE pebl.deleted=0 AND pebl.is_opex=" + isOpex
+                + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' " + "AND peb.deleted=0 AND lcip.deleted=0 AND lcip.is_frozen=0 "
+                + "AND pe.deleted=0 AND pe.archived=0 AND phpe.portfolio_id=" + id;
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -130,28 +129,25 @@ public abstract class PortfolioDao {
      * Get the total portfolio entries "cost to complete" (not engaged work
      * orders) in the default currency of a portfolio.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param id
      *            the portfolio id
      * @param isOpex
      *            set to true for OPEX budget, else CAPEX
      */
-    public static Double getPortfolioAsCostToCompleteAmountByOpex(Long id, boolean isOpex) {
+    public static Double getPortfolioAsCostToCompleteAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex) {
 
-        String baseSqlSelect =
-                "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id "
-                        + "JOIN portfolio_has_portfolio_entry phpe ON wo.portfolio_entry_id = phpe.portfolio_entry_id";
+        String baseSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id "
+                + "JOIN portfolio_has_portfolio_entry phpe ON wo.portfolio_entry_id = phpe.portfolio_entry_id";
 
-        String baseSqlCond =
-                " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code
-                        + "' AND pe.deleted=0 AND pe.archived=0 AND phpe.portfolio_id=" + id;
+        String baseSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code
+                + "' AND pe.deleted=0 AND pe.archived=0 AND phpe.portfolio_id=" + id;
 
         List<String> sqls = new ArrayList<>();
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) { // if
-                                                                     // purchase
-                                                                     // orders
-                                                                     // are
-                                                                     // enable
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin)) {
+            // if purchase orders are enable
 
             // either the work orders without purchase order line
             sqls.add(baseSqlSelect + " WHERE wo.purchase_order_line_item_id IS NULL" + baseSqlCond);
@@ -184,28 +180,26 @@ public abstract class PortfolioDao {
      * "free" purchase order line items assigned to the PE) in the default
      * currency of a portfolio.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param id
      *            the portfolio id
      * @param isOpex
      *            set to true for OPEX budget, else CAPEX
+     * 
      */
-    public static Double getPortfolioAsEngagedAmountByOpex(Long id, boolean isOpex) {
+    public static Double getPortfolioAsEngagedAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex) {
 
-        String baseWOSqlSelect =
-                "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id "
-                        + "JOIN portfolio_has_portfolio_entry phpe ON wo.portfolio_entry_id = phpe.portfolio_entry_id";
+        String baseWOSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id "
+                + "JOIN portfolio_has_portfolio_entry phpe ON wo.portfolio_entry_id = phpe.portfolio_entry_id";
 
-        String baseWOSqlCond =
-                " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code
-                        + "' AND pe.deleted=0 AND pe.archived=0 AND phpe.portfolio_id=" + id;
+        String baseWOSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code
+                + "' AND pe.deleted=0 AND pe.archived=0 AND phpe.portfolio_id=" + id;
 
         List<String> sqls = new ArrayList<>();
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) { // if
-                                                                     // purchase
-                                                                     // orders
-                                                                     // are
-                                                                     // enable
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin)) {
+            // if purchase orders are enable
 
             // either the work orders with an active purchase order line
             sqls.add(baseWOSqlSelect
@@ -248,8 +242,8 @@ public abstract class PortfolioDao {
      *            the actor id
      */
     public static Pagination<Portfolio> getPortfolioActiveAsPaginationByStakeholder(Long actorId) {
-        return new Pagination<>(findPortfolio.where().eq("isActive", true).eq("stakeholders.actor.id", actorId).eq("deleted", false)
-                .eq("stakeholders.deleted", false));
+        return new Pagination<>(
+                findPortfolio.where().eq("isActive", true).eq("stakeholders.actor.id", actorId).eq("deleted", false).eq("stakeholders.deleted", false));
     }
 
     /**

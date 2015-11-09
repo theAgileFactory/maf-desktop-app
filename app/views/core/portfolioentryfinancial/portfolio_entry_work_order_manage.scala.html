@@ -28,13 +28,14 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
+@import views.html.commons._
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.WorkOrder])
 }
 
 @tab=@{
-    if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+    if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
         "engaged"
     } else {
         "costToComplete"
@@ -75,7 +76,7 @@
                         }
                         
                         @***if edit case and the work order is engaged then the user can not update the isOpex and shared fields***@
-                        @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                        @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
                             <input type="hidden" id="isOpex" data-primitive="true" name="isOpex" value="@workOrderForm("isOpex").value"/>
                             <input type="hidden" id="shared" data-primitive="true" name="shared" value="@workOrderForm("shared").value"/>
                         } else {
@@ -85,7 +86,7 @@
                                 parts.Msg.asString("object.work_order.is_opex.help")
                             )
                             
-                            @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+                            @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)) {
                                 <input type="hidden" id="shared" data-primitive="true" name="shared" value="false"/>
                             } else {
                                 @parts.checkbox(
@@ -101,7 +102,7 @@
                         @helper.textarea(workOrderForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.description.label"))
         
                         @***if the purchase orders are disable or create case or the work order is not engaged then display the amount and currency fields***@
-                        @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                        @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin) || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
                         
                             @parts.input_text(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
         
@@ -115,7 +116,7 @@
                         }
                         
                         @***if edit case and the work order is engaged and (the work order is shared or the purchase orders are disable) then the user can define the amount received***@
-                        @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) && (workOrder.shared || !dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                        @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)) && (workOrder.shared || !dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
                             @parts.input_text(workOrderForm("amountReceived"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount_received.label"))
                         }
                         

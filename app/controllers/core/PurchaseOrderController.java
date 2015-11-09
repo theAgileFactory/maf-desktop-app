@@ -22,6 +22,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import dao.finance.PurchaseOrderDAO;
+import dao.finance.WorkOrderDAO;
+import framework.services.account.IPreferenceManagerPlugin;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.finance.GoodsReceipt;
 import models.finance.PurchaseOrder;
 import models.finance.PurchaseOrderLineItem;
@@ -33,14 +44,6 @@ import utils.form.PurchaseOrderLineItemWorkOrderFormData;
 import utils.table.GoodsReceiptListView;
 import utils.table.PurchaseOrderLineItemListView;
 import utils.table.PurchaseOrderLineItemWorkOrderListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import constants.IMafConstants;
-import dao.finance.PurchaseOrderDAO;
-import dao.finance.WorkOrderDAO;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * The controller which allows to display the purchase orders.
@@ -48,6 +51,9 @@ import framework.utils.Utilities;
  * @author Johann Kohler
  */
 public class PurchaseOrderController extends Controller {
+
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     public static Form<PurchaseOrderLineItemWorkOrderFormData> workOrderFormTemplate = Form.form(PurchaseOrderLineItemWorkOrderFormData.class);
 
@@ -73,8 +79,8 @@ public class PurchaseOrderController extends Controller {
         for (PurchaseOrderLineItem lineItem : purchaseOrder.purchaseOrderLineItems) {
             purchaseOrderLineItemListView.add(new PurchaseOrderLineItemListView(lineItem));
         }
-        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable =
-                PurchaseOrderLineItemListView.templateTable.fill(purchaseOrderLineItemListView, hideColumnsForLineItemTable);
+        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable = PurchaseOrderLineItemListView.templateTable.fill(purchaseOrderLineItemListView,
+                hideColumnsForLineItemTable);
 
         return ok(views.html.core.purchaseorder.purchase_order_view.render(purchaseOrder, purchaseOrderLineItemsTable));
     }
@@ -102,14 +108,14 @@ public class PurchaseOrderController extends Controller {
         // construct the work orders table
         List<PurchaseOrderLineItemWorkOrderListView> workOrderListView = new ArrayList<PurchaseOrderLineItemWorkOrderListView>();
         for (WorkOrder workOrder : lineItem.workOrders) {
-            workOrderListView.add(new PurchaseOrderLineItemWorkOrderListView(workOrder));
+            workOrderListView.add(new PurchaseOrderLineItemWorkOrderListView(this.getPreferenceManagerPlugin(), workOrder));
         }
         Set<String> hideColumnsForWorkOrderTable = new HashSet<String>();
         if (!lineItem.isAssociated() || lineItem.isShared() == false) {
             hideColumnsForWorkOrderTable.add("editActionLink");
         }
-        Table<PurchaseOrderLineItemWorkOrderListView> workOrderTable =
-                PurchaseOrderLineItemWorkOrderListView.templateTable.fill(workOrderListView, hideColumnsForWorkOrderTable);
+        Table<PurchaseOrderLineItemWorkOrderListView> workOrderTable = PurchaseOrderLineItemWorkOrderListView.templateTable.fill(workOrderListView,
+                hideColumnsForWorkOrderTable);
 
         return ok(views.html.core.purchaseorder.purchase_order_line_item_view.render(lineItem, workOrderTable, goodsReceiptTable));
     }
@@ -178,6 +184,13 @@ public class PurchaseOrderController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.purchase_order.line_item.work_order.edit.successful"));
 
         return redirect(controllers.core.routes.PurchaseOrderController.viewLineItem(lineItemId));
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }

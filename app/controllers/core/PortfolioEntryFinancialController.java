@@ -37,6 +37,7 @@ import dao.pmo.PortfolioEntryDao;
 import framework.highcharts.pattern.BasicBar;
 import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -85,6 +86,8 @@ public class PortfolioEntryFinancialController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
@@ -152,15 +155,16 @@ public class PortfolioEntryFinancialController extends Controller {
             hideColumnsForCostToCompleteTable.add("editActionLink");
             hideColumnsForCostToCompleteTable.add("deleteActionLink");
         }
-        if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
+        if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())
                 || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("selectLineItemActionLink");
         }
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())
+                || !getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForCostToCompleteTable.add("engageWorkOrder");
         }
         hideColumnsForCostToCompleteTable.add("amountReceived");
-        if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+        if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())) {
             hideColumnsForCostToCompleteTable.add("shared");
         }
 
@@ -171,20 +175,21 @@ public class PortfolioEntryFinancialController extends Controller {
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForEngagedTable.add("editActionLink");
         }
-        if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+        if (!PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())) {
             hideColumnsForEngagedTable.add("shared");
         }
-        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "") || PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION", "")
+                || PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())) {
             hideColumnsForEngagedTable.add("deleteActionLink");
         }
 
         List<WorkOrderListView> costToCompleteWorkOrderListView = new ArrayList<WorkOrderListView>();
         List<WorkOrderListView> engagedWorkOrderListView = new ArrayList<WorkOrderListView>();
         for (WorkOrder workOrder : portfolioEntry.workOrders) {
-            if (!workOrder.getComputedIsEngaged(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
-                costToCompleteWorkOrderListView.add(new WorkOrderListView(workOrder));
+            if (!workOrder.getComputedIsEngaged(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin()))) {
+                costToCompleteWorkOrderListView.add(new WorkOrderListView(this.getPreferenceManagerPlugin(), workOrder));
             } else {
-                engagedWorkOrderListView.add(new WorkOrderListView(workOrder));
+                engagedWorkOrderListView.add(new WorkOrderListView(this.getPreferenceManagerPlugin(), workOrder));
             }
         }
         Table<WorkOrderListView> costToCompleteWorkOrderTable = WorkOrderListView.templateTable.fill(costToCompleteWorkOrderListView,
@@ -195,7 +200,7 @@ public class PortfolioEntryFinancialController extends Controller {
          * create the purchase order line items of portfolio entry table
          */
         Table<PurchaseOrderLineItemListView> lineItemsTable = null;
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())) {
 
             Set<String> hideColumnsForLineItemTable = new HashSet<String>();
             hideColumnsForLineItemTable.add("isAssociated");
@@ -251,10 +256,10 @@ public class PortfolioEntryFinancialController extends Controller {
         // compute the totals
         Double opexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, true);
         Double capexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false);
-        Double opexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(id, true);
-        Double capexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(id, false);
-        Double opexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(id, true);
-        Double capexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(id, false);
+        Double opexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true);
+        Double capexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false);
+        Double opexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true);
+        Double capexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false);
 
         /*
          * compute the financial status
@@ -995,23 +1000,45 @@ public class PortfolioEntryFinancialController extends Controller {
         return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }

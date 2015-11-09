@@ -36,6 +36,7 @@ import javax.inject.Singleton;
 import dao.finance.CurrencyDAO;
 import dao.finance.PurchaseOrderDAO;
 import dao.reporting.ReportingDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.database.IDatabaseDependencyService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -88,6 +89,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
     private ISysAdminUtils sysAdminUtils;
     private Configuration configuration;
     private Environment environment;
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(ReportingUtilsImpl.class);
 
@@ -100,7 +102,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
     private static final String POWER_POINT_FILE_NAME = "report_%s_%s_%s.pptx";
 
     /**
-     * Creates a new ReportingUtilsImpl
+     * Creates a new ReportingUtilsImpl.
      * 
      * @param lifecycle
      *            the play application lifecycle listener
@@ -117,11 +119,15 @@ public class ReportingUtilsImpl implements IReportingUtils {
      * @param sysAdminUtils
      *            the sysadmin utilities
      * @param databaseDependencyService
+     *            the database dependency service
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
     @Inject
     public ReportingUtilsImpl(ApplicationLifecycle lifecycle, Configuration configuration, Environment environment,
             IUserSessionManagerPlugin userSessionManagerPlugin, IPersonalStoragePlugin personalStoragePlugin,
-            INotificationManagerPlugin notificationManagerPlugin, ISysAdminUtils sysAdminUtils, IDatabaseDependencyService databaseDependencyService) {
+            INotificationManagerPlugin notificationManagerPlugin, ISysAdminUtils sysAdminUtils, IDatabaseDependencyService databaseDependencyService,
+            IPreferenceManagerPlugin preferenceManagerPlugin) {
         log.info("SERVICE>>> ReportingUtilsImpl starting...");
         this.configuration = configuration;
         this.environment = environment;
@@ -129,6 +135,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
         this.personalStoragePlugin = personalStoragePlugin;
         this.notificationManagerPlugin = notificationManagerPlugin;
         this.sysAdminUtils = sysAdminUtils;
+        this.preferenceManagerPlugin = preferenceManagerPlugin;
         loadDefinitions();
         lifecycle.addStopHook(() -> {
             log.info("SERVICE>>> ReportingUtilsImpl stopping...");
@@ -181,7 +188,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
         parameters.put("format", format.name());
 
         // set the "use purchase order"
-        parameters.put("use_purchase_order", PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder());
+        parameters.put("use_purchase_order", PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin()));
 
         // set the default currency code
         parameters.put("default_currency_code", CurrencyDAO.getCurrencyDefault().code);
@@ -371,27 +378,52 @@ public class ReportingUtilsImpl implements IReportingUtils {
         }
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the system admin utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * Get the Play environment service.
+     */
     private Environment getEnvironment() {
         return environment;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }

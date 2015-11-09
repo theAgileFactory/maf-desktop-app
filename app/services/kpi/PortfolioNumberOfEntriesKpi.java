@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import dao.pmo.PortfolioEntryDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 import models.framework_models.kpi.KpiData;
@@ -36,17 +37,17 @@ import models.framework_models.kpi.KpiData;
 public class PortfolioNumberOfEntriesKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return new BigDecimal(PortfolioEntryDao.getPEAsNbActiveByPortfolio(objectId));
     }
 
     @Override
-    public BigDecimal computeAdditional1(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return new BigDecimal(PortfolioEntryDao.getPEAsNbActiveConceptualByPortfolio(objectId));
     }
 
     @Override
-    public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return new BigDecimal(PortfolioEntryDao.getPEAsNbActiveNonConceptualByPortfolio(objectId));
     }
 
@@ -56,12 +57,12 @@ public class PortfolioNumberOfEntriesKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 

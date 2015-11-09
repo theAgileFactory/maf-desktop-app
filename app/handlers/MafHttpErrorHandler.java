@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import controllers.ControllersUtils;
 import framework.handlers.AbstractErrorHandler;
 import framework.security.ISecurityService;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
 import framework.services.api.IApiControllerUtilsService;
@@ -27,7 +28,7 @@ import services.datasyndication.IDataSyndicationService;
 import services.echannel.IEchannelService;
 
 /**
- * Handler registered to deal with errors
+ * Handler registered to deal with errors.
  * 
  * @author Pierre-Yves Cloux
  */
@@ -45,7 +46,21 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     private INotificationManagerPlugin notificationService;
     @Inject
     private IEchannelService echannelService;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
+    /**
+     * Default constructor.
+     * 
+     * @param configuration
+     *            the Play configuration service
+     * @param environment
+     *            the Play environment service
+     * @param optionalSourceMapper
+     *            the Play optional source mapper
+     * @param providerRouter
+     *            the route provider
+     */
     @Inject
     public MafHttpErrorHandler(Configuration configuration, Environment environment, OptionalSourceMapper optionalSourceMapper,
             Provider<Router> providerRouter) {
@@ -99,8 +114,12 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         context.args.put(ISecurityService.class.getName(), securityService);
         context.args.put(INotificationManagerPlugin.class.getName(), notificationService);
         context.args.put(IEchannelService.class.getName(), echannelService);
+        context.args.put(IPreferenceManagerPlugin.class.getName(), preferenceManagerPlugin);
     }
 
+    /**
+     * Get the API controller utils service.
+     */
     private IApiControllerUtilsService getApiControllerUtilsService() {
         return apiControllerUtilsService;
     }

@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import dao.pmo.PortfolioEntryRiskDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 import models.framework_models.kpi.KpiData;
@@ -36,20 +37,20 @@ import models.framework_models.kpi.KpiData;
 public class RisksAndIssuesKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         int nbActiveRisks = PortfolioEntryRiskDao.getPERiskAsNbActiveByPE(objectId);
         int nbActiveIssues = PortfolioEntryRiskDao.getPEIssueAsNbActiveByPE(objectId);
         return new BigDecimal(nbActiveRisks + nbActiveIssues);
     }
 
     @Override
-    public BigDecimal computeAdditional1(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         int nbActiveRisks = PortfolioEntryRiskDao.getPERiskAsNbActiveByPE(objectId);
         return new BigDecimal(nbActiveRisks);
     }
 
     @Override
-    public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         int nbActiveIssues = PortfolioEntryRiskDao.getPEIssueAsNbActiveByPE(objectId);
         return new BigDecimal(nbActiveIssues);
     }
@@ -60,12 +61,12 @@ public class RisksAndIssuesKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 

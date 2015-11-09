@@ -28,7 +28,7 @@ import constants.IMafConstants;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
-import framework.services.ServiceStaticAccessor;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 import models.framework_models.kpi.KpiData;
@@ -43,7 +43,7 @@ import models.pmo.PortfolioEntryPlanningPackage;
 public class PortfolioEntryProgressKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
 
         BigDecimal numerator = BigDecimal.ZERO;
@@ -63,7 +63,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
                 numerator = numerator.add(days);
                 break;
             case ON_GOING:
-                numerator = numerator.add(days.multiply(getOnGoingRate()));
+                numerator = numerator.add(days.multiply(getOnGoingRate(preferenceManagerPlugin)));
                 break;
             default:
                 break;
@@ -79,7 +79,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional1(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
 
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
 
@@ -96,7 +96,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
                 numerator = numerator.add(days);
                 break;
             case ON_GOING:
-                numerator = numerator.add(days.multiply(getOnGoingRate()));
+                numerator = numerator.add(days.multiply(getOnGoingRate(preferenceManagerPlugin)));
                 break;
             default:
                 break;
@@ -108,7 +108,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
 
         BigDecimal value = BigDecimal.ZERO;
@@ -127,20 +127,22 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
 
     /**
      * Get the on going fulfillment rate.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    private BigDecimal getOnGoingRate() {
-        Integer percentage = ServiceStaticAccessor.getPreferenceManagerPlugin()
-                .getPreferenceValueAsInteger(IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE);
+    private BigDecimal getOnGoingRate(IPreferenceManagerPlugin preferenceManagerPlugin) {
+        Integer percentage = preferenceManagerPlugin.getPreferenceValueAsInteger(IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE);
         return new BigDecimal(percentage / 100.0);
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 

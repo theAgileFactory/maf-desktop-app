@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import dao.pmo.PortfolioEntryDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 import models.framework_models.kpi.KpiData;
@@ -37,9 +38,10 @@ import utils.finance.Totals;
 public class DeviationCapexKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         Totals totals = new Totals(0.0, PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false), 0.0,
-                PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(objectId, false), 0.0, PortfolioEntryDao.getPEAsEngagedAmountByOpex(objectId, false));
+                PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, false), 0.0,
+                PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, false));
         Double deviation = totals.getDeviationRate(false);
         if (deviation != null) {
             return new BigDecimal(totals.getDeviationRate(false));
@@ -49,14 +51,14 @@ public class DeviationCapexKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional1(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return new BigDecimal(PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false));
     }
 
     @Override
-    public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
-        return new BigDecimal(
-                PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(objectId, false) + PortfolioEntryDao.getPEAsEngagedAmountByOpex(objectId, false));
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+        return new BigDecimal(PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, false)
+                + PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, false));
     }
 
     @Override
@@ -65,12 +67,12 @@ public class DeviationCapexKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 

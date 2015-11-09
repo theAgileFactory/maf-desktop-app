@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import framework.handlers.AbstractRequestHandler;
 import framework.security.ISecurityService;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
 import framework.services.notification.INotificationManagerPlugin;
@@ -43,6 +44,9 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
 
     @Inject
     private IEchannelService echannelService;
+
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     /**
      * Default constructor.
@@ -87,5 +91,6 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
         context.args.put(ISecurityService.class.getName(), securityService);
         context.args.put(INotificationManagerPlugin.class.getName(), notificationService);
         context.args.put(IEchannelService.class.getName(), echannelService);
+        context.args.put(IPreferenceManagerPlugin.class.getName(), preferenceManagerPlugin);
     }
 }

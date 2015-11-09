@@ -15,4 +15,5 @@ object commons extends framework.handlers.ViewsInjector{
     val _echannelService=play.mvc.Http.Context.current().args.get(classOf[services.echannel.IEchannelService].getName).asInstanceOf[services.echannel.IEchannelService]
     val _securityService=play.mvc.Http.Context.current().args.get(classOf[framework.security.ISecurityService].getName).asInstanceOf[framework.security.ISecurityService]
     val _notificationService=play.mvc.Http.Context.current().args.get(classOf[framework.services.notification.INotificationManagerPlugin].getName).asInstanceOf[framework.services.notification.INotificationManagerPlugin]
+    val _preferenceManagerPlugin=play.mvc.Http.Context.current().args.get(classOf[framework.services.account.IPreferenceManagerPlugin].getName).asInstanceOf[framework.services.account.IPreferenceManagerPlugin]
 }

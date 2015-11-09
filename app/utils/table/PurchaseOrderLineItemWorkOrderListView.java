@@ -19,15 +19,16 @@ package utils.table;
 
 import java.math.BigDecimal;
 
-import models.finance.WorkOrder;
-import models.pmo.PortfolioEntry;
 import constants.IMafConstants;
 import dao.finance.PurchaseOrderDAO;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.WorkOrder;
+import models.pmo.PortfolioEntry;
 
 /**
  * A purchase order line item work order list view is used to display an engaged
@@ -73,12 +74,11 @@ public class PurchaseOrderLineItemWorkOrderListView {
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PurchaseOrderLineItemWorkOrderListView>(IMafConstants.EDIT_URL_FORMAT,
                         new StringFormatFormatter.Hook<PurchaseOrderLineItemWorkOrderListView>() {
-                            @Override
-                            public String convert(PurchaseOrderLineItemWorkOrderListView workOrderListView) {
-                                return controllers.core.routes.PurchaseOrderController.editWorkOrder(workOrderListView.lineItemId, workOrderListView.id)
-                                        .url();
-                            }
-                        }));
+                    @Override
+                    public String convert(PurchaseOrderLineItemWorkOrderListView workOrderListView) {
+                        return controllers.core.routes.PurchaseOrderController.editWorkOrder(workOrderListView.lineItemId, workOrderListView.id).url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
@@ -111,18 +111,20 @@ public class PurchaseOrderLineItemWorkOrderListView {
     /**
      * Construct a list view with a DB entry.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param workOrder
      *            the work order in the DB.
      */
-    public PurchaseOrderLineItemWorkOrderListView(WorkOrder workOrder) {
+    public PurchaseOrderLineItemWorkOrderListView(IPreferenceManagerPlugin preferenceManagerPlugin, WorkOrder workOrder) {
 
         this.id = workOrder.id;
         this.lineItemId = workOrder.purchaseOrderLineItem.id;
         this.name = workOrder.name;
         this.portfolioEntry = workOrder.portfolioEntry;
-        this.amount = workOrder.getComputedAmount(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder());
-        this.amountReceived = workOrder.getComputedAmountReceived(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder());
-        this.amountOpen = workOrder.getAmountOpen(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder());
+        this.amount = workOrder.getComputedAmount(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin));
+        this.amountReceived = workOrder.getComputedAmountReceived(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin));
+        this.amountOpen = workOrder.getAmountOpen(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin));
 
     }
 }

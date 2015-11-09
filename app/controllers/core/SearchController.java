@@ -35,6 +35,7 @@ import dao.pmo.OrgUnitDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -82,6 +83,8 @@ public class SearchController extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Form<SearchFormData> formTemplate = Form.form(SearchFormData.class);
     private static Logger.ALogger log = Logger.of(SearchController.class);
@@ -93,11 +96,13 @@ public class SearchController extends Controller {
      *            the account manager service
      * @param userSessionManagerPlugin
      *            the user session manager service
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param securityService
      *            the security service
      */
     public static DefaultSelectableValueHolderCollection<ObjectTypes> getObjectTypes(IAccountManagerPlugin accountManagerPlugin,
-            IUserSessionManagerPlugin userSessionManagerPlugin, ISecurityService securityService) {
+            IUserSessionManagerPlugin userSessionManagerPlugin, IPreferenceManagerPlugin preferenceManagerPlugin, ISecurityService securityService) {
 
         IUserAccount userAccount = null;
         try {
@@ -116,7 +121,7 @@ public class SearchController extends Controller {
 
         objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit")));
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin)
                 && securityService.restrict(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION, userAccount)) {
             objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order")));
         }
@@ -133,8 +138,8 @@ public class SearchController extends Controller {
      * Display the search form.
      */
     public Result index() {
-        return ok(views.html.core.search.index.render(formTemplate,
-                getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(), getSecurityService()), null));
+        return ok(views.html.core.search.index.render(formTemplate, getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(),
+                this.getPreferenceManagerPlugin(), this.getSecurityService()), null));
 
     }
 
@@ -147,8 +152,8 @@ public class SearchController extends Controller {
         Form<SearchFormData> boundForm = formTemplate.bindFromRequest();
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.core.search.index.render(boundForm,
-                    getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(), getSecurityService()), null));
+            return ok(views.html.core.search.index.render(boundForm, getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(),
+                    this.getPreferenceManagerPlugin(), this.getSecurityService()), null));
         }
 
         SearchFormData searchFormData = boundForm.get();
@@ -305,8 +310,8 @@ public class SearchController extends Controller {
             break;
         }
 
-        return ok(views.html.core.search.index.render(boundForm,
-                getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(), getSecurityService()), "core.search.submit.noresult"));
+        return ok(views.html.core.search.index.render(boundForm, getObjectTypes(this.getAccountManagerPlugin(), this.getUserSessionManagerPlugin(),
+                this.getPreferenceManagerPlugin(), this.getSecurityService()), "core.search.submit.noresult"));
     }
 
     /**
@@ -371,5 +376,12 @@ public class SearchController extends Controller {
      */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return this.userSessionManagerPlugin;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }

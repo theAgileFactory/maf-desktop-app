@@ -500,10 +500,10 @@ public class RoadmapController extends Controller {
                 budgetOpex = budgetOpex.add(new BigDecimal(entryBudgetOpex));
 
                 // forecast
-                Double entryCostToCompleteCapex = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(id, false);
-                Double entryCostToCompleteOpex = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(id, true);
-                Double entryEngagedCapex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(id, false);
-                Double entryEngagedOpex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(id, true);
+                Double entryCostToCompleteCapex = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false);
+                Double entryCostToCompleteOpex = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true);
+                Double entryEngagedCapex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false);
+                Double entryEngagedOpex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true);
 
                 forecast = forecast.add(new BigDecimal(entryCostToCompleteCapex + entryCostToCompleteOpex + entryEngagedCapex + entryEngagedOpex));
                 forecastCapex = forecastCapex.add(new BigDecimal(entryCostToCompleteCapex + entryEngagedCapex));

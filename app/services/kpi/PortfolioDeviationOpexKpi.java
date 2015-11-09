@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import dao.pmo.PortfolioDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 import models.framework_models.kpi.KpiData;
@@ -37,10 +38,10 @@ import utils.finance.Totals;
 public class PortfolioDeviationOpexKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         Totals totals = new Totals(PortfolioDao.getPortfolioAsBudgetAmountByOpex(objectId, true), 0.0,
-                PortfolioDao.getPortfolioAsCostToCompleteAmountByOpex(objectId, true), 0.0, PortfolioDao.getPortfolioAsEngagedAmountByOpex(objectId, true),
-                0.0);
+                PortfolioDao.getPortfolioAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, true), 0.0,
+                PortfolioDao.getPortfolioAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, true), 0.0);
         Double deviation = totals.getDeviationRate(true);
         if (deviation != null) {
             return new BigDecimal(totals.getDeviationRate(true));
@@ -50,14 +51,14 @@ public class PortfolioDeviationOpexKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional1(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return new BigDecimal(PortfolioDao.getPortfolioAsBudgetAmountByOpex(objectId, true));
     }
 
     @Override
-    public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
-        return new BigDecimal(
-                PortfolioDao.getPortfolioAsCostToCompleteAmountByOpex(objectId, true) + PortfolioDao.getPortfolioAsEngagedAmountByOpex(objectId, true));
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+        return new BigDecimal(PortfolioDao.getPortfolioAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, true)
+                + PortfolioDao.getPortfolioAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, true));
     }
 
     @Override
@@ -66,12 +67,12 @@ public class PortfolioDeviationOpexKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
         return null;
     }
 

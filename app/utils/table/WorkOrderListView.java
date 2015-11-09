@@ -21,11 +21,9 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import models.finance.Currency;
-import models.finance.WorkOrder;
-import models.pmo.PortfolioEntryPlanningPackage;
 import constants.IMafConstants;
 import dao.finance.PurchaseOrderDAO;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -34,6 +32,9 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.Currency;
+import models.finance.WorkOrder;
+import models.pmo.PortfolioEntryPlanningPackage;
 
 /**
  * A work order list view is used to display a work order row in a table.
@@ -95,36 +96,36 @@ public class WorkOrderListView {
                 addColumn("selectLineItemActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("selectLineItemActionLink", new StringFormatFormatter<WorkOrderListView>(
                         "<a href=\"%s\"><span class=\"glyphicons glyphicons-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
-                            @Override
-                            public String convert(WorkOrderListView workOrderListView) {
-                                return controllers.core.routes.PortfolioEntryFinancialController.selectWorkOrderLineItemStep1(
-                                        workOrderListView.portfolioEntryId, workOrderListView.id).url();
-                            }
-                        }));
+                    @Override
+                    public String convert(WorkOrderListView workOrderListView) {
+                        return controllers.core.routes.PortfolioEntryFinancialController
+                                .selectWorkOrderLineItemStep1(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                    }
+                }));
                 setColumnCssClass("selectLineItemActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("selectLineItemActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                 addColumn("engageWorkOrder", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("engageWorkOrder", new StringFormatFormatter<WorkOrderListView>(
                         "<a href=\"%s\"><span class=\"glyphicons glyphicons-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
-                            @Override
-                            public String convert(WorkOrderListView workOrderListView) {
-                                return controllers.core.routes.PortfolioEntryFinancialController.engageWorkOrderStep1(workOrderListView.portfolioEntryId,
-                                        workOrderListView.id).url();
-                            }
-                        }));
+                    @Override
+                    public String convert(WorkOrderListView workOrderListView) {
+                        return controllers.core.routes.PortfolioEntryFinancialController
+                                .engageWorkOrderStep1(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                    }
+                }));
                 setColumnCssClass("engageWorkOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("engageWorkOrder", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<WorkOrderListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<WorkOrderListView>() {
-                            @Override
-                            public String convert(WorkOrderListView workOrderListView) {
-                                return controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(workOrderListView.portfolioEntryId,
-                                        workOrderListView.id).url();
-                            }
-                        }));
+                setJavaColumnFormatter("editActionLink",
+                        new StringFormatFormatter<WorkOrderListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<WorkOrderListView>() {
+                    @Override
+                    public String convert(WorkOrderListView workOrderListView) {
+                        return controllers.core.routes.PortfolioEntryFinancialController
+                                .manageWorkOrder(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -132,11 +133,10 @@ public class WorkOrderListView {
                 setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<WorkOrderListView>() {
                     @Override
                     public String apply(WorkOrderListView workOrderListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.core.routes.PortfolioEntryFinancialController.deleteWorkOrder(workOrderListView.portfolioEntryId,
-                                        workOrderListView.id).url();
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = controllers.core.routes.PortfolioEntryFinancialController
+                                .deleteWorkOrder(workOrderListView.portfolioEntryId, workOrderListView.id).url();
                         return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     }
                 });
@@ -146,8 +146,8 @@ public class WorkOrderListView {
                 this.setLineAction(new IColumnFormatter<WorkOrderListView>() {
                     @Override
                     public String apply(WorkOrderListView workOrderListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryFinancialController.viewWorkOrder(workOrderListView.portfolioEntryId,
-                                workOrderListView.id).url();
+                        return controllers.core.routes.PortfolioEntryFinancialController
+                                .viewWorkOrder(workOrderListView.portfolioEntryId, workOrderListView.id).url();
                     }
                 });
 
@@ -193,22 +193,24 @@ public class WorkOrderListView {
     /**
      * Construct a row with a DB entry.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param workOrder
      *            the work order in the DB.
      */
-    public WorkOrderListView(WorkOrder workOrder) {
+    public WorkOrderListView(IPreferenceManagerPlugin preferenceManagerPlugin, WorkOrder workOrder) {
 
         this.id = workOrder.id;
         this.portfolioEntryId = workOrder.portfolioEntry.id;
         this.name = workOrder.name;
         this.shared = workOrder.shared;
         this.currency = workOrder.currency;
-        this.amount = workOrder.getComputedAmount(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder());
+        this.amount = workOrder.getComputedAmount(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin));
         this.isOpex = workOrder.isOpex;
         this.dueDate = workOrder.dueDate;
         this.startDate = workOrder.startDate;
         this.planningPackage = workOrder.portfolioEntryPlanningPackage;
 
-        this.amountReceived = workOrder.getComputedAmountReceived(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder());
+        this.amountReceived = workOrder.getComputedAmountReceived(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin));
     }
 }

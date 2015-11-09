@@ -26,9 +26,10 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
+@import views.html.commons._
 
 @tab=@{
-    if(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+    if(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
         "engaged"
     } else {
         "costToComplete"
@@ -70,7 +71,7 @@
                         <th>@parts.Msg("object.work_order.expenditure_type.label")</th>
                         <td>@display_is_opex(workOrder.isOpex)</td>
                     </tr>
-                    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+                    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)) {
                         <tr>
                             <th>@parts.Msg("object.work_order.shared.label")</th>
                             <td>@display_boolean(workOrder.shared)</td>
@@ -78,7 +79,7 @@
                     }
                     <tr>
                         <th>@parts.Msg("object.work_order.is_engaged.label")</th>
-                        <td>@display_boolean(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()))</td>
+                        <td>@display_boolean(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))</td>
                     </tr>
                     <tr>
                         <th>@parts.Msg("object.work_order.name.label")</th>
@@ -90,12 +91,12 @@
                     </tr>
                     <tr>
                         <th>@parts.Msg("object.work_order.amount.label")</th>
-                        <td>@display_number(workOrder.getComputedAmount(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()))</td>
+                        <td>@display_number(workOrder.getComputedAmount(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))</td>
                     </tr>
-                    @if(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder())) {
+                    @if(workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
                         <tr>
                             <th>@parts.Msg("object.work_order.amount_received.label")</th>
-                            <td>@display_number(workOrder.getComputedAmountReceived(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()))</td>
+                            <td>@display_number(workOrder.getComputedAmountReceived(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))</td>
                         </tr>
                     }
                     <tr>
@@ -122,7 +123,7 @@
         </div>
     </div>
 
-    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) {
+    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)) {
     
         @if(workOrder.purchaseOrderLineItem != null && workOrder.purchaseOrderLineItem.isCancelled == false) {
             <div class="panel panel-default">

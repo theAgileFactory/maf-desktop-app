@@ -28,6 +28,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import dao.delivery.ReleaseDAO;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 import models.delivery.Release;
@@ -43,7 +44,7 @@ import models.pmo.PortfolioEntry;
 public class ReleaseBurndownKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
 
         List<Requirement> requirements = getRequirements(objectId);
 
@@ -59,7 +60,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional1(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
 
         List<Requirement> requirements = getRequirements(objectId);
 
@@ -75,7 +76,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional2(Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
 
         List<Requirement> requirements = getRequirements(objectId);
 
@@ -125,7 +126,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
 
         Release release = ReleaseDAO.getReleaseById(objectId);
 
@@ -153,7 +154,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
 
         Release release = ReleaseDAO.getReleaseById(objectId);
 

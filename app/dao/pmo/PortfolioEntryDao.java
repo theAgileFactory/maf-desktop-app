@@ -31,6 +31,7 @@ import com.avaje.ebean.RawSqlBuilder;
 
 import dao.finance.CurrencyDAO;
 import dao.finance.PurchaseOrderDAO;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -130,12 +131,14 @@ public abstract class PortfolioEntryDao {
     /**
      * Get the "cost to complete" of a portfolio entry.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param id
      *            the portfolio entry id
      * @param isOpex
      *            set to true for OPEX value, else CAPEX
      */
-    public static Double getPEAsCostToCompleteAmountByOpex(Long id, boolean isOpex) {
+    public static Double getPEAsCostToCompleteAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex) {
 
         String baseSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
@@ -144,11 +147,8 @@ public abstract class PortfolioEntryDao {
 
         List<String> sqls = new ArrayList<>();
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) { // if
-                                                                     // purchase
-                                                                     // orders
-                                                                     // are
-                                                                     // enable
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin)) {
+            // if purchase orders are enable
 
             // either the work orders without purchase order line
             sqls.add(baseSqlSelect + " WHERE wo.purchase_order_line_item_id IS NULL" + baseSqlCond);
@@ -179,12 +179,14 @@ public abstract class PortfolioEntryDao {
     /**
      * Get the engaged amount of a portfolio entry.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param id
      *            the portfolio entry id
      * @param isOpex
      *            set to true for OPEX value, else CAPEX
      */
-    public static Double getPEAsEngagedAmountByOpex(Long id, boolean isOpex) {
+    public static Double getPEAsEngagedAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex) {
 
         String baseWOSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
@@ -193,11 +195,8 @@ public abstract class PortfolioEntryDao {
 
         List<String> sqls = new ArrayList<>();
 
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()) { // if
-                                                                     // purchase
-                                                                     // orders
-                                                                     // are
-                                                                     // enable
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin)) {
+            // if purchase orders are enable
 
             // either the work orders with an active purchase order line
             sqls.add(baseWOSqlSelect

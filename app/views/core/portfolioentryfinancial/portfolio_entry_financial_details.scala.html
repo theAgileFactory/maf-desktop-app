@@ -22,12 +22,13 @@
     engagedWorkOrderTable: framework.utils.Table[utils.table.WorkOrderListView],
     lineItemTable: framework.utils.Table[utils.table.PurchaseOrderLineItemListView]
 )
-
+ 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import framework_views.parts
 @import framework_views.parts.formats._
 @import views.html.modelsparts._
+@import views.html.commons._
 
 @breadcrump=@{
     Seq(
@@ -94,7 +95,7 @@
         </div>
     }
 
-    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder() && lineItemTable.hasValues) {
+    @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin) && lineItemTable.hasValues) {
         <div class="panel panel-default">
     
             <div class="panel-heading">

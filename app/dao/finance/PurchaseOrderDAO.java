@@ -21,16 +21,15 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
+
+import constants.IMafConstants;
+import framework.services.account.IPreferenceManagerPlugin;
+import framework.utils.DefaultSelectableValueHolderCollection;
 import models.finance.PurchaseOrder;
 import models.finance.PurchaseOrderLineItem;
 import models.finance.PurchaseOrderLineShipmentStatusType;
-
-import com.avaje.ebean.Model.Finder;
-import com.avaje.ebean.ExpressionList;
-
-import constants.IMafConstants;
-import framework.services.ServiceStaticAccessor;
-import framework.utils.DefaultSelectableValueHolderCollection;
 
 /**
  * DAO for the {@link PurchaseOrder}, {@link PurchaseOrderLineItem},
@@ -51,8 +50,8 @@ public abstract class PurchaseOrderDAO {
     /**
      * Default finder for the entity class.
      */
-    public static Finder<Long, PurchaseOrderLineShipmentStatusType> findPurchaseOrderLineShipmentStatusType =
-            new Finder<Long, PurchaseOrderLineShipmentStatusType>(PurchaseOrderLineShipmentStatusType.class);
+    public static Finder<Long, PurchaseOrderLineShipmentStatusType> findPurchaseOrderLineShipmentStatusType = new Finder<Long, PurchaseOrderLineShipmentStatusType>(
+            PurchaseOrderLineShipmentStatusType.class);
 
     /**
      * Default constructor.
@@ -62,10 +61,12 @@ public abstract class PurchaseOrderDAO {
 
     /**
      * Define if the system is configured to use the purchase orders.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static boolean isSystemPreferenceUsePurchaseOrder() {
-        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsBoolean(
-                IMafConstants.FINANCIAL_USE_PURCHASE_ORDER_PREFERENCE);
+    public static boolean isSystemPreferenceUsePurchaseOrder(IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return preferenceManagerPlugin.getPreferenceValueAsBoolean(IMafConstants.FINANCIAL_USE_PURCHASE_ORDER_PREFERENCE);
     }
 
     /**
@@ -93,8 +94,8 @@ public abstract class PurchaseOrderDAO {
      *            the purchase order ref id
      */
     public static PurchaseOrder getPurchaseOrderActiveByRefId(String refId) {
-        List<PurchaseOrder> purchaseOrders =
-                PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).eq("isCancelled", false).eq("refId", refId).findList();
+        List<PurchaseOrder> purchaseOrders = PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).eq("isCancelled", false).eq("refId", refId)
+                .findList();
         if (purchaseOrders != null && !purchaseOrders.isEmpty()) {
             return purchaseOrders.get(0);
         }
@@ -211,8 +212,8 @@ public abstract class PurchaseOrderDAO {
      *            set to true for OPEX, else CAPEX
      */
     public static ExpressionList<PurchaseOrderLineItem> getPurchaseOrderLineItemActiveAsExprByCurrencyAndOpex(String currency, Boolean isOpex) {
-        return PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).eq("isCancelled", false).eq("isOpex", isOpex)
-                .eq("currency.code", currency);
+        return PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).eq("isCancelled", false).eq("isOpex", isOpex).eq("currency.code",
+                currency);
     }
 
     /**
@@ -226,8 +227,8 @@ public abstract class PurchaseOrderDAO {
      * @param isOpex
      *            set to true for OPEX, else CAPEX
      */
-    public static List<PurchaseOrderLineItem>
-            getPurchaseOrderLineItemActiveAsListByPOAndCurrencyAndOpex(Long purchaseOrderId, String currency, Boolean isOpex) {
+    public static List<PurchaseOrderLineItem> getPurchaseOrderLineItemActiveAsListByPOAndCurrencyAndOpex(Long purchaseOrderId, String currency,
+            Boolean isOpex) {
         return getPurchaseOrderLineItemActiveAsExprByCurrencyAndOpex(currency, isOpex).eq("purchaseOrder.id", purchaseOrderId).findList();
     }
 
@@ -241,8 +242,8 @@ public abstract class PurchaseOrderDAO {
      **/
     public static List<PurchaseOrderLineItem> getPurchaseOrderLineItemActiveAsListByPO(Long purchaseOrderId, Boolean isCancelled) {
 
-        ExpressionList<PurchaseOrderLineItem> e =
-                PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).eq("purchaseOrder.id", purchaseOrderId);
+        ExpressionList<PurchaseOrderLineItem> e = PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).eq("purchaseOrder.id",
+                purchaseOrderId);
 
         if (isCancelled != null) {
             e = e.eq("isCancelled", isCancelled);

@@ -55,6 +55,7 @@ import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
 import models.delivery.Iteration;
@@ -83,8 +84,13 @@ import services.licensesmanagement.ILicensesManagementService;
  */
 @Api(value = "/api/core/portfolio-entry", description = "Operations on Portfolio Entries")
 public class PortfolioEntryApiController extends ApiController {
+
     @Inject
     private ILicensesManagementService licensesManagementService;
+
+    @Inject
+    IPreferenceManagerPlugin preferenceManagerPlugin;
+
     public static Form<PortfolioEntryListRequest> portfolioEntryListRequestFormTemplate = Form.form(PortfolioEntryListRequest.class);
     public static Form<PortfolioEntryRequestPost> portfolioEntryRequestPostFormTemplate = Form.form(PortfolioEntryRequestPost.class);
     public static Form<PortfolioEntryRequestPut> portfolioEntryRequestPutFormTemplate = Form.form(PortfolioEntryRequestPut.class);
@@ -638,7 +644,8 @@ public class PortfolioEntryApiController extends ApiController {
                 return getJsonErrorResponse(new ApiError(400, "The work order does not belong to the given portfolio entry"));
             }
 
-            return getJsonSuccessResponse(workOrder.getComputedIsEngaged(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()));
+            return getJsonSuccessResponse(
+                    workOrder.getComputedIsEngaged(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())));
 
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
@@ -678,7 +685,8 @@ public class PortfolioEntryApiController extends ApiController {
                 return getJsonErrorResponse(new ApiError(400, "The work order does not belong to the given portfolio entry"));
             }
 
-            return getJsonSuccessResponse(workOrder.getComputedAmount(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()));
+            return getJsonSuccessResponse(
+                    workOrder.getComputedAmount(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())));
 
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
@@ -718,15 +726,26 @@ public class PortfolioEntryApiController extends ApiController {
                 return getJsonErrorResponse(new ApiError(400, "The work order does not belong to the given portfolio entry"));
             }
 
-            return getJsonSuccessResponse(workOrder.getComputedAmountReceived(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder()));
+            return getJsonSuccessResponse(
+                    workOrder.getComputedAmountReceived(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(this.getPreferenceManagerPlugin())));
 
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
         }
     }
 
+    /**
+     * Get the licenses management service.
+     */
     private ILicensesManagementService getLicensesManagementService() {
         return licensesManagementService;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }
