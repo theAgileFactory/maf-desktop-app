@@ -22,6 +22,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
+import framework.services.session.IUserSessionManagerPlugin;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.framework_models.account.Notification;
 import models.framework_models.account.Principal;
 import models.framework_models.parent.IModelConstants;
@@ -33,12 +40,6 @@ import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.table.MessageListView;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.services.notification.INotificationManagerPlugin;
-import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * Messaging controller.
@@ -55,7 +56,9 @@ public class MessagingController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
+
     private static Logger.ALogger log = Logger.of(MessagingController.class);
     private static Form<NotificationMessage> notificationMessageForm = Form.form(NotificationMessage.class);
 
@@ -66,8 +69,13 @@ public class MessagingController extends Controller {
     public Result index() {
 
         String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
-        Table<Notification> messagesTables =
-                MessageListView.templateTable.fill(getNotificationManagerPlugin().getMessagesForUid(loggedUser));
+
+        List<MessageListView> messageListViewRows = new ArrayList<>();
+        List<Notification> notifications = getNotificationManagerPlugin().getMessagesForUid(loggedUser);
+        for (Notification notification : notifications) {
+            messageListViewRows.add(new MessageListView(this.getAccountManagerPlugin(), notification));
+        }
+        Table<MessageListView> messagesTables = MessageListView.templateTable.fill(messageListViewRows);
 
         NotificationMessage notificationMessage = createEmptyNotificationMessage();
 
@@ -79,18 +87,24 @@ public class MessagingController extends Controller {
      */
     public Result sendMessage() {
 
-        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
-        Table<Notification> messagesTables =
-                MessageListView.templateTable.fill(getNotificationManagerPlugin().getMessagesForUid(loggedUser));
-
         try {
             Form<NotificationMessage> boundForm = notificationMessageForm.bindFromRequest();
             if (boundForm.hasErrors()) {
+
+                String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
+
+                List<MessageListView> messageListViewRows = new ArrayList<>();
+                List<Notification> notifications = getNotificationManagerPlugin().getMessagesForUid(loggedUser);
+                for (Notification notification : notifications) {
+                    messageListViewRows.add(new MessageListView(this.getAccountManagerPlugin(), notification));
+                }
+                Table<MessageListView> messagesTables = MessageListView.templateTable.fill(messageListViewRows);
+
                 return ok(views.html.messaging.index.render(messagesTables, boundForm));
             }
             NotificationMessage notificationMessage = boundForm.get();
-            getNotificationManagerPlugin().sendMessage(getUserSessionManagerPlugin().getUserSessionId(ctx()), notificationMessage.principalUids, notificationMessage.title,
-                    notificationMessage.message);
+            getNotificationManagerPlugin().sendMessage(getUserSessionManagerPlugin().getUserSessionId(ctx()), notificationMessage.principalUids,
+                    notificationMessage.title, notificationMessage.message);
             Utilities.sendSuccessFlashMessage(getI18nMessagesPlugin().get("messaging.send.success", notificationMessage.title));
             return redirect(routes.MessagingController.index());
         } catch (Exception e) {
@@ -134,19 +148,38 @@ public class MessagingController extends Controller {
         public List<String> principalUids;
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the account manager service.
+     */
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return this.accountManagerPlugin;
     }
 }

@@ -18,10 +18,9 @@
 package utils.table;
 
 import java.text.MessageFormat;
+import java.util.Date;
 
-import models.framework_models.account.Notification;
 import constants.IMafConstants;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
@@ -31,6 +30,8 @@ import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.framework_models.account.Notification;
+import models.framework_models.account.Principal;
 
 /**
  * A message list view is used to display a message row in a table.
@@ -39,31 +40,30 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class MessageListView {
 
-    public static Table<Notification> templateTable = new Table<Notification>() {
+    public static Table<MessageListView> templateTable = new Table<MessageListView>() {
         {
 
             this.setIdFieldName("id");
 
             this.addColumn("creationDate", "creationDate", "object.message.date.label", SorterType.DATE_SORTER);
-            setJavaColumnFormatter("creationDate", new IColumnFormatter<Notification>() {
+            setJavaColumnFormatter("creationDate", new IColumnFormatter<MessageListView>() {
                 @Override
-                public String apply(Notification notification, Object value) {
-                    DateFormatter<Notification> df = new DateFormatter<Notification>();
-                    return strongify(notification, df.apply(notification, value));
+                public String apply(MessageListView messageListView, Object value) {
+                    DateFormatter<MessageListView> df = new DateFormatter<MessageListView>();
+                    return strongify(messageListView, df.apply(messageListView, value));
                 }
             });
             setColumnCssClass("creationDate", IMafConstants.BOOTSTRAP_COLUMN_2);
 
             this.addColumn("senderPrincipal", "senderPrincipal", "object.message.sender.label", SorterType.STRING_SORTER);
-            setJavaColumnFormatter("senderPrincipal", new IColumnFormatter<Notification>() {
+            setJavaColumnFormatter("senderPrincipal", new IColumnFormatter<MessageListView>() {
                 @Override
-                public String apply(Notification notification, Object value) {
-                    IAccountManagerPlugin accountManagerPlugin = ServiceStaticAccessor.getAccountManagerPlugin();
+                public String apply(MessageListView messageListView, Object value) {
                     try {
-                        IUserAccount userAccount = accountManagerPlugin.getUserAccountFromUid(notification.senderPrincipal.uid);
-                        return strongify(notification, userAccount.getFirstName() + " " + userAccount.getLastName());
+                        IUserAccount userAccount = messageListView.accountManagerPlugin.getUserAccountFromUid(messageListView.senderPrincipal.uid);
+                        return strongify(messageListView, userAccount.getFirstName() + " " + userAccount.getLastName());
                     } catch (AccountManagementException e) {
-                        return strongify(notification, notification.senderPrincipal.uid);
+                        return strongify(messageListView, messageListView.senderPrincipal.uid);
                     }
 
                 }
@@ -71,25 +71,25 @@ public class MessageListView {
             setColumnCssClass("senderPrincipal", IMafConstants.BOOTSTRAP_COLUMN_2);
 
             this.addColumn("title", "title", "object.message.title.label", SorterType.STRING_SORTER);
-            setJavaColumnFormatter("title", new IColumnFormatter<Notification>() {
+            setJavaColumnFormatter("title", new IColumnFormatter<MessageListView>() {
                 @Override
-                public String apply(Notification notification, Object value) {
-                    return strongify(notification, notification.getTitle());
+                public String apply(MessageListView messageListView, Object value) {
+                    return strongify(messageListView, messageListView.title);
                 }
             });
             setColumnCssClass("title", IMafConstants.BOOTSTRAP_COLUMN_2);
 
             this.addColumn("message", "message", "object.message.message.label", SorterType.NONE);
-            setJavaColumnFormatter("message", new ObjectFormatter<Notification>());
+            setJavaColumnFormatter("message", new ObjectFormatter<MessageListView>());
             setColumnCssClass("message", IMafConstants.BOOTSTRAP_COLUMN_4);
 
             addColumn("maskAsReadLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("maskAsReadLink", new IColumnFormatter<Notification>() {
+            setJavaColumnFormatter("maskAsReadLink", new IColumnFormatter<MessageListView>() {
                 @Override
-                public String apply(Notification notification, Object value) {
-                    if (!notification.isRead) {
+                public String apply(MessageListView messageListView, Object value) {
+                    if (!messageListView.isRead) {
                         String message = "<a href=\"%s\"><span class=\"glyphicons glyphicons-check\"></span></a>";
-                        String url = controllers.routes.Application.markNotificationAsRead(notification.id).url();
+                        String url = controllers.routes.Application.markNotificationAsRead(messageListView.id).url();
                         return views.html.framework_views.parts.formats.display_with_format.render(url, message).body();
                     } else {
                         return "";
@@ -100,12 +100,12 @@ public class MessageListView {
             setColumnValueCssClass("maskAsReadLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
             addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<Notification>() {
+            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<MessageListView>() {
                 @Override
-                public String apply(Notification notification, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.routes.Application.deleteNotification(notification.id).url();
+                public String apply(MessageListView messageListView, Object value) {
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
+                    String url = controllers.routes.Application.deleteNotification(messageListView.id).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 }
             });
@@ -120,22 +120,44 @@ public class MessageListView {
     /**
      * Strongify a string if needed.
      * 
-     * @param notification
-     *            the concerned notification
+     * @param messageListView
+     *            the concerned row
      * @param in
      *            the string input
      */
-    public static String strongify(Notification notification, String in) {
-        if (!notification.isRead) {
+    public static String strongify(MessageListView messageListView, String in) {
+        if (!messageListView.isRead) {
             return "<strong>" + in + "</strong>";
         }
         return in;
     }
 
+    public Long id;
+    public boolean isRead;
+    public Date creationDate;
+    public Principal senderPrincipal;
+    public String title;
+    public String message;
+
+    public IAccountManagerPlugin accountManagerPlugin;
+
     /**
      * Default constructor.
+     * 
+     * @param accountManagerPlugin
+     *            the account manager service
+     * @param notification
+     *            the notification
      */
-    public MessageListView() {
+    public MessageListView(IAccountManagerPlugin accountManagerPlugin, Notification notification) {
+        this.id = notification.id;
+        this.isRead = notification.isRead;
+        this.creationDate = notification.creationDate;
+        this.senderPrincipal = notification.senderPrincipal;
+        this.title = notification.title;
+        this.message = notification.message;
+
+        this.accountManagerPlugin = accountManagerPlugin;
     }
 
 }
