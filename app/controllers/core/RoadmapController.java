@@ -57,8 +57,8 @@ import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.highcharts.pattern.BasicBar;
 import framework.security.ISecurityService;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -127,6 +127,8 @@ public class RoadmapController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(RoadmapController.class);
 
@@ -524,6 +526,9 @@ public class RoadmapController extends Controller {
 
         try {
 
+            Integer percentage = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
+            int warningLimitPercent = percentage.intValue();
+
             List<String> ids = FilterConfig.getIdsFromRequest(request());
 
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -602,7 +607,7 @@ public class RoadmapController extends Controller {
                 if (orgUnitCapacities.containsKey(allocatedOrgUnit.orgUnit.id)) {
                     orgUnitCapacity = orgUnitCapacities.get(allocatedOrgUnit.orgUnit.id);
                 } else {
-                    orgUnitCapacity = new OrgUnitCapacity(allocatedOrgUnit.orgUnit);
+                    orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedOrgUnit.orgUnit);
                     orgUnitCapacities.put(allocatedOrgUnit.orgUnit.id, orgUnitCapacity);
                 }
 
@@ -619,7 +624,7 @@ public class RoadmapController extends Controller {
                     if (orgUnitCapacities.containsKey(allocatedActor.actor.orgUnit.id)) {
                         orgUnitCapacity = orgUnitCapacities.get(allocatedActor.actor.orgUnit.id);
                     } else {
-                        orgUnitCapacity = new OrgUnitCapacity(allocatedActor.actor.orgUnit);
+                        orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedActor.actor.orgUnit);
                         orgUnitCapacities.put(allocatedActor.actor.orgUnit.id, orgUnitCapacity);
                     }
 
@@ -643,7 +648,7 @@ public class RoadmapController extends Controller {
                 if (competencyCapacities.containsKey(allocatedCompetency.competency.id)) {
                     competencyCapacity = competencyCapacities.get(allocatedCompetency.competency.id);
                 } else {
-                    competencyCapacity = new CompetencyCapacity(allocatedCompetency.competency);
+                    competencyCapacity = new CompetencyCapacity(warningLimitPercent, allocatedCompetency.competency);
                     competencyCapacities.put(allocatedCompetency.competency.id, competencyCapacity);
                 }
 
@@ -661,7 +666,7 @@ public class RoadmapController extends Controller {
                     if (competencyCapacities.containsKey(allocatedActor.actor.defaultCompetency.id)) {
                         competencyCapacity = competencyCapacities.get(allocatedActor.actor.defaultCompetency.id);
                     } else {
-                        competencyCapacity = new CompetencyCapacity(allocatedActor.actor.defaultCompetency);
+                        competencyCapacity = new CompetencyCapacity(warningLimitPercent, allocatedActor.actor.defaultCompetency);
                         competencyCapacities.put(allocatedActor.actor.defaultCompetency.id, competencyCapacity);
                     }
 
@@ -1144,11 +1149,15 @@ public class RoadmapController extends Controller {
 
         /**
          * Default constructor.
+         * 
+         * @param warningLimitPercent
+         *            the warning limit in percent
          */
-        public ResourceRequestCapacity() {
+        public ResourceRequestCapacity(int warningLimitPercent) {
+
             this.resourceCapacityMonths = new HashMap<>();
             for (int i = 0; i < 12; i++) {
-                this.resourceCapacityMonths.put(i, new ResourceCapacityMonth());
+                this.resourceCapacityMonths.put(i, new ResourceCapacityMonth(warningLimitPercent));
             }
         }
 
@@ -1197,11 +1206,13 @@ public class RoadmapController extends Controller {
         /**
          * Default constructor.
          * 
+         * @param warningLimitPercent
+         *            the warning limit in percent
          * @param orgUnit
          *            the org unit
          */
-        public OrgUnitCapacity(OrgUnit orgUnit) {
-            super();
+        public OrgUnitCapacity(int warningLimitPercent, OrgUnit orgUnit) {
+            super(warningLimitPercent);
             this.orgUnit = orgUnit;
         }
 
@@ -1227,11 +1238,13 @@ public class RoadmapController extends Controller {
         /**
          * Default constructor.
          * 
+         * @param warningLimitPercent
+         *            the warning limit in percent
          * @param competency
          *            the competency
          */
-        public CompetencyCapacity(Competency competency) {
-            super();
+        public CompetencyCapacity(int warningLimitPercent, Competency competency) {
+            super(warningLimitPercent);
             this.competency = competency;
         }
 
@@ -1254,13 +1267,18 @@ public class RoadmapController extends Controller {
 
         private double planned;
         private double available;
+        private int warningLimitPercent;
 
         /**
          * Default constructor.
+         * 
+         * @param warningLimitPercent
+         *            the warning limit in percent
          */
-        public ResourceCapacityMonth() {
+        public ResourceCapacityMonth(int warningLimitPercent) {
             this.planned = 0.0;
             this.available = 0.0;
+            this.warningLimitPercent = warningLimitPercent;
         }
 
         /**
@@ -1282,12 +1300,9 @@ public class RoadmapController extends Controller {
          */
         public String getBootstrapBackground() {
 
-            Integer percentage = ServiceStaticAccessor.getPreferenceManagerPlugin()
-                    .getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
-
             if (this.getAvailable() >= this.getPlanned() - 0.01) {
                 return "success";
-            } else if (this.getAvailable() * (1 + (percentage.intValue() / 100.0)) >= this.getPlanned() - 0.01) {
+            } else if (this.getAvailable() * (1 + (warningLimitPercent / 100.0)) >= this.getPlanned() - 0.01) {
                 return "warning";
             }
             return "danger";
@@ -1521,12 +1536,25 @@ public class RoadmapController extends Controller {
         return securityService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }
