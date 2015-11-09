@@ -42,7 +42,7 @@
         @header
     </head>
     <body>
-        @utils.AdPanelUtils.display(request.path)
+        @_adPanelManagerService.getPanel(request.path)
         @content
 
         @subjectPresent() {
@@ -56,7 +56,7 @@
                 });
             </script>
             
-            @utils.tour.TourUtils.getTour(request.path, request.getQueryString("tourUid"), request.getQueryString("tourStep"), _messagesPluginService, _securityService)
+            @utils.tour.TourUtils.getTour(request.path, request.getQueryString("tourUid"), request.getQueryString("tourStep"), _messagesPluginService, _securityService, _preferenceManagerPlugin)
         }
     </body>
 </html>

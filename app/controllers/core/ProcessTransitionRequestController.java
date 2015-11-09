@@ -87,7 +87,7 @@ public class ProcessTransitionRequestController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    
+
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
     private static Form<ProcessMilestoneRequestFormData> processMilestoneRequestFormTemplate = Form.form(ProcessMilestoneRequestFormData.class);
@@ -108,11 +108,9 @@ public class ProcessTransitionRequestController extends Controller {
 
         List<MilestoneRequestListView> requestsListView = new ArrayList<MilestoneRequestListView>();
         for (ProcessTransitionRequest request : pagination.getListOfObjects()) {
-            MilestoneRequestListView milestoneRequest = new MilestoneRequestListView(request);
-            if (milestoneRequest.portfolioEntry != null
-                    && milestoneRequest.milestone != null
-                    && getSecurityService().dynamic(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, "",
-                            milestoneRequest.portfolioEntry.id)) {
+            MilestoneRequestListView milestoneRequest = new MilestoneRequestListView(this.getAttachmentManagerPlugin(), request);
+            if (milestoneRequest.portfolioEntry != null && milestoneRequest.milestone != null && getSecurityService()
+                    .dynamic(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, "", milestoneRequest.portfolioEntry.id)) {
                 requestsListView.add(milestoneRequest);
             }
         }
@@ -149,8 +147,8 @@ public class ProcessTransitionRequestController extends Controller {
         // get the structured document (RequestMilestoneFormData)
         RequestMilestoneFormData requestMilestoneFormData = null;
         try {
-            List<Attachment> structuredDocumentAttachments =
-                    getAttachmentManagerPlugin().getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class, request.id, true);
+            List<Attachment> structuredDocumentAttachments = getAttachmentManagerPlugin()
+                    .getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class, request.id, true);
 
             requestMilestoneFormData = (RequestMilestoneFormData) Utilities.unmarshallObject(structuredDocumentAttachments.get(0).structuredDocument.content);
 
@@ -169,15 +167,16 @@ public class ProcessTransitionRequestController extends Controller {
         List<String> status = LifeCycleMilestoneDao.getLCMilestoneAsStatusByPEAndLCMilestone(id, lifeCycleMilestone.id);
 
         // if exists, get the description document
-        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id,getAttachmentManagerPlugin(),getUserSessionManagerPlugin());
+        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id,
+                getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
         Attachment descriptionDocument = null;
         if (attachments != null && attachments.size() > 0) {
             descriptionDocument = attachments.get(0);
         }
 
         // construct the form
-        Form<ProcessMilestoneRequestFormData> processMilestoneRequestForm =
-                processMilestoneRequestFormTemplate.fill(new ProcessMilestoneRequestFormData(requestMilestoneFormData, request.id));
+        Form<ProcessMilestoneRequestFormData> processMilestoneRequestForm = processMilestoneRequestFormTemplate
+                .fill(new ProcessMilestoneRequestFormData(requestMilestoneFormData, request.id));
 
         return ok(views.html.core.processtransitionrequest.milestone_request_process.render(request, descriptionDocument, portfolioEntry, lifeCycleMilestone,
                 status, processMilestoneRequestForm));
@@ -214,7 +213,8 @@ public class ProcessTransitionRequestController extends Controller {
         ProcessTransitionRequest request = ProcessTransitionRequestDao.getProcessTransitionRequestById(processMilestoneRequestFormData.requestId);
 
         // if exists, get the request description document file
-        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id,getAttachmentManagerPlugin(),getUserSessionManagerPlugin());
+        List<Attachment> attachments = FileAttachmentHelper.getFileAttachmentsForDisplay(ProcessTransitionRequest.class, request.id,
+                getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
         Attachment descriptionDocument = null;
         if (attachments != null && attachments.size() > 0) {
             descriptionDocument = attachments.get(0);
@@ -249,7 +249,8 @@ public class ProcessTransitionRequestController extends Controller {
                 ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.REQUEST_REVIEW),
                         controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
                         "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.title",
-                        "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.message", portfolioEntry.getName());
+                        "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.message",
+                        portfolioEntry.getName());
 
                 // notification (approvers)
                 String approversUrl = controllers.core.routes.MilestoneApprovalController.process(lifeCycleMilestoneInstance.id).url();
@@ -274,10 +275,11 @@ public class ProcessTransitionRequestController extends Controller {
 
                 // notification
                 List<Actor> actors = new ArrayList<Actor>(Arrays.asList(portfolioEntry.manager, request.requester));
-                ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.APPROVAL), controllers.core.routes.PortfolioEntryGovernanceController
-                        .index(portfolioEntry.id).url(),
+                ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.APPROVAL),
+                        controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
                         "core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title",
-                        "core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message", portfolioEntry.getName());
+                        "core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message",
+                        portfolioEntry.getName());
 
                 // success message
                 successKey = "core.process_transition_request.process_milestone_request.panel.form.accept.approved.successful";
@@ -338,8 +340,9 @@ public class ProcessTransitionRequestController extends Controller {
 
         // send notification (manager + requester)
         List<Actor> actors = new ArrayList<Actor>(Arrays.asList(portfolioEntry.manager, request.requester));
-        ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.REQUEST_REVIEW), controllers.core.routes.PortfolioEntryGovernanceController
-                .index(portfolioEntry.id).url(), "core.process_transition_request.process_milestone_request.panel.form.reject.notification.title",
+        ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.REQUEST_REVIEW),
+                controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
+                "core.process_transition_request.process_milestone_request.panel.form.reject.notification.title",
                 "core.process_transition_request.process_milestone_request.panel.form.reject.notification.message", portfolioEntry.getName());
 
         return redirect(controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0));

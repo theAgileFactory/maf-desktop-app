@@ -59,6 +59,7 @@ import framework.security.ISecurityService;
 import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
@@ -136,6 +137,8 @@ public class Application extends Controller {
     private Configuration configuration;
     @Inject
     private IEchannelService echannelService;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(Application.class);
 
@@ -675,7 +678,7 @@ public class Application extends Controller {
      *            the tour uid
      */
     public Result endTour(String tourUid) {
-        TourUtils.markTourAsRead(tourUid);
+        TourUtils.markTourAsRead(this.getPreferenceManagerPlugin(), tourUid);
         return ok();
     }
 
@@ -954,11 +957,24 @@ public class Application extends Controller {
         return dataSyndicationService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }

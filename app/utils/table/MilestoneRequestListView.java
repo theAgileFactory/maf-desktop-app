@@ -23,7 +23,6 @@ import java.util.List;
 
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.PortfolioEntryDao;
-import framework.services.ServiceStaticAccessor;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
@@ -116,10 +115,12 @@ public class MilestoneRequestListView {
     /**
      * Construct a row with a DB entry.
      * 
+     * @param attachmentManagerPlugin
+     *            the attachment manager service
      * @param request
      *            the process transition request in the DB
      */
-    public MilestoneRequestListView(ProcessTransitionRequest request) {
+    public MilestoneRequestListView(IAttachmentManagerPlugin attachmentManagerPlugin, ProcessTransitionRequest request) {
 
         this.id = request.id;
         this.requester = request.requester;
@@ -130,8 +131,7 @@ public class MilestoneRequestListView {
         this.milestone = null;
         if (request.requestType.equals(ProcessTransitionRequest.RequestType.MILESTONE_APPROVAL.name())) {
 
-            IAttachmentManagerPlugin attachmentPlugin = ServiceStaticAccessor.getAttachmentManagerPlugin();
-            List<Attachment> structuredDocumentAttachments = attachmentPlugin.getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class,
+            List<Attachment> structuredDocumentAttachments = attachmentManagerPlugin.getAttachmentsFromObjectTypeAndObjectId(ProcessTransitionRequest.class,
                     request.id, true);
             if (structuredDocumentAttachments != null && structuredDocumentAttachments.size() > 0) {
                 RequestMilestoneFormData requestMilestoneFormData = (RequestMilestoneFormData) Utilities

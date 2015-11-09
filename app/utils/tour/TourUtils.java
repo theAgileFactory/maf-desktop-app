@@ -19,7 +19,6 @@ package utils.tour;
 
 import constants.IMafConstants;
 import framework.security.ISecurityService;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -63,10 +62,11 @@ public class TourUtils {
      *            the security service
      * @param messagesPlugin
      *            the i18n service
-     * @throws AccountManagementException
+     * @param preferenceService
+     *            the preference service
      */
     public static Html getTour(String route, String tourUidString, String tourStepString, II18nMessagesPlugin messagesPlugin,
-            ISecurityService securityService) throws AccountManagementException {
+            ISecurityService securityService, IPreferenceManagerPlugin preferenceService) throws AccountManagementException {
 
         if (route.equals("")) {
             route = "/";
@@ -87,7 +87,6 @@ public class TourUtils {
 
         } else {
 
-            IPreferenceManagerPlugin preferenceService = ServiceStaticAccessor.getPreferenceManagerPlugin();
             boolean isAdmin = securityService.restrict(IMafConstants.ADMIN_CONFIGURATION_PERMISSION);
 
             for (TourUid tourUid : TourUid.values()) {
@@ -169,11 +168,12 @@ public class TourUtils {
     /**
      * Mark a tour as read.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param tourUidString
      *            the tour uid
      */
-    public static void markTourAsRead(String tourUidString) {
-        IPreferenceManagerPlugin preferenceService = ServiceStaticAccessor.getPreferenceManagerPlugin();
-        preferenceService.updatePreferenceValue(tourUidString, false);
+    public static void markTourAsRead(IPreferenceManagerPlugin preferenceManagerPlugin, String tourUidString) {
+        preferenceManagerPlugin.updatePreferenceValue(tourUidString, false);
     }
 }
