@@ -77,7 +77,6 @@ import framework.services.storage.PersonalStoragePluginImpl;
 import framework.services.storage.SharedStorageServiceImpl;
 import framework.services.system.ISysAdminUtils;
 import framework.services.system.SysAdminUtilsImpl;
-import models.CustomBeanPersistController;
 import play.Configuration;
 import play.Environment;
 import play.Logger;
@@ -126,7 +125,6 @@ public class ApplicationServicesModule extends FrameworkModule {
         beforeInjection();
         super.configure();
         log.info(">>> Desktop static dependency injected start...");
-        requestStaticInjection(CustomBeanPersistController.class);
         requestStaticInjection(ApiAuthenticationBizdockCheck.class);
         requestStaticInjection(StaticAccessor.class);
         log.info("...Desktop static dependency injected end");
