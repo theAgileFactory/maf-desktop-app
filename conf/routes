@@ -2,8 +2,6 @@
 # Root module
 #-------------------
 
-GET    /switch-perspective         framework.utils.TopMenuBarController.switchPerspective(key)
-
 #Custom router method
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)
 POST   /ext/*path                  framework.services.router.CustomRouterController.perform(path)

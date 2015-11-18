@@ -45,6 +45,7 @@ import framework.services.configuration.I18nMessages;
 import framework.services.configuration.I18nMessagesPluginImpl;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.IImplementationDefinedObjectService;
+import framework.services.configuration.ITopMenuBarService;
 import framework.services.database.IDatabaseDependencyService;
 import framework.services.email.EmailServiceImpl;
 import framework.services.email.IEmailService;
@@ -86,6 +87,7 @@ import security.SecurityServiceImpl;
 import services.bizdockapi.BizdockApiClientImpl;
 import services.bizdockapi.IBizdockApiClient;
 import services.configuration.ImplementationDefinedObjectImpl;
+import services.configuration.TopMenuBarService;
 import services.database.DatabaseDependencyServiceImpl;
 import services.datasyndication.DataSyndicationServiceImpl;
 import services.datasyndication.IDataSyndicationService;
@@ -143,6 +145,8 @@ public class ApplicationServicesModule extends FrameworkModule {
 
         bind(II18nMessagesPlugin.class).to(I18nMessagesPluginImpl.class).asEagerSingleton();
         bind(I18nMessages.class).to(DefaultI18nMessages.class).asEagerSingleton();
+        
+        bind(ITopMenuBarService.class).to(TopMenuBarService.class).asEagerSingleton();
 
         bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
         bind(IPreferenceManagerPlugin.class).to(DefaultPreferenceManagementPlugin.class).asEagerSingleton();
