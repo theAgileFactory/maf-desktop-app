@@ -307,7 +307,7 @@ data_type.PortfolioEntryBudget.label=Budget d''initiative
 data_type.PortfolioEntryBudgetLine.label=Ligne de budget d''initiative
 data_type.PortfolioEntryEvent.label=Evénement
 data_type.PortfolioEntry.label=Initiative
-data_type.PortfolioEntryPlanningPackage.label=Livrable
+data_type.PortfolioEntryPlanningPackage.label=Résultat
 data_type.PortfolioEntryReport.label=Rapport d''initiative
 data_type.PortfolioEntryResourcePlanAllocatedActor.label=Allocation d''employé (initiative)
 data_type.PortfolioEntryResourcePlanAllocatedOrgUnit.label=Allocation d''unité d''organisation
@@ -534,10 +534,6 @@ kpi.release_burndown.static_trend_line.name=Courbe théorique
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
 #----------------------
 
-report.release_requirements.name=Exigences d''une release
-report.release_requirements.description=Liste des exigences d''une release
-report.release_requirements.release.name=Release
-
 report.competency.name=Compétence
 report.competency.description=Employés avec cette compétence et affectations.
 report.competency.competency.name=Compétence
@@ -624,10 +620,6 @@ permission.timesheet_approval_all_permission.description=Autorise un utilisateur
 permission.timesheet_approval_as_manager_permission.description=Autorise un utilisateur à approuver ou rejeter une feuille de temps qui a été saisie par tout subordonné (direct ou non).
 permission.timesheet_lock_all_permission.description=Autorise un utilisateur à vérouiller et dévérouiller toute feuille de temps.
 permission.admin.system_owner.description=Autorise un utilisateur de modifier et/ou commander des ressources (licences, performances..) supplémentaires.
-permission.release_view_all_permission.description=Autorise un utilisateur à voir tous les détails de toute release.
-permission.release_view_as_manager_permission.description=Autorise un utilisateur à afficher tous les détails d''une release pour laquelle il est le responsable.
-permission.release_edit_all_permission.description=Autorise un utilisateur à mettre à jour tous les détails de toute release.
-permission.release_edit_as_manager_permission.description=Autorise un utilisateur à mettre à jour tous les détails d''une release pour laquelle il est le responsable.
 permission.api_manager_permission.description=Autorise une utilisateur à créer des clefs et configurer les autorisations pour les API.
 permission.api_tester_permission.description=Autorise un utilisateur d''accéder à la documentation et à l''interface de test des API.
 permission.roadmap_simulator_permission.description=Autorise un utilisateur de simuler les scénarios de capacité dans la feuille de route.
@@ -657,8 +649,8 @@ preference.timesheet_reminder_limit_preference.description=La limite de rappel e
 preference.timesheet_reminder_limit_preference.name=Limite de rappel pour les feuilles de temps en retard
 preference.timesheet_hours_per_day.description=Définis le nombre attendu d''heures pour un jour lors du remplissage d''une feuille de temps.
 preference.timesheet_hours_per_day.name=Nombre d''heures par jour
-preference.package_status_on_going_fulfillment_percentage.name=Pourcentage d''accomplissement du statut "En cours" des livrables
-preference.package_status_on_going_fulfillment_percentage.description=Valeur en pourcent de l''accomplissement d''un livrable lorsque son statut est "En cours".
+preference.package_status_on_going_fulfillment_percentage.name=Pourcentage d''accomplissement du statut "En cours" des résultats
+preference.package_status_on_going_fulfillment_percentage.description=Valeur en pourcent de l''accomplissement d''un résultat lorsque son statut est "En cours".
 preference.api_authz_mode_preference.name=Mode d''authentification des APIs
 preference.api_authz_mode_preference.description=Niveau de sécurité pour l''authentification des APIs.\
 BizDock peut utiliser un mécanisme basé sur la signature des requêtes ou un modèle moins sécurisé basé sur une clef d''application.
@@ -847,6 +839,7 @@ object.custom_attribute_item.table.empty=Il n''existe aucune option.
 object.portfolio_entry_type.name.label=Nom
 object.portfolio_entry_type.description.label=Description
 object.portfolio_entry_type.selectable.label=Sélectionnable
+object.portfolio_entry_type.is_release.label=Release
 object.portfolio_entry_type.table.empty=Il n''existe aucun type d''initiative.
 
 #----------------------
@@ -1014,7 +1007,7 @@ object.timesheet_report.table.empty=Il n''existe aucune feuille de temps.
 #----------------------
 
 object.timesheet_entry.portfolio_entry.label=Initiative
-object.timesheet_entry.planning_package.label=Livrable
+object.timesheet_entry.planning_package.label=Résultat
 object.timesheet_entry.timesheet_activity.label=Activité
 
 #----------------------
@@ -1056,6 +1049,9 @@ object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=L''initiative choisie ne doit pas être la courante.
 object.portfolio_entry.dependency.already.error=L''initiative choisie est déjà une dépendance pour le type sélectionné.
 object.portfolio_entry.dependency.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer cette dépendance?
+object.portfolio_entry.deliverables.label=Livrables
+object.portfolio_entry.deliverable.type.OWNER.label=Propriétaire
+object.portfolio_entry.deliverable.type.FOLLOWER.label=Suiveur
 object.portfolio_entry.table.empty=Il n''existe aucune initiative.
 
 #----------------------
@@ -1130,8 +1126,8 @@ object.portfolio_entry_planning_package.status.ON_GOING.label=En cours
 object.portfolio_entry_planning_package.status.CLOSED.label=Fermé
 object.portfolio_entry_planning_package.allocated_resources_days.label=Jours des ressources allouées
 object.portfolio_entry_planning_package.timesheets_days.label=Jours des feuilles de temps
-object.portfolio_entry_planning_package.table.empty=Il n''existe aucun livrable.
-object.portfolio_entry_planning_package.pattern.table.empty=Il n''existe aucun modèle de livrable.
+object.portfolio_entry_planning_package.table.empty=Aucune entrée.
+object.portfolio_entry_planning_package.pattern.table.empty=Il n''existe aucun modèle de résultat.
 
 #----------------------
 # portfolioEntryPlanningType
@@ -1150,8 +1146,8 @@ object.portfolio_entry_planning_package_type.table.empty=Aucun type
 object.portfolio_entry_planning_package_group.name.label=Nom
 object.portfolio_entry_planning_package_group.description.label=Description
 object.portfolio_entry_planning_package_group.is_active.label=Actif
-object.portfolio_entry_planning_package_group.packages.label=Livrables
-object.portfolio_entry_planning_package_group.table.empty=Il n''existe aucun groupe de livrables
+object.portfolio_entry_planning_package_group.packages.label=Résultats
+object.portfolio_entry_planning_package_group.table.empty=Il n''existe aucun groupe de résultats
 
 #----------------------
 # stakeholder
@@ -1171,6 +1167,7 @@ object.life_cycle_process.short_name.label=Nom court
 object.life_cycle_process.name.label=Nom
 object.life_cycle_process.description.label=Description
 object.life_cycle_process.is_active.label=Actif
+object.life_cycle_process.is_release.label=Release
 object.life_cycle_process.table.empty=Il n''existe aucun processus de gouvernance.
 
 #----------------------
@@ -1194,6 +1191,9 @@ object.life_cycle_milestone.is_review_required.label=Revue requise
 object.life_cycle_milestone.default_status_type.label=Type de status par défaut
 object.life_cycle_milestone.is_active.label=Actif
 object.life_cycle_milestone.approvers.label=Approbateurs
+object.life_cycle_milestone.type.label=Type
+object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Date de début d''implémentation
+object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=Date de fin d''implémentation
 object.life_cycle_milestone.table.empty=Il n''existe aucun jalon.
 
 #----------------------
@@ -1352,13 +1352,23 @@ object.allocated_resource.start_date.label=Date de début
 object.allocated_resource.start_date.invalid=La date de début ne peut pas être renseignée seule: pour saisir une simple date, il faut remplir le champ "Date de fin" et laisser "Date de début" vide. Pour une période il suffit de renseigner les deux champs.
 object.allocated_resource.end_date.label=Date de fin
 object.allocated_resource.end_date.invalid=La date de fin doit être ultérieure à la date de début.
-object.allocated_resource.package.label=Livrable
-object.allocated_resource.follow_package_dates.label=Suivre les dates du livrable
+object.allocated_resource.package.label=Résultat
+object.allocated_resource.follow_package_dates.label=Suivre les dates du résultat
 object.allocated_resource.is_confirmed.label=Confirmé
 object.allocated_resource.actor.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.org_unit.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.competency.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.table.empty=Il n''existe aucune allocation.
+
+#----------------------
+# deliverable
+#----------------------
+
+object.deliverable.name.label=Nom
+object.deliverable.description.label=Description
+object.deliverable.requirements.label=Exigences
+object.deliverable.portfolio_entries.label=Initiatives
+object.deliverable.table.empty=Aucun livrable.
 
 #----------------------
 # requirement
@@ -1379,6 +1389,7 @@ object.requirement.effort.label=Effort effectué
 object.requirement.remaining_effort.label=Effort restant
 object.requirement.is_scoped.label=Approuvé
 object.requirement.iteration.label=Itération
+object.requirement.deliverables.label=Livrables
 object.requirement.table.empty=Il n''existe aucun exigence.
 
 #----------------------
@@ -1417,8 +1428,8 @@ object.work_order.due_date.invalid=La date d''échéance doit être ultérieure 
 object.work_order.portfolio_entry.label=Initiative
 object.work_order.is_engaged.label=Engagé
 object.work_order.purchase_order_line_item.label=Article
-object.work_order.portfolio_entry_planning_package.label=Livrable
-object.work_order.follow_package_dates.label=Suivre les dates du livrable
+object.work_order.portfolio_entry_planning_package.label=Résultat
+object.work_order.follow_package_dates.label=Suivre les dates du résultat
 object.work_order.table.empty=Il n''existe aucun ordre de travail.
 
 #----------------------
@@ -1622,7 +1633,7 @@ object.application_block.table.empty=Aucun bloc applicatif
 #portfolio entry
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.label=Initiative
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.REPORT.label=Rapport d''état
-object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Livrable
+object.data_syndication_agreement_item.models.pmo.PortfolioEntry.PLANNING_PACKAGE.label=Résultat
 object.data_syndication_agreement_item.models.pmo.PortfolioEntry.TIMESHEET.label=Feuille de temps
 
 #----------------------
@@ -1978,7 +1989,7 @@ core.timesheet.fill.weekly.copy.successful=Les entrées de la semaine précéden
 core.timesheet.fill.weekly.copy.info.empty=Il n''existe aucune entrée à copier.
 core.timesheet.fill.weekly.week.label=Semaine du {0} au {1}
 core.timesheet.fill.weekly.table.entry.label=Initiative / Activité
-core.timesheet.fill.weekly.table.subentry.label=Livrable / Tâche
+core.timesheet.fill.weekly.table.subentry.label=Résultat / Tâche
 core.timesheet.fill.weekly.table.total.label=Total
 
 #approve
@@ -2123,7 +2134,7 @@ core.portfolio_entry.sidebar.delivery.requirements_status.label=Statut des exige
 core.portfolio_entry.sidebar.delivery.iterations.label=Itérations
 core.portfolio_entry.sidebar.planning.label=Planification
 core.portfolio_entry.sidebar.planning.overview.label=Vue d''ensemble
-core.portfolio_entry.sidebar.planning.packages.label=Livrables
+core.portfolio_entry.sidebar.planning.packages.label=Résultats
 core.portfolio_entry.sidebar.planning.resources.label=Ressources
 core.portfolio_entry.sidebar.status_reporting.label=Rapports d''état
 core.portfolio_entry.sidebar.status_reporting.registers.label=Registres d''état
@@ -2362,35 +2373,35 @@ core.portfolio_entry_delivery.iteration.edit.successful=L''itération a été mi
 core.portfolio_entry_planning.overview.no_planning=La planification est vide.
 core.portfolio_entry_planning.overview.phase.label=Phase
 core.portfolio_entry_planning.overview.milestone.label=Jalon
-core.portfolio_entry_planning.overview.package.label=Livrable
+core.portfolio_entry_planning.overview.package.label=Résultat
 core.portfolio_entry_planning.overview.iteration.label=Itération
 
 #list of packages
-core.portfolio_entry_planning.packages.title=Livrables
-core.portfolio_entry_planning.packages.new.package=Livrable
-core.portfolio_entry_planning.packages.new.groups=Groupes de livrables
+core.portfolio_entry_planning.packages.title=Résultats
+core.portfolio_entry_planning.packages.new.package=Résultat
+core.portfolio_entry_planning.packages.new.groups=Groupes de résultats
 core.portfolio_entry_planning.packages.nogroup=Aucun groupe disponible
 core.portfolio_entry_planning.packages.gantt.lastupdate=Dernière mise à jour
 
 #add groups
-core.portfolio_entry_planning.package.groups.title=Ajouter des groupes de livrables
+core.portfolio_entry_planning.package.groups.title=Ajouter des groupes de résultats
 core.portfolio_entry_planning.package.groups.selectagroup=Veuillez sélectionner au moins 1 groupe.
-core.portfolio_entry_planning.package.groups.successful=Les livrables des groupes sélectionnés ont été ajoutés.
+core.portfolio_entry_planning.package.groups.successful=Les résultats des groupes sélectionnés ont été ajoutés.
 
 #view package
 core.portfolio_entry_planning.package.view.title=Détails
 
 #manage package
-core.portfolio_entry_planning.package.manage.title=Gérer un livrable
-core.portfolio_entry_planning.package.add.successful=Le livrable a été créé.
-core.portfolio_entry_planning.package.edit.successful=Le livrable a été mis à jour.
+core.portfolio_entry_planning.package.manage.title=Gérer un résultat
+core.portfolio_entry_planning.package.add.successful=Le résultat a été créé.
+core.portfolio_entry_planning.package.edit.successful=Le résultat a été mis à jour.
 
 #delete package
-core.portfolio_entry_planning.package.delete.successful=Le livrable a été supprimé.
+core.portfolio_entry_planning.package.delete.successful=Le résultat a été supprimé.
 
 #manage all packages
-core.portfolio_entry_planning.packages.manage.title=Gérer les livrables
-core.portfolio_entry_planning.packages.manage.successful=Les livrables ont été mis à jour.
+core.portfolio_entry_planning.packages.manage.title=Gérer les résultats
+core.portfolio_entry_planning.packages.manage.successful=Les résultats ont été mis à jour.
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Employés affectés
@@ -2793,10 +2804,10 @@ admin.configuration.reference_data.requirements.title=Exigences
 admin.configuration.reference_data.requirements.status.title=Statuts
 admin.configuration.reference_data.requirements.priorities.title=Priorités
 admin.configuration.reference_data.requirements.severities.title=Gravités
-admin.configuration.reference_data.planning_packages.title=Livrables
-admin.configuration.reference_data.planning_packages.groups.title=Groupes de livrables
-admin.configuration.reference_data.planning_packages.types.title=Types de livrables
-admin.configuration.reference_data.planning_packages.patterns.title=Modèles de livrables
+admin.configuration.reference_data.planning_packages.title=Résultats
+admin.configuration.reference_data.planning_packages.groups.title=Groupes de résultats
+admin.configuration.reference_data.planning_packages.types.title=Types de résultat
+admin.configuration.reference_data.planning_packages.patterns.title=Modèles de résultats
 admin.configuration.reference_data.register.title=Registres
 admin.configuration.reference_data.register.risktypes.title=Types de risque
 admin.configuration.reference_data.register.report_status_types.title=Types de statut de rapport
@@ -2893,22 +2904,22 @@ admin.configuration.reference_data.requirementseverity.edit.successful=La gravit
 admin.configuration.reference_data.requirementseverity.delete.successful=La gravité a été supprimée.
 
 #manage package group
-admin.configuration.reference_data.package_group.manage.title=Gérer un groupe de livrables
-admin.configuration.reference_data.package_group.add.successful=Le groupe de livrables a été ajouté.
-admin.configuration.reference_data.package_group.edit.successful=Le groupe de livrables a été mis à jour.
-admin.configuration.reference_data.package_group.delete.successful=Le groupe de livrables a été supprimé.
+admin.configuration.reference_data.package_group.manage.title=Gérer un groupe de résultats
+admin.configuration.reference_data.package_group.add.successful=Le groupe de résultats a été ajouté.
+admin.configuration.reference_data.package_group.edit.successful=Le groupe de résultats a été mis à jour.
+admin.configuration.reference_data.package_group.delete.successful=Le groupe de résultats a été supprimé.
 
 #manage package type
-admin.configuration.reference_data.package_type.manage.title=Gérer un type de livrables
-admin.configuration.reference_data.package_type.add.successful=Le type de livrables a été ajouté.
-admin.configuration.reference_data.package_type.edit.successful=Le type de livrables a été mis à jour.
-admin.configuration.reference_data.package_type.delete.successful=Le type de livrables a été supprimé.
+admin.configuration.reference_data.package_type.manage.title=Gérer un type de résultats
+admin.configuration.reference_data.package_type.add.successful=Le type de résultats a été ajouté.
+admin.configuration.reference_data.package_type.edit.successful=Le type de résultats a été mis à jour.
+admin.configuration.reference_data.package_type.delete.successful=Le type de résultats a été supprimé.
 
 #manage package pattern
-admin.configuration.reference_data.package_pattern.manage.title=Gérer un modèle de livrables
-admin.configuration.reference_data.package_pattern.add.successful=Le modèle de livrables a été ajouté.
-admin.configuration.reference_data.package_pattern.edit.successful=Le modèle de livrables a été mis à jour.
-admin.configuration.reference_data.package_pattern.delete.successful=Le modèle de livrables a été supprimé.
+admin.configuration.reference_data.package_pattern.manage.title=Gérer un modèle de résultats
+admin.configuration.reference_data.package_pattern.add.successful=Le modèle de résultats a été ajouté.
+admin.configuration.reference_data.package_pattern.edit.successful=Le modèle de résultats a été mis à jour.
+admin.configuration.reference_data.package_pattern.delete.successful=Le modèle de résultats a été supprimé.
 
 #manage risk type
 admin.configuration.reference_data.risktype.manage.title=Gérer un type de risque

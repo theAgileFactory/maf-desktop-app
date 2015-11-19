@@ -428,22 +428,6 @@ VALUES
 VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_VIEW_ALL_PERMISSION')
-);
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_EDIT_ALL_PERMISSION')
-);
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PARTNER_SYNDICATION_PERMISSION')
 );
 	INSERT INTO `system_level_role_type_has_system_permission`
@@ -683,22 +667,6 @@ VALUES
 `system_permission_id`)
 VALUES
 (
-(select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_VIEW_ALL_PERMISSION')
-);
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_EDIT_ALL_PERMISSION')
-);
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_SIMULATOR_PERMISSION')
 );
@@ -870,14 +838,6 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_VIEW_ALL_PERMISSION')
-);
 		INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
@@ -1021,22 +981,6 @@ VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
-);
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_VIEW_AS_MANAGER_PERMISSION')
-);
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_EDIT_AS_MANAGER_PERMISSION')
 );
 		INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
@@ -1382,14 +1326,6 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='RELEASE_VIEW_ALL_PERMISSION')
-);
 		INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
@@ -1656,6 +1592,7 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.des
 insert into portfolio_entry_type(id, deleted, name,  description, selectable, last_update) values (1, 0, 'portfolio_entry_type.name.project', 'portfolio_entry_type.description.project', 1, CURRENT_TIMESTAMP);
 insert into portfolio_entry_type(id, deleted, name,  description, selectable, last_update) values (2, 0, 'portfolio_entry_type.name.enhancement', 'portfolio_entry_type.description.enhancement', 1, CURRENT_TIMESTAMP);
 insert into portfolio_entry_type(id, deleted, name,  description, selectable, last_update) values (3, 0, 'portfolio_entry_type.name.upgrade', 'portfolio_entry_type.description.upgrade', 1, CURRENT_TIMESTAMP);
+insert into portfolio_entry_type(id, deleted, name,  description, selectable, is_release, last_update) values (10, 0, 'portfolio_entry_type.name.release', 'portfolio_entry_type.description.release', 1, 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.project', 'en', 'Project');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.project', 'fr', 'Projet');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.project', 'de', 'Projekt');
@@ -1665,6 +1602,9 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_t
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'en', 'Upgrade');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'fr', 'Mise à jour');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'de', 'Aktualisieren');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.release', 'en', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.release', 'fr', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.release', 'de', 'Release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'en', 'A company project');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'fr', 'Un projet d''entreprise');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'de', 'Ein Unternehmensprojekt');
@@ -1674,6 +1614,9 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_t
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.upgrade', 'en', 'Upgrade of an IT system');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.upgrade', 'fr', 'Mise à jour d''un système informatique');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.upgrade', 'de', 'Aktualisieren eines IT-Systems');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.release', 'en', 'Distribution of a new or upgraded version of software');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.release', 'fr', 'Distribution d\'une version nouvelle ou améliorée d\'un logiciel');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.release', 'de', 'Verteilung eines neuen oder aktualisierten Version der Software');
 
 -- Table portfolio_entry_dependency_type
 
@@ -1778,6 +1721,8 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_r
 
 -- Table life_cycle_process
 insert into life_cycle_process(id, deleted, short_name, name, description, is_active, last_update) values (5, 0, 'life_cycle_process.short_name.default', 'life_cycle_process.short_name.default', 'life_cycle_process.description.default', 1, CURRENT_TIMESTAMP);
+insert into life_cycle_process(id, deleted, short_name, name, description, is_active, is_release, last_update) values (6, 0, 'life_cycle_process.short_name.release', 'life_cycle_process.short_name.release', 'life_cycle_process.description.release', 1, 1, CURRENT_TIMESTAMP);
+
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'en', 'Default');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'fr', 'Standard');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'de', 'Grundeinstellung');
@@ -1787,6 +1732,16 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_proces
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.default', 'en', 'Default life cycle process when you do not know what to choose');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.default', 'fr', 'Processus de gouvernance standard');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.default', 'de', 'Grundeinstellung Lieferzyklus');
+
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.release', 'en', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.release', 'fr', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.release', 'de', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.release', 'en', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.release', 'fr', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.release', 'de', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.release', 'en', 'Default life cycle process for a release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.release', 'fr', 'Processus de gouvernance standard pour une release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.release', 'de', 'Grundeinstellung Lieferzyklus');
 
 -- Table life_cycle_milestone_instance_status_type
 insert into life_cycle_milestone_instance_status_type(id, deleted, name, description, is_approved, selectable, last_update) values (1, 0, 'life_cycle_milestone_instance_status_type.name.approved', 'life_cycle_milestone_instance_status_type.description.approved', 1, 1, CURRENT_TIMESTAMP);
@@ -1848,6 +1803,21 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milest
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.closure', 'fr', 'Terminé');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.closure', 'de', 'Abgeschlossen');
 
+insert into life_cycle_milestone(id, deleted, short_name, name, description, `order`, life_cycle_process_id, last_update, is_review_required, default_life_cycle_milestone_instance_status_type_id, type) values (24, 0, 'life_cycle_milestone.short_name.release_start_implementation', 'life_cycle_milestone.name.release_start_implementation', null, 1, 6, CURRENT_TIMESTAMP, 0, 1, 'IMPLEMENTATION_START_DATE');
+insert into life_cycle_milestone(id, deleted, short_name, name, description, `order`, life_cycle_process_id, last_update, is_review_required, default_life_cycle_milestone_instance_status_type_id, type) values (25, 0, 'life_cycle_milestone.short_name.release_end_implementation', 'life_cycle_milestone.name.release_end_implementation', null, 2, 6, CURRENT_TIMESTAMP, 0, 1, 'IMPLEMENTATION_END_DATE');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_start_implementation', 'en', 'Start');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_start_implementation', 'fr', 'Début');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_start_implementation', 'de', 'Anfang');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_end_implementation', 'en', 'End');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_end_implementation', 'fr', 'Fin');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_end_implementation', 'de', 'Ende');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_start_implementation', 'en', 'Implementation start');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_start_implementation', 'fr', 'Début de l\'implémentation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_start_implementation', 'de', 'Umsetzung Anfang');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_end_implementation', 'en', 'Implementation end');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_end_implementation', 'fr', 'Fin de l\'implémentation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_end_implementation', 'de', 'Umsetzung Ende');
+
 -- Table stakeholder_type
 insert into stakeholder_type(id, deleted, name, description, selectable, last_update) values (2, 0, 'stakeholder_type.name.product_manager', null, 1, CURRENT_TIMESTAMP);
 insert into stakeholder_type(id, deleted, name, description, selectable, last_update) values (5, 0, 'stakeholder_type.name.business_analyst', null, 1, CURRENT_TIMESTAMP);
@@ -1903,6 +1873,11 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.execution',
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.closure', 'en', 'Closure');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.closure', 'fr', 'Fermeture');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.closure', 'de', 'Abschluss');
+
+INSERT INTO life_cycle_phase (`name`,`life_cycle_process_id`,`order`,`start_life_cycle_milestone_id`,`end_life_cycle_milestone_id`,`last_update`,`gap_days_start`,`gap_days_end`) VALUES ('phase.implementation', 6, 1,  24, 25, CURRENT_TIMESTAMP, 0, 0);
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.implementation', 'en', 'Implementation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.implementation', 'fr', 'Implémentation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.implementation', 'de', 'Umsetzung');
 
 -- Table requirement_status
 INSERT INTO `requirement_status`(`id`,`deleted`,`last_update`,`type`,`name`,`description`) VALUES (1, 0, CURRENT_TIMESTAMP, 'NEW', 'requirement.status.name.new','');
@@ -1994,7 +1969,6 @@ UPDATE `reporting` SET `reporting_category_id`=(SELECT `id` FROM `reporting_cate
 UPDATE `reporting` SET `reporting_category_id`=(SELECT `id` FROM `reporting_category` WHERE `name`='reporting_category.allocation.name') WHERE `name`='reporting.org_unit_allocation.name';
 UPDATE `reporting` SET `reporting_category_id`=(SELECT `id` FROM `reporting_category` WHERE `name`='reporting_category.allocation.name') WHERE `name`='reporting.org_unit_actors_allocation.name';
 UPDATE `reporting` SET `reporting_category_id`=(SELECT `id` FROM `reporting_category` WHERE `name`='reporting_category.allocation.name') WHERE `name`='report.competency.name';
-UPDATE `reporting` SET `reporting_category_id`=(SELECT `id` FROM `reporting_category` WHERE `name`='reporting_category.release.name') WHERE `name`='report.release_requirements.name';
 
 -- Table plugin_definition
 

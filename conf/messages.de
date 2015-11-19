@@ -534,10 +534,6 @@ kpi.release_burndown.static_trend_line.name=Theoritischer Restaufwand
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
 #----------------------
 
-report.release_requirements.name=Release Anforderungen
-report.release_requirements.description=Liste der Anforderungen einer Release
-report.release_requirements.release.name=Release
-
 report.competency.name=Kompetenz
 report.competency.description=Mitarbeiter und Kompetenzzuweisung
 report.competency.competency.name=Kompetenz
@@ -624,10 +620,6 @@ permission.timesheet_approval_all_permission.description=Genehmigen und ablehnen
 permission.timesheet_approval_as_manager_permission.description=Timesheet der Untergebenen genehmigen und ablehnen.
 permission.timesheet_lock_all_permission.description=Blockieren und Freischalten aller Timesheet.
 permission.admin.system_owner.description=Instanzinformationen und Lizenzverwaltung (inkl. deren Zukauf).
-permission.release_view_all_permission.description=Daten sämtliche Release einsehen.
-permission.release_view_as_manager_permission.description=Verantwortlicher kann Daten seiner Release einsehen.
-permission.release_edit_all_permission.description=Daten aller Release ändern.
-permission.release_edit_as_manager_permission.description=Verantwortlicher kann alle Daten seiner Release ändern.
 permission.api_manager_permission.description=API Schlüssel und Zugriff konfigurieren.
 permission.api_tester_permission.description=Zugriff auf API Dokumentation und Test-Interface.
 permission.roadmap_simulator_permission.description=Simulation der Kapazitäten-Scenario in der Roadmap.
@@ -847,6 +839,7 @@ object.custom_attribute_item.table.empty=Kein Eintrag
 object.portfolio_entry_type.name.label=Name
 object.portfolio_entry_type.description.label=Beschreibung
 object.portfolio_entry_type.selectable.label=Aktiviert
+object.portfolio_entry_type.is_release.label=Release
 object.portfolio_entry_type.table.empty=Keine Einträge
 
 #----------------------
@@ -1056,6 +1049,9 @@ object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=Die gewählte Initiative sollte nicht die aktuelle sein.
 object.portfolio_entry.dependency.already.error=Die gewählte Initiative ist bereits eine Abhängigkeit für den ausgewählten Typ.
 object.portfolio_entry.dependency.delete.confirmation=Abhängigkeit löschen?
+object.portfolio_entry.deliverables.label=de: Delivrables
+object.portfolio_entry.deliverable.type.OWNER.label=de: Owner
+object.portfolio_entry.deliverable.type.FOLLOWER.label=de: Follower
 object.portfolio_entry.table.empty=Keine Initiativen eingetragen
 
 #----------------------
@@ -1171,6 +1167,7 @@ object.life_cycle_process.short_name.label=Kurzname
 object.life_cycle_process.name.label=Name
 object.life_cycle_process.description.label=Beschreibung
 object.life_cycle_process.is_active.label=Aktiv
+object.life_cycle_process.is_release.label=Release
 object.life_cycle_process.table.empty=Kein Prozess.
 
 #----------------------
@@ -1194,6 +1191,9 @@ object.life_cycle_milestone.is_review_required.label=erfordert Genehmigung
 object.life_cycle_milestone.default_status_type.label=Standardstatus
 object.life_cycle_milestone.is_active.label=Aktiv
 object.life_cycle_milestone.approvers.label=Approvers
+object.life_cycle_milestone.type.label=Typ
+object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=de: Implementation start date
+object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=de: Implementation end date
 object.life_cycle_milestone.table.empty=Kein Meilenstein eingetragen
 
 #----------------------
@@ -1361,6 +1361,16 @@ object.allocated_resource.competency.table.empty=Keine Einträge
 object.allocated_resource.table.empty=Keine Einträge
 
 #----------------------
+# deliverable
+#----------------------
+
+object.deliverable.name.label=Name
+object.deliverable.description.label=Beschreibung
+object.deliverable.requirements.label=Anforderungen
+object.deliverable.portfolio_entries.label=Initiativen
+object.deliverable.table.empty=Keine Einträge
+
+#----------------------
 # requirement
 #----------------------
 
@@ -1379,6 +1389,7 @@ object.requirement.effort.label=Ausgeführt
 object.requirement.remaining_effort.label=Restaufwand
 object.requirement.is_scoped.label=Akzeptiert
 object.requirement.iteration.label=Iteration
+object.requirement.deliverables.label=de: Delivrables
 object.requirement.table.empty=Keine Einträge
 
 #----------------------
