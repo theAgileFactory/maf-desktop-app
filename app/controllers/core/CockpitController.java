@@ -39,7 +39,6 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
-import dao.delivery.ReleaseDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
@@ -61,7 +60,6 @@ import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.SideBar;
 import framework.utils.Table;
-import models.delivery.Release;
 import models.finance.BudgetBucket;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.pmo.Actor;
@@ -87,7 +85,6 @@ import utils.table.OrgUnitListView;
 import utils.table.PortfolioEntryListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
 import utils.table.PortfolioListView;
-import utils.table.ReleaseListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
 import utils.table.TimesheetReportListView;
 
@@ -107,7 +104,6 @@ public class CockpitController extends Controller {
     @Inject
     private Configuration configuration;
 
-    
     private static Logger.ALogger log = Logger.of(CockpitController.class);
 
     /**
@@ -133,7 +129,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -151,7 +147,7 @@ public class CockpitController extends Controller {
         }
 
         Table<PortfolioEntryListView> asManagerTable = PortfolioEntryListView.templateTable.fill(portfolioEntryListView,
-                PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
+                PortfolioEntryListView.getHideNonDefaultColumns(true, true));
 
         /**
          * get the portfolio entries for which the current actor is a
@@ -169,7 +165,7 @@ public class CockpitController extends Controller {
         }
 
         Table<PortfolioEntryListView> asStakeholderTable = PortfolioEntryListView.templateTable.fill(portfolioEntryListView,
-                PortfolioEntryListView.getHideNonDefaultColumns(false, true, true));
+                PortfolioEntryListView.getHideNonDefaultColumns(false, true));
 
         return ok(views.html.core.cockpit.cockpit_myinitiatives_list.render(asManagerTable, asManagerPagination, viewAllAsManager, asStakeholderTable,
                 asStakeholderPagination));
@@ -199,7 +195,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -258,7 +254,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -295,7 +291,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -435,7 +431,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -476,7 +472,7 @@ public class CockpitController extends Controller {
                 Actor actor = ActorDao.getActorByUid(uid);
                 actorId = actor.id;
             } catch (Exception e) {
-                Logger.error("impossible to findRelease the actor of the sign-in user");
+                Logger.error("impossible to find the actor of the sign-in user");
                 return redirect(controllers.routes.Application.index());
             }
 
@@ -594,7 +590,7 @@ public class CockpitController extends Controller {
                 Actor actor = ActorDao.getActorByUid(uid);
                 actorId = actor.id;
             } catch (Exception e) {
-                Logger.error("impossible to findRelease the actor of the sign-in user");
+                Logger.error("impossible to find the actor of the sign-in user");
                 return redirect(controllers.routes.Application.index());
             }
 
@@ -636,7 +632,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -702,7 +698,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -754,7 +750,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
             actorId = actor.id;
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
             return redirect(controllers.routes.Application.index());
         }
 
@@ -849,47 +845,6 @@ public class CockpitController extends Controller {
     }
 
     /**
-     * Display releases for which the sign-in user is the manager.
-     * 
-     * @param page
-     *            the current page
-     * @param viewAll
-     *            set to true to display also non-active releases
-     */
-    public Result releases(Integer page, Boolean viewAll) {
-
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
-            return redirect(controllers.routes.Application.index());
-        }
-
-        Pagination<Release> pagination = ReleaseDAO.getReleaseAsPaginationByManager(actorId, viewAll);
-        pagination.setCurrentPage(page);
-
-        List<ReleaseListView> releaseListView = new ArrayList<ReleaseListView>();
-        for (Release release : pagination.getListOfObjects()) {
-            releaseListView.add(new ReleaseListView(release));
-        }
-
-        Set<String> columnsToHide = new HashSet<String>();
-        columnsToHide.add("manager");
-        columnsToHide.add("capacity");
-
-        Table<ReleaseListView> filledTable = ReleaseListView.templateTable.fill(releaseListView, columnsToHide);
-
-        return ok(views.html.core.cockpit.cockpit_my_releases.render(filledTable, pagination, viewAll));
-    }
-
-    /**
      * Construct the side bar.
      * 
      * @param currentType
@@ -944,12 +899,6 @@ public class CockpitController extends Controller {
                             "glyphicons glyphicons-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
         }
 
-        if (securityService.restrict(IMafConstants.RELEASE_VIEW_ALL_PERMISSION)
-                || securityService.restrict(IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION)) {
-            sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.releases", controllers.core.routes.CockpitController.releases(0, false),
-                    "glyphicons glyphicons-git-branch", currentType.equals(MenuItemType.MY_RELEASES)));
-        }
-
         try {
 
             String uid = ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx());
@@ -962,7 +911,7 @@ public class CockpitController extends Controller {
             sideBar.addMenuItem(myEmployeeCardMenu);
 
         } catch (Exception e) {
-            Logger.error("impossible to findRelease the actor of the sign-in user");
+            Logger.error("impossible to find the actor of the sign-in user");
         }
 
         return sideBar;
@@ -1078,7 +1027,7 @@ public class CockpitController extends Controller {
      * 
      */
     public static enum MenuItemType {
-        MY_INITIATIVES, MY_PORTFOLIOS, MY_EMPLOYEES, MY_ORG_UNITS, MY_BUDGET_BUCKETS, MY_RELEASES, MY_EMPLOYEE_CARD;
+        MY_INITIATIVES, MY_PORTFOLIOS, MY_EMPLOYEES, MY_ORG_UNITS, MY_BUDGET_BUCKETS, MY_EMPLOYEE_CARD;
     }
 
     private II18nMessagesPlugin getMessagesPlugin() {

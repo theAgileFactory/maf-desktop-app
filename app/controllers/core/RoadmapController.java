@@ -272,8 +272,8 @@ public class RoadmapController extends Controller {
      * -for each portfolio entry we get its life cycle process and its last
      * planned dates (there is one date by milestone)<br/>
      * -for each phase of the life cycle process, we get its start milestone and
-     * we findRelease the corresponding planned date (that is the start date)
-     * from the last planned dates. We do the same for the end milestone<br/>
+     * we find the corresponding planned date (that is the start date) from the
+     * last planned dates. We do the same for the end milestone<br/>
      * -we display one interval (bar) by phase according to the computed start
      * and end dates (see just above)
      */
@@ -984,7 +984,6 @@ public class RoadmapController extends Controller {
     private static Set<String> getColumnsToHide(FilterConfig<PortfolioEntryListView> filterConfig) {
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
         columnsToHide.add("stakeholderTypes");
-        columnsToHide.add("releasePortfolioEntry");
         return columnsToHide;
     }
 

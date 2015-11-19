@@ -20,12 +20,11 @@ package controllers.api.request;
 import java.util.ArrayList;
 import java.util.List;
 
-import play.data.validation.ValidationError;
-import dao.delivery.ReleaseDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
+import play.data.validation.ValidationError;
 
 /**
  * The portfolio entry list request.
@@ -38,7 +37,6 @@ public class PortfolioEntryListRequest {
     public Long sponsoringUnitId;
     public Long deliveryUnitId;
     public Long portfolioId;
-    public Long releaseId;
     public Boolean archived;
     public Long portfolioEntryTypeId;
     public Boolean isPublic;
@@ -54,8 +52,6 @@ public class PortfolioEntryListRequest {
      *            the delivery unit id
      * @param portfolioId
      *            the portfolio id
-     * @param releaseId
-     *            the release id
      * @param archived
      *            is archived
      * @param portfolioEntryTypeId
@@ -63,14 +59,13 @@ public class PortfolioEntryListRequest {
      * @param isPublic
      *            is public
      */
-    public PortfolioEntryListRequest(Long managerId, Long sponsoringUnitId, Long deliveryUnitId, Long portfolioId, Long releaseId, Boolean archived,
+    public PortfolioEntryListRequest(Long managerId, Long sponsoringUnitId, Long deliveryUnitId, Long portfolioId, Boolean archived,
             Long portfolioEntryTypeId, Boolean isPublic) {
 
         this.managerId = managerId;
         this.sponsoringUnitId = sponsoringUnitId;
         this.deliveryUnitId = deliveryUnitId;
         this.portfolioId = portfolioId;
-        this.releaseId = releaseId;
         this.archived = archived;
         this.portfolioEntryTypeId = portfolioEntryTypeId;
         this.isPublic = isPublic;
@@ -99,9 +94,6 @@ public class PortfolioEntryListRequest {
         }
         if (portfolioId != null && PortfolioDao.getPortfolioById(portfolioId) == null) {
             errors.add(new ValidationError("portfolioId", "The portfolio does not exist"));
-        }
-        if (releaseId != null && ReleaseDAO.getReleaseById(releaseId) == null) {
-            errors.add(new ValidationError("releaseId", "The release does not exist"));
         }
         if (portfolioEntryTypeId != null && PortfolioEntryDao.getPETypeById(portfolioEntryTypeId) == null) {
             errors.add(new ValidationError("portfolioEntryTypeId", "The portfolioEntryType does not exist"));

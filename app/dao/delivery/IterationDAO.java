@@ -19,10 +19,10 @@ package dao.delivery;
 
 import java.util.List;
 
-import models.delivery.Iteration;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 
-import com.avaje.ebean.ExpressionList;
+import models.delivery.Iteration;
 
 /**
  * DAO for the {@link Iteration} object.
@@ -67,18 +67,6 @@ public abstract class IterationDAO {
      */
     public static List<Iteration> getIterationAllAsListByPE(Long portfolioEntryId) {
         return getIterationAllAsExprByPE(portfolioEntryId).findList();
-    }
-
-    /**
-     * Get all iterations of a portfolio entry for a release.
-     * 
-     * @param releaseId
-     *            the release id
-     * @param portfolioEntryId
-     *            the portfolio entry id
-     */
-    public static List<Iteration> getIterationAllAsListByPEAndRelease(Long releaseId, Long portfolioEntryId) {
-        return IterationDAO.find.where().eq("deleted", false).eq("release.id", releaseId).eq("portfolioEntry.id", portfolioEntryId).findList();
     }
 
     /**

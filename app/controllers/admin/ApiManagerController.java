@@ -366,7 +366,7 @@ public class ApiManagerController extends Controller {
             return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName,
                     getApiSignatureService().listAuthorizedAndTestableApplications()));
         } catch (Exception e) {
-            log.error("Unable to findRelease the list of testable applications", e);
+            log.error("Unable to find the list of testable applications", e);
         }
         return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName, null));
     }

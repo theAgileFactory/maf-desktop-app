@@ -19,10 +19,9 @@ package utils.table;
 
 import java.util.Date;
 
-import models.delivery.Iteration;
-import models.delivery.Release;
 import constants.IMafConstants;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -31,6 +30,7 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.delivery.Iteration;
 
 /**
  * An iteration list view is used to display an iteration row in a table.
@@ -48,7 +48,8 @@ public class IterationListView {
         return new FilterConfig<IterationListView>() {
             {
 
-                addColumnConfiguration("name", "name", "object.iteration.name.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                addColumnConfiguration("name", "name", "object.iteration.name.label", new TextFieldFilterComponent("*"), true, false,
+                        SortStatusType.UNSORTED);
 
                 addColumnConfiguration("storyPoints", "storyPoints", "object.iteration.story_points.label", new NumericFieldFilterComponent("0", "="), true,
                         false, SortStatusType.UNSORTED);
@@ -56,16 +57,14 @@ public class IterationListView {
                 addColumnConfiguration("isClosed", "isClosed", "object.iteration.is_closed.label", new CheckboxFilterComponent(false), true, false,
                         SortStatusType.NONE);
 
-                addColumnConfiguration("startDate", "startDate", "object.iteration.start_date.label", new DateRangeFilterComponent(new Date(), new Date(),
-                        Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
+                addColumnConfiguration("startDate", "startDate", "object.iteration.start_date.label",
+                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
 
-                addColumnConfiguration("endDate", "endDate", "object.iteration.end_date.label", new DateRangeFilterComponent(new Date(), new Date(),
-                        Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
+                addColumnConfiguration("endDate", "endDate", "object.iteration.end_date.label",
+                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
 
                 addColumnConfiguration("source", "source", "object.iteration.source.label", new TextFieldFilterComponent("*"), false, false,
                         SortStatusType.UNSORTED);
-
-                addColumnConfiguration("release", "release", "object.iteration.release.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
 
                 addCustomAttributesColumns("id", Iteration.class);
             }
@@ -101,34 +100,25 @@ public class IterationListView {
                 addColumn("source", "source", "object.iteration.source.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("source", new ObjectFormatter<IterationListView>());
 
-                addColumn("release", "release", "object.iteration.release.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("release", new IColumnFormatter<IterationListView>() {
-                    @Override
-                    public String apply(IterationListView iterationListView, Object value) {
-                        return views.html.modelsparts.display_release.render(iterationListView.release).body();
-                    }
-                });
-                this.setColumnValueCssClass("release", "rowlink-skip");
-
                 addCustomAttributeColumns(Iteration.class);
 
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<IterationListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<IterationListView>() {
-                            @Override
-                            public String convert(IterationListView iterationListView) {
-                                return controllers.core.routes.PortfolioEntryDeliveryController.editIteration(iterationListView.portfolioEntryId,
-                                        iterationListView.id).url();
-                            }
-                        }));
+                setJavaColumnFormatter("editActionLink",
+                        new StringFormatFormatter<IterationListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<IterationListView>() {
+                    @Override
+                    public String convert(IterationListView iterationListView) {
+                        return controllers.core.routes.PortfolioEntryDeliveryController
+                                .editIteration(iterationListView.portfolioEntryId, iterationListView.id).url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                 this.setLineAction(new IColumnFormatter<IterationListView>() {
                     @Override
                     public String apply(IterationListView iterationListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryDeliveryController.viewIteration(iterationListView.portfolioEntryId,
-                                iterationListView.id).url();
+                        return controllers.core.routes.PortfolioEntryDeliveryController
+                                .viewIteration(iterationListView.portfolioEntryId, iterationListView.id).url();
                     }
                 });
 
@@ -151,7 +141,6 @@ public class IterationListView {
     public Date startDate;
     public Date endDate;
     public String source;
-    public Release release;
 
     /**
      * Construct an iteration list view with a DB entry.
@@ -170,7 +159,5 @@ public class IterationListView {
         this.startDate = iteration.startDate;
         this.endDate = iteration.endDate;
         this.source = iteration.source;
-        this.release = iteration.release;
-
     }
 }

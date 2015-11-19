@@ -188,7 +188,7 @@ public class SearchController extends Controller {
                 }
 
                 Table<PortfolioEntryListView> filledTable = PortfolioEntryListView.templateTable.fill(portfolioEntryListView,
-                        PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
+                        PortfolioEntryListView.getHideNonDefaultColumns(true, true));
                 return ok(views.html.core.search.portfolio_entry_table.render(filledTable));
             }
 

@@ -145,7 +145,7 @@ public class ApplicationServicesModule extends FrameworkModule {
 
         bind(II18nMessagesPlugin.class).to(I18nMessagesPluginImpl.class).asEagerSingleton();
         bind(I18nMessages.class).to(DefaultI18nMessages.class).asEagerSingleton();
-        
+
         bind(ITopMenuBarService.class).to(TopMenuBarService.class).asEagerSingleton();
 
         bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
@@ -292,9 +292,6 @@ public class ApplicationServicesModule extends FrameworkModule {
         MafDataType.add(IMafConstants.Stakeholder, "models.pmo.Stakeholder", true, false);
         MafDataType.add(IMafConstants.PurchaseOrderLineItem, "models.finance.PurchaseOrderLineItem", true, false);
         MafDataType.add(IMafConstants.PurchaseOrder, "models.finance.PurchaseOrder", true, false);
-        MafDataType.add(IMafConstants.Release, "models.delivery.Release", false, true,
-                ImmutableMap.<String, String> builder().put("isActive", "object.release.is_active.label").put("name", "object.release.name.label")
-                        .put("capacity", "object.release.capacity.label").build());
         MafDataType.add(IMafConstants.Requirement, "models.delivery.Requirement", false, true);
         MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true,
                 ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label").build());

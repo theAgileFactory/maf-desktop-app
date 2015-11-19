@@ -404,7 +404,7 @@ public class ActorController extends Controller {
         }
 
         Table<PortfolioEntryListView> filledTable = PortfolioEntryListView.templateTable.fill(portfolioEntriesView,
-                PortfolioEntryListView.getHideNonDefaultColumns(false, false, true));
+                PortfolioEntryListView.getHideNonDefaultColumns(false, false));
 
         return ok(views.html.core.actor.actor_portfolio_entry_list.render(actor, filledTable, pagination));
     }

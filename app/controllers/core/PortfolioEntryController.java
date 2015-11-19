@@ -700,7 +700,7 @@ public class PortfolioEntryController extends Controller {
             return ok(views.html.core.portfolioentry.portfolio_entry_add_dependency.render(portfolioEntry, boundForm));
         }
 
-        // check the release is not already assigned.
+        // check the portfolio entry is not already assigned.
         if (PortfolioEntryDao.getPEDependencyById(portfolioEntryDependency.getSourcePortfolioEntry().id,
                 portfolioEntryDependency.getDestinationPortfolioEntry().id, portfolioEntryDependency.getPortfolioEntryDependencyType().id) != null) {
             boundForm.reject("dependingId", Msg.get("object.portfolio_entry.dependency.already.error"));
@@ -845,9 +845,6 @@ public class PortfolioEntryController extends Controller {
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.iterations.label",
                     controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntryId), "glyphicons glyphicons-history", false));
-
-            deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.releases.label",
-                    controllers.core.routes.PortfolioEntryDeliveryController.releases(portfolioEntryId), "glyphicons glyphicons-git-branch", false));
 
             sideBar.addMenuItem(deliveryMenu);
 

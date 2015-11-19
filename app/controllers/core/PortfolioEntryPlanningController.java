@@ -69,8 +69,6 @@ import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.delivery.Iteration;
-import models.delivery.Release;
-import models.delivery.ReleasePortfolioEntry;
 import models.finance.PortfolioEntryResourcePlan;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
@@ -167,14 +165,12 @@ public class PortfolioEntryPlanningController extends Controller {
      * Life cycle phases of the process (with is_roadmap_phase = false)<br/>
      * Life cycle milestones (diamond)<br/>
      * Planning packages<br/>
-     * Releases<br/>
      * Iterations<br/>
      * 
      * Configuration:<br/>
      * -Display phases<br/>
      * -Display milestones<br/>
      * -Display packages<br/>
-     * -Display releases<br/>
      * -Display iterations<br/>
      * 
      * 
@@ -350,60 +346,6 @@ public class PortfolioEntryPlanningController extends Controller {
 
                 }
 
-            }
-
-        }
-
-        /** Releases **/
-
-        if (conf.releases) {
-
-            for (ReleasePortfolioEntry releasePortfolioEntry : portfolioEntry.releasesPortfolioEntries) {
-
-                Release release = releasePortfolioEntry.getRelease();
-
-                if (release != null) {
-
-                    SourceDataValue dataValue = new SourceDataValue(controllers.core.routes.ReleaseController.view(release.id, 0).url(), null, null, null,
-                            null);
-
-                    // get the dates
-                    Date cutOffDate = release.cutOffDate;
-                    Date endTestsDate = release.endTestsDate;
-                    Date deploymentDate = release.deploymentDate;
-
-                    SourceItem item = new SourceItem(release.getName(), null);
-
-                    Date from = null;
-
-                    if (cutOffDate == null && endTestsDate == null) {
-
-                        item.values.add(new SourceValue(deploymentDate, deploymentDate, "", "", "diamond diamond-info", dataValue));
-                        from = deploymentDate;
-
-                    } else if (cutOffDate != null && endTestsDate == null) {
-
-                        item.values.add(
-                                new SourceValue(cutOffDate, JqueryGantt.cleanToDate(cutOffDate, deploymentDate), "", release.getName(), "info", dataValue));
-                        from = cutOffDate;
-
-                    } else if (cutOffDate == null && endTestsDate != null) {
-
-                        item.values.add(new SourceValue(endTestsDate, JqueryGantt.cleanToDate(endTestsDate, deploymentDate), "", release.getName(), "info",
-                                dataValue));
-                        from = endTestsDate;
-
-                    } else {
-
-                        item.values.add(
-                                new SourceValue(cutOffDate, JqueryGantt.cleanToDate(cutOffDate, deploymentDate), "", release.getName(), "info", dataValue));
-                        from = cutOffDate;
-
-                    }
-
-                    sortableCollection.addObject(new ComplexSortableObject(from, 3, 0, item));
-
-                }
             }
 
         }
@@ -2116,7 +2058,6 @@ public class PortfolioEntryPlanningController extends Controller {
         public boolean phases;
         public boolean milestones;
         public boolean packages;
-        public boolean releases;
         public boolean iterations;
 
         /**
@@ -2135,7 +2076,6 @@ public class PortfolioEntryPlanningController extends Controller {
             this.phases = defaultValue;
             this.milestones = defaultValue;
             this.packages = defaultValue;
-            this.releases = defaultValue;
             this.iterations = defaultValue;
         }
 
@@ -2205,6 +2145,9 @@ public class PortfolioEntryPlanningController extends Controller {
         return securityService;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

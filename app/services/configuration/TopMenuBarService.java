@@ -7,10 +7,10 @@ import constants.IMafConstants;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.AbstractTopMenuBarService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Utilities;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
 import framework.utils.Menu.SeparatorMenuItem;
+import framework.utils.Utilities;
 import play.Configuration;
 import play.inject.ApplicationLifecycle;
 import services.configuration.ImplementationDefinedObjectImpl.TopMenus;
@@ -32,7 +32,6 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         defineArchitectureMenu(null);
         defineNewMenu(null);
         defineGovernanceMenu(null);
-        defineDeliveryMenu(null);
         defineToolsMenu(null);
         defineAdminMenu(null);
         defineSearchMenu(null);
@@ -142,30 +141,6 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
     }
 
     /**
-     * Define the delivery menu.
-     * 
-     * @param perspectiveKey
-     *            the perspective key, let null for the main
-     */
-    private void defineDeliveryMenu(String perspectiveKey) {
-        HeaderMenuItem deliveryMenuItem = new HeaderMenuItem(TopMenus.DELIVERY.name(), "topmenubar.delivery.menu.label", "glyphicons glyphicons-cargo",
-                false);
-        deliveryMenuItem.setAuthorizedPermissions(
-                Utilities.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
-        if (perspectiveKey == null) {
-            addMenuItemToMainPerspective(deliveryMenuItem);
-        } else {
-            getPerspective(perspectiveKey).addMenuItem(deliveryMenuItem);
-        }
-
-        ClickableMenuItem viewReleasesMenuItem = new ClickableMenuItem(TopMenus.DELIVERY.name(1), "topmenubar.delivery.releases.menu.label",
-                controllers.core.routes.ReleaseController.list(), "glyphicons glyphicons-git-branch", false);
-        viewReleasesMenuItem.setAuthorizedPermissions(
-                Utilities.getListOfArray(IMafConstants.RELEASE_VIEW_ALL_PERMISSION, IMafConstants.RELEASE_VIEW_AS_MANAGER_PERMISSION));
-        deliveryMenuItem.addSubMenuItem(viewReleasesMenuItem);
-    }
-
-    /**
      * Define the architecture menu (item).
      * 
      * @param perspectiveKey
@@ -230,7 +205,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label", "glyphicons glyphicons-gift", false);
         newMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION,
                 IMafConstants.ACTOR_EDIT_ALL_PERMISSION, IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION,
-                IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION, IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
+                IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         if (perspectiveKey == null) {
             addMenuItemToMainPerspective(newMenuItem);
         } else {
@@ -266,11 +241,6 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
                 controllers.core.routes.BudgetBucketController.create(), "glyphicons glyphicons-calculator", false);
         newBudgetBucketMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newBudgetBucketMenuItem);
-
-        ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(6), "topmenubar.new.release.menu.label",
-                controllers.core.routes.ReleaseController.create(), "glyphicons glyphicons-git-branch", false);
-        newReleaseMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.RELEASE_EDIT_ALL_PERMISSION));
-        newMenuItem.addSubMenuItem(newReleaseMenuItem);
 
     }
 
