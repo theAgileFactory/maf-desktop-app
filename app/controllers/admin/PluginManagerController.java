@@ -17,6 +17,8 @@
  */
 package controllers.admin;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +30,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.Ebean;
@@ -54,7 +58,6 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -73,8 +76,12 @@ import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
+import play.libs.F.Function0;
 import play.libs.F.Promise;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
 
 /**
@@ -107,6 +114,7 @@ public class PluginManagerController extends Controller {
     private Configuration configuration;
 
     private static Logger.ALogger log = Logger.of(PluginManagerController.class);
+    public static final int MAX_CONFIG_FILE_SIZE = 1 * 1024 * 1024;
 
     /**
      * Form managing the registration of a plugin.
@@ -738,6 +746,84 @@ public class PluginManagerController extends Controller {
                 Msg.get("admin.plugin_manager.configuration_block.edit.success", Msg.get(pluginConfigurationBlockDescriptor.getName())));
 
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
+    }
+    
+    /**
+     * Export the plugin configuration as an XML file
+     * @param pluginConfigurationId
+     *            the plugin configuration id
+     * @return
+     */
+    @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
+    public Result exportConfiguration(Long pluginConfigurationId) {
+        if(log.isDebugEnabled()){
+            log.debug("Export of the configuration blocks for the plugin "+pluginConfigurationId);
+        }
+        response().setContentType("application/xml");
+        response().setHeader("Content-disposition","attachment; filename=export.xml");
+        try {
+            String configuration=getPluginManagerService().exportPluginConfiguration(pluginConfigurationId);
+            if(log.isDebugEnabled()){
+                log.debug("Found the configuration "+configuration);
+            }
+            return ok(configuration);
+        } catch (PluginException e) {
+            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration_block.export.error"));
+            return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
+        }
+    }
+    
+    /**
+     * Import a previously exported configuration file.<br/>
+     * The file is posted using a file input control.
+     * @param pluginConfigurationId
+     *            the plugin configuration id
+     * @return
+     */
+    @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
+    @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = MAX_CONFIG_FILE_SIZE)
+    public Promise<Result> importConfiguration(Long pluginConfigurationId) {
+     // Perform the upload
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try {
+                    if(log.isDebugEnabled()){
+                        log.debug("Configuration upload requested for "+pluginConfigurationId);
+                    }
+                    MultipartFormData body = request().body().asMultipartFormData();
+                    FilePart filePart = body.getFile("import");
+                    if (filePart != null) {
+                        if(log.isDebugEnabled()){
+                            log.debug("A file has been found");
+                        }
+                        String configuration=IOUtils.toString(new FileInputStream(filePart.getFile()));
+                        if(log.isDebugEnabled()){
+                            log.debug("Content of the uploaded file is "+configuration);
+                        }
+                        try{
+                            getPluginManagerService().importPluginConfiguration(pluginConfigurationId, configuration);
+                            if(log.isDebugEnabled()){
+                                log.debug("Plugin configuration uploaded");
+                            }
+                            Utilities.sendSuccessFlashMessage(Msg.get("admin.shared_storage.upload.success"));
+                        }catch(PluginException e){
+                            log.error("Attempt to upload an invalid plugin configuration for "+pluginConfigurationId,e);
+                            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration_block.import.error"));
+                        }
+                    } else {
+                        Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.no_file"));
+                    }
+                } catch (Exception e) {
+                    Utilities
+                            .sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.file.size.invalid", FileUtils.byteCountToDisplaySize(MAX_CONFIG_FILE_SIZE)));
+                    String message = String.format("Failure while uploading the plugin configuration for %d", pluginConfigurationId);
+                    log.error(message);
+                    throw new IOException(message, e);
+                }
+                return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
+            }
+        });
     }
 
     /**

@@ -3127,6 +3127,8 @@ admin.plugin_manager.configuration_block.edit.title.label=Konfiguration - {0}
 admin.plugin_manager.configuration_block.edit.success=Die Konfiguration {0} wurde gespeichert. ACHTUNG: Instanz muss neu gestartet werden, um die Konfiguration einzulesen.
 admin.plugin_manager.configuration_block.edit.reset_to_default.error=Fehler: Zurücksetzen ist fehlgeschlagen. Bitte versuchen Sie es nochmal oder kontaktieren sie den Administrator.
 admin.plugin_manager.configuration_block.edit.reset_to_default.success=Konfiguration zurückgesetzt (ACHTUNG: Wenn Sie jetzt speichern verliehren sie Ihr vorherige Konfiguration)
+admin.plugin_manager.configuration_block.export.error=Fehler beim Exportieren der Konfigurationsdatei
+admin.plugin_manager.configuration_block.import.error=Das Format der Konfigurationsdatei ist falsch
 
 #view shared storage
 admin.shared_storage.view.header=Dieser Daten Speicher wird benutzt um Daten zwischen BizDock un der Aussenwelt zu  übermitteln.\

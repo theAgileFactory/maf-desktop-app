@@ -3116,6 +3116,8 @@ admin.plugin_manager.configuration_block.edit.title.label=Configuration block ed
 admin.plugin_manager.configuration_block.edit.success=The configuration {0} has been successfully saved. WARNING: You should restart the plugin to use the new configuration.
 admin.plugin_manager.configuration_block.edit.reset_to_default.error=Error while attempting to reset to the default configuration. Please try again or contact your administrator.
 admin.plugin_manager.configuration_block.edit.reset_to_default.success=Configuration reseted to default (if you save now your will lose your previous configuration)
+admin.plugin_manager.configuration_block.export.error=Error while exporting the configuration
+admin.plugin_manager.configuration_block.import.error=Invalid configuration file format
 
 #view shared storage
 admin.shared_storage.view.header=The data exchange storage is used for data integration between your BizDock instance and the outside world.\

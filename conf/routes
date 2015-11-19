@@ -692,6 +692,8 @@ GET    /admin/plugin/config/default/:id/:blockId   controllers.admin.PluginManag
 GET    /admin/plugin/adminaction/:id/:actionId     controllers.admin.PluginManagerController.postAdminActionToPlugin(id: java.lang.Long, actionId: java.lang.String)
 GET    /admin/plugin/definition/:identifier        controllers.admin.PluginManagerController.pluginDefinitionDetails(identifier: java.lang.String)
 GET    /admin/plugin/image/:identifier/:big        controllers.admin.PluginManagerController.image(identifier: java.lang.String, big: Boolean)
+GET    /admin/plugin/config-export/:id             controllers.admin.PluginManagerController.exportConfiguration(id: java.lang.Long)
+POST   /admin/plugin/config-import/:id			   controllers.admin.PluginManagerController.importConfiguration(id: java.lang.Long)
 
 #SharedStorage controller
 GET     /admin/sharedstorage/display           controllers.admin.SharedStorageManagerController.index()

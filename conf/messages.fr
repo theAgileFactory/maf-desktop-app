@@ -3128,6 +3128,8 @@ admin.plugin_manager.configuration_block.edit.title.label=Edition de la configur
 admin.plugin_manager.configuration_block.edit.success=La configuration {0} a été enregistrée avec succès. ATTENTION: Vous devez redémarrer le plugin pour qu''elle soit prise en compte.
 admin.plugin_manager.configuration_block.edit.reset_to_default.error=Erreur lors de la réinitialisation à la configuration par défaut. Merci de réessayer.
 admin.plugin_manager.configuration_block.edit.reset_to_default.success=Configuration réinitialisée. Si vous sauvez maintenant, votre configuration précédente sera perdue.
+admin.plugin_manager.configuration_block.export.error=Erreur lors de l''export de la configuration du plugin
+admin.plugin_manager.configuration_block.import.error=Le format du fichier de configuration est incorrect
 
 #view shared storage
 admin.shared_storage.view.header=L''espace d''échange de données est utilisé pour l''intégration entre BizDock et le monde extérieur.\
