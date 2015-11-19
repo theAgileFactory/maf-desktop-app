@@ -7,17 +7,37 @@ import constants.IMafConstants;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.AbstractTopMenuBarService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.Utilities;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
+import framework.utils.Menu.MenuItem;
 import framework.utils.Menu.SeparatorMenuItem;
+import framework.utils.Utilities;
 import play.Configuration;
 import play.inject.ApplicationLifecycle;
-import services.configuration.ImplementationDefinedObjectImpl.TopMenus;
 
 @Singleton
 public class TopMenuBarService extends AbstractTopMenuBarService {
+    private HeaderMenuItem toolsMenuItem;
 
+    /**
+     * An enumeration which contains the top level menu entries.
+     * 
+     * @author Pierre-Yves Cloux
+     */
+    public enum TopMenus {
+        ROADMAP, COCKPIT, NEW, GOVERNANCE, DELIVERY, TOOLS, ADMIN, SEARCH, SPECIAL, ARCHITECTURE;
+
+        /**
+         * Get the name with an index (useful for the help tour).
+         * 
+         * @param index
+         *            the index.
+         */
+        public String name(int index) {
+            return name() + "-" + index;
+        }
+    }
+    
     @Inject
     public TopMenuBarService(ApplicationLifecycle lifecycle, Configuration configuration, IPreferenceManagerPlugin preferenceManagerPlugin,
             IUserSessionManagerPlugin userSessionManagerPlugin) {
@@ -36,6 +56,18 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         defineToolsMenu(null);
         defineAdminMenu(null);
         defineSearchMenu(null);
+    }
+
+    @Override
+    public void addToolMenuItem(MenuItem menuItem) {
+        //Add to the tools menu
+        toolsMenuItem.addSubMenuItem(menuItem);
+    }
+
+    @Override
+    public void removeToolMenuItem(String uuid) {
+        //Remove from the tools menu
+        toolsMenuItem.removeSubMenuItems(uuid);
     }
 
     /**
@@ -120,7 +152,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
      *            the perspective key, let null for the main
      */
     private void defineToolsMenu(String perspectiveKey) {
-        HeaderMenuItem toolsMenuItem = new HeaderMenuItem(TopMenus.TOOLS.name(), "topmenubar.tools.menu.label", "glyphicons glyphicons-settings", false);
+        toolsMenuItem = new HeaderMenuItem(TopMenus.TOOLS.name(), "topmenubar.tools.menu.label", "glyphicons glyphicons-settings", false);
         toolsMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.TIMESHEET_ENTRY_PERMISSION, IMafConstants.REPORTING_VIEW_ALL_PERMISSION,
                 IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION));
         if (perspectiveKey == null) {

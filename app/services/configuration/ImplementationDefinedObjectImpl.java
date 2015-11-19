@@ -43,25 +43,6 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     private static Logger.ALogger log = Logger.of(ImplementationDefinedObjectImpl.class);
 
     /**
-     * An enumeration which contains the top level menu entries.
-     * 
-     * @author Pierre-Yves Cloux
-     */
-    public enum TopMenus {
-        ROADMAP, COCKPIT, NEW, GOVERNANCE, DELIVERY, TOOLS, ADMIN, SEARCH, SPECIAL, ARCHITECTURE;
-
-        /**
-         * Get the name with an index (useful for the help tour).
-         * 
-         * @param index
-         *            the index.
-         */
-        public String name(int index) {
-            return name() + "-" + index;
-        }
-    }
-
-    /**
      * Default constructor.
      * 
      * @param lifecycle
