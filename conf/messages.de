@@ -317,7 +317,6 @@ data_type.Portfolio.label=Portfolio
 data_type.Stakeholder.label=Projektbeteiligter
 data_type.PurchaseOrderLineItem.label=Auftragsposition
 data_type.PurchaseOrder.label=Auftrag
-data_type.Release.label=Release
 data_type.Requirement.label=Anforderungen
 data_type.TimesheetActivityAllocatedActor.label=Zugeweise Mitarbeiter (Aktivität)
 data_type.WorkOrder.label=Bestellung
@@ -407,8 +406,6 @@ tour.top_menu_bar.step5.title=Neu
 tour.top_menu_bar.step5.content=Unter Neu legen Sie neue Initiativen und andere Objekte an, je nach ihren Zugriffsrechten.
 tour.top_menu_bar.step6.title=Unternehmensführung
 tour.top_menu_bar.step6.content=Unter Unternehmensführung finden Sie die Meilensteinplannung und deren Genehmigung
-tour.top_menu_bar.step7.title=Lieferung
-tour.top_menu_bar.step7.content=Unter Lieferung sehen Sie die Release in einer Liste oder in Gantt Format.
 tour.top_menu_bar.step8.title=Werkzeuge
 tour.top_menu_bar.step8.content=Unter Werkzeuge finden Sie : The Tools menu contains systems that allow you to transversely manage your BizDock data, for example the timesheets or the reporting.
 tour.top_menu_bar.step9.title=Admin
@@ -444,17 +441,12 @@ topmenubar.new.actor.menu.label=Mitarbeiter
 topmenubar.new.org_unit.menu.label=Organisationseinheit
 topmenubar.new.portfolio.menu.label=Portfolio
 topmenubar.new.budget_bucket.menu.label=Budgetposten
-topmenubar.new.release.menu.label=Release
 
 #governance
 topmenubar.governance.menu.label=Unternehmensführung
 topmenubar.governance.milestone_planning.menu.label=Meilensteinplanung
 topmenubar.governance.provide_approval.menu.label=Meilensteine akzeptieren
 topmenubar.governance.review_milestone_request.menu.label=Anfragen validieren
-
-#delivery
-topmenubar.delivery.menu.label=Lieferung
-topmenubar.delivery.releases.menu.label=Release
 
 #architecture
 topmenubar.architecture.menu.label=Architektur
@@ -1059,7 +1051,6 @@ object.portfolio_entry.archived.label=Archiviert
 object.portfolio_entry.is_concept.label=Konzept
 object.portfolio_entry.stakeholder_types.label=Funktion
 object.portfolio_entry.scope_description.label=Dokument
-object.portfolio_entry.release.label=Release
 object.portfolio_entry.dependency_type.label=Typ
 object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=Die gewählte Initiative sollte nicht die aktuelle sein.
@@ -1388,8 +1379,6 @@ object.requirement.effort.label=Ausgeführt
 object.requirement.remaining_effort.label=Restaufwand
 object.requirement.is_scoped.label=Akzeptiert
 object.requirement.iteration.label=Iteration
-object.requirement.release.label=Release
-object.requirement.release.help=Anforderungen können manuel mit jeder Release verknüpft werden, deren Verknüpfung mit der Initiative auf "manuel" gesetzt wurde.
 object.requirement.table.empty=Keine Einträge
 
 #----------------------
@@ -1403,32 +1392,7 @@ object.iteration.story_points.label=Story points
 object.iteration.start_date.label=Startdatum
 object.iteration.end_date.label=Enddatum
 object.iteration.source.label=Quelle
-object.iteration.release.label=Release
-object.iteration.release.help=Eine Iteration kann manuel mit jeder Release verknüpft werden, deren Verknüpfung mit der Initiative auf "Nach Iteration" gesetzt wurde.
 object.iteration.table.empty=Keine Einträge
-
-#----------------------
-# release
-#----------------------
-
-object.release.is_active.label=Aktiv
-object.release.name.label=Name
-object.release.description.label=Beschreibung
-object.release.capacity.label=Freie Kapazität
-object.release.cut_off_date.label=Stichtag
-object.release.cut_off_date.invalid=Der Stichtag muss vor dem Testende sein (und der Bereitstellung, falls definiert).
-object.release.end_tests_date.label=Testende
-object.release.end_tests_date.invalid=Testend muss vor der Bereitstellung sein.
-object.release.deployment_date.label=Bereitstellung
-object.release.manager.label=Delivery manager
-object.release.portfolio_entry.unassign.confirmation=Initiative aus dieser Release entfernen?
-object.release.portfolio_entry.type.label=Anforderungs Beziehung
-object.release.portfolio_entry.type.NONE.label=Keine Anforderungen
-object.release.portfolio_entry.type.ALL.label=Alle Anforderungen
-object.release.portfolio_entry.type.BY_ITERATION.label=Nach Iteration
-object.release.portfolio_entry.type.BY_REQUIREMENT.label=Manuel
-object.release.portfolio_entry.already_assigned=Diese Initiative ist bereits diese Release zugeortnet.
-object.release.table.empty=Keine Release
 
 #----------------------
 # workOrder
@@ -1915,7 +1879,6 @@ core.cockpit.sidebar.subordinates.allocations_details=Zuweisungs Details
 core.cockpit.sidebar.subordinates.timesheet=Zeiterfassung
 core.cockpit.sidebar.org_units=Organisationseinheit
 core.cockpit.sidebar.budget_buckets=Budgetposten
-core.cockpit.sidebar.releases=Releases
 core.cockpit.sidebar.my_allocations=Zuweisungen
 
 #initiatives
@@ -2153,7 +2116,6 @@ core.portfolio_entry.sidebar.delivery.label=Lieferung
 core.portfolio_entry.sidebar.delivery.requirements.label=Anforderungen
 core.portfolio_entry.sidebar.delivery.requirements_status.label=Anforderungsstatus
 core.portfolio_entry.sidebar.delivery.iterations.label=Iterations
-core.portfolio_entry.sidebar.delivery.releases.label=Releases
 core.portfolio_entry.sidebar.planning.label=Planung
 core.portfolio_entry.sidebar.planning.overview.label=Überblick
 core.portfolio_entry.sidebar.planning.packages.label=Planungspakete
@@ -2388,16 +2350,6 @@ core.portfolio_entry_delivery.iteration.view.details.title=Details
 core.portfolio_entry_delivery.iteration.edit.title=Iteration aktualisieren
 core.portfolio_entry_delivery.iteration.edit.successful=Die Iteration wurde aktualisiert.
 
-#list of assigned releases
-core.portfolio_entry_delivery.releases.title=Betroffene Release
-
-#assign a release
-core.portfolio_entry_delivery.release_assign.title=Release hinzufügen
-core.portfolio_entry_delivery.release_assign.successful=Release wurde hinzugefügt.
-
-#unassign a release
-core.portfolio_entry_delivery.release_unassign.successful=Release wurde entfernt.
-
 #----------------------
 # portfolio entry: planning
 #----------------------
@@ -2407,7 +2359,6 @@ core.portfolio_entry_planning.overview.no_planning=Keine Planning vorhanden.
 core.portfolio_entry_planning.overview.phase.label=Phase
 core.portfolio_entry_planning.overview.milestone.label=Meilenstein
 core.portfolio_entry_planning.overview.package.label=Paket
-core.portfolio_entry_planning.overview.release.label=Release
 core.portfolio_entry_planning.overview.iteration.label=Iteration
 
 #list of packages
@@ -2664,42 +2615,6 @@ core.org_unit.allocation.details.actors.activity.title=Aktivitäten Mitarbeiterz
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Verwalten einer zugewiesenen Tätigkeit für einen Mitarbeiter
 core.org_unit.actor_allocated_activity.add.successful=Zuweisung wurde hinzugefügt.
-
-#----------------------
-# release
-#----------------------
-
-#helper
-core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
-
-#list and planning
-core.release.list.no_release.info=Eine Release beinhaltet Elemente die geliefert werden können. Sie können Initiativen einer Release zuordnen um die Anforderungen zu erweitern.
-core.release.list.no_release.create=Meine erste Release erstellen
-core.release.list.planning.title=Gantt-Diagramm
-core.release.list.planning.no_source=Keine Daten
-core.release.list.planning.phase.full=Erstellen und Liefern
-core.release.list.planning.phase.execution=Erstellen
-core.release.list.planning.phase.rollout=Lieferung
-
-#create
-core.release.create.title=Neuer Release
-core.release.create.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Neuer Release
-core.release.create.successful=Release wurde angelegt
-
-#edit
-core.release.edit.title=Bearbeiten
-core.release.edit.successful=Release wurde aktualisiert.
-
-#view
-core.release.view.details.title=Details
-core.release.view.initiatives.title=Initiativen
-
-#delete
-core.release.delete.confirmation.message=Release loschen?
-core.release.delete.successful=Release wurde gelöscht.
-
-#view initiative
-core.release.initiative.view.requirements.title=Anforderungen
 
 #----------------------
 # architecture
@@ -3231,7 +3146,6 @@ admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manage
 #list
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
 admin.kpi.object_type.models.pmo.Portfolio=Portfolio
-admin.kpi.object_type.models.delivery.Release=Release
 
 #view
 admin.kpi.view.details.title=Details
