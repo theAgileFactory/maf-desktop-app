@@ -19,6 +19,15 @@ package dao.delivery;
 
 import java.util.List;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
+
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
 import models.delivery.Requirement;
 import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
@@ -26,16 +35,6 @@ import models.delivery.RequirementStatus;
 import models.delivery.RequirementStatus.Type;
 import models.delivery.TotalRequirement;
 import models.delivery.TotalStoryPoints;
-import com.avaje.ebean.Model.Finder;
-
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Query;
-import com.avaje.ebean.RawSql;
-import com.avaje.ebean.RawSqlBuilder;
-
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.ISelectableValueHolderCollection;
 
 /**
  * DAO for the {@link Requirement}, {@link RequirementPriority},
@@ -90,9 +89,8 @@ public abstract class RequirementDAO {
      *            optional needs, to null to get all
      */
     public static ExpressionList<Requirement> getRequirementNeedsAsExprByPEAndStatusType(Long portfolioEntryId, Type statusType, Boolean isMust) {
-        ExpressionList<Requirement> expr =
-                RequirementDAO.findRequirement.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).eq("isDefect", false)
-                        .eq("requirementStatus.type", statusType);
+        ExpressionList<Requirement> expr = RequirementDAO.findRequirement.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId)
+                .eq("isDefect", false).eq("requirementStatus.type", statusType);
         if (isMust != null) {
             expr = expr.eq("requirementPriority.isMust", isMust);
         }
@@ -129,9 +127,8 @@ public abstract class RequirementDAO {
      *            non blocker defects, to null to get all
      */
     public static ExpressionList<Requirement> getRequirementDefectsAsExprByPEAndStatusType(Long portfolioEntryId, Type statusType, Boolean isBlocker) {
-        ExpressionList<Requirement> expr =
-                RequirementDAO.findRequirement.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).eq("isDefect", true)
-                        .eq("requirementStatus.type", statusType);
+        ExpressionList<Requirement> expr = RequirementDAO.findRequirement.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId)
+                .eq("isDefect", true).eq("requirementStatus.type", statusType);
         if (isBlocker != null) {
             expr = expr.eq("requirementSeverity.isBlocker", isBlocker);
         }
@@ -156,31 +153,6 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get all requirements of a portfolio entry for a release.
-     * 
-     * @param releaseId
-     *            the release id
-     * @param portfolioEntryId
-     *            the portfolio entry id
-     */
-    public static List<Requirement> getRequirementAsListByPEAndRelease(Long releaseId, Long portfolioEntryId) {
-        return RequirementDAO.findRequirement.where().eq("deleted", false).eq("release.id", releaseId).eq("portfolioEntry.id", portfolioEntryId).findList();
-    }
-
-    /**
-     * Get all requirements of a portfolio entry for a release of the iteration.
-     * 
-     * @param releaseId
-     *            the release id
-     * @param portfolioEntryId
-     *            the portfolio entry id
-     */
-    public static List<Requirement> getRequirementAsListByPEAndReleaseOfIteration(Long releaseId, Long portfolioEntryId) {
-        return RequirementDAO.findRequirement.where().eq("deleted", false).eq("iteration.release.id", releaseId).eq("portfolioEntry.id", portfolioEntryId)
-                .findList();
-    }
-
-    /**
      * Get the total story points of a portfolio entry.
      * 
      * @param portfolioEntryId
@@ -191,10 +163,9 @@ public abstract class RequirementDAO {
      */
     public static Integer getStoryPointsByPE(Long portfolioEntryId, Boolean isClosed) {
 
-        String sql =
-                "SELECT SUM(r.story_points) AS totalStoryPoints " + "FROM requirement r "
-                        + "JOIN requirement_status rs ON r.requirement_status_id = rs.id AND rs.deleted = 0 "
-                        + "WHERE r.deleted = 0 AND r.portfolio_entry_id = " + portfolioEntryId;
+        String sql = "SELECT SUM(r.story_points) AS totalStoryPoints " + "FROM requirement r "
+                + "JOIN requirement_status rs ON r.requirement_status_id = rs.id AND rs.deleted = 0 " + "WHERE r.deleted = 0 AND r.portfolio_entry_id = "
+                + portfolioEntryId;
 
         if (isClosed != null) {
             if (isClosed) {
@@ -228,10 +199,9 @@ public abstract class RequirementDAO {
      */
     public static Integer getRequirementAsCountByPE(Long portfolioEntryId, Boolean isClosed) {
 
-        String sql =
-                "SELECT COUNT(r.id) AS totalRequirement " + "FROM requirement r "
-                        + "JOIN requirement_status rs ON r.requirement_status_id = rs.id AND rs.deleted = 0 "
-                        + "WHERE r.deleted = 0 AND r.portfolio_entry_id = " + portfolioEntryId;
+        String sql = "SELECT COUNT(r.id) AS totalRequirement " + "FROM requirement r "
+                + "JOIN requirement_status rs ON r.requirement_status_id = rs.id AND rs.deleted = 0 " + "WHERE r.deleted = 0 AND r.portfolio_entry_id = "
+                + portfolioEntryId;
 
         if (isClosed != null) {
             if (isClosed) {
@@ -265,9 +235,9 @@ public abstract class RequirementDAO {
      */
     public static Integer getRequirementAsOpenDefectCountByPE(Long portfolioEntryId, Boolean isBlocker) {
 
-        ExpressionList<Requirement> expr =
-                RequirementDAO.findRequirement.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).eq("isDefect", true)
-                        .ne("requirementStatus.type", RequirementStatus.Type.CLOSED).ne("requirementStatus.type", RequirementStatus.Type.DEPLOYED);
+        ExpressionList<Requirement> expr = RequirementDAO.findRequirement.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId)
+                .eq("isDefect", true).ne("requirementStatus.type", RequirementStatus.Type.CLOSED)
+                .ne("requirementStatus.type", RequirementStatus.Type.DEPLOYED);
 
         if (isBlocker != null) {
             expr = expr.eq("requirementSeverity.isBlocker", isBlocker);
@@ -305,11 +275,10 @@ public abstract class RequirementDAO {
      */
     public static Integer getStoryPointClosedAsCountByIteration(Long iterationId) {
 
-        String sql =
-                "SELECT SUM(r.story_points) AS totalStoryPoints " + "FROM requirement r "
-                        + "JOIN requirement_status rs ON r.requirement_status_id = rs.id AND rs.deleted = 0 " + "WHERE r.deleted = 0 AND r.iteration_id = "
-                        + iterationId + " AND (rs.type = '" + RequirementStatus.Type.CLOSED.name() + "' OR rs.type = '"
-                        + RequirementStatus.Type.DEPLOYED.name() + "')";
+        String sql = "SELECT SUM(r.story_points) AS totalStoryPoints " + "FROM requirement r "
+                + "JOIN requirement_status rs ON r.requirement_status_id = rs.id AND rs.deleted = 0 " + "WHERE r.deleted = 0 AND r.iteration_id = "
+                + iterationId + " AND (rs.type = '" + RequirementStatus.Type.CLOSED.name() + "' OR rs.type = '" + RequirementStatus.Type.DEPLOYED.name()
+                + "')";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 

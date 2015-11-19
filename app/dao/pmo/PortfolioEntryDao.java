@@ -380,36 +380,6 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
-     * Get the portfolio entries as pagination of a release.
-     * 
-     * @param releaseId
-     *            the release id
-     */
-    public static Pagination<PortfolioEntry> getPEAsPaginationByRelease(Long releaseId) {
-        return new Pagination<>(getPEAsExprByRelease(releaseId));
-    }
-
-    /**
-     * Get the portfolio entries as list of a release.
-     * 
-     * @param releaseId
-     *            the release id
-     */
-    public static List<PortfolioEntry> getPEAsListByRelease(Long releaseId) {
-        return getPEAsExprByRelease(releaseId).findList();
-    }
-
-    /**
-     * Get the portfolio entries as expression list of a release.
-     * 
-     * @param releaseId
-     *            the release id
-     */
-    public static ExpressionList<PortfolioEntry> getPEAsExprByRelease(Long releaseId) {
-        return findPortfolioEntry.where().eq("deleted", false).eq("releasesPortfolioEntries.release.id", releaseId);
-    }
-
-    /**
      * Get the last governance id as an integer.
      * 
      * If there is no portfolio entry, then return null.
@@ -465,20 +435,6 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
-     * Return true if the the given release id is already assigned to the
-     * portfolio entry.
-     * 
-     * @param id
-     *            the portfolio entry id
-     * @param releaseId
-     *            the release id
-     */
-    public static boolean hasPEAssignedRelease(Long id, Long releaseId) {
-        return findPortfolioEntry.where().eq("releasesPortfolioEntries.portfolioEntry.id", id).eq("releasesPortfolioEntries.release.id", releaseId)
-                .findRowCount() > 0;
-    }
-
-    /**
      * Get the portfolio entries list with filter.
      * 
      * @param managerId
@@ -493,9 +449,6 @@ public abstract class PortfolioEntryDao {
      * @param portfolioId
      *            if not null then return only portfolio entries belonging to
      *            the given portfolio.
-     * @param releaseId
-     *            if not null then return only portfolio entries for the given
-     *            release.
      * @param archived
      *            true to return only archived portfolio entries, false only
      *            active, null all.
@@ -506,8 +459,8 @@ public abstract class PortfolioEntryDao {
      *            true to return only public portfolio entries, false only
      *            confidential, null all.
      */
-    public static List<PortfolioEntry> getPEAsListByFilter(Long managerId, Long sponsoringUnitId, Long deliveryUnitId, Long portfolioId, Long releaseId,
-            Boolean archived, Long portfolioEntryTypeId, Boolean isPublic) {
+    public static List<PortfolioEntry> getPEAsListByFilter(Long managerId, Long sponsoringUnitId, Long deliveryUnitId, Long portfolioId, Boolean archived,
+            Long portfolioEntryTypeId, Boolean isPublic) {
 
         ExpressionList<PortfolioEntry> e = findPortfolioEntry.where().eq("deleted", false);
         if (managerId != null) {
@@ -521,9 +474,6 @@ public abstract class PortfolioEntryDao {
         }
         if (portfolioId != null) {
             e = e.eq("portfolios.id", portfolioId);
-        }
-        if (releaseId != null) {
-            e = e.eq("releasesPortfolioEntries.release.id", releaseId);
         }
         if (archived != null) {
             e = e.eq("archived", archived);

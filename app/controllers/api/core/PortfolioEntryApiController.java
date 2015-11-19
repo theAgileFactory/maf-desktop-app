@@ -111,9 +111,6 @@ public class PortfolioEntryApiController extends ApiController {
      * @param portfolioId
      *            if not null then return only portfolio entries belonging to
      *            the given portfolio.
-     * @param releaseId
-     *            if not null then return only portfolio entries for the given
-     *            release.
      * @param archived
      *            true to return only archived portfolio entries, false only
      *            active, null all.
@@ -133,7 +130,6 @@ public class PortfolioEntryApiController extends ApiController {
             @ApiParam(value = "sponsoringUnitId", required = false) @QueryParam("sponsoringUnitId") Long sponsoringUnitId,
             @ApiParam(value = "deliveryUnitId", required = false) @QueryParam("deliveryUnitId") Long deliveryUnitId,
             @ApiParam(value = "portfolioId", required = false) @QueryParam("portfolioId") Long portfolioId,
-            @ApiParam(value = "releaseId", required = false) @QueryParam("releaseId") Long releaseId,
             @ApiParam(value = "archived", required = false) @QueryParam("archived") Boolean archived,
             @ApiParam(value = "portfolioEntryTypeId", required = false) @QueryParam("portfolioEntryTypeId") Long portfolioEntryTypeId,
             @ApiParam(value = "isPublic", required = false) @QueryParam("isPublic") Boolean isPublic) {
@@ -142,7 +138,7 @@ public class PortfolioEntryApiController extends ApiController {
 
             // Validation form
             PortfolioEntryListRequest portfolioEntryListRequest = new PortfolioEntryListRequest(managerId, sponsoringUnitId, deliveryUnitId, portfolioId,
-                    releaseId, archived, portfolioEntryTypeId, isPublic);
+                    archived, portfolioEntryTypeId, isPublic);
 
             // object to jsonNode
             JsonNode node = portfolioEntryMapper.valueToTree(portfolioEntryListRequest);
@@ -158,7 +154,7 @@ public class PortfolioEntryApiController extends ApiController {
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
-            return getJsonSuccessResponse(PortfolioEntryDao.getPEAsListByFilter(managerId, sponsoringUnitId, deliveryUnitId, portfolioId, releaseId, archived,
+            return getJsonSuccessResponse(PortfolioEntryDao.getPEAsListByFilter(managerId, sponsoringUnitId, deliveryUnitId, portfolioId, archived,
                     portfolioEntryTypeId, isPublic));
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));

@@ -317,7 +317,6 @@ data_type.Portfolio.label=Portefeuille
 data_type.Stakeholder.label=Intervenant
 data_type.PurchaseOrderLineItem.label=Ligne de bon de commande
 data_type.PurchaseOrder.label=Bon de commande
-data_type.Release.label=Release
 data_type.Requirement.label=Exigence
 data_type.TimesheetActivityAllocatedActor.label=Allocation d''employé (activité)
 data_type.WorkOrder.label=Bon de travail
@@ -407,8 +406,6 @@ tour.top_menu_bar.step5.title=Nouveau
 tour.top_menu_bar.step5.content=Le menu Nouveau vous permet de créer tout type de données selon vos permissions.
 tour.top_menu_bar.step6.title=Gouvernance
 tour.top_menu_bar.step6.content=Trouvez ici l''agenda des jalons ainsi que les actions de gouvernance pour lesquelles vous être requis.
-tour.top_menu_bar.step7.title=Livraison
-tour.top_menu_bar.step7.content=Visualisez ici les releases soit par liste, soit grâce à un diagramme de gantt.
 tour.top_menu_bar.step8.title=Outils
 tour.top_menu_bar.step8.content=Le menu Outils contient les feuilles de temps et le module reporting.
 tour.top_menu_bar.step9.title=Admin
@@ -444,17 +441,12 @@ topmenubar.new.actor.menu.label=Employé
 topmenubar.new.org_unit.menu.label=Unité d''organisation
 topmenubar.new.portfolio.menu.label=Portefeuille
 topmenubar.new.budget_bucket.menu.label=Enveloppe budgétaire
-topmenubar.new.release.menu.label=Release
 
 #governance
 topmenubar.governance.menu.label=Gouvernance
 topmenubar.governance.milestone_planning.menu.label=Agenda des jalons
 topmenubar.governance.provide_approval.menu.label=Approuver un jalon
 topmenubar.governance.review_milestone_request.menu.label=Revoir les requêtes de jalon
-
-#delivery
-topmenubar.delivery.menu.label=Livraison
-topmenubar.delivery.releases.menu.label=Releases
 
 #architecture
 topmenubar.architecture.menu.label=Architecture
@@ -1059,7 +1051,6 @@ object.portfolio_entry.archived.label=Archivé
 object.portfolio_entry.is_concept.label=Concept
 object.portfolio_entry.stakeholder_types.label=Rôle(s) de l''intervenant
 object.portfolio_entry.scope_description.label=Document
-object.portfolio_entry.release.label=Release
 object.portfolio_entry.dependency_type.label=Type
 object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=L''initiative choisie ne doit pas être la courante.
@@ -1388,8 +1379,6 @@ object.requirement.effort.label=Effort effectué
 object.requirement.remaining_effort.label=Effort restant
 object.requirement.is_scoped.label=Approuvé
 object.requirement.iteration.label=Itération
-object.requirement.release.label=Release
-object.requirement.release.help=Une exigence peut être manuellement attachée à toute release qui est associée à l''initiative avec le type "Manuel".
 object.requirement.table.empty=Il n''existe aucun exigence.
 
 #----------------------
@@ -1403,32 +1392,7 @@ object.iteration.story_points.label=Points
 object.iteration.start_date.label=Date de début
 object.iteration.end_date.label=Date de fin
 object.iteration.source.label=Source
-object.iteration.release.label=Release
-object.iteration.release.help=Une itération peut être manuellement attachée à toute release qui est associée à l''initiative avec le type "Par itération".
 object.iteration.table.empty=Il n''existe aucune itération.
-
-#----------------------
-# release
-#----------------------
-
-object.release.is_active.label=Active
-object.release.name.label=Nom
-object.release.description.label=Description
-object.release.capacity.label=Capacité disponible
-object.release.cut_off_date.label=Date butoir
-object.release.cut_off_date.invalid=La date butoir doit être antérieure à la date de fin des tests (si donnée) et à la date de déploiement.
-object.release.end_tests_date.label=Date de fin des tests
-object.release.end_tests_date.invalid=La date de fin des tests doit être antérieure à la date de déploiement.
-object.release.deployment_date.label=Date de déploiement
-object.release.manager.label=Responsable de la livraison
-object.release.portfolio_entry.unassign.confirmation=Etes-vous sûr(e) de vouloir retirer cette initiative de cette release?
-object.release.portfolio_entry.type.label=Type de relation des exigences
-object.release.portfolio_entry.type.NONE.label=Pas d''exigence
-object.release.portfolio_entry.type.ALL.label=Toutes les exigences
-object.release.portfolio_entry.type.BY_ITERATION.label=Par itération
-object.release.portfolio_entry.type.BY_REQUIREMENT.label=Manuel
-object.release.portfolio_entry.already_assigned=Cette initiative est déjà incluse dans cette release.
-object.release.table.empty=Il n''existe aucune release.
 
 #----------------------
 # workOrder
@@ -1919,7 +1883,6 @@ core.cockpit.sidebar.subordinates.allocations_details=Détails de affectations
 core.cockpit.sidebar.subordinates.timesheet=Feuilles de temps
 core.cockpit.sidebar.org_units=Unités d''organisation
 core.cockpit.sidebar.budget_buckets=Enveloppes budgétaires
-core.cockpit.sidebar.releases=Releases
 core.cockpit.sidebar.my_allocations=Affectations
 
 #initiatives
@@ -2158,7 +2121,6 @@ core.portfolio_entry.sidebar.delivery.label=Livraison
 core.portfolio_entry.sidebar.delivery.requirements.label=Exigences
 core.portfolio_entry.sidebar.delivery.requirements_status.label=Statut des exigences
 core.portfolio_entry.sidebar.delivery.iterations.label=Itérations
-core.portfolio_entry.sidebar.delivery.releases.label=Releases
 core.portfolio_entry.sidebar.planning.label=Planification
 core.portfolio_entry.sidebar.planning.overview.label=Vue d''ensemble
 core.portfolio_entry.sidebar.planning.packages.label=Livrables
@@ -2392,16 +2354,6 @@ core.portfolio_entry_delivery.iteration.view.details.title=Détails
 core.portfolio_entry_delivery.iteration.edit.title=Mettre à jour une itération
 core.portfolio_entry_delivery.iteration.edit.successful=L''itération a été mise à jour.
 
-#list of assigned releases
-core.portfolio_entry_delivery.releases.title=Releases associées à l''initiative
-
-#assign a release
-core.portfolio_entry_delivery.release_assign.title=Inclure dans une release
-core.portfolio_entry_delivery.release_assign.successful=L''initiative a été incluse dans la release.
-
-#unassign a release
-core.portfolio_entry_delivery.release_unassign.successful=L''initiative a été exclue de la release.
-
 #----------------------
 # portfolio entry: planning
 #----------------------
@@ -2411,7 +2363,6 @@ core.portfolio_entry_planning.overview.no_planning=La planification est vide.
 core.portfolio_entry_planning.overview.phase.label=Phase
 core.portfolio_entry_planning.overview.milestone.label=Jalon
 core.portfolio_entry_planning.overview.package.label=Livrable
-core.portfolio_entry_planning.overview.release.label=Release
 core.portfolio_entry_planning.overview.iteration.label=Itération
 
 #list of packages
@@ -2668,42 +2619,6 @@ core.org_unit.allocation.details.actors.activity.title=Affectations d''activité
 #manage actor allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Géré une activité affectée pour un employé
 core.org_unit.actor_allocated_activity.add.successful=L''activité a été affectée.
-
-#----------------------
-# release
-#----------------------
-
-#helper
-core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
-
-#list and planning
-core.release.list.no_release.info=Une release représente un artefact logiciel qui va être déployé. Il est possible d''enregistrer des initiatives à une release afin qu''elle contienne un ensemble d''exigences.
-core.release.list.no_release.create=Créer votre première release
-core.release.list.planning.title=Agenda
-core.release.list.planning.no_source=Il n''existe aucune release à afficher: les filtres configurés sont trop spécifiques.
-core.release.list.planning.phase.full=Réalisation et Déploiement
-core.release.list.planning.phase.execution=Réalisation
-core.release.list.planning.phase.rollout=Déploiement
-
-#create
-core.release.create.title=Créer une release
-core.release.create.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Créer une release
-core.release.create.successful=La release a été créée.
-
-#edit
-core.release.edit.title=Mettre à jour
-core.release.edit.successful=La release a été mise à jour.
-
-#view
-core.release.view.details.title=Détails
-core.release.view.initiatives.title=Initiatives
-
-#delete
-core.release.delete.confirmation.message=Etes-vous sûr(e) de vouloir supprimer cette release?
-core.release.delete.successful=La release a été supprimée.
-
-#view initiative
-core.release.initiative.view.requirements.title=Exigences
 
 #----------------------
 # architecture
@@ -3234,7 +3149,6 @@ admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;Gestion de
 #list
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
 admin.kpi.object_type.models.pmo.Portfolio=Portefeuille
-admin.kpi.object_type.models.delivery.Release=Release
 
 #view
 admin.kpi.view.details.title=Détails

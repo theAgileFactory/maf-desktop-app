@@ -18,7 +18,6 @@
 package controllers.core;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +32,6 @@ import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.delivery.IterationDAO;
-import dao.delivery.ReleaseDAO;
 import dao.delivery.RequirementDAO;
 import dao.pmo.PortfolioEntryDao;
 import framework.highcharts.pattern.BasicBar;
@@ -43,17 +41,12 @@ import framework.security.ISecurityService;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FilterConfig;
-import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.delivery.Iteration;
-import models.delivery.Release;
-import models.delivery.ReleasePortfolioEntry;
 import models.delivery.Requirement;
 import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
@@ -67,10 +60,8 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import utils.form.IterationFormData;
-import utils.form.ReleasePortfolioEntryFormData;
 import utils.form.RequirementFormData;
 import utils.table.IterationListView;
-import utils.table.ReleasePortfolioEntryListView;
 import utils.table.RequirementListView;
 
 /**
@@ -93,7 +84,6 @@ public class PortfolioEntryDeliveryController extends Controller {
 
     public static Form<RequirementFormData> formTemplate = Form.form(RequirementFormData.class);
     public static Form<IterationFormData> iterationFormTemplate = Form.form(IterationFormData.class);
-    public static Form<ReleasePortfolioEntryFormData> assignReleaseFormTemplate = Form.form(ReleasePortfolioEntryFormData.class);
 
     /**
      * Display the list of the requirements of a portfolio entry.
@@ -382,8 +372,15 @@ public class PortfolioEntryDeliveryController extends Controller {
         // add the custom attributes values
         CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, requirementId);
 
-        return ok(views.html.core.portfolioentrydelivery.requirement_edit.render(portfolioEntry, requirement, requirementForm,
-                ReleaseDAO.getReleaseAsVHByPEAndType(id, models.delivery.ReleasePortfolioEntry.Type.BY_REQUIREMENT)));
+        /*
+         * return
+         * ok(views.html.core.portfolioentrydelivery.requirement_edit.render(
+         * portfolioEntry, requirement, requirementForm,
+         * ReleaseDAO.getReleaseAsVHByPEAndType(id,
+         * models.delivery.ReleasePortfolioEntry.Type.BY_REQUIREMENT)));
+         */
+
+        return TODO;
 
     }
 
@@ -411,8 +408,14 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Requirement.class)) {
-            return ok(views.html.core.portfolioentrydelivery.requirement_edit.render(portfolioEntry, requirement, boundForm,
-                    ReleaseDAO.getReleaseAsVHByPEAndType(id, models.delivery.ReleasePortfolioEntry.Type.BY_REQUIREMENT)));
+            return TODO;
+            /*
+             * return
+             * ok(views.html.core.portfolioentrydelivery.requirement_edit.render
+             * (portfolioEntry, requirement, boundForm,
+             * ReleaseDAO.getReleaseAsVHByPEAndType(id,
+             * models.delivery.ReleasePortfolioEntry.Type.BY_REQUIREMENT)));
+             */
         }
 
         RequirementFormData requirementFormData = boundForm.get();
@@ -639,8 +642,14 @@ public class PortfolioEntryDeliveryController extends Controller {
         // add the custom attributes values
         CustomAttributeFormAndDisplayHandler.fillWithValues(iterationForm, Iteration.class, iterationId);
 
-        return ok(views.html.core.portfolioentrydelivery.iteration_edit.render(portfolioEntry, iterationForm,
-                ReleaseDAO.getReleaseAsVHByPEAndType(id, models.delivery.ReleasePortfolioEntry.Type.BY_ITERATION)));
+        return TODO;
+        /*
+         * return
+         * ok(views.html.core.portfolioentrydelivery.iteration_edit.render(
+         * portfolioEntry, iterationForm,
+         * ReleaseDAO.getReleaseAsVHByPEAndType(id,
+         * models.delivery.ReleasePortfolioEntry.Type.BY_ITERATION)));
+         */
 
     }
 
@@ -659,8 +668,15 @@ public class PortfolioEntryDeliveryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Iteration.class)) {
-            return ok(views.html.core.portfolioentrydelivery.iteration_edit.render(portfolioEntry, boundForm,
-                    ReleaseDAO.getReleaseAsVHByPEAndType(id, models.delivery.ReleasePortfolioEntry.Type.BY_ITERATION)));
+            /*
+             * return
+             * ok(views.html.core.portfolioentrydelivery.iteration_edit.render(
+             * portfolioEntry, boundForm,
+             * ReleaseDAO.getReleaseAsVHByPEAndType(id,
+             * models.delivery.ReleasePortfolioEntry.Type.BY_ITERATION)));
+             */
+
+            return TODO;
         }
 
         IterationFormData iterationFormData = boundForm.get();
@@ -686,144 +702,6 @@ public class PortfolioEntryDeliveryController extends Controller {
     }
 
     /**
-     * List of assigned (to the portfolio entry) releases.
-     * 
-     * @param id
-     *            the portfolio entry id
-     */
-    @With(CheckPortfolioEntryExists.class)
-    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result releases(Long id) {
-
-        // get the portfolio entry
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
-
-        List<ReleasePortfolioEntryListView> releasePortfolioEntryListView = new ArrayList<ReleasePortfolioEntryListView>();
-        for (ReleasePortfolioEntry releasePortfolioEntry : portfolioEntry.releasesPortfolioEntries) {
-            Release release = releasePortfolioEntry.getRelease();
-            if (release != null) {
-                releasePortfolioEntryListView.add(new ReleasePortfolioEntryListView(release, id, releasePortfolioEntry.type));
-            }
-        }
-
-        Set<String> columnsToHide = new HashSet<>();
-        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
-            columnsToHide.add("unassignActionLink");
-        }
-
-        Table<ReleasePortfolioEntryListView> releasesTable = ReleasePortfolioEntryListView.templateTable.fill(releasePortfolioEntryListView, columnsToHide);
-
-        return ok(views.html.core.portfolioentrydelivery.releases.render(portfolioEntry, releasesTable));
-    }
-
-    /**
-     * Display the form to assign a new release to the portfolio entry.
-     * 
-     * @param id
-     *            the portfolio entry
-     */
-    @With(CheckPortfolioEntryExists.class)
-    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result assignRelease(Long id) {
-
-        // get the portfolio entry
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
-
-        Form<ReleasePortfolioEntryFormData> assignReleaseForm = assignReleaseFormTemplate.fill(new ReleasePortfolioEntryFormData());
-
-        return ok(views.html.core.portfolioentrydelivery.release_assign.render(portfolioEntry, assignReleaseForm,
-                getRequirementsRelationTypesAsValueHolderCollection()));
-    }
-
-    /**
-     * Process the form to assign a release.
-     */
-    @With(CheckPortfolioEntryExists.class)
-    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result processAssignRelease() {
-
-        // bind the form
-        Form<ReleasePortfolioEntryFormData> boundForm = assignReleaseFormTemplate.bindFromRequest();
-
-        // get the portfolioEntry
-        Long id = Long.valueOf(boundForm.data().get("id"));
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
-
-        if (boundForm.hasErrors()) {
-            return ok(views.html.core.portfolioentrydelivery.release_assign.render(portfolioEntry, boundForm,
-                    getRequirementsRelationTypesAsValueHolderCollection()));
-        }
-
-        ReleasePortfolioEntryFormData releasePortfolioEntryFormData = boundForm.get();
-
-        // check the release is not already assigned.
-        if (PortfolioEntryDao.hasPEAssignedRelease(id, releasePortfolioEntryFormData.release)) {
-            boundForm.reject("release", Msg.get("object.release.portfolio_entry.already_assigned"));
-            return ok(views.html.core.portfolioentrydelivery.release_assign.render(portfolioEntry, boundForm,
-                    getRequirementsRelationTypesAsValueHolderCollection()));
-        }
-
-        ReleasePortfolioEntry releasePortfolioEntry = releasePortfolioEntryFormData.get();
-        releasePortfolioEntry.save();
-
-        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.release_assign.successful"));
-
-        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.releases(portfolioEntry.id));
-
-    }
-
-    /**
-     * Unassign a release.
-     * 
-     * @param id
-     *            the portfolio entry id
-     * @param releaseId
-     *            the release id
-     */
-    @With(CheckPortfolioEntryExists.class)
-    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result unassignRelease(Long id, Long releaseId) {
-
-        ReleasePortfolioEntry association = ReleaseDAO.getReleaseByIdAndPE(releaseId, id);
-
-        // remove existing relation
-        switch (association.type) {
-        case BY_ITERATION:
-            for (Iteration iteration : IterationDAO.getIterationAllAsListByPEAndRelease(releaseId, id)) {
-                iteration.release = null;
-                iteration.save();
-            }
-            break;
-        case BY_REQUIREMENT:
-            for (Requirement requirement : RequirementDAO.getRequirementAsListByPEAndRelease(releaseId, id)) {
-                requirement.release = null;
-                requirement.save();
-            }
-            break;
-        default:
-            break;
-        }
-
-        association.delete();
-
-        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.release_unassign.successful"));
-
-        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.releases(id));
-
-    }
-
-    /**
-     * Get the requirements' relation types as a value holder collection.
-     */
-    private static ISelectableValueHolderCollection<String> getRequirementsRelationTypesAsValueHolderCollection() {
-        ISelectableValueHolderCollection<String> types = new DefaultSelectableValueHolderCollection<String>();
-        for (ReleasePortfolioEntry.Type type : ReleasePortfolioEntry.Type.values()) {
-            types.add(new DefaultSelectableValueHolder<String>(type.name(), type.getLabel()));
-        }
-        return types;
-    }
-
-    /**
      * Get the messages service.
      */
     private II18nMessagesPlugin getMessagesPlugin() {
@@ -837,6 +715,9 @@ public class PortfolioEntryDeliveryController extends Controller {
         return securityService;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

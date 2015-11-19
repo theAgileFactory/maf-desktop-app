@@ -37,7 +37,6 @@ import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.services.remote.IAdPanelManagerService;
 import play.Configuration;
-import play.Play;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.reporting.IReportingUtils;
@@ -61,8 +60,6 @@ import utils.table.PortfolioListView;
 import utils.table.PurchaseOrderLineItemListView;
 import utils.table.PurchaseOrderLineItemWorkOrderListView;
 import utils.table.PurchaseOrderListView;
-import utils.table.ReleaseListView;
-import utils.table.ReleasePortfolioEntryListView;
 import utils.table.RequirementListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
 import utils.table.WorkOrderListView;
@@ -260,8 +257,6 @@ public class RootApiController extends ApiController {
         WorkOrderListView.templateTable = WorkOrderListView.getTable();
         RequirementListView.templateTable = RequirementListView.getTable();
         IterationListView.templateTable = IterationListView.getTable();
-        ReleaseListView.templateTable = ReleaseListView.getTable();
-        ReleasePortfolioEntryListView.templateTable = ReleasePortfolioEntryListView.getTable();
         TimesheetActivityAllocatedActorListView.templateTable = TimesheetActivityAllocatedActorListView.getTable();
     }
 
@@ -296,7 +291,6 @@ public class RootApiController extends ApiController {
         IterationListView.filterConfig = IterationListView.getFilterConfig();
         PortfolioEntryPlanningPackageListView.filterConfig = PortfolioEntryPlanningPackageListView.getFilterConfig();
         PortfolioEntryEventListView.filterConfig = PortfolioEntryEventListView.getFilterConfig();
-        ReleaseListView.filterConfig = ReleaseListView.getFilterConfig();
         PortfolioEntryResourcePlanAllocatedActorListView.filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.getFilterConfig();
         TimesheetActivityAllocatedActorListView.filterConfig = TimesheetActivityAllocatedActorListView.getFilterConfig();
     }

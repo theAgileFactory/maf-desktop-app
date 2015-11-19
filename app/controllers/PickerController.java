@@ -17,6 +17,7 @@
  */
 package controllers;
 
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.picker.ActorPicker;
@@ -28,8 +29,6 @@ import utils.picker.PortfolioEntryTypePicker;
 import utils.picker.PortfolioPicker;
 import utils.picker.PortfolioTypePicker;
 import utils.picker.PrincipalPicker;
-import utils.picker.ReleasePicker;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
 
 /**
  * The controller that provides the pickers.
@@ -173,13 +172,6 @@ public class PickerController extends Controller {
      */
     public Result portfolioEntryType() {
         return PortfolioEntryTypePicker.pickerTemplate.handle(request());
-    }
-
-    /**
-     * The active release picker.
-     */
-    public Result activeRelease() {
-        return ReleasePicker.allActiveTemplate.handle(request());
     }
 
 }

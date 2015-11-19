@@ -32,6 +32,7 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -40,8 +41,6 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
-import framework.utils.formats.StringFormatFormatter;
-import models.delivery.ReleasePortfolioEntry;
 import models.governance.LifeCycleMilestoneInstance;
 import models.pmo.Actor;
 import models.pmo.OrgUnit;
@@ -258,34 +257,9 @@ public class PortfolioEntryListView {
                 addColumn("isPublic", "isPublic", "object.portfolio_entry.is_public.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("isPublic", new BooleanFormatter<PortfolioEntryListView>());
 
-                addColumn("releasePortfolioEntry", "releasePortfolioEntry", "object.release.portfolio_entry.type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("releasePortfolioEntry", new IColumnFormatter<PortfolioEntryListView>() {
-                    @Override
-                    public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
-                        return portfolioEntryView.releasePortfolioEntry.type.getLabel();
-                    }
-                });
-
                 addKpis(PortfolioEntry.class);
 
                 addCustomAttributeColumns(PortfolioEntry.class);
-
-                addColumn("releasePortfolioEntry", "releasePortfolioEntry", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("releasePortfolioEntry",
-                        new StringFormatFormatter<PortfolioEntryListView>("<a href=\"%s\"><span class=\"glyphicons glyphicons-log-book\"></span></a>",
-                                new StringFormatFormatter.Hook<PortfolioEntryListView>() {
-                    @Override
-                    public String convert(PortfolioEntryListView portfolioEntryListView) {
-                        if (portfolioEntryListView.releasePortfolioEntry.type.equals(ReleasePortfolioEntry.Type.NONE)) {
-                            return null;
-                        } else {
-                            return controllers.core.routes.ReleaseController
-                                    .viewInitiative(portfolioEntryListView.releasePortfolioEntry.getRelease().id, portfolioEntryListView.id).url();
-                        }
-                    }
-                }));
-                setColumnCssClass("releasePortfolioEntry", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("releasePortfolioEntry", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                 this.setLineAction(new IColumnFormatter<PortfolioEntryListView>() {
                     @Override
@@ -306,13 +280,10 @@ public class PortfolioEntryListView {
      *            set to true if the stakeholder types column must be hidden
      * @param hideManagerColumn
      *            set to true if the manager column must be hidden
-     * @param hideReleaseColumns
-     *            set to true to hide the release columns (requirements'
-     *            relation type, number of requirements...)
      * 
      * @return a set of columns name
      */
-    public static Set<String> getHideNonDefaultColumns(boolean hideStakeholderTypesColumn, boolean hideManagerColumn, boolean hideReleaseColumns) {
+    public static Set<String> getHideNonDefaultColumns(boolean hideStakeholderTypesColumn, boolean hideManagerColumn) {
         Set<String> columns = new HashSet<String>();
 
         if (hideStakeholderTypesColumn) {
@@ -321,10 +292,6 @@ public class PortfolioEntryListView {
 
         if (hideManagerColumn) {
             columns.add("manager");
-        }
-
-        if (hideReleaseColumns) {
-            columns.add("releasePortfolioEntry");
         }
 
         columns.add("creationDate");
@@ -362,7 +329,6 @@ public class PortfolioEntryListView {
 
     // contextual attributes
     public List<String> stakeholderTypes = new ArrayList<String>();
-    public ReleasePortfolioEntry releasePortfolioEntry = null;
 
     /**
      * Construct a portfolio entry list view with a DB entry.
@@ -410,24 +376,6 @@ public class PortfolioEntryListView {
         for (Stakeholder stakeholder : stakeholders) {
             this.stakeholderTypes.add(stakeholder.stakeholderType.getName());
         }
-
-    }
-
-    /**
-     * Constructor used in the case of the release columns must be displayed.
-     * 
-     * note: this constructor is called when displaying the portfolio entries in
-     * a release context.
-     * 
-     * @param portfolioEntry
-     *            the portfolio entry
-     * @param releasePortfolioEntry
-     *            the relation between the release and the portfolio entry
-     */
-    public PortfolioEntryListView(PortfolioEntry portfolioEntry, ReleasePortfolioEntry releasePortfolioEntry) {
-
-        this(portfolioEntry);
-        this.releasePortfolioEntry = releasePortfolioEntry;
 
     }
 

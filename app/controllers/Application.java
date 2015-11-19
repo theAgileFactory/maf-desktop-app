@@ -660,7 +660,7 @@ public class Application extends Controller {
                 }
 
             } else {
-                Logger.error("deleteShortcut: impossible to findRelease the shortcut for the id " + id);
+                Logger.error("deleteShortcut: impossible to find the shortcut for the id " + id);
             }
 
         } else {

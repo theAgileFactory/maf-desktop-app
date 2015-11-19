@@ -135,7 +135,6 @@ POST   /picker/principals/uid                         controllers.PickerControll
 POST   /picker/portfolio-entry/planning-package       controllers.PickerController.planningPackageOfPortfolioEntry()
 POST   /picker/portfolio-type                         controllers.PickerController.portfolioType()
 POST   /picker/portfolio-entry-type                   controllers.PickerController.portfolioEntryType()
-POST   /picker/release/active                         controllers.PickerController.activeRelease()
 
 #-------------------
 # Core: ProcessTransitionRequest
@@ -196,7 +195,6 @@ POST   /cockpit/subordinates/allocations/activity/filter          controllers.co
 GET    /cockpit/subordinates/timesheet                            controllers.core.CockpitController.subordinatesTimesheet()
 GET    /cockpit/org-units                                         controllers.core.CockpitController.orgUnits(page: Integer ?= 0, viewAll: Boolean ?= false)
 GET    /cockpit/budget-buckets                                    controllers.core.CockpitController.budgetBuckets(asOwnerPage: Integer ?= 0, asResponsiblePage: Integer ?= 0, viewAllAsOwner: Boolean ?= false, viewAllAsResponsible: Boolean ?= false)
-GET    /cockpit/releases                                          controllers.core.CockpitController.releases(page: Integer ?= 0, viewAll: Boolean ?= false)
 
 #-------------------
 # Core: Roadmap
@@ -293,10 +291,6 @@ POST   /portfolio-entry/iterations/filter                 controllers.core.Portf
 GET    /portfolio-entry/iteration/view                    controllers.core.PortfolioEntryDeliveryController.viewIteration(id: Long, iterationId: Long)
 GET    /portfolio-entry/iteration/edit                    controllers.core.PortfolioEntryDeliveryController.editIteration(id: Long, iterationId: Long ?= 0)
 POST   /portfolio-entry/iteration/edit                    controllers.core.PortfolioEntryDeliveryController.processEditIteration()
-GET    /portfolio-entry/releases                          controllers.core.PortfolioEntryDeliveryController.releases(id: Long)
-GET    /portfolio-entry/release/assign                    controllers.core.PortfolioEntryDeliveryController.assignRelease(id: Long)
-POST   /portfolio-entry/release/assign                    controllers.core.PortfolioEntryDeliveryController.processAssignRelease()
-GET    /portfolio-entry/release/unassign                  controllers.core.PortfolioEntryDeliveryController.unassignRelease(id: Long, releaseId: Long)
 
 #-------------------
 # Core: PortfolioEntryPlanning
@@ -465,23 +459,6 @@ POST   /reporting/category/children            controllers.core.ReportingControl
 GET    /reporting/list                         controllers.core.ReportingController.listFragment()
 GET    /reporting/parametrize                  controllers.core.ReportingController.parametrize(id: Long)
 POST   /reporting/generate                     controllers.core.ReportingController.generate()
-
-
-#-------------------
-# Core: Release
-#-------------------
-
-GET    /releases                               controllers.core.ReleaseController.list()
-POST   /releases/filter                        controllers.core.ReleaseController.listFilter()
-POST   /releases/export                        controllers.core.ReleaseController.exportListAsExcel()
-GET    /releases/planning                      controllers.core.ReleaseController.planning()
-GET    /release/view                           controllers.core.ReleaseController.view(id: Long, page: Integer ?= 0)
-GET    /release/initiative/view                controllers.core.ReleaseController.viewInitiative(id: Long, portfolioEntryId: Long)
-GET    /release/new                            controllers.core.ReleaseController.create()
-POST   /release/new/save                       controllers.core.ReleaseController.saveCreate()
-GET    /release/edit                           controllers.core.ReleaseController.edit(id: Long)
-POST   /release/edit/save                      controllers.core.ReleaseController.saveEdit()
-GET    /release/delete                         controllers.core.ReleaseController.delete(id: Long)
 
 #-------------------
 # Core: Architecture
@@ -788,7 +765,7 @@ GET     /api/core/portfolio-type/find                                      contr
 GET     /api/core/portfolio-type/:id                                       controllers.api.core.PortfolioTypeApiController.getPortfolioTypeById(id: Long)
 
 #PortfolioEntry
-GET     /api/core/portfolio-entry/find                                     controllers.api.core.PortfolioEntryApiController.getPortfolioEntriesList(managerId: java.lang.Long ?= null, sponsoringUnitId: java.lang.Long ?= null, deliveryUnitId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, releaseId: java.lang.Long ?= null, archived: java.lang.Boolean ?= null, portfolioEntryTypeId: java.lang.Long ?= null, isPublic: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry/find                                     controllers.api.core.PortfolioEntryApiController.getPortfolioEntriesList(managerId: java.lang.Long ?= null, sponsoringUnitId: java.lang.Long ?= null, deliveryUnitId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, archived: java.lang.Boolean ?= null, portfolioEntryTypeId: java.lang.Long ?= null, isPublic: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry/:id                                      controllers.api.core.PortfolioEntryApiController.getPortfolioEntryById(id: Long)
 POST    /api/core/portfolio-entry                                          controllers.api.core.PortfolioEntryApiController.createPortfolioEntry()
 PUT     /api/core/portfolio-entry/:id                                      controllers.api.core.PortfolioEntryApiController.updatePortfolioEntry(id: Long)
@@ -840,10 +817,6 @@ GET     /api/core/stakeholder/:id                                         contro
 #StakeholderType
 GET     /api/core/stakeholder-type/find                                   controllers.api.core.StakeholderTypeApiController.getStakeholderTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/stakeholder-type/:id                                    controllers.api.core.StakeholderTypeApiController.getStakeholderTypeById(id: Long)
-
-#Release
-GET     /api/core/release/find                                            controllers.api.core.ReleaseApiController.getReleasesList(isActive: java.lang.Boolean ?= null, managerId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null)
-GET     /api/core/release/:id                                             controllers.api.core.ReleaseApiController.getReleaseById(id: Long)
 
 #Requirement Status
 GET     /api/core/requirement-status/find                                 controllers.api.core.RequirementStatusApiController.getRequirementStatusList()
@@ -934,8 +907,6 @@ GET     /api-docs/api/core/portfolio-entry-risk-type                      framew
 
 GET     /api-docs/api/core/stakeholder                                    framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/stakeholder")
 GET     /api-docs/api/core/stakeholder-type                               framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/stakeholder-type")
-
-GET     /api-docs/api/core/release                                        framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/release")
 
 GET     /api-docs/api/core/requirement-severity                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-severity")
 GET     /api-docs/api/core/requirement-priority                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/requirement-priority")

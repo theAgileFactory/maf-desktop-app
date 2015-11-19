@@ -12,7 +12,6 @@ import be.objectify.deadbolt.java.DynamicResourceHandler;
 import be.objectify.deadbolt.java.JavaAnalyzer;
 import be.objectify.deadbolt.java.cache.SubjectCache;
 import constants.IMafConstants;
-import dao.delivery.ReleaseDAO;
 import dao.finance.BudgetBucketDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
@@ -28,7 +27,6 @@ import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Utilities;
-import models.delivery.Release;
 import models.finance.BudgetBucket;
 import models.framework_models.account.SystemPermission;
 import models.pmo.Actor;
@@ -49,7 +47,6 @@ import security.dynamic.BudgetBucketDynamicHelper;
 import security.dynamic.OrgUnitDynamicHelper;
 import security.dynamic.PortfolioDynamicHelper;
 import security.dynamic.PortfolioEntryDynamicHelper;
-import security.dynamic.ReleaseDynamicHelper;
 import security.dynamic.ReportingDynamicHelper;
 import security.dynamic.TimesheetReportDynamicHelper;
 
@@ -230,32 +227,6 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
                         return true;
                     } else {
                         return BudgetBucketDynamicHelper.isBudgetBucketEditAllowed(budgetBucket, securityService);
-                    }
-                });
-            }
-        });
-
-        dynamicAuthenticationHandlers.put(IMafConstants.RELEASE_VIEW_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-                return Promise.promise(() -> {
-                    Release release = ReleaseDAO.getReleaseById(Utilities.getId(context));
-                    if (release == null) {
-                        return true;
-                    } else {
-                        return ReleaseDynamicHelper.isReleaseViewAllowed(release.id, securityService);
-                    }
-                });
-            }
-        });
-
-        dynamicAuthenticationHandlers.put(IMafConstants.RELEASE_EDIT_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
-            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
-                return Promise.promise(() -> {
-                    Release release = ReleaseDAO.getReleaseById(Utilities.getId(context));
-                    if (release == null) {
-                        return true;
-                    } else {
-                        return ReleaseDynamicHelper.isReleaseEditAllowed(release, securityService);
                     }
                 });
             }

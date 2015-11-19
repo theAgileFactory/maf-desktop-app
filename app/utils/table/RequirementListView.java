@@ -20,7 +20,6 @@ package utils.table;
 import constants.IMafConstants;
 import dao.delivery.RequirementDAO;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -30,7 +29,6 @@ import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.delivery.Iteration;
-import models.delivery.Release;
 import models.delivery.Requirement;
 import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
@@ -63,9 +61,6 @@ public class RequirementListView {
                         SortStatusType.UNSORTED);
 
                 addColumnConfiguration("iteration", "iteration", "object.requirement.iteration.label", new NoneFilterComponent(), false, false,
-                        SortStatusType.NONE);
-
-                addColumnConfiguration("release", "release", "object.requirement.release.label", new NoneFilterComponent(), false, false,
                         SortStatusType.NONE);
 
                 addColumnConfiguration("category", "category", "object.requirement.category.label", new TextFieldFilterComponent("*"), false, false,
@@ -150,15 +145,6 @@ public class RequirementListView {
                     }
                 });
                 this.setColumnValueCssClass("iteration", "rowlink-skip");
-
-                addColumn("release", "release", "object.requirement.release.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("release", new IColumnFormatter<RequirementListView>() {
-                    @Override
-                    public String apply(RequirementListView requirementListView, Object value) {
-                        return views.html.modelsparts.display_release.render(requirementListView.release).body();
-                    }
-                });
-                this.setColumnValueCssClass("release", "rowlink-skip");
 
                 addColumn("category", "category", "object.requirement.category.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("category", new ObjectFormatter<RequirementListView>());
@@ -261,7 +247,6 @@ public class RequirementListView {
     public Double remainingEffort;
     public Boolean isScoped;
     public Iteration iteration;
-    public Release release;
 
     /**
      * Construct a requirement list view with a DB entry.
@@ -288,8 +273,6 @@ public class RequirementListView {
         this.remainingEffort = requirement.remainingEffort;
         this.isScoped = requirement.isScoped;
         this.iteration = requirement.iteration;
-        this.release = requirement.release;
-
     }
 
 }

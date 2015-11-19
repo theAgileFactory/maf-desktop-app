@@ -285,7 +285,7 @@ public class OrgUnitController extends Controller {
         }
 
         Table<PortfolioEntryListView> filledTable = PortfolioEntryListView.templateTable.fill(portfolioEntriesView,
-                PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
+                PortfolioEntryListView.getHideNonDefaultColumns(true, true));
 
         return ok(views.html.core.orgunit.org_unit_portfolio_entry_list.render(orgUnit, filledTable, pagination));
     }

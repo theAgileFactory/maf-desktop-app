@@ -18,7 +18,6 @@
 package utils.form;
 
 import models.delivery.Iteration;
-import dao.delivery.ReleaseDAO;
 
 /**
  * An iteration form data is used to manage the fields when editing an
@@ -34,8 +33,6 @@ public class IterationFormData {
     public Long iterationId;
 
     public Integer storyPoints;
-
-    public Long release;
 
     /**
      * Default constructor.
@@ -54,7 +51,6 @@ public class IterationFormData {
         this.id = iteration.portfolioEntry.id;
         this.iterationId = iteration.id;
         this.storyPoints = iteration.storyPoints;
-        this.release = iteration.release != null ? iteration.release.id : null;
 
     }
 
@@ -66,6 +62,5 @@ public class IterationFormData {
      */
     public void fill(Iteration iteration) {
         iteration.storyPoints = this.storyPoints;
-        iteration.release = this.release != null ? ReleaseDAO.getReleaseById(this.release) : null;
     }
 }

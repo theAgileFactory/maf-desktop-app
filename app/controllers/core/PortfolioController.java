@@ -129,7 +129,7 @@ public class PortfolioController extends Controller {
         }
 
         Table<PortfolioEntryListView> filledPortfolioEntryTable = PortfolioEntryListView.templateTable.fill(portfolioEntriesView,
-                PortfolioEntryListView.getHideNonDefaultColumns(true, true, true));
+                PortfolioEntryListView.getHideNonDefaultColumns(true, true));
 
         // get the stakeholders
         Pagination<Stakeholder> stakeholderPagination = StakeholderDao.getStakeholderAsPaginationByPortfolio(id);

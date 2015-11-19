@@ -305,7 +305,6 @@ data_type.Portfolio.label=Portfolio
 data_type.Stakeholder.label=Stakeholder
 data_type.PurchaseOrderLineItem.label=Purchase order line
 data_type.PurchaseOrder.label=Purchase order
-data_type.Release.label=Release
 data_type.Requirement.label=Requirement
 data_type.TimesheetActivityAllocatedActor.label=Allocated employee (activity)
 data_type.WorkOrder.label=Work order
@@ -395,8 +394,6 @@ tour.top_menu_bar.step5.title=New
 tour.top_menu_bar.step5.content=The New menu allows you to create any type of data according to your permissions.
 tour.top_menu_bar.step6.title=Governance
 tour.top_menu_bar.step6.content=Find here the milestones'' planning and all governance actions for which you are required.
-tour.top_menu_bar.step7.title=Delivery
-tour.top_menu_bar.step7.content=Visualize here the releases either by list or with a gantt chart.
 tour.top_menu_bar.step8.title=Tools
 tour.top_menu_bar.step8.content=The Tools menu contains the timesheets or the reporting modules.
 tour.top_menu_bar.step9.title=Admin
@@ -432,17 +429,12 @@ topmenubar.new.actor.menu.label=Employee
 topmenubar.new.org_unit.menu.label=Org unit
 topmenubar.new.portfolio.menu.label=Portfolio
 topmenubar.new.budget_bucket.menu.label=Budget bucket
-topmenubar.new.release.menu.label=Release
 
 #governance
 topmenubar.governance.menu.label=Governance
 topmenubar.governance.milestone_planning.menu.label=Milestone planning
 topmenubar.governance.provide_approval.menu.label=Provide approval
 topmenubar.governance.review_milestone_request.menu.label=Review milestone requests
-
-#delivery
-topmenubar.delivery.menu.label=Delivery
-topmenubar.delivery.releases.menu.label=Releases
 
 #architecture
 topmenubar.architecture.menu.label=Architecture
@@ -1047,7 +1039,6 @@ object.portfolio_entry.archived.label=Archived
 object.portfolio_entry.is_concept.label=Concept
 object.portfolio_entry.stakeholder_types.label=Stakeholder type(s)
 object.portfolio_entry.scope_description.label=Document
-object.portfolio_entry.release.label=Release
 object.portfolio_entry.dependency_type.label=Type
 object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=The chosen initiative should not be the current.
@@ -1376,8 +1367,6 @@ object.requirement.effort.label=Effort made
 object.requirement.remaining_effort.label=Remaining effort
 object.requirement.is_scoped.label=In scope
 object.requirement.iteration.label=Iteration
-object.requirement.release.label=Release
-object.requirement.release.help=A requirement can be manually attached to any release which is associated to the initiative with the "Manual" type.
 object.requirement.table.empty=There is no requirement.
 
 #----------------------
@@ -1391,32 +1380,7 @@ object.iteration.story_points.label=Story points
 object.iteration.start_date.label=Start date
 object.iteration.end_date.label=End date
 object.iteration.source.label=Source
-object.iteration.release.label=Release
-object.iteration.release.help=An iteration can be manually attached to any release which is associated to the initiative with the "By iteration" type.
 object.iteration.table.empty=There is no iteration.
-
-#----------------------
-# release
-#----------------------
-
-object.release.is_active.label=Active
-object.release.name.label=Name
-object.release.description.label=Description
-object.release.capacity.label=Available capacity
-object.release.cut_off_date.label=Cut-off date
-object.release.cut_off_date.invalid=The cut-off date should be before the end of tests date (if given) and the deployment date.
-object.release.end_tests_date.label=End of tests date
-object.release.end_tests_date.invalid=The end of tests date should be before the deployment date.
-object.release.deployment_date.label=Deployment date
-object.release.manager.label=Delivery manager
-object.release.portfolio_entry.unassign.confirmation=Are you sure you want to remove this initiative from this release?
-object.release.portfolio_entry.type.label=Requirements'' relation type
-object.release.portfolio_entry.type.NONE.label=No requirement
-object.release.portfolio_entry.type.ALL.label=All requirements
-object.release.portfolio_entry.type.BY_ITERATION.label=By iteration
-object.release.portfolio_entry.type.BY_REQUIREMENT.label=Manual
-object.release.portfolio_entry.already_assigned=This initiative is already part of this release.
-object.release.table.empty=There is no release.
 
 #----------------------
 # workOrder
@@ -1904,7 +1868,6 @@ core.cockpit.sidebar.subordinates.allocations_details=Allocations details
 core.cockpit.sidebar.subordinates.timesheet=Timesheets
 core.cockpit.sidebar.org_units=Org units
 core.cockpit.sidebar.budget_buckets=Budget buckets
-core.cockpit.sidebar.releases=Releases
 core.cockpit.sidebar.my_allocations=Allocations
 
 #initiatives
@@ -2142,7 +2105,6 @@ core.portfolio_entry.sidebar.delivery.label=Delivery
 core.portfolio_entry.sidebar.delivery.requirements.label=Requirements
 core.portfolio_entry.sidebar.delivery.requirements_status.label=Requirements status
 core.portfolio_entry.sidebar.delivery.iterations.label=Iterations
-core.portfolio_entry.sidebar.delivery.releases.label=Releases
 core.portfolio_entry.sidebar.planning.label=Planning
 core.portfolio_entry.sidebar.planning.overview.label=Overview
 core.portfolio_entry.sidebar.planning.packages.label=Packages
@@ -2376,16 +2338,6 @@ core.portfolio_entry_delivery.iteration.view.details.title=Details
 core.portfolio_entry_delivery.iteration.edit.title=Update an iteration
 core.portfolio_entry_delivery.iteration.edit.successful=The iteration has been updated.
 
-#list of assigned releases
-core.portfolio_entry_delivery.releases.title=Releases assigned to the initiative
-
-#assign a release
-core.portfolio_entry_delivery.release_assign.title=Assign a release
-core.portfolio_entry_delivery.release_assign.successful=The release has been assigned.
-
-#unassign a release
-core.portfolio_entry_delivery.release_unassign.successful=The release has been unassigned.
-
 #----------------------
 # portfolio entry: planning
 #----------------------
@@ -2395,7 +2347,6 @@ core.portfolio_entry_planning.overview.no_planning=The planning is empty.
 core.portfolio_entry_planning.overview.phase.label=Phase
 core.portfolio_entry_planning.overview.milestone.label=Milestone
 core.portfolio_entry_planning.overview.package.label=Package
-core.portfolio_entry_planning.overview.release.label=Release
 core.portfolio_entry_planning.overview.iteration.label=Iteration
 
 #list of packages
@@ -2652,42 +2603,6 @@ core.org_unit.allocation.details.actors.activity.title=Activity''s allocations f
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Manage an allocated activity for an employee
 core.org_unit.actor_allocated_activity.add.successful=The activity has been allocated successfully.
-
-#----------------------
-# release
-#----------------------
-
-#helper
-core.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Releases
-
-#list and planning
-core.release.list.no_release.info=A release reprensents an artifact that would be rolled out. It is possible to register initiatives to a release in order it includes a set of requirements.
-core.release.list.no_release.create=Create your first release
-core.release.list.planning.title=Planning
-core.release.list.planning.no_source=There is no release to display: the configured filters are too much specific.
-core.release.list.planning.phase.full=Build & Rollout
-core.release.list.planning.phase.execution=Build
-core.release.list.planning.phase.rollout=Rollout
-
-#create
-core.release.create.title=Create a release
-core.release.create.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Create a release
-core.release.create.successful=The release has been created successfully.
-
-#edit
-core.release.edit.title=Edit
-core.release.edit.successful=The release has been updated.
-
-#view
-core.release.view.details.title=Details
-core.release.view.initiatives.title=Initiatives
-
-#delete
-core.release.delete.confirmation.message=Are you sure you want to delete this release?
-core.release.delete.successful=The release has been removed.
-
-#view initiative
-core.release.initiative.view.requirements.title=Requirements
 
 #----------------------
 # architecture
@@ -3221,7 +3136,6 @@ admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manage
 #list
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
 admin.kpi.object_type.models.pmo.Portfolio=Portfolio
-admin.kpi.object_type.models.delivery.Release=Release
 
 #view
 admin.kpi.view.details.title=Details

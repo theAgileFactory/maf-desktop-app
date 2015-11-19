@@ -17,7 +17,6 @@
  */
 package utils.form;
 
-import dao.delivery.ReleaseDAO;
 import models.delivery.Requirement;
 
 /**
@@ -32,8 +31,6 @@ public class RequirementFormData {
     public Long id;
 
     public Long requirementId;
-
-    public Long release;
 
     /**
      * Default constructor.
@@ -50,7 +47,6 @@ public class RequirementFormData {
     public RequirementFormData(Requirement requirement) {
         this.id = requirement.portfolioEntry.id;
         this.requirementId = requirement.id;
-        this.release = requirement.release != null ? requirement.release.id : null;
     }
 
     /**
@@ -60,6 +56,5 @@ public class RequirementFormData {
      *            the requirement in the DB
      */
     public void fill(Requirement requirement) {
-        requirement.release = this.release != null ? ReleaseDAO.getReleaseById(this.release) : null;
     }
 }
