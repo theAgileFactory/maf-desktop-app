@@ -522,10 +522,6 @@ kpi.release_burndown.static_trend_line.name=Theoretical remaining effort
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
 #----------------------
 
-report.release_requirements.name=Release''s requirements
-report.release_requirements.description=List of requirements for a release
-report.release_requirements.release.name=Release
-
 report.competency.name=Competency
 report.competency.description=Employees with this competency and allocations.
 report.competency.competency.name=Competency
@@ -612,10 +608,6 @@ permission.timesheet_approval_all_permission.description=Permission which allows
 permission.timesheet_approval_as_manager_permission.description=Permission which allows a user to approve or reject a timesheet which has been filled by any subordinates (direct or not).
 permission.timesheet_lock_all_permission.description=Permission which allows a user to lock and unlock any timesheets.
 permission.admin.system_owner.description=Permission which allows a user to change (possibly purchase) additional resources for the system
-permission.release_view_all_permission.description=Permission which allows a user to view the details of any releases.
-permission.release_view_as_manager_permission.description=Permission which allows a user to view the details of a release for which he is the manager.
-permission.release_edit_all_permission.description=Permission which allows a user to edit the details of any releases.
-permission.release_edit_as_manager_permission.description=Permission which allows a user to edit the details of a release for which he is the manager.
 permission.api_manager_permission.description=Permission which allows a user to configure the api keys and authorizations.
 permission.api_tester_permission.description=Permission which allows a user to access the API documentation and test interface.
 permission.roadmap_simulator_permission.description=Permission which allows a user to simulate the capacity scenarios in the roadmap.
@@ -835,6 +827,7 @@ object.custom_attribute_item.table.empty=There is currently no option.
 object.portfolio_entry_type.name.label=Name
 object.portfolio_entry_type.description.label=Description
 object.portfolio_entry_type.selectable.label=Selectable
+object.portfolio_entry_type.is_release.label=Release
 object.portfolio_entry_type.table.empty=There is currently no initiative type.
 
 #----------------------
@@ -1044,6 +1037,9 @@ object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=The chosen initiative should not be the current.
 object.portfolio_entry.dependency.already.error=The chosen initiative is already a dependency for the selected type.
 object.portfolio_entry.dependency.delete.confirmation=Are you sure you want to delete this dependency?
+object.portfolio_entry.deliverables.label=Delivrables
+object.portfolio_entry.deliverable.type.OWNER.label=Owner
+object.portfolio_entry.deliverable.type.FOLLOWER.label=Follower
 object.portfolio_entry.table.empty=There is no initiative.
 
 #----------------------
@@ -1159,6 +1155,7 @@ object.life_cycle_process.short_name.label=Short name
 object.life_cycle_process.name.label=Name
 object.life_cycle_process.description.label=Description
 object.life_cycle_process.is_active.label=Active
+object.life_cycle_process.is_release.label=Release
 object.life_cycle_process.table.empty=There is no process.
 
 #----------------------
@@ -1182,6 +1179,9 @@ object.life_cycle_milestone.is_review_required.label=Review required
 object.life_cycle_milestone.default_status_type.label=Default status type
 object.life_cycle_milestone.is_active.label=Active
 object.life_cycle_milestone.approvers.label=Approvers
+object.life_cycle_milestone.type.label=Type
+object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Implementation start date
+object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=Implementation end date
 object.life_cycle_milestone.table.empty=There is no milestone.
 
 #----------------------
@@ -1349,6 +1349,16 @@ object.allocated_resource.competency.table.empty=There is no allocation.
 object.allocated_resource.table.empty=There is no allocation.
 
 #----------------------
+# deliverable
+#----------------------
+
+object.deliverable.name.label=Name
+object.deliverable.description.label=Description
+object.deliverable.requirements.label=Requirements
+object.deliverable.portfolio_entries.label=Initiatives
+object.deliverable.table.empty=There is no deliverable.
+
+#----------------------
 # requirement
 #----------------------
 
@@ -1367,6 +1377,7 @@ object.requirement.effort.label=Effort made
 object.requirement.remaining_effort.label=Remaining effort
 object.requirement.is_scoped.label=In scope
 object.requirement.iteration.label=Iteration
+object.requirement.deliverables.label=Delivrables
 object.requirement.table.empty=There is no requirement.
 
 #----------------------
