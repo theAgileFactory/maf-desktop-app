@@ -24,23 +24,22 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import models.framework_models.account.Principal;
-import play.Configuration;
-import play.Logger;
-import play.Play;
-import play.mvc.Controller;
-import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.ext.api.IExtensionDescriptor.IPluginDescriptor;
 import framework.services.plugins.IPluginManagerService;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
-import framework.services.ext.api.IExtensionDescriptor.IPluginDescriptor;
+import models.framework_models.account.Principal;
+import play.Configuration;
+import play.Logger;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 /**
  * A controller to be used by the system owner to display and modify the core

@@ -106,6 +106,11 @@ form.input.file_field.type.label=Type
 form.input.file_field.type.UPLOAD.label=<span class="glyphicons glyphicons-upload"></span> Fichier local
 form.input.file_field.type.URL.label=<span class="glyphicons glyphicons-link"></span> URL
 form.input.file_field.file.label=Fichier
+form.input.file_field.label=Ajouter un fichier
+form.input.file_field.file.size.invalid=Chargement impossible la taille d''un fichier est limitée à {0}
+form.input.file_field.no_file=Aucun fichier n''a été sélectionné
+form.input.file_field.success=Chargement réussi
+form.input.file_field.file.size.warning=La taille d''un fichier est limitée à {0}
 
 #----------------------
 # default messages
@@ -3066,12 +3071,8 @@ admin.shared_storage.view.file.last_modified.label=Dernière modification
 admin.shared_storage.view.file.size.label=Taille
 
 #shared storage: upload file
-admin.shared_storage.upload.file.label=Ajouter un fichier
 admin.shared_storage.upload.file.help=La taille d''un fichier est limitée a {0} et vous ne pouvez pas chargez plus de {1} fichiers
-admin.shared_storage.upload.file.size.invalid=Chargement impossible la taille d''un fichier est limitée à {0}
 admin.shared_storage.upload.error.max_number=Trop de fichier dans ce répertoire, veuillez en effacer un avant de tenter d''en ajouter un nouveau
-admin.shared_storage.upload.no_file=Aucun fichier n''a été sélectionné
-admin.shared_storage.upload.success=Chargement réussi
 
 #shared storage: delete file
 admin.shared_storage.delete.success=Fichier supprimé
@@ -3262,3 +3263,11 @@ admin.auditable.export.notification.success.message=Le journal d''audit est main
 admin.auditable.export.notification.error.title=Erreur d''exportation du journal d''audit
 admin.auditable.export.notification.error.message=Le système n''a pas réussi a exporter le journal d''audit. Veuillez contacter votre administrateur.
 admin.auditable.export.notification.not_found.message=Aucun journal d''audit n''a pu être trouvé.\n Avez-vous activé l''audit pour au moins un objet?
+
+
+#logging
+admin.auditable.logging.title=Logs d''application
+admin.auditable.switchdebug.label=Passer en mode debug
+admin.auditable.download.label=Télécharger
+
+

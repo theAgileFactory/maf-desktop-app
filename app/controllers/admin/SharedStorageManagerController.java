@@ -48,7 +48,6 @@ import framework.utils.formats.StringFormatFormatter;
 import framework.utils.formats.StringFormatFormatter.Hook;
 import play.Configuration;
 import play.Logger;
-import play.Play;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.BodyParser;
@@ -257,9 +256,9 @@ public class SharedStorageManagerController extends Controller {
                     if (filePart != null) {
                         IOUtils.copy(new FileInputStream(filePart.getFile()),
                                 getSharedStorageService().writeFile("/" + folderName + "/" + filePart.getFilename(), true));
-                        Utilities.sendSuccessFlashMessage(Msg.get("admin.shared_storage.upload.success"));
+                        Utilities.sendSuccessFlashMessage(Msg.get("form.input.file_field.success"));
                     } else {
-                        Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.no_file"));
+                        Utilities.sendErrorFlashMessage(Msg.get("form.input.file_field.no_file"));
                     }
                 } catch (Exception e) {
                     Utilities

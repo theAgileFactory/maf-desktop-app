@@ -126,12 +126,42 @@ public class AuditableController extends Controller {
      --------------------------------------------------------------------------------*/
 
     /**
+     * Return the application logs
+     * @return
+     */
+    public Promise<Result> downloadApplicationLog(){
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try{
+                    response().setContentType("text/plain");
+                    response().setHeader("Content-disposition","attachment; filename=application.log");
+                    return ok(getAuditLoggerService().getApplicationLog());
+                }catch(Exception e){
+                    log.error("Unable to download the application log",e);
+                    Utilities.sendErrorFlashMessage(Msg.get("unexpected.error.title"));
+                }
+                return redirect(routes.AuditableController.listAuditable());
+            }
+        });
+    }
+    
+    /**
+     * Change the log level to debug
+     * @return
+     */
+    public Result switchToDebug(){
+        getAuditLoggerService().changeLogLevelToDebug(getConfiguration().getInt("maf.audit.application.log.debug.duration"));
+        return redirect(routes.AuditableController.listAuditable());
+    }
+    
+    /**
      * Display a list of Auditable.
      */
     public Result listAuditable() {
         try {
             Table<Auditable> table = tableTemplate.fill(getAuditLoggerService().getAllActiveAuditable());
-            return ok(views.html.admin.audit.auditable_table.render(table));
+            return ok(views.html.admin.audit.auditable_table.render(table, getAuditLoggerService().isLogLevelDebug()));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }

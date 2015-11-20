@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(table: framework.utils.Table[framework.services.audit.Auditable])
+@(table: framework.utils.Table[framework.services.audit.Auditable], debugLogEnabled: Boolean)
 
 @import helper._
 @import bootstrap3._
@@ -72,6 +72,31 @@
         </div>
         <div class="panel-body">
             @parts.table.tableview(table)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("admin.auditable.logging.title")
+        </div>
+        <div class="panel-body">
+        	<p>
+        	Log level&nbsp;
+        	@if(debugLogEnabled){
+        		<ul class="list-group">
+  					<li class="list-group-item"><span class="label label-warning">DEBUG</span></li>
+  				</ul>
+        	}else{
+        		<ul class="list-group">
+  					<li class="list-group-item"><span class="label label-warning">STANDARD</span></li>
+  					<li class="list-group-item"><a href="@controllers.admin.routes.AuditableController.switchToDebug()" class="btn btn-primary">@parts.Msg("admin.auditable.switchdebug.label")</a></li>
+  				</ul>
+  				<br/>
+        	}
+        	</p>
+        	<p>
+            <a href="@controllers.admin.routes.AuditableController.downloadApplicationLog()" class="btn btn-primary"><i class="glyphicons glyphicons-disk-save"></i>&nbsp;@parts.Msg("admin.auditable.download.label")</a>
+            </p>
         </div>
     </div>
 

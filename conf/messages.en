@@ -106,6 +106,11 @@ form.input.file_field.type.label=Type
 form.input.file_field.type.UPLOAD.label=<span class="glyphicons glyphicons-upload"></span> Upload
 form.input.file_field.type.URL.label=<span class="glyphicons glyphicons-link"></span> URL
 form.input.file_field.file.label=File
+form.input.file_field.label=Upload a new file
+form.input.file_field.file.size.invalid=Cannot upload, the file size is limited to {0}
+form.input.file_field.no_file=No file was selected
+form.input.file_field.success=File successfully uploaded
+form.input.file_field.file.size.warning=The file size is limited to {0}
 
 #----------------------
 # default messages
@@ -3054,12 +3059,8 @@ admin.shared_storage.view.file.last_modified.label=Last update
 admin.shared_storage.view.file.size.label=Size
 
 #shared storage: upload file
-admin.shared_storage.upload.file.label=Upload a new file
 admin.shared_storage.upload.file.help=The file size is limited to {0} and you cannot upload more than {1} files
-admin.shared_storage.upload.file.size.invalid=Cannot upload, the file size is limited to {0}
 admin.shared_storage.upload.error.max_number=Too much files in this folder, please delete a file before uploading a new one
-admin.shared_storage.upload.no_file=No file was selected
-admin.shared_storage.upload.success=File succesfully upoaded
 
 #shared storage: delete file
 admin.shared_storage.delete.success=File deleted
@@ -3249,3 +3250,9 @@ admin.auditable.export.notification.success.message=The audit log archive has be
 admin.auditable.export.notification.error.title=Export audit log error
 admin.auditable.export.notification.error.message=The system failed to export your audit log archive, please contact your administrator
 admin.auditable.export.notification.not_found.message=No audit logs found for this system, have you activated the audit log for any object ?
+
+#logging
+admin.auditable.logging.title=Application logs
+admin.auditable.switchdebug.label=Switch to debug
+admin.auditable.download.label=Download
+

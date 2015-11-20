@@ -806,13 +806,13 @@ public class PluginManagerController extends Controller {
                             if(log.isDebugEnabled()){
                                 log.debug("Plugin configuration uploaded");
                             }
-                            Utilities.sendSuccessFlashMessage(Msg.get("admin.shared_storage.upload.success"));
+                            Utilities.sendSuccessFlashMessage(Msg.get("form.input.file_field.success"));
                         }catch(PluginException e){
                             log.error("Attempt to upload an invalid plugin configuration for "+pluginConfigurationId,e);
                             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration_block.import.error"));
                         }
                     } else {
-                        Utilities.sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.no_file"));
+                        Utilities.sendErrorFlashMessage(Msg.get("form.input.file_field.no_file"));
                     }
                 } catch (Exception e) {
                     Utilities

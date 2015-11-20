@@ -26,7 +26,7 @@
     <div class="form-group">
         @helper.form(action = controllers.admin.routes.SharedStorageManagerController.upload(isInput), 'enctype -> "multipart/form-data") {
             <fieldset>
-                <label for="@folderName">@parts.Msg("admin.shared_storage.upload.file.label")</label>
+                <label for="@folderName">@parts.Msg("form.input.file_field.label")</label>
                 <input type="file" id="@folderName" name="@folderName"/>
                 <span class="help-block"><strong>@parts.Msg("admin.shared_storage.upload.file.help",org.apache.commons.io.FileUtils.byteCountToDisplaySize(controllers.admin.SharedStorageManagerController.MAX_FILE_SIZE),""+maxFileNumber)</strong></span>
                 <input id="upload" type="submit" value="@parts.Msg("button.upload")" class="btn btn-primary"/>
@@ -37,7 +37,7 @@
     <script type="text/javascript">
     $('#@folderName').bind('change', function() {
           if(this.files[0].size>@controllers.admin.SharedStorageManagerController.MAX_FILE_SIZE){
-              alert("@parts.Msg("admin.shared_storage.upload.file.size.invalid",
+              alert("@parts.Msg("form.input.file_field.file.size.invalid",
                       org.apache.commons.io.FileUtils.byteCountToDisplaySize(controllers.admin.SharedStorageManagerController.MAX_FILE_SIZE))");
               $('#upload').attr("disabled", true);
           }else{
