@@ -1720,8 +1720,8 @@ INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_r
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.budget', 'de', 'Risiko - Budget.');
 
 -- Table life_cycle_process
-insert into life_cycle_process(id, deleted, short_name, name, description, is_active, last_update) values (5, 0, 'life_cycle_process.short_name.default', 'life_cycle_process.short_name.default', 'life_cycle_process.description.default', 1, CURRENT_TIMESTAMP);
-insert into life_cycle_process(id, deleted, short_name, name, description, is_active, is_release, last_update) values (6, 0, 'life_cycle_process.short_name.release', 'life_cycle_process.short_name.release', 'life_cycle_process.description.release', 1, 1, CURRENT_TIMESTAMP);
+insert into life_cycle_process(id, deleted, short_name, name, description, is_active, last_update) values (5, 0, 'life_cycle_process.short_name.default', 'life_cycle_process.name.default', 'life_cycle_process.description.default', 1, CURRENT_TIMESTAMP);
+insert into life_cycle_process(id, deleted, short_name, name, description, is_active, is_release, last_update) values (6, 0, 'life_cycle_process.short_name.release', 'life_cycle_process.name.release', 'life_cycle_process.description.release', 1, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'en', 'Default');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'fr', 'Standard');
