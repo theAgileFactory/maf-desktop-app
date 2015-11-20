@@ -572,7 +572,7 @@ public class PortfolioEntryGovernanceController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         return ok(views.html.core.portfolioentrygovernance.life_cycle_process_change.render(portfolioEntry, changeProcessFormTemplate,
-                LifeCycleProcessDao.getLCProcessActiveAsVH()));
+                LifeCycleProcessDao.getLCProcessActiveAsVH(portfolioEntry.portfolioEntryType.isRelease)));
     }
 
     /**
