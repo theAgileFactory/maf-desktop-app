@@ -22,6 +22,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.api.core.RootApiController;
+import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.LifeCyclePlanningDao;
+import dao.governance.LifeCycleProcessDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.governance.LifeCycleInstance;
 import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCycleMilestone;
@@ -40,17 +53,6 @@ import utils.table.LifeCycleMilestoneInstanceStatusTypeListView;
 import utils.table.LifeCycleMilestoneListView;
 import utils.table.LifeCyclePhaseListView;
 import utils.table.LifeCycleProcessListView;
-import constants.IMafConstants;
-import controllers.api.core.RootApiController;
-import dao.governance.LifeCycleMilestoneDao;
-import dao.governance.LifeCyclePlanningDao;
-import dao.governance.LifeCycleProcessDao;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 
 /**
  * Manage the portfolios and portfolio entries reference data.
@@ -68,7 +70,7 @@ public class ConfigurationGovernanceController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
-    
+
     /**
      * Display the lists of data (LifeCycleProcess,
      * LifeCycleMilestoneInstanceStatusType).
@@ -611,6 +613,28 @@ public class ConfigurationGovernanceController extends Controller {
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(phase.lifeCycleProcess.id));
     }
 
+    /**
+     * Get the life cycle milestone types as a value holder collection.
+     * 
+     * Note: return null if there is no type.
+     * 
+     * @param isRelease
+     *            true to get type for release process, false for initiative
+     *            process.
+     */
+    public static DefaultSelectableValueHolderCollection<String> getLifeCycleMilestoneTypeAsVHC(boolean isRelease) {
+        DefaultSelectableValueHolderCollection<String> types = new DefaultSelectableValueHolderCollection<String>();
+        for (LifeCycleMilestone.Type type : LifeCycleMilestone.Type.values()) {
+            if (type.isRelease == isRelease) {
+                types.add(new DefaultSelectableValueHolder<String>(type.name(), type.getLabel()));
+            }
+        }
+        return types.getSortedValues().size() > 0 ? types : null;
+    }
+
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }

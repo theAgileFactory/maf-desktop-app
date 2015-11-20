@@ -20,9 +20,6 @@ package utils.table;
 import java.text.MessageFormat;
 import java.util.List;
 
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstanceStatusType;
-import models.pmo.Actor;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -31,6 +28,9 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.governance.LifeCycleMilestone;
+import models.governance.LifeCycleMilestoneInstanceStatusType;
+import models.pmo.Actor;
 
 /**
  * An life cycle milestone list view is used to display a life cycle milestone
@@ -67,6 +67,18 @@ public class LifeCycleMilestoneListView {
             addColumn("description", "description", "object.life_cycle_milestone.description.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("description", new ObjectFormatter<LifeCycleMilestoneListView>());
 
+            addColumn("type", "type", "object.life_cycle_milestone.type.label", Table.ColumnDef.SorterType.NONE);
+            setJavaColumnFormatter("type", new IColumnFormatter<LifeCycleMilestoneListView>() {
+                @Override
+                public String apply(LifeCycleMilestoneListView lifeCycleMilestoneListView, Object value) {
+                    if (lifeCycleMilestoneListView.type != null) {
+                        return lifeCycleMilestoneListView.type.getLabel();
+                    } else {
+                        return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
+                    }
+                }
+            });
+
             addColumn("isReviewRequired", "isReviewRequired", "object.life_cycle_milestone.is_review_required.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("isReviewRequired", new BooleanFormatter<LifeCycleMilestoneListView>());
 
@@ -87,12 +99,12 @@ public class LifeCycleMilestoneListView {
             addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("editActionLink", new StringFormatFormatter<LifeCycleMilestoneListView>(IMafConstants.EDIT_URL_FORMAT,
                     new StringFormatFormatter.Hook<LifeCycleMilestoneListView>() {
-                        @Override
-                        public String convert(LifeCycleMilestoneListView lifeCycleMilestoneListView) {
-                            return controllers.admin.routes.ConfigurationGovernanceController.manageMilestone(lifeCycleMilestoneListView.lifeCycleProcessId,
-                                    lifeCycleMilestoneListView.id).url();
-                        }
-                    }));
+                @Override
+                public String convert(LifeCycleMilestoneListView lifeCycleMilestoneListView) {
+                    return controllers.admin.routes.ConfigurationGovernanceController
+                            .manageMilestone(lifeCycleMilestoneListView.lifeCycleProcessId, lifeCycleMilestoneListView.id).url();
+                }
+            }));
             setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
             setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
@@ -100,8 +112,8 @@ public class LifeCycleMilestoneListView {
             setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<LifeCycleMilestoneListView>() {
                 @Override
                 public String apply(LifeCycleMilestoneListView lifeCycleMilestoneListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
                     String url = controllers.admin.routes.ConfigurationGovernanceController.deleteMilestone(lifeCycleMilestoneListView.id).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 }
@@ -137,6 +149,8 @@ public class LifeCycleMilestoneListView {
 
     public boolean isActive;
 
+    public LifeCycleMilestone.Type type;
+
     public List<Actor> approvers;
 
     /**
@@ -158,6 +172,7 @@ public class LifeCycleMilestoneListView {
         this.defaultStatusType = lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType;
         this.isActive = lifeCycleMilestone.isActive;
         this.approvers = lifeCycleMilestone.approvers;
+        this.type = lifeCycleMilestone.type;
 
     }
 }
