@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.governance.LifeCycleProcess;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.governance.LifeCycleProcess;
 
 /**
  * An life cycle process list view is used to display a life cycle process row
@@ -53,14 +53,17 @@ public class LifeCycleProcessListView {
             addColumn("isActive", "isActive", "object.life_cycle_process.is_active.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("isActive", new BooleanFormatter<LifeCycleProcessListView>());
 
+            addColumn("isRelease", "isRelease", "object.life_cycle_process.is_release.label", Table.ColumnDef.SorterType.NONE);
+            setJavaColumnFormatter("isRelease", new BooleanFormatter<LifeCycleProcessListView>());
+
             addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("editActionLink", new StringFormatFormatter<LifeCycleProcessListView>(IMafConstants.EDIT_URL_FORMAT,
                     new StringFormatFormatter.Hook<LifeCycleProcessListView>() {
-                        @Override
-                        public String convert(LifeCycleProcessListView lifeCycleProcessListView) {
-                            return controllers.admin.routes.ConfigurationGovernanceController.manageLifeCycleProcess(lifeCycleProcessListView.id).url();
-                        }
-                    }));
+                @Override
+                public String convert(LifeCycleProcessListView lifeCycleProcessListView) {
+                    return controllers.admin.routes.ConfigurationGovernanceController.manageLifeCycleProcess(lifeCycleProcessListView.id).url();
+                }
+            }));
             setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
             setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -68,8 +71,8 @@ public class LifeCycleProcessListView {
             setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<LifeCycleProcessListView>() {
                 @Override
                 public String apply(LifeCycleProcessListView lifeCycleProcessListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
                     String url = controllers.admin.routes.ConfigurationGovernanceController.deleteLifeCycleProcess(lifeCycleProcessListView.id).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 }
@@ -105,6 +108,8 @@ public class LifeCycleProcessListView {
 
     public boolean isActive;
 
+    public boolean isRelease;
+
     /**
      * Construct a list view with a DB entry.
      * 
@@ -118,6 +123,7 @@ public class LifeCycleProcessListView {
         this.name = lifeCycleProcess.name;
         this.description = lifeCycleProcess.description;
         this.isActive = lifeCycleProcess.isActive;
+        this.isRelease = lifeCycleProcess.isRelease;
 
     }
 }
