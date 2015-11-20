@@ -32,6 +32,8 @@ import framework.services.account.IAuthenticationAccountWriterPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.LightAuthenticationAccountReaderPlugin;
 import framework.services.account.LightAuthenticationAccountWriterPlugin;
+import framework.services.action_log.ActionLogServiceImpl;
+import framework.services.action_log.IActionLogService;
 import framework.services.actor.ActorSystemPluginImpl;
 import framework.services.actor.IActorSystemPlugin;
 import framework.services.api.ApiControllerUtilsServiceImpl;
@@ -84,6 +86,8 @@ import play.Logger;
 import play.db.ebean.DefaultEbeanConfig;
 import play.db.ebean.EbeanConfig;
 import security.SecurityServiceImpl;
+import services.action_log.IMafActionLogService;
+import services.action_log.MafActionLogServiceImpl;
 import services.bizdockapi.BizdockApiClientImpl;
 import services.bizdockapi.IBizdockApiClient;
 import services.configuration.ImplementationDefinedObjectImpl;
@@ -147,6 +151,9 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(I18nMessages.class).to(DefaultI18nMessages.class).asEagerSingleton();
 
         bind(ITopMenuBarService.class).to(TopMenuBarService.class).asEagerSingleton();
+
+        bind(IActionLogService.class).to(ActionLogServiceImpl.class).asEagerSingleton();
+        bind(IMafActionLogService.class).to(MafActionLogServiceImpl.class).asEagerSingleton();
 
         bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
         bind(IPreferenceManagerPlugin.class).to(DefaultPreferenceManagementPlugin.class).asEagerSingleton();
@@ -299,6 +306,8 @@ public class ApplicationServicesModule extends FrameworkModule {
                 ImmutableMap.<String, String> builder().put("name", "object.work_order.name.label").put("currency", "object.work_order.currency.label")
                         .put("amount", "object.work_order.amount.label").put("isOpex", "object.work_order.is_opex.label")
                         .put("shared", "object.work_order.shared.label").put("amountReceived", "object.work_order.amount_received.label").build());
+        MafDataType.add(IMafConstants.Deliverable, "models.delivery.Deliverable", false, true,
+                ImmutableMap.<String, String> builder().put("name", "object.deliverable.name.label").build());
 
     }
 
