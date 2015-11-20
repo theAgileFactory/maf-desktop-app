@@ -20,9 +20,6 @@ package controllers.api.core;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-import models.pmo.PortfolioEntryType;
-import play.mvc.Result;
-
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -34,6 +31,8 @@ import controllers.api.ApiController;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
+import models.pmo.PortfolioEntryType;
+import play.mvc.Result;
 
 /**
  * The API controller for the {@link PortfolioEntryType}.
@@ -49,15 +48,19 @@ public class PortfolioEntryTypeApiController extends ApiController {
      * @param selectable
      *            true to return only active portfolio entry type, false only
      *            non-active, null all.
+     * @param isRelease
+     *            true to return only release portfolio entry type, false only
+     *            initiative, null all.
      */
     @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
     @ApiOperation(value = "list the Portfolio Entry Types", notes = "Return the list of Portfolio Entry Types in the system",
             response = PortfolioEntryType.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public Result getPortfolioEntryTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
+    public Result getPortfolioEntryTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable,
+            @ApiParam(value = "isRelease", required = false) @QueryParam("isRelease") Boolean isRelease) {
         try {
-            return getJsonSuccessResponse(PortfolioEntryDao.getPETypeAsListByFilter(selectable));
+            return getJsonSuccessResponse(PortfolioEntryDao.getPETypeAsListByFilter(selectable, isRelease));
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
         }

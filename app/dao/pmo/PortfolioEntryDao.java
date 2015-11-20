@@ -499,10 +499,17 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
-     * Get all portfolio entry types.
+     * Get all portfolio entry types for initiatives.
      */
-    public static List<PortfolioEntryType> getPETypeAsList() {
-        return findPortfolioEntryType.where().eq("deleted", false).findList();
+    public static List<PortfolioEntryType> getPETypeInitiativeAsList() {
+        return findPortfolioEntryType.where().eq("deleted", false).eq("isRelease", false).findList();
+    }
+
+    /**
+     * Get all portfolio entry types for releases.
+     */
+    public static List<PortfolioEntryType> getPETypeReleaseAsList() {
+        return findPortfolioEntryType.where().eq("deleted", false).eq("isRelease", true).findList();
     }
 
     /**
@@ -525,13 +532,19 @@ public abstract class PortfolioEntryDao {
      * @param isActive
      *            true to return only active portfolio entry type, false only
      *            non-active, null all.
+     * @param isRelease
+     *            true to return only release portfolio entry type, false only
+     *            initiative, null all.
      */
-    public static List<PortfolioEntryType> getPETypeAsListByFilter(Boolean isActive) {
+    public static List<PortfolioEntryType> getPETypeAsListByFilter(Boolean isActive, Boolean isRelease) {
+        ExpressionList<PortfolioEntryType> e = findPortfolioEntryType.where().eq("deleted", false);
         if (isActive != null) {
-            return findPortfolioEntryType.where().eq("deleted", false).eq("selectable", isActive).findList();
-        } else {
-            return getPETypeAsList();
+            e = e.eq("isActive", isActive);
         }
+        if (isRelease != null) {
+            e = e.eq("isRelease", isRelease);
+        }
+        return e.findList();
     }
 
     /**
