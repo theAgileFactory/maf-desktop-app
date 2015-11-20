@@ -1192,6 +1192,7 @@ object.life_cycle_milestone.default_status_type.label=Standardstatus
 object.life_cycle_milestone.is_active.label=Aktiv
 object.life_cycle_milestone.approvers.label=Approvers
 object.life_cycle_milestone.type.label=Typ
+object.life_cycle_milestone.type.invalid=de: This type has been already selected by another milestone of the process
 object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=de: Implementation start date
 object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=de: Implementation end date
 object.life_cycle_milestone.table.empty=Kein Meilenstein eingetragen

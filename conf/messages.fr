@@ -1192,6 +1192,7 @@ object.life_cycle_milestone.default_status_type.label=Type de status par défaut
 object.life_cycle_milestone.is_active.label=Actif
 object.life_cycle_milestone.approvers.label=Approbateurs
 object.life_cycle_milestone.type.label=Type
+object.life_cycle_milestone.type.invalid=Ce type a déjà été sélectionné par un autre jalon du processus
 object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Date de début d''implémentation
 object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=Date de fin d''implémentation
 object.life_cycle_milestone.table.empty=Il n''existe aucun jalon.

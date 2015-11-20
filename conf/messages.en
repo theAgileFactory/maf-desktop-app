@@ -1180,6 +1180,7 @@ object.life_cycle_milestone.default_status_type.label=Default status type
 object.life_cycle_milestone.is_active.label=Active
 object.life_cycle_milestone.approvers.label=Approvers
 object.life_cycle_milestone.type.label=Type
+object.life_cycle_milestone.type.invalid=This type has been already selected by another milestone of the process
 object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Implementation start date
 object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=Implementation end date
 object.life_cycle_milestone.table.empty=There is no milestone.
