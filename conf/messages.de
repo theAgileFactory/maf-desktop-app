@@ -2786,7 +2786,8 @@ admin.configuration.roles.delete.successful=Funktion gelöscht.
 #helpers
 admin.configuration.reference_data.title=Referenzdaten
 admin.configuration.reference_data.portfolio.title=Initiative & Portfolio
-admin.configuration.reference_data.portfolio.portfolioentrytypes.title=Initiative Typen
+admin.configuration.reference_data.portfolio.initiativetypes.title=Initiative Typen
+admin.configuration.reference_data.portfolio.releasetypes.title=Release Typen
 admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Initiative Abhängigkeitstypen
 admin.configuration.reference_data.portfolio.portfoliotypes.title=Portfolio Typen
 admin.configuration.reference_data.actorsandorgunits.title=Mitarbeiter & Organisationseinheit
@@ -2816,10 +2817,11 @@ admin.configuration.reference_data.timesheetactivities.types.title=Typen
 admin.configuration.reference_data.timesheetactivities.activities.title=Aktivitäten
 
 #manage portfolio entry type
-admin.configuration.reference_data.portfolioentrytype.manage.title=Initiative Typen bearbeiten
-admin.configuration.reference_data.portfolioentrytype.add.successful=Der Initiative Typ wurde hinzugefügt.
-admin.configuration.reference_data.portfolioentrytype.edit.successful=Der Initiative Typ wurde aktualisiert.
-admin.configuration.reference_data.portfolioentrytype.delete.successful=Der Initiative Typ wurde entfernt.
+admin.configuration.reference_data.initiativetype.manage.title=Initiative Typen bearbeiten
+admin.configuration.reference_data.releasetype.manage.title=Release Typen bearbeiten
+admin.configuration.reference_data.portfolioentrytype.add.successful=Der Typ wurde hinzugefügt.
+admin.configuration.reference_data.portfolioentrytype.edit.successful=Der Typ wurde aktualisiert.
+admin.configuration.reference_data.portfolioentrytype.delete.successful=Der Typ wurde entfernt.
 
 #manage portfolio entry dependency type
 admin.configuration.reference_data.portfolioentrydependencytype.manage.title=Abhängigkeitstyp bearbeiten
