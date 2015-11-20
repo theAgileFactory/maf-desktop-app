@@ -1023,8 +1023,8 @@ object.timesheet_log.table.empty=Aucune entrée
 # portfolioEntry
 #----------------------
 
-object.portfolio_entry.is_condfidential.label=Initiative confidentielle
-object.portfolio_entry.is_condfidential.help=Une initiative confidentielle n''est pas visible par les utilisateurs qui n''y participent pas.
+object.portfolio_entry.is_condfidential.label=Confidentielle
+object.portfolio_entry.is_condfidential.help=Si confidentielle alors pas visible par les utilisateurs qui n''y participent pas.
 object.portfolio_entry.is_active.label=Active
 object.portfolio_entry.governance_id.label=No de gouvernance
 object.portfolio_entry.erp_ref_id.label=No ERP
@@ -1033,7 +1033,7 @@ object.portfolio_entry.is_public.label=Publique
 object.portfolio_entry.name.label=Nom
 object.portfolio_entry.description.label=Description
 object.portfolio_entry.type.label=Type
-object.portfolio_entry.manager.label=Responsable de l''initiative
+object.portfolio_entry.manager.label=Responsable
 object.portfolio_entry.sponsoring_unit.label=Client interne
 object.portfolio_entry.delivery_units.label=Fournisseur(s) interne(s)
 object.portfolio_entry.portfolio.label=Portefeuille
@@ -2150,13 +2150,21 @@ core.portfolio_entry.breadcrump.manage=Gérer
 core.portfolio_entry.breadcrump.view=Détails
 core.portfolio_entry.breadcrump.new=Nouveau
 
-#create
-core.portfolio_entry.create.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Soumettre une nouvelle initiative
-core.portfolio_entry.create.title=Soumettre une nouvelle initiative
-core.portfolio_entry.create.success.message=Votre initiative a été soumise
-core.portfolio_entry.create.notification.title=Nouvelle initiative
-core.portfolio_entry.create.notification.message=Une nouvelle initiative a été ajoutée à votre portefeuille {0}
-core.portfolio_entry.create.notification.manager.message=Une nouvelle initiative vous a été assignée.
+#create initiative
+core.portfolio_entry.create.initiative.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Soumettre une nouvelle initiative
+core.portfolio_entry.create.initiative.title=Soumettre une nouvelle initiative
+core.portfolio_entry.create.initiative.success.message=Votre initiative a été soumise
+core.portfolio_entry.create.initiative.notification.title=Nouvelle initiative
+core.portfolio_entry.create.initiative.notification.message=Une nouvelle initiative a été ajoutée à votre portefeuille {0}
+core.portfolio_entry.create.initiative.notification.manager.message=Une nouvelle initiative vous a été assignée.
+
+#create release
+core.portfolio_entry.create.release.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Soumettre une nouvelle release
+core.portfolio_entry.create.release.title=Soumettre une nouvelle release
+core.portfolio_entry.create.release.success.message=Votre release a été soumise
+core.portfolio_entry.create.release.notification.title=Nouvelle release
+core.portfolio_entry.create.release.notification.message=Une nouvelle release a été ajoutée à votre portefeuille {0}
+core.portfolio_entry.create.release.notification.manager.message=Une nouvelle release vous a été assignée.
 
 #overview
 core.portfolio_entry.overview.milestones_trend.panel.title=Tendance des jalons

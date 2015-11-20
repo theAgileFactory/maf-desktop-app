@@ -499,14 +499,14 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
-     * Get all portfolio entry types for initiatives.
+     * Get all initiative types.
      */
     public static List<PortfolioEntryType> getPETypeInitiativeAsList() {
         return findPortfolioEntryType.where().eq("deleted", false).eq("isRelease", false).findList();
     }
 
     /**
-     * Get all portfolio entry types for releases.
+     * Get all release types.
      */
     public static List<PortfolioEntryType> getPETypeReleaseAsList() {
         return findPortfolioEntryType.where().eq("deleted", false).eq("isRelease", true).findList();
@@ -524,6 +524,17 @@ public abstract class PortfolioEntryDao {
      */
     public static ISelectableValueHolderCollection<Long> getPETypeActiveAsVH() {
         return new DefaultSelectableValueHolderCollection<>(getPETypeActiveAsList());
+    }
+
+    /**
+     * Get active portfolio entry types as value holder collection.
+     * 
+     * @param isRelease
+     *            true for release, false for initiative
+     */
+    public static ISelectableValueHolderCollection<Long> getPETypeActiveAsVH(boolean isRelease) {
+        return new DefaultSelectableValueHolderCollection<>(
+                findPortfolioEntryType.where().eq("deleted", false).eq("selectable", true).eq("isRelease", isRelease).findList());
     }
 
     /**

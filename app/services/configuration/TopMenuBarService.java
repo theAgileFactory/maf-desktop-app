@@ -245,12 +245,12 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         }
 
         ClickableMenuItem newInitiativeMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.initiative.menu.label",
-                controllers.core.routes.PortfolioEntryController.create(), "glyphicons glyphicons-wallet", false);
+                controllers.core.routes.PortfolioEntryController.create(false), "glyphicons glyphicons-wallet", false);
         newInitiativeMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
         newMenuItem.addSubMenuItem(newInitiativeMenuItem);
 
         ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(2), "topmenubar.new.release.menu.label",
-                controllers.core.routes.PortfolioEntryController.create(), "glyphicons glyphicons-git-branch", false);
+                controllers.core.routes.PortfolioEntryController.create(true), "glyphicons glyphicons-git-branch", false);
         newReleaseMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
         newMenuItem.addSubMenuItem(newReleaseMenuItem);
 

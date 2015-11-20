@@ -213,7 +213,7 @@ POST   /roadmap/simulator/capacity-forecast/cell/details/fragment    controllers
 # Core: PortfolioEntry
 #-------------------
 
-GET    /portfolio-entry/create             controllers.core.PortfolioEntryController.create()
+GET    /portfolio-entry/create             controllers.core.PortfolioEntryController.create(isRelease: Boolean ?= false)
 POST   /portfolio-entry/create             controllers.core.PortfolioEntryController.processCreate()
 GET    /portfolio-entry/overview           controllers.core.PortfolioEntryController.overview(id: Long)
 GET    /portfolio-entry/view               controllers.core.PortfolioEntryController.view(id: Long, attachmentPage: Integer ?= 0)

@@ -19,11 +19,12 @@ package dao.governance;
 
 import java.util.List;
 
-import models.governance.LifeCycleInstance;
-import models.governance.LifeCycleProcess;
 import com.avaje.ebean.Model.Finder;
+
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
+import models.governance.LifeCycleInstance;
+import models.governance.LifeCycleProcess;
 
 /**
  * DAO for the {@link LifeCycleInstance} and {@link LifeCycleProcess} objects.
@@ -69,6 +70,17 @@ public abstract class LifeCycleProcessDao {
      */
     public static ISelectableValueHolderCollection<Long> getLCProcessActiveAsVH() {
         return new DefaultSelectableValueHolderCollection<>(getLCProcessActiveAsList());
+    }
+
+    /**
+     * Get all active life cycle process as value holder collection.
+     * 
+     * @param isRelease
+     *            true for release process, false for initiative process
+     */
+    public static ISelectableValueHolderCollection<Long> getLCProcessActiveAsVH(boolean isRelease) {
+        return new DefaultSelectableValueHolderCollection<>(
+                findLifeCycleProcess.where().eq("deleted", false).eq("isActive", true).eq("isRelease", isRelease).findList());
     }
 
 }
