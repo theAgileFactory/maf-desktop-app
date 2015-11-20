@@ -30,7 +30,7 @@ INSERT INTO `system_level_role_type` (`name`,`description`,`deleted`,`selectable
 VALUES ('VIEWER_ROLE','role.viewer_role.description',0,0,NOW(),'VIEWER');
 
 #Associations role to permission
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -38,7 +38,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -46,7 +46,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -54,7 +54,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -62,7 +62,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -70,7 +70,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -78,7 +78,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -86,7 +86,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_SIMULATOR_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -94,7 +94,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='API_MANAGER_PERMISSION ')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -102,7 +102,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='API_TESTER_PERMISSION  ')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -110,7 +110,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -118,7 +118,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -126,7 +126,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -134,7 +134,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -142,7 +142,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -150,7 +150,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -158,7 +158,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_DELETE_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -166,7 +166,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PURCHASE_ORDER_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -174,7 +174,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_USER_ADMINISTRATION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -182,7 +182,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_HUB_MONITORING_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -190,7 +190,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_AUDIT_LOG_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -198,7 +198,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -206,7 +206,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_PROVISIONING_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -214,7 +214,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SCM_DEVELOPER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -222,7 +222,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SCM_ADMIN_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -230,7 +230,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='JENKINS_DEPLOY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -238,7 +238,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_SUBMISSION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -246,7 +246,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_CONFIGURATION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -254,7 +254,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_CUSTOM_ATTRIBUTE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -262,7 +262,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_PLUGIN_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -270,7 +270,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ADMIN_KPI_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -278,7 +278,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_APPROVAL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -286,7 +286,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_DECIDE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -294,7 +294,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_OVERVIEW_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -302,7 +302,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -310,7 +310,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -318,7 +318,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -326,7 +326,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -334,7 +334,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -342,7 +342,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -350,7 +350,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -358,7 +358,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -366,7 +366,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -374,7 +374,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -382,7 +382,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -390,7 +390,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -398,7 +398,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_ADMINISTRATION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -406,7 +406,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -414,7 +414,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_APPROVAL_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -422,7 +422,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_LOCK_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -430,7 +430,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PARTNER_SYNDICATION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -438,7 +438,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_SIMULATOR_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -446,7 +446,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -454,7 +454,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -462,7 +462,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -470,7 +470,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -478,7 +478,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -486,7 +486,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -494,7 +494,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_DELETE_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -502,7 +502,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PURCHASE_ORDER_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -510,7 +510,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -518,7 +518,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_SUBMISSION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -526,7 +526,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_APPROVAL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -534,7 +534,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_DECIDE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -542,7 +542,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_OVERVIEW_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -550,7 +550,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -558,7 +558,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -566,7 +566,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -574,7 +574,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -582,7 +582,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -590,7 +590,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -598,7 +598,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -606,7 +606,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -614,7 +614,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -622,7 +622,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -630,7 +630,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -638,7 +638,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_VIEW_AS_VIEWER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -646,7 +646,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -654,7 +654,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_APPROVAL_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -662,7 +662,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_LOCK_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -670,7 +670,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_SIMULATOR_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -678,7 +678,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -686,7 +686,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -694,7 +694,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -702,7 +702,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_PORTFOLIO_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -710,7 +710,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_PORTFOLIO_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -718,7 +718,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -726,7 +726,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_SUBMISSION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -734,7 +734,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_APPROVAL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -742,7 +742,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_OVERVIEW_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -750,7 +750,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -758,7 +758,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -766,7 +766,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_VIEW_AS_SUPERIOR_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -774,7 +774,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -782,7 +782,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -790,7 +790,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -798,7 +798,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -806,7 +806,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -814,7 +814,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_EDIT_AS_OWNER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -822,7 +822,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_VIEW_AS_VIEWER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -830,7 +830,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -838,7 +838,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -846,7 +846,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -854,7 +854,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -862,7 +862,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -870,7 +870,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -878,7 +878,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -886,7 +886,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -894,7 +894,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -902,7 +902,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -910,7 +910,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -918,7 +918,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SCM_DEVELOPER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -926,7 +926,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SCM_ADMIN_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -934,7 +934,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='JENKINS_DEPLOY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -942,7 +942,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -950,7 +950,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_VIEW_AS_SUPERIOR_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -958,7 +958,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -966,7 +966,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -974,7 +974,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_VIEW_AS_VIEWER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -982,7 +982,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -990,7 +990,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -998,7 +998,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1006,7 +1006,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1014,7 +1014,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1022,7 +1022,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1030,7 +1030,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1038,7 +1038,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1046,7 +1046,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1054,7 +1054,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_VIEW_AS_SUPERIOR_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1062,7 +1062,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1070,7 +1070,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1078,7 +1078,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_VIEW_AS_VIEWER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1086,7 +1086,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1094,7 +1094,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1102,7 +1102,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1110,7 +1110,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1118,7 +1118,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1126,7 +1126,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SCM_DEVELOPER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1134,7 +1134,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='JENKINS_VIEWER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1142,7 +1142,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1150,7 +1150,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1158,7 +1158,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1166,7 +1166,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_SIMULATOR_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1174,7 +1174,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1182,7 +1182,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_ALL_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1190,7 +1190,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION ')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1198,7 +1198,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1206,7 +1206,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1214,7 +1214,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_DETAILS_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1222,7 +1222,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1230,7 +1230,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1238,7 +1238,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1246,7 +1246,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_SUBMISSION_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1254,7 +1254,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_APPROVAL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1262,7 +1262,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='MILESTONE_OVERVIEW_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1270,7 +1270,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1278,7 +1278,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_VIEW_AS_SUPERIOR_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1286,7 +1286,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1294,7 +1294,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1302,7 +1302,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1310,7 +1310,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_VIEW_AS_VIEWER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1318,7 +1318,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1326,7 +1326,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION')
 );
-		INSERT INTO `system_level_role_type_has_system_permission`
+        INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1334,7 +1334,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1342,7 +1342,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1350,7 +1350,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1358,7 +1358,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1366,7 +1366,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PURCHASE_ORDER_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1374,7 +1374,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1382,7 +1382,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='SEARCH_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1390,7 +1390,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ACTOR_VIEW_AS_SUPERIOR_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1398,7 +1398,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1406,7 +1406,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_DETAILS_AS_STAKEHOLDER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1414,7 +1414,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1422,7 +1422,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_VIEW_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1430,7 +1430,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='BUDGET_BUCKET_EDIT_ALL_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1438,7 +1438,7 @@ VALUES
 (select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='REPORTING_VIEW_AS_VIEWER_PERMISSION')
 );
-	INSERT INTO `system_level_role_type_has_system_permission`
+    INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
 `system_permission_id`)
 VALUES
@@ -1983,6 +1983,7 @@ INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES (
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('orgunitsload1', 'services.plugins.system.orgunitsload1.OrgUnitLoaderPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('finance1', 'services.plugins.system.finance1.FinanceErpIntegrationPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('notification1', 'services.plugins.system.notification1.EventNotificationPluginRunner', '0');
+INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('genint1', 'services.plugins.system.genint1.GenericExternalIntegrationPluginRunner', '0');
 
 -- API root key
 
@@ -1992,3 +1993,4 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 SET SQL_SAFE_UPDATES = 1;
+
