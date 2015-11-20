@@ -37,7 +37,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
             return name() + "-" + index;
         }
     }
-    
+
     @Inject
     public TopMenuBarService(ApplicationLifecycle lifecycle, Configuration configuration, IPreferenceManagerPlugin preferenceManagerPlugin,
             IUserSessionManagerPlugin userSessionManagerPlugin) {
@@ -59,13 +59,13 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
 
     @Override
     public void addToolMenuItem(MenuItem menuItem) {
-        //Add to the tools menu
+        // Add to the tools menu
         toolsMenuItem.addSubMenuItem(menuItem);
     }
 
     @Override
     public void removeToolMenuItem(String uuid) {
-        //Remove from the tools menu
+        // Remove from the tools menu
         toolsMenuItem.removeSubMenuItems(uuid);
     }
 
@@ -245,31 +245,36 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         }
 
         ClickableMenuItem newInitiativeMenuItem = new ClickableMenuItem(TopMenus.NEW.name(1), "topmenubar.new.initiative.menu.label",
-                controllers.core.routes.PortfolioEntryController.create(), "glyphicons glyphicons-wallet", false);
+                controllers.core.routes.PortfolioEntryController.create(false), "glyphicons glyphicons-wallet", false);
         newInitiativeMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
         newMenuItem.addSubMenuItem(newInitiativeMenuItem);
+
+        ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(2), "topmenubar.new.release.menu.label",
+                controllers.core.routes.PortfolioEntryController.create(true), "glyphicons glyphicons-git-branch", false);
+        newReleaseMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
+        newMenuItem.addSubMenuItem(newReleaseMenuItem);
 
         SeparatorMenuItem newSeparatorMenuItem = new SeparatorMenuItem();
         newSeparatorMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION,
                 IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newSeparatorMenuItem);
 
-        ClickableMenuItem newActorMenuItem = new ClickableMenuItem(TopMenus.NEW.name(2), "topmenubar.new.actor.menu.label",
+        ClickableMenuItem newActorMenuItem = new ClickableMenuItem(TopMenus.NEW.name(3), "topmenubar.new.actor.menu.label",
                 controllers.core.routes.ActorController.create(), "glyphicons glyphicons-parents", false);
         newActorMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newActorMenuItem);
 
-        ClickableMenuItem newOrgUnitMenuItem = new ClickableMenuItem(TopMenus.NEW.name(3), "topmenubar.new.org_unit.menu.label",
+        ClickableMenuItem newOrgUnitMenuItem = new ClickableMenuItem(TopMenus.NEW.name(4), "topmenubar.new.org_unit.menu.label",
                 controllers.core.routes.OrgUnitController.create(), "glyphicons glyphicons-building", false);
         newOrgUnitMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newOrgUnitMenuItem);
 
-        ClickableMenuItem newPortfolioMenuItem = new ClickableMenuItem(TopMenus.NEW.name(4), "topmenubar.new.portfolio.menu.label",
+        ClickableMenuItem newPortfolioMenuItem = new ClickableMenuItem(TopMenus.NEW.name(5), "topmenubar.new.portfolio.menu.label",
                 controllers.core.routes.PortfolioController.create(), "glyphicons glyphicons-sort", false);
         newPortfolioMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newPortfolioMenuItem);
 
-        ClickableMenuItem newBudgetBucketMenuItem = new ClickableMenuItem(TopMenus.NEW.name(5), "topmenubar.new.budget_bucket.menu.label",
+        ClickableMenuItem newBudgetBucketMenuItem = new ClickableMenuItem(TopMenus.NEW.name(6), "topmenubar.new.budget_bucket.menu.label",
                 controllers.core.routes.BudgetBucketController.create(), "glyphicons glyphicons-calculator", false);
         newBudgetBucketMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newBudgetBucketMenuItem);

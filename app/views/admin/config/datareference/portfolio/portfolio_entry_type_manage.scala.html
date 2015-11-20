@@ -25,11 +25,20 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
+@titleKey=@{
+    if(portfolioEntryTypeForm("isRelease").value.equals("true")) {
+        "admin.configuration.reference_data.releasetype.manage.title"
+    } else {
+        "admin.configuration.reference_data.initiativetype.manage.title"
+    }
+}
+
+
 @breadcrump=@{
     Seq(
         ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
         ("admin.configuration.reference_data.portfolio.title", controllers.admin.routes.ConfigurationPortfolioController.list().url),
-        ("admin.configuration.reference_data.portfolioentrytype.manage.title", null)
+        (titleKey, null)
     )
 }
 
@@ -48,6 +57,8 @@
                 @if(portfolioEntryTypeForm("id").value!=null) {
                     <input type="hidden" name="id" value="@portfolioEntryTypeForm("id").value"/>
                 }
+                
+                <input type="hidden" name="isRelease" value="@portfolioEntryTypeForm("isRelease").value"/>
                 
                 @parts.checkbox(
                     portfolioEntryTypeForm("selectable"), 

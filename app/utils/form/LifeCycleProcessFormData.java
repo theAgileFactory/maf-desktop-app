@@ -47,6 +47,8 @@ public class LifeCycleProcessFormData {
 
     public boolean isActive;
 
+    public boolean isRelease;
+
     /**
      * Default constructor.
      */
@@ -68,6 +70,7 @@ public class LifeCycleProcessFormData {
         this.name = MultiLanguagesString.getByKey(lifeCycleProcess.name, i18nMessagesPlugin);
         this.description = MultiLanguagesString.getByKey(lifeCycleProcess.description, i18nMessagesPlugin);
         this.isActive = lifeCycleProcess.isActive;
+        this.isRelease = lifeCycleProcess.isRelease;
 
     }
 
@@ -80,6 +83,7 @@ public class LifeCycleProcessFormData {
     public void fill(LifeCycleProcess lifeCycleProcess) {
 
         lifeCycleProcess.isActive = this.isActive;
+        lifeCycleProcess.isRelease = this.isRelease;
         lifeCycleProcess.shortName = this.shortName.getKeyIfValue();
         lifeCycleProcess.name = this.name.getKeyIfValue();
         lifeCycleProcess.description = this.description.getKeyIfValue();

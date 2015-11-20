@@ -213,7 +213,7 @@ POST   /roadmap/simulator/capacity-forecast/cell/details/fragment    controllers
 # Core: PortfolioEntry
 #-------------------
 
-GET    /portfolio-entry/create             controllers.core.PortfolioEntryController.create()
+GET    /portfolio-entry/create             controllers.core.PortfolioEntryController.create(isRelease: Boolean ?= false)
 POST   /portfolio-entry/create             controllers.core.PortfolioEntryController.processCreate()
 GET    /portfolio-entry/overview           controllers.core.PortfolioEntryController.overview(id: Long)
 GET    /portfolio-entry/view               controllers.core.PortfolioEntryController.view(id: Long, attachmentPage: Integer ?= 0)
@@ -543,7 +543,7 @@ POST   /admin/config/roles/manage                                   controllers.
 GET    /admin/config/roles/delete                                   controllers.admin.ConfigurationController.deleteRole(roleTypeId: Long)
 
 GET    /admin/config/ref-data/portfolios                             controllers.admin.ConfigurationPortfolioController.list()
-GET    /admin/config/ref-data/portfolio-entry-type/manage            controllers.admin.ConfigurationPortfolioController.managePortfolioEntryType(portfolioEntryTypeId: Long ?= 0)
+GET    /admin/config/ref-data/portfolio-entry-type/manage            controllers.admin.ConfigurationPortfolioController.managePortfolioEntryType(isRelease: Boolean ?= false, portfolioEntryTypeId: Long ?= 0)
 POST   /admin/config/ref-data/portfolio-entry-type/save              controllers.admin.ConfigurationPortfolioController.savePortfolioEntryType()
 GET    /admin/config/ref-data/portfolio-entry-type/delete            controllers.admin.ConfigurationPortfolioController.deletePortfolioEntryType(portfolioEntryTypeId: Long ?= 0)
 GET    /admin/config/ref-data/portfolio-type/manage                  controllers.admin.ConfigurationPortfolioController.managePortfolioType(portfolioTypeId: Long ?= 0)
@@ -787,7 +787,7 @@ GET     /api/core/portfolio-entry/:id/work-order/:workOrderId/amount       contr
 GET     /api/core/portfolio-entry/:id/work-order/:workOrderId/amount-received controllers.api.core.PortfolioEntryApiController.getWorkOrderAmountReceived(id: Long, workOrderId: Long)
 
 #PortfolioEntryType
-GET     /api/core/portfolio-entry-type/find                                controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypesList(selectable: java.lang.Boolean ?= null)
+GET     /api/core/portfolio-entry-type/find                                controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypesList(selectable: java.lang.Boolean ?= null, isRelease: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-type/:id                                 controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypeById(id: Long)
 
 #PortfolioEntryEventType

@@ -17,8 +17,7 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    iterationForm: Form[utils.form.IterationFormData],
-    releases: framework.utils.ISelectableValueHolderCollection[_]
+    iterationForm: Form[utils.form.IterationFormData]
 )
 
 @import helper._
@@ -64,8 +63,6 @@
                         
                         @parts.input_text(iterationForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.iteration.story_points.label"), 'autofocus -> "autofocus")
                         
-                        @parts.dropdownlist(iterationForm("release"), parts.Msg.asString("object.iteration.release.label"), releases, parts.Msg.asString("object.iteration.release.help"), false)
-
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
                         

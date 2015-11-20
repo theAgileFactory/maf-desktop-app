@@ -42,12 +42,17 @@ public class PortfolioEntryCreateFormData {
     /**
      * Construct with a default manager.
      * 
+     * @param isRelease
+     *            true for a release, false for an initiative
      * @param managerId
      *            the manager id
      */
-    public PortfolioEntryCreateFormData(Long managerId) {
+    public PortfolioEntryCreateFormData(boolean isRelease, Long managerId) {
+        this.isRelease = isRelease;
         this.manager = managerId;
     }
+
+    public boolean isRelease;
 
     public boolean isConfidential;
 

@@ -15,7 +15,10 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(newPortfolioEntryForm: Form[utils.form.PortfolioEntryCreateFormData])
+@(
+    newPortfolioEntryForm: Form[utils.form.PortfolioEntryCreateFormData],
+    isRelease: Boolean
+)
 
 @import helper._
 @import bootstrap3._
@@ -26,10 +29,18 @@
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntry])
 }
 
+@keyPrefix=@{
+    if(isRelease) {
+        "core.portfolio_entry.create.release."
+    } else {
+        "core.portfolio_entry.create.initiative."
+    }
+}
+
 @templates.main_bc_nosidebar(
-    parts.Msg.asString("core.portfolio_entry.create.title"),
+    parts.Msg.asString(keyPrefix + "title"),
     Seq(
-        ("core.portfolio_entry.create.breadcrumb",null)
+        (keyPrefix + "breadcrumb",null)
     )
 ){
 }{
@@ -54,6 +65,8 @@
                     
                         <input type="hidden" id="isActive" data-primitive="true" name="isActive" value="true"/>
                         
+                        <input type="hidden" id="isRelease" data-primitive="true" name="isRelease" value="@isRelease"/>
+                        
                         @parts.checkbox(newPortfolioEntryForm("isConfidential"), parts.Msg.asString("object.portfolio_entry.is_condfidential.label"), parts.Msg.asString("object.portfolio_entry.is_condfidential.help"))
                          
                         @parts.input_text(newPortfolioEntryForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
@@ -62,9 +75,9 @@
                         
                         @parts.singlevalue_picker(newPortfolioEntryForm("portfolio"),parts.Msg.asString("object.portfolio_entry.portfolio.label"),controllers.routes.PickerController.portfolio().url)
                         
-                        @parts.dropdownlist(newPortfolioEntryForm("portfolioEntryType"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH())
+                        @parts.dropdownlist(newPortfolioEntryForm("portfolioEntryType"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(isRelease))
                         
-                        @parts.dropdownlist(newPortfolioEntryForm("requestedLifeCycleProcess"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH)
+                        @parts.dropdownlist(newPortfolioEntryForm("requestedLifeCycleProcess"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH(isRelease))
                         
                         @parts.singlevalue_picker(
                             newPortfolioEntryForm("manager"), 

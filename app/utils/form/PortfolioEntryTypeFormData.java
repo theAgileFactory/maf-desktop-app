@@ -36,6 +36,8 @@ public class PortfolioEntryTypeFormData {
 
     public boolean selectable;
 
+    public boolean isRelease;
+
     @MultiLanguagesStringRequired
     @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
@@ -50,6 +52,16 @@ public class PortfolioEntryTypeFormData {
     }
 
     /**
+     * Construction with initial value.
+     * 
+     * @param isRelease
+     *            true if the type is a release
+     */
+    public PortfolioEntryTypeFormData(boolean isRelease) {
+        this.isRelease = isRelease;
+    }
+
+    /**
      * Construct the form data with a DB entry.
      * 
      * @param portfolioEntryType
@@ -61,6 +73,7 @@ public class PortfolioEntryTypeFormData {
 
         this.id = portfolioEntryType.id;
         this.selectable = portfolioEntryType.selectable;
+        this.isRelease = portfolioEntryType.isRelease;
         this.name = MultiLanguagesString.getByKey(portfolioEntryType.name, i18nMessagesPlugin);
         this.description = MultiLanguagesString.getByKey(portfolioEntryType.description, i18nMessagesPlugin);
 
@@ -75,6 +88,7 @@ public class PortfolioEntryTypeFormData {
     public void fill(PortfolioEntryType portfolioEntryType) {
 
         portfolioEntryType.selectable = this.selectable;
+        portfolioEntryType.isRelease = this.isRelease;
         portfolioEntryType.name = this.name.getKeyIfValue();
         portfolioEntryType.description = this.description.getKeyIfValue();
 

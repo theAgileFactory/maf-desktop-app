@@ -16,7 +16,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    portfolioEntryTypesTable: framework.utils.Table[utils.table.PortfolioEntryTypeListView],
+    initiativeTypesTable: framework.utils.Table[utils.table.PortfolioEntryTypeListView],
+    releaseTypesTable: framework.utils.Table[utils.table.PortfolioEntryTypeListView],
     portfolioEntryDependencyTypesTable: framework.utils.Table[utils.table.PortfolioEntryDependencyTypeListView],
     portfolioTypesTable: framework.utils.Table[utils.table.PortfolioTypeListView]
 )
@@ -39,15 +40,30 @@
     <div class="panel panel-default">
     
         <div class="panel-heading">
-            @parts.Msg("admin.configuration.reference_data.portfolio.portfolioentrytypes.title")
+            @parts.Msg("admin.configuration.reference_data.portfolio.initiativetypes.title")
             
             <div class="pull-right">
-                <a href="@controllers.admin.routes.ConfigurationPortfolioController.managePortfolioEntryType().url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                <a href="@controllers.admin.routes.ConfigurationPortfolioController.managePortfolioEntryType(false).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
             </div>
         </div>
     
         <div class="panel-body">
-            @parts.table.tableview(portfolioEntryTypesTable)
+            @parts.table.tableview(initiativeTypesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.portfolio.releasetypes.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationPortfolioController.managePortfolioEntryType(true).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(releaseTypesTable)
         </div>
     </div>
     

@@ -22,6 +22,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.api.core.RootApiController;
+import dao.pmo.PortfolioDao;
+import dao.pmo.PortfolioEntryDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.pmo.PortfolioEntryDependencyType;
 import models.pmo.PortfolioEntryType;
 import models.pmo.PortfolioType;
@@ -34,16 +44,6 @@ import utils.form.PortfolioTypeFormData;
 import utils.table.PortfolioEntryDependencyTypeListView;
 import utils.table.PortfolioEntryTypeListView;
 import utils.table.PortfolioTypeListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import constants.IMafConstants;
-import controllers.api.core.RootApiController;
-import dao.pmo.PortfolioDao;
-import dao.pmo.PortfolioEntryDao;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * Manage the portfolios and portfolio entries reference data.
@@ -61,21 +61,27 @@ public class ConfigurationPortfolioController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
-    
+
     /**
      * Display the lists of data.
      */
     public Result list() {
 
-        // portfolio entry types
-        List<PortfolioEntryType> portfolioEntryTypes = PortfolioEntryDao.getPETypeAsList();
-
-        List<PortfolioEntryTypeListView> portfolioEntryTypesListView = new ArrayList<PortfolioEntryTypeListView>();
-        for (PortfolioEntryType portfolioEntryType : portfolioEntryTypes) {
-            portfolioEntryTypesListView.add(new PortfolioEntryTypeListView(portfolioEntryType));
+        // portfolio entry types of initiatives
+        List<PortfolioEntryTypeListView> initiativeTypesListView = new ArrayList<PortfolioEntryTypeListView>();
+        for (PortfolioEntryType portfolioEntryType : PortfolioEntryDao.getPETypeInitiativeAsList()) {
+            initiativeTypesListView.add(new PortfolioEntryTypeListView(portfolioEntryType));
         }
 
-        Table<PortfolioEntryTypeListView> portfolioEntryTypesFilledTable = PortfolioEntryTypeListView.templateTable.fill(portfolioEntryTypesListView);
+        Table<PortfolioEntryTypeListView> initiativeTypesFilledTable = PortfolioEntryTypeListView.templateTable.fill(initiativeTypesListView);
+
+        // portfolio entry types of releases
+        List<PortfolioEntryTypeListView> releaseTypesListView = new ArrayList<PortfolioEntryTypeListView>();
+        for (PortfolioEntryType portfolioEntryType : PortfolioEntryDao.getPETypeReleaseAsList()) {
+            releaseTypesListView.add(new PortfolioEntryTypeListView(portfolioEntryType));
+        }
+
+        Table<PortfolioEntryTypeListView> releaseTypesFilledTable = PortfolioEntryTypeListView.templateTable.fill(releaseTypesListView);
 
         // portfolio entry dependency types
         List<PortfolioEntryDependencyType> portfolioEntryDependencyTypes = PortfolioEntryDao.getPEDependencyTypeAsList();
@@ -85,8 +91,8 @@ public class ConfigurationPortfolioController extends Controller {
             portfolioEntryDependencyTypesListView.add(new PortfolioEntryDependencyTypeListView(portfolioEntryDependencyType));
         }
 
-        Table<PortfolioEntryDependencyTypeListView> portfolioEntryDependencyTypesFilledTable =
-                PortfolioEntryDependencyTypeListView.templateTable.fill(portfolioEntryDependencyTypesListView);
+        Table<PortfolioEntryDependencyTypeListView> portfolioEntryDependencyTypesFilledTable = PortfolioEntryDependencyTypeListView.templateTable
+                .fill(portfolioEntryDependencyTypesListView);
 
         // portfolio types
         List<PortfolioType> portfolioTypes = PortfolioDao.getPortfolioTypeAsList();
@@ -98,20 +104,23 @@ public class ConfigurationPortfolioController extends Controller {
 
         Table<PortfolioTypeListView> portfolioTypesFilledTable = PortfolioTypeListView.templateTable.fill(portfolioTypesListView);
 
-        return ok(views.html.admin.config.datareference.portfolio.list.render(portfolioEntryTypesFilledTable, portfolioEntryDependencyTypesFilledTable,
-                portfolioTypesFilledTable));
+        return ok(views.html.admin.config.datareference.portfolio.list.render(initiativeTypesFilledTable, releaseTypesFilledTable,
+                portfolioEntryDependencyTypesFilledTable, portfolioTypesFilledTable));
     }
 
     /**
      * Edit or create a portfolio entry type.
      * 
+     * @param isRelease
+     *            true if the portfolio entry type is a release (used only in
+     *            create case)
      * @param portfolioEntryTypeId
      *            the portfolio entry type id (set 0 for create case)
      */
-    public Result managePortfolioEntryType(Long portfolioEntryTypeId) {
+    public Result managePortfolioEntryType(Boolean isRelease, Long portfolioEntryTypeId) {
 
         // initiate the form with the template
-        Form<PortfolioEntryTypeFormData> portfolioEntryTypeForm = portfolioEntryTypeFormTemplate;
+        Form<PortfolioEntryTypeFormData> portfolioEntryTypeForm = null;
 
         // edit case: inject values
         if (!portfolioEntryTypeId.equals(Long.valueOf(0))) {
@@ -120,6 +129,8 @@ public class ConfigurationPortfolioController extends Controller {
 
             portfolioEntryTypeForm = portfolioEntryTypeFormTemplate.fill(new PortfolioEntryTypeFormData(portfolioEntryType, getI18nMessagesPlugin()));
 
+        } else {
+            portfolioEntryTypeForm = portfolioEntryTypeFormTemplate.fill(new PortfolioEntryTypeFormData(isRelease));
         }
 
         return ok(views.html.admin.config.datareference.portfolio.portfolio_entry_type_manage.render(portfolioEntryTypeForm));
@@ -203,8 +214,8 @@ public class ConfigurationPortfolioController extends Controller {
 
             PortfolioEntryDependencyType portfolioEntryDependencyType = PortfolioEntryDao.getPEDependencyTypeById(portfolioEntryDependencyTypeId);
 
-            portfolioEntryDependencyTypeForm =
-                    portfolioEntryDependencyTypeFormTemplate.fill(new PortfolioEntryDependencyTypeFormData(portfolioEntryDependencyType, getI18nMessagesPlugin()));
+            portfolioEntryDependencyTypeForm = portfolioEntryDependencyTypeFormTemplate
+                    .fill(new PortfolioEntryDependencyTypeFormData(portfolioEntryDependencyType, getI18nMessagesPlugin()));
 
         }
 

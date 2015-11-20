@@ -80,6 +80,18 @@ public abstract class LifeCycleMilestoneDao {
     }
 
     /**
+     * Get the milestone of a process for a given type.
+     * 
+     * @param processId
+     *            the life cycle process id
+     * @param type
+     *            the type
+     */
+    public static LifeCycleMilestone getLCMilestoneByProcessAndType(Long processId, LifeCycleMilestone.Type type) {
+        return findLifeCycleMilestone.where().eq("deleted", false).eq("lifeCycleProcess.id", processId).eq("type", type).findUnique();
+    }
+
+    /**
      * Get a life cycle milestone by short name.
      * 
      * @param shortName

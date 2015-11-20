@@ -49,6 +49,16 @@
                     <input type="hidden" name="id" value="@lifeCycleProcessForm("id").value"/>
                 }
                 
+                @if(lifeCycleProcessForm("id").value!=null) {
+                     <input type="hidden" name="isRelease" value="@lifeCycleProcessForm("isRelease").value"/>
+                } else {
+                    @parts.checkbox(
+                        lifeCycleProcessForm("isRelease"), 
+                        parts.Msg.asString("object.life_cycle_process.is_release.label"),
+                        ""
+                    )
+                }
+                
                 @parts.checkbox(
                     lifeCycleProcessForm("isActive"), 
                     parts.Msg.asString("object.life_cycle_process.is_active.label"),

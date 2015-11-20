@@ -139,17 +139,20 @@ public class PortfolioEntryController extends Controller {
 
     /**
      * Form to create a new portfolio entry.
+     * 
+     * @param isRelease
+     *            true if the portfolio entry is a release, else an initiative
      */
     @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
-    public Result create() {
+    public Result create(boolean isRelease) {
 
         if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
         }
 
         Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(this.getAccountManagerPlugin(), getUserSessionManagerPlugin().getUserSessionId(ctx()));
-        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(actor.id));
-        return ok(views.html.core.portfolioentry.portfolio_entry_create.render(filledForm));
+        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(isRelease, actor.id));
+        return ok(views.html.core.portfolioentry.portfolio_entry_create.render(filledForm, isRelease));
     }
 
     /**
@@ -160,14 +163,23 @@ public class PortfolioEntryController extends Controller {
 
         if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
-            return redirect(controllers.core.routes.PortfolioEntryController.create());
+            return redirect(controllers.core.routes.PortfolioEntryController.create(false));
         }
 
         Form<PortfolioEntryCreateFormData> boundForm = portfolioEntryCreateFormTemplate.bindFromRequest();
 
+        boolean isRelease = Boolean.valueOf(boundForm.data().get("isRelease"));
+
         CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class);
         if (boundForm.hasErrors()) {
-            return badRequest(views.html.core.portfolioentry.portfolio_entry_create.render(boundForm));
+            return badRequest(views.html.core.portfolioentry.portfolio_entry_create.render(boundForm, isRelease));
+        }
+
+        String keyPrefix = null;
+        if (isRelease) {
+            keyPrefix = "core.portfolio_entry.create.release.";
+        } else {
+            keyPrefix = "core.portfolio_entry.create.initiative.";
         }
 
         PortfolioEntryCreateFormData portfolioEntryCreateFormData = boundForm.get();
@@ -233,8 +245,8 @@ public class PortfolioEntryController extends Controller {
         // send a notification to the portfolio manager (if it exists)
         if (portfolio != null) {
             ActorDao.sendNotification(portfolio.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), "core.portfolio_entry.create.notification.title",
-                    "core.portfolio_entry.create.notification.message", portfolio.name);
+                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), keyPrefix + "notification.title",
+                    keyPrefix + "notification.message", portfolio.name);
         }
 
         // send a notification to the initiative manager (if he is not the
@@ -242,12 +254,12 @@ public class PortfolioEntryController extends Controller {
         Actor actor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         if (!actor.id.equals(portfolioEntry.manager.id)) {
             ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), "core.portfolio_entry.create.notification.title",
-                    "core.portfolio_entry.create.notification.manager.message");
+                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), keyPrefix + "notification.title",
+                    keyPrefix + "notification.manager.message");
 
         }
 
-        Utilities.sendSuccessFlashMessage(Messages.get("core.portfolio_entry.create.success.message"));
+        Utilities.sendSuccessFlashMessage(Messages.get(keyPrefix + "success.message"));
 
         return redirect(controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0));
 
@@ -437,7 +449,8 @@ public class PortfolioEntryController extends Controller {
         // add the custom attributes
         CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryForm, PortfolioEntry.class, id);
 
-        return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm, PortfolioEntryDao.getPETypeActiveAsVH()));
+        return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm,
+                PortfolioEntryDao.getPETypeActiveAsVH(portfolioEntry.portfolioEntryType.isRelease)));
     }
 
     /**

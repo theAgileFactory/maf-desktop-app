@@ -36,6 +36,10 @@
     )
 }
 
+@types=@{
+    controllers.admin.ConfigurationGovernanceController.getLifeCycleMilestoneTypeAsVHC(lifeCycleProcess.isRelease)
+}
+
 @views.html.admin.config.config_template("admin.configuration.reference_data.governance.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
 
     <div class="maf-form">
@@ -67,12 +71,20 @@
 
                 @parts.multi_languages_input_text(lifeCycleMilestoneForm("description"), parts.Msg.asString("object.life_cycle_milestone.description.label"))
                 
+                @if(types != null) {
+                    @parts.dropdownlist(
+                        lifeCycleMilestoneForm("type"), 
+                        parts.Msg.asString("object.life_cycle_milestone.type.label"),
+                        types
+                    )
+                }
+                
                 @parts.checkbox(
                     lifeCycleMilestoneForm("isReviewRequired"), 
                     parts.Msg.asString("object.life_cycle_milestone.is_review_required.label"),
                     ""
                 )
-
+                
                 @parts.dropdownlist(lifeCycleMilestoneForm("defaultStatusType"), parts.Msg.asString("object.life_cycle_milestone.default_status_type.label"), statusTypes)
 
                 @parts.multivalue_picker(

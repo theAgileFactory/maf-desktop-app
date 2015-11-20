@@ -294,10 +294,16 @@ public class PortfolioEntryApiController extends ApiController {
                 return getJsonErrorResponse(new ApiError(400, errorMsg));
             }
 
-            // Validation Form
+            // Get the form data
             PortfolioEntryRequestPut portfolioEntryRequest = portfolioEntryRequestForm.get();
 
             PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+            // Verify the isRelease flag is not changed
+            if (portfolioEntry.portfolioEntryType.isRelease != PortfolioEntryDao.getPETypeById(portfolioEntryRequest.portfolioEntryTypeId).isRelease) {
+                return getJsonErrorResponse(
+                        new ApiError(400, "Incompatible type: the previous type was release so the new should be also release (or vice versa)"));
+            }
 
             // fill to match with DB
             portfolioEntry.name = portfolioEntryRequest.name;

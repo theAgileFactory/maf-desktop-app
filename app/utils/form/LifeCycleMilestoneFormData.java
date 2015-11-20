@@ -25,11 +25,13 @@ import dao.pmo.ActorDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
 import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
+import framework.utils.Msg;
 import framework.utils.MultiLanguagesString;
 import models.framework_models.parent.IModelConstants;
 import models.governance.LifeCycleMilestone;
 import models.pmo.Actor;
 import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 
 /**
  * A life cycle process form data is used to manage the fields when managing a
@@ -59,6 +61,8 @@ public class LifeCycleMilestoneFormData {
     @Required
     public Long defaultStatusType;
 
+    public String type;
+
     public boolean isActive;
 
     public List<Long> approvers = new ArrayList<Long>();
@@ -67,6 +71,35 @@ public class LifeCycleMilestoneFormData {
      * Default constructor.
      */
     public LifeCycleMilestoneFormData() {
+    }
+
+    /**
+     * Form validation.
+     */
+    public List<ValidationError> validate() {
+
+        List<ValidationError> errors = new ArrayList<>();
+
+        // check the type is not already used by another milestone of the
+        // process
+        if (this.type != null && !this.type.equals("")) {
+            LifeCycleMilestone otherMilestone = LifeCycleMilestoneDao.getLCMilestoneByProcessAndType(this.lifeCycleProcessId,
+                    LifeCycleMilestone.Type.valueOf(this.type));
+            if (otherMilestone != null) {
+                if (this.id != null) {
+                    // edit case
+                    if (!this.id.equals(otherMilestone.id)) {
+                        errors.add(new ValidationError("type", Msg.get("object.life_cycle_milestone.type.invalid")));
+                    }
+                } else {
+                    // create case
+                    errors.add(new ValidationError("type", Msg.get("object.life_cycle_milestone.type.invalid")));
+                }
+            }
+        }
+
+        return errors.isEmpty() ? null : errors;
+
     }
 
     /**
@@ -86,6 +119,7 @@ public class LifeCycleMilestoneFormData {
         this.isReviewRequired = lifeCycleMilestone.isReviewRequired;
         this.defaultStatusType = lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType.id;
         this.isActive = lifeCycleMilestone.isActive;
+        this.type = lifeCycleMilestone.type != null ? lifeCycleMilestone.type.name() : null;
         if (lifeCycleMilestone.approvers != null) {
             for (Actor approver : lifeCycleMilestone.approvers) {
                 this.approvers.add(approver.id);
@@ -107,6 +141,7 @@ public class LifeCycleMilestoneFormData {
         lifeCycleMilestone.name = this.name.getKeyIfValue();
         lifeCycleMilestone.description = this.description.getKeyIfValue();
         lifeCycleMilestone.isReviewRequired = this.isReviewRequired;
+        lifeCycleMilestone.type = this.type != null && !this.type.equals("") ? LifeCycleMilestone.Type.valueOf(this.type) : null;
         lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType = LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeById(this.defaultStatusType);
         lifeCycleMilestone.approvers = new ArrayList<Actor>();
         for (Long approver : this.approvers) {

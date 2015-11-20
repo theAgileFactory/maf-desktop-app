@@ -22,11 +22,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 
-import models.framework_models.parent.IModelConstants;
-import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.Required;
-import play.data.validation.ValidationError;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -37,6 +32,12 @@ import dao.governance.LifeCycleProcessDao;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
+import models.framework_models.parent.IModelConstants;
+import models.governance.LifeCycleProcess;
+import models.pmo.PortfolioEntryType;
+import play.data.validation.Constraints.MaxLength;
+import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 
 /**
  * The portfolio entry post request.
@@ -117,6 +118,12 @@ public class PortfolioEntryRequestPost {
         if (lifeCycleProcessId != null
                 && (LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId) == null || !LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId).isActive)) {
             errors.add(new ValidationError("lifeCycleProcessId", "The lifeCycleProcess does not exist or is not active"));
+        }
+
+        PortfolioEntryType type = PortfolioEntryDao.getPETypeById(portfolioEntryTypeId);
+        LifeCycleProcess process = LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId);
+        if (type != null && process != null && type.isRelease != process.isRelease) {
+            errors.add(new ValidationError("lifeCycleProcessId", "The type is release, so the process should be release."));
         }
 
         return errors.isEmpty() ? null : errors;

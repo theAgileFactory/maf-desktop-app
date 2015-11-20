@@ -442,6 +442,7 @@ topmenubar.cockpit.menu.label=Cockpit
 #new
 topmenubar.new.menu.label=Neu
 topmenubar.new.initiative.menu.label=Initiative
+topmenubar.new.release.menu.label=Release
 topmenubar.new.actor.menu.label=Mitarbeiter
 topmenubar.new.org_unit.menu.label=Organisationseinheit
 topmenubar.new.portfolio.menu.label=Portfolio
@@ -1027,8 +1028,8 @@ object.timesheet_log.table.empty=Keine Einträge
 # portfolioEntry
 #----------------------
 
-object.portfolio_entry.is_condfidential.label=Vertrauliche Initiative
-object.portfolio_entry.is_condfidential.help=Vertrauliche Initiativen werden nicht in der öffentlichen Roadmap angezeigt.
+object.portfolio_entry.is_condfidential.label=Vertrauliche
+object.portfolio_entry.is_condfidential.help=de: If confidential then not visible by users which don''t participate to it.
 object.portfolio_entry.is_active.label=Aktiv
 object.portfolio_entry.governance_id.label=ID
 object.portfolio_entry.erp_ref_id.label=ERP ID
@@ -1197,6 +1198,7 @@ object.life_cycle_milestone.default_status_type.label=Standardstatus
 object.life_cycle_milestone.is_active.label=Aktiv
 object.life_cycle_milestone.approvers.label=Approvers
 object.life_cycle_milestone.type.label=Typ
+object.life_cycle_milestone.type.invalid=de: This type has been already selected by another milestone of the process
 object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=de: Implementation start date
 object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=de: Implementation end date
 object.life_cycle_milestone.table.empty=Kein Meilenstein eingetragen
@@ -2148,13 +2150,21 @@ core.portfolio_entry.breadcrump.view=Anzeigen
 core.portfolio_entry.breadcrump.new=Neu
 core.portfolio_entry.breadcrump.edit=Bearbeiten
 
-#create
-core.portfolio_entry.create.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Neue Initiative erstellen
-core.portfolio_entry.create.title=Neue Initiative erstellen
-core.portfolio_entry.create.success.message=Die Initiative wurde erstellt
-core.portfolio_entry.create.notification.title=Neue Initiative
-core.portfolio_entry.create.notification.message=Neue Initiative in Ihr Portfolio {0} erstellt.
-core.portfolio_entry.create.notification.manager.message=A new initiative has been assigned to you.
+#create initiative
+core.portfolio_entry.create.initiative.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Neue Initiative erstellen
+core.portfolio_entry.create.initiative.title=Neue Initiative erstellen
+core.portfolio_entry.create.initiative.success.message=Die Initiative wurde erstellt
+core.portfolio_entry.create.initiative.notification.title=Neue Initiative
+core.portfolio_entry.create.initiative.notification.message=Neue Initiative in Ihr Portfolio {0} erstellt.
+core.portfolio_entry.create.initiative.notification.manager.message=A new initiative has been assigned to you.
+
+#create release
+core.portfolio_entry.create.release.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Neue Release erstellen
+core.portfolio_entry.create.release.title=Neue Release erstellen
+core.portfolio_entry.create.release.success.message=Die Release wurde erstellt
+core.portfolio_entry.create.release.notification.title=Neue Release
+core.portfolio_entry.create.release.notification.message=Neue Release in Ihr Portfolio {0} erstellt.
+core.portfolio_entry.create.release.notification.manager.message=A new Release has been assigned to you.
 
 #overview
 core.portfolio_entry.overview.milestones_trend.panel.title=Meilenstein Trend
@@ -2791,7 +2801,8 @@ admin.configuration.roles.delete.successful=Funktion gelöscht.
 #helpers
 admin.configuration.reference_data.title=Referenzdaten
 admin.configuration.reference_data.portfolio.title=Initiative & Portfolio
-admin.configuration.reference_data.portfolio.portfolioentrytypes.title=Initiative Typen
+admin.configuration.reference_data.portfolio.initiativetypes.title=Initiative Typen
+admin.configuration.reference_data.portfolio.releasetypes.title=Release Typen
 admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Initiative Abhängigkeitstypen
 admin.configuration.reference_data.portfolio.portfoliotypes.title=Portfolio Typen
 admin.configuration.reference_data.actorsandorgunits.title=Mitarbeiter & Organisationseinheit
@@ -2821,10 +2832,11 @@ admin.configuration.reference_data.timesheetactivities.types.title=Typen
 admin.configuration.reference_data.timesheetactivities.activities.title=Aktivitäten
 
 #manage portfolio entry type
-admin.configuration.reference_data.portfolioentrytype.manage.title=Initiative Typen bearbeiten
-admin.configuration.reference_data.portfolioentrytype.add.successful=Der Initiative Typ wurde hinzugefügt.
-admin.configuration.reference_data.portfolioentrytype.edit.successful=Der Initiative Typ wurde aktualisiert.
-admin.configuration.reference_data.portfolioentrytype.delete.successful=Der Initiative Typ wurde entfernt.
+admin.configuration.reference_data.initiativetype.manage.title=Initiative Typen bearbeiten
+admin.configuration.reference_data.releasetype.manage.title=Release Typen bearbeiten
+admin.configuration.reference_data.portfolioentrytype.add.successful=Der Typ wurde hinzugefügt.
+admin.configuration.reference_data.portfolioentrytype.edit.successful=Der Typ wurde aktualisiert.
+admin.configuration.reference_data.portfolioentrytype.delete.successful=Der Typ wurde entfernt.
 
 #manage portfolio entry dependency type
 admin.configuration.reference_data.portfolioentrydependencytype.manage.title=Abhängigkeitstyp bearbeiten
