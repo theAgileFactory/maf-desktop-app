@@ -449,7 +449,8 @@ public class PortfolioEntryController extends Controller {
         // add the custom attributes
         CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryForm, PortfolioEntry.class, id);
 
-        return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm, PortfolioEntryDao.getPETypeActiveAsVH()));
+        return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm,
+                PortfolioEntryDao.getPETypeActiveAsVH(portfolioEntry.portfolioEntryType.isRelease)));
     }
 
     /**
