@@ -437,6 +437,7 @@ topmenubar.cockpit.menu.label=Cockpit
 #new
 topmenubar.new.menu.label=Neu
 topmenubar.new.initiative.menu.label=Initiative
+topmenubar.new.release.menu.label=Release
 topmenubar.new.actor.menu.label=Mitarbeiter
 topmenubar.new.org_unit.menu.label=Organisationseinheit
 topmenubar.new.portfolio.menu.label=Portfolio

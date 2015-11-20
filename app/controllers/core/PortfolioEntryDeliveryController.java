@@ -642,14 +642,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         // add the custom attributes values
         CustomAttributeFormAndDisplayHandler.fillWithValues(iterationForm, Iteration.class, iterationId);
 
-        return TODO;
-        /*
-         * return
-         * ok(views.html.core.portfolioentrydelivery.iteration_edit.render(
-         * portfolioEntry, iterationForm,
-         * ReleaseDAO.getReleaseAsVHByPEAndType(id,
-         * models.delivery.ReleasePortfolioEntry.Type.BY_ITERATION)));
-         */
+        return ok(views.html.core.portfolioentrydelivery.iteration_edit.render(portfolioEntry, iterationForm));
 
     }
 
@@ -668,15 +661,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Iteration.class)) {
-            /*
-             * return
-             * ok(views.html.core.portfolioentrydelivery.iteration_edit.render(
-             * portfolioEntry, boundForm,
-             * ReleaseDAO.getReleaseAsVHByPEAndType(id,
-             * models.delivery.ReleasePortfolioEntry.Type.BY_ITERATION)));
-             */
-
-            return TODO;
+            return ok(views.html.core.portfolioentrydelivery.iteration_edit.render(portfolioEntry, boundForm));
         }
 
         IterationFormData iterationFormData = boundForm.get();

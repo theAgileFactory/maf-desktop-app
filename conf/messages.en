@@ -425,6 +425,7 @@ topmenubar.cockpit.menu.label=Cockpit
 #new
 topmenubar.new.menu.label=New
 topmenubar.new.initiative.menu.label=Initiative
+topmenubar.new.release.menu.label=Release
 topmenubar.new.actor.menu.label=Employee
 topmenubar.new.org_unit.menu.label=Org unit
 topmenubar.new.portfolio.menu.label=Portfolio
