@@ -813,6 +813,8 @@ public class PortfolioEntryController extends Controller {
 
         SideBar sideBar = new SideBar();
 
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryId);
+
         if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.overview.label",
                     controllers.core.routes.PortfolioEntryController.overview(portfolioEntryId), "glyphicons glyphicons-radar",
@@ -856,8 +858,10 @@ public class PortfolioEntryController extends Controller {
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.requirements_status.label",
                     controllers.core.routes.PortfolioEntryDeliveryController.requirementsStatus(portfolioEntryId), "glyphicons glyphicons-charts", false));
 
-            deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.iterations.label",
-                    controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntryId), "glyphicons glyphicons-history", false));
+            if (portfolioEntry.portfolioEntryType != null && !portfolioEntry.portfolioEntryType.isRelease) {
+                deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.iterations.label",
+                        controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntryId), "glyphicons glyphicons-history", false));
+            }
 
             sideBar.addMenuItem(deliveryMenu);
 

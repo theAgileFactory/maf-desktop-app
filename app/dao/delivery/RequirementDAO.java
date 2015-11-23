@@ -69,6 +69,19 @@ public abstract class RequirementDAO {
     /**
      * Get all requirements of a portfolio entry as an expression list.
      * 
+     * They could be direct or across a deliverable.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     */
+    public static ExpressionList<Requirement> getRequirementAllAsExprByPE(Long portfolioEntryId) {
+        return findRequirement.where().eq("deleted", false).disjunction().eq("portfolioEntry.id", portfolioEntryId)
+                .eq("delivrables.portfolioEntryDeliverables.portfolioEntry.id", portfolioEntryId);
+    }
+
+    /**
+     * Get direct requirements of a portfolio entry as an expression list.
+     * 
      * @param portfolioEntryId
      *            the portfolio entry id
      */
@@ -77,8 +90,8 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the needs of a portfolio entry for a given status type, and return an
-     * expression list.
+     * Get the direct needs of a portfolio entry for a given status type, and
+     * return an expression list.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -98,8 +111,8 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the needs of a portfolio entry for a given status type and priority,
-     * and return an expression list.
+     * Get the direct needs of a portfolio entry for a given status type and
+     * priority, and return an expression list.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -115,8 +128,8 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the defects of a portfolio entry for a given status type, and return
-     * an expression list.
+     * Get the direct defects of a portfolio entry for a given status type, and
+     * return an expression list.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -136,7 +149,7 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the defects of a portfolio entry for a given status type and a
+     * Get the direct defects of a portfolio entry for a given status type and a
      * severity, and return an expression list.
      * 
      * @param portfolioEntryId
@@ -153,7 +166,7 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the total story points of a portfolio entry.
+     * Get the total story points of a portfolio entry for direct requirements.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -189,7 +202,7 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the total number of requirement of a portfolio entry.
+     * Get the total number of direct requirement of a portfolio entry.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -225,7 +238,7 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the total number of open defects of a portfolio entry.
+     * Get the total number of open and direct defects of a portfolio entry.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -247,8 +260,8 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the total number of requirements of a portfolio entry according to
-     * the isScoped value.
+     * Get the total number of direct requirements of a portfolio entry
+     * according to the isScoped value.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -268,7 +281,7 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get the closed story points of requirements of an iteration.
+     * Get the closed story points of direct requirements of an iteration.
      * 
      * @param iterationId
      *            the iteration id
@@ -295,7 +308,7 @@ public abstract class RequirementDAO {
     }
 
     /**
-     * Get list of all requirements of a portfolio entry.
+     * Get list of direct requirements of a portfolio entry.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id.
