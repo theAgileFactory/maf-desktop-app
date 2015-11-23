@@ -1121,7 +1121,6 @@ object.portfolio_entry_planning_package.start_date.label=Date de début
 object.portfolio_entry_planning_package.start_date.invalid=La date de début ne peut pas être renseignée seule: pour saisir une simple date, il faut remplir le champ "Date de fin" et laisser "Date de début" vide. Pour une période il suffit de renseigner les deux champs.
 object.portfolio_entry_planning_package.end_date.label=Date de fin
 object.portfolio_entry_planning_package.end_date.invalid=La date de fin doit être ultérieure à la date de début.
-object.portfolio_entry_planning_package.is_important.label=Important
 object.portfolio_entry_planning_package.name.label=Nom
 object.portfolio_entry_planning_package.description.label=Description
 object.portfolio_entry_planning_package.group.label=Groupe

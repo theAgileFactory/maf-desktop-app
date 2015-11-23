@@ -1121,7 +1121,6 @@ object.portfolio_entry_planning_package.start_date.label=Startdatum
 object.portfolio_entry_planning_package.start_date.invalid=Wenn Sie nur ein Datum eingeben möchten, bitte Enddatum eingeben.
 object.portfolio_entry_planning_package.end_date.label=Enddatum
 object.portfolio_entry_planning_package.end_date.invalid=Enddatum muss nach Startdatum liegen.
-object.portfolio_entry_planning_package.is_important.label=Wichtig
 object.portfolio_entry_planning_package.name.label=Name
 object.portfolio_entry_planning_package.description.label=Beschreibung
 object.portfolio_entry_planning_package.group.label=Gruppe
