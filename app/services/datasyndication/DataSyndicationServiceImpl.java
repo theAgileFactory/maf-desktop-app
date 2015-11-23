@@ -609,16 +609,14 @@ public class DataSyndicationServiceImpl implements IDataSyndicationService {
                 // construct the data
                 List<List<Object>> data = new ArrayList<>();
                 if (agreementItem.descriptor.equals("PLANNING_PACKAGE")) {
-                    data.add(Arrays.asList("object.portfolio_entry_planning_package.is_important.label", "object.portfolio_entry_planning_package.name.label",
-                            "object.portfolio_entry_planning_package.description.label", "object.portfolio_entry_planning_package.start_date.label",
-                            "object.portfolio_entry_planning_package.end_date.label", "object.portfolio_entry_planning_package.group.label",
-                            "object.portfolio_entry_planning_package.status.label"));
+                    data.add(Arrays.asList("object.portfolio_entry_planning_package.name.label", "object.portfolio_entry_planning_package.description.label",
+                            "object.portfolio_entry_planning_package.start_date.label", "object.portfolio_entry_planning_package.end_date.label",
+                            "object.portfolio_entry_planning_package.group.label", "object.portfolio_entry_planning_package.status.label"));
                     for (PortfolioEntryPlanningPackage planningPackage : PortfolioEntryPlanningPackageDao
                             .getPEPlanningPackageAsListByPE(agreementLink.masterObjectId)) {
                         String group = planningPackage.portfolioEntryPlanningPackageGroup != null
                                 ? Msg.get(planningPackage.portfolioEntryPlanningPackageGroup.getName()) : null;
-                        data.add(Arrays.asList(planningPackage.isImportant, planningPackage.name, planningPackage.description, planningPackage.startDate,
-                                planningPackage.endDate, group,
+                        data.add(Arrays.asList(planningPackage.name, planningPackage.description, planningPackage.startDate, planningPackage.endDate, group,
                                 "object.portfolio_entry_planning_package.status." + planningPackage.status.name() + ".label"));
                     }
 

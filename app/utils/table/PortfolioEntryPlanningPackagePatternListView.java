@@ -24,7 +24,6 @@ import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
-import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.pmo.PortfolioEntryPlanningPackagePattern;
@@ -55,9 +54,6 @@ public class PortfolioEntryPlanningPackagePatternListView {
                 }
             });
             setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
-
-            addColumn("isImportant", "isImportant", "object.portfolio_entry_planning_package.is_important.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isImportant", new BooleanFormatter<PortfolioEntryPlanningPackagePatternListView>());
 
             addColumn("name", "name", "object.portfolio_entry_planning_package.name.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
@@ -117,8 +113,6 @@ public class PortfolioEntryPlanningPackagePatternListView {
 
     public String description;
 
-    public boolean isImportant;
-
     public PortfolioEntryPlanningPackageType type;
 
     /**
@@ -136,7 +130,6 @@ public class PortfolioEntryPlanningPackagePatternListView {
 
         this.name = packagePattern.name;
         this.description = packagePattern.description;
-        this.isImportant = packagePattern.isImportant;
         this.type = packagePattern.portfolioEntryPlanningPackageType;
 
     }

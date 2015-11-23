@@ -69,11 +69,6 @@
                             <input type="hidden" name="planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
                         }
                         
-                        @parts.checkbox(
-                            planningPackageForm("isImportant"), 
-                            parts.Msg.asString("object.portfolio_entry_planning_package.is_important.label")
-                        )
-                        
                         @parts.input_text(planningPackageForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
                         
                         @helper.textarea(planningPackageForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))

@@ -275,7 +275,6 @@ public class ApplicationServicesModule extends FrameworkModule {
                         .put("erpRefId", "object.portfolio_entry.erp_ref_id.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryPlanningPackage, "models.pmo.PortfolioEntryPlanningPackage", false, true,
                 ImmutableMap.<String, String> builder().put("name", "object.portfolio_entry_planning_package.name.label")
-                        .put("isImportant", "object.portfolio_entry_planning_package.is_important.label")
                         .put("portfolioEntryPlanningPackageGroup", "object.portfolio_entry_planning_package.group.label")
                         .put("portfolioEntryPlanningPackageType", "object.portfolio_entry_planning_package.type.label")
                         .put("status", "object.portfolio_entry_planning_package.status.label").build());

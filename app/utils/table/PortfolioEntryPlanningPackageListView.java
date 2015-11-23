@@ -28,12 +28,12 @@ import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
@@ -58,9 +58,6 @@ public class PortfolioEntryPlanningPackageListView {
     public static FilterConfig<PortfolioEntryPlanningPackageListView> getFilterConfig() {
         return new FilterConfig<PortfolioEntryPlanningPackageListView>() {
             {
-
-                addColumnConfiguration("isImportant", "isImportant", "object.portfolio_entry_planning_package.is_important.label",
-                        new CheckboxFilterComponent(true), true, false, SortStatusType.UNSORTED);
 
                 addColumnConfiguration("name", "name", "object.portfolio_entry_planning_package.name.label", new TextFieldFilterComponent("*"), true, false,
                         SortStatusType.UNSORTED);
@@ -120,9 +117,6 @@ public class PortfolioEntryPlanningPackageListView {
         return new Table<PortfolioEntryPlanningPackageListView>() {
             {
                 setIdFieldName("id");
-
-                addColumn("isImportant", "isImportant", "object.portfolio_entry_planning_package.is_important.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isImportant", new BooleanFormatter<PortfolioEntryPlanningPackageListView>());
 
                 addColumn("name", "name", "object.portfolio_entry_planning_package.name.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackageListView>());
@@ -212,7 +206,6 @@ public class PortfolioEntryPlanningPackageListView {
     public Long id;
     public Long portfolioEntryId;
 
-    public boolean isImportant;
     public String name;
     public Date startDate;
     public Date endDate;
@@ -241,8 +234,6 @@ public class PortfolioEntryPlanningPackageListView {
         this.startDate = portfolioEntryPlanningPackage.startDate;
 
         this.endDate = portfolioEntryPlanningPackage.endDate;
-
-        this.isImportant = portfolioEntryPlanningPackage.isImportant;
 
         this.group = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup;
 

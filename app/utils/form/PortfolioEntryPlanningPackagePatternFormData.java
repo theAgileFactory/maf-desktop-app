@@ -45,8 +45,6 @@ public class PortfolioEntryPlanningPackagePatternFormData {
     @Required
     public Long type;
 
-    public boolean isImportant;
-
     /**
      * Default constructor.
      */
@@ -67,7 +65,6 @@ public class PortfolioEntryPlanningPackagePatternFormData {
         this.name = packagePattern.name;
         this.description = packagePattern.description;
         this.type = packagePattern.portfolioEntryPlanningPackageType.id;
-        this.isImportant = packagePattern.isImportant;
 
     }
 
@@ -82,7 +79,6 @@ public class PortfolioEntryPlanningPackagePatternFormData {
         packagePattern.name = this.name;
         packagePattern.description = this.description;
         packagePattern.portfolioEntryPlanningPackageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(this.type);
-        packagePattern.isImportant = this.isImportant;
 
     }
 }

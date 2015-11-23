@@ -62,8 +62,6 @@ public class PortfolioEntryPlanningPackageFormData {
     @Required
     public Long portfolioEntryPlanningPackageType;
 
-    public boolean isImportant;
-
     public Long portfolioEntryPlanningPackageGroup;
 
     @Required
@@ -103,7 +101,6 @@ public class PortfolioEntryPlanningPackageFormData {
      */
     public PortfolioEntryPlanningPackageFormData() {
         this.status = Status.NOT_STARTED.name();
-        this.isImportant = false;
     }
 
     /**
@@ -123,7 +120,6 @@ public class PortfolioEntryPlanningPackageFormData {
                 : null;
         this.endDate = portfolioEntryPlanningPackage.endDate != null ? Utilities.getDateFormat(null).format(portfolioEntryPlanningPackage.endDate) : null;
         this.portfolioEntryPlanningPackageType = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType.id;
-        this.isImportant = portfolioEntryPlanningPackage.isImportant;
         this.portfolioEntryPlanningPackageGroup = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup != null
                 ? portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup.id : null;
         this.status = portfolioEntryPlanningPackage.status.name();
@@ -155,8 +151,6 @@ public class PortfolioEntryPlanningPackageFormData {
 
         portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType = PortfolioEntryPlanningPackageDao
                 .getPEPlanningPackageTypeById(this.portfolioEntryPlanningPackageType);
-
-        portfolioEntryPlanningPackage.isImportant = this.isImportant;
 
         portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup = this.portfolioEntryPlanningPackageGroup != null
                 ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupById(this.portfolioEntryPlanningPackageGroup) : null;
