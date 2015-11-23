@@ -293,6 +293,7 @@ data_type.Actor.label=Employee
 data_type.BudgetBucket.label=Budget bucket
 data_type.BudgetBucketLine.label=Budget bucket line
 data_type.CostCenter.label=Cost center
+data_type.Deliverable.label=Deliverable
 data_type.GoodsReceipt.label=Goods receipt
 data_type.Iteration.label=Iteration
 data_type.OrgUnit.label=Org unit

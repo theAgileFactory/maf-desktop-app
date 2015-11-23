@@ -305,6 +305,7 @@ data_type.Actor.label=Employé
 data_type.BudgetBucket.label=Enveloppe budgétaire
 data_type.BudgetBucketLine.label=Ligne d''enveloppe budgétaire
 data_type.CostCenter.label=Centre de coût
+data_type.Deliverable.label=Livrable
 data_type.GoodsReceipt.label=Entrée de marchandises
 data_type.Iteration.label=Itération
 data_type.OrgUnit.label=Unité d''organisation

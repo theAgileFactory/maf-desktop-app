@@ -305,6 +305,7 @@ data_type.Actor.label=Mitarbeiter
 data_type.BudgetBucket.label=Budgetposten
 data_type.BudgetBucketLine.label=Budgeteintrag
 data_type.CostCenter.label=Kostenstelle
+data_type.Deliverable.label=de: Deliverable
 data_type.GoodsReceipt.label=Wareneingang
 data_type.Iteration.label=Iteration
 data_type.OrgUnit.label=Organisationseinheit
