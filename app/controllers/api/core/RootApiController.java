@@ -41,10 +41,9 @@ import play.libs.Json;
 import play.mvc.Result;
 import utils.reporting.IReportingUtils;
 import utils.table.ActorListView;
-import utils.table.AttachmentListView;
-import utils.table.BudgetBucketLineListView;
+import utils.table.ApplicationBlockListView;
 import utils.table.BudgetBucketListView;
-import utils.table.GoodsReceiptListView;
+import utils.table.DeliverableListView;
 import utils.table.IterationListView;
 import utils.table.OrgUnitListView;
 import utils.table.PortfolioEntryBudgetLineListView;
@@ -57,9 +56,6 @@ import utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
 import utils.table.PortfolioEntryRiskListView;
 import utils.table.PortfolioListView;
-import utils.table.PurchaseOrderLineItemListView;
-import utils.table.PurchaseOrderLineItemWorkOrderListView;
-import utils.table.PurchaseOrderListView;
 import utils.table.RequirementListView;
 import utils.table.TimesheetActivityAllocatedActorListView;
 import utils.table.WorkOrderListView;
@@ -235,29 +231,27 @@ public class RootApiController extends ApiController {
      * custom attributes...).
      */
     public static void flushTables() {
-        PortfolioEntryListView.templateTable = PortfolioEntryListView.getTable();
-        ActorListView.templateTable = ActorListView.getTable();
-        AttachmentListView.templateTable = AttachmentListView.getTable();
-        BudgetBucketLineListView.templateTable = BudgetBucketLineListView.getTable();
+
+        PortfolioEntryResourcePlanAllocatedResourceListView.templateTable = PortfolioEntryResourcePlanAllocatedResourceListView.getTable();
+        PortfolioEntryResourcePlanAllocatedOrgUnitListView.templateTable = PortfolioEntryResourcePlanAllocatedOrgUnitListView.getTable();
+        PortfolioEntryResourcePlanAllocatedActorListView.templateTable = PortfolioEntryResourcePlanAllocatedActorListView.getTable();
+        TimesheetActivityAllocatedActorListView.templateTable = TimesheetActivityAllocatedActorListView.getTable();
+        ApplicationBlockListView.templateTable = ApplicationBlockListView.getTable();
         BudgetBucketListView.templateTable = BudgetBucketListView.getTable();
-        GoodsReceiptListView.templateTable = GoodsReceiptListView.getTable();
-        OrgUnitListView.templateTable = OrgUnitListView.getTable();
+        ActorListView.templateTable = ActorListView.getTable();
+        PortfolioEntryEventListView.templateTable = PortfolioEntryEventListView.getTable();
+        DeliverableListView.templateTable = DeliverableListView.getTable();
+        PortfolioEntryListView.templateTable = PortfolioEntryListView.getTable();
         PortfolioEntryBudgetLineListView.templateTable = PortfolioEntryBudgetLineListView.getTable();
         PortfolioEntryReportListView.templateTable = PortfolioEntryReportListView.getTable();
-        PortfolioEntryResourcePlanAllocatedActorListView.templateTable = PortfolioEntryResourcePlanAllocatedActorListView.getTable();
-        PortfolioEntryResourcePlanAllocatedOrgUnitListView.templateTable = PortfolioEntryResourcePlanAllocatedOrgUnitListView.getTable();
-        PortfolioEntryResourcePlanAllocatedResourceListView.templateTable = PortfolioEntryResourcePlanAllocatedResourceListView.getTable();
-        PortfolioEntryRiskListView.templateTable = PortfolioEntryRiskListView.getTable();
-        PortfolioEntryEventListView.templateTable = PortfolioEntryEventListView.getTable();
+        IterationListView.templateTable = IterationListView.getTable();
+        OrgUnitListView.templateTable = OrgUnitListView.getTable();
         PortfolioEntryPlanningPackageListView.templateTable = PortfolioEntryPlanningPackageListView.getTable();
         PortfolioListView.templateTable = PortfolioListView.getTable();
-        PurchaseOrderLineItemListView.templateTable = PurchaseOrderLineItemListView.getTable();
-        PurchaseOrderLineItemWorkOrderListView.templateTable = PurchaseOrderLineItemWorkOrderListView.getTable();
-        PurchaseOrderListView.templateTable = PurchaseOrderListView.getTable();
-        WorkOrderListView.templateTable = WorkOrderListView.getTable();
         RequirementListView.templateTable = RequirementListView.getTable();
-        IterationListView.templateTable = IterationListView.getTable();
-        TimesheetActivityAllocatedActorListView.templateTable = TimesheetActivityAllocatedActorListView.getTable();
+        PortfolioEntryRiskListView.templateTable = PortfolioEntryRiskListView.getTable();
+        WorkOrderListView.templateTable = WorkOrderListView.getTable();
+
     }
 
     /**
@@ -286,13 +280,17 @@ public class RootApiController extends ApiController {
      * custom attributes, select values...).
      */
     public static void flushFilters() {
-        PortfolioEntryListView.filterConfig = PortfolioEntryListView.getFilterConfig();
-        RequirementListView.filterConfig = RequirementListView.getFilterConfig();
+
+        ApplicationBlockListView.filterConfig = ApplicationBlockListView.getFilterConfig();
+        DeliverableListView.filterConfig = DeliverableListView.getFilterConfig();
         IterationListView.filterConfig = IterationListView.getFilterConfig();
-        PortfolioEntryPlanningPackageListView.filterConfig = PortfolioEntryPlanningPackageListView.getFilterConfig();
         PortfolioEntryEventListView.filterConfig = PortfolioEntryEventListView.getFilterConfig();
+        PortfolioEntryListView.filterConfig = PortfolioEntryListView.getFilterConfig();
+        PortfolioEntryPlanningPackageListView.filterConfig = PortfolioEntryPlanningPackageListView.getFilterConfig();
         PortfolioEntryResourcePlanAllocatedActorListView.filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.getFilterConfig();
+        RequirementListView.filterConfig = RequirementListView.getFilterConfig();
         TimesheetActivityAllocatedActorListView.filterConfig = TimesheetActivityAllocatedActorListView.getFilterConfig();
+
     }
 
     /**

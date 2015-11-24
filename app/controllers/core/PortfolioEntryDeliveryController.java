@@ -47,6 +47,7 @@ import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.delivery.Deliverable;
 import models.delivery.Iteration;
 import models.delivery.PortfolioEntryDeliverable;
 import models.delivery.Requirement;
@@ -61,6 +62,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
+import utils.form.DeliverableFormData;
 import utils.form.IterationFormData;
 import utils.form.RequirementFormData;
 import utils.table.DeliverableListView;
@@ -87,8 +89,9 @@ public class PortfolioEntryDeliveryController extends Controller {
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
-    public static Form<RequirementFormData> formTemplate = Form.form(RequirementFormData.class);
     public static Form<IterationFormData> iterationFormTemplate = Form.form(IterationFormData.class);
+    public static Form<RequirementFormData> formTemplate = Form.form(RequirementFormData.class);
+    public static Form<DeliverableFormData> deliverableFormTemplate = Form.form(DeliverableFormData.class);
 
     /**
      * Display the list of the deliverables of a portfolio entry.
@@ -215,10 +218,35 @@ public class PortfolioEntryDeliveryController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageDeliverable(Long id, Long deliverableId) {
 
-        // get the portfolio entry
+        // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        return TODO;
+        // initiate the form with the template
+        Form<DeliverableFormData> deliverableForm = deliverableFormTemplate;
+
+        boolean isOwner = false;
+
+        if (!deliverableId.equals(Long.valueOf(0))) { // edit
+
+            PortfolioEntryDeliverable portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(id, deliverableId);
+            Deliverable deliverable = portfolioEntryDeliverable.getDeliverable();
+
+            deliverableForm = deliverableFormTemplate.fill(new DeliverableFormData(deliverable, portfolioEntryDeliverable));
+
+            isOwner = portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER);
+
+            // add the custom attributes values
+            CustomAttributeFormAndDisplayHandler.fillWithValues(deliverableForm, Deliverable.class, deliverableId);
+
+        } else { // create
+
+            // add the custom attributes default values
+            CustomAttributeFormAndDisplayHandler.fillWithValues(deliverableForm, Deliverable.class, null);
+
+            isOwner = true;
+        }
+
+        return ok(views.html.core.portfolioentrydelivery.deliverable_manage.render(portfolioEntry, deliverableForm, isOwner));
 
     }
 
@@ -228,7 +256,62 @@ public class PortfolioEntryDeliveryController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageDeliverable() {
-        return TODO;
+
+        // bind the form
+        Form<DeliverableFormData> boundForm = deliverableFormTemplate.bindFromRequest();
+
+        // get the portfolioEntry
+        Long id = Long.valueOf(boundForm.data().get("id"));
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the is owner attribute
+        boolean isOwner = Boolean.valueOf(boundForm.data().get("isOwner"));
+
+        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Deliverable.class)) {
+            return ok(views.html.core.portfolioentrydelivery.deliverable_manage.render(portfolioEntry, boundForm, isOwner));
+        }
+
+        DeliverableFormData deliverableFormData = boundForm.get();
+
+        PortfolioEntryDeliverable portfolioEntryDeliverable = null;
+        Deliverable deliverable = null;
+
+        if (deliverableFormData.deliverableId == null) { // create case
+
+            deliverable = new Deliverable();
+            deliverableFormData.fillDeliverable(deliverable);
+            deliverable.save();
+
+            portfolioEntryDeliverable = new PortfolioEntryDeliverable(portfolioEntry, deliverable);
+            portfolioEntryDeliverable.type = PortfolioEntryDeliverable.Type.OWNER;
+            deliverableFormData.fillPortfolioEntryDeliverable(portfolioEntryDeliverable);
+            portfolioEntryDeliverable.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.deliverable.add.successful"));
+
+        } else { // edit case
+
+            portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(id, deliverableFormData.deliverableId);
+            deliverable = portfolioEntryDeliverable.getDeliverable();
+
+            if (portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
+                deliverableFormData.fillDeliverable(deliverable);
+                deliverable.save();
+            }
+
+            deliverableFormData.fillPortfolioEntryDeliverable(portfolioEntryDeliverable);
+            portfolioEntryDeliverable.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.deliverable.edit.successful"));
+
+        }
+
+        // save the custom attributes
+        if (portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
+            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Deliverable.class, deliverable.id);
+        }
+
+        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntry.id));
     }
 
     /**
@@ -243,10 +326,18 @@ public class PortfolioEntryDeliveryController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteDeliverable(Long id, Long deliverableId) {
 
-        // get the portfolio entry
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+        PortfolioEntryDeliverable portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(id, deliverableId);
 
-        return TODO;
+        if (!portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        Deliverable deliverable = portfolioEntryDeliverable.getDeliverable();
+        deliverable.doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.deliverable.delete.successful"));
+
+        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.deliverables(id));
 
     }
 

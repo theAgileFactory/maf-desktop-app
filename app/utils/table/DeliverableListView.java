@@ -22,10 +22,10 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
+import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.delivery.Deliverable;
@@ -85,7 +85,7 @@ public class DeliverableListView {
                 setJavaColumnFormatter("description", new ObjectFormatter<DeliverableListView>());
 
                 addColumn("isDelegated", "isDelegated", "object.deliverable.is_delegated.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isDelegated", new ObjectFormatter<DeliverableListView>());
+                setJavaColumnFormatter("isDelegated", new BooleanFormatter<DeliverableListView>());
 
                 addColumn("owner", "owner", "object.deliverable.owner.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("owner", new IColumnFormatter<DeliverableListView>() {
@@ -123,11 +123,15 @@ public class DeliverableListView {
                 setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<DeliverableListView>() {
                     @Override
                     public String apply(DeliverableListView deliverableListView, Object value) {
-                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                Msg.get("default.delete.confirmation.message"));
-                        String url = controllers.core.routes.PortfolioEntryDeliveryController
-                                .deleteDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        if (deliverableListView.isDelegated) {
+                            return null;
+                        } else {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.PortfolioEntryDeliveryController
+                                    .deleteDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
                     }
                 });
                 setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -168,20 +172,22 @@ public class DeliverableListView {
      */
     public DeliverableListView(PortfolioEntryDeliverable portfolioEntryDeliverable) {
 
-        this.id = portfolioEntryDeliverable.getDeliverable().id;
+        Deliverable deliverable = portfolioEntryDeliverable.getDeliverable();
 
-        this.portfolioEntryId = portfolioEntryDeliverable.getPortfolioEntry().id;
+        this.id = deliverable.id;
 
-        this.name = portfolioEntryDeliverable.getDeliverable().name;
+        this.portfolioEntryId = portfolioEntryDeliverable.id.portfolioEntryId;
 
-        this.description = portfolioEntryDeliverable.getDeliverable().description;
+        this.name = deliverable.name;
+
+        this.description = deliverable.description;
 
         this.isDelegated = !portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER);
 
         if (portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
             this.owner = portfolioEntryDeliverable.getPortfolioEntry();
         } else {
-            this.owner = DeliverableDAO.getDeliverableOwner(this.id);
+            this.owner = DeliverableDAO.getDeliverableOwner(deliverable.id);
         }
 
         this.planningPackage = portfolioEntryDeliverable.portfolioEntryPlanningPackage;
