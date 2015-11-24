@@ -66,6 +66,7 @@ public class DeliverableFormData {
      */
     public DeliverableFormData(Deliverable deliverable, PortfolioEntryDeliverable portfolioEntryDeliverable) {
         this.id = portfolioEntryDeliverable.id.portfolioEntryId;
+        this.deliverableId = deliverable.id;
         this.name = deliverable.name;
         this.description = deliverable.description;
         this.planningPackage = portfolioEntryDeliverable.portfolioEntryPlanningPackage != null ? portfolioEntryDeliverable.portfolioEntryPlanningPackage.id

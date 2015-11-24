@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -137,6 +138,8 @@ public class DeliverableListView {
                 setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
+                // TODO set action line
+
                 setEmptyMessageKey("object.deliverable.table.empty");
 
             }
@@ -185,7 +188,7 @@ public class DeliverableListView {
         this.isDelegated = !portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER);
 
         if (portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
-            this.owner = portfolioEntryDeliverable.getPortfolioEntry();
+            this.owner = null;
         } else {
             this.owner = DeliverableDAO.getDeliverableOwner(deliverable.id);
         }
