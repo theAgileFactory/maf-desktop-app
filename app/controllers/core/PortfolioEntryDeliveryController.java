@@ -113,7 +113,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             FilterConfig<DeliverableListView> filterConfig = DeliverableListView.filterConfig.getCurrent(uid, request());
 
             // get the table
-            Pair<Table<DeliverableListView>, Pagination<PortfolioEntryDeliverable>> t = getDeliverablesTable(id, filterConfig);
+            Pair<Table<DeliverableListView>, Pagination<Deliverable>> t = getDeliverablesTable(id, filterConfig);
 
             return ok(views.html.core.portfolioentrydelivery.deliverables.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig));
 
@@ -146,7 +146,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             } else {
 
                 // get the table
-                Pair<Table<DeliverableListView>, Pagination<PortfolioEntryDeliverable>> t = getDeliverablesTable(id, filterConfig);
+                Pair<Table<DeliverableListView>, Pagination<Deliverable>> t = getDeliverablesTable(id, filterConfig);
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
@@ -165,18 +165,18 @@ public class PortfolioEntryDeliveryController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private Pair<Table<DeliverableListView>, Pagination<PortfolioEntryDeliverable>> getDeliverablesTable(Long portfolioEntryId,
+    private Pair<Table<DeliverableListView>, Pagination<Deliverable>> getDeliverablesTable(Long portfolioEntryId,
             FilterConfig<DeliverableListView> filterConfig) {
 
-        ExpressionList<PortfolioEntryDeliverable> expressionList = filterConfig
-                .updateWithSearchExpression(DeliverableDAO.getPortfolioEntryDeliverableAsExprByPE(portfolioEntryId));
+        ExpressionList<Deliverable> expressionList = filterConfig.updateWithSearchExpression(DeliverableDAO.getDeliverableAsExprByPE(portfolioEntryId));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<PortfolioEntryDeliverable> pagination = new Pagination<PortfolioEntryDeliverable>(expressionList);
+        Pagination<Deliverable> pagination = new Pagination<Deliverable>(expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<DeliverableListView> deliverableListView = new ArrayList<DeliverableListView>();
-        for (PortfolioEntryDeliverable portfolioEntryDeliverable : pagination.getListOfObjects()) {
+        for (Deliverable deliverable : pagination.getListOfObjects()) {
+            PortfolioEntryDeliverable portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(portfolioEntryId, deliverable.id);
             deliverableListView.add(new DeliverableListView(portfolioEntryDeliverable));
         }
 

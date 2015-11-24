@@ -47,13 +47,13 @@ public class DeliverableDAO {
     }
 
     /**
-     * Get all deliverable relation of a portfolio entry as an expression list.
+     * Get all deliverables of a portfolio entry as an expression list.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
      */
-    public static ExpressionList<PortfolioEntryDeliverable> getPortfolioEntryDeliverableAsExprByPE(Long portfolioEntryId) {
-        return findPortfolioEntryDeliverable.where().eq("id.portfolioEntryId", portfolioEntryId).eq("deliverable.deleted", false);
+    public static ExpressionList<Deliverable> getDeliverableAsExprByPE(Long portfolioEntryId) {
+        return findDeliverable.where().eq("deleted", false).eq("portfolioEntryDeliverables.portfolioEntry.id", portfolioEntryId);
     }
 
     /**

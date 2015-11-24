@@ -85,8 +85,8 @@
                     
                     @if(!isOwner) {
                         <script>
-                            $("#name").prop("disabled", true);
-                            $("#description").prop("disabled", true);
+                            $("#name").prop("readonly", true);
+                            $("#description").prop("readonly", true);
                         </script>
                     }
                     
@@ -103,7 +103,7 @@
                 
                 @if(!isOwner) {
                     <script>
-                        $("#custom-attributes :input").prop("disabled", true);
+                        $("#custom-attributes :input").prop("readonly", true);
                     </script>
                 }
 

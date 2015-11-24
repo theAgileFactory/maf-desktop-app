@@ -22,7 +22,6 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -50,18 +49,25 @@ public class DeliverableListView {
         return new FilterConfig<DeliverableListView>() {
             {
 
-                addColumnConfiguration("name", "deliverable.name", "object.deliverable.name.label", new TextFieldFilterComponent("*"), true, false,
+                addColumnConfiguration("name", "name", "object.deliverable.name.label", new TextFieldFilterComponent("*"), true, false,
                         SortStatusType.UNSORTED);
 
-                addColumnConfiguration("description", "deliverable.description", "object.deliverable.description.label", new TextFieldFilterComponent("*"),
-                        true, false, SortStatusType.UNSORTED);
+                addColumnConfiguration("description", "description", "object.deliverable.description.label", new TextFieldFilterComponent("*"), true, false,
+                        SortStatusType.UNSORTED);
 
                 // TODO isDelegated
 
                 // TODO owner
 
-                addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.deliverable.planning_package.label",
-                        new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                // TODO planningPackage
+
+                /*
+                 * addColumnConfiguration("planningPackage",
+                 * "portfolioEntryPlanningPackage.name",
+                 * "object.deliverable.planning_package.label", new
+                 * TextFieldFilterComponent("*"), true, false,
+                 * SortStatusType.UNSORTED);
+                 */
 
                 addCustomAttributesColumns("id", Deliverable.class);
 
