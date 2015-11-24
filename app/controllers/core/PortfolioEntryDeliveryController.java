@@ -18,6 +18,7 @@
 package controllers.core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -212,7 +213,19 @@ public class PortfolioEntryDeliveryController extends Controller {
         for (Requirement requirement : deliverable.requirements) {
             requirementsListView.add(new RequirementListView(requirement));
         }
-        Table<RequirementListView> filledRequirementsTable = RequirementListView.templateTable.fill(requirementsListView);
+        Set<String> columnsToHide = new HashSet<>();
+        columnsToHide.add("iteration");
+        columnsToHide.add("author");
+        columnsToHide.add("initialEstimation");
+        columnsToHide.add("requirementPriority");
+        columnsToHide.add("requirementSeverity");
+        columnsToHide.add("effort");
+        columnsToHide.add("storyPoints");
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            columnsToHide.add("editActionLink");
+        }
+
+        Table<RequirementListView> filledRequirementsTable = RequirementListView.templateTable.fill(requirementsListView, columnsToHide);
 
         // construct the corresponding form data (for the custom attributes)
         DeliverableFormData deliverableFormData = new DeliverableFormData(deliverable, portfolioEntryDeliverable);
