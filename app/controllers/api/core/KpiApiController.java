@@ -17,7 +17,6 @@
  */
 package controllers.api.core;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +38,7 @@ import controllers.api.request.post.KpiDataRequest;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
 import framework.services.kpi.IKpiService;
-import framework.services.kpi.Kpi;
-import models.framework_models.kpi.KpiData;
-import models.framework_models.kpi.KpiDefinition;
+import framework.services.kpi.KpiServiceImpl.KpiServiceException;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
@@ -75,30 +72,6 @@ public class KpiApiController extends ApiController {
     public Result addKpiData(@ApiParam(value = "KPI uid", required = true) @PathParam("uid") String uid) {
         try {
 
-            uid = uid.trim();
-
-            KpiDefinition kpiDefinition = KpiDefinition.getByUid(uid);
-            if (kpiDefinition == null) {
-                return getJsonErrorResponse(new ApiError(404, "The KPI with the specified uid is not found"));
-            }
-
-            Kpi kpi = getKpiService().getKpi(uid);
-            if (kpi == null) {
-                return getJsonErrorResponse(new ApiError(400, "Impossible to add a data for an inactive KPI"));
-            }
-
-            if (kpi.isStandard()) {
-                return getJsonErrorResponse(new ApiError(400, "Impossible to add a data for a standard KPI"));
-            }
-
-            if (!kpi.isExternal()) {
-                return getJsonErrorResponse(new ApiError(400, "Impossible to add a data for a KPI with data provided by BizDock"));
-            }
-
-            if (!kpi.hasBoxDisplay()) {
-                return getJsonErrorResponse(new ApiError(400, "Impossible to add a data for a KPI without box display."));
-            }
-
             // Json to object
             JsonNode json = getRequestBodyAsJsonNode(request());
 
@@ -115,34 +88,12 @@ public class KpiApiController extends ApiController {
             // Validation Form
             KpiDataRequest kpiDataRequest = kpiDataRequestForm.get();
 
-            // If the timestamp is not given then get the current date
-            Date timestamp = kpiDataRequest.timestamp != null ? kpiDataRequest.timestamp : new Date();
-
-            // Check the object id (should exist for the given object type)
-            if (kpi.getKpiObjectsContainer().getObjectByIdForKpi(kpiDataRequest.objectId) == null) {
-                return getJsonErrorResponse(new ApiError(400, "Impossible to find the corresponding object for the given objectId"));
+            try {
+                getKpiService().addData(uid, kpiDataRequest.objectId, kpiDataRequest.timestamp, kpiDataRequest.mainValue, kpiDataRequest.additional1Value,
+                        kpiDataRequest.additional2Value);
+            } catch (KpiServiceException kpiE) {
+                return getJsonErrorResponse(new ApiError(kpiE.getHttpCode(), kpiE.getMessage()));
             }
-
-            KpiData mainKpiData = new KpiData();
-            mainKpiData.kpiValueDefinition = kpiDefinition.mainKpiValueDefinition;
-            mainKpiData.objectId = kpiDataRequest.objectId;
-            mainKpiData.timestamp = timestamp;
-            mainKpiData.value = kpiDataRequest.mainValue;
-            mainKpiData.save();
-
-            KpiData additional1KpiData = new KpiData();
-            additional1KpiData.kpiValueDefinition = kpiDefinition.additional1KpiValueDefinition;
-            additional1KpiData.objectId = kpiDataRequest.objectId;
-            additional1KpiData.timestamp = timestamp;
-            additional1KpiData.value = kpiDataRequest.additional1Value;
-            additional1KpiData.save();
-
-            KpiData additional2KpiData = new KpiData();
-            additional2KpiData.kpiValueDefinition = kpiDefinition.additional2KpiValueDefinition;
-            additional2KpiData.objectId = kpiDataRequest.objectId;
-            additional2KpiData.timestamp = timestamp;
-            additional2KpiData.value = kpiDataRequest.additional2Value;
-            additional2KpiData.save();
 
             // return json success
             return noContent();
@@ -152,6 +103,9 @@ public class KpiApiController extends ApiController {
         }
     }
 
+    /**
+     * Get the KPI service.
+     */
     private IKpiService getKpiService() {
         return kpiService;
     }
