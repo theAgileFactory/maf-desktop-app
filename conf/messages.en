@@ -2338,6 +2338,14 @@ core.portfolio_entry_governance.process.change.notification.message=The life cyc
 # portfolio entry: delivery
 #----------------------
 
+#manage deliverable
+core.portfolio_entry_delivery.deliverable.manage.title=Manage a deliverable
+core.portfolio_entry_delivery.deliverable.add.successful=The deliverable has been added successfully.
+core.portfolio_entry_delivery.deliverable.edit.successful=The deliverable has been updated.
+
+#delete deliverable
+core.portfolio_entry_delivery.deliverable.delete.successful=The deliverable has been removed.
+
 #requirements status
 core.portfolio_entry_delivery.requirement.status.priority.title=Distribution of needs by priority
 core.portfolio_entry_delivery.requirement.status.priority.must.false.label=Optional

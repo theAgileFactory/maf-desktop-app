@@ -2354,6 +2354,14 @@ core.portfolio_entry_governance.process.change.notification.message=Le processus
 # portfolio entry: delivery
 #----------------------
 
+#manage deliverable
+core.portfolio_entry_delivery.deliverable.manage.title=Gérer un livrable
+core.portfolio_entry_delivery.deliverable.add.successful=Le livrable a été créé.
+core.portfolio_entry_delivery.deliverable.edit.successful=Le livrable a été mis à jour.
+
+#delete deliverable
+core.portfolio_entry_delivery.deliverable.delete.successful=Le livrable a été supprimé.
+
 #requirements status
 core.portfolio_entry_delivery.requirement.status.priority.title=Répartition par priorité des besoins
 core.portfolio_entry_delivery.requirement.status.priority.must.false.label=Optionnel

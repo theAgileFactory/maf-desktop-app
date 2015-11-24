@@ -2350,6 +2350,14 @@ core.portfolio_entry_governance.process.change.notification.message=der Lieferzy
 # portfolio entry: delivery
 #----------------------
 
+#manage deliverable
+core.portfolio_entry_delivery.deliverable.manage.title=de: Manage a deliverable
+core.portfolio_entry_delivery.deliverable.add.successful=de: The deliverable has been added successfully.
+core.portfolio_entry_delivery.deliverable.edit.successful=de: The deliverable has been updated.
+
+#delete deliverable
+core.portfolio_entry_delivery.deliverable.delete.successful=de: The deliverable has been removed.
+
 #requirements status
 core.portfolio_entry_delivery.requirement.status.priority.title=Bedürfnis nach Dringlichkeit
 core.portfolio_entry_delivery.requirement.status.priority.must.false.label=Optional
