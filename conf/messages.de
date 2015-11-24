@@ -1373,6 +1373,9 @@ object.allocated_resource.table.empty=Keine Einträge
 
 object.deliverable.name.label=Name
 object.deliverable.description.label=Beschreibung
+object.deliverable.is_delegated.label=de: Delegated
+object.deliverable.owner.label=de: Owner
+object.deliverable.planning_package.label=Planungspaket
 object.deliverable.requirements.label=Anforderungen
 object.deliverable.portfolio_entries.label=Initiativen
 object.deliverable.table.empty=Keine Einträge
@@ -2131,6 +2134,7 @@ core.portfolio_entry.sidebar.financial.details.label=Details
 core.portfolio_entry.sidebar.stakeholders.label=Projektbeteiligte
 core.portfolio_entry.sidebar.governance.label=Unternehmensführung
 core.portfolio_entry.sidebar.delivery.label=Lieferung
+core.portfolio_entry.sidebar.delivery.deliverables.label=de: Deliverables
 core.portfolio_entry.sidebar.delivery.requirements.label=Anforderungen
 core.portfolio_entry.sidebar.delivery.requirements_status.label=Anforderungsstatus
 core.portfolio_entry.sidebar.delivery.iterations.label=Iterations

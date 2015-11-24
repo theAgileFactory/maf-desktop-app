@@ -1361,6 +1361,9 @@ object.allocated_resource.table.empty=There is no allocation.
 
 object.deliverable.name.label=Name
 object.deliverable.description.label=Description
+object.deliverable.is_delegated.label=Delegated
+object.deliverable.owner.label=Owner
+object.deliverable.planning_package.label=Package
 object.deliverable.requirements.label=Requirements
 object.deliverable.portfolio_entries.label=Initiatives
 object.deliverable.table.empty=There is no deliverable.
@@ -2120,6 +2123,7 @@ core.portfolio_entry.sidebar.financial.details.label=Details
 core.portfolio_entry.sidebar.stakeholders.label=Stakeholders
 core.portfolio_entry.sidebar.governance.label=Governance
 core.portfolio_entry.sidebar.delivery.label=Delivery
+core.portfolio_entry.sidebar.delivery.deliverables.label=Deliverables
 core.portfolio_entry.sidebar.delivery.requirements.label=Requirements
 core.portfolio_entry.sidebar.delivery.requirements_status.label=Requirements status
 core.portfolio_entry.sidebar.delivery.iterations.label=Iterations
