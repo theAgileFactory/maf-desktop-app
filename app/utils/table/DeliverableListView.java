@@ -60,7 +60,7 @@ public class DeliverableListView {
 
                 addColumnConfiguration("owner", "owner", "object.deliverable.owner.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
 
-                addColumnConfiguration("isDelegated", "portfolioEntryDeliverables.portfolioEntryPlanningPackage.name",
+                addColumnConfiguration("planningPackage", "portfolioEntryDeliverables.portfolioEntryPlanningPackage.name",
                         "object.deliverable.planning_package.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.NONE);
 
                 addCustomAttributesColumns("id", Deliverable.class);
@@ -136,9 +136,15 @@ public class DeliverableListView {
                     }
                 });
                 setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-                // TODO set action line
+                this.setLineAction(new IColumnFormatter<DeliverableListView>() {
+                    @Override
+                    public String apply(DeliverableListView deliverableListView, Object value) {
+                        return controllers.core.routes.PortfolioEntryDeliveryController
+                                .viewDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
+                    }
+                });
 
                 setEmptyMessageKey("object.deliverable.table.empty");
 

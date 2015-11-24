@@ -203,7 +203,22 @@ public class PortfolioEntryDeliveryController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result viewDeliverable(Long id, Long deliverableId) {
-        return TODO;
+
+        PortfolioEntryDeliverable portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(id, deliverableId);
+        Deliverable deliverable = portfolioEntryDeliverable.getDeliverable();
+        PortfolioEntry portfolioEntry = portfolioEntryDeliverable.getPortfolioEntry();
+
+        List<RequirementListView> requirementsListView = new ArrayList<>();
+        for (Requirement requirement : deliverable.requirements) {
+            requirementsListView.add(new RequirementListView(requirement));
+        }
+        Table<RequirementListView> filledRequirementsTable = RequirementListView.templateTable.fill(requirementsListView);
+
+        // construct the corresponding form data (for the custom attributes)
+        DeliverableFormData deliverableFormData = new DeliverableFormData(deliverable, portfolioEntryDeliverable);
+
+        return ok(views.html.core.portfolioentrydelivery.deliverable_view.render(portfolioEntry, portfolioEntryDeliverable, deliverableFormData,
+                filledRequirementsTable));
     }
 
     /**
