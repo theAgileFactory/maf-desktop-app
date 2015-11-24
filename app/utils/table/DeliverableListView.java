@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -49,25 +50,18 @@ public class DeliverableListView {
         return new FilterConfig<DeliverableListView>() {
             {
 
-                addColumnConfiguration("name", "name", "object.deliverable.name.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
+                addColumnConfiguration("name", "name", "object.deliverable.name.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.ASC);
 
                 addColumnConfiguration("description", "description", "object.deliverable.description.label", new TextFieldFilterComponent("*"), true, false,
                         SortStatusType.UNSORTED);
 
-                // TODO isDelegated
+                addColumnConfiguration("isDelegated", "(portfolioEntryDeliverables.type<>'" + PortfolioEntryDeliverable.Type.OWNER + "')",
+                        "object.deliverable.is_delegated.label", new CheckboxFilterComponent(false), true, false, SortStatusType.NONE);
 
-                // TODO owner
+                addColumnConfiguration("owner", "owner", "object.deliverable.owner.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
 
-                // TODO planningPackage
-
-                /*
-                 * addColumnConfiguration("planningPackage",
-                 * "portfolioEntryPlanningPackage.name",
-                 * "object.deliverable.planning_package.label", new
-                 * TextFieldFilterComponent("*"), true, false,
-                 * SortStatusType.UNSORTED);
-                 */
+                addColumnConfiguration("isDelegated", "portfolioEntryDeliverables.portfolioEntryPlanningPackage.name",
+                        "object.deliverable.planning_package.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.NONE);
 
                 addCustomAttributesColumns("id", Deliverable.class);
 
