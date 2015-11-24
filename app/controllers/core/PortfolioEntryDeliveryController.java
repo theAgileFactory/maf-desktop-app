@@ -31,6 +31,7 @@ import com.avaje.ebean.OrderBy;
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
+import dao.delivery.DeliverableDAO;
 import dao.delivery.IterationDAO;
 import dao.delivery.RequirementDAO;
 import dao.pmo.PortfolioEntryDao;
@@ -47,6 +48,7 @@ import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.delivery.Iteration;
+import models.delivery.PortfolioEntryDeliverable;
 import models.delivery.Requirement;
 import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
@@ -61,6 +63,7 @@ import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import utils.form.IterationFormData;
 import utils.form.RequirementFormData;
+import utils.table.DeliverableListView;
 import utils.table.IterationListView;
 import utils.table.RequirementListView;
 
@@ -79,11 +82,173 @@ public class PortfolioEntryDeliveryController extends Controller {
     private Configuration configuration;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
     public static Form<RequirementFormData> formTemplate = Form.form(RequirementFormData.class);
     public static Form<IterationFormData> iterationFormTemplate = Form.form(IterationFormData.class);
+
+    /**
+     * Display the list of the deliverables of a portfolio entry.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result deliverables(Long id) {
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        try {
+
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<DeliverableListView> filterConfig = DeliverableListView.filterConfig.getCurrent(uid, request());
+
+            // get the table
+            Pair<Table<DeliverableListView>, Pagination<PortfolioEntryDeliverable>> t = getDeliverablesTable(id, filterConfig);
+
+            return ok(views.html.core.portfolioentrydelivery.deliverables.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig));
+
+        } catch (Exception e) {
+
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
+        }
+
+    }
+
+    /**
+     * Filter the deliverables.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result deliverablesFilter(Long id) {
+
+        try {
+
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<DeliverableListView> filterConfig = DeliverableListView.filterConfig.persistCurrentInDefault(uid, request());
+
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
+
+                // get the table
+                Pair<Table<DeliverableListView>, Pagination<PortfolioEntryDeliverable>> t = getDeliverablesTable(id, filterConfig);
+
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
+
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+        }
+    }
+
+    /**
+     * Get the delivrables table for a portfolio entry and a filter config.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     * @param filterConfig
+     *            the filter config.
+     */
+    private Pair<Table<DeliverableListView>, Pagination<PortfolioEntryDeliverable>> getDeliverablesTable(Long portfolioEntryId,
+            FilterConfig<DeliverableListView> filterConfig) {
+
+        ExpressionList<PortfolioEntryDeliverable> expressionList = filterConfig
+                .updateWithSearchExpression(DeliverableDAO.getPortfolioEntryDeliverableAsExprByPE(portfolioEntryId));
+        filterConfig.updateWithSortExpression(expressionList);
+
+        Pagination<PortfolioEntryDeliverable> pagination = new Pagination<PortfolioEntryDeliverable>(expressionList);
+        pagination.setCurrentPage(filterConfig.getCurrentPage());
+
+        List<DeliverableListView> deliverableListView = new ArrayList<DeliverableListView>();
+        for (PortfolioEntryDeliverable portfolioEntryDeliverable : pagination.getListOfObjects()) {
+            deliverableListView.add(new DeliverableListView(portfolioEntryDeliverable));
+        }
+
+        Set<String> columnsToHide = filterConfig.getColumnsToHide();
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            columnsToHide.add("editActionLink");
+            columnsToHide.add("deleteActionLink");
+        }
+
+        Table<DeliverableListView> table = DeliverableListView.templateTable.fillForFilterConfig(deliverableListView, columnsToHide);
+
+        return Pair.of(table, pagination);
+
+    }
+
+    /**
+     * View details of a deliverable.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param deliverableId
+     *            the deliverable id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result viewDeliverable(Long id, Long deliverableId) {
+        return TODO;
+    }
+
+    /**
+     * Form to manage a deliverable.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param deliverableId
+     *            the deliverable id (0 for create case)
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result manageDeliverable(Long id, Long deliverableId) {
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        return TODO;
+
+    }
+
+    /**
+     * Process the creation/edition of a deliverable.
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result processManageDeliverable() {
+        return TODO;
+    }
+
+    /**
+     * Delete a deliverable.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param deliverableId
+     *            the deliverable id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteDeliverable(Long id, Long deliverableId) {
+
+        // get the portfolio entry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        return TODO;
+
+    }
 
     /**
      * Display the list of the requirements of a portfolio entry.
@@ -712,6 +877,13 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
+    }
+
+    /**
+     * Get the i18n messages service.
+     */
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 
 }

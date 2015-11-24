@@ -852,6 +852,9 @@ public class PortfolioEntryController extends Controller {
             HeaderMenuItem deliveryMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.delivery.label", "glyphicons glyphicons-cargo",
                     currentType.equals(MenuItemType.DELIVERY));
 
+            deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.deliverables.label",
+                    controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntryId), "glyphicons glyphicons-package", false));
+
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.requirements.label",
                     controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntryId), "glyphicons glyphicons-log-book", false));
 
@@ -872,7 +875,7 @@ public class PortfolioEntryController extends Controller {
                     controllers.core.routes.PortfolioEntryPlanningController.overview(portfolioEntryId), "glyphicons glyphicons-radar", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.packages.label",
-                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId), "glyphicons glyphicons-package", false));
+                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId), "glyphicons glyphicons-lab", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.resources.label",
                     controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryId), "glyphicons glyphicons-address-book", false));

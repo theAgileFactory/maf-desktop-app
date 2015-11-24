@@ -1321,6 +1321,9 @@ public class PortfolioEntryStatusReportingController extends Controller {
         return securityService;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

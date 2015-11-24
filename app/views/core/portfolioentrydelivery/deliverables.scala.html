@@ -1,0 +1,62 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    table: framework.utils.Table[utils.table.DeliverableListView], 
+    pagination: framework.utils.Pagination[models.delivery.PortfolioEntryDeliverable],
+    filterConfig: framework.utils.FilterConfig[utils.table.DeliverableListView]
+)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.deliverybles.label", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.REPORTING, breadcrump){
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            &nbsp;
+            
+            <div class="pull-right">
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryDeliveryController.manageDeliverable(portfolioEntry.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                }
+            </div>
+        </div>
+
+        <div class="panel-body">
+        
+            @parts.table.filtered_tableview(
+                table, 
+                pagination, 
+                filterConfig, 
+                controllers.core.routes.PortfolioEntryDeliveryController.deliverablesFilter(portfolioEntry.id).url,
+                null
+            )
+
+        </div>
+    </div>
+}
