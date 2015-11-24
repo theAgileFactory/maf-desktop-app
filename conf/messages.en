@@ -2338,6 +2338,10 @@ core.portfolio_entry_governance.process.change.notification.message=The life cyc
 # portfolio entry: delivery
 #----------------------
 
+#view deliverable
+core.portfolio_entry_delivery.deliverable.view.details.title=Details
+core.portfolio_entry_delivery.deliverable.view.requirements.title=Requirements
+
 #manage deliverable
 core.portfolio_entry_delivery.deliverable.manage.title=Manage a deliverable
 core.portfolio_entry_delivery.deliverable.add.successful=The deliverable has been added successfully.
