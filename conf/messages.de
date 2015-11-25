@@ -2362,6 +2362,9 @@ core.portfolio_entry_delivery.deliverable.edit.successful=de: The deliverable ha
 #delete deliverable
 core.portfolio_entry_delivery.deliverable.delete.successful=de: The deliverable has been removed.
 
+#edit deliverable requirements
+core.portfolio_entry_delivery.deliverable.requirements.edit.title=de: Edit the requirements assignment
+
 #requirements status
 core.portfolio_entry_delivery.requirement.status.priority.title=Bedürfnis nach Dringlichkeit
 core.portfolio_entry_delivery.requirement.status.priority.must.false.label=Optional

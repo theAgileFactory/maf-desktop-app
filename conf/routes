@@ -286,6 +286,8 @@ GET    /portfolio-entry/deliverable/view                  controllers.core.Portf
 GET    /portfolio-entry/deliverable/edit                  controllers.core.PortfolioEntryDeliveryController.manageDeliverable(id: Long, deliverableId: Long ?= 0)
 POST   /portfolio-entry/deliverable/edit                  controllers.core.PortfolioEntryDeliveryController.processManageDeliverable()
 GET    /portfolio-entry/deliverable/delete                controllers.core.PortfolioEntryDeliveryController.deleteDeliverable(id: Long, deliverableId: Long)
+GET    /portfolio-entry/deliverable/requirements/edit     controllers.core.PortfolioEntryDeliveryController.editDeliverableRequirements(id: Long, deliverableId: Long)
+POST   /portfolio-entry/deliverable/requirements/edit     controllers.core.PortfolioEntryDeliveryController.processEditDeliverableRequirements()
 GET    /portfolio-entry/requirements                      controllers.core.PortfolioEntryDeliveryController.requirements(id: Long)
 POST   /portfolio-entry/requirements/filter               controllers.core.PortfolioEntryDeliveryController.requirementsFilter(id: Long)
 GET    /portfolio-entry/requirements/status               controllers.core.PortfolioEntryDeliveryController.requirementsStatus(id: Long)
