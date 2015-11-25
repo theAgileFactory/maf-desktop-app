@@ -2352,6 +2352,7 @@ core.portfolio_entry_delivery.deliverable.delete.successful=The deliverable has 
 
 #edit deliverable requirements
 core.portfolio_entry_delivery.deliverable.requirements.edit.title=Edit the requirements assignment
+core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement=This initiative (or release) hasn''t requirement, simply <a href="{0}">click here</a> to create your first requirement.
 core.portfolio_entry_delivery.deliverable.requirements.edit.successful=The list of requirements has been updated
 
 #requirements status

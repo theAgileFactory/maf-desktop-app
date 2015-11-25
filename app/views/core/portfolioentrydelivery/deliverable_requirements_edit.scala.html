@@ -61,54 +61,62 @@
         }
 
         @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processEditDeliverableRequirements()) {
-            <fieldset>
             
-                <input type="hidden" name="id" value="@portfolioEntry.id"/>
-                <input type="hidden" name="deliverableId" value="@deliverable.id"/>
-
-                <table id="requirements_table" class="table table-condensed table-hover">
-                    <colgroup>
-                        <col style="width: 40px;">
-                        <col class="col-md-2">
-                        <col class="col-md-5">
-                        <col class="col-md-5">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>&nbsp;</th>
-                            <th>@parts.Msg("object.requirement.name.label")</th>
-                            <th>@parts.Msg("object.requirement.external_ref_id.label")</th>
-                            <th>@parts.Msg("object.requirement.deliverables.label")</th>
-                        </tr>
-                    </thead>
-                    <tbody class="rowlink" data-link="row">
-                        @for((requirement, i) <- portfolioEntry.requirements.zipWithIndex) {
+            @if(portfolioEntry.requirements != null && portfolioEntry.requirements.size > 0) {
+                <fieldset>
+                    <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                    <input type="hidden" name="deliverableId" value="@deliverable.id"/>
+    
+                    <table id="requirements_table" class="table table-condensed table-hover">
+                        <colgroup>
+                            <col style="width: 40px;">
+                            <col class="col-md-2">
+                            <col class="col-md-5">
+                            <col class="col-md-5">
+                        </colgroup>
+                        <thead>
                             <tr>
-                                <td class="rowlink-skip"><input type="checkbox" value="@requirement.id" name="requirements[@i]" id="requirements_@i" @if(isValueIn(requirementsForm("requirements"),requirement.id)){checked="checked"}></td>
-                                <td>
-                                    <a class="hidden" href="javascript: maf_checkRequirement('requirements_@i');"></a>
-                                    <strong>@requirement.getName</strong></td>
-                                <td>@display_object(requirement.externalRefId)</td>
-                                <td>@display_list_of_values(requirement.deliverables)</td>
+                                <th>&nbsp;</th>
+                                <th>@parts.Msg("object.requirement.name.label")</th>
+                                <th>@parts.Msg("object.requirement.external_ref_id.label")</th>
+                                <th>@parts.Msg("object.requirement.deliverables.label")</th>
                             </tr>
+                        </thead>
+                        <tbody class="rowlink" data-link="row">
+                            @for((requirement, i) <- portfolioEntry.requirements.zipWithIndex) {
+                                <tr>
+                                    <td class="rowlink-skip"><input type="checkbox" value="@requirement.id" name="requirements[@i]" id="requirements_@i" @if(isValueIn(requirementsForm("requirements"),requirement.id)){checked="checked"}></td>
+                                    <td>
+                                        <a class="hidden" href="javascript: maf_checkRequirement('requirements_@i');"></a>
+                                        <strong>@requirement.getName</strong></td>
+                                    <td>@display_object(requirement.externalRefId)</td>
+                                    <td>@display_list_of_values(requirement.deliverables)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <script>
+                        $('#requirements_table tbody').rowlink();
+                        function maf_checkRequirement(id) {
+                            if($('#' + id).is(':checked')) {
+                                $('#' + id).prop('checked', false);
+                            } else {
+                                $('#' + id).prop('checked', true);
+                            }
                         }
-                    </tbody>
-                </table>
-                <script>
-                    $('#requirements_table tbody').rowlink();
-                    function maf_checkRequirement(id) {
-                        if($('#' + id).is(':checked')) {
-                            $('#' + id).prop('checked', false);
-                        } else {
-                            $('#' + id).prop('checked', true);
-                        }
-                    }
-                </script>
+                    </script>
+    
+                </fieldset>
+                <br/>
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id).url">@parts.Msg("button.cancel")</a>
+            } else {
+                <div class="alert alert-info">
+                    @parts.Msg("core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement", controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id).url)
+                </div>
+                <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id).url">@parts.Msg("button.back")</a>
+            }
 
-            </fieldset>
-            <br/>
-            <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-            <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id).url">@parts.Msg("button.cancel")</a>
         }
     </div> 
    
