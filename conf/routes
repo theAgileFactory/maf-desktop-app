@@ -133,6 +133,7 @@ POST   /picker/portfolio                              controllers.PickerControll
 POST   /picker/budget-bucket                          controllers.PickerController.budgetBucket()
 POST   /picker/principals/uid                         controllers.PickerController.principalsUid()
 POST   /picker/portfolio-entry/planning-package       controllers.PickerController.planningPackageOfPortfolioEntry()
+POST   /picker/portfolio-entry/deliverable            controllers.PickerController.deliverableOfPortfolioEntry
 POST   /picker/portfolio-type                         controllers.PickerController.portfolioType()
 POST   /picker/portfolio-entry-type                   controllers.PickerController.portfolioEntryType()
 
