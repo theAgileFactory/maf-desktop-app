@@ -76,13 +76,13 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>&nbsp;</th>
+                                <th><input type="checkbox" name="check-all-requirements" id="check-all-requirements"></th>
                                 <th>@parts.Msg("object.requirement.name.label")</th>
                                 <th>@parts.Msg("object.requirement.external_ref_id.label")</th>
                                 <th>@parts.Msg("object.requirement.deliverables.label")</th>
                             </tr>
                         </thead>
-                        <tbody class="rowlink" data-link="row">
+                        <tbody class="rowlink" data-link="row" id="requirements_table_body">
                             @for((requirement, i) <- portfolioEntry.requirements.zipWithIndex) {
                                 <tr>
                                     <td class="rowlink-skip"><input type="checkbox" value="@requirement.id" name="requirements[@i]" id="requirements_@i" @if(isValueIn(requirementsForm("requirements"),requirement.id)){checked="checked"}></td>
@@ -104,6 +104,10 @@
                                 $('#' + id).prop('checked', true);
                             }
                         }
+                        $("#check-all-requirements").change(function() {
+                            $('#requirements_table_body input:checkbox').prop('checked', $(this).prop('checked'));
+                        });
+                        
                     </script>
     
                 </fieldset>
