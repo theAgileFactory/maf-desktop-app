@@ -17,17 +17,22 @@
  */
 package utils.table;
 
+import java.util.List;
+
 import constants.IMafConstants;
 import dao.delivery.RequirementDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.HoursFormatter;
+import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.delivery.Deliverable;
 import models.delivery.Iteration;
 import models.delivery.Requirement;
 import models.delivery.RequirementPriority;
@@ -59,6 +64,9 @@ public class RequirementListView {
 
                 addColumnConfiguration("name", "name", "object.requirement.name.label", new TextFieldFilterComponent("*"), true, false,
                         SortStatusType.UNSORTED);
+
+                addColumnConfiguration("deliverables", "deliverables.name", "object.requirement.deliverables.label", new TextFieldFilterComponent("*"), false,
+                        false, SortStatusType.NONE);
 
                 addColumnConfiguration("iteration", "iteration", "object.requirement.iteration.label", new NoneFilterComponent(), false, false,
                         SortStatusType.NONE);
@@ -136,6 +144,10 @@ public class RequirementListView {
 
                 addColumn("name", "name", "object.requirement.name.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("name", new ObjectFormatter<RequirementListView>());
+
+                addColumn("deliverables", "deliverables", "object.requirement.deliverables.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("deliverables", new ListOfValuesFormatter<RequirementListView>());
+                this.setColumnValueCssClass("deliverables", "rowlink-skip");
 
                 addColumn("iteration", "iteration", "object.requirement.iteration.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("iteration", new IColumnFormatter<RequirementListView>() {
@@ -247,6 +259,7 @@ public class RequirementListView {
     public Double remainingEffort;
     public Boolean isScoped;
     public Iteration iteration;
+    public List<Deliverable> deliverables;
 
     /**
      * Construct a requirement list view with a DB entry.
@@ -273,6 +286,7 @@ public class RequirementListView {
         this.remainingEffort = requirement.remainingEffort;
         this.isScoped = requirement.isScoped;
         this.iteration = requirement.iteration;
+        this.deliverables = requirement.deliverables;
     }
 
 }

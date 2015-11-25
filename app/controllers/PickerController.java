@@ -23,6 +23,7 @@ import play.mvc.Result;
 import utils.picker.ActorPicker;
 import utils.picker.BudgetBucketPicker;
 import utils.picker.CostCenterPicker;
+import utils.picker.DeliverablePicker;
 import utils.picker.OrgUnitPicker;
 import utils.picker.PlanningPackagePicker;
 import utils.picker.PortfolioEntryTypePicker;
@@ -158,6 +159,15 @@ public class PickerController extends Controller {
      */
     public Result planningPackageOfPortfolioEntry() {
         return PlanningPackagePicker.pickerTemplate.handle(request());
+    }
+
+    /**
+     * The deliverables of a portfolio entry.
+     * 
+     * The portfolio entry id is given as a picker parameter.
+     */
+    public Result deliverableOfPortfolioEntry() {
+        return DeliverablePicker.pickerTemplate.handle(request());
     }
 
     /**

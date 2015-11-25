@@ -17,6 +17,11 @@
  */
 package utils.form;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import dao.delivery.DeliverableDAO;
+import models.delivery.Deliverable;
 import models.delivery.Requirement;
 
 /**
@@ -31,6 +36,8 @@ public class RequirementFormData {
     public Long id;
 
     public Long requirementId;
+
+    public List<Long> deliverables = new ArrayList<Long>();
 
     /**
      * Default constructor.
@@ -47,6 +54,11 @@ public class RequirementFormData {
     public RequirementFormData(Requirement requirement) {
         this.id = requirement.portfolioEntry.id;
         this.requirementId = requirement.id;
+        if (requirement.deliverables != null) {
+            for (Deliverable deliverable : requirement.deliverables) {
+                this.deliverables.add(deliverable.id);
+            }
+        }
     }
 
     /**
@@ -56,5 +68,9 @@ public class RequirementFormData {
      *            the requirement in the DB
      */
     public void fill(Requirement requirement) {
+        requirement.deliverables = new ArrayList<Deliverable>();
+        for (Long deliverableId : this.deliverables) {
+            requirement.deliverables.add(DeliverableDAO.getDeliverableById(deliverableId));
+        }
     }
 }

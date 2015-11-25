@@ -18,8 +18,7 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     requirement: models.delivery.Requirement,
-    requirementForm: Form[utils.form.RequirementFormData],
-    releases: framework.utils.ISelectableValueHolderCollection[_]
+    requirementForm: Form[utils.form.RequirementFormData]
 )
 
 @import helper._
@@ -65,8 +64,13 @@
         
                         <input type="hidden" name="requirementId" value="@requirementForm("requirementId").value"/>
                         
-                        @parts.dropdownlist(requirementForm("release"), parts.Msg.asString("object.requirement.release.label"), releases, parts.Msg.asString("object.requirement.release.help"), false)
-
+                        @parts.multivalue_picker(
+                            requirementForm("deliverables"), 
+                            parts.Msg.asString("object.requirement.deliverables.label"),
+                            controllers.routes.PickerController.deliverableOfPortfolioEntry().url,
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                        )
+                        
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
         

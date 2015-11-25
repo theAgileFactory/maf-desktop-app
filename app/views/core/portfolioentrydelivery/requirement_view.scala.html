@@ -80,6 +80,10 @@
                                 <td>@display_object(requirement.name)</td>
                             </tr>
                             <tr>
+                                <th>@parts.Msg("object.requirement.deliverables.label")</th>
+                                <td>@display_list_of_values(requirement.deliverables)</td>
+                            </tr>
+                            <tr>
                                 <th>@parts.Msg("object.requirement.iteration.label")</th>
                                 <td>@display_iteration(requirement.iteration)</td>
                             </tr>

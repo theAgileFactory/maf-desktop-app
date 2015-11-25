@@ -223,6 +223,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         columnsToHide.add("requirementSeverity");
         columnsToHide.add("effort");
         columnsToHide.add("storyPoints");
+        columnsToHide.add("deliverables");
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             columnsToHide.add("editActionLink");
         }
@@ -721,15 +722,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         // add the custom attributes values
         CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, requirementId);
 
-        /*
-         * return
-         * ok(views.html.core.portfolioentrydelivery.requirement_edit.render(
-         * portfolioEntry, requirement, requirementForm,
-         * ReleaseDAO.getReleaseAsVHByPEAndType(id,
-         * models.delivery.ReleasePortfolioEntry.Type.BY_REQUIREMENT)));
-         */
-
-        return TODO;
+        return ok(views.html.core.portfolioentrydelivery.requirement_edit.render(portfolioEntry, requirement, requirementForm));
 
     }
 
@@ -757,14 +750,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Requirement.class)) {
-            return TODO;
-            /*
-             * return
-             * ok(views.html.core.portfolioentrydelivery.requirement_edit.render
-             * (portfolioEntry, requirement, boundForm,
-             * ReleaseDAO.getReleaseAsVHByPEAndType(id,
-             * models.delivery.ReleasePortfolioEntry.Type.BY_REQUIREMENT)));
-             */
+            return ok(views.html.core.portfolioentrydelivery.requirement_edit.render(portfolioEntry, requirement, boundForm));
         }
 
         RequirementFormData requirementFormData = boundForm.get();

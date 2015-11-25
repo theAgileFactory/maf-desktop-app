@@ -3,6 +3,8 @@ package dao.delivery;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
 import models.delivery.Deliverable;
 import models.delivery.PortfolioEntryDeliverable;
 import models.pmo.PortfolioEntry;
@@ -54,6 +56,16 @@ public class DeliverableDAO {
      */
     public static ExpressionList<Deliverable> getDeliverableAsExprByPE(Long portfolioEntryId) {
         return findDeliverable.where().eq("deleted", false).eq("portfolioEntryDeliverables.portfolioEntry.id", portfolioEntryId);
+    }
+
+    /**
+     * Get all deliverables of a portfolio entry as a value holder collection.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     */
+    public static ISelectableValueHolderCollection<Long> getDeliverableAsVHByPE(Long portfolioEntryId) {
+        return new DefaultSelectableValueHolderCollection<>(getDeliverableAsExprByPE(portfolioEntryId).findList());
     }
 
     /**
