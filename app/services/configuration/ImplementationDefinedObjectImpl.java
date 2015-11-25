@@ -24,6 +24,7 @@ import controllers.Assets.Asset;
 import dao.finance.CurrencyDAO;
 import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.database.IDatabaseDependencyService;
+import models.delivery.Deliverable;
 import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
 import play.Configuration;
@@ -144,6 +145,10 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
         if (object instanceof Portfolio) {
             return views.html.modelsparts.display_portfolio.render((Portfolio) object).body();
+        }
+        if (object instanceof Deliverable) {
+            Deliverable deliverable = (Deliverable) object;
+            return deliverable.getName();
         }
         return object.toString();
     }

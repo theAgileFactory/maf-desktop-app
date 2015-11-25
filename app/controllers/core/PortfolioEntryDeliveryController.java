@@ -64,6 +64,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import utils.form.DeliverableFormData;
+import utils.form.DeliverableRequirementsFormData;
 import utils.form.IterationFormData;
 import utils.form.RequirementFormData;
 import utils.table.DeliverableListView;
@@ -93,6 +94,7 @@ public class PortfolioEntryDeliveryController extends Controller {
     public static Form<IterationFormData> iterationFormTemplate = Form.form(IterationFormData.class);
     public static Form<RequirementFormData> formTemplate = Form.form(RequirementFormData.class);
     public static Form<DeliverableFormData> deliverableFormTemplate = Form.form(DeliverableFormData.class);
+    private static Form<DeliverableRequirementsFormData> deliverableRequirementsFormTemplate = Form.form(DeliverableRequirementsFormData.class);
 
     /**
      * Display the list of the deliverables of a portfolio entry.
@@ -367,6 +369,43 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         return redirect(controllers.core.routes.PortfolioEntryDeliveryController.deliverables(id));
 
+    }
+
+    /**
+     * Form to edit the requirements assignments of the deliverable.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param deliverableId
+     *            the deliverable id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result editDeliverableRequirements(Long id, Long deliverableId) {
+
+        PortfolioEntryDeliverable portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(id, deliverableId);
+
+        if (!portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        PortfolioEntry portfolioEntry = portfolioEntryDeliverable.getPortfolioEntry();
+        Deliverable deliverable = portfolioEntryDeliverable.getDeliverable();
+
+        // construct the form
+        Form<DeliverableRequirementsFormData> deliverableRequirementsForm = deliverableRequirementsFormTemplate
+                .fill(new DeliverableRequirementsFormData(portfolioEntryDeliverable));
+
+        return ok(views.html.core.portfolioentrydelivery.deliverable_requirements_edit.render(portfolioEntry, deliverable, deliverableRequirementsForm));
+    }
+
+    /**
+     * Process the form to edit the requirements assignments of the deliverable.
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result processEditDeliverableRequirements() {
+        return TODO;
     }
 
     /**

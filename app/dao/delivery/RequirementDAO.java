@@ -76,7 +76,7 @@ public abstract class RequirementDAO {
      */
     public static ExpressionList<Requirement> getRequirementAllAsExprByPE(Long portfolioEntryId) {
         return findRequirement.where().eq("deleted", false).disjunction().eq("portfolioEntry.id", portfolioEntryId)
-                .eq("delivrables.portfolioEntryDeliverables.portfolioEntry.id", portfolioEntryId);
+                .eq("deliverables.portfolioEntryDeliverables.portfolioEntry.id", portfolioEntryId);
     }
 
     /**

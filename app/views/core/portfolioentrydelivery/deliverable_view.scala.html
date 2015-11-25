@@ -117,6 +117,14 @@
                 
                 <div class="panel-heading">
                     @parts.Msg("core.portfolio_entry_delivery.deliverable.view.requirements.title")
+                    <div class="pull-right">
+                        @if(!isDelegated) {
+                            @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                                <a href="@controllers.core.routes.PortfolioEntryDeliveryController.editDeliverableRequirements(portfolioEntry.id, deliverable.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                                &nbsp;
+                            }
+                        }
+                    </div>
                 </div>
                 <div class="panel-body">
                     @parts.table.tableview(requirementsTable)

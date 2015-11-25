@@ -1,0 +1,115 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry, 
+    deliverable: models.delivery.Deliverable,
+    requirementsForm: Form[utils.form.DeliverableRequirementsFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import framework_views.parts
+@import framework_views.parts.formats._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.deliverables.label", controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntry.id).url),
+        (deliverable.getName, controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id).url),
+        ("core.portfolio_entry_delivery.deliverable.requirements.edit.title", null)
+    )
+}
+
+@isValueIn=@{
+    val isValueIn = (afield : Field, value: Any) => {
+        var isIn=false;
+        for(index <- afield.indexes) {
+            if(!afield.apply("["+index.toString()+"]").value.isEmpty && afield.apply("["+index.toString()+"]").value.get.equals(value.toString)){
+                isIn=true;
+            }
+        }
+        isIn;
+    }
+    isValueIn;
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+    <div class="maf-form">
+        @if(requirementsForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+
+        @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processEditDeliverableRequirements()) {
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                <input type="hidden" name="deliverableId" value="@deliverable.id"/>
+
+                <table id="requirements_table" class="table table-condensed table-hover">
+                    <colgroup>
+                        <col style="width: 40px;">
+                        <col class="col-md-2">
+                        <col class="col-md-5">
+                        <col class="col-md-5">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>@parts.Msg("object.requirement.name.label")</th>
+                            <th>@parts.Msg("object.requirement.external_ref_id.label")</th>
+                            <th>@parts.Msg("object.requirement.deliverables.label")</th>
+                        </tr>
+                    </thead>
+                    <tbody class="rowlink" data-link="row">
+                        @for((requirement, i) <- portfolioEntry.requirements.zipWithIndex) {
+                            <tr>
+                                <td class="rowlink-skip"><input type="checkbox" value="@requirement.id" name="requirements[@i]" id="requirements_@i" @if(isValueIn(requirementsForm("requirements"),requirement.id)){checked="checked"}></td>
+                                <td>
+                                    <a class="hidden" href="javascript: maf_checkRequirement('requirements_@i');"></a>
+                                    <strong>@requirement.getName</strong></td>
+                                <td>@display_object(requirement.externalRefId)</td>
+                                <td>@display_list_of_values(requirement.deliverables)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <script>
+                    $('#requirements_table tbody').rowlink();
+                    function maf_checkRequirement(id) {
+                        if($('#' + id).is(':checked')) {
+                            $('#' + id).prop('checked', false);
+                        } else {
+                            $('#' + id).prop('checked', true);
+                        }
+                    }
+                </script>
+
+            </fieldset>
+            <br/>
+            <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+            <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id).url">@parts.Msg("button.cancel")</a>
+        }
+    </div> 
+   
+}
