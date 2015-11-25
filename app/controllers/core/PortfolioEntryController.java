@@ -583,7 +583,6 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry updPortfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryPortfoliosFormData.id);
         portfolioEntryPortfoliosFormData.fill(updPortfolioEntry);
         updPortfolioEntry.save();
-        // updPortfolioEntry.saveManyToManyAssociations("portfolios");
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.editportfolios.successful"));
 

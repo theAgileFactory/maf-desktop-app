@@ -2364,6 +2364,7 @@ core.portfolio_entry_delivery.deliverable.delete.successful=de: The deliverable 
 
 #edit deliverable requirements
 core.portfolio_entry_delivery.deliverable.requirements.edit.title=de: Edit the requirements assignment
+core.portfolio_entry_delivery.deliverable.requirements.edit.successful=de: The list of requirements has been updated
 
 #requirements status
 core.portfolio_entry_delivery.requirement.status.priority.title=Bedürfnis nach Dringlichkeit

@@ -405,7 +405,33 @@ public class PortfolioEntryDeliveryController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processEditDeliverableRequirements() {
-        return TODO;
+
+        // bind the form
+        Form<DeliverableRequirementsFormData> boundForm = deliverableRequirementsFormTemplate.bindFromRequest();
+
+        // get the portfolioEntry deliverable relation
+        Long id = Long.valueOf(boundForm.data().get("id"));
+        Long deliverableId = Long.valueOf(boundForm.data().get("deliverableId"));
+        PortfolioEntryDeliverable portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(id, deliverableId);
+        PortfolioEntry portfolioEntry = portfolioEntryDeliverable.getPortfolioEntry();
+        Deliverable deliverable = portfolioEntryDeliverable.getDeliverable();
+
+        if (!portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.core.portfolioentrydelivery.deliverable_requirements_edit.render(portfolioEntry, deliverable, boundForm));
+        }
+
+        DeliverableRequirementsFormData deliverableRequirementsFormData = boundForm.get();
+
+        deliverableRequirementsFormData.fill(deliverable);
+        deliverable.save();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.deliverable.requirements.edit.successful"));
+
+        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id));
     }
 
     /**

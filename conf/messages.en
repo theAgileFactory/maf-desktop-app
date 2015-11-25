@@ -2352,6 +2352,7 @@ core.portfolio_entry_delivery.deliverable.delete.successful=The deliverable has 
 
 #edit deliverable requirements
 core.portfolio_entry_delivery.deliverable.requirements.edit.title=Edit the requirements assignment
+core.portfolio_entry_delivery.deliverable.requirements.edit.successful=The list of requirements has been updated
 
 #requirements status
 core.portfolio_entry_delivery.requirement.status.priority.title=Distribution of needs by priority

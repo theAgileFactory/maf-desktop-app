@@ -2368,6 +2368,7 @@ core.portfolio_entry_delivery.deliverable.delete.successful=Le livrable a été 
 
 #edit deliverable requirements
 core.portfolio_entry_delivery.deliverable.requirements.edit.title=Mettre à jour l'assignement des exigences
+core.portfolio_entry_delivery.deliverable.requirements.edit.successful=La liste des exigences a été mise à jour
 
 #requirements status
 core.portfolio_entry_delivery.requirement.status.priority.title=Répartition par priorité des besoins
