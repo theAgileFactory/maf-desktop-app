@@ -116,6 +116,7 @@ public class PasswordReset extends Controller {
             }
             getAccountManagerPlugin().updatePassword(uid, passwordFormData.password);
             getAccountManagerPlugin().resetValidationKey(uid);
+            getAccountManagerPlugin().updateActivationStatus(uid, true);
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_password.successful"));
             session().clear();
             return redirect(controllers.routes.Application.index());
