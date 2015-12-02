@@ -54,10 +54,8 @@ public class RequirementFormData {
     public RequirementFormData(Requirement requirement) {
         this.id = requirement.portfolioEntry.id;
         this.requirementId = requirement.id;
-        if (requirement.deliverables != null) {
-            for (Deliverable deliverable : requirement.deliverables) {
-                this.deliverables.add(deliverable.id);
-            }
+        for (Deliverable deliverable : DeliverableDAO.getDeliverableAsListByRequirement(requirement.id)) {
+            this.deliverables.add(deliverable.id);
         }
     }
 

@@ -20,9 +20,9 @@ package utils.table;
 import java.util.List;
 
 import constants.IMafConstants;
+import dao.delivery.DeliverableDAO;
 import dao.delivery.RequirementDAO;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -286,7 +286,7 @@ public class RequirementListView {
         this.remainingEffort = requirement.remainingEffort;
         this.isScoped = requirement.isScoped;
         this.iteration = requirement.iteration;
-        this.deliverables = requirement.deliverables;
+        this.deliverables = DeliverableDAO.getDeliverableAsListByRequirement(requirement.id);
     }
 
 }

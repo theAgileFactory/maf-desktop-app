@@ -81,7 +81,7 @@
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.requirement.deliverables.label")</th>
-                                <td>@display_list_of_values(requirement.deliverables)</td>
+                                <td>@display_list_of_values(dao.delivery.DeliverableDAO.getDeliverableAsListByRequirement(requirement.id))</td>
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.requirement.iteration.label")</th>

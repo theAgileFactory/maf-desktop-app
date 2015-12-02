@@ -90,7 +90,7 @@
                                         <a class="hidden" href="javascript: maf_checkRequirement('requirements_@i');"></a>
                                         <strong>@requirement.getName</strong></td>
                                     <td>@display_object(requirement.externalRefId)</td>
-                                    <td>@display_list_of_values(requirement.deliverables)</td>
+                                    <td>@display_list_of_values(dao.delivery.DeliverableDAO.getDeliverableAsListByRequirement(requirement.id))</td>
                                 </tr>
                             }
                         </tbody>

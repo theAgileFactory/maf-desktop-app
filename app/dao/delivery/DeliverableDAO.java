@@ -1,5 +1,7 @@
 package dao.delivery;
 
+import java.util.List;
+
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 
@@ -67,6 +69,16 @@ public class DeliverableDAO {
     public static ExpressionList<Deliverable> getDeliverableOwnerAsExprByPE(Long portfolioEntryId) {
         return findDeliverable.where().eq("deleted", false).eq("portfolioEntryDeliverables.type", PortfolioEntryDeliverable.Type.OWNER)
                 .eq("portfolioEntryDeliverables.portfolioEntry.id", portfolioEntryId);
+    }
+
+    /**
+     * Get the deliverables of a requirements.
+     * 
+     * @param requirementId
+     *            the requirement id
+     */
+    public static List<Deliverable> getDeliverableAsListByRequirement(Long requirementId) {
+        return findDeliverable.where().eq("deleted", false).eq("requirements.id", requirementId).findList();
     }
 
     /**
