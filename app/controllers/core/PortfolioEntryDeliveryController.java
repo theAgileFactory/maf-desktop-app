@@ -216,14 +216,19 @@ public class PortfolioEntryDeliveryController extends Controller {
             requirementsListView.add(new RequirementListView(requirement));
         }
         Set<String> columnsToHide = new HashSet<>();
+        columnsToHide.add("deliverables");
         columnsToHide.add("iteration");
-        columnsToHide.add("author");
-        columnsToHide.add("initialEstimation");
+        columnsToHide.add("category");
         columnsToHide.add("requirementPriority");
         columnsToHide.add("requirementSeverity");
-        columnsToHide.add("effort");
+        columnsToHide.add("isScoped");
+        columnsToHide.add("author");
         columnsToHide.add("storyPoints");
-        columnsToHide.add("deliverables");
+        columnsToHide.add("initialEstimation");
+        columnsToHide.add("effort");
+        columnsToHide.add("remainingEffort");
+        columnsToHide.add("editActionLink");
+
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             columnsToHide.add("editActionLink");
         }

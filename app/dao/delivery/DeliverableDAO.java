@@ -59,13 +59,25 @@ public class DeliverableDAO {
     }
 
     /**
-     * Get all deliverables of a portfolio entry as a value holder collection.
+     * Get all deliverables owned by a portfolio entry as an expression list.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
      */
-    public static ISelectableValueHolderCollection<Long> getDeliverableAsVHByPE(Long portfolioEntryId) {
-        return new DefaultSelectableValueHolderCollection<>(getDeliverableAsExprByPE(portfolioEntryId).findList());
+    public static ExpressionList<Deliverable> getDeliverableOwnerAsExprByPE(Long portfolioEntryId) {
+        return findDeliverable.where().eq("deleted", false).eq("portfolioEntryDeliverables.type", PortfolioEntryDeliverable.Type.OWNER)
+                .eq("portfolioEntryDeliverables.portfolioEntry.id", portfolioEntryId);
+    }
+
+    /**
+     * Get all deliverables owned by a portfolio entry as a value holder
+     * collection.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     */
+    public static ISelectableValueHolderCollection<Long> getDeliverableOwnerAsVHByPE(Long portfolioEntryId) {
+        return new DefaultSelectableValueHolderCollection<>(getDeliverableOwnerAsExprByPE(portfolioEntryId).findList());
     }
 
     /**

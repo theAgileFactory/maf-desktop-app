@@ -43,7 +43,7 @@ public class DeliverablePicker {
         @Override
         public ISelectableValueHolderCollection<Long> getInitialValueHolders(List<Long> values, Map<String, String> context) {
             Long portfolioEntryId = Long.valueOf(context.get("portfolioEntryId"));
-            return DeliverableDAO.getDeliverableAsVHByPE(portfolioEntryId);
+            return DeliverableDAO.getDeliverableOwnerAsVHByPE(portfolioEntryId);
         }
 
     });

@@ -147,8 +147,7 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
             return views.html.modelsparts.display_portfolio.render((Portfolio) object).body();
         }
         if (object instanceof Deliverable) {
-            Deliverable deliverable = (Deliverable) object;
-            return deliverable.getName();
+            return views.html.modelsparts.display_deliverable.render((Deliverable) object).body();
         }
         return object.toString();
     }
