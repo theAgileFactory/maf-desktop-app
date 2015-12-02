@@ -874,7 +874,7 @@ public class PortfolioEntryController extends Controller {
                     controllers.core.routes.PortfolioEntryPlanningController.overview(portfolioEntryId), "glyphicons glyphicons-radar", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.packages.label",
-                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId), "glyphicons glyphicons-lab", false));
+                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId), "glyphicons glyphicons-blog", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.resources.label",
                     controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryId), "glyphicons glyphicons-address-book", false));
