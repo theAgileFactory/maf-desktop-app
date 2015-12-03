@@ -1982,7 +1982,7 @@ INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES (
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('actorsload1', 'services.plugins.system.actorsload1.ActorLoaderPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('orgunitsload1', 'services.plugins.system.orgunitsload1.OrgUnitLoaderPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('finance1', 'services.plugins.system.finance1.FinanceErpIntegrationPluginRunner', '1');
-INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('notification1', 'services.plugins.system.notification1.EventNotificationPluginRunner', '0');
+INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('notification1', 'services.plugins.system.notification1.EventNotificationPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('genint1', 'services.plugins.system.genint1.GenericExternalIntegrationPluginRunner', '0');
 
 -- API root key
@@ -1993,4 +1993,3 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 SET SQL_SAFE_UPDATES = 1;
-
