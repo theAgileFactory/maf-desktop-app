@@ -45,7 +45,7 @@
             </div>
         }
 
-        @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processfollowDeliverable()) {
+        @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processFollowDeliverable()) {
 
             <fieldset>
             
@@ -58,21 +58,23 @@
                     controllers.core.routes.PortfolioEntryController.search().url
                 )
                 
-                <div class="form-group">
+                <div class='form-group @if(followDeliverableForm("otherDeliverable").hasErrors) {has-error}'>
                     <label for="otherDelivrable" class="control-label">
                         @parts.Msg.asString("object.portfolio_entry.deliverable.label")&nbsp;<i class="glyphicons glyphicons-asterisk" style="color: red;"></i>
                     </label>
                     <select name="otherDelivrable" id="otherDelivrable" class="form-control" disabled></select>
+                    <span class="help-block"><strong>@{followDeliverableForm("otherDeliverable").error.map { error => parts.Msg(error.message) }}</strong></span>
                 </div>
                 
                 <script>
-                    $("#otherPortfolioEntry").change(function() { 
+                function maf_loadDeliverables(otherPortfolioEntry) {
+                    if(!(typeof otherPortfolioEntry === "undefined")) {
                         $('#otherDelivrable').prop('disabled', false);
                         $.ajax({
                             type: 'GET',
                             contentType: "application/json; charset=utf-8",
                             url: "@controllers.core.routes.PortfolioEntryDeliveryController.getDeliverables().url",
-                            data: "id=" + $(this).val(),
+                            data: "id=" + otherPortfolioEntry,
                             cache : false
                         }).done(function(result) {
                             $("#otherDelivrable").find('option').remove();
@@ -80,7 +82,10 @@
                                 $("#otherDelivrable").append('<option value="' + result[i].value + '">' + result[i].text + '</option>');
                             }
                         });
-                    });
+                    }
+                }
+                maf_loadDeliverables(@followDeliverableForm("otherPortfolioEntry").value);
+                $("#otherPortfolioEntry").change(function() { maf_loadDeliverables($(this).val()); });
                 </script>
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

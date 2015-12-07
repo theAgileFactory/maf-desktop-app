@@ -66,6 +66,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
+import security.dynamic.PortfolioEntryDynamicHelper;
 import utils.form.DeliverableFormData;
 import utils.form.DeliverableRequirementsFormData;
 import utils.form.FollowDeliverableFormData;
@@ -377,15 +378,43 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result processfollowDeliverable() {
+    public Result processFollowDeliverable() {
 
-        // TODO test with empty values
+        // bind the form
+        Form<FollowDeliverableFormData> boundForm = followDeliverableFormTemplate.bindFromRequest();
 
-        // TODO should be another PE!
+        // get the portfolioEntry
+        Long id = Long.valueOf(boundForm.data().get("id"));
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        // TODO should be viewer of the other PE
+        if (boundForm.hasErrors()) {
+            return ok(views.html.core.portfolioentrydelivery.deliverable_follow.render(portfolioEntry, boundForm));
+        }
 
-        return TODO;
+        FollowDeliverableFormData followDeliverableFormData = boundForm.get();
+
+        if (!PortfolioEntryDynamicHelper.isPortfolioEntryViewAllowed(followDeliverableFormData.otherPortfolioEntry, this.getSecurityService())) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        if (id.equals(followDeliverableFormData.otherPortfolioEntry)) {
+            boundForm.reject("otherPortfolioEntry", Msg.get("core.portfolio_entry_delivery.deliverable.follow.error.same_portfolio_entry"));
+            return ok(views.html.core.portfolioentrydelivery.deliverable_follow.render(portfolioEntry, boundForm));
+        }
+
+        if (DeliverableDAO.getPortfolioEntryDeliverableById(id, followDeliverableFormData.otherDelivrable) != null) {
+            boundForm.reject("otherDelivrable", Msg.get("core.portfolio_entry_delivery.deliverable.follow.error.already_assigned"));
+            return ok(views.html.core.portfolioentrydelivery.deliverable_follow.render(portfolioEntry, boundForm));
+        }
+
+        Deliverable deliverable = DeliverableDAO.getDeliverableById(followDeliverableFormData.otherDelivrable);
+        PortfolioEntryDeliverable portfolioEntryDeliverable = new PortfolioEntryDeliverable(portfolioEntry, deliverable);
+        portfolioEntryDeliverable.type = PortfolioEntryDeliverable.Type.FOLLOWER;
+        portfolioEntryDeliverable.save();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.deliverable.follow.successful"));
+
+        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntry.id));
 
     }
 

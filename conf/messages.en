@@ -2355,7 +2355,9 @@ core.portfolio_entry_delivery.deliverable.add.successful=The deliverable has bee
 core.portfolio_entry_delivery.deliverable.edit.successful=The deliverable has been updated.
 
 #follow deliverable
-core.portfolio_entry_delivery.deliverable.follow.title=Assign and follow a deliverable from another initiative
+core.portfolio_entry_delivery.deliverable.follow.title=Follow a deliverable from another initiative
+core.portfolio_entry_delivery.deliverable.follow.error.same_portfolio_entry=Please select an initiative that is not the current.
+core.portfolio_entry_delivery.deliverable.follow.error.already_assigned=This deliverable is already assigned.
 core.portfolio_entry_delivery.deliverable.follow.successful=The deliverable has been assigned successfully.
 
 #delete deliverable

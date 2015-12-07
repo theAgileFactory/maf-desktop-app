@@ -2371,7 +2371,9 @@ core.portfolio_entry_delivery.deliverable.add.successful=Le livrable a été cr�
 core.portfolio_entry_delivery.deliverable.edit.successful=Le livrable a été mis à jour.
 
 #follow deliverable
-core.portfolio_entry_delivery.deliverable.follow.title=Assigner et suivre un livrable d''une autre initiative
+core.portfolio_entry_delivery.deliverable.follow.title=Suivre un livrable d''une autre initiative
+core.portfolio_entry_delivery.deliverable.follow.error.same_portfolio_entry=Veuillez sélectionner une autre initiative.
+core.portfolio_entry_delivery.deliverable.follow.error.already_assigned=Ce livrable est déjà assigné.
 core.portfolio_entry_delivery.deliverable.follow.successful=Le livrable a été assigné.
 
 #delete deliverable
