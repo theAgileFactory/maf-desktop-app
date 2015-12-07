@@ -2355,6 +2355,10 @@ core.portfolio_entry_governance.process.change.notification.message=Le processus
 # portfolio entry: delivery
 #----------------------
 
+#deliverables
+core.portfolio_entry_delivery.deliverables.new.deliverable.label=Livrables
+core.portfolio_entry_delivery.deliverables.new.follower.label=Depuis une autre initiative
+
 #view deliverable
 core.portfolio_entry_delivery.deliverable.view.details.title=Détails
 core.portfolio_entry_delivery.deliverable.view.requirements.title=Exigences
@@ -2363,6 +2367,10 @@ core.portfolio_entry_delivery.deliverable.view.requirements.title=Exigences
 core.portfolio_entry_delivery.deliverable.manage.title=Gérer un livrable
 core.portfolio_entry_delivery.deliverable.add.successful=Le livrable a été créé.
 core.portfolio_entry_delivery.deliverable.edit.successful=Le livrable a été mis à jour.
+
+#follow deliverable
+core.portfolio_entry_delivery.deliverable.follow.title=Assigner et suivre un livrable d''une autre initiative
+core.portfolio_entry_delivery.deliverable.follow.successful=Le livrable a été assigné.
 
 #delete deliverable
 core.portfolio_entry_delivery.deliverable.delete.successful=Le livrable a été supprimé.

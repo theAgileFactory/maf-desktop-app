@@ -2351,6 +2351,10 @@ core.portfolio_entry_governance.process.change.notification.message=der Lieferzy
 # portfolio entry: delivery
 #----------------------
 
+#deliverables
+core.portfolio_entry_delivery.deliverables.new.deliverable.label=de: Deliverable
+core.portfolio_entry_delivery.deliverables.new.follower.label=de: From another initiative
+
 #view deliverable
 core.portfolio_entry_delivery.deliverable.view.details.title=Details
 core.portfolio_entry_delivery.deliverable.view.requirements.title=Anforderungen
@@ -2359,6 +2363,10 @@ core.portfolio_entry_delivery.deliverable.view.requirements.title=Anforderungen
 core.portfolio_entry_delivery.deliverable.manage.title=de: Manage a deliverable
 core.portfolio_entry_delivery.deliverable.add.successful=de: The deliverable has been added successfully.
 core.portfolio_entry_delivery.deliverable.edit.successful=de: The deliverable has been updated.
+
+#follow deliverable
+core.portfolio_entry_delivery.deliverable.follow.title=de: Assign and follow a deliverable from another initiative
+core.portfolio_entry_delivery.deliverable.follow.successful=de: The deliverable has been assigned successfully.
 
 #delete deliverable
 core.portfolio_entry_delivery.deliverable.delete.successful=de: The deliverable has been removed.
