@@ -28,10 +28,13 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
+import controllers.core.TimesheetController.OptionData;
 import dao.delivery.DeliverableDAO;
 import dao.delivery.IterationDAO;
 import dao.delivery.RequirementDAO;
@@ -376,7 +379,33 @@ public class PortfolioEntryDeliveryController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processfollowDeliverable() {
 
+        // TODO should be another PE!
+
+        // TODO should be viewer of the other PE
+
         return TODO;
+
+    }
+
+    /**
+     * Follow a deliverable: get the deliverables of the other portfolio entry.
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
+    public Result getDeliverables() {
+
+        Long id = Long.valueOf(request().getQueryString("id"));
+
+        List<Deliverable> deliverables = DeliverableDAO.getDeliverableAsExprByPE(id).findList();
+        List<OptionData> options = new ArrayList<OptionData>();
+
+        for (Deliverable deliverable : deliverables) {
+            options.add(new OptionData(deliverable.id, deliverable.getName()));
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        return ok((JsonNode) mapper.valueToTree(options));
 
     }
 

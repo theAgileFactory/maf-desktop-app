@@ -1367,6 +1367,7 @@ object.deliverable.owner.label=Owner
 object.deliverable.planning_package.label=Package
 object.deliverable.requirements.label=Requirements
 object.deliverable.portfolio_entries.label=Initiatives
+object.deliverable.portfolio_entry.label=Initiative
 object.deliverable.table.empty=There is no deliverable.
 
 #----------------------

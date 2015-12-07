@@ -51,41 +51,34 @@
             
                 <input type="hidden" name="id" value="@portfolioEntry.id"/>
                 
-                
-                @@parts.dropdownlist(
-                    allocatedActivityForm("timesheetActivityType"), 
-                    parts.Msg.asString("object.allocated_resource.timesheet_activity.label"), 
-                    dao.timesheet.TimesheetDao.getTimesheetActivityTypeAsVH
+                @parts.autocomplete(
+                    followDeliverableForm("otherPortfolioEntry"),
+                    parts.Msg.asString("object.deliverable.portfolio_entry.label"),
+                    "",
+                    controllers.core.routes.PortfolioEntryController.search().url
                 )
                 
                 <div class="form-group">
-                    <select name="timesheetActivity" id="timesheetActivity" class="form-control" disabled>
+                    <select name="otherDelivrable" id="otherDelivrable" class="form-control" disabled>
                     </select>
                 </div>
                 
                 <script>
-                    function maf_loadActivityType(timesheetActivity) {
-                        timesheetActivity = (typeof timesheetActivity === "undefined") ? null : timesheetActivity;
+                    $("#otherPortfolioEntry").change(function() { 
+                        $('#otherDelivrable').prop('disabled', false);
                         $.ajax({
-                            type: 'POST',
+                            type: 'GET',
                             contentType: "application/json; charset=utf-8",
-                            dataType: 'json',
-                            url: "@controllers.core.routes.ActorController.getActivities().url",
-                            data: JSON.stringify({'activityTypeId' : $("#timesheetActivityType").val()}),
+                            url: "@controllers.core.routes.PortfolioEntryDeliveryController.getDeliverables().url",
+                            data: "id=" + $(this).val(),
                             cache : false
                         }).done(function(result) {
-                            $("#timesheetActivity").find('option').remove();
+                            $("#otherDelivrable").find('option').remove();
                             for (i = 0; i < result.length; ++i) {
-                                var selected = "";
-                                if (timesheetActivity != null && timesheetActivity == result[i].value) {
-                                    selected = "selected"; 
-                                }
-                                $("#timesheetActivity").append('<option value="' + result[i].value + '" ' + selected + '>' + result[i].text + '</option>');
+                                $("#otherDelivrable").append('<option value="' + result[i].value + '">' + result[i].text + '</option>');
                             }
                         });
-                    }
-
-                    $("#timesheetActivityType").change(function() { maf_loadActivityType(); });
+                    });
                 </script>
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

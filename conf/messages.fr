@@ -1379,6 +1379,7 @@ object.deliverable.owner.label=Responsable
 object.deliverable.planning_package.label=Résultat
 object.deliverable.requirements.label=Exigences
 object.deliverable.portfolio_entries.label=Initiatives
+object.deliverable.portfolio_entry.label=Initiative
 object.deliverable.table.empty=Aucun livrable.
 
 #----------------------

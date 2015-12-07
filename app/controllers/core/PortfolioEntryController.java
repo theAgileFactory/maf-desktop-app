@@ -793,7 +793,8 @@ public class PortfolioEntryController extends Controller {
 
                 ISelectableValueHolderCollection<Long> portfolioEntries = new DefaultSelectableValueHolderCollection<Long>();
 
-                Expression expression = Expr.or(Expr.ilike("name", query + "%"), Expr.ilike("governanceId", query + "%"));
+                Expression expression = Expr.and(Expr.eq("archived", false),
+                        Expr.or(Expr.ilike("name", query + "%"), Expr.ilike("governanceId", query + "%")));
 
                 for (PortfolioEntry portfolioEntry : PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService())
                         .findList()) {

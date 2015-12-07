@@ -1379,6 +1379,7 @@ object.deliverable.owner.label=de: Owner
 object.deliverable.planning_package.label=Planungspaket
 object.deliverable.requirements.label=Anforderungen
 object.deliverable.portfolio_entries.label=Initiativen
+object.deliverable.portfolio_entry.label=Initiative
 object.deliverable.table.empty=Keine Einträge
 
 #----------------------
