@@ -1057,6 +1057,7 @@ object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=L''initiative choisie ne doit pas être la courante.
 object.portfolio_entry.dependency.already.error=L''initiative choisie est déjà une dépendance pour le type sélectionné.
 object.portfolio_entry.dependency.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer cette dépendance?
+object.portfolio_entry.deliverable.label=Livrable
 object.portfolio_entry.deliverables.label=Livrables
 object.portfolio_entry.deliverable.type.OWNER.label=Propriétaire
 object.portfolio_entry.deliverable.type.FOLLOWER.label=Suiveur

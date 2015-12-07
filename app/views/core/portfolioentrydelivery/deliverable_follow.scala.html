@@ -59,8 +59,10 @@
                 )
                 
                 <div class="form-group">
-                    <select name="otherDelivrable" id="otherDelivrable" class="form-control" disabled>
-                    </select>
+                    <label for="otherDelivrable" class="control-label">
+                        @parts.Msg.asString("object.portfolio_entry.deliverable.label")&nbsp;<i class="glyphicons glyphicons-asterisk" style="color: red;"></i>
+                    </label>
+                    <select name="otherDelivrable" id="otherDelivrable" class="form-control" disabled></select>
                 </div>
                 
                 <script>

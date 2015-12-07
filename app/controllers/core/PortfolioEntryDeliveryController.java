@@ -379,6 +379,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processfollowDeliverable() {
 
+        // TODO test with empty values
+
         // TODO should be another PE!
 
         // TODO should be viewer of the other PE
@@ -388,7 +390,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     }
 
     /**
-     * Follow a deliverable: get the deliverables of the other portfolio entry.
+     * Follow a deliverable: get the deliverables of the other portfolio entry
+     * (represented by the "id" query param).
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_VIEW_DYNAMIC_PERMISSION)
