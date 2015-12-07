@@ -34,7 +34,7 @@ public class FollowDeliverableFormData {
     public Long otherPortfolioEntry;
 
     @Required
-    public Long otherDelivrable;
+    public Long otherDeliverable;
 
     /**
      * Default constructor.

@@ -167,7 +167,7 @@ public class PortfolioEntryDeliveryController extends Controller {
     }
 
     /**
-     * Get the delivrables table for a portfolio entry and a filter config.
+     * Get the deliverables table for a portfolio entry and a filter config.
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
@@ -402,12 +402,12 @@ public class PortfolioEntryDeliveryController extends Controller {
             return ok(views.html.core.portfolioentrydelivery.deliverable_follow.render(portfolioEntry, boundForm));
         }
 
-        if (DeliverableDAO.getPortfolioEntryDeliverableById(id, followDeliverableFormData.otherDelivrable) != null) {
-            boundForm.reject("otherDelivrable", Msg.get("core.portfolio_entry_delivery.deliverable.follow.error.already_assigned"));
+        if (DeliverableDAO.getPortfolioEntryDeliverableById(id, followDeliverableFormData.otherDeliverable) != null) {
+            boundForm.reject("otherDeliverable", Msg.get("core.portfolio_entry_delivery.deliverable.follow.error.already_assigned"));
             return ok(views.html.core.portfolioentrydelivery.deliverable_follow.render(portfolioEntry, boundForm));
         }
 
-        Deliverable deliverable = DeliverableDAO.getDeliverableById(followDeliverableFormData.otherDelivrable);
+        Deliverable deliverable = DeliverableDAO.getDeliverableById(followDeliverableFormData.otherDeliverable);
         PortfolioEntryDeliverable portfolioEntryDeliverable = new PortfolioEntryDeliverable(portfolioEntry, deliverable);
         portfolioEntryDeliverable.type = PortfolioEntryDeliverable.Type.FOLLOWER;
         portfolioEntryDeliverable.save();

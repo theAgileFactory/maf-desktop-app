@@ -22,7 +22,6 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -35,7 +34,7 @@ import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
 
 /**
- * A deliverable list view is used to display a delivrable row in a table.
+ * A deliverable list view is used to display a deliverable row in a table.
  * 
  * @author Johann Kohler
  */
@@ -177,7 +176,7 @@ public class DeliverableListView {
      * Construct a list view with a DB entry.
      * 
      * @param portfolioEntryDeliverable
-     *            the delivrable relation with a portfolio entry
+     *            the deliverable relation with a portfolio entry
      */
     public DeliverableListView(PortfolioEntryDeliverable portfolioEntryDeliverable) {
 

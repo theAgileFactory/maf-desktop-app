@@ -1402,7 +1402,7 @@ object.requirement.effort.label=Ausgeführt
 object.requirement.remaining_effort.label=Restaufwand
 object.requirement.is_scoped.label=Akzeptiert
 object.requirement.iteration.label=Iteration
-object.requirement.deliverables.label=de: Delivrables
+object.requirement.deliverables.label=de: Deliverables
 object.requirement.table.empty=Keine Einträge
 
 #----------------------

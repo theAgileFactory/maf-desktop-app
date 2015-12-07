@@ -42,7 +42,7 @@ public class DeliverableDAO {
      * Get the owner of a deliverable.
      * 
      * @param deliverableId
-     *            the delivrable id
+     *            the deliverable id
      */
     public static PortfolioEntry getDeliverableOwner(Long deliverableId) {
         return findPortfolioEntryDeliverable.where().eq("id.deliverableId", deliverableId).eq("type", PortfolioEntryDeliverable.Type.OWNER).findUnique()

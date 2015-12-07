@@ -59,17 +59,17 @@
                 )
                 
                 <div class='form-group @if(followDeliverableForm("otherDeliverable").hasErrors) {has-error}'>
-                    <label for="otherDelivrable" class="control-label">
+                    <label for="otherDeliverable" class="control-label">
                         @parts.Msg.asString("object.portfolio_entry.deliverable.label")&nbsp;<i class="glyphicons glyphicons-asterisk" style="color: red;"></i>
                     </label>
-                    <select name="otherDelivrable" id="otherDelivrable" class="form-control" disabled></select>
+                    <select name="otherDeliverable" id="otherDeliverable" class="form-control" disabled></select>
                     <span class="help-block"><strong>@{followDeliverableForm("otherDeliverable").error.map { error => parts.Msg(error.message) }}</strong></span>
                 </div>
                 
                 <script>
                 function maf_loadDeliverables(otherPortfolioEntry) {
                     if(!(typeof otherPortfolioEntry === "undefined")) {
-                        $('#otherDelivrable').prop('disabled', false);
+                        $('#otherDeliverable').prop('disabled', false);
                         $.ajax({
                             type: 'GET',
                             contentType: "application/json; charset=utf-8",
@@ -77,9 +77,9 @@
                             data: "id=" + otherPortfolioEntry,
                             cache : false
                         }).done(function(result) {
-                            $("#otherDelivrable").find('option').remove();
+                            $("#otherDeliverable").find('option').remove();
                             for (i = 0; i < result.length; ++i) {
-                                $("#otherDelivrable").append('<option value="' + result[i].value + '">' + result[i].text + '</option>');
+                                $("#otherDeliverable").append('<option value="' + result[i].value + '">' + result[i].text + '</option>');
                             }
                         });
                     }

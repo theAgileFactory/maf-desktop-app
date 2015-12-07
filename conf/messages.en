@@ -1390,7 +1390,7 @@ object.requirement.effort.label=Effort made
 object.requirement.remaining_effort.label=Remaining effort
 object.requirement.is_scoped.label=In scope
 object.requirement.iteration.label=Iteration
-object.requirement.deliverables.label=Delivrables
+object.requirement.deliverables.label=Deliverables
 object.requirement.table.empty=There is no requirement.
 
 #----------------------
