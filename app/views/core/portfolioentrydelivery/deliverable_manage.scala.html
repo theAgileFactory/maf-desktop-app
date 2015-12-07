@@ -104,6 +104,7 @@
                 @if(!isOwner) {
                     <script>
                         $("#custom-attributes :input").prop("readonly", true);
+                        $("#custom-attributes select").attr("readonly", "readonly");
                     </script>
                 }
 
