@@ -595,6 +595,7 @@ permission.scm_admin_permission.description="Source Code Repository" Administrat
 permission.jenkins_viewer_permission.description=Jenkins Daten einsehen.
 permission.jenkins_deploy_permission.description=Jenkins Jobs eingeben und ausführen.
 permission.portfolio_entry_submission_permission.description=Neue Initiativen erstellen.
+permission.release_submission_permission.description=de: Permission which allows a user to create a new release.
 permission.admin_configuration_permission.description=Konfiguration der Anwendung (Grundeinstellungen, Rollen,...)
 permission.admin_plugin_manager_permission.description=Drittanbieter-Module verwalten und konfigurieren.
 permission.admin_kpi_manager_permission.description=KPI verwalten und konfigurieren

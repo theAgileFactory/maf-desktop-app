@@ -236,8 +236,8 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
     private void defineNewMenu(String perspectiveKey) {
         HeaderMenuItem newMenuItem = new HeaderMenuItem(TopMenus.NEW.name(), "topmenubar.new.menu.label", "glyphicons glyphicons-gift", false);
         newMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION,
-                IMafConstants.ACTOR_EDIT_ALL_PERMISSION, IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION, IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION,
-                IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
+                IMafConstants.RELEASE_SUBMISSION_PERMISSION, IMafConstants.ACTOR_EDIT_ALL_PERMISSION, IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION,
+                IMafConstants.PORTFOLIO_EDIT_ALL_PERMISSION, IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         if (perspectiveKey == null) {
             addMenuItemToMainPerspective(newMenuItem);
         } else {
@@ -251,7 +251,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
 
         ClickableMenuItem newReleaseMenuItem = new ClickableMenuItem(TopMenus.NEW.name(2), "topmenubar.new.release.menu.label",
                 controllers.core.routes.PortfolioEntryController.create(true), "glyphicons glyphicons-git-branch", false);
-        newReleaseMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION));
+        newReleaseMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.RELEASE_SUBMISSION_PERMISSION));
         newMenuItem.addSubMenuItem(newReleaseMenuItem);
 
         SeparatorMenuItem newSeparatorMenuItem = new SeparatorMenuItem();

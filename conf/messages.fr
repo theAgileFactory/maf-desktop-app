@@ -595,6 +595,7 @@ permission.scm_admin_permission.description=Autorise un utilisateur à administr
 permission.jenkins_viewer_permission.description=Autorise un utilisateur à utiliser Jenkins en lecture.
 permission.jenkins_deploy_permission.description=Autorise un utilisateur à créer et déployer des jobs dans Jenkins.
 permission.portfolio_entry_submission_permission.description=Autorise un utilisateur à créer une nouvelle initiative.
+permission.release_submission_permission.description=Autorise un utilisateur à créer une nouvelle release.
 permission.admin_configuration_permission.description=Autorise un utilisateur à modifier la configuration de l''application (préférences systèmes, rôles...).
 permission.admin_plugin_manager_permission.description=Autorise un utilisateur à configurer et gérer les modules tiers.
 permission.admin_kpi_manager_permission.description=Autorise un utilisateur à configurer et gérer les KPIs.

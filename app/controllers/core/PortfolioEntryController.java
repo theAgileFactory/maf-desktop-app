@@ -143,8 +143,19 @@ public class PortfolioEntryController extends Controller {
      * @param isRelease
      *            true if the portfolio entry is a release, else an initiative
      */
-    @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
+    @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION), @Group(IMafConstants.RELEASE_SUBMISSION_PERMISSION) })
     public Result create(boolean isRelease) {
+
+        try {
+            if (isRelease && !securityService.restrict(IMafConstants.RELEASE_SUBMISSION_PERMISSION)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+            if (!isRelease && !securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
+        }
 
         if (!getLicensesManagementService().canCreatePortfolioEntry()) {
             Utilities.sendErrorFlashMessage(Msg.get("licenses_management.cannot_create_portfolio_entry"));
@@ -158,7 +169,7 @@ public class PortfolioEntryController extends Controller {
     /**
      * Process the creation of a portfolio entry.
      */
-    @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION) })
+    @Restrict({ @Group(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION), @Group(IMafConstants.RELEASE_SUBMISSION_PERMISSION) })
     public Result processCreate() {
 
         if (!getLicensesManagementService().canCreatePortfolioEntry()) {
@@ -169,6 +180,17 @@ public class PortfolioEntryController extends Controller {
         Form<PortfolioEntryCreateFormData> boundForm = portfolioEntryCreateFormTemplate.bindFromRequest();
 
         boolean isRelease = Boolean.valueOf(boundForm.data().get("isRelease"));
+
+        try {
+            if (isRelease && !securityService.restrict(IMafConstants.RELEASE_SUBMISSION_PERMISSION)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+            if (!isRelease && !securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
+        }
 
         CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class);
         if (boundForm.hasErrors()) {
