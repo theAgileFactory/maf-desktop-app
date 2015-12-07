@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -124,7 +125,13 @@ public class DeliverableListView {
                     @Override
                     public String apply(DeliverableListView deliverableListView, Object value) {
                         if (deliverableListView.isDelegated) {
-                            return null;
+                            String unassignConfirmationMessage = MessageFormat.format(
+                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">"
+                                            + "<span class=\"glyphicons glyphicons-remove-2\"></span></a>",
+                                    Msg.get("core.portfolio_entry_delivery.deliverable.unfollow.confirmation"));
+                            String url = controllers.core.routes.PortfolioEntryDeliveryController
+                                    .unfollowDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, unassignConfirmationMessage).body();
                         } else {
                             String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
                                     Msg.get("default.delete.confirmation.message"));

@@ -2360,6 +2360,10 @@ core.portfolio_entry_delivery.deliverable.follow.error.same_portfolio_entry=Plea
 core.portfolio_entry_delivery.deliverable.follow.error.already_assigned=This deliverable is already assigned.
 core.portfolio_entry_delivery.deliverable.follow.successful=The deliverable has been assigned successfully.
 
+#unfollow deliverable
+core.portfolio_entry_delivery.deliverable.unfollow.confirmation=Are you sure you want to unsubscribe the initiative from this deliverable?
+core.portfolio_entry_delivery.deliverable.unfollow.successful=The deliverable is not more followed.
+
 #delete deliverable
 core.portfolio_entry_delivery.deliverable.delete.successful=The deliverable has been removed.
 

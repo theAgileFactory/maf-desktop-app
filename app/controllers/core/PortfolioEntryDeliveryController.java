@@ -442,6 +442,28 @@ public class PortfolioEntryDeliveryController extends Controller {
     }
 
     /**
+     * Unfollow a deliverable
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param deliverableId
+     *            the deliverable id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result unfollowDeliverable(Long id, Long deliverableId) {
+
+        PortfolioEntryDeliverable portfolioEntryDeliverable = DeliverableDAO.getPortfolioEntryDeliverableById(id, deliverableId);
+
+        portfolioEntryDeliverable.delete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.deliverable.unfollow.successful"));
+
+        return redirect(controllers.core.routes.PortfolioEntryDeliveryController.deliverables(id));
+
+    }
+
+    /**
      * Delete a deliverable.
      * 
      * @param id

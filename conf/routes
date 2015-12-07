@@ -289,6 +289,7 @@ POST   /portfolio-entry/deliverable/edit                  controllers.core.Portf
 GET    /portfolio-entry/deliverable/follow                controllers.core.PortfolioEntryDeliveryController.followDeliverable(id: Long)
 POST   /portfolio-entry/deliverable/follow                controllers.core.PortfolioEntryDeliveryController.processFollowDeliverable()
 GET    /portfolio-entry/deliverable/follow/deliverables   controllers.core.PortfolioEntryDeliveryController.getDeliverables()
+GET    /portfolio-entry/deliverable/unfollow              controllers.core.PortfolioEntryDeliveryController.unfollowDeliverable(id: Long, deliverableId: Long)
 GET    /portfolio-entry/deliverable/delete                controllers.core.PortfolioEntryDeliveryController.deleteDeliverable(id: Long, deliverableId: Long)
 GET    /portfolio-entry/deliverable/requirements/edit     controllers.core.PortfolioEntryDeliveryController.editDeliverableRequirements(id: Long, deliverableId: Long)
 POST   /portfolio-entry/deliverable/requirements/edit     controllers.core.PortfolioEntryDeliveryController.processEditDeliverableRequirements()

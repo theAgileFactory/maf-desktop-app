@@ -2376,6 +2376,10 @@ core.portfolio_entry_delivery.deliverable.follow.error.same_portfolio_entry=Veui
 core.portfolio_entry_delivery.deliverable.follow.error.already_assigned=Ce livrable est déjà assigné.
 core.portfolio_entry_delivery.deliverable.follow.successful=Le livrable a été assigné.
 
+#unfollow deliverable
+core.portfolio_entry_delivery.deliverable.unfollow.confirmation=Etes-vous sûr(e) de vouloir désinscrire l''initiative de ce livrable?
+core.portfolio_entry_delivery.deliverable.unfollow.successful=Le livrable n''est plus suivi.
+
 #delete deliverable
 core.portfolio_entry_delivery.deliverable.delete.successful=Le livrable a été supprimé.
 
