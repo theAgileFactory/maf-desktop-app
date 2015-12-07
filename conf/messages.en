@@ -2344,6 +2344,9 @@ core.portfolio_entry_governance.process.change.notification.message=The life cyc
 #deliverables
 core.portfolio_entry_delivery.deliverables.new.deliverable.label=Deliverable
 core.portfolio_entry_delivery.deliverables.new.follower.label=From another initiative
+core.portfolio_entry_delivery.no_deliverables.info=This initiative (or release) hasn''t deliverable, you can either create a new deliverable or follow one from another initiative.
+core.portfolio_entry_delivery.no_deliverables.create=Create your first deliverable
+core.portfolio_entry_delivery.no_deliverables.follow=Follow a deliverable from another initiative
 
 #view deliverable
 core.portfolio_entry_delivery.deliverable.view.details.title=Details

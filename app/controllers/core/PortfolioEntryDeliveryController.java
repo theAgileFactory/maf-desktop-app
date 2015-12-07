@@ -117,6 +117,8 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         try {
 
+            boolean existDeliverables = DeliverableDAO.getDeliverableAsExprByPE(id).findRowCount() > 0 ? true : false;
+
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             FilterConfig<DeliverableListView> filterConfig = DeliverableListView.filterConfig.getCurrent(uid, request());
@@ -124,7 +126,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             // get the table
             Pair<Table<DeliverableListView>, Pagination<Deliverable>> t = getDeliverablesTable(id, filterConfig);
 
-            return ok(views.html.core.portfolioentrydelivery.deliverables.render(portfolioEntry, t.getLeft(), t.getRight(), filterConfig));
+            return ok(views.html.core.portfolioentrydelivery.deliverables.render(existDeliverables, portfolioEntry, t.getLeft(), t.getRight(), filterConfig));
 
         } catch (Exception e) {
 

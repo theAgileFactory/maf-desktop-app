@@ -2360,6 +2360,9 @@ core.portfolio_entry_governance.process.change.notification.message=Le processus
 #deliverables
 core.portfolio_entry_delivery.deliverables.new.deliverable.label=Livrables
 core.portfolio_entry_delivery.deliverables.new.follower.label=Depuis une autre initiative
+core.portfolio_entry_delivery.no_deliverables.info=Cette initiative (ou release) n''a pas de livrable, vous pouvez soit créer un nouveau livrable soit en suivre un d''une autre initiative.
+core.portfolio_entry_delivery.no_deliverables.create=Créer votre votre premier livrable
+core.portfolio_entry_delivery.no_deliverables.follow=Suivre un livrable d''une autre initiative
 
 #view deliverable
 core.portfolio_entry_delivery.deliverable.view.details.title=Détails
@@ -3190,11 +3193,11 @@ admin.data_syndication.cancel_agreement.success=L''agrément a été annulé.
 
 admin.data_syndication.process_agreement_link.title=Approuver une relation d''agrément
 admin.data_syndication.process_agreement_link.already=La relation d''agrément a déjà été traitée.
-admin.data_syndication.process_agreement_link.pe.accept.new.title=Approuver avec une nouvelle initative
+admin.data_syndication.process_agreement_link.pe.accept.new.title=Approuver avec une nouvelle initiative
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.title=Nouvelle initiative avec syndication
 admin.data_syndication.process_agreement_link.pe.accept.new.notification.message=Une nouvelle initiative vous a été assignée. Elle a été syndiquée avec l''initiative "{0}" d''un partenaire.
 admin.data_syndication.process_agreement_link.pe.accept.new.success=La relation d''agrément a été appouvée avec une nouvelle initiative.
-admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approuver avec une initative existante
+admin.data_syndication.process_agreement_link.pe.accept.existing.title=Approuver avec une initiative existante
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title=Une initiative a été syndiquée
 admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message="{0}" a été syndiquée avec l''initiative "{1}" d''un partenaire.
 admin.data_syndication.process_agreement_link.pe.accept.existing.success=La relation d''agrément a été appouvée avec une initiative existante.

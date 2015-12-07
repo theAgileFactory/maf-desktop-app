@@ -16,6 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
+    existDeliverables: Boolean,
     portfolioEntry: models.pmo.PortfolioEntry,
     table: framework.utils.Table[utils.table.DeliverableListView], 
     pagination: framework.utils.Pagination[models.delivery.Deliverable],
@@ -36,35 +37,54 @@
 
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            &nbsp;
-            
-            <div class="pull-right">
-                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <div class="btn-group">
-                        <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicons glyphicons-plus glyphicons-panel"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right text-left">
-                            <li><a href="@controllers.core.routes.PortfolioEntryDeliveryController.manageDeliverable(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_delivery.deliverables.new.deliverable.label")</a></li>
-                            <li><a href="@controllers.core.routes.PortfolioEntryDeliveryController.followDeliverable(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_delivery.deliverables.new.follower.label")</a></li>
-                        </ul>
-                    </div>
-                }
+    @if(existDeliverables) {
+    
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                &nbsp;
+                
+                <div class="pull-right">
+                    @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                        <div class="btn-group">
+                            <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="glyphicons glyphicons-plus glyphicons-panel"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right text-left">
+                                <li><a href="@controllers.core.routes.PortfolioEntryDeliveryController.manageDeliverable(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_delivery.deliverables.new.deliverable.label")</a></li>
+                                <li><a href="@controllers.core.routes.PortfolioEntryDeliveryController.followDeliverable(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_delivery.deliverables.new.follower.label")</a></li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+    
+            <div class="panel-body">
+                @parts.table.filtered_tableview(
+                    table, 
+                    pagination, 
+                    filterConfig, 
+                    controllers.core.routes.PortfolioEntryDeliveryController.deliverablesFilter(portfolioEntry.id).url,
+                    null
+                )
             </div>
         </div>
+    
+    } else {
 
-        <div class="panel-body">
-        
-            @parts.table.filtered_tableview(
-                table, 
-                pagination, 
-                filterConfig, 
-                controllers.core.routes.PortfolioEntryDeliveryController.deliverablesFilter(portfolioEntry.id).url,
-                null
-            )
-
+        <div class="alert alert-info">
+            <span class="glyphicons glyphicons-circle-info"></span>
+            @parts.Msg("core.portfolio_entry_delivery.no_deliverables.info")
         </div>
-    </div>
+        
+        <a href="@controllers.core.routes.PortfolioEntryDeliveryController.manageDeliverable(portfolioEntry.id).url" class="btn btn-success">
+            <span class="glyphicons glyphicons-plus"></span> @parts.Msg("core.portfolio_entry_delivery.no_deliverables.create")
+        </a>
+        
+        &nbsp;&nbsp;
+        
+        <a href="@controllers.core.routes.PortfolioEntryDeliveryController.followDeliverable(portfolioEntry.id).url" class="btn btn-success">
+            <span class="glyphicons glyphicons-check"></span> @parts.Msg("core.portfolio_entry_delivery.no_deliverables.follow")
+        </a>
+        
+    }
 }

@@ -2356,6 +2356,9 @@ core.portfolio_entry_governance.process.change.notification.message=der Lieferzy
 #deliverables
 core.portfolio_entry_delivery.deliverables.new.deliverable.label=de: Deliverable
 core.portfolio_entry_delivery.deliverables.new.follower.label=de: From another initiative
+core.portfolio_entry_delivery.no_deliverables.info=de: This initiative (or release) hasn''t deliverable, you can either create a new deliverable or follow one from another initiative.
+core.portfolio_entry_delivery.no_deliverables.create=de: Create your first deliverable
+core.portfolio_entry_delivery.no_deliverables.follow=de: Follow a deliverable from another initiative
 
 #view deliverable
 core.portfolio_entry_delivery.deliverable.view.details.title=Details
