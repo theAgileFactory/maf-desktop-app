@@ -2399,7 +2399,9 @@ core.portfolio_entry_delivery.requirement.status.severity.blocker.true.label=Blo
 core.portfolio_entry_delivery.requirement.view.details.title=Details
 core.portfolio_entry_delivery.requirement.view.description.title=Beschreibung
 
-#edit requirement
+#manage requirement
+core.portfolio_entry_delivery.requirement.manage.title=de: Manage a requirement
+core.portfolio_entry_delivery.requirement.add.successful=de: The requirement has been added.
 core.portfolio_entry_delivery.requirement.edit.successful=Anforderung wurde aktualisiert.
 
 #list of iterations

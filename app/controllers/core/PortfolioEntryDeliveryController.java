@@ -815,16 +815,24 @@ public class PortfolioEntryDeliveryController extends Controller {
     }
 
     /**
-     * Form to edit some attributes of a requirement.
+     * Form to manage a requirement.
+     * 
+     * If it is provided externally (for example by Redmine), then it's possible
+     * to edit only the deliverables and custom attributes.
      * 
      * @param id
      *            the portfolio entry id
      * @param requirementId
-     *            the requirement id
+     *            the requirement id (0 for create)
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result editRequirement(Long id, Long requirementId) {
+    public Result manageRequirement(Long id, Long requirementId) {
+
+        // TODO
+
+        // TODO when edit an external requirement => add it's name in the form
+        // (as non-editable field)
 
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -842,7 +850,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         // add the custom attributes values
         CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, requirementId);
 
-        return ok(views.html.core.portfolioentrydelivery.requirement_edit.render(portfolioEntry, requirement, requirementForm));
+        return ok(views.html.core.portfolioentrydelivery.requirement_manage.render(portfolioEntry, requirementForm));
 
     }
 
@@ -851,7 +859,9 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result processEditRequirement() {
+    public Result processManageRequirement() {
+
+        // TODO
 
         // bind the form
         Form<RequirementFormData> boundForm = formTemplate.bindFromRequest();
@@ -870,7 +880,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Requirement.class)) {
-            return ok(views.html.core.portfolioentrydelivery.requirement_edit.render(portfolioEntry, requirement, boundForm));
+            return ok(views.html.core.portfolioentrydelivery.requirement_manage.render(portfolioEntry, boundForm));
         }
 
         RequirementFormData requirementFormData = boundForm.get();

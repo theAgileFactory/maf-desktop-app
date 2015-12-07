@@ -17,7 +17,6 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    requirement: models.delivery.Requirement,
     requirementForm: Form[utils.form.RequirementFormData]
 )
 
@@ -36,8 +35,7 @@
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
         ("core.portfolio_entry.sidebar.delivery.requirements.label",controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id).url),
-        (requirement.getName, controllers.core.routes.PortfolioEntryDeliveryController.viewRequirement(portfolioEntry.id, requirement.id).url),
-        ("core.portfolio_entry.breadcrump.edit", null)
+        ("core.portfolio_entry_delivery.requirement.manage.title", null)
     )
 }
 
@@ -50,7 +48,7 @@
             </div>
         }
         
-        @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processEditRequirement()) {
+        @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processManageRequirement()) {
         
             @if(hasExtendedAttributes) {
             <div class="row">

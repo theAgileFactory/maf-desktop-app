@@ -23,6 +23,7 @@ import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import dao.delivery.RequirementDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -217,7 +218,7 @@ public class RequirementListView {
                     @Override
                     public String convert(RequirementListView requirementListView) {
                         return controllers.core.routes.PortfolioEntryDeliveryController
-                                .editRequirement(requirementListView.portfolioEntryId, requirementListView.id).url();
+                                .manageRequirement(requirementListView.portfolioEntryId, requirementListView.id).url();
                     }
                 }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
