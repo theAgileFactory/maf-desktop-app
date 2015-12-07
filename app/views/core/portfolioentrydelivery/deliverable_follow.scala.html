@@ -67,8 +67,7 @@
                 </div>
                 
                 <script>
-                function maf_loadDeliverables(otherPortfolioEntry) {
-                    if(!(typeof otherPortfolioEntry === "undefined")) {
+                    function maf_loadDeliverables(otherPortfolioEntry, otherDeliverable) {
                         $('#otherDeliverable').prop('disabled', false);
                         $.ajax({
                             type: 'GET',
@@ -79,13 +78,22 @@
                         }).done(function(result) {
                             $("#otherDeliverable").find('option').remove();
                             for (i = 0; i < result.length; ++i) {
-                                $("#otherDeliverable").append('<option value="' + result[i].value + '">' + result[i].text + '</option>');
+                                var selected = "";
+                                if (otherDeliverable != null && otherDeliverable == result[i].value) {
+                                    selected = "selected"; 
+                                }
+                                $("#otherDeliverable").append('<option value="' + result[i].value + '" ' + selected + '>' + result[i].text + '</option>');
                             }
                         });
                     }
-                }
-                maf_loadDeliverables(@followDeliverableForm("otherPortfolioEntry").value);
-                $("#otherPortfolioEntry").change(function() { maf_loadDeliverables($(this).val()); });
+
+                    var initialOtherPortfolioEntry = "@followDeliverableForm("otherPortfolioEntry").value";
+                    var initialOtherDeliverable = "@followDeliverableForm("otherDeliverable").value";
+                    if (initialOtherPortfolioEntry != "") {
+                        maf_loadDeliverables(initialOtherPortfolioEntry, initialOtherDeliverable);
+                    }
+
+                    $("#otherPortfolioEntry").change(function() {maf_loadDeliverables($(this).val(), null); });
                 </script>
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
