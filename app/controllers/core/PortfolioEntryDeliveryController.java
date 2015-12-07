@@ -65,6 +65,7 @@ import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import utils.form.DeliverableFormData;
 import utils.form.DeliverableRequirementsFormData;
+import utils.form.FollowDeliverableFormData;
 import utils.form.IterationFormData;
 import utils.form.RequirementFormData;
 import utils.table.DeliverableListView;
@@ -95,6 +96,7 @@ public class PortfolioEntryDeliveryController extends Controller {
     public static Form<RequirementFormData> formTemplate = Form.form(RequirementFormData.class);
     public static Form<DeliverableFormData> deliverableFormTemplate = Form.form(DeliverableFormData.class);
     private static Form<DeliverableRequirementsFormData> deliverableRequirementsFormTemplate = Form.form(DeliverableRequirementsFormData.class);
+    private static Form<FollowDeliverableFormData> followDeliverableFormTemplate = Form.form(FollowDeliverableFormData.class);
 
     /**
      * Display the list of the deliverables of a portfolio entry.
@@ -348,6 +350,34 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         return redirect(controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntry.id));
+    }
+
+    /**
+     * Form to follow a deliverable from another portfolio entry.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result followDeliverable(Long id) {
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        return ok(views.html.core.portfolioentrydelivery.deliverable_follow.render(portfolioEntry, followDeliverableFormTemplate));
+
+    }
+
+    /**
+     * Process the form to follow a deliverable from another portfolio entry.
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result processfollowDeliverable() {
+
+        return TODO;
+
     }
 
     /**

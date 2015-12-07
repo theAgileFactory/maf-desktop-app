@@ -1,0 +1,101 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(
+    portfolioEntry: models.pmo.PortfolioEntry,
+    followDeliverableForm: Form[utils.form.FollowDeliverableFormData]
+)
+
+@import helper._
+@import bootstrap3._
+@import framework_views.parts
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
+
+@breadcrump=@{
+    Seq(
+        (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
+        ("core.portfolio_entry.sidebar.delivery.deliverables.label",controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntry.id).url),
+        ("core.portfolio_entry_delivery.deliverable.follow.title", null)
+    )
+}
+
+@views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+    
+    <div class="maf-form">
+        @if(followDeliverableForm.hasErrors()){
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br/>
+            </div>
+        }
+
+        @helper.form(action = controllers.core.routes.PortfolioEntryDeliveryController.processfollowDeliverable()) {
+
+            <fieldset>
+            
+                <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                
+                
+                @@parts.dropdownlist(
+                    allocatedActivityForm("timesheetActivityType"), 
+                    parts.Msg.asString("object.allocated_resource.timesheet_activity.label"), 
+                    dao.timesheet.TimesheetDao.getTimesheetActivityTypeAsVH
+                )
+                
+                <div class="form-group">
+                    <select name="timesheetActivity" id="timesheetActivity" class="form-control" disabled>
+                    </select>
+                </div>
+                
+                <script>
+                    function maf_loadActivityType(timesheetActivity) {
+                        timesheetActivity = (typeof timesheetActivity === "undefined") ? null : timesheetActivity;
+                        $.ajax({
+                            type: 'POST',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'json',
+                            url: "@controllers.core.routes.ActorController.getActivities().url",
+                            data: JSON.stringify({'activityTypeId' : $("#timesheetActivityType").val()}),
+                            cache : false
+                        }).done(function(result) {
+                            $("#timesheetActivity").find('option').remove();
+                            for (i = 0; i < result.length; ++i) {
+                                var selected = "";
+                                if (timesheetActivity != null && timesheetActivity == result[i].value) {
+                                    selected = "selected"; 
+                                }
+                                $("#timesheetActivity").append('<option value="' + result[i].value + '" ' + selected + '>' + result[i].text + '</option>');
+                            }
+                        });
+                    }
+
+                    $("#timesheetActivityType").change(function() { maf_loadActivityType(); });
+                </script>
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>
+                
+            </fieldset>
+                   
+
+        }
+
+    </div> 
+   
+}
