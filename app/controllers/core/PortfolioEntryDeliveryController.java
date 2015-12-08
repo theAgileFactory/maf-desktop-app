@@ -871,8 +871,6 @@ public class PortfolioEntryDeliveryController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageRequirement() {
 
-        // TODO
-
         // bind the form
         Form<RequirementFormData> boundForm = formTemplate.bindFromRequest();
 
@@ -881,12 +879,10 @@ public class PortfolioEntryDeliveryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // get the requirement
-        Long requirementId = Long.valueOf(boundForm.data().get("requirementId"));
-        Requirement requirement = RequirementDAO.getRequirementById(requirementId);
-
-        // security: the portfolio entry must be related to the object
-        if (!requirement.portfolioEntry.id.equals(id)) {
-            return forbidden(views.html.error.access_forbidden.render(""));
+        Requirement requirement = null;
+        String requirementIdString = boundForm.data().get("requirementId");
+        if (requirementIdString != null) {
+            requirement = RequirementDAO.getRequirementById(Long.valueOf(requirementIdString));
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Requirement.class)) {
@@ -895,13 +891,31 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         RequirementFormData requirementFormData = boundForm.get();
 
-        requirementFormData.fill(requirement);
-        requirement.update();
+        if (requirement == null) { // create case
+
+            requirement = new Requirement();
+            requirement.portfolioEntry = portfolioEntry;
+            requirementFormData.fill(requirement);
+            requirement.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.requirement.add.successful"));
+
+        } else { // edit case
+
+            // security: the portfolio entry must be related to the object
+            if (!requirement.portfolioEntry.id.equals(id)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+
+            requirementFormData.fill(requirement);
+            requirement.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.requirement.edit.successful"));
+
+        }
 
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Requirement.class, requirement.id);
-
-        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.requirement.edit.successful"));
 
         return redirect(controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id));
     }

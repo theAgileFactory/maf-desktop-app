@@ -37,12 +37,26 @@
 
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
 
-    @parts.table.filtered_tableview(
-        table, 
-        pagination, 
-        filterConfig, 
-        controllers.core.routes.PortfolioEntryDeliveryController.requirementsFilter(portfolioEntry.id).url,
-        null
-    )
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            &nbsp;
+            
+            <div class="pull-right">
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryDeliveryController.manageRequirement(portfolioEntry.id)"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                }
+            </div>
+        </div>
+
+        <div class="panel-body">
+            @parts.table.filtered_tableview(
+                table, 
+                pagination, 
+                filterConfig, 
+                controllers.core.routes.PortfolioEntryDeliveryController.requirementsFilter(portfolioEntry.id).url,
+                null
+            )
+        </div>
+    </div>
 
 }

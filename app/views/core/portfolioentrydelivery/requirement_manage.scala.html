@@ -209,7 +209,12 @@
                 </div>
                 
                 <div class="col-md-6">
-                    @parts.extended_attributes_input(requirementForm, classOf[models.delivery.Requirement], Long.parseLong(requirementForm("requirementId").value))
+                    @if(requirementForm("requirementId").value!=null) {
+                        @parts.extended_attributes_input(requirementForm, classOf[models.delivery.Requirement], Long.parseLong(requirementForm("requirementId").value))
+                    } else {
+                        @parts.extended_attributes_input(requirementForm, classOf[models.delivery.Requirement], null)
+                    }
+                    
                 </div>
 
             </div>
