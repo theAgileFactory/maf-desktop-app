@@ -829,28 +829,38 @@ public class PortfolioEntryDeliveryController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageRequirement(Long id, Long requirementId) {
 
-        // TODO
-
-        // TODO when edit an external requirement => add it's name in the form
-        // (as non-editable field)
-
         // get the portfolio entry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        // get the requirement
-        Requirement requirement = RequirementDAO.getRequirementById(requirementId);
+        // initiate the form with the template
+        Form<RequirementFormData> requirementForm = formTemplate;
 
-        // security: the portfolio entry must be related to the object
-        if (!requirement.portfolioEntry.id.equals(id)) {
-            return forbidden(views.html.error.access_forbidden.render(""));
+        // initiate the requirement
+        Requirement requirement = null;
+
+        if (!requirementId.equals(Long.valueOf(0))) { // edit
+
+            // get the requirement
+            requirement = RequirementDAO.getRequirementById(requirementId);
+
+            // security: the portfolio entry must be related to the object
+            if (!requirement.portfolioEntry.id.equals(id)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+
+            requirementForm = formTemplate.fill(new RequirementFormData(requirement));
+
+            // add the custom attributes values
+            CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, requirementId);
+
+        } else { // create
+
+            // add the custom attributes default values
+            CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, null);
+
         }
 
-        Form<RequirementFormData> requirementForm = formTemplate.fill(new RequirementFormData(requirement));
-
-        // add the custom attributes values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, requirementId);
-
-        return ok(views.html.core.portfolioentrydelivery.requirement_manage.render(portfolioEntry, requirementForm));
+        return ok(views.html.core.portfolioentrydelivery.requirement_manage.render(portfolioEntry, requirement, requirementForm));
 
     }
 
@@ -867,11 +877,11 @@ public class PortfolioEntryDeliveryController extends Controller {
         Form<RequirementFormData> boundForm = formTemplate.bindFromRequest();
 
         // get the portfolioEntry
-        Long id = Long.valueOf(request().body().asFormUrlEncoded().get("id")[0]);
+        Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // get the requirement
-        Long requirementId = Long.valueOf(request().body().asFormUrlEncoded().get("requirementId")[0]);
+        Long requirementId = Long.valueOf(boundForm.data().get("requirementId"));
         Requirement requirement = RequirementDAO.getRequirementById(requirementId);
 
         // security: the portfolio entry must be related to the object
@@ -880,7 +890,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Requirement.class)) {
-            return ok(views.html.core.portfolioentrydelivery.requirement_manage.render(portfolioEntry, boundForm));
+            return ok(views.html.core.portfolioentrydelivery.requirement_manage.render(portfolioEntry, requirement, boundForm));
         }
 
         RequirementFormData requirementFormData = boundForm.get();

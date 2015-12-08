@@ -21,8 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.delivery.DeliverableDAO;
+import dao.delivery.IterationDAO;
+import dao.delivery.RequirementDAO;
+import dao.pmo.ActorDao;
 import models.delivery.Deliverable;
 import models.delivery.Requirement;
+import models.framework_models.parent.IModelConstants;
+import play.data.validation.Constraints.MaxLength;
+import play.data.validation.Constraints.Required;
 
 /**
  * A requirement form data is used to manage the fields when editing a
@@ -36,6 +42,37 @@ public class RequirementFormData {
     public Long id;
 
     public Long requirementId;
+
+    public boolean isDefect;
+
+    @Required
+    @MaxLength(value = IModelConstants.LARGE_STRING)
+    public String name;
+
+    public String description;
+
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
+    public String category;
+
+    public Long requirementStatus;
+
+    public Long requirementPriority;
+
+    public Long requirementSeverity;
+
+    public Long author;
+
+    public Integer storyPoints;
+
+    public Double initialEstimation;
+
+    public Double effort;
+
+    public Double remainingEffort;
+
+    public boolean isScoped;
+
+    public Long iteration;
 
     public List<Long> deliverables = new ArrayList<Long>();
 
@@ -54,6 +91,21 @@ public class RequirementFormData {
     public RequirementFormData(Requirement requirement) {
         this.id = requirement.portfolioEntry.id;
         this.requirementId = requirement.id;
+
+        this.isDefect = requirement.isDefect;
+        this.name = requirement.name;
+        this.description = requirement.description;
+        this.category = requirement.category;
+        this.requirementStatus = requirement.requirementStatus != null ? requirement.requirementStatus.id : null;
+        this.requirementPriority = requirement.requirementPriority != null ? requirement.requirementPriority.id : null;
+        this.requirementSeverity = requirement.requirementSeverity != null ? requirement.requirementSeverity.id : null;
+        this.author = requirement.author != null ? requirement.author.id : null;
+        this.storyPoints = requirement.storyPoints;
+        this.initialEstimation = requirement.initialEstimation;
+        this.effort = requirement.effort;
+        this.remainingEffort = requirement.remainingEffort;
+        this.isScoped = requirement.isScoped != null ? requirement.isScoped : false;
+        this.iteration = requirement.iteration != null ? requirement.iteration.id : null;
         for (Deliverable deliverable : DeliverableDAO.getDeliverableAsListByRequirement(requirement.id)) {
             this.deliverables.add(deliverable.id);
         }
@@ -66,6 +118,20 @@ public class RequirementFormData {
      *            the requirement in the DB
      */
     public void fill(Requirement requirement) {
+        requirement.isDefect = this.isDefect;
+        requirement.name = this.name;
+        requirement.description = this.description;
+        requirement.category = this.category;
+        requirement.requirementStatus = this.requirementStatus != null ? RequirementDAO.getRequirementStatusById(this.requirementStatus) : null;
+        requirement.requirementPriority = this.requirementPriority != null ? RequirementDAO.getRequirementPriorityById(this.requirementPriority) : null;
+        requirement.requirementSeverity = this.requirementSeverity != null ? RequirementDAO.getRequirementSeverityById(this.requirementSeverity) : null;
+        requirement.author = this.author != null ? ActorDao.getActorById(this.author) : null;
+        requirement.storyPoints = this.storyPoints;
+        requirement.initialEstimation = this.initialEstimation;
+        requirement.effort = this.effort;
+        requirement.remainingEffort = this.remainingEffort;
+        requirement.isScoped = this.isScoped;
+        requirement.iteration = this.iteration != null ? IterationDAO.getIterationById(this.iteration) : null;
         requirement.deliverables = new ArrayList<Deliverable>();
         for (Long deliverableId : this.deliverables) {
             requirement.deliverables.add(DeliverableDAO.getDeliverableById(deliverableId));

@@ -17,6 +17,7 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
+    requirement: models.delivery.Requirement,
     requirementForm: Form[utils.form.RequirementFormData]
 )
 
@@ -31,6 +32,10 @@
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.delivery.Requirement])
 }
 
+@isExternal=@{
+    requirement != null && requirement.externalRefId != null && !requirement.externalRefId.equals("")
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -40,6 +45,12 @@
 }
 
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+    @if(isExternal) {
+        <div class="alert alert-info">
+            @parts.Msg("core.portfolio_entry_delivery.requirement.manage.external.info")
+        </div>
+    }
 
     <div class="maf-form">
         @if(requirementForm.hasErrors()){
@@ -60,8 +71,128 @@
                     
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
         
-                        <input type="hidden" name="requirementId" value="@requirementForm("requirementId").value"/>
+                        @if(requirementForm("requirementId").value!=null){
+                            <input type="hidden" name="requirementId" value="@requirementForm("requirementId").value"/>
+                        }
                         
+                        @if(isExternal) {
+                        
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.is_defect.label")</label>
+                                <div class="">@parts.formats.display_boolean(requirement.isDefect)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("isDefect").name" id="@requirementForm("isDefect").id" value="@requirementForm("isDefect").value" />
+                            </div>
+                        
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.name.label")</label>
+                                <div class="">@parts.formats.display_object(requirement.name)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("name").name" id="@requirementForm("name").id" value="@requirementForm("name").value" />
+                            </div>
+                            
+                            <input type="hidden" data-primitive="true" name="@requirementForm("description").name" id="@requirementForm("description").id" value="@requirementForm("description").value" />
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.category.label")</label>
+                                <div class="">@parts.formats.display_object(requirement.category)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("category").name" id="@requirementForm("category").id" value="@requirementForm("category").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.status.label")</label>
+                                <div class="">@parts.formats.display_value_holder(requirement.requirementStatus)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("requirementStatus").name" id="@requirementForm("requirementStatus").id" value="@requirementForm("requirementStatus").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.priority.label")</label>
+                                <div class="">@parts.formats.display_value_holder(requirement.requirementPriority)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("requirementPriority").name" id="@requirementForm("requirementPriority").id" value="@requirementForm("requirementPriority").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.severity.label")</label>
+                                <div class="">@parts.formats.display_value_holder(requirement.requirementSeverity)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("requirementSeverity").name" id="@requirementForm("requirementSeverity").id" value="@requirementForm("requirementSeverity").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.author.label")</label>
+                                <div class="">@display_actor(requirement.author)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("author").name" id="@requirementForm("author").id" value="@requirementForm("author").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.story_points.label")</label>
+                                <div class="">@parts.formats.display_number(requirement.storyPoints)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("storyPoints").name" id="@requirementForm("storyPoints").id" value="@requirementForm("storyPoints").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.initial_estimation.label")</label>
+                                <div class="">@parts.formats.display_number(requirement.initialEstimation)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("initialEstimation").name" id="@requirementForm("initialEstimation").id" value="@requirementForm("initialEstimation").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.effort.label")</label>
+                                <div class="">@parts.formats.display_number(requirement.effort)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("effort").name" id="@requirementForm("effort").id" value="@requirementForm("effort").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.remaining_effort.label")</label>
+                                <div class="">@parts.formats.display_number(requirement.remainingEffort)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("remainingEffort").name" id="@requirementForm("remainingEffort").id" value="@requirementForm("remainingEffort").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.is_scoped.label")</label>
+                                <div class="">@parts.formats.display_boolean(requirement.isScoped)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("isScoped").name" id="@requirementForm("isScoped").id" value="@requirementForm("isScoped").value" />
+                            </div>
+                            
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.requirement.iteration.label")</label>
+                                <div class="">@display_iteration(requirement.iteration)</div>
+                                <input type="hidden" data-primitive="true" name="@requirementForm("iteration").name" id="@requirementForm("iteration").id" value="@requirementForm("iteration").value" />
+                            </div>
+                            
+                        } else {
+                        
+                            @parts.checkbox(requirementForm("isDefect"), parts.Msg.asString("object.requirement.is_defect.label"))
+                        
+                            @parts.input_text(requirementForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.name.label"), 'autofocus -> "autofocus")
+                            
+                            @helper.textarea(requirementForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.description.label"))
+                            
+                            @parts.input_text(requirementForm("category"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.category.label"))
+                            
+                            @parts.dropdownlist(requirementForm("requirementStatus"),parts.Msg.asString("object.requirement.status.label"), dao.delivery.RequirementDAO.getRequirementStatusAsVH())
+                            
+                            @parts.dropdownlist(requirementForm("requirementPriority"),parts.Msg.asString("object.requirement.priority.label"), dao.delivery.RequirementDAO.getRequirementPriorityAsVH())
+                            
+                            @parts.dropdownlist(requirementForm("requirementSeverity"),parts.Msg.asString("object.requirement.severity.label"), dao.delivery.RequirementDAO.getRequirementSeverityAsVH())
+                            
+                            @parts.singlevalue_picker(
+                                requirementForm("author"), 
+                                parts.Msg.asString("object.requirement.author.label"),
+                                controllers.routes.PickerController.actor().url
+                            )
+                            
+                            @parts.input_text(requirementForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.story_points.label"))
+                            
+                            @parts.input_text(requirementForm("initialEstimation"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.initial_estimation.label"))
+                            
+                            @parts.input_text(requirementForm("effort"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.effort.label"))
+                            
+                            @parts.input_text(requirementForm("remainingEffort"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.remaining_effort.label"))
+                            
+                            @parts.checkbox(requirementForm("isScoped"), parts.Msg.asString("object.requirement.is_scoped.label"))
+                            
+                            @parts.dropdownlist(requirementForm("iteration"),parts.Msg.asString("object.requirement.iteration.label"), dao.delivery.IterationDAO.getIterationsAsVHByPE(portfolioEntry.id), null, false)
+                            
+                        }
+
                         @parts.multivalue_picker(
                             requirementForm("deliverables"), 
                             parts.Msg.asString("object.requirement.deliverables.label"),

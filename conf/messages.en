@@ -1379,6 +1379,7 @@ object.requirement.is_defect.label=Defect
 object.requirement.external_ref_id.label=External ref ID
 object.requirement.external_link.label=External link
 object.requirement.name.label=Name
+object.requirement.description.label=Description
 object.requirement.category.label=Category
 object.requirement.status.label=Status
 object.requirement.priority.label=Priority
@@ -2389,6 +2390,7 @@ core.portfolio_entry_delivery.requirement.view.description.title=Description
 
 #manage requirement
 core.portfolio_entry_delivery.requirement.manage.title=Manage a requirement
+core.portfolio_entry_delivery.requirement.manage.external.info=This requirement has been externally provisioned: only the deliverables and the custom attributes could be updated.
 core.portfolio_entry_delivery.requirement.add.successful=The requirement has been added.
 core.portfolio_entry_delivery.requirement.edit.successful=The requirement has been updated.
 

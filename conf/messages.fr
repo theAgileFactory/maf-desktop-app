@@ -1391,6 +1391,7 @@ object.requirement.is_defect.label=Anomalie
 object.requirement.external_ref_id.label=ID externe
 object.requirement.external_link.label=Lien externe
 object.requirement.name.label=Nom
+object.requirement.description.label=Description
 object.requirement.category.label=Catégorie
 object.requirement.status.label=Statut
 object.requirement.priority.label=Priorité
@@ -2405,6 +2406,7 @@ core.portfolio_entry_delivery.requirement.view.description.title=Description
 
 #manage requirement
 core.portfolio_entry_delivery.requirement.manage.title=Gérer une exigence
+core.portfolio_entry_delivery.requirement.manage.external.info=Cette exigence a été provisionnée par un module tiers: seuls les livrables et les attributs personnalisés peuvent être modifiés.
 core.portfolio_entry_delivery.requirement.add.successful=L''exigence a été ajoutée.
 core.portfolio_entry_delivery.requirement.edit.successful=L''exigence a été mise à jour.
 

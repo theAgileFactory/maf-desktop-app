@@ -22,6 +22,8 @@ import java.util.List;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
 import models.delivery.Iteration;
 
 /**
@@ -77,6 +79,13 @@ public abstract class IterationDAO {
      */
     public static List<Iteration> getIterationsListByPE(Long portfolioEntryId) {
         return IterationDAO.find.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).findList();
+    }
+
+    /**
+     * Get iterations of a portfolio entry as a value holder collection.
+     */
+    public static ISelectableValueHolderCollection<Long> getIterationsAsVHByPE(Long portfolioEntryId) {
+        return new DefaultSelectableValueHolderCollection<>(getIterationAllAsListByPE(portfolioEntryId));
     }
 
 }
