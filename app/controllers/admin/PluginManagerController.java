@@ -39,6 +39,7 @@ import com.avaje.ebean.ExpressionList;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import framework.commons.IFrameworkConstants.Syntax;
@@ -272,7 +273,7 @@ public class PluginManagerController extends Controller {
      * @param isBigImage
      *            true for the big image, esle the small
      */
-    @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
+    @SubjectPresent
     public Promise<Result> image(String identifier, boolean isBigImage) {
 
         InputStream inStream = null;
