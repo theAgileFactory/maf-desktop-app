@@ -28,7 +28,6 @@ import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.Msg;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
-import modules.StaticAccessor;
 import play.Logger;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.IDataSyndicationService.DataSyndicationPostDataException;
@@ -52,6 +51,9 @@ public interface JobDescriptors {
      * 
      */
     class UpdateConsumedLicensesJobDescriptor implements IJobDescriptor {
+
+        @Inject
+        private ILicensesManagementService licensesManagementService;
 
         @Override
         public String getId() {
@@ -85,11 +87,9 @@ public interface JobDescriptors {
 
         @Override
         public void trigger() {
-            ILicensesManagementService licensesManagementService = StaticAccessor.getLicensesManagementService();
             licensesManagementService.updateConsumedPortfolioEntries();
             licensesManagementService.updateConsumedUsers();
             licensesManagementService.updateConsumedStorage();
-
         }
 
         @Override
