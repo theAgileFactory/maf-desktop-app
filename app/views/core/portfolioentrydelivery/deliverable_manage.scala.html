@@ -29,7 +29,7 @@
 @import views.html.modelsparts._
 
 @hasExtendedAttributes=@{
-    models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.delivery.Deliverable])
+    isOwner && models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.delivery.Deliverable])
 }
 
 @breadcrump=@{
@@ -41,6 +41,12 @@
 }
 
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.DELIVERY, breadcrump){
+
+    @if(!isOwner) {
+        <div class="alert alert-info">
+            @parts.Msg("core.portfolio_entry_delivery.deliverable.manage.delegated.info")
+        </div>
+    }
 
     <div class="maf-form">
         @if(deliverableForm.hasErrors()){
@@ -67,10 +73,22 @@
                             <input type="hidden" name="deliverableId" value="@deliverableForm("deliverableId").value"/>
                         }
                         
-                        @parts.input_text(deliverableForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.deliverable.name.label"), 'autofocus -> "autofocus")
+                        @if(!isOwner) {
+                            <div class="form-group ">
+                                <label class="control-label">@parts.Msg("object.deliverable.name.label")</label>
+                                <div class="">@parts.formats.display_object(deliverableForm("name").value)</div>
+                                <input type="hidden" data-primitive="true" name="@deliverableForm("name").name" id="@deliverableForm("name").id" value="@deliverableForm("name").value" />
+                            </div>
+                            
+                            <input type="hidden" data-primitive="true" name="@deliverableForm("description").name" id="@deliverableForm("description").id" value="@deliverableForm("description").value" />
+                        } else {
 
-                        @helper.textarea(deliverableForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.deliverable.description.label"))
-                        
+                            @parts.input_text(deliverableForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.deliverable.name.label"), 'autofocus -> "autofocus")
+
+                            @helper.textarea(deliverableForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.deliverable.description.label"))
+
+                        }
+
                         @parts.singlevalue_picker(
                             deliverableForm("planningPackage"), 
                             parts.Msg.asString("object.deliverable.planning_package.label"),
@@ -83,13 +101,6 @@
         
                     </fieldset>
                     
-                    @if(!isOwner) {
-                        <script>
-                            $("#name").prop("readonly", true);
-                            $("#description").prop("readonly", true);
-                        </script>
-                    }
-                    
                 @if(hasExtendedAttributes) {
                 </div>
                 
@@ -100,13 +111,6 @@
                         @parts.extended_attributes_input(deliverableForm, classOf[models.delivery.Deliverable], null)
                     }
                 </div>
-                
-                @if(!isOwner) {
-                    <script>
-                        $("#custom-attributes :input").prop("readonly", true);
-                        $("#custom-attributes select").attr("readonly", "readonly");
-                    </script>
-                }
 
             </div>
             }

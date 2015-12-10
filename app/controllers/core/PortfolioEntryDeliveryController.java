@@ -316,7 +316,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         // get the is owner attribute
         boolean isOwner = Boolean.valueOf(boundForm.data().get("isOwner"));
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Deliverable.class)) {
+        if (boundForm.hasErrors() || (isOwner && CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Deliverable.class))) {
             return ok(views.html.core.portfolioentrydelivery.deliverable_manage.render(portfolioEntry, boundForm, isOwner));
         }
 

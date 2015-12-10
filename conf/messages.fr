@@ -2371,6 +2371,7 @@ core.portfolio_entry_delivery.deliverable.view.requirements.title=Exigences
 
 #manage deliverable
 core.portfolio_entry_delivery.deliverable.manage.title=Gérer un livrable
+core.portfolio_entry_delivery.deliverable.manage.delegated.info=Ce livrable est géré par une autre initiative ou release: seul le résultat peut être modifié.
 core.portfolio_entry_delivery.deliverable.add.successful=Le livrable a été créé.
 core.portfolio_entry_delivery.deliverable.edit.successful=Le livrable a été mis à jour.
 

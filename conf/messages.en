@@ -2355,6 +2355,7 @@ core.portfolio_entry_delivery.deliverable.view.requirements.title=Requirements
 
 #manage deliverable
 core.portfolio_entry_delivery.deliverable.manage.title=Manage a deliverable
+core.portfolio_entry_delivery.deliverable.manage.delegated.info=This deliverable is owned by another initiative or release: only the planning package could be updated.
 core.portfolio_entry_delivery.deliverable.add.successful=The deliverable has been added successfully.
 core.portfolio_entry_delivery.deliverable.edit.successful=The deliverable has been updated.
 
