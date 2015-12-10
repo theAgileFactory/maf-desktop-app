@@ -38,11 +38,13 @@ import controllers.core.TimesheetController.OptionData;
 import dao.delivery.DeliverableDAO;
 import dao.delivery.IterationDAO;
 import dao.delivery.RequirementDAO;
+import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.highcharts.pattern.BasicBar;
 import framework.highcharts.pattern.DistributedDonut;
 import framework.highcharts.pattern.RangeLine;
 import framework.security.ISecurityService;
+import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
@@ -58,6 +60,7 @@ import models.delivery.Requirement;
 import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
 import models.delivery.RequirementStatus.Type;
+import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
 import play.Configuration;
 import play.Logger;
@@ -93,6 +96,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -833,7 +838,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // initiate the form with the template
-        Form<RequirementFormData> requirementForm = formTemplate;
+        Form<RequirementFormData> requirementForm = null;
 
         // initiate the requirement
         Requirement requirement = null;
@@ -854,6 +859,10 @@ public class PortfolioEntryDeliveryController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, requirementId);
 
         } else { // create
+
+            Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(getAccountManagerPlugin(), getUserSessionManagerPlugin().getUserSessionId(ctx()));
+
+            requirementForm = formTemplate.fill(new RequirementFormData(actor));
 
             // add the custom attributes default values
             CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, null);
@@ -1208,6 +1217,13 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the account manager service.
+     */
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return this.accountManagerPlugin;
     }
 
 }

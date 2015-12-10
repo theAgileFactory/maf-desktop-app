@@ -27,6 +27,7 @@ import dao.pmo.ActorDao;
 import models.delivery.Deliverable;
 import models.delivery.Requirement;
 import models.framework_models.parent.IModelConstants;
+import models.pmo.Actor;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 
@@ -109,6 +110,16 @@ public class RequirementFormData {
         for (Deliverable deliverable : DeliverableDAO.getDeliverableAsListByRequirement(requirement.id)) {
             this.deliverables.add(deliverable.id);
         }
+    }
+
+    /**
+     * Construct the form data with default value.
+     * 
+     * @param author
+     *            the requirement author
+     */
+    public RequirementFormData(Actor author) {
+        this.author = author.id;
     }
 
     /**
