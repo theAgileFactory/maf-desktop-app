@@ -129,31 +129,43 @@
              <div class="panel panel-default">
                 <div class="panel-heading">
                     @parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.title")
+                    
+                    <div class="pull-right">
+                        @if(pluginInfo.getDescriptor().getConfigurationBlockDescriptors()!=null && pluginInfo.getDescriptor().getConfigurationBlockDescriptors().size()!=0){
+
+                            @helper.form(action = controllers.admin.routes.PluginManagerController.importConfiguration(pluginConfigurationId), 'enctype -> "multipart/form-data", 'class -> "form-inline", 'style -> "margin: -5px;") {
+                                
+                                <div class="form-group">
+                                    <input type="file" id="import" name="import">
+                                </div>
+                                <button style="color: #558ed5;" id="import-configuration" id="upload" type="submit" class="btn" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.import.help")">
+                                    <i class="glyphicons glyphicons-disk-open glyphicons-panel"></i>
+                                </button>
+                                <script>$('#import-configuration').tooltip();</script>
+                                
+                                &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
+                                
+                                <a class="btn" id="export-configuration" href="@controllers.admin.routes.PluginManagerController.exportConfiguration(pluginConfigurationId)" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.export.help")">
+                                    <i class="glyphicons glyphicons-disk-save glyphicons-panel"></i>
+                                </a>
+                                <script>$('#export-configuration').tooltip();</script>
+                                
+                                
+                            }
+                            
+                        }
+                    </div>
+                    
                 </div>
                 <div class="panel-body">
-                @if(pluginInfo.hasCustomConfigurator()){
-                	<p>
-                	<a class="btn btn-primary" href="@pluginInfo.getLinkToCustomConfiguration()">@parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.custom.button")</a>
-                	</p>
-                }
-                @if(pluginInfo.getDescriptor().getConfigurationBlockDescriptors()!=null
-                && pluginInfo.getDescriptor().getConfigurationBlockDescriptors().size()!=0){
-                	<div class="row">
-	                	<div class="col-md-6"></div>
-	                	<div class="col-md-2">
-	                		<a href="@controllers.admin.routes.PluginManagerController.exportConfiguration(pluginConfigurationId)" class="btn btn-primary"><i class="glyphicons glyphicons-disk-save"></i></a>
-	                	</div>
-	                	<div class="col-md-4 text-right">
-	                	 	@helper.form(action = controllers.admin.routes.PluginManagerController.importConfiguration(pluginConfigurationId), 'enctype -> "multipart/form-data") {
-	                		<div class="row">
-	                		<div class="col-md-6"><input type="file" id="import" name="import"/></div>
-	                		<div class="col-md-6"><input id="upload" type="submit" value="@parts.Msg("button.upload")" class="btn btn-primary"/></div>
-	                		</div>
-	                		}
-	                	</div>
-                	</div>
-                	@parts.table.tableview(configurationBlocksTable)
-                }
+                    @if(pluginInfo.hasCustomConfigurator()){
+                        <p>
+                           <a class="btn btn-primary" href="@pluginInfo.getLinkToCustomConfiguration()">@parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.custom.button")</a>
+                        </p>
+                    }
+                    
+                    @parts.table.tableview(configurationBlocksTable)
+                    
                 </div>
             </div>
         </div>
