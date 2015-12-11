@@ -59,6 +59,7 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -748,24 +749,25 @@ public class PluginManagerController extends Controller {
 
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }
-    
+
     /**
      * Export the plugin configuration as an XML file
+     * 
      * @param pluginConfigurationId
      *            the plugin configuration id
      * @return
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result exportConfiguration(Long pluginConfigurationId) {
-        if(log.isDebugEnabled()){
-            log.debug("Export of the configuration blocks for the plugin "+pluginConfigurationId);
+        if (log.isDebugEnabled()) {
+            log.debug("Export of the configuration blocks for the plugin " + pluginConfigurationId);
         }
         response().setContentType("application/xml");
-        response().setHeader("Content-disposition","attachment; filename=export.xml");
+        response().setHeader("Content-disposition", "attachment; filename=export.xml");
         try {
-            String configuration=getPluginManagerService().exportPluginConfiguration(pluginConfigurationId);
-            if(log.isDebugEnabled()){
-                log.debug("Found the configuration "+configuration);
+            String configuration = getPluginManagerService().exportPluginConfiguration(pluginConfigurationId);
+            if (log.isDebugEnabled()) {
+                log.debug("Found the configuration " + configuration);
             }
             return ok(configuration);
         } catch (PluginException e) {
@@ -773,10 +775,11 @@ public class PluginManagerController extends Controller {
             return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
         }
     }
-    
+
     /**
      * Import a previously exported configuration file.<br/>
      * The file is posted using a file input control.
+     * 
      * @param pluginConfigurationId
      *            the plugin configuration id
      * @return
@@ -784,40 +787,40 @@ public class PluginManagerController extends Controller {
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = MAX_CONFIG_FILE_SIZE)
     public Promise<Result> importConfiguration(Long pluginConfigurationId) {
-     // Perform the upload
+        // Perform the upload
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    if(log.isDebugEnabled()){
-                        log.debug("Configuration upload requested for "+pluginConfigurationId);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Configuration upload requested for " + pluginConfigurationId);
                     }
                     MultipartFormData body = request().body().asMultipartFormData();
                     FilePart filePart = body.getFile("import");
                     if (filePart != null) {
-                        if(log.isDebugEnabled()){
+                        if (log.isDebugEnabled()) {
                             log.debug("A file has been found");
                         }
-                        String configuration=IOUtils.toString(new FileInputStream(filePart.getFile()));
-                        if(log.isDebugEnabled()){
-                            log.debug("Content of the uploaded file is "+configuration);
+                        String configuration = IOUtils.toString(new FileInputStream(filePart.getFile()));
+                        if (log.isDebugEnabled()) {
+                            log.debug("Content of the uploaded file is " + configuration);
                         }
-                        try{
+                        try {
                             getPluginManagerService().importPluginConfiguration(pluginConfigurationId, configuration);
-                            if(log.isDebugEnabled()){
+                            if (log.isDebugEnabled()) {
                                 log.debug("Plugin configuration uploaded");
                             }
-                            Utilities.sendSuccessFlashMessage(Msg.get("form.input.file_field.success"));
-                        }catch(PluginException e){
-                            log.error("Attempt to upload an invalid plugin configuration for "+pluginConfigurationId,e);
+                            Utilities.sendWarningFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.configuration.import.success"));
+                        } catch (PluginException e) {
+                            log.error("Attempt to upload an invalid plugin configuration for " + pluginConfigurationId, e);
                             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration_block.import.error"));
                         }
                     } else {
                         Utilities.sendErrorFlashMessage(Msg.get("form.input.file_field.no_file"));
                     }
                 } catch (Exception e) {
-                    Utilities
-                            .sendErrorFlashMessage(Msg.get("admin.shared_storage.upload.file.size.invalid", FileUtils.byteCountToDisplaySize(MAX_CONFIG_FILE_SIZE)));
+                    Utilities.sendErrorFlashMessage(
+                            Msg.get("admin.shared_storage.upload.file.size.invalid", FileUtils.byteCountToDisplaySize(MAX_CONFIG_FILE_SIZE)));
                     String message = String.format("Failure while uploading the plugin configuration for %d", pluginConfigurationId);
                     log.error(message);
                     throw new IOException(message, e);

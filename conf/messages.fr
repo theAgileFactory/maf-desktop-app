@@ -3096,6 +3096,7 @@ admin.plugin_manager.configuration.view.panel.admin.stop.success=Plugin {0} est 
 admin.plugin_manager.configuration.view.panel.configuration.title=Configuration du plugin
 admin.plugin_manager.configuration.view.panel.configuration.export.help=Exporter la configuration courante en XML
 admin.plugin_manager.configuration.view.panel.configuration.import.help=Importer une configuration depuis un fichier XML
+admin.plugin_manager.configuration.view.panel.configuration.import.success=La configuration a été chargée. ATTENTION: Vous devez redémarrer le plugin pour qu''elle soit prise en compte.
 admin.plugin_manager.configuration.view.panel.configuration.custom.button=Configuration avancée
 admin.plugin_manager.configuration.view.panel.log.title=Logs du plugin
 admin.plugin_manager.configuration.view.panel.log.refresh.help=Rafraichir

@@ -3095,6 +3095,7 @@ admin.plugin_manager.configuration.view.panel.admin.stop.success=Plugin {0} wird
 admin.plugin_manager.configuration.view.panel.configuration.title=Plugin Konfiguration
 admin.plugin_manager.configuration.view.panel.configuration.export.help=de: Export the current configuration as XML
 admin.plugin_manager.configuration.view.panel.configuration.import.help=de: Import a configuration from an XML file
+admin.plugin_manager.configuration.view.panel.configuration.import.success=Konfiguration zurückgesetzt (ACHTUNG: Wenn Sie jetzt speichern verliehren sie Ihr vorherige Konfiguration)
 admin.plugin_manager.configuration.view.panel.configuration.custom.button=Erweiterte Konfiguration
 admin.plugin_manager.configuration.view.panel.log.title=Plugin Log
 admin.plugin_manager.configuration.view.panel.log.refresh.help=Aktualisieren
