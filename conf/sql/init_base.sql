@@ -1984,6 +1984,7 @@ INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES (
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('finance1', 'services.plugins.system.finance1.FinanceErpIntegrationPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('notification1', 'services.plugins.system.notification1.EventNotificationPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('genint1', 'services.plugins.system.genint1.GenericExternalIntegrationPluginRunner', '0');
+INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('schedule1', 'services.plugins.system.schedule1.HookScriptSchedulerPluginRunner', '0');
 
 -- API root key
 
