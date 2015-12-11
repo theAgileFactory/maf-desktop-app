@@ -141,7 +141,11 @@
                             
                             @parts.checkbox(requirementForm("isScoped"), parts.Msg.asString("object.requirement.is_scoped.label"))
                             
-                            @parts.dropdownlist(requirementForm("iteration"),parts.Msg.asString("object.requirement.iteration.label"), dao.delivery.IterationDAO.getIterationsAsVHByPE(portfolioEntry.id), null, false)
+                            @if(portfolioEntry.portfolioEntryType.isRelease) {
+                                <input type="hidden" id="@requirementForm("iteration").id" name="@requirementForm("iteration").name" value="@requirementForm("iteration").value" />
+                            } else {
+                                @parts.dropdownlist(requirementForm("iteration"),parts.Msg.asString("object.requirement.iteration.label"), dao.delivery.IterationDAO.getIterationsAsVHByPE(portfolioEntry.id), null, false)
+                            }
                             
                         }
 
