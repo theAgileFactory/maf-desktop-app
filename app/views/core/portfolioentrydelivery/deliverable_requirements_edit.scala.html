@@ -116,7 +116,7 @@
                 <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id).url">@parts.Msg("button.cancel")</a>
             } else {
                 <div class="alert alert-info">
-                    @parts.Msg("core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement", controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id).url)
+                    @parts.Msg("core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement", controllers.core.routes.PortfolioEntryDeliveryController.manageRequirement(portfolioEntry.id).url)
                 </div>
                 <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryDeliveryController.viewDeliverable(portfolioEntry.id, deliverable.id).url">@parts.Msg("button.back")</a>
             }
