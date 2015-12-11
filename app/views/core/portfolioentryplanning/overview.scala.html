@@ -52,11 +52,16 @@
             parts.Msg.asString("core.portfolio_entry_planning.overview.package.label"),
             "warning"
         ) &nbsp;
-        @checkbox_colored(
-            overviewConfigurationForm("iterations"), 
-            parts.Msg.asString("core.portfolio_entry_planning.overview.iteration.label"),
-            "primary"
-        ) &nbsp;
+        @if(portfolioEntry.portfolioEntryType.isRelease) {
+            <input type="hidden" id="@overviewConfigurationForm("iterations").id" name="@overviewConfigurationForm("iterations").name" value="@overviewConfigurationForm("iterations").value" />
+        } else {
+            @checkbox_colored(
+                overviewConfigurationForm("iterations"), 
+                parts.Msg.asString("core.portfolio_entry_planning.overview.iteration.label"),
+                "primary"
+            ) &nbsp;
+        }
+        
         
         <div class="form-group">
             <input class="btn btn-default" type="submit" value="@parts.Msg("button.refresh")" />
