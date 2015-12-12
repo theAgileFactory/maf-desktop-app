@@ -70,6 +70,8 @@ import framework.services.remote.IAdPanelManagerService;
 import framework.services.router.CustomRouterServiceImpl;
 import framework.services.router.ICustomRouterNotificationService;
 import framework.services.router.ICustomRouterService;
+import framework.services.script.IScriptService;
+import framework.services.script.ScriptServiceImpl;
 import framework.services.session.CookieUserSessionManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.DefaultAttachmentManagerPlugin;
@@ -140,6 +142,8 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IDatabaseDependencyService.class).to(DatabaseDependencyServiceImpl.class).asEagerSingleton();
         bind(IImplementationDefinedObjectService.class).to(ImplementationDefinedObjectImpl.class).asEagerSingleton();
 
+        bind(IScriptService.class).to(ScriptServiceImpl.class).asEagerSingleton();
+        
         bind(HandlerCache.class).to(SecurityServiceImpl.class).asEagerSingleton();
         bind(ISecurityService.class).to(SecurityServiceImpl.class);
         bind(ISecurityServiceConfiguration.class).to(SecurityServiceImpl.class);
