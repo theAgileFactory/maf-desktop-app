@@ -35,6 +35,7 @@ import dao.timesheet.TimesheetDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
+import framework.services.script.IScriptService;
 import models.delivery.Requirement;
 import models.framework_models.kpi.KpiData;
 import models.governance.LifeCycleMilestone;
@@ -49,7 +50,7 @@ import models.pmo.PortfolioEntry;
 public class ReleaseBurndownKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
 
         List<Requirement> requirements = getRequirements(objectId);
 
@@ -65,7 +66,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
 
         List<Requirement> requirements = getRequirements(objectId);
 
@@ -81,7 +82,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
 
         List<Requirement> requirements = getRequirements(objectId);
 
@@ -122,7 +123,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
 
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
 
@@ -167,9 +168,9 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
 
-        Pair<Date, Date> dates = this.getTrendPeriod(preferenceManagerPlugin, kpi, objectId);
+        Pair<Date, Date> dates = this.getTrendPeriod(preferenceManagerPlugin, scriptService, kpi, objectId);
 
         if (dates != null) {
 
@@ -177,7 +178,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
 
             KpiData d1 = new KpiData();
             d1.timestamp = dates.getLeft();
-            d1.value = this.computeAdditional2(preferenceManagerPlugin, kpi, objectId);
+            d1.value = this.computeAdditional2(preferenceManagerPlugin, scriptService, kpi, objectId);
             datas.add(d1);
 
             KpiData d2 = new KpiData();

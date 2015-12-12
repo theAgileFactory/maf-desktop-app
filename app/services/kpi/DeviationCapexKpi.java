@@ -27,6 +27,7 @@ import dao.pmo.PortfolioEntryDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
+import framework.services.script.IScriptService;
 import models.framework_models.kpi.KpiData;
 import utils.finance.Totals;
 
@@ -38,7 +39,7 @@ import utils.finance.Totals;
 public class DeviationCapexKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         Totals totals = new Totals(0.0, PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false), 0.0,
                 PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, false), 0.0,
                 PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, false));
@@ -51,12 +52,12 @@ public class DeviationCapexKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         return new BigDecimal(PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false));
     }
 
     @Override
-    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         return new BigDecimal(PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, false)
                 + PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, false));
     }
@@ -67,12 +68,12 @@ public class DeviationCapexKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         return null;
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         return null;
     }
 

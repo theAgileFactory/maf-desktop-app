@@ -31,6 +31,7 @@ import dao.timesheet.TimesheetDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
+import framework.services.script.IScriptService;
 import models.framework_models.kpi.KpiData;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
@@ -43,7 +44,7 @@ import models.pmo.PortfolioEntryPlanningPackage;
 public class PortfolioEntryProgressKpi implements IKpiRunner {
 
     @Override
-    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
 
         BigDecimal numerator = BigDecimal.ZERO;
@@ -79,7 +80,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
 
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
 
@@ -108,7 +109,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
     }
 
     @Override
-    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(objectId);
 
         BigDecimal value = BigDecimal.ZERO;
@@ -137,12 +138,12 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public Pair<Date, Date> getTrendPeriod(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         return null;
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
         return null;
     }
 
