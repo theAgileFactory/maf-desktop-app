@@ -1974,7 +1974,6 @@ UPDATE `reporting` SET `reporting_category_id`=(SELECT `id` FROM `reporting_cate
 
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('jira1', 'services.plugins.atlassian.jira.jira1.JiraPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('jenk1', 'services.plugins.jenkins.jenk1.JenkinsPluginRunner', '1');
-INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('sharp1', 'services.plugins.microsoft.sharepoint.sharp1.SharepointPluginRunner', '0');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('nex1', 'services.plugins.nexus.nex1.NexusPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('redm1', 'services.plugins.redmine.redm1.RedminePluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('redm2', 'services.plugins.redmine.redm2.RedminePluginRunner', '1');
