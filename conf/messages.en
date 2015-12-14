@@ -574,7 +574,6 @@ permission.portfolio_entry_review_request_all_permission.description=Permission 
 permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Permission which allows a user to display and process all the review requests of any initiatives for which he is a manager of at least one portfolio.
 permission.purchase_order_view_all_permission.description=Permission which allows a user to view all details of any purchase orders.
 permission.admin_user_administration_permission.description=Permission which allows a user to create, edit and remove the users.
-permission.admin_hub_monitoring_permission.description=Permission which allows a user to display the logs of the integration hub.
 permission.admin_audit_log_permission.description=Permission which allows a user to configure the audit log.
 permission.personal_space_read_permission.description=Permission which allows a user to display and access its personal space.
 permission.admin_provisioning_manager_permission.description=Permission which allows to receive the notifications of provisioning failures.
@@ -3316,4 +3315,3 @@ admin.auditable.export.notification.not_found.message=No audit logs found for th
 admin.auditable.logging.title=Application logs
 admin.auditable.switchdebug.label=Switch to debug
 admin.auditable.download.label=Download
-

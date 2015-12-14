@@ -586,7 +586,6 @@ permission.portfolio_entry_review_request_all_permission.description=Anfragen ei
 permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Anfragen einsehen und bearbeiten von Initiativen in denen der Benutzer mindesten für ein Portfolio verantwortlich ist.
 permission.purchase_order_view_all_permission.description=Alle Bestellinformation einsehen.
 permission.admin_user_administration_permission.description=Benutzer hinzufügen, ändern und löschen.
-permission.admin_hub_monitoring_permission.description=Logs des Integration-Hub einsehen.
 permission.admin_audit_log_permission.description=Audit-Log Einstellungen.
 permission.personal_space_read_permission.description=Zugriff auf Persönliche Ablage
 permission.admin_provisioning_manager_permission.description=Nachrichten von Provisioning Fehler erhalten.

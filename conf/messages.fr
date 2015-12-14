@@ -586,7 +586,6 @@ permission.portfolio_entry_review_request_all_permission.description=Autorise un
 permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Autorise un utilisateur à afficher et traiter les requêtes de jalon d''une initiative pour laquelle il est reponsable d''au moins un portefeuille.
 permission.purchase_order_view_all_permission.description=Autorise un utilisateur à voir tous les détails de tous les bons de commande.
 permission.admin_user_administration_permission.description=Autorise un utilisateur à créer, mettre à jour et supprimer tout utilisateur.
-permission.admin_hub_monitoring_permission.description=Autorise un utilisateur à afficher le journal du hub.
 permission.admin_audit_log_permission.description=Autorise un utilisateur à configurer le journal d''audit.
 permission.personal_space_read_permission.description=Autorise un utilisateur à afficher son espace de stockage.
 permission.admin_provisioning_manager_permission.description=Autorise un utilisateur à recevoir les notifications suite à une erreur de provisionnement.
@@ -3330,5 +3329,3 @@ admin.auditable.export.notification.not_found.message=Aucun journal d''audit n''
 admin.auditable.logging.title=Logs d''application
 admin.auditable.switchdebug.label=Passer en mode debug
 admin.auditable.download.label=Télécharger
-
-
