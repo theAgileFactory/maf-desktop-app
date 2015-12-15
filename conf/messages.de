@@ -305,7 +305,7 @@ data_type.Actor.label=Mitarbeiter
 data_type.BudgetBucket.label=Budgetposten
 data_type.BudgetBucketLine.label=Budgeteintrag
 data_type.CostCenter.label=Kostenstelle
-data_type.Deliverable.label=de: Deliverable
+data_type.Deliverable.label=Ergebnis
 data_type.GoodsReceipt.label=Wareneingang
 data_type.Iteration.label=Iteration
 data_type.OrgUnit.label=Organisationseinheit
@@ -594,7 +594,7 @@ permission.scm_admin_permission.description="Source Code Repository" Administrat
 permission.jenkins_viewer_permission.description=Jenkins Daten einsehen.
 permission.jenkins_deploy_permission.description=Jenkins Jobs eingeben und ausführen.
 permission.portfolio_entry_submission_permission.description=Neue Initiativen erstellen.
-permission.release_submission_permission.description=de: Permission which allows a user to create a new release.
+permission.release_submission_permission.description=Neue Release erstellen.
 permission.admin_configuration_permission.description=Konfiguration der Anwendung (Grundeinstellungen, Rollen,...)
 permission.admin_plugin_manager_permission.description=Drittanbieter-Module verwalten und konfigurieren.
 permission.admin_kpi_manager_permission.description=KPI verwalten und konfigurieren
@@ -1029,8 +1029,8 @@ object.timesheet_log.table.empty=Keine Einträge
 # portfolioEntry
 #----------------------
 
-object.portfolio_entry.is_condfidential.label=Vertrauliche
-object.portfolio_entry.is_condfidential.help=de: If confidential then not visible by users which don''t participate to it.
+object.portfolio_entry.is_condfidential.label=Vertraulich
+object.portfolio_entry.is_condfidential.help=Nur sichtbar für beteiligte Benutzer.
 object.portfolio_entry.is_active.label=Aktiv
 object.portfolio_entry.governance_id.label=ID
 object.portfolio_entry.erp_ref_id.label=ERP ID
@@ -1056,10 +1056,10 @@ object.portfolio_entry.dependency.label=Initiative
 object.portfolio_entry.dependency.same.error=Die gewählte Initiative sollte nicht die aktuelle sein.
 object.portfolio_entry.dependency.already.error=Die gewählte Initiative ist bereits eine Abhängigkeit für den ausgewählten Typ.
 object.portfolio_entry.dependency.delete.confirmation=Abhängigkeit löschen?
-object.portfolio_entry.deliverable.label=de: Deliverable
-object.portfolio_entry.deliverables.label=de: Deliverables
-object.portfolio_entry.deliverable.type.OWNER.label=de: Owner
-object.portfolio_entry.deliverable.type.FOLLOWER.label=de: Follower
+object.portfolio_entry.deliverable.label=Ergebnis
+object.portfolio_entry.deliverables.label=Ergebnisse
+object.portfolio_entry.deliverable.type.OWNER.label=Träger
+object.portfolio_entry.deliverable.type.FOLLOWER.label=Folger
 object.portfolio_entry.table.empty=Keine Initiativen eingetragen
 
 #----------------------
@@ -1197,11 +1197,11 @@ object.life_cycle_milestone.description.label=Beschreibung
 object.life_cycle_milestone.is_review_required.label=erfordert Genehmigung
 object.life_cycle_milestone.default_status_type.label=Standardstatus
 object.life_cycle_milestone.is_active.label=Aktiv
-object.life_cycle_milestone.approvers.label=Approvers
+object.life_cycle_milestone.approvers.label=Genehmiger
 object.life_cycle_milestone.type.label=Typ
-object.life_cycle_milestone.type.invalid=de: This type has been already selected by another milestone of the process
-object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=de: Implementation start date
-object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=de: Implementation end date
+object.life_cycle_milestone.type.invalid=Dieser Typ wurde schon für einen anderen Meilenstein gewählt
+object.life_cycle_milestone.type.IMPLEMENTATION_START_DATE.label=Implementation Startdatum
+object.life_cycle_milestone.type.IMPLEMENTATION_END_DATE.label=Implementation Enddatum
 object.life_cycle_milestone.table.empty=Kein Meilenstein eingetragen
 
 #----------------------
@@ -1374,8 +1374,8 @@ object.allocated_resource.table.empty=Keine Einträge
 
 object.deliverable.name.label=Name
 object.deliverable.description.label=Beschreibung
-object.deliverable.is_delegated.label=de: Delegated
-object.deliverable.owner.label=de: Owner
+object.deliverable.is_delegated.label=Delegiert
+object.deliverable.owner.label=Träger
 object.deliverable.planning_package.label=Planungspaket
 object.deliverable.requirements.label=Anforderungen
 object.deliverable.portfolio_entries.label=Initiativen
@@ -1402,7 +1402,7 @@ object.requirement.effort.label=Ausgeführt
 object.requirement.remaining_effort.label=Restaufwand
 object.requirement.is_scoped.label=Akzeptiert
 object.requirement.iteration.label=Iteration
-object.requirement.deliverables.label=de: Deliverables
+object.requirement.deliverables.label=Ergebnisse
 object.requirement.table.empty=Keine Einträge
 
 #----------------------
@@ -2137,7 +2137,7 @@ core.portfolio_entry.sidebar.financial.details.label=Details
 core.portfolio_entry.sidebar.stakeholders.label=Projektbeteiligte
 core.portfolio_entry.sidebar.governance.label=Unternehmensführung
 core.portfolio_entry.sidebar.delivery.label=Lieferung
-core.portfolio_entry.sidebar.delivery.deliverables.label=de: Deliverables
+core.portfolio_entry.sidebar.delivery.deliverables.label=Ergebnisse
 core.portfolio_entry.sidebar.delivery.requirements.label=Anforderungen
 core.portfolio_entry.sidebar.delivery.requirements_status.label=Anforderungsstatus
 core.portfolio_entry.sidebar.delivery.iterations.label=Iterations
@@ -2163,7 +2163,7 @@ core.portfolio_entry.create.initiative.title=Neue Initiative erstellen
 core.portfolio_entry.create.initiative.success.message=Die Initiative wurde erstellt
 core.portfolio_entry.create.initiative.notification.title=Neue Initiative
 core.portfolio_entry.create.initiative.notification.message=Neue Initiative in Ihr Portfolio {0} erstellt.
-core.portfolio_entry.create.initiative.notification.manager.message=de: A new initiative has been assigned to you.
+core.portfolio_entry.create.initiative.notification.manager.message=Eine neue Initiative wurden Ihnen zugeteilt.
 
 #create release
 core.portfolio_entry.create.release.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Neue Release erstellen
@@ -2171,7 +2171,7 @@ core.portfolio_entry.create.release.title=Neue Release erstellen
 core.portfolio_entry.create.release.success.message=Die Release wurde erstellt
 core.portfolio_entry.create.release.notification.title=Neue Release
 core.portfolio_entry.create.release.notification.message=Neue Release in Ihr Portfolio {0} erstellt.
-core.portfolio_entry.create.release.notification.manager.message=de: A new Release has been assigned to you.
+core.portfolio_entry.create.release.notification.manager.message=Eine neue Release wurden Ihnen zugeteilt.
 
 #overview
 core.portfolio_entry.overview.milestones_trend.panel.title=Meilenstein Trend
@@ -2345,51 +2345,51 @@ core.portfolio_entry_governance.planning.edit.successful=Die Plannung wurde aktu
 core.portfolio_entry_governance.process.change.breadcrump=Lieferzyklus bearbeiten
 core.portfolio_entry_governance.process.change.header=<span class="glyphicons glyphicons-circle-info"></span> Wichtig: Wenn Sie den Lieferzyklus wechseln werden die Planungen, die Meilensteine und die Budgets gelöscht.<br>Die Initiative wird auf "Konzept" zurückgesetzt.
 core.portfolio_entry_governance.process.change.confirm=Sind Sie sicher dass der Lieferzyklus aktualisieren wollen?
-core.portfolio_entry_governance.process.change.successful=der Lieferzyklus wurde aktualisiert.
-core.portfolio_entry_governance.process.change.notification.title=Neue Lebenszyklus
-core.portfolio_entry_governance.process.change.notification.message=der Lieferzyklus für "{0}" wurde auf "{1}" aktualisiert.
+core.portfolio_entry_governance.process.change.successful=Der Lieferzyklus wurde aktualisiert.
+core.portfolio_entry_governance.process.change.notification.title=Neuer Lieferzyklus
+core.portfolio_entry_governance.process.change.notification.message=Der Lieferzyklus für "{0}" wurde auf "{1}" aktualisiert.
 
 #----------------------
 # portfolio entry: delivery
 #----------------------
 
 #deliverables
-core.portfolio_entry_delivery.deliverables.new.deliverable.label=de: Deliverable
-core.portfolio_entry_delivery.deliverables.new.follower.label=de: From another initiative
-core.portfolio_entry_delivery.no_deliverables.info=de: This initiative (or release) hasn''t deliverable, you can either create a new deliverable or follow one from another initiative.
-core.portfolio_entry_delivery.no_deliverables.create=de: Create your first deliverable
-core.portfolio_entry_delivery.no_deliverables.follow=de: Follow a deliverable from another initiative
+core.portfolio_entry_delivery.deliverables.new.deliverable.label=Ergebnis
+core.portfolio_entry_delivery.deliverables.new.follower.label=Von einer anderen Initiative
+core.portfolio_entry_delivery.no_deliverables.info=Diese Initiative (oder Release) hat keine Ergebnisse, erstellen Sie ein Ergebins oder folgen Sie eines einer anderen Initiative.
+core.portfolio_entry_delivery.no_deliverables.create=Mein erstes Ergebnis erstellen
+core.portfolio_entry_delivery.no_deliverables.follow=Ergebnis einer anderen Initiative folgen
 
 #view deliverable
 core.portfolio_entry_delivery.deliverable.view.details.title=Details
 core.portfolio_entry_delivery.deliverable.view.requirements.title=Anforderungen
 
 #manage deliverable
-core.portfolio_entry_delivery.deliverable.manage.title=de: Manage a deliverable
-core.portfolio_entry_delivery.deliverable.manage.delegated.info=de: This deliverable is owned by another initiative or release: only the planning package could be updated.
-core.portfolio_entry_delivery.deliverable.add.successful=de: The deliverable has been added successfully.
-core.portfolio_entry_delivery.deliverable.edit.successful=de: The deliverable has been updated.
+core.portfolio_entry_delivery.deliverable.manage.title=Ergebnisse verwalten
+core.portfolio_entry_delivery.deliverable.manage.delegated.info=Diese Ergebnis gehört einer anderen Initiative: nur das Planungspacket wurde aktualisiert.
+core.portfolio_entry_delivery.deliverable.add.successful=Ergebnis hinzugefügt.
+core.portfolio_entry_delivery.deliverable.edit.successful=Ergebnis aktualisiert.
 
 #follow deliverable
-core.portfolio_entry_delivery.deliverable.follow.title=de: Follow a deliverable from another initiative
-core.portfolio_entry_delivery.deliverable.follow.error.same_portfolio_entry=de: Please select an initiative that is not the current.
-core.portfolio_entry_delivery.deliverable.follow.error.already_assigned=de: This deliverable is already assigned.
-core.portfolio_entry_delivery.deliverable.follow.successful=de: The deliverable has been assigned successfully.
+core.portfolio_entry_delivery.deliverable.follow.title=Ergebnis einer anderen Initiative folgen
+core.portfolio_entry_delivery.deliverable.follow.error.same_portfolio_entry=Bitte eine Andere Initiative wählen.
+core.portfolio_entry_delivery.deliverable.follow.error.already_assigned=Dieses Ergebnis ist bereits zugeordnet.
+core.portfolio_entry_delivery.deliverable.follow.successful=Ergebnis zugeordnet.
 
 #unfollow deliverable
-core.portfolio_entry_delivery.deliverable.unfollow.confirmation=de: Are you sure you want to unsubscribe the initiative from this deliverable?
-core.portfolio_entry_delivery.deliverable.unfollow.successful=de: The deliverable is not more followed.
+core.portfolio_entry_delivery.deliverable.unfollow.confirmation=Abhängigkeit der Initiative von diesem Ergebnis löschen?
+core.portfolio_entry_delivery.deliverable.unfollow.successful=Ergebnis wird nicht mehr gefolgt.
 
 #delete deliverable
-core.portfolio_entry_delivery.deliverable.delete.successful=de: The deliverable has been removed.
+core.portfolio_entry_delivery.deliverable.delete.successful=Ergebnis entfernt.
 
 #edit deliverable requirements
-core.portfolio_entry_delivery.deliverable.requirements.edit.title=de: Edit the requirements assignment
-core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement=de: This initiative (or release) hasn''t requirement, simply <a href="{0}">click here</a> to create your first requirement.
-core.portfolio_entry_delivery.deliverable.requirements.edit.successful=de: The list of requirements has been updated
+core.portfolio_entry_delivery.deliverable.requirements.edit.title=Zuweisung der Anforderungen bearbeiten
+core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement=Diese Initiative (oder Release) hat keine Anforderungen. <a href="{0}">Hier klicken</a> um Ihre erste Anforderung zu erstellen.
+core.portfolio_entry_delivery.deliverable.requirements.edit.successful=Anforderungen aktualisiert
 
 #requirements status
-core.portfolio_entry_delivery.requirement.status.priority.title=Bedürfnis nach Dringlichkeit
+core.portfolio_entry_delivery.requirement.status.priority.title=Anforderungen nach Dringlichkeit
 core.portfolio_entry_delivery.requirement.status.priority.must.false.label=Optional
 core.portfolio_entry_delivery.requirement.status.priority.must.true.label=Zwingend
 core.portfolio_entry_delivery.requirement.status.severity.title=Mängel nach Gewichtung
@@ -2401,9 +2401,9 @@ core.portfolio_entry_delivery.requirement.view.details.title=Details
 core.portfolio_entry_delivery.requirement.view.description.title=Beschreibung
 
 #manage requirement
-core.portfolio_entry_delivery.requirement.manage.title=de: Manage a requirement
-core.portfolio_entry_delivery.requirement.manage.external.info=de: This requirement has been externally provisioned: only the deliverables and the custom attributes could be updated.
-core.portfolio_entry_delivery.requirement.add.successful=de: The requirement has been added.
+core.portfolio_entry_delivery.requirement.manage.title=Anforderung bearbeiten
+core.portfolio_entry_delivery.requirement.manage.external.info=Externe Anforderung: nur Ergebnisse und Zusatzfelder wurden aktualisiert.
+core.portfolio_entry_delivery.requirement.add.successful=Anforderung hinzugefügt.
 core.portfolio_entry_delivery.requirement.edit.successful=Anforderung wurde aktualisiert.
 
 #list of iterations
@@ -3092,9 +3092,9 @@ admin.plugin_manager.configuration.view.panel.admin.start.success=Plugin {0} sta
 admin.plugin_manager.configuration.view.panel.admin.start.error=Plugin {0} konnte nicht starten, weiter Informationen im Error Log
 admin.plugin_manager.configuration.view.panel.admin.stop.success=Plugin {0} wird gestoppt, dies kann etwas dauern..
 admin.plugin_manager.configuration.view.panel.configuration.title=Plugin Konfiguration
-admin.plugin_manager.configuration.view.panel.configuration.export.help=de: Export the current configuration as XML
-admin.plugin_manager.configuration.view.panel.configuration.import.help=de: Import a configuration from an XML file
-admin.plugin_manager.configuration.view.panel.configuration.import.success=Konfiguration zurückgesetzt (ACHTUNG: Wenn Sie jetzt speichern verliehren sie Ihr vorherige Konfiguration)
+admin.plugin_manager.configuration.view.panel.configuration.export.help=Konfiguration exportieren (in XML Datei)
+admin.plugin_manager.configuration.view.panel.configuration.import.help=Konfiguration importieren (von XML Datei)
+admin.plugin_manager.configuration.view.panel.configuration.import.success=Konfiguration importiert (ACHTUNG: Wenn Sie jetzt speichern verliehren sie Ihr vorherige Konfiguration)
 admin.plugin_manager.configuration.view.panel.configuration.custom.button=Erweiterte Konfiguration
 admin.plugin_manager.configuration.view.panel.log.title=Plugin Log
 admin.plugin_manager.configuration.view.panel.log.refresh.help=Aktualisieren
@@ -3322,6 +3322,6 @@ admin.auditable.export.notification.error.message=Audit-Log Export fehlgeschlage
 admin.auditable.export.notification.not_found.message=Kein Audit-log vorhanden. Bitte überprüfen Sie, dass der Audit-Log aktiviert ist.
 
 #logging
-admin.auditable.logging.title=de: Application logs
-admin.auditable.switchdebug.label=de: Switch to debug
+admin.auditable.logging.title=Anwendungslog
+admin.auditable.switchdebug.label=Debug-Modus einschalten
 admin.auditable.download.label=Downloaden
