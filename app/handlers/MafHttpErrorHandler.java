@@ -8,6 +8,7 @@ import controllers.ControllersUtils;
 import framework.handlers.AbstractErrorHandler;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.account.IUserAccount;
 import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
 import framework.services.api.IApiControllerUtilsService;
@@ -105,7 +106,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         injectCommonServicesIncontext(Http.Context.current());
         return Promise.promise(new Function0<Result>() {
             public Result apply() throws Throwable {
-                return (Result) ControllersUtils.logAndReturnUnexpectedError((Exception) t, log, getConfiguration(), getMessagesPlugin());
+                return (Result) ControllersUtils.logAndReturnUnexpectedError((Exception) t, getUserMailIfAvailableInContext(),log, getConfiguration(), getMessagesPlugin());
             }
         });
     }
@@ -128,4 +129,18 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         return apiControllerUtilsService;
     }
 
+    /**
+     * Return the currently logged user mail (if any)
+     * @return an email address
+     */
+    private String getUserMailIfAvailableInContext(){
+        try {;
+            IUserAccount userAccount=securityService.getCurrentUser();
+            if(userAccount!=null){
+                return userAccount.getMail();
+            }
+        } catch (Exception e) {
+        }
+        return "Unknown user";
+    }
 }

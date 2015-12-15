@@ -36,18 +36,34 @@ public abstract class ControllersUtils {
 
     /**
      * Log the exception and return a generic error message.
-     * 
      * @param e
      *            an exception
      * @param log
      *            a log instance
-     * 
-     * @return a Result to be diplayed
+     * @param configuration
+     * @param messagePlugin
+     * @return
      */
     public static Result logAndReturnUnexpectedError(Exception e, Logger.ALogger log, Configuration configuration, II18nMessagesPlugin messagePlugin) {
+        return logAndReturnUnexpectedError(e, null, log, configuration, messagePlugin);
+    }
+    
+    /**
+     * Log the exception and return a generic error message.
+     * @param e
+     *            an exception
+     * @param message
+     *            a specific message to be added to the error log
+     * @param log
+     *            a log instance
+     * @param configuration
+     * @param messagePlugin
+     * @return
+     */
+    public static Result logAndReturnUnexpectedError(Exception e, String message, Logger.ALogger log, Configuration configuration, II18nMessagesPlugin messagePlugin) {
         try{
             String uuid = UUID.randomUUID().toString();
-            log.error("Unexpected error with uuid " + uuid, e);
+            log.error("Unexpected error with uuid " + uuid+(message!=null?" from "+message:""), e);
             if (configuration.getBoolean("maf.unexpected.error.trace")) {
                 String stackTrace = Utilities.getExceptionAsString(e);
                 return Controller.internalServerError(views.html.error.unexpected_error_with_stacktrace.render(messagePlugin.get("unexpected.error.title"), uuid,
