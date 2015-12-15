@@ -59,7 +59,6 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -653,7 +652,12 @@ public class PluginManagerController extends Controller {
         PluginConfigurationBlock pluginConfigurationBlock = PluginConfigurationBlock.getPluginConfigurationBlockFromIdentifier(pluginConfigurationId,
                 pluginConfigurationBlockIdentifier);
         if (pluginConfigurationBlock != null) {
-            pluginConfigurationBlockObject.value = new String(pluginConfigurationBlock.configuration);
+            byte[] configAsByteArray=pluginConfigurationBlock.configuration;
+            if(configAsByteArray!=null){
+                pluginConfigurationBlockObject.value = new String(pluginConfigurationBlock.configuration);
+            }else{
+                pluginConfigurationBlockObject.value ="";
+            }
         } else {
             pluginConfigurationBlockObject.value = new String(pluginConfigurationBlockDescriptor.getDefaultValue());
         }
