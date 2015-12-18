@@ -1830,7 +1830,7 @@ my.personalstorage.file.size.label=Taille
 
 #roadmap
 core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Feuille de route
-core.roadmap.no_portfolio_entry.info=Une initiative représente  une demande / idée qui peut éventuellement devenir un projet ou un demande d'évolution. La feuille de route liste toutes les initiatives en fonction de vos permissions.
+core.roadmap.no_portfolio_entry.info=Une initiative représente  une demande / idée qui peut éventuellement devenir un projet ou un demande d''évolution. La feuille de route liste toutes les initiatives en fonction de vos permissions.
 core.roadmap.no_portfolio_entry.create=Créer votre première initiative
 
 #planning
@@ -2388,7 +2388,7 @@ core.portfolio_entry_delivery.deliverable.unfollow.successful=Le livrable n''est
 core.portfolio_entry_delivery.deliverable.delete.successful=Le livrable a été supprimé.
 
 #edit deliverable requirements
-core.portfolio_entry_delivery.deliverable.requirements.edit.title=Mettre à jour l'assignement des exigences
+core.portfolio_entry_delivery.deliverable.requirements.edit.title=Mettre à jour l''assignement des exigences
 core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement=Cette initiative (ou release) n''a pas d''exigence, veuillez <a href="{0}">cliquer ici</a> pour créer votre première exigence.
 core.portfolio_entry_delivery.deliverable.requirements.edit.successful=La liste des exigences a été mise à jour
 
@@ -2780,7 +2780,7 @@ admin.user_manager.create.header=Veuillez remplir le formulaire ci-dessous pour 
 Il est important de ne pas oublier de sélectioner son ou ses rôle(s).<br/>\
 Attention: la création de l''utilisateur dans les modules tiers peut prendre quelques minutes.
 admin.user_manager.create.credentials.title=Mot de passe
-admin.user_manager.create.admindefinedpassword.label=Choisir le mot de passe à la place de l'utilisateur
+admin.user_manager.create.admindefinedpassword.label=Choisir le mot de passe à la place de l''utilisateur
 admin.user_manager.create.basic_data.title=Informations principales
 admin.user_manager.create.success=L''utilisateur a été créé
 admin.user_manager.create.mail.subject=Le compte a été créé
