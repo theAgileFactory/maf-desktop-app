@@ -2484,7 +2484,6 @@ core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.messag
 core.portfolio_entry_planning.allocated_actor.delete.successful=L''employé affecté a été supprimé.
 
 #manage allocated org unit
-core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=Vous devez ajouter au moins un fournisseur interne à l''initiative afin de pouvoir l''affecter.
 core.portfolio_entry_planning.allocated_org_unit.manage.title=Gérer un fournisseur interne affecté
 core.portfolio_entry_planning.allocated_org_unit.add.successful=Le fournisseur interne a été affecté.
 core.portfolio_entry_planning.allocated_org_unit.edit.successful=Le fournisseur interne affecté a été mis à jour.

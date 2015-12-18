@@ -2480,7 +2480,6 @@ core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.messag
 core.portfolio_entry_planning.allocated_actor.delete.successful=Die Arbeitnehmerüberlassung wurde entfernt.
 
 #manage allocated org unit
-core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=Sie müssen wenigstens einen internen Zulieferer hinzufügen, um diese der Initiative zuweisen zu können.
 core.portfolio_entry_planning.allocated_org_unit.manage.title=Interne Zulieferer Arbeitsaufgabe bearbeiten
 core.portfolio_entry_planning.allocated_org_unit.add.successful=Die Interne Zulieferer Arbeitsaufgabe wurde hinzugefügt.
 core.portfolio_entry_planning.allocated_org_unit.edit.successful=Die Interne Zulieferer Arbeitsaufgabe wurde aktualisiert.

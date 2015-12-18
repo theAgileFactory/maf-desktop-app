@@ -74,29 +74,6 @@ public class ActorPicker {
 
     });
 
-    public static PickerHandler<Long> pickerForPortfolioEntryTemplate = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
-
-        @Override
-        public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
-            defaultParameters.put(Parameters.SEARCH_ENABLED, "true");
-            return defaultParameters;
-        }
-
-        @Override
-        public ISelectableValueHolderCollection<Long> getInitialValueHolders(List<Long> values, Map<String, String> context) {
-            Long portfolioEntryId = Long.valueOf(context.get("portfolioEntryId"));
-            return ActorDao.getActorActiveAsVHByPE(portfolioEntryId);
-        }
-
-        @Override
-        public ISelectableValueHolderCollection<Long> getFoundValueHolders(String searchString, Map<String, String> context) {
-            Long portfolioEntryId = Long.valueOf(context.get("portfolioEntryId"));
-            searchString = searchString.replaceAll("\\*", "%");
-            return ActorDao.getActorActiveAsVHByKeywordsAndPE(searchString, portfolioEntryId);
-        }
-
-    });
-
     public static PickerHandler<Long> pickerForOrgUnitTemplate = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
 
         @Override

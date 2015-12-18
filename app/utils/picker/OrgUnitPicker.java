@@ -95,27 +95,4 @@ public class OrgUnitPicker {
 
     });
 
-    public static PickerHandler<Long> canDeliverPickerForPortfolioEntryTemplate = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
-
-        @Override
-        public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
-            defaultParameters.put(Parameters.SEARCH_ENABLED, "true");
-            return defaultParameters;
-        }
-
-        @Override
-        public ISelectableValueHolderCollection<Long> getInitialValueHolders(List<Long> values, Map<String, String> context) {
-            Long portfolioEntryId = Long.valueOf(context.get("portfolioEntryId"));
-            return OrgUnitDao.getOrgUnitActiveCanDeliverAsVHByPE(portfolioEntryId);
-        }
-
-        @Override
-        public ISelectableValueHolderCollection<Long> getFoundValueHolders(String searchString, Map<String, String> context) {
-            Long portfolioEntryId = Long.valueOf(context.get("portfolioEntryId"));
-            searchString = searchString.replaceAll("\\*", "%");
-            return OrgUnitDao.getOrgUnitActiveCanDeliverAsVHByKeywordsAndPE(searchString, portfolioEntryId);
-        }
-
-    });
-
 }

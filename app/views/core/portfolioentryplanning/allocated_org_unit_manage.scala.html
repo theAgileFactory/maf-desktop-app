@@ -74,8 +74,7 @@
                         @parts.singlevalue_picker(
                             allocatedOrgUnitForm("orgUnit"), 
                             parts.Msg.asString("object.allocated_resource.org_unit.label"),
-                            controllers.routes.PickerController.deliveryUnitsOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                            controllers.routes.PickerController.deliveryUnits().url
                         )
                         
                         @parts.input_text(allocatedOrgUnitForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")

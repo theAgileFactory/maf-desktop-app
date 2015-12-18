@@ -68,15 +68,6 @@ public class PickerController extends Controller {
     }
 
     /**
-     * The actors that are direct stakeholders of a portfolio entry.
-     * 
-     * The portfolio entry id is given as a picker parameter.
-     */
-    public Result actorOfPortfolioEntry() {
-        return ActorPicker.pickerForPortfolioEntryTemplate.handle(request());
-    }
-
-    /**
      * The actors of an org unit.
      * 
      * The org unit id is given as a picker parameter.
@@ -113,15 +104,6 @@ public class PickerController extends Controller {
      */
     public Result deliveryUnits() {
         return OrgUnitPicker.canDeliverPickerTemplate.handle(request());
-    }
-
-    /**
-     * The delivery units that are delivery units of a portfolio entry.
-     * 
-     * The portfolio entry id is given as a picker parameter.
-     */
-    public Result deliveryUnitsOfPortfolioEntry() {
-        return OrgUnitPicker.canDeliverPickerForPortfolioEntryTemplate.handle(request());
     }
 
     /**

@@ -2468,7 +2468,6 @@ core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.messag
 core.portfolio_entry_planning.allocated_actor.delete.successful=The allocated employee has been removed.
 
 #manage allocated org unit
-core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=You need to add at least one delivery unit to the initiative in order to allocate it.
 core.portfolio_entry_planning.allocated_org_unit.manage.title=Manage an allocated delivery unit
 core.portfolio_entry_planning.allocated_org_unit.add.successful=The delivery unit has been allocated successfully.
 core.portfolio_entry_planning.allocated_org_unit.edit.successful=The allocated delivery unit has been updated.

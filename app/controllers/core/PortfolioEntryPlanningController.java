@@ -45,7 +45,6 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
 import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.StakeholderDao;
@@ -1452,17 +1451,6 @@ public class PortfolioEntryPlanningController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
 
-        // for create case, check there is at least one delivery unit that can
-        // be allocated (represented by the delivery units of the portfolio
-        // entry)
-        if (allocatedOrgUnitId.equals(Long.valueOf(0))) {
-            List<OrgUnit> orgUnits = OrgUnitDao.getOrgUnitActiveCanDeliverAsListByPE(id);
-            if (orgUnits == null || orgUnits.size() == 0) {
-                Utilities.sendInfoFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit"));
-                return redirect(controllers.core.routes.PortfolioEntryController.edit(id));
-            }
-        }
-
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
@@ -1547,6 +1535,15 @@ public class PortfolioEntryPlanningController extends Controller {
             allocatedOrgUnit.update();
 
             Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.edit.successful"));
+        }
+
+        // assign the delivery unit to the PE (if not already)
+        if (!PortfolioEntryDao.isDeliveryUnitOfPE(allocatedOrgUnit.orgUnit.id, portfolioEntry.id)) {
+            if (portfolioEntry.deliveryUnits == null) {
+                portfolioEntry.deliveryUnits = new ArrayList<>();
+            }
+            portfolioEntry.deliveryUnits.add(allocatedOrgUnit.orgUnit);
+            portfolioEntry.save();
         }
 
         // save the custom attributes

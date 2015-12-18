@@ -74,8 +74,7 @@
                         @parts.singlevalue_picker(
                             allocatedActorForm("actor"), 
                             parts.Msg.asString("object.allocated_resource.actor.label"),
-                            controllers.routes.PickerController.actorOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                            controllers.routes.PickerController.actor().url
                         )
                         
                         @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
