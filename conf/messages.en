@@ -2457,7 +2457,6 @@ core.portfolio_entry_planning.resources.new.competency=Competency
 core.portfolio_entry_planning.resources.no_competency=There is no competency available
 
 #manage allocated actor
-core.portfolio_entry_planning.allocated_actor.manage.noactor=You need to add at least one stakeholder in order to allocate an actor to the initiative.
 core.portfolio_entry_planning.allocated_actor.manage.title=Manage an allocated employee
 core.portfolio_entry_planning.allocated_actor.add.successful=The employee has been allocated successfully.
 core.portfolio_entry_planning.allocated_actor.edit.successful=The allocated employee has been updated.

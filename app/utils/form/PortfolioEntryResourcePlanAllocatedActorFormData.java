@@ -52,14 +52,13 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
     // used only when reallocate an allocated competency to an actor
     public Long allocatedCompetencyId;
 
-    @Required(groups = { ReallocateGroup.class, DefaultGroup.class })
+    @Required
     public Long actor;
 
-    // used only when reallocate an allocated resource to an actor
-    @Required(groups = { ReallocateGroup.class })
+    @Required
     public Long stakeholderType;
 
-    @Required(groups = { ReallocateGroup.class, DefaultGroup.class })
+    @Required
     public BigDecimal days;
 
     public String startDate;
@@ -213,21 +212,5 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
         allocatedActor.isConfirmed = this.isConfirmed;
 
-    }
-
-    /**
-     * The group for the default case.
-     * 
-     * @author Johann Kohler
-     */
-    public interface DefaultGroup {
-    }
-
-    /**
-     * The group for the reallocate form.
-     * 
-     * @author Johann Kohler
-     */
-    public interface ReallocateGroup {
     }
 }

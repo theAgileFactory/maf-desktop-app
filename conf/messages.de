@@ -2469,7 +2469,6 @@ core.portfolio_entry_planning.resources.new.competency=Kompetenz
 core.portfolio_entry_planning.resources.no_competency=Keine Kompetenz vorhanden
 
 #manage allocated actor
-core.portfolio_entry_planning.allocated_actor.manage.noactor=Sie müssen mindestens ein Mitarbeiter hinzufügen, um der Initiative Ressourcen zuweisen zu können.
 core.portfolio_entry_planning.allocated_actor.manage.title=Mitarbeiter Zuweisungen bearbeiten
 core.portfolio_entry_planning.allocated_actor.add.successful=Mitarbeiter zugewiesen
 core.portfolio_entry_planning.allocated_actor.edit.successful=Zuweisung aktualisiert.

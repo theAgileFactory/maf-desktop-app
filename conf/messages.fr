@@ -2473,7 +2473,6 @@ core.portfolio_entry_planning.resources.new.competency=Compétence
 core.portfolio_entry_planning.resources.no_competency=Aucune compétence disponible
 
 #manage allocated actor
-core.portfolio_entry_planning.allocated_actor.manage.noactor=Vous devez ajouter au moins un intervenant afin de pouvoir affecter un employé à l''initiative.
 core.portfolio_entry_planning.allocated_actor.manage.title=Gérer un employé affecté
 core.portfolio_entry_planning.allocated_actor.add.successful=L''employé a été affecté.
 core.portfolio_entry_planning.allocated_actor.edit.successful=L''employé affecté a été mis à jour.
