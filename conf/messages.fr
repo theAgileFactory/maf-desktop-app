@@ -2058,6 +2058,8 @@ core.milestone.approval.process.panel.decide.approve.notification.title=Jalon ap
 core.milestone.approval.process.panel.decide.approve.notification.message=La décision finale pour un jalon de l''initiative "{0}" a été enregistrée: le jalon est approuvé.
 core.milestone.approval.process.panel.decide.reject.notification.title=Jalon rejeté
 core.milestone.approval.process.panel.decide.reject.notification.message=La décision finale pour un jalon de l''initiative "{0}" a été enregistrée: le jalon est rejeté.
+core.milestone.approval.process.panel.decide.delete.confirm=Etes-vous sûr(e) de vouloir supprimer cette requête d''approbation de jalon?
+core.milestone.approval.process.panel.decide.delete.successful=La requête d''approbation de jalon a été supprimée.
 
 #----------------------
 # process transition request

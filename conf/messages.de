@@ -2053,6 +2053,8 @@ core.milestone.approval.process.panel.decide.approve.notification.title=Meilenst
 core.milestone.approval.process.panel.decide.approve.notification.message=Die endgültige Genehmigung für den Meilenstein von "{0}" wurde gespeichert: Der Meilenstein ist genehmigt.
 core.milestone.approval.process.panel.decide.reject.notification.title=Meilenstein abgelehnt
 core.milestone.approval.process.panel.decide.reject.notification.message=Die endgültige Genehmigung für den Meilenstein von "{0}" wurde gespeichert: Der Meilenstein wurde abgelehnt.
+core.milestone.approval.process.panel.decide.delete.confirm=de: Are you sure you want to delete this milestone approval request?
+core.milestone.approval.process.panel.decide.delete.successful=de: The milestone approval request has been deleted.
 
 #----------------------
 # process transition request

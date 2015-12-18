@@ -413,6 +413,7 @@ GET    /milestone/approval/list             controllers.core.MilestoneApprovalCo
 GET    /milestone/approval/process          controllers.core.MilestoneApprovalController.process(milestoneInstanceId: Long)
 POST   /milestone/approval/vote             controllers.core.MilestoneApprovalController.vote()
 POST   /milestone/approval/decide           controllers.core.MilestoneApprovalController.decide()
+GET   /milestone/approval/delete           controllers.core.MilestoneApprovalController.delete(milestoneInstanceId: Long)
 
 #-------------------
 # Core: Search

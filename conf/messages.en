@@ -2042,6 +2042,8 @@ core.milestone.approval.process.panel.decide.approve.notification.title=Mileston
 core.milestone.approval.process.panel.decide.approve.notification.message=The final approval for a milestone of the initiative "{0}" has been registered: the milestone is approved.
 core.milestone.approval.process.panel.decide.reject.notification.title=Milestone rejected
 core.milestone.approval.process.panel.decide.reject.notification.message=The final approval for a milestone of the initiative "{0}" has been registered: the milestone is rejected.
+core.milestone.approval.process.panel.decide.delete.confirm=Are you sure you want to delete this milestone approval request?
+core.milestone.approval.process.panel.decide.delete.successful=The milestone approval request has been deleted.
 
 #----------------------
 # process transition request
