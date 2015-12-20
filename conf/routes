@@ -2,6 +2,9 @@
 # Root module
 #-------------------
 
+GET    /dash/                      controllers.dashboard.DashboardController.index()
+GET    /dash/edit                  controllers.dashboard.DashboardController.edit()
+
 #Custom router method
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)
 POST   /ext/*path                  framework.services.router.CustomRouterController.perform(path)

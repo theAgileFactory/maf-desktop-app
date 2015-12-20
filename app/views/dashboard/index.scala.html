@@ -1,0 +1,72 @@
+@import framework_views.parts
+@import helper._
+@import bootstrap3._
+
+@templates.main_bc_nosidebar(
+    "Dashbaord",
+    Seq(
+        ("Dashboard",null)
+    )
+){
+<style>
+.test{ padding-top: 2em;padding-bottom: 2em;
+}
+</style>
+}{
+<div class="row test">
+	<div class="col-md-6">
+		<div class="btn-group" data-toggle="buttons">
+		  <label class="btn btn-primary active">
+		    <input type="radio" name="options" id="option1" autocomplete="off" checked> Page A
+		  </label>
+		  <label class="btn btn-primary">
+		    <input type="radio" name="options" id="option2" autocomplete="off"> Page B
+		  </label>
+		  <label class="btn btn-primary">
+		    <input type="radio" name="options" id="option3" autocomplete="off"> Page C
+		  </label>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<p class="text-right"><a class="btn btn-primary" href="#"><i class="glyphicons glyphicons-cogwheel"></i>&nbsp;Edit page</a></p>
+	</div>
+</div>
+<div class="row">
+  <div id="workspace" class="col-md-12">
+  	<!-- Page wide widget -->
+  	<div class="row">
+  		<div id="widget1" class="col-md-12">
+  			<div class="panel panel-info">
+			  <div class="panel-heading">Panel heading without title 
+			  	<div class="pull-right">
+			  		<a href="#"><span class="glyphicons glyphicons-cogwheel"></span></a>
+			  	</div>
+			  </div>
+			  <div class="panel-body">
+			    Panel content
+			  </div>
+			</div>
+  		</div>
+  	</div>
+    <!-- Two widgets -->
+  	<div class="row">
+  		<div id="widget2" class="col-md-6">
+  			<div class="panel panel-info">
+			  <div class="panel-heading">Panel heading without title</div>
+			  <div class="panel-body">
+			    Panel content
+			  </div>
+			</div>
+  		</div>
+  		<div id="widget2" class="col-md-6">
+  			<div class="panel panel-info">
+			  <div class="panel-heading">Panel heading without title</div>
+			  <div class="panel-body">
+			    Panel content
+			  </div>
+			</div>
+  		</div>
+  	</div>
+  </div>
+</div>
+}

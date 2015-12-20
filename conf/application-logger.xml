@@ -41,10 +41,9 @@
 		</encoder>
 	</appender>
 
-	<logger name="play" level="INFO" />
-	<logger name="application" level="INFO" />
-	<logger name="logger.tools" level="INFO" />
-	<logger name="be.objectify.deadbolt.java.ExecutionContextProvider" level="ERROR" />
+	<logger name="play" level="ERROR" />
+	<logger name="application" level="ERROR" />
+	<logger name="logger.tools" level="ERROR" />
 	
 	<logger name="framework.services.audit.AuditLoggerServiceImpl" level="INFO">
 		<appender-ref ref="FILE_AUDIT" />

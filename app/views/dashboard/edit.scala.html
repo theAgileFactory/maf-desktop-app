@@ -1,0 +1,133 @@
+@import framework_views.parts
+@import helper._
+@import bootstrap3._
+
+@templates.main_bc_nosidebar(
+    "Dashbaord",
+    Seq(
+        ("Dashboard",null)
+    )
+){
+<style>
+.dropzone{}
+.dropzone-content{}
+.dropzone-remove{}
+</style>
+}{
+<script type="text/javascript">
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("widget", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var widgetId = ev.dataTransfer.getData("widget");
+    var landing=$(ev.target);
+    var dropzone=landing.closest(".dropzone");
+    var dropzoneId=dropzone.attr('id');
+    var dropzoneContent=dropzone.find(".dropzone-content");
+    var dropzoneRemove=dropzone.find(".dropzone-remove");
+    dropzoneContent.html('<b>'+widgetId+'</b><br/><i class="glyphicons glyphicons-check">');
+    dropzoneRemove.html('<h4><a id="'+widgetId+'_'+dropzoneId+'_remove" href="#"><span class="glyphicons glyphicons-bin"></span></a></h4>');
+    $("#"+widgetId+"_"+dropzoneId+"_remove").on('click',function(){
+		var dropzone=$(this).closest(".dropzone");
+		var dropzoneContent=dropzone.find(".dropzone-content");
+	    var dropzoneRemove=$(this).closest(".dropzone-remove");
+	    dropzoneContent.html('<i class="glyphicons glyphicons-unchecked"></i>');
+	    dropzoneRemove.html("");
+    });
+}
+</script>
+<div class="row">
+  <div class="col-md-6">
+  	<div class="panel panel-info">
+	  <div class="panel-heading">Page template</div>
+	  <div class="panel-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div id="zoneA" class="dropzone panel panel-default" ondrop="drop(event)" ondragover="allowDrop(event)">
+					  <div class="panel-body">
+					  	<div class="dropzone-remove pull-right"></div>
+					    <h3 class="dropzone-content text-center"><i class="glyphicons glyphicons-unchecked"></i></h3>
+					  </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div  id="zoneB" class="dropzone panel panel-default" ondrop="drop(event)" ondragover="allowDrop(event)">
+					  <div class="panel-body">
+					    <div class="dropzone-remove pull-right"></div>
+					    <h3 class="dropzone-content text-center"><i class="glyphicons glyphicons-unchecked"></i></h3>
+					  </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div  id="zoneC" class="dropzone panel panel-default" ondrop="drop(event)" ondragover="allowDrop(event)">
+					  <div class="panel-body">
+					  	<div class="dropzone-remove pull-right"></div>
+					    <h3 class="dropzone-content text-center"><i class="glyphicons glyphicons-unchecked"></i></h3>
+					  </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+  </div>
+  <div class="col-md-6">
+	<div class="panel panel-primary">
+		  <div class="panel-heading">Widget library</div>
+		  <div class="panel-body">
+		  	<div class="row">
+		  		<div class="col-md-3">
+					<div id="widgetA" class="panel panel-primary" draggable="true" ondragstart="drag(event)">
+					  <div class="panel-body">
+					    widget A
+					  </div>
+					</div>
+		  		</div>
+		  		<div class="col-md-3">
+					<div id="widgetB" class="panel panel-primary" draggable="true" ondragstart="drag(event)">
+					  <div class="panel-body">
+					    widget B
+					  </div>
+					</div>
+		  		</div>
+		  		<div class="col-md-3">
+					<div id="widgetC" class="panel panel-primary" draggable="true" ondragstart="drag(event)">
+					  <div class="panel-body">
+					    widget C
+					  </div>
+					</div>
+		  		</div>
+		  		<div class="col-md-3">
+					<div id="widgetD" class="panel panel-primary" draggable="true" ondragstart="drag(event)">
+					  <div class="panel-body">
+					    widget D
+					  </div>
+					</div>
+		  		</div>
+		  		<div class="col-md-3">
+					<div id="widgetE" class="panel panel-primary" draggable="true" ondragstart="drag(event)">
+					  <div class="panel-body">
+					    widget E
+					  </div>
+					</div>
+		  		</div>
+		  		<div class="col-md-3">
+					<div id="widgetF" class="panel panel-primary" draggable="true" ondragstart="drag(event)">
+					  <div class="panel-body">
+					    widget F
+					  </div>
+					</div>
+		  		</div>
+		  	</div>
+		  </div>	
+	</div>
+  </div>
+</div>
+}
