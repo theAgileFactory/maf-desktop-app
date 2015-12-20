@@ -34,7 +34,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 
 import be.objectify.deadbolt.java.actions.Group;
@@ -59,6 +58,7 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -70,8 +70,6 @@ import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.Utilities;
 import models.framework_models.plugin.PluginConfiguration;
 import models.framework_models.plugin.PluginConfigurationBlock;
-import models.framework_models.plugin.PluginDefinition;
-import models.framework_models.plugin.PluginIdentificationLink;
 import models.framework_models.plugin.PluginLog;
 import play.Configuration;
 import play.Logger;
@@ -320,7 +318,7 @@ public class PluginManagerController extends Controller {
             PluginConfigurationDescriptionTableObject tableObject = new PluginConfigurationDescriptionTableObject();
             tableObject.id = pluginConfigurationId;
             IPluginInfo pluginInfo = registeredPlugins.get(pluginConfigurationId);
-            tableObject.name = PluginConfiguration.getAvailablePluginById(pluginConfigurationId).name;
+            tableObject.name = pluginInfo.getPluginConfigurationName();
             tableObject.definitionIdentifier = pluginInfo.getDescriptor().getIdentifier();
             tableObject.definitionName = Msg.get(pluginInfo.getDescriptor().getName());
             tableObject.definitionDescription = Msg.get(pluginInfo.getDescriptor().getDescription());
@@ -394,25 +392,11 @@ public class PluginManagerController extends Controller {
 
         // Create the configuration record
         PluginRegistrationFormObject pluginRegistrationFormObject = boundForm.get();
-        PluginConfiguration pluginConfiguration = new PluginConfiguration();
-        pluginConfiguration.name = pluginRegistrationFormObject.name;
-        pluginConfiguration.isAutostart = true;
-        pluginConfiguration.pluginDefinition = PluginDefinition.getAvailablePluginDefinitionFromIdentifier(pluginRegistrationFormObject.identifier);
-
-        if (pluginConfiguration.pluginDefinition == null) {
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.new.success", pluginConfiguration.name));
-            return redirect(routes.PluginManagerController.registration());
-        }
-
-        pluginConfiguration.save();
-
-        // Trigger the registration
-
         try {
-            getPluginManagerService().registerPlugin(pluginConfiguration.id);
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.new.success", pluginConfiguration.name));
+            getPluginManagerService().registerPlugin(pluginRegistrationFormObject.name, pluginRegistrationFormObject.identifier);
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.new.success", pluginRegistrationFormObject.name));
         } catch (PluginException e) {
-            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.new.error", pluginConfiguration.name));
+            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.new.error", pluginRegistrationFormObject.name));
             log.error("Failed to register manually the plugin in the manager controller", e);
         }
 
@@ -427,44 +411,17 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result unregisterPlugin(Long pluginConfigurationId) {
-
-        PluginConfiguration configuration = PluginConfiguration.getPluginById(pluginConfigurationId);
-
-        if (configuration == null) {
-            return badRequest();
+        IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
+        if (pluginInfo == null) {
+            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.not_exists", pluginConfigurationId));
+            return redirect(routes.PluginManagerController.index());
         }
-
-        Ebean.beginTransaction();
-
+        String pluginConfigurationName=pluginInfo.getPluginConfigurationName();
         try {
-
-            // due to an issue with play, the children are not removed with
-            // cascade property, they should be manually removed.
-            for (PluginIdentificationLink pluginIdentificationLink : configuration.pluginIdentificationLinks) {
-                for (PluginIdentificationLink child : pluginIdentificationLink.children) {
-                    child.delete();
-                }
-                if (pluginIdentificationLink.parent == null) {
-                    pluginIdentificationLink.delete();
-                }
-            }
-
-            // Delete the associated configuration
-            configuration.delete();
-
-            // Unregister the plugin
-
             getPluginManagerService().unregisterPlugin(pluginConfigurationId);
-
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.success", configuration.name));
-
-            Ebean.commitTransaction();
-
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.success", pluginConfigurationName));
         } catch (Exception e) {
-
-            Ebean.rollbackTransaction();
-
-            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.error", configuration.name));
+            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.error", pluginConfigurationName));
             log.error("Fail to unregister a plugin configuration manually", e);
         }
         return redirect(routes.PluginManagerController.index());
@@ -507,10 +464,6 @@ public class PluginManagerController extends Controller {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.not_exists", pluginConfigurationId));
             return redirect(routes.PluginManagerController.index());
         }
-
-        // Plugin config
-        PluginConfiguration configuration = PluginConfiguration.getAvailablePluginById(pluginConfigurationId);
-
         // Plugin configuration block
         List<PluginConfigurationBlockObject> configurationBlocks = new ArrayList<PluginConfigurationBlockObject>();
         if (pluginInfo.getDescriptor().getConfigurationBlockDescriptors() != null) {
@@ -533,7 +486,7 @@ public class PluginManagerController extends Controller {
 
         Table<PluginLog> pluginLogsTable = pluginLogsTableTemplate.fill(pluginLogsPagination.getListOfObjects(), filterConfig.getColumnsToHide());
 
-        return ok(views.html.admin.plugin.pluginmanager_configuration_details.render(configuration.name, pluginConfigurationId, pluginInfo,
+        return ok(views.html.admin.plugin.pluginmanager_configuration_details.render(pluginInfo.getPluginConfigurationName(), pluginConfigurationId, pluginInfo,
                 configurationBlocksTableTemplate.fill(configurationBlocks), pluginLogsPagination, pluginLogsTable, filterConfig));
     }
 
@@ -584,16 +537,17 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result startPlugin(Long pluginConfigurationId) {
-        PluginConfiguration configuration = PluginConfiguration.getAvailablePluginById(pluginConfigurationId);
-        if (configuration == null) {
+        IPluginInfo pluginInfo=getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
+        if(pluginInfo==null){
             return badRequest();
         }
-
+        String pluginConfigurationName=pluginInfo.getPluginConfigurationName();
         try {
             getPluginManagerService().startPlugin(pluginConfigurationId);
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", configuration.name));
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", Msg.get(pluginConfigurationName)));
         } catch (PluginException e) {
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.error", configuration.name));
+            log.error("Exception while attempting to start the plugin "+pluginConfigurationId,e);
+            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.error", Msg.get(pluginConfigurationName)));
         }
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }
@@ -607,13 +561,14 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result stopPlugin(Long pluginConfigurationId) {
-        PluginConfiguration configuration = PluginConfiguration.getAvailablePluginById(pluginConfigurationId);
-        if (configuration == null) {
+        IPluginInfo pluginInfo=getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
+        if(pluginInfo==null){
             return badRequest();
+        }else{
+            String pluginConfigurationName=pluginInfo.getPluginConfigurationName();
+            getPluginManagerService().stopPlugin(pluginConfigurationId);
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", Msg.get(pluginConfigurationName)));
         }
-
-        getPluginManagerService().stopPlugin(pluginConfigurationId);
-        Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", configuration.name));
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }
 
@@ -642,28 +597,17 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result editConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
-        IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = getPluginConfigurationBlockDescriptor(pluginConfigurationId,
-                pluginConfigurationBlockIdentifier);
-        if (pluginConfigurationBlockDescriptor == null) {
-            return redirect(routes.PluginManagerController.index());
+        try{
+            Pair<IPluginConfigurationBlockDescriptor, byte[]> configBlock=getPluginManagerService().getPluginConfigurationBlock(pluginConfigurationId, pluginConfigurationBlockIdentifier);
+            PluginConfigurationBlockObject pluginConfigurationBlockObject = new PluginConfigurationBlockObject();
+            pluginConfigurationBlockObject.value=new String(configBlock.getRight());
+            return ok(views.html.admin.plugin.pluginmanager_configblock_edit.render(pluginConfigurationId, configBlock.getLeft(),
+                    pluginConfigurationBlockFormTemplate.fill(pluginConfigurationBlockObject),
+                    getSyntaxFromConfigurationBlockEditionType(configBlock.getLeft().getEditionType())));
+        }catch(PluginException e){
+            log.error("Error while downloading the plugin configuration "+pluginConfigurationBlockIdentifier+" for "+pluginConfigurationId, e);
+            return badRequest();
         }
-
-        PluginConfigurationBlockObject pluginConfigurationBlockObject = new PluginConfigurationBlockObject();
-        PluginConfigurationBlock pluginConfigurationBlock = PluginConfigurationBlock.getPluginConfigurationBlockFromIdentifier(pluginConfigurationId,
-                pluginConfigurationBlockIdentifier);
-        if (pluginConfigurationBlock != null) {
-            byte[] configAsByteArray=pluginConfigurationBlock.configuration;
-            if(configAsByteArray!=null){
-                pluginConfigurationBlockObject.value = new String(pluginConfigurationBlock.configuration);
-            }else{
-                pluginConfigurationBlockObject.value ="";
-            }
-        } else {
-            pluginConfigurationBlockObject.value = new String(pluginConfigurationBlockDescriptor.getDefaultValue());
-        }
-        return ok(views.html.admin.plugin.pluginmanager_configblock_edit.render(pluginConfigurationId, pluginConfigurationBlockDescriptor,
-                pluginConfigurationBlockFormTemplate.fill(pluginConfigurationBlockObject),
-                getSyntaxFromConfigurationBlockEditionType(pluginConfigurationBlockDescriptor.getEditionType())));
     }
 
     /**
@@ -677,7 +621,6 @@ public class PluginManagerController extends Controller {
      * @return
      */
     private IPluginConfigurationBlockDescriptor getPluginConfigurationBlockDescriptor(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
-
         IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
         if (pluginInfo == null || pluginInfo.getDescriptor().getConfigurationBlockDescriptors() == null
                 || !pluginInfo.getDescriptor().getConfigurationBlockDescriptors().containsKey(pluginConfigurationBlockIdentifier)) {
@@ -722,12 +665,11 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result updateConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
-        IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = getPluginConfigurationBlockDescriptor(pluginConfigurationId,
-                pluginConfigurationBlockIdentifier);
-        if (pluginConfigurationBlockDescriptor == null) {
-            return redirect(routes.PluginManagerController.index());
+        IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor=getPluginConfigurationBlockDescriptor(pluginConfigurationId, pluginConfigurationBlockIdentifier);
+        if(pluginConfigurationBlockDescriptor==null){
+            return badRequest();
         }
-
+        
         Form<PluginConfigurationBlockObject> boundForm = pluginConfigurationBlockFormTemplate.bindFromRequest();
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.plugin.pluginmanager_configblock_edit.render(pluginConfigurationId, pluginConfigurationBlockDescriptor, boundForm,
@@ -736,21 +678,13 @@ public class PluginManagerController extends Controller {
 
         // Update the configuration block
         PluginConfigurationBlockObject pluginConfigurationBlockObject = boundForm.get();
-        PluginConfigurationBlock pluginConfigurationBlock = PluginConfigurationBlock.getPluginConfigurationBlockFromIdentifier(pluginConfigurationId,
-                pluginConfigurationBlockIdentifier);
-        if (pluginConfigurationBlock == null) {
-            pluginConfigurationBlock = new PluginConfigurationBlock();
-            pluginConfigurationBlock.configurationType = pluginConfigurationBlockDescriptor.getEditionType().name();
-            pluginConfigurationBlock.identifier = pluginConfigurationBlockIdentifier;
-            pluginConfigurationBlock.pluginConfiguration = PluginConfiguration.getPluginById(pluginConfigurationId);
+        try {
+            getPluginManagerService().updatePluginConfiguration(pluginConfigurationId, pluginConfigurationBlockIdentifier, (pluginConfigurationBlockObject.value != null ? pluginConfigurationBlockObject.value.getBytes():null));
+            Utilities.sendWarningFlashMessage(
+                    Msg.get("admin.plugin_manager.configuration_block.edit.success", Msg.get(pluginConfigurationBlockDescriptor.getName())));
+        } catch (PluginException e) {
+            return redirect(routes.PluginManagerController.index());
         }
-        pluginConfigurationBlock.version = pluginConfigurationBlockDescriptor.getVersion();
-        pluginConfigurationBlock.configuration = pluginConfigurationBlockObject.value != null ? pluginConfigurationBlockObject.value.getBytes() : null;
-        pluginConfigurationBlock.save();
-
-        Utilities.sendWarningFlashMessage(
-                Msg.get("admin.plugin_manager.configuration_block.edit.success", Msg.get(pluginConfigurationBlockDescriptor.getName())));
-
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }
 
