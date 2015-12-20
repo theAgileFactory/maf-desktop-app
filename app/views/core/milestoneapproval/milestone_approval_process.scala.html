@@ -180,7 +180,23 @@
             
             @restrict(la(as(constants.IMafConstants.MILESTONE_DECIDE_PERMISSION))){
                 <div class="panel panel-primary">
-                    <div class="panel-heading ">@parts.Msg("core.milestone.approval.process.panel.decide.title")</div>
+                    <div class="panel-heading ">
+                        
+                        @parts.Msg("core.milestone.approval.process.panel.decide.title")
+
+                        <div class="pull-right">
+                            <a class="pull-right" onclick="return maf_confirmDelete();" href="@controllers.core.routes.MilestoneApprovalController.delete(milestoneInstance.id).url">
+                                <span class="glyphicons glyphicons-bin glyphicons-panel" style="color: white;"></span>
+                            </a>
+                        </div>
+                        
+                        <script type="text/javascript">
+                            function maf_confirmDelete(){
+                                return window.confirm("@parts.Msg("core.milestone.approval.process.panel.decide.delete.confirm")");
+                            }
+                        </script>
+                        
+                    </div>
                     <div class="panel-body">
                     
                         <div class="alert alert-warning">@parts.Msg("core.milestone.approval.process.panel.decide.header")</div>

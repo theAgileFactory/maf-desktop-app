@@ -45,7 +45,6 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
 import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.StakeholderDao;
@@ -81,7 +80,6 @@ import models.governance.LifeCycleInstance;
 import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCyclePhase;
 import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.pmo.Actor;
 import models.pmo.Competency;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntry;
@@ -147,15 +145,15 @@ public class PortfolioEntryPlanningController extends Controller {
     public static Form<PortfolioEntryPlanningPackageGroupsFormData> planningPackageGroupsFormTemplate = Form
             .form(PortfolioEntryPlanningPackageGroupsFormData.class);
     public static Form<PortfolioEntryResourcePlanAllocatedActorFormData> allocatedActorFormTemplate = Form
-            .form(PortfolioEntryResourcePlanAllocatedActorFormData.class, PortfolioEntryResourcePlanAllocatedActorFormData.DefaultGroup.class);
+            .form(PortfolioEntryResourcePlanAllocatedActorFormData.class);
     public static Form<PortfolioEntryResourcePlanAllocatedOrgUnitFormData> allocatedOrgUnitFormTemplate = Form
             .form(PortfolioEntryResourcePlanAllocatedOrgUnitFormData.class);
     public static Form<PortfolioEntryResourcePlanAllocatedCompetencyFormData> allocatedCompetencyFormTemplate = Form
             .form(PortfolioEntryResourcePlanAllocatedCompetencyFormData.class);
     public static Form<PortfolioEntryResourcePlanAllocatedActorFormData> reallocateOrgUnitFormTemplate = Form
-            .form(PortfolioEntryResourcePlanAllocatedActorFormData.class, PortfolioEntryResourcePlanAllocatedActorFormData.ReallocateGroup.class);
+            .form(PortfolioEntryResourcePlanAllocatedActorFormData.class);
     public static Form<PortfolioEntryResourcePlanAllocatedActorFormData> reallocateCompetencyFormTemplate = Form
-            .form(PortfolioEntryResourcePlanAllocatedActorFormData.class, PortfolioEntryResourcePlanAllocatedActorFormData.ReallocateGroup.class);
+            .form(PortfolioEntryResourcePlanAllocatedActorFormData.class);
     private static Form<AttachmentFormData> attachmentFormTemplate = Form.form(AttachmentFormData.class);
     private static Form<PortfolioEntryPlanningPackagesFormData> planningPackagesFormDataTemplate = Form.form(PortfolioEntryPlanningPackagesFormData.class);
 
@@ -1296,16 +1294,6 @@ public class PortfolioEntryPlanningController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageAllocatedActor(Long id, Long allocatedActorId) {
 
-        // for create case, check there is at least one actor that can be
-        // allocated (represented by the stakeholders of the portfolio entry)
-        if (allocatedActorId.equals(Long.valueOf(0))) {
-            List<Actor> actors = ActorDao.getActorActiveAsListByPE(id);
-            if (actors == null || actors.size() == 0) {
-                Utilities.sendInfoFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_actor.manage.noactor"));
-                return redirect(controllers.core.routes.PortfolioEntryStakeholderController.index(id));
-            }
-        }
-
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
@@ -1404,6 +1392,18 @@ public class PortfolioEntryPlanningController extends Controller {
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
 
+        // create the stakeholder if necessary: crate case AND not already
+        // stakeholder
+        if (portfolioEntryResourcePlanAllocatedActorFormData.allocatedActorId == null
+                && StakeholderDao.getStakeholderByActorAndTypeAndPE(allocatedActor.actor.id, portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType,
+                        portfolioEntry.id) == null) {
+            Stakeholder stakeholder = new Stakeholder();
+            stakeholder.actor = allocatedActor.actor;
+            stakeholder.portfolioEntry = portfolioEntry;
+            stakeholder.stakeholderType = StakeholderDao.getStakeholderTypeById(portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType);
+            stakeholder.save();
+        }
+
         return redirect(controllers.core.routes.PortfolioEntryPlanningController.resources(id));
 
     }
@@ -1451,17 +1451,6 @@ public class PortfolioEntryPlanningController extends Controller {
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result manageAllocatedOrgUnit(Long id, Long allocatedOrgUnitId) {
-
-        // for create case, check there is at least one delivery unit that can
-        // be allocated (represented by the delivery units of the portfolio
-        // entry)
-        if (allocatedOrgUnitId.equals(Long.valueOf(0))) {
-            List<OrgUnit> orgUnits = OrgUnitDao.getOrgUnitActiveCanDeliverAsListByPE(id);
-            if (orgUnits == null || orgUnits.size() == 0) {
-                Utilities.sendInfoFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit"));
-                return redirect(controllers.core.routes.PortfolioEntryController.edit(id));
-            }
-        }
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
@@ -1547,6 +1536,15 @@ public class PortfolioEntryPlanningController extends Controller {
             allocatedOrgUnit.update();
 
             Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.edit.successful"));
+        }
+
+        // assign the delivery unit to the PE (if not already)
+        if (!PortfolioEntryDao.isDeliveryUnitOfPE(allocatedOrgUnit.orgUnit.id, portfolioEntry.id)) {
+            if (portfolioEntry.deliveryUnits == null) {
+                portfolioEntry.deliveryUnits = new ArrayList<>();
+            }
+            portfolioEntry.deliveryUnits.add(allocatedOrgUnit.orgUnit);
+            portfolioEntry.save();
         }
 
         // save the custom attributes

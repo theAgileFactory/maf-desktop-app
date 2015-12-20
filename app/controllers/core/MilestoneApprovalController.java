@@ -437,6 +437,21 @@ public class MilestoneApprovalController extends Controller {
     }
 
     /**
+     * Delete the milestone instance.
+     */
+    @Restrict({ @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
+    public Result delete(Long milestoneInstanceId) {
+
+        LifeCycleMilestoneInstance milestoneInstance = LifeCycleMilestoneDao.getLCMilestoneInstanceById(milestoneInstanceId);
+
+        milestoneInstance.doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.milestone.approval.process.panel.decide.delete.successful"));
+
+        return redirect(controllers.core.routes.MilestoneApprovalController.list(0));
+    }
+
+    /**
      * A milestone instance event represents an entry (for the display) in the
      * milestones' planning.
      * 

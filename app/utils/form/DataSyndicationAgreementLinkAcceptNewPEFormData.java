@@ -92,6 +92,7 @@ public class DataSyndicationAgreementLinkAcceptNewPEFormData {
             portfolioEntry.portfolioEntryType = PortfolioEntryDao.getPETypeById(this.portfolioEntryTypeId);
             Integer lastGovernanceId = PortfolioEntryDao.getPEAsLastGovernanceId();
             portfolioEntry.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
+            portfolioEntry.erpRefId = "";
             portfolioEntry.save();
 
             PortfolioEntryController.createLifeCycleProcessTree(portfolioEntry, LifeCycleProcessDao.getLCProcessById(this.lifeCycleProcessId));

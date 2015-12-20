@@ -281,6 +281,20 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
+     * Return true if the given org unit is a delivery unit of the portfolio
+     * entry.
+     * 
+     * @param orgUnitId
+     *            the org unit id
+     * @param portfolioEntryId
+     *            the delivery id
+     */
+    public static boolean isDeliveryUnitOfPE(Long orgUnitId, Long portfolioEntryId) {
+        return findPortfolioEntry.where().eq("deleted", false).eq("id", portfolioEntryId).eq("deliveryUnits.deleted", false).eq("deliveryUnits.id", orgUnitId)
+                .findRowCount() > 0;
+    }
+
+    /**
      * Get all portfolio entries as pagination object for which an actor is the
      * manager.
      * 

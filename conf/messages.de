@@ -2053,6 +2053,8 @@ core.milestone.approval.process.panel.decide.approve.notification.title=Meilenst
 core.milestone.approval.process.panel.decide.approve.notification.message=Die endgültige Genehmigung für den Meilenstein von "{0}" wurde gespeichert: Der Meilenstein ist genehmigt.
 core.milestone.approval.process.panel.decide.reject.notification.title=Meilenstein abgelehnt
 core.milestone.approval.process.panel.decide.reject.notification.message=Die endgültige Genehmigung für den Meilenstein von "{0}" wurde gespeichert: Der Meilenstein wurde abgelehnt.
+core.milestone.approval.process.panel.decide.delete.confirm=de: Are you sure you want to delete this milestone approval request?
+core.milestone.approval.process.panel.decide.delete.successful=de: The milestone approval request has been deleted.
 
 #----------------------
 # process transition request
@@ -2467,7 +2469,6 @@ core.portfolio_entry_planning.resources.new.competency=Kompetenz
 core.portfolio_entry_planning.resources.no_competency=Keine Kompetenz vorhanden
 
 #manage allocated actor
-core.portfolio_entry_planning.allocated_actor.manage.noactor=Sie müssen mindestens ein Mitarbeiter hinzufügen, um der Initiative Ressourcen zuweisen zu können.
 core.portfolio_entry_planning.allocated_actor.manage.title=Mitarbeiter Zuweisungen bearbeiten
 core.portfolio_entry_planning.allocated_actor.add.successful=Mitarbeiter zugewiesen
 core.portfolio_entry_planning.allocated_actor.edit.successful=Zuweisung aktualisiert.
@@ -2478,7 +2479,6 @@ core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.messag
 core.portfolio_entry_planning.allocated_actor.delete.successful=Die Arbeitnehmerüberlassung wurde entfernt.
 
 #manage allocated org unit
-core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=Sie müssen wenigstens einen internen Zulieferer hinzufügen, um diese der Initiative zuweisen zu können.
 core.portfolio_entry_planning.allocated_org_unit.manage.title=Interne Zulieferer Arbeitsaufgabe bearbeiten
 core.portfolio_entry_planning.allocated_org_unit.add.successful=Die Interne Zulieferer Arbeitsaufgabe wurde hinzugefügt.
 core.portfolio_entry_planning.allocated_org_unit.edit.successful=Die Interne Zulieferer Arbeitsaufgabe wurde aktualisiert.

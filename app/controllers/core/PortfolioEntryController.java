@@ -230,6 +230,7 @@ public class PortfolioEntryController extends Controller {
             PortfolioEntryType portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryCreateFormData.portfolioEntryType);
             portfolioEntry.portfolioEntryType = portfolioEntryType;
             portfolioEntry.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
+            portfolioEntry.erpRefId = "";
             portfolioEntry.save();
 
             createLifeCycleProcessTree(portfolioEntry, requestedLifeCycleProcess);

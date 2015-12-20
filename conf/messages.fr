@@ -1830,7 +1830,7 @@ my.personalstorage.file.size.label=Taille
 
 #roadmap
 core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Feuille de route
-core.roadmap.no_portfolio_entry.info=Une initiative représente  une demande / idée qui peut éventuellement devenir un projet ou un demande d'évolution. La feuille de route liste toutes les initiatives en fonction de vos permissions.
+core.roadmap.no_portfolio_entry.info=Une initiative représente  une demande / idée qui peut éventuellement devenir un projet ou un demande d''évolution. La feuille de route liste toutes les initiatives en fonction de vos permissions.
 core.roadmap.no_portfolio_entry.create=Créer votre première initiative
 
 #planning
@@ -2058,6 +2058,8 @@ core.milestone.approval.process.panel.decide.approve.notification.title=Jalon ap
 core.milestone.approval.process.panel.decide.approve.notification.message=La décision finale pour un jalon de l''initiative "{0}" a été enregistrée: le jalon est approuvé.
 core.milestone.approval.process.panel.decide.reject.notification.title=Jalon rejeté
 core.milestone.approval.process.panel.decide.reject.notification.message=La décision finale pour un jalon de l''initiative "{0}" a été enregistrée: le jalon est rejeté.
+core.milestone.approval.process.panel.decide.delete.confirm=Etes-vous sûr(e) de vouloir supprimer cette requête d''approbation de jalon?
+core.milestone.approval.process.panel.decide.delete.successful=La requête d''approbation de jalon a été supprimée.
 
 #----------------------
 # process transition request
@@ -2388,7 +2390,7 @@ core.portfolio_entry_delivery.deliverable.unfollow.successful=Le livrable n''est
 core.portfolio_entry_delivery.deliverable.delete.successful=Le livrable a été supprimé.
 
 #edit deliverable requirements
-core.portfolio_entry_delivery.deliverable.requirements.edit.title=Mettre à jour l'assignement des exigences
+core.portfolio_entry_delivery.deliverable.requirements.edit.title=Mettre à jour l''assignement des exigences
 core.portfolio_entry_delivery.deliverable.requirements.edit.no_requirement=Cette initiative (ou release) n''a pas d''exigence, veuillez <a href="{0}">cliquer ici</a> pour créer votre première exigence.
 core.portfolio_entry_delivery.deliverable.requirements.edit.successful=La liste des exigences a été mise à jour
 
@@ -2471,7 +2473,6 @@ core.portfolio_entry_planning.resources.new.competency=Compétence
 core.portfolio_entry_planning.resources.no_competency=Aucune compétence disponible
 
 #manage allocated actor
-core.portfolio_entry_planning.allocated_actor.manage.noactor=Vous devez ajouter au moins un intervenant afin de pouvoir affecter un employé à l''initiative.
 core.portfolio_entry_planning.allocated_actor.manage.title=Gérer un employé affecté
 core.portfolio_entry_planning.allocated_actor.add.successful=L''employé a été affecté.
 core.portfolio_entry_planning.allocated_actor.edit.successful=L''employé affecté a été mis à jour.
@@ -2482,7 +2483,6 @@ core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.messag
 core.portfolio_entry_planning.allocated_actor.delete.successful=L''employé affecté a été supprimé.
 
 #manage allocated org unit
-core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=Vous devez ajouter au moins un fournisseur interne à l''initiative afin de pouvoir l''affecter.
 core.portfolio_entry_planning.allocated_org_unit.manage.title=Gérer un fournisseur interne affecté
 core.portfolio_entry_planning.allocated_org_unit.add.successful=Le fournisseur interne a été affecté.
 core.portfolio_entry_planning.allocated_org_unit.edit.successful=Le fournisseur interne affecté a été mis à jour.
@@ -2780,7 +2780,7 @@ admin.user_manager.create.header=Veuillez remplir le formulaire ci-dessous pour 
 Il est important de ne pas oublier de sélectioner son ou ses rôle(s).<br/>\
 Attention: la création de l''utilisateur dans les modules tiers peut prendre quelques minutes.
 admin.user_manager.create.credentials.title=Mot de passe
-admin.user_manager.create.admindefinedpassword.label=Choisir le mot de passe à la place de l'utilisateur
+admin.user_manager.create.admindefinedpassword.label=Choisir le mot de passe à la place de l''utilisateur
 admin.user_manager.create.basic_data.title=Informations principales
 admin.user_manager.create.success=L''utilisateur a été créé
 admin.user_manager.create.mail.subject=Le compte a été créé

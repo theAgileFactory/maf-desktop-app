@@ -2042,6 +2042,8 @@ core.milestone.approval.process.panel.decide.approve.notification.title=Mileston
 core.milestone.approval.process.panel.decide.approve.notification.message=The final approval for a milestone of the initiative "{0}" has been registered: the milestone is approved.
 core.milestone.approval.process.panel.decide.reject.notification.title=Milestone rejected
 core.milestone.approval.process.panel.decide.reject.notification.message=The final approval for a milestone of the initiative "{0}" has been registered: the milestone is rejected.
+core.milestone.approval.process.panel.decide.delete.confirm=Are you sure you want to delete this milestone approval request?
+core.milestone.approval.process.panel.decide.delete.successful=The milestone approval request has been deleted.
 
 #----------------------
 # process transition request
@@ -2455,7 +2457,6 @@ core.portfolio_entry_planning.resources.new.competency=Competency
 core.portfolio_entry_planning.resources.no_competency=There is no competency available
 
 #manage allocated actor
-core.portfolio_entry_planning.allocated_actor.manage.noactor=You need to add at least one stakeholder in order to allocate an actor to the initiative.
 core.portfolio_entry_planning.allocated_actor.manage.title=Manage an allocated employee
 core.portfolio_entry_planning.allocated_actor.add.successful=The employee has been allocated successfully.
 core.portfolio_entry_planning.allocated_actor.edit.successful=The allocated employee has been updated.
@@ -2466,7 +2467,6 @@ core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.messag
 core.portfolio_entry_planning.allocated_actor.delete.successful=The allocated employee has been removed.
 
 #manage allocated org unit
-core.portfolio_entry_planning.allocated_org_unit.manage.nodeliveryunit=You need to add at least one delivery unit to the initiative in order to allocate it.
 core.portfolio_entry_planning.allocated_org_unit.manage.title=Manage an allocated delivery unit
 core.portfolio_entry_planning.allocated_org_unit.add.successful=The delivery unit has been allocated successfully.
 core.portfolio_entry_planning.allocated_org_unit.edit.successful=The allocated delivery unit has been updated.
