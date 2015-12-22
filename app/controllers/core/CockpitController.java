@@ -905,7 +905,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
 
             ClickableMenuItem myEmployeeCardMenu = new ClickableMenuItem("core.cockpit.sidebar.my_allocations",
-                    controllers.core.routes.ActorController.allocation(actor.id), "glyphicons glyphicons-address-book",
+                    controllers.core.routes.ActorController.allocation(actor.id), "fa fa-book",
                     currentType.equals(MenuItemType.MY_EMPLOYEE_CARD));
             myEmployeeCardMenu.setIsImportant(true);
             sideBar.addMenuItem(myEmployeeCardMenu);

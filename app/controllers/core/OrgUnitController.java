@@ -638,7 +638,7 @@ public class OrgUnitController extends Controller {
                     new ClickableMenuItem("core.org_unit.sidebar.portfolio_entries", controllers.core.routes.OrgUnitController.listPortfolioEntries(id, 0),
                             "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.INITIATIVES)));
 
-            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.org_unit.sidebar.allocation", "glyphicons glyphicons-address-book",
+            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.org_unit.sidebar.allocation", "fa fa-book",
                     currentType.equals(MenuItemType.ALLOCATION));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.org_unit.sidebar.allocation.overview",

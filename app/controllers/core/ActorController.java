@@ -894,7 +894,7 @@ public class ActorController extends Controller {
             sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolios", controllers.core.routes.ActorController.listPortfolios(id, 0),
                     "glyphicons glyphicons-sort", currentType.equals(MenuItemType.PORTFOLIOS)));
 
-            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.actor.sidebar.allocation", "glyphicons glyphicons-address-book",
+            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.actor.sidebar.allocation", "fa fa-book",
                     currentType.equals(MenuItemType.ALLOCATION));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.overview",
