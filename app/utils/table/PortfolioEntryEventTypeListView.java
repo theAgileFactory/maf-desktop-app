@@ -19,15 +19,15 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.PortfolioEntryEventType;
 import constants.IMafConstants;
-import framework.utils.Glyphicon;
 import framework.utils.IColumnFormatter;
+import framework.utils.Icon;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.PortfolioEntryEventType;
 
 /**
  * A portfolio entry event type list view is used to display a portfolio entry
@@ -47,7 +47,7 @@ public class PortfolioEntryEventTypeListView {
             setJavaColumnFormatter("bootstrapGlyphicon", new IColumnFormatter<PortfolioEntryEventTypeListView>() {
                 @Override
                 public String apply(PortfolioEntryEventTypeListView portfolioEntryEventTypeListView, Object value) {
-                    return Glyphicon.getLabel(portfolioEntryEventTypeListView.bootstrapGlyphicon);
+                    return Icon.getLabel(portfolioEntryEventTypeListView.bootstrapGlyphicon);
                 }
             });
 
@@ -60,11 +60,11 @@ public class PortfolioEntryEventTypeListView {
             addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryEventTypeListView>(IMafConstants.EDIT_URL_FORMAT,
                     new StringFormatFormatter.Hook<PortfolioEntryEventTypeListView>() {
-                        @Override
-                        public String convert(PortfolioEntryEventTypeListView portfolioEntryEventTypeListView) {
-                            return controllers.admin.routes.ConfigurationRegisterController.manageEventType(portfolioEntryEventTypeListView.id).url();
-                        }
-                    }));
+                @Override
+                public String convert(PortfolioEntryEventTypeListView portfolioEntryEventTypeListView) {
+                    return controllers.admin.routes.ConfigurationRegisterController.manageEventType(portfolioEntryEventTypeListView.id).url();
+                }
+            }));
             setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
             setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -72,8 +72,8 @@ public class PortfolioEntryEventTypeListView {
             setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryEventTypeListView>() {
                 @Override
                 public String apply(PortfolioEntryEventTypeListView portfolioEntryEventTypeListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
                     String url = controllers.admin.routes.ConfigurationRegisterController.deleteEventType(portfolioEntryEventTypeListView.id).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 }
