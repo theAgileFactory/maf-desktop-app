@@ -31,8 +31,8 @@ function drop(ev) {
     var dropzoneId=dropzone.attr('id');
     var dropzoneContent=dropzone.find(".dropzone-content");
     var dropzoneRemove=dropzone.find(".dropzone-remove");
-    dropzoneContent.html('<b>'+widgetId+'</b><br/><i class="glyphicons glyphicons-check">');
-    dropzoneRemove.html('<h4><a id="'+widgetId+'_'+dropzoneId+'_remove" href="#"><span class="glyphicons glyphicons-bin"></span></a></h4>');
+    dropzoneContent.html('<b>'+widgetId+'</b><br/><i class="fa fa-check-square-o">');
+    dropzoneRemove.html('<h4><a id="'+widgetId+'_'+dropzoneId+'_remove" href="#"><span class="fa fa-trash"></span></a></h4>');
     $("#"+widgetId+"_"+dropzoneId+"_remove").on('click',function(){
 		var dropzone=$(this).closest(".dropzone");
 		var dropzoneContent=dropzone.find(".dropzone-content");

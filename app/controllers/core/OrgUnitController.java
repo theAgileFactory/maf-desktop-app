@@ -630,22 +630,22 @@ public class OrgUnitController extends Controller {
         SideBar sideBar = new SideBar();
 
         sideBar.addMenuItem(new ClickableMenuItem("core.org_unit.sidebar.overview", controllers.core.routes.OrgUnitController.view(id, 0),
-                "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.OVERVIEW)));
+                "fa fa-search-plus", currentType.equals(MenuItemType.OVERVIEW)));
 
         if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
 
             sideBar.addMenuItem(
                     new ClickableMenuItem("core.org_unit.sidebar.portfolio_entries", controllers.core.routes.OrgUnitController.listPortfolioEntries(id, 0),
-                            "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.INITIATIVES)));
+                            "fa fa-sticky-note", currentType.equals(MenuItemType.INITIATIVES)));
 
             HeaderMenuItem allocationMenu = new HeaderMenuItem("core.org_unit.sidebar.allocation", "fa fa-book",
                     currentType.equals(MenuItemType.ALLOCATION));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.org_unit.sidebar.allocation.overview",
-                    controllers.core.routes.OrgUnitController.allocation(id), "glyphicons glyphicons-radar", false));
+                    controllers.core.routes.OrgUnitController.allocation(id), "fa fa-tachometer", false));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.org_unit.sidebar.allocation.details",
-                    controllers.core.routes.OrgUnitController.allocationDetails(id, 0), "glyphicons glyphicons-zoom-in", false));
+                    controllers.core.routes.OrgUnitController.allocationDetails(id, 0), "fa fa-search-plus", false));
 
             sideBar.addMenuItem(allocationMenu);
 

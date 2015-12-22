@@ -858,25 +858,25 @@ public class CockpitController extends Controller {
         SideBar sideBar = new SideBar();
 
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.initiatives", controllers.core.routes.CockpitController.initiatives(0, 0, false),
-                "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.MY_INITIATIVES)));
+                "fa fa-sticky-note", currentType.equals(MenuItemType.MY_INITIATIVES)));
 
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.portfolios", controllers.core.routes.CockpitController.portfolios(0, 0, false),
-                "glyphicons glyphicons-sort", currentType.equals(MenuItemType.MY_PORTFOLIOS)));
+                "fa fa-folder", currentType.equals(MenuItemType.MY_PORTFOLIOS)));
 
-        HeaderMenuItem employeesMenu = new HeaderMenuItem("core.cockpit.sidebar.subordinates", "glyphicons glyphicons-pawn",
+        HeaderMenuItem employeesMenu = new HeaderMenuItem("core.cockpit.sidebar.subordinates", "fa fa-child",
                 currentType.equals(MenuItemType.MY_EMPLOYEES));
 
         ClickableMenuItem employeesOverviewMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.members",
-                controllers.core.routes.CockpitController.subordinates(), "glyphicons glyphicons-list", false);
+                controllers.core.routes.CockpitController.subordinates(), "fa fa-list", false);
 
         ClickableMenuItem employeesAllocationMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.allocations_overview",
-                controllers.core.routes.CockpitController.subordinatesAllocations(), "glyphicons glyphicons-radar", false);
+                controllers.core.routes.CockpitController.subordinatesAllocations(), "fa fa-tachometer", false);
 
         ClickableMenuItem employeesAllocationDetailsMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.allocations_details",
-                controllers.core.routes.CockpitController.subordinatesAllocationsDetails(), "glyphicons glyphicons-zoom-in", false);
+                controllers.core.routes.CockpitController.subordinatesAllocationsDetails(), "fa fa-search-plus", false);
 
         ClickableMenuItem employeesTimesheetMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.timesheet",
-                controllers.core.routes.CockpitController.subordinatesTimesheet(), "glyphicons glyphicons-clock", false);
+                controllers.core.routes.CockpitController.subordinatesTimesheet(), "fa fa-clock-o", false);
         ArrayList<String[]> list = new ArrayList<String[]>();
         list.add(new String[] { IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION });
         list.add(new String[] { IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION });
@@ -890,13 +890,13 @@ public class CockpitController extends Controller {
         sideBar.addMenuItem(employeesMenu);
 
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.org_units", controllers.core.routes.CockpitController.orgUnits(0, false),
-                "glyphicons glyphicons-building", currentType.equals(MenuItemType.MY_ORG_UNITS)));
+                "fa fa-building", currentType.equals(MenuItemType.MY_ORG_UNITS)));
 
         if (securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION)
                 || securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_AS_OWNER_PERMISSION)) {
             sideBar.addMenuItem(
                     new ClickableMenuItem("core.cockpit.sidebar.budget_buckets", controllers.core.routes.CockpitController.budgetBuckets(0, 0, false, false),
-                            "glyphicons glyphicons-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
+                            "fa fa-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
         }
 
         try {

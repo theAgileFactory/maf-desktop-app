@@ -98,7 +98,7 @@ public class DataSyndicationAgreementLinkListView {
                         if (dataSyndicationAgreementLinkListView.status.equals(DataSyndicationAgreement.Status.PENDING)) {
 
                             String content = "<a title=\"" + Msg.get("object.data_syndication_agreement_link.process.label")
-                                    + "\" href=\"%s\"><span class=\"glyphicons glyphicons-thumbs-up\"></span></a>";
+                                    + "\" href=\"%s\"><span class=\"fa fa-thumbs-up\"></span></a>";
 
                             String url = controllers.admin.routes.DataSyndicationController.processAgreementLink(dataSyndicationAgreementLinkListView.id)
                                     .url();

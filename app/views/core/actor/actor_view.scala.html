@@ -42,12 +42,12 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.ActorController.edit(actor.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.ActorController.edit(actor.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
                         }
                         @dynamic(constants.IMafConstants.ACTOR_DELETE_DYNAMIC_PERMISSION) {
                             &nbsp;
                             <a class="pull-right" onclick="return maf_confirmDelete();" href="@controllers.core.routes.ActorController.delete(actor.id)">
-                                <span class="glyphicons glyphicons-bin glyphicons-panel"></span>
+                                <span class="fa fa-trash glyphicons-panel"></span>
                             </a>
                             <script type="text/javascript">
                                 function maf_confirmDelete(){
@@ -139,9 +139,9 @@
                     @dynamic(constants.IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION) {
                         <div class="pull-right">
                             @if(!existCompetencies) {
-                                <a href='javascript: alert("@parts.Msg("core.actor.competencies.no_competency")");'><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                                <a href='javascript: alert("@parts.Msg("core.actor.competencies.no_competency")");'><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
                             } else {
-                                <a href="@controllers.core.routes.ActorController.editCompetencies(actor.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                                <a href="@controllers.core.routes.ActorController.editCompetencies(actor.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
                             }
                         </div>
                     }

@@ -51,7 +51,7 @@
                     @parts.Msg("core.portfolio_entry_planning.package.view.title")
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id, planningPackage.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id, planningPackage.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
                             &nbsp;
                         }
                     </div>
@@ -116,7 +116,7 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.createPackageAttachment(portfolioEntry.id, planningPackage.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.createPackageAttachment(portfolioEntry.id, planningPackage.id).url"><span class="fa fa-plus glyphicons-panel"></span></a>
                         }
                     </div>
                 </div>

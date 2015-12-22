@@ -40,9 +40,9 @@
             @parts.Msg("core.cockpit.sidebar.org_units")
             <div class="pull-right">
                 @if(!viewAll) {
-                    <a href="@controllers.core.routes.CockpitController.orgUnits(0, true).url"><span class="glyphicons glyphicons-resize-full glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.CockpitController.orgUnits(0, true).url"><span class="fa fa-expand glyphicons-panel"></span></a>
                 } else {
-                    <a href="@controllers.core.routes.CockpitController.orgUnits(0, false).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.CockpitController.orgUnits(0, false).url"><span class="fa fa-compress glyphicons-panel"></span></a>
                 }
             </div>
         </div>

@@ -71,7 +71,7 @@ public class TimesheetReportListView {
                     return "<form action='" + controllers.core.routes.TimesheetController.processTimesheet().url() + "' method='POST'>"
                             + "<input type='hidden' name='comments' value='' />" + "<input type='hidden' name='id' value='" + timesheetReportListView.id
                             + "' />" + "<button type='submit' class='btn btn-default btn-xs' name='action' value='APPROVE'>"
-                            + "<span class='glyphicons glyphicons-thumbs-up'></span> " + Msg.get("button.approve") + "</button>" + "</form>";
+                            + "<span class='fa fa-thumbs-up'></span> " + Msg.get("button.approve") + "</button>" + "</form>";
                 }
             });
             setColumnCssClass("approveActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -80,7 +80,7 @@ public class TimesheetReportListView {
             addColumn("reminderActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("reminderActionLink", new StringFormatFormatter<TimesheetReportListView>(
                     "<a href=\"%s\" data-toggle='tooltip' class='timesheet-reminder' title=\"" + Msg.get("object.timesheet_report.reminder.help") + "\">"
-                            + "<span class=\"glyphicons glyphicons-bell\"></span></a><script>$('.timesheet-reminder').tooltip();</script>",
+                            + "<span class=\"fa fa-bell\"></span></a><script>$('.timesheet-reminder').tooltip();</script>",
                     new StringFormatFormatter.Hook<TimesheetReportListView>() {
                         @Override
                         public String convert(TimesheetReportListView timesheetReportListView) {

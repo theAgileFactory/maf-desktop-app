@@ -883,33 +883,33 @@ public class ActorController extends Controller {
         SideBar sideBar = new SideBar();
 
         sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.overview", controllers.core.routes.ActorController.view(id),
-                "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.OVERVIEW)));
+                "fa fa-search-plus", currentType.equals(MenuItemType.OVERVIEW)));
 
         if (securityService.dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION, "")) {
 
             sideBar.addMenuItem(
                     new ClickableMenuItem("core.actor.sidebar.portfolio_entries", controllers.core.routes.ActorController.listPortfolioEntries(id, 0),
-                            "glyphicons glyphicons-wallet", currentType.equals(MenuItemType.INITIATIVES)));
+                            "fa fa-sticky-note", currentType.equals(MenuItemType.INITIATIVES)));
 
             sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolios", controllers.core.routes.ActorController.listPortfolios(id, 0),
-                    "glyphicons glyphicons-sort", currentType.equals(MenuItemType.PORTFOLIOS)));
+                    "fa fa-folder", currentType.equals(MenuItemType.PORTFOLIOS)));
 
             HeaderMenuItem allocationMenu = new HeaderMenuItem("core.actor.sidebar.allocation", "fa fa-book",
                     currentType.equals(MenuItemType.ALLOCATION));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.overview",
-                    controllers.core.routes.ActorController.allocation(id), "glyphicons glyphicons-radar", false));
+                    controllers.core.routes.ActorController.allocation(id), "fa fa-tachometer", false));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.details",
-                    controllers.core.routes.ActorController.allocationDetails(id, 0, 0, false), "glyphicons glyphicons-zoom-in", false));
+                    controllers.core.routes.ActorController.allocationDetails(id, 0, 0, false), "fa fa-search-plus", false));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.capacity",
-                    controllers.core.routes.ActorController.capacity(id, 0), "glyphicons glyphicons-equalizer", false));
+                    controllers.core.routes.ActorController.capacity(id, 0), "fa fa-barcode", false));
 
             sideBar.addMenuItem(allocationMenu);
 
             sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.timesheet", controllers.core.routes.ActorController.viewWeeklyTimesheet(id, ""),
-                    "glyphicons glyphicons-clock", currentType.equals(MenuItemType.TIMESHEET)));
+                    "fa fa-clock-o", currentType.equals(MenuItemType.TIMESHEET)));
 
         }
 

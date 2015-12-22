@@ -49,9 +49,9 @@
                     @parts.Msg("core.portfolio.view.details.title")
                     @dynamic(constants.IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION) {
                         <div class="pull-right">
-                            <a href="@controllers.core.routes.PortfolioController.edit(portfolio.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioController.edit(portfolio.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
                             &nbsp;&nbsp;
-                            <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioController.delete(portfolio.id)"><span class="glyphicons glyphicons-bin glyphicons-panel"></span></a>
+                            <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioController.delete(portfolio.id)"><span class="fa fa-trash glyphicons-panel"></span></a>
                             <script type="text/javascript">
                                 function maf_confirmDelete(){
                                     return window.confirm("@parts.Msg("core.portfolio.delete.confirmation.message")");
@@ -110,7 +110,7 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioStakeholderController.manage(portfolio.id).url"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioStakeholderController.manage(portfolio.id).url"><span class="fa fa-plus glyphicons-panel"></span></a>
                         }
                     </div>
                 </div>

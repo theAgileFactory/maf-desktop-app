@@ -286,10 +286,10 @@ public class MilestonesTrend {
             if (this.previousValue != null && this.value != null) {
                 if (this.value.compareTo(this.previousValue) < 0) {
                     // the value is lesser than the previousValue
-                    arrow = " <span class=\"glyphicons glyphicons-down-arrow\" style=\"color: green;\"></span>";
+                    arrow = " <span class=\"fa fa-arrow-down\" style=\"color: green;\"></span>";
                 } else if (this.value.compareTo(this.previousValue) > 0) {
                     // the value is higher than the previousValue
-                    arrow = " <span class=\"glyphicons glyphicons-up-arrow\" style=\"color: red;\"></span>";
+                    arrow = " <span class=\"fa fa-arrow-up\" style=\"color: red;\"></span>";
                 }
             }
             return arrow;
@@ -336,10 +336,10 @@ public class MilestonesTrend {
                 if (this.previousValue != null && this.value != null) {
                     if (this.value.before(this.previousValue)) {
                         // the value is before than the previousValue
-                        arrow = " <span class=\"glyphicons glyphicons-down-arrow\" style=\"color: green;\"></span>";
+                        arrow = " <span class=\"fa fa-arrow-down\" style=\"color: green;\"></span>";
                     } else if (this.value.after(this.previousValue)) {
                         // the value is after than the previousValue
-                        arrow = " <span class=\"glyphicons glyphicons-up-arrow\" style=\"color: red;\"></span>";
+                        arrow = " <span class=\"fa fa-arrow-up\" style=\"color: red;\"></span>";
                     }
                 }
 

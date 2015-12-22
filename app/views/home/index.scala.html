@@ -76,14 +76,14 @@
                     
                         <div class="panel panel-info">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="glyphicons glyphicons-circle-info"></i>&nbsp; @parts.Msg("index.help.title")</h3>
+                                <h3 class="panel-title"><i class="fa fa-info-circle"></i>&nbsp; @parts.Msg("index.help.title")</h3>
                             </div>
                             <div class="list-group">
-                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=resources:what-is-bizdock"><span class="glyphicons glyphicons-eye-open"></span> @parts.Msg("index.help.bizdock.label")</a>
-                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:initiative:create-initiative"><span class="glyphicons glyphicons-gift"></span> @parts.Msg("index.help.intake.label")</a>
-                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:roadmap"><span class="glyphicons glyphicons-road"></span> @parts.Msg("index.help.roadmap.label")</a>
-                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:cockpit"><span class="glyphicons glyphicons-dashboard"></span> @parts.Msg("index.help.cockpit.label")</a>
-                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:my-account"><span class="glyphicons glyphicons-nameplate"></span> @parts.Msg("index.help.profile.label")</a>
+                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=resources:what-is-bizdock"><span class="fa fa-eye"></span> @parts.Msg("index.help.bizdock.label")</a>
+                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:initiative:create-initiative"><span class="fa fa-gift"></span> @parts.Msg("index.help.intake.label")</a>
+                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:roadmap"><span class="fa fa-road"></span> @parts.Msg("index.help.roadmap.label")</a>
+                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:cockpit"><span class="fa fa-tachometer"></span> @parts.Msg("index.help.cockpit.label")</a>
+                                <a class="list-group-item" target="_blank" href="https://help.bizdock.io/doku.php?id=user-guide:my-account"><span class="fa fa-street-view"></span> @parts.Msg("index.help.profile.label")</a>
                             </div>
                         </div>
 
@@ -99,7 +99,7 @@
                         <h3 class="panel-title">
                             @parts.Msg("index.profile.title")
                             <div class="pull-right">
-                                <a href="@controllers.admin.routes.MyAccount.display()"><span class="glyphicons glyphicons-new-window "></span></a>
+                                <a href="@controllers.admin.routes.MyAccount.display()"><span class="fa fa-external-link"></span></a>
                             </div>
                         </h3>
                     </div>
@@ -144,27 +144,27 @@
                 
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="glyphicons glyphicons-circle-info"></i>&nbsp; @parts.Msg("index.quick_links.title")</h3>
+                        <h3 class="panel-title"><i class="fa fa-info-circle"></i>&nbsp; @parts.Msg("index.quick_links.title")</h3>
                     </div>
                     <div class="list-group">
                         @restrict(la(as(constants.IMafConstants.PORTFOLIO_ENTRY_SUBMISSION_PERMISSION))){
                             <a class="list-group-item" href="@controllers.core.routes.PortfolioEntryController.create().url">
-                                <span class="glyphicons glyphicons-gift"></span> @parts.Msg("index.intake.label") &nbsp;<small><i>@parts.Msg("index.intake.description")</i></small>
+                                <span class="fa fa-gift"></span> @parts.Msg("index.intake.label") &nbsp;<small><i>@parts.Msg("index.intake.description")</i></small>
                             </a>
                         }
                         @restrict(la(as(constants.IMafConstants.ROADMAP_DISPLAY_PERMISSION))){
                             <a class="list-group-item" href="@controllers.core.routes.RoadmapController.index().url">
-                                <span class="glyphicons glyphicons-road"></span> @parts.Msg("index.roadmap.label") &nbsp;<small><i>@parts.Msg("index.roadmap.description")</i></small>
+                                <span class="fa fa-road"></span> @parts.Msg("index.roadmap.label") &nbsp;<small><i>@parts.Msg("index.roadmap.description")</i></small>
                             </a>
                         }
                         @restrict(la(as(constants.IMafConstants.COCKPIT_DISPLAY_PERMISSION))){
                             <a class="list-group-item" href="@controllers.core.routes.CockpitController.initiatives().url">
-                                <span class="glyphicons glyphicons-dashboard"></span> @parts.Msg("index.cockpit.label") &nbsp;<small><i>@parts.Msg("index.cockpit.description")</i></small>
+                                <span class="fa fa-tachometer"></span> @parts.Msg("index.cockpit.label") &nbsp;<small><i>@parts.Msg("index.cockpit.description")</i></small>
                             </a>
                         }
                         @restrict(la(as(constants.IMafConstants.SEARCH_PERMISSION))){
                             <a class="list-group-item" href="@controllers.core.routes.SearchController.index().url">
-                                <span class="glyphicons glyphicons-search"></span> @parts.Msg("index.search.label") &nbsp;<small><i>@parts.Msg("index.search.description")</i></small>
+                                <span class="fa fa-search"></span> @parts.Msg("index.search.label") &nbsp;<small><i>@parts.Msg("index.search.description")</i></small>
                             </a>
                         }
                     </div>

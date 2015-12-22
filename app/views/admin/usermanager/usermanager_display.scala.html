@@ -32,12 +32,12 @@
             <div class="pull-right">
             
                 @if(userAccount.isActive()){
-                    <a id="lockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), false)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.lock.help")"><i class="glyphicons glyphicons-lock glyphicons-panel"></i></a>
+                    <a id="lockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), false)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.lock.help")"><i class="fa fa-lock glyphicons-panel"></i></a>
                     <script>
                         $('#lockAction').tooltip();
                     </script>
                 }else{
-                    <a id="unlockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), true)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.unlock.help")"><i class="glyphicons glyphicons-unlock glyphicons-panel"></i></a>
+                    <a id="unlockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), true)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.unlock.help")"><i class="fa fa-unlock glyphicons-panel"></i></a>
                     <script>
                         $('#unlockAction').tooltip();
                     </script>
@@ -45,14 +45,14 @@
                 &nbsp;
                 
                 @if(masterMode){
-                <a id="resetPasswordAction" onclick="return maf_confirmResetPassword();" href="@controllers.admin.routes.UserManager.resetPassword(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.reset_password.help")"><i class="glyphicons glyphicons-retweet-2 glyphicons-panel"></i></a>
+                <a id="resetPasswordAction" onclick="return maf_confirmResetPassword();" href="@controllers.admin.routes.UserManager.resetPassword(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.reset_password.help")"><i class="fa fa-retweet glyphicons-panel"></i></a>
                 <script>
                     $('#resetPasswordAction').tooltip();
                 </script>
                 &nbsp;
                 }
                 
-                <a id="deleteAction" onclick="return maf_confirmDelete();" href="@controllers.admin.routes.UserManager.deleteUser(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.delete.help")"><i class="glyphicons glyphicons-bin glyphicons-panel"></i></a>
+                <a id="deleteAction" onclick="return maf_confirmDelete();" href="@controllers.admin.routes.UserManager.deleteUser(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.delete.help")"><i class="fa fa-trash glyphicons-panel"></i></a>
                 <script>
                     $('#deleteAction').tooltip();
                 </script>
@@ -68,21 +68,21 @@
                         <th width="20%">@parts.Msg("object.user_account.full_name.label")</th>
                         <td>
                             @userAccount.getFirstName() @userAccount.getLastName()
-                            <a class="pull-right" href="@controllers.admin.routes.UserManager.editBasicData(userAccount.getUid())"><span class="glyphicons glyphicons-edit"></span></a>
+                            <a class="pull-right" href="@controllers.admin.routes.UserManager.editBasicData(userAccount.getUid())"><span class="fa fa-pencil-square-o"></span></a>
                         </td>
                     </tr>
                     <tr>
                         <th width="20%">@parts.Msg("object.user_account.email.label")</th>
                         <td>
                             @userAccount.getMail()
-                            <a class="pull-right" href="@controllers.admin.routes.UserManager.editMail(userAccount.getUid())"><span class="glyphicons glyphicons-edit"></span></a>
+                            <a class="pull-right" href="@controllers.admin.routes.UserManager.editMail(userAccount.getUid())"><span class="fa fa-pencil-square-o"></span></a>
                         </td>
                     </tr>
                     <tr>
                         <th width="20%">@parts.Msg("object.user_account.type.label")</th>
                         <td>
                             @userAccount.getAccountType().getLabel()
-                            <a class="pull-right" href="@controllers.admin.routes.UserManager.editUserAccountType(userAccount.getUid())"><span class="glyphicons glyphicons-edit"></span></a>
+                            <a class="pull-right" href="@controllers.admin.routes.UserManager.editUserAccountType(userAccount.getUid())"><span class="fa fa-pencil-square-o"></span></a>
                         </td>
                     </tr>
                     <tr>
@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     @if(userAccount.getAccountType().isRolesEditable()){
-                                    <a class="pull-right" href="@controllers.admin.routes.UserManager.editRoles(userAccount.getUid())"><span class="glyphicons glyphicons-edit"></span></a>
+                                    <a class="pull-right" href="@controllers.admin.routes.UserManager.editRoles(userAccount.getUid())"><span class="fa fa-pencil-square-o"></span></a>
                                     }
                                 </div>
                             </div>

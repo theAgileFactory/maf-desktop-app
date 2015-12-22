@@ -29,7 +29,7 @@
     val systemPreferenceItem = new ClickableMenuItem(
         "admin.configuration.system_preferences.title",
         controllers.admin.routes.ConfigurationController.systemPreferences().url,
-        "glyphicons glyphicons-cogwheels",
+        "fa fa-cogs",
         menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.SYSTEM_PREFERENCES));
     systemPreferenceItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CONFIGURATION_PERMISSION) :: Nil);
     sidebarInstance.addMenuItem(systemPreferenceItem);
@@ -37,57 +37,57 @@
     val rolesItem = new ClickableMenuItem(
         "admin.configuration.roles.title",
         controllers.admin.routes.ConfigurationController.roles().url,
-        "glyphicons glyphicons-security-camera",
+        "fa fa-video-camera",
         menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.ROLES));
     rolesItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CONFIGURATION_PERMISSION) :: Nil);
     sidebarInstance.addMenuItem(rolesItem);
     
     val referenceDataSidebar = new HeaderMenuItem(
         "admin.configuration.reference_data.title", 
-        "glyphicons glyphicons-sampler",
+        "fa fa-tags",
         menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA))
     referenceDataSidebar.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CONFIGURATION_PERMISSION) :: Nil);
         
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.portfolio.title",
         controllers.admin.routes.ConfigurationPortfolioController.list().url,
-        "glyphicons glyphicons-wallet",
+        "fa fa-sticky-note",
         false)
     );
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.actorsandorgunits.title",
         controllers.admin.routes.ConfigurationActorAndOrgUnitController.list().url,
-        "glyphicons glyphicons-pawn",
+        "fa fa-child",
         false)
     );
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.governance.title",
         controllers.admin.routes.ConfigurationGovernanceController.list().url,
-        "glyphicons glyphicons-cluster",
+        "fa fa-university",
         false)
     );
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.requirements.title",
         controllers.admin.routes.ConfigurationRequirementController.list().url,
-        "glyphicons glyphicons-log-book",
+        "fa fa-newspaper-o",
         false)
     );
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.planning_packages.title",
         controllers.admin.routes.ConfigurationPlanningPackageController.list().url,
-        "glyphicons glyphicons-blog",
+        "fa fa-calendar-check-o",
         false)
     );
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.register.title",
         controllers.admin.routes.ConfigurationRegisterController.list().url,
-        "glyphicons glyphicons-inbox",
+        "fa fa-inbox",
         false)
     );
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.timesheetactivities.title",
         controllers.admin.routes.ConfigurationTimesheetActivityController.list().url,
-        "glyphicons glyphicons-clock",
+        "fa fa-clock-o",
         false)
     );
     sidebarInstance.addMenuItem(referenceDataSidebar)
@@ -95,7 +95,7 @@
     val customAttributeItem = new ClickableMenuItem(
         "admin.configuration.custom_attributes.title",
         controllers.admin.routes.ConfigurationCustomAttributeController.list().url,
-        "glyphicons glyphicons-magic",
+        "fa fa-magic",
         menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.CUSTOM_ATTRIBUTES));
     customAttributeItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) :: Nil);
     sidebarInstance.addMenuItem(customAttributeItem);
@@ -103,7 +103,7 @@
     val translationsItem = new ClickableMenuItem(
         "admin.configuration.translations.title",
         controllers.admin.routes.ConfigurationController.searchTranslations().url,
-        "glyphicons glyphicons-translate",
+        "fa fa-language",
         menuItemType.equals(controllers.admin.ConfigurationController.MenuItemType.TRANSLATIONS));
     translationsItem.setAuthorizedPermissions(Array(constants.IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION) :: Nil);
     sidebarInstance.addMenuItem(translationsItem);

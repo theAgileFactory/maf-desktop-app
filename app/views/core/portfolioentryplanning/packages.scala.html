@@ -48,10 +48,10 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllPackages(portfolioEntry.id)"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllPackages(portfolioEntry.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
                     &nbsp; <div class="btn-group">
                         <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicons glyphicons-plus glyphicons-panel"></i>
+                            <i class="fa fa-plus glyphicons-panel"></i>
                         </a>
                         <ul class="dropdown-menu pull-right text-left">
                             <li><a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_planning.packages.new.package")</a></li>
@@ -82,7 +82,7 @@
         <div class="pull-right small">
             @parts.Msg("core.portfolio_entry_planning.packages.gantt.lastupdate"):
             @parts.formats.display_date(new Date(), framework.utils.Utilities.getDefaultDatePattern() + " kk:mm") &nbsp;
-            <a href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)"><span class="glyphicons glyphicons-refresh"></span></a>
+            <a href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)"><span class="fa fa-refresh"></span></a>
         </div>&nbsp;
         <div class="gantt" id="packages-gantt" style="margin: 0px auto;"></div>
         <br/><br/>

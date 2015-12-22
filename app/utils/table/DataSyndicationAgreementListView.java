@@ -94,7 +94,7 @@ public class DataSyndicationAgreementListView {
                         if (dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.PENDING)) {
 
                             String content = "<a title=\"" + Msg.get("object.data_syndication_agreement.process.label")
-                                    + "\" href=\"%s\"><span class=\"glyphicons glyphicons-thumbs-up\"></span></a>";
+                                    + "\" href=\"%s\"><span class=\"fa fa-thumbs-up\"></span></a>";
 
                             String url = controllers.admin.routes.DataSyndicationController.processAgreement(dataSyndicationAgreementListView.id).url();
 
@@ -121,7 +121,7 @@ public class DataSyndicationAgreementListView {
 
                         case ONGOING:
                             content = MessageFormat.format(
-                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"glyphicons glyphicons-pause\"></span></a>",
+                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"fa fa-pause\"></span></a>",
                                     Msg.get("object.data_syndication_agreement.suspend.confirm"));
 
                             url = controllers.admin.routes.DataSyndicationController.suspendAgreement(dataSyndicationAgreementListView.id).url();
@@ -129,7 +129,7 @@ public class DataSyndicationAgreementListView {
                             return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
 
                         case SUSPENDED:
-                            content = "<a href=\"%s\"><span class=\"glyphicons glyphicons-play\"></span></a>";
+                            content = "<a href=\"%s\"><span class=\"fa fa-play\"></span></a>";
 
                             url = controllers.admin.routes.DataSyndicationController.restartAgreement(dataSyndicationAgreementListView.id).url();
 
@@ -156,7 +156,7 @@ public class DataSyndicationAgreementListView {
                                 || dataSyndicationAgreementListView.status.equals(DataSyndicationAgreement.Status.SUSPENDED)) {
 
                             String content = MessageFormat.format(
-                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"glyphicons glyphicons-ban\"></span></a>",
+                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"fa fa-ban\"></span></a>",
                                     Msg.get("object.data_syndication_agreement.cancel.confirm"));
 
                             String url = controllers.admin.routes.DataSyndicationController.cancelAgreement(dataSyndicationAgreementListView.id).url();

@@ -22,7 +22,7 @@
 @import play.api.i18n._
    <div class="form-group @if(elements.hasErrors) {has-error}">
        <label for="@elements.id" class="control-label">@elements.label
-       @if(isRequired(elements.field)){&nbsp;<i style="color: red;" class="glyphicons glyphicons-asterisk"></i>}
+       @if(isRequired(elements.field)){&nbsp;<i style="color: red;" class="fa fa-asterisk"></i>}
        </label>
        <div class="@elements.args.toMap.get('inputDivClass)">
    @if(elements.input.toString().contains("class=")) {

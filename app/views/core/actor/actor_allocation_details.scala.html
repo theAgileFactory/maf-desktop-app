@@ -45,13 +45,13 @@
             
             <div class="pull-right">
                 @if(!viewAllActivities) {
-                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, true).url"><span class="glyphicons glyphicons-resize-full glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, true).url"><span class="fa fa-expand glyphicons-panel"></span></a>
                 } else {
-                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, false).url"><span class="glyphicons glyphicons-resize-small glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, false).url"><span class="fa fa-compress glyphicons-panel"></span></a>
                 }
                 &nbsp;
                 @dynamic(constants.IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.ActorController.manageAllocatedActivity(actor.id)"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.ActorController.manageAllocatedActivity(actor.id)"><span class="fa fa-plus glyphicons-panel"></span></a>
                 }
             </div>
             

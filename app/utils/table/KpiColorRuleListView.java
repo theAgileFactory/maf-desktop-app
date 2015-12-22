@@ -47,9 +47,9 @@ public class KpiColorRuleListView {
                 @Override
                 public String apply(KpiColorRuleListView kpiColorRuleListView, Object value) {
                     return "<a href=\"" + controllers.admin.routes.KpiManagerController.changeRuleOrder(kpiColorRuleListView.id, false).url()
-                            + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;" + "<a href=\""
+                            + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
                             + controllers.admin.routes.KpiManagerController.changeRuleOrder(kpiColorRuleListView.id, true).url()
-                            + "\"><span class=\"glyphicons glyphicons-up-arrow\"></span></a>";
+                            + "\"><span class=\"fa fa-arrow-up\"></span></a>";
                 }
             });
             setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);

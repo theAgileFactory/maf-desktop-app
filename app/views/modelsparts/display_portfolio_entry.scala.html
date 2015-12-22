@@ -28,15 +28,15 @@
     }
 
     @if(!portfolioEntry.isPublic){
-        <i id='portfolio-entry-confidential' class='glyphicons glyphicons-eye-close' title='@parts.Msg("object.portfolio_entry.is_condfidential.label")'></i>&nbsp;
+        <i id='portfolio-entry-confidential' class='fa fa-eye-slash' title='@parts.Msg("object.portfolio_entry.is_condfidential.label")'></i>&nbsp;
     }
     
     @if(portfolioEntry.archived){
-        <i id='portfolio-entry-archived' class='glyphicons glyphicons-compressed' title='@parts.Msg("object.portfolio_entry.archived.label")'></i>&nbsp;
+        <i id='portfolio-entry-archived' class='fa fa-archive' title='@parts.Msg("object.portfolio_entry.archived.label")'></i>&nbsp;
     }
     
     @if(portfolioEntry.activeLifeCycleInstance.isConcept){
-        <i class='glyphicons glyphicons-lightbulb' title='@parts.Msg("object.portfolio_entry.is_concept.label")'></i>&nbsp;
+        <i class='fa fa-lightbulb-o' title='@parts.Msg("object.portfolio_entry.is_concept.label")'></i>&nbsp;
     }
     
     @portfolioEntry.getName

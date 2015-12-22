@@ -62,7 +62,7 @@ public class PortfolioEntryDependencyListView {
                     public String apply(PortfolioEntryDependencyListView portfolioEntryDependencyListView, Object value) {
                         String unassignConfirmationMessage = MessageFormat.format(
                                 "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">"
-                                        + "<span class=\"glyphicons glyphicons-remove-2\"></span></a>",
+                                        + "<span class=\"fa fa-times-2\"></span></a>",
                                 Msg.get("object.portfolio_entry.dependency.delete.confirmation"));
                         String url = controllers.core.routes.PortfolioEntryController.deleteDependency(portfolioEntryDependencyListView.portfolioEntryId,
                                 portfolioEntryDependencyListView.portfolioEntryDependency.id.sourcePortfolioEntryId,

@@ -293,10 +293,10 @@ public class PortfolioController extends Controller {
         SideBar sideBar = new SideBar();
 
         sideBar.addMenuItem(new ClickableMenuItem("core.portfolio.sidebar.overview.label", controllers.core.routes.PortfolioController.overview(portfolioId),
-                "glyphicons glyphicons-radar", currentType.equals(MenuItemType.OVERVIEW)));
+                "fa fa-tachometer", currentType.equals(MenuItemType.OVERVIEW)));
 
         sideBar.addMenuItem(new ClickableMenuItem("core.portfolio.sidebar.view.label", controllers.core.routes.PortfolioController.view(portfolioId, 0, 0),
-                "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.VIEW)));
+                "fa fa-search-plus", currentType.equals(MenuItemType.VIEW)));
 
         return sideBar;
 

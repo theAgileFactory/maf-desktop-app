@@ -95,7 +95,7 @@ public class WorkOrderListView {
 
                 addColumn("selectLineItemActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("selectLineItemActionLink", new StringFormatFormatter<WorkOrderListView>(
-                        "<a href=\"%s\"><span class=\"glyphicons glyphicons-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
+                        "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
                     @Override
                     public String convert(WorkOrderListView workOrderListView) {
                         return controllers.core.routes.PortfolioEntryFinancialController
@@ -107,7 +107,7 @@ public class WorkOrderListView {
 
                 addColumn("engageWorkOrder", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("engageWorkOrder", new StringFormatFormatter<WorkOrderListView>(
-                        "<a href=\"%s\"><span class=\"glyphicons glyphicons-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
+                        "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
                     @Override
                     public String convert(WorkOrderListView workOrderListView) {
                         return controllers.core.routes.PortfolioEntryFinancialController

@@ -25,8 +25,8 @@
 
 @sidebarInstance=@{
     val sidebarInstance=new SideBar();
-    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.user_manager.sidebar.search",controllers.admin.routes.UserManager.displayUserSearchForm(), "glyphicons glyphicons-search", currentType.equals(controllers.admin.UserManager.MenuItemType.SEARCH)));
-    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.user_manager.sidebar.create",controllers.admin.routes.UserManager.displayUserCreationForm(), "glyphicons glyphicons-user-add", currentType.equals(controllers.admin.UserManager.MenuItemType.CREATE)));
+    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.user_manager.sidebar.search",controllers.admin.routes.UserManager.displayUserSearchForm(), "fa fa-search", currentType.equals(controllers.admin.UserManager.MenuItemType.SEARCH)));
+    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.user_manager.sidebar.create",controllers.admin.routes.UserManager.displayUserCreationForm(), "fa fa-user-add", currentType.equals(controllers.admin.UserManager.MenuItemType.CREATE)));
     sidebarInstance.addMenuItem(new ClickableMenuItem("admin.user_manager.sidebar.export",controllers.admin.routes.UserManager.exportAsExcel(), "filetypes filetypes-xlsx", false));
     sidebarInstance;
 }

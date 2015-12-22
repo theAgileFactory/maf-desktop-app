@@ -840,83 +840,83 @@ public class PortfolioEntryController extends Controller {
 
         if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.overview.label",
-                    controllers.core.routes.PortfolioEntryController.overview(portfolioEntryId), "glyphicons glyphicons-radar",
+                    controllers.core.routes.PortfolioEntryController.overview(portfolioEntryId), "fa fa-tachometer",
                     currentType.equals(MenuItemType.OVERVIEW)));
         }
 
         sideBar.addMenuItem(
                 new ClickableMenuItem("core.portfolio_entry.sidebar.view.label", controllers.core.routes.PortfolioEntryController.view(portfolioEntryId, 0),
-                        "glyphicons glyphicons-zoom-in", currentType.equals(MenuItemType.VIEW)));
+                        "fa fa-search-plus", currentType.equals(MenuItemType.VIEW)));
 
         if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
-            HeaderMenuItem financialMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.financial.label", "glyphicons glyphicons-coins",
+            HeaderMenuItem financialMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.financial.label", "fa fa-money",
                     currentType.equals(MenuItemType.FINANCIAL));
 
             financialMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.financial.details.label",
-                    controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntryId), "glyphicons glyphicons-zoom-in", false));
+                    controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntryId), "fa fa-search-plus", false));
 
             financialMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.financial.status.label",
-                    controllers.core.routes.PortfolioEntryFinancialController.status(portfolioEntryId), "glyphicons glyphicons-charts", false));
+                    controllers.core.routes.PortfolioEntryFinancialController.status(portfolioEntryId), "fa fa-bar-chart", false));
 
             sideBar.addMenuItem(financialMenu);
         }
 
         sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.stakeholders.label",
-                controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntryId), "glyphicons glyphicons-group",
+                controllers.core.routes.PortfolioEntryStakeholderController.index(portfolioEntryId), "fa fa-users",
                 currentType.equals(MenuItemType.STAKEHOLDERS)));
 
         if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
             sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.governance.label",
-                    controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntryId), "glyphicons glyphicons-cluster",
+                    controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntryId), "fa fa-university",
                     currentType.equals(MenuItemType.GOVERNANCE)));
 
-            HeaderMenuItem deliveryMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.delivery.label", "glyphicons glyphicons-cargo",
+            HeaderMenuItem deliveryMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.delivery.label", "fa fa-industry",
                     currentType.equals(MenuItemType.DELIVERY));
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.deliverables.label",
-                    controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntryId), "glyphicons glyphicons-package", false));
+                    controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntryId), "fa fa-cubes", false));
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.requirements.label",
-                    controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntryId), "glyphicons glyphicons-log-book", false));
+                    controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntryId), "fa fa-newspaper-o", false));
 
             deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.requirements_status.label",
-                    controllers.core.routes.PortfolioEntryDeliveryController.requirementsStatus(portfolioEntryId), "glyphicons glyphicons-charts", false));
+                    controllers.core.routes.PortfolioEntryDeliveryController.requirementsStatus(portfolioEntryId), "fa fa-bar-chart", false));
 
             if (portfolioEntry.portfolioEntryType != null && !portfolioEntry.portfolioEntryType.isRelease) {
                 deliveryMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.delivery.iterations.label",
-                        controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntryId), "glyphicons glyphicons-history", false));
+                        controllers.core.routes.PortfolioEntryDeliveryController.iterations(portfolioEntryId), "fa fa-history", false));
             }
 
             sideBar.addMenuItem(deliveryMenu);
 
-            HeaderMenuItem planningMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.planning.label", "glyphicons glyphicons-calendar",
+            HeaderMenuItem planningMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.planning.label", "fa fa-calendar",
                     currentType.equals(MenuItemType.PLANNING));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.overview.label",
-                    controllers.core.routes.PortfolioEntryPlanningController.overview(portfolioEntryId), "glyphicons glyphicons-radar", false));
+                    controllers.core.routes.PortfolioEntryPlanningController.overview(portfolioEntryId), "fa fa-tachometer", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.packages.label",
-                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId), "glyphicons glyphicons-blog", false));
+                    controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntryId), "fa fa-calendar-check-o", false));
 
             planningMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.planning.resources.label",
                     controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryId), "fa fa-book", false));
 
             sideBar.addMenuItem(planningMenu);
 
-            HeaderMenuItem reportingMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.status_reporting.label", "glyphicons glyphicons-notes",
+            HeaderMenuItem reportingMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.status_reporting.label", "fa fa-file-text",
                     currentType.equals(MenuItemType.REPORTING));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.registers.label",
                     controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntryId, 0, 0, 0, false, false),
-                    "glyphicons glyphicons-inbox", false));
+                    "fa fa-inbox", false));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.events.label",
-                    controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId), "glyphicons glyphicons-bullhorn", false));
+                    controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId), "fa fa-bullhorn", false));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.timesheets.label",
-                    controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntryId), "glyphicons glyphicons-clock", false));
+                    controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntryId), "fa fa-clock-o", false));
 
             sideBar.addMenuItem(reportingMenu);
 
@@ -924,17 +924,17 @@ public class PortfolioEntryController extends Controller {
 
         if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
-            HeaderMenuItem integrationMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.integration.label", "glyphicons glyphicons-cloud",
+            HeaderMenuItem integrationMenu = new HeaderMenuItem("core.portfolio_entry.sidebar.integration.label", "fa fa-cloud",
                     currentType.equals(MenuItemType.INTEGRATION));
             integrationMenu.setIsImportant(true);
             sideBar.addMenuItem(integrationMenu);
 
             integrationMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.integration.plugins.label",
-                    controllers.core.routes.PortfolioEntryController.pluginConfig(portfolioEntryId), "glyphicons glyphicons-remote-control", false));
+                    controllers.core.routes.PortfolioEntryController.pluginConfig(portfolioEntryId), "fa fa-rss", false));
 
             if (isDataSyndicationActive) {
                 integrationMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.integration.data_syndication.label",
-                        controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntryId), "glyphicons glyphicons-share-alt", false));
+                        controllers.core.routes.PortfolioEntryDataSyndicationController.index(portfolioEntryId), "fa fa-share-alt", false));
             }
 
         }

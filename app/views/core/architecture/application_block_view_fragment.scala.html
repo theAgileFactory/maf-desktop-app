@@ -79,7 +79,7 @@
                         <div class="panel cockpit-box cockpit-box-primary">
                             <div class="row header">
                                 <div class="col-xs-offset-1 col-xs-3 icon">
-                                    <span class="glyphicons glyphicons-hdd"></span>
+                                    <span class="fa fa-database"></span>
                                 </div>
                                 <div class="col-xs-8 value">
                                     <p>@ab.name</p>
@@ -106,11 +106,11 @@
     } else {
         @if(applicationBlock == null) {
             <div class="alert alert-info">
-                <span class="glyphicons glyphicons-circle-info"></span>
+                <span class="fa fa-info-circle"></span>
                 @parts.Msg("core.architecture.index.application_block.no_application_block.info")
             </div>
             <a href="#" id="create-first-application-block" class="btn btn btn-success">
-                <span class="glyphicons glyphicons-hdd"></span> @parts.Msg("core.architecture.index.application_block.no_application_block.create")
+                <span class="fa fa-database"></span> @parts.Msg("core.architecture.index.application_block.no_application_block.create")
             </a>
             <script>
             $("#create-first-application-block").click(function(e) {
@@ -131,7 +131,7 @@
                 
                 <div class="pull-right">
                     @restrict(la(as(constants.IMafConstants.APPLICATION_BLOCK_EDIT_ALL_PERMISSION))) {
-                        <a href="#" id="application-block-edit-link"><span class="glyphicons glyphicons-edit glyphicons-panel"></span></a>
+                        <a href="#" id="application-block-edit-link"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
                         <script>
                         $("#application-block-edit-link").click(function(e) {
                             e.preventDefault();

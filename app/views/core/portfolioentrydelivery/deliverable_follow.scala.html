@@ -60,7 +60,7 @@
                 
                 <div class='form-group @if(followDeliverableForm("otherDeliverable").hasErrors) {has-error}'>
                     <label for="otherDeliverable" class="control-label">
-                        @parts.Msg.asString("object.portfolio_entry.deliverable.label")&nbsp;<i class="glyphicons glyphicons-asterisk" style="color: red;"></i>
+                        @parts.Msg.asString("object.portfolio_entry.deliverable.label")&nbsp;<i class="fa fa-asterisk" style="color: red;"></i>
                     </label>
                     <select name="otherDeliverable" id="otherDeliverable" class="form-control" disabled></select>
                     <span class="help-block"><strong>@{followDeliverableForm("otherDeliverable").error.map { error => parts.Msg(error.message) }}</strong></span>

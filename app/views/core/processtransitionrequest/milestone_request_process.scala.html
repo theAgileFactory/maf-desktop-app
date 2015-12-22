@@ -84,7 +84,7 @@
                         <br>
                         <p class="text-center">
                             <a href="@framework.utils.Utilities.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary">
-                                <i class="glyphicons glyphicons-download"></i> @parts.Msg("core.process_transition_request.process_milestone_request.panel.request.download")
+                                <i class="fa fa-arrow-circle-o-down"></i> @parts.Msg("core.process_transition_request.process_milestone_request.panel.request.download")
                             </a>
                         </p>
                     }
@@ -167,11 +167,11 @@
                                 @helper.textarea(requestForm("gateComments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.comments.label"))
 
                                 <button data-dismiss="modal" class="btn btn-success" type="submit">
-                                    <i class="glyphicons glyphicons-play"></i>&nbsp;@parts.Msg("button.accept")
+                                    <i class="fa fa-play"></i>&nbsp;@parts.Msg("button.accept")
                                 </button>
 
                                 <a class="btn btn-danger" href="@controllers.core.routes.ProcessTransitionRequestController.rejectMilestoneRequest(portfolioEntry.id, request.id).url">
-                                    <i class="glyphicons glyphicons-remove"></i>&nbsp;@parts.Msg("button.reject")
+                                    <i class="fa fa-times"></i>&nbsp;@parts.Msg("button.reject")
                                 </a>
 
                             </fieldset>

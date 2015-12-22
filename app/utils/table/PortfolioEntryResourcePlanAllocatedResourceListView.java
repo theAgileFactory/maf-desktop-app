@@ -61,11 +61,11 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
                     public String apply(PortfolioEntryResourcePlanAllocatedResourceListView allocatedResourceListView, Object value) {
                         switch (allocatedResourceListView.type) {
                         case ACTOR:
-                            return "<span class=\"glyphicons glyphicons-user\"></span>";
+                            return "<span class=\"fa fa-user\"></span>";
                         case COMPETENCY:
-                            return "<span class=\"glyphicons glyphicons-piano\"></span>";
+                            return "<span class=\"fa fa-graduation-cap\"></span>";
                         case ORG_UNIT:
-                            return "<span class=\"glyphicons glyphicons-building\"></span>";
+                            return "<span class=\"fa fa-building\"></span>";
                         default:
                             return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
                         }
@@ -114,7 +114,7 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
 
                 addColumn("reallocate", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("reallocate", new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>(
-                        "<a href=\"%s\"><span class=\"glyphicons glyphicons-parents\"></span></a>",
+                        "<a href=\"%s\"><span class=\"fa fa-user-times\"></span></a>",
                         new StringFormatFormatter.Hook<PortfolioEntryResourcePlanAllocatedResourceListView>() {
                             @Override
                             public String convert(PortfolioEntryResourcePlanAllocatedResourceListView allocatedResourceListView) {

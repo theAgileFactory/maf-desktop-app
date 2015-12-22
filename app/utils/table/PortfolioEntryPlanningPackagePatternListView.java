@@ -48,9 +48,9 @@ public class PortfolioEntryPlanningPackagePatternListView {
                     return "<a href=\""
                             + controllers.admin.routes.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternListView.id, false)
                                     .url()
-                            + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;" + "<a href=\""
+                            + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
                             + controllers.admin.routes.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternListView.id, true).url()
-                            + "\"><span class=\"glyphicons glyphicons-up-arrow\"></span></a>";
+                            + "\"><span class=\"fa fa-arrow-up\"></span></a>";
                 }
             });
             setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);

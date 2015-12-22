@@ -88,7 +88,7 @@ public class MessageListView {
                 @Override
                 public String apply(MessageListView messageListView, Object value) {
                     if (!messageListView.isRead) {
-                        String message = "<a href=\"%s\"><span class=\"glyphicons glyphicons-check\"></span></a>";
+                        String message = "<a href=\"%s\"><span class=\"fa fa-check-square-o\"></span></a>";
                         String url = controllers.routes.Application.markNotificationAsRead(messageListView.id).url();
                         return views.html.framework_views.parts.formats.display_with_format.render(url, message).body();
                     } else {

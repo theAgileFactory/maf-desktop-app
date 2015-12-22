@@ -127,7 +127,7 @@ public class DeliverableListView {
                         if (deliverableListView.isDelegated) {
                             String unassignConfirmationMessage = MessageFormat.format(
                                     "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">"
-                                            + "<span class=\"glyphicons glyphicons-remove-2\"></span></a>",
+                                            + "<span class=\"fa fa-times-2\"></span></a>",
                                     Msg.get("core.portfolio_entry_delivery.deliverable.unfollow.confirmation"));
                             String url = controllers.core.routes.PortfolioEntryDeliveryController
                                     .unfollowDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();

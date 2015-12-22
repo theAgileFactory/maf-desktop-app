@@ -25,10 +25,10 @@
 
 @sidebarInstance=@{
     val sidebarInstance = new SideBar();
-    sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.details",controllers.admin.routes.MyAccount.display(), "glyphicons glyphicons-zoom-in", currentType.equals(controllers.admin.MyAccount.MenuItemType.VIEW))); 
-    sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_data",controllers.admin.routes.MyAccount.editBasicData(), "glyphicons glyphicons-nameplate", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_DATA))); 
+    sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.details",controllers.admin.routes.MyAccount.display(), "fa fa-search-plus", currentType.equals(controllers.admin.MyAccount.MenuItemType.VIEW))); 
+    sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_data",controllers.admin.routes.MyAccount.editBasicData(), "fa fa-street-view", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_DATA))); 
     if(masterMode){
-       sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_password", controllers.admin.routes.MyAccount.editPassword(), "glyphicons glyphicons-retweet-2", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_PASSWORD)));
+       sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_password", controllers.admin.routes.MyAccount.editPassword(), "fa fa-retweet", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_PASSWORD)));
     }
     if(selfEmailUpdate){
        sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_email", controllers.admin.routes.MyAccount.editEmail(), "social social-e-mail", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_MAIL)));

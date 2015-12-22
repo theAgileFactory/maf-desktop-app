@@ -43,11 +43,11 @@
                     </div>
                     <div class="btn-group btn-group-justified" role="group">
                         <div class="btn-group" role="group">
-                          <a type="button" class="btn btn-light" href="@controllers.admin.routes.PluginManagerController.pluginDefinitionDetails(plugin.getRight.getIdentifier)"><i class="glyphicons glyphicons-zoom-in"></i> @parts.Msg("admin.plugin_manager.available_plugins.details.label")</a>
+                          <a type="button" class="btn btn-light" href="@controllers.admin.routes.PluginManagerController.pluginDefinitionDetails(plugin.getRight.getIdentifier)"><i class="fa fa-search-plus"></i> @parts.Msg("admin.plugin_manager.available_plugins.details.label")</a>
                         </div>
                         @if(plugin.getLeft) {
                             <div class="btn-group" role="group">
-                                <a type="button" class="btn btn-primary" href="@controllers.admin.routes.PluginManagerController.displayRegistrationForm(plugin.getRight.getIdentifier)"><i class="glyphicons glyphicons-circle-plus"></i> @parts.Msg("admin.plugin_manager.available_plugins.activate.label")</a>
+                                <a type="button" class="btn btn-primary" href="@controllers.admin.routes.PluginManagerController.displayRegistrationForm(plugin.getRight.getIdentifier)"><i class="fa fa-plus-circle"></i> @parts.Msg("admin.plugin_manager.available_plugins.activate.label")</a>
                             </div>
                         }
                     </div>

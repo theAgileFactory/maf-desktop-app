@@ -45,9 +45,9 @@ public class KpiDefinitionListView {
                 public String apply(KpiDefinitionListView kpiDefinitionListView, Object value) {
                     if (kpiDefinitionListView.isDisplayed) {
                         return "<a href=\"" + controllers.admin.routes.KpiManagerController.changeOrder(kpiDefinitionListView.id, false).url()
-                                + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;" + "<a href=\""
+                                + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
                                 + controllers.admin.routes.KpiManagerController.changeOrder(kpiDefinitionListView.id, true).url()
-                                + "\"><span class=\"glyphicons glyphicons-up-arrow\"></span></a>";
+                                + "\"><span class=\"fa fa-arrow-up\"></span></a>";
                     } else {
                         return "";
                     }

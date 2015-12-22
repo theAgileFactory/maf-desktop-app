@@ -99,7 +99,7 @@ public class PurchaseOrderLineItemListView {
 
                 addColumn("selectActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("selectActionLink", new StringFormatFormatter<PurchaseOrderLineItemListView>(
-                        "<a href=\"%s\"><span class=\"glyphicons glyphicons-lock\"></span></a>",
+                        "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>",
                         new StringFormatFormatter.Hook<PurchaseOrderLineItemListView>() {
                             @Override
                             public String convert(PurchaseOrderLineItemListView purchaseOrderLineItemListView) {

@@ -95,8 +95,8 @@
                 </div>
                 <div class="panel-body">
                     <p class="text-center">
-                        <a class="btn btn-success @startDisabled" href="@controllers.admin.routes.PluginManagerController.startPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-play"></i>&nbsp;@parts.Msg("button.start")</a>
-                        <a class="btn btn-danger @stopDisabled" href="@controllers.admin.routes.PluginManagerController.stopPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-stop"></i>&nbsp;@parts.Msg("button.stop")</a>
+                        <a class="btn btn-success @startDisabled" href="@controllers.admin.routes.PluginManagerController.startPlugin(pluginConfigurationId).url"><i class="fa fa-play"></i>&nbsp;@parts.Msg("button.start")</a>
+                        <a class="btn btn-danger @stopDisabled" href="@controllers.admin.routes.PluginManagerController.stopPlugin(pluginConfigurationId).url"><i class="fa fa-stop"></i>&nbsp;@parts.Msg("button.stop")</a>
                     </p>
                     @if(pluginInfo.getActionDescriptors()!=null){
                     <hr/>
@@ -112,7 +112,7 @@
                     }
                     <hr/>
                     <p class="text-center">
-                        <a onclick="return maf_confirmRemoveRegistration();" class="btn btn-danger @unregisterDisabled" href="@controllers.admin.routes.PluginManagerController.unregisterPlugin(pluginConfigurationId).url"><i class="glyphicons glyphicons-bin"></i>&nbsp;@parts.Msg("button.delete")</a>
+                        <a onclick="return maf_confirmRemoveRegistration();" class="btn btn-danger @unregisterDisabled" href="@controllers.admin.routes.PluginManagerController.unregisterPlugin(pluginConfigurationId).url"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("button.delete")</a>
                         <script type="text/javascript">
                             function maf_confirmRemoveRegistration(){
                                 return window.confirm("@parts.Msg("admin.plugin_manager.configuration.delete.confirmation")");
@@ -139,14 +139,14 @@
                                     <input type="file" id="import" name="import">
                                 </div>
                                 <button style="color: #558ed5;" id="import-configuration" id="upload" type="submit" class="btn" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.import.help")">
-                                    <i class="glyphicons glyphicons-disk-open glyphicons-panel"></i>
+                                    <i class="fa fa-upload glyphicons-panel"></i>
                                 </button>
                                 <script>$('#import-configuration').tooltip();</script>
                                 
                                 &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
                                 
                                 <a class="btn" id="export-configuration" href="@controllers.admin.routes.PluginManagerController.exportConfiguration(pluginConfigurationId)" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.configuration.export.help")">
-                                    <i class="glyphicons glyphicons-disk-save glyphicons-panel"></i>
+                                    <i class="fa fa-download glyphicons-panel"></i>
                                 </a>
                                 <script>$('#export-configuration').tooltip();</script>
                                 
@@ -177,11 +177,11 @@
                 <div class="panel-heading">
                     @parts.Msg("admin.plugin_manager.configuration.view.panel.log.title")
                     <div class="pull-right">
-                        <a id="refreshLogs" href="#" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.log.refresh.help")"><i class="glyphicons glyphicons-refresh glyphicons-panel"></i></a>&nbsp;&nbsp;
+                        <a id="refreshLogs" href="#" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.log.refresh.help")"><i class="fa fa-refresh glyphicons-panel"></i></a>&nbsp;&nbsp;
                         <script>
                             $('#refreshLogs').tooltip();
                         </script>
-                        <a id="flushLogs" href="@controllers.admin.routes.PluginManagerController.flushLogs(pluginConfigurationId).url" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.log.flush.help")"><i class="glyphicons glyphicons-cleaning glyphicons-panel"></i></a>
+                        <a id="flushLogs" href="@controllers.admin.routes.PluginManagerController.flushLogs(pluginConfigurationId).url" data-toggle="tooltip" title="@parts.Msg("admin.plugin_manager.configuration.view.panel.log.flush.help")"><i class="fa fa-eraser glyphicons-panel"></i></a>
                         <script>
                             $('#flushLogs').tooltip();
                         </script>

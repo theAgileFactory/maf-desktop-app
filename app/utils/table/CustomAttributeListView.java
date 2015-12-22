@@ -54,9 +54,9 @@ public class CustomAttributeListView {
                     public String apply(CustomAttributeListView customAttributeListView, Object value) {
                         return "<a href=\""
                                 + controllers.admin.routes.ConfigurationCustomAttributeController.changeOrder(customAttributeListView.id, false).url()
-                                + "\"><span class=\"glyphicons glyphicons-down-arrow\"></span></a>&nbsp;" + "<a href=\""
+                                + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
                                 + controllers.admin.routes.ConfigurationCustomAttributeController.changeOrder(customAttributeListView.id, true).url()
-                                + "\"><span class=\"glyphicons glyphicons-up-arrow\"></span></a>";
+                                + "\"><span class=\"fa fa-arrow-up\"></span></a>";
                     }
                 });
                 setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -87,7 +87,7 @@ public class CustomAttributeListView {
                     public String apply(CustomAttributeListView customAttributeListView, Object value) {
                         if (ConfigurationCustomAttributeController.itemizableAttributeTypes.contains(customAttributeListView.attributeType.name())) {
                             return "<a href=\"" + controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttributeListView.id).url()
-                                    + "\"><span class=\"glyphicons glyphicons-list\"></span></a>";
+                                    + "\"><span class=\"fa fa-list\"></span></a>";
                         } else {
                             return null;
                         }

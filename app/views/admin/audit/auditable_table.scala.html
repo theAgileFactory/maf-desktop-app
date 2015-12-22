@@ -44,11 +44,11 @@
 })
 
 @table.setColumnFormatter("deleteActionLink", {(anObject: framework.services.audit.Auditable, objectClass: Option[java.lang.String])   =>  {
-            "<a onclick=\"return maf_confirmDelete('"+anObject.toString()+"');\" href=\""+controllers.admin.routes.AuditableController.deleteAuditable(objectClass.get)+"\" class=\"glyphicons glyphicons-bin\"></a>"
+            "<a onclick=\"return maf_confirmDelete('"+anObject.toString()+"');\" href=\""+controllers.admin.routes.AuditableController.deleteAuditable(objectClass.get)+"\" class=\"fa fa-trash\"></a>"
         }
 })
 @table.setColumnFormatter("editActionLink", {(anObject: framework.services.audit.Auditable, objectClass: Option[java.lang.String])   =>  {
-            "<a  href=\""+controllers.admin.routes.AuditableController.editAuditable(objectClass.get)+"\" class=\"glyphicons glyphicons-edit\"></a>"
+            "<a  href=\""+controllers.admin.routes.AuditableController.editAuditable(objectClass.get)+"\" class=\"fa fa-pencil-square-o\"></a>"
         }
 })
 
@@ -65,9 +65,9 @@
         <div class="panel-heading">
             @parts.Msg("admin.auditable.list.title")
             <div class="pull-right">
-                <a href="@controllers.admin.routes.AuditableController.createAuditable()"><span class="glyphicons glyphicons-plus glyphicons-panel"></span></a>
+                <a href="@controllers.admin.routes.AuditableController.createAuditable()"><span class="fa fa-plus glyphicons-panel"></span></a>
                 &nbsp;
-                <a href="#" id="exportAuditLog"><span class="glyphicons glyphicons-download-alt glyphicons-panel"></span></a>
+                <a href="#" id="exportAuditLog"><span class="fa fa-arrow-circle-o-down-alt glyphicons-panel"></span></a>
             </div>
         </div>
         <div class="panel-body">
@@ -95,7 +95,7 @@
         	}
         	</p>
         	<p>
-            <a href="@controllers.admin.routes.AuditableController.downloadApplicationLog()" class="btn btn-primary"><i class="glyphicons glyphicons-disk-save"></i>&nbsp;@parts.Msg("admin.auditable.download.label")</a>
+            <a href="@controllers.admin.routes.AuditableController.downloadApplicationLog()" class="btn btn-primary"><i class="fa fa-download"></i>&nbsp;@parts.Msg("admin.auditable.download.label")</a>
             </p>
         </div>
     </div>

@@ -992,20 +992,20 @@ public class PluginManagerController extends Controller {
 
         SideBar sideBar = new SideBar();
 
-        HeaderMenuItem pluginsMenu = new HeaderMenuItem("admin.integration.sidebar.plugins", "glyphicons glyphicons-remote-control",
+        HeaderMenuItem pluginsMenu = new HeaderMenuItem("admin.integration.sidebar.plugins", "fa fa-rss",
                 currentType.equals(MenuItemType.PLUGINS));
         pluginsMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION));
         sideBar.addMenuItem(pluginsMenu);
 
         pluginsMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.plugins.active_plugins",
-                controllers.admin.routes.PluginManagerController.index(), "glyphicons glyphicons-electrical-plug", false));
+                controllers.admin.routes.PluginManagerController.index(), "fa fa-plug", false));
 
         pluginsMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.plugins.available_plugins",
-                controllers.admin.routes.PluginManagerController.registration(), "glyphicons glyphicons-shopping-bag", false));
+                controllers.admin.routes.PluginManagerController.registration(), "fa fa-shopping-bag", false));
 
         if (isDataSyndicationActive) {
 
-            HeaderMenuItem dataSyndicationMenu = new HeaderMenuItem("admin.integration.sidebar.data_syndication", "glyphicons glyphicons-share-alt",
+            HeaderMenuItem dataSyndicationMenu = new HeaderMenuItem("admin.integration.sidebar.data_syndication", "fa fa-share-alt",
                     currentType.equals(MenuItemType.DATA_SYNDICATION));
             dataSyndicationMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.PARTNER_SYNDICATION_PERMISSION));
             sideBar.addMenuItem(dataSyndicationMenu);
@@ -1018,18 +1018,18 @@ public class PluginManagerController extends Controller {
 
         }
 
-        HeaderMenuItem apiMenu = new HeaderMenuItem("admin.integration.sidebar.api", "glyphicons glyphicons-transfer", currentType.equals(MenuItemType.API));
+        HeaderMenuItem apiMenu = new HeaderMenuItem("admin.integration.sidebar.api", "fa fa-exchange", currentType.equals(MenuItemType.API));
         apiMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
         sideBar.addMenuItem(apiMenu);
 
         apiMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.api.keys", controllers.admin.routes.ApiManagerController.index(),
-                "glyphicons glyphicons-keys", false));
+                "fa fa-key", false));
 
         apiMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.api.browser", controllers.admin.routes.ApiManagerController.displayBrowser(),
-                "glyphicons glyphicons-global", false));
+                "fa fa-globe", false));
 
         ClickableMenuItem sharedStorageMenu = new ClickableMenuItem("admin.integration.sidebar.shared_storage",
-                controllers.admin.routes.SharedStorageManagerController.index(), "glyphicons glyphicons-inbox-in",
+                controllers.admin.routes.SharedStorageManagerController.index(), "fa fa-inbox-in",
                 currentType.equals(MenuItemType.SHARED_STORAGE));
         sharedStorageMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
         sideBar.addMenuItem(sharedStorageMenu);

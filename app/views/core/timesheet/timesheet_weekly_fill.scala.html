@@ -87,14 +87,14 @@
          
          <div class="col-md-3 text-right">
          
-            <a id='timesheet-copy-link' class="btn btn-primary" data-toggle="tooltip" title="@parts.Msg("core.timesheet.fill.weekly.copy.title")" href="javascript: maf_copy()" @if(!report.isEditable){disabled}><i class="glyphicons glyphicons-more-windows"></i></a>
+            <a id='timesheet-copy-link' class="btn btn-primary" data-toggle="tooltip" title="@parts.Msg("core.timesheet.fill.weekly.copy.title")" href="javascript: maf_copy()" @if(!report.isEditable){disabled}><i class="fa fa-clone"></i></a>
             <script>
                 $('#timesheet-copy-link').tooltip();
             </script>
             
             <div class="btn-group">
                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button" @if(!report.isEditable){disabled}>
-                    <i class="glyphicons glyphicons-plus"></i>
+                    <i class="fa fa-plus"></i>
                 </button>
                 <ul class="dropdown-menu pull-right text-left">
                     @if(portfolioEntries.size() == 0) {
@@ -190,7 +190,7 @@
                                 <td id='timesheet-entry-total-@id' style="vertical-align:middle" class="text-center active">@entry.getTotal</td>
                                 
                                 <td style="vertical-align:middle" class="text-center">
-                                    <button type="button" onclick='javascript: maf_deleteEntry(@id)' class="btn btn-default" @if(!report.isEditable){disabled}><span class="glyphicons glyphicons-bin"></span></button>
+                                    <button type="button" onclick='javascript: maf_deleteEntry(@id)' class="btn btn-default" @if(!report.isEditable){disabled}><span class="fa fa-trash"></span></button>
                                 </td>
                             
                                 <script>
@@ -303,7 +303,7 @@
                 
             _initiativeRowHtml += ""
                 +"    <td id='timesheet-entry-total-" + cLastEntryId + "' style='vertical-align:middle' class='text-center active'>0</td>"
-                +"    <td style='vertical-align:middle' class='text-center'><button type='button' class='btn btn-default' onclick='javascript: maf_deleteEntry(" + cLastEntryId + ")'><span class='glyphicons glyphicons-bin'></span></button></td>"
+                +"    <td style='vertical-align:middle' class='text-center'><button type='button' class='btn btn-default' onclick='javascript: maf_deleteEntry(" + cLastEntryId + ")'><span class='fa fa-trash'></span></button></td>"
                 +"</tr>";
 
             $("#timesheet-table-tbody").append(_initiativeRowHtml);
@@ -395,7 +395,7 @@
                 
             _initiativeRowHtml += ""
                 +"    <td id='timesheet-entry-total-" + cLastEntryId + "' style='vertical-align:middle' class='text-center active'>0</td>"
-                +"    <td style='vertical-align:middle' class='text-center'><button type='button' class='btn btn-default' onclick='javascript: maf_deleteEntry(" + cLastEntryId + ")'><span class='glyphicons glyphicons-bin'></span></button></td>"
+                +"    <td style='vertical-align:middle' class='text-center'><button type='button' class='btn btn-default' onclick='javascript: maf_deleteEntry(" + cLastEntryId + ")'><span class='fa fa-trash'></span></button></td>"
                 +"</tr>";
 
             $("#timesheet-table-tbody").append(_initiativeRowHtml);

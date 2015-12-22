@@ -35,13 +35,13 @@
     sidebarInstance.addMenuItem(new ClickableMenuItem(
         "topmenubar.roadmap.menu.label",
         controllers.core.routes.RoadmapController.index().url,
-        "glyphicons glyphicons-road",
+        "fa fa-road",
         true)
     );
     sidebarInstance.addMenuItem(new ClickableMenuItem(
         "core.roadmap.planning.title",
         controllers.core.routes.RoadmapController.viewPlanning().url,
-        "glyphicons glyphicons-calendar",
+        "fa fa-calendar",
         false)
     );
     sidebarInstance
@@ -76,11 +76,11 @@
     } else {
     
         <div class="alert alert-info">
-            <span class="glyphicons glyphicons-circle-info"></span>
+            <span class="fa fa-info-circle"></span>
             @parts.Msg("core.roadmap.no_portfolio_entry.info")
         </div>
         <a href="@controllers.core.routes.PortfolioEntryController.create().url" class="btn btn-success">
-            <span class="glyphicons glyphicons-wallet"></span> @parts.Msg("core.roadmap.no_portfolio_entry.create")
+            <span class="fa fa-sticky-note"></span> @parts.Msg("core.roadmap.no_portfolio_entry.create")
         </a>
         
     }
