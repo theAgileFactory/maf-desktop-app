@@ -72,10 +72,10 @@
                         
                         <div class="pull-right">
                             @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                                <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id, portfolioEntry.lastPortfolioEntryReport.id).url"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                                <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id, portfolioEntry.lastPortfolioEntryReport.id).url"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                                 &nbsp;&nbsp;
                             }
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url"><span class="fa fa-external-linkglyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url"><span class="fa fa-external-linkfa-lg"></span></a>
                         </div>
                     </div>
             
@@ -113,7 +113,7 @@
                     @parts.Msg("core.portfolio_entry.overview.milestones.panel.title")
                     
                     <div class="pull-right">
-                        <a href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url"><span class="fa fa-external-linkglyphicons-panel"></span></a>
+                        <a href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url"><span class="fa fa-external-linkfa-lg"></span></a>
                     </div>
                 </div>
         

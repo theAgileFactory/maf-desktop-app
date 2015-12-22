@@ -39,7 +39,7 @@
             <strong>@agreementLink.agreement.masterPartner.customerName</strong> / @parts.Msg("object.data_syndication_agreement_item." + agreementItem.dataType + "." + agreementItem.descriptor + ".label")
             <div class="pull-right">
                 @if(displayExcelLink) {
-                    <a href="@controllers.routes.Application.exportDataSyndicationAsExcel(play.mvc.Http.Context.current().request().uri(), agreementLink.id, agreementItem.id)"><span class="fa fa-download glyphicons-panel"></span></a>
+                    <a href="@controllers.routes.Application.exportDataSyndicationAsExcel(play.mvc.Http.Context.current().request().uri(), agreementLink.id, agreementItem.id)"><span class="fa fa-download fa-lg"></span></a>
                 }
             </div>
         </div>

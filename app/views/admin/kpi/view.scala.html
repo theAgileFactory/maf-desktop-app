@@ -49,10 +49,10 @@
                     @parts.Msg("admin.kpi.view.details.title")
                     
                     <div class="pull-right">
-                        <a href="@controllers.admin.routes.KpiManagerController.edit(kpiDefinition.id).url"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                        <a href="@controllers.admin.routes.KpiManagerController.edit(kpiDefinition.id).url"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                         @if(!kpi.isStandard) {
                             &nbsp;&nbsp;
-                            <a onclick="return maf_confirmDelete();" href="@controllers.admin.routes.KpiManagerController.delete(kpiDefinition.id)"><span class="fa fa-trash glyphicons-panel"></span></a>
+                            <a onclick="return maf_confirmDelete();" href="@controllers.admin.routes.KpiManagerController.delete(kpiDefinition.id)"><span class="fa fa-trash fa-lg"></span></a>
                             <script type="text/javascript">
                                 function maf_confirmDelete(){
                                     return window.confirm("@parts.Msg("admin.kpi.delete.confirm.message")");
@@ -117,18 +117,18 @@
                         
                         <div class="pull-right">
                             @if(kpi.hasScheduler) {
-                                <a href="@controllers.admin.routes.KpiManagerController.editScheduler(kpiDefinition.id).url"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                                <a href="@controllers.admin.routes.KpiManagerController.editScheduler(kpiDefinition.id).url"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                                 @if(kpiDefinition.isActive) {
-                                    &nbsp;<a href="@controllers.admin.routes.KpiManagerController.triggerScheduler(kpiDefinition.id).url"><span class="fa fa-play-button glyphicons-panel"></span></a>
+                                    &nbsp;<a href="@controllers.admin.routes.KpiManagerController.triggerScheduler(kpiDefinition.id).url"><span class="fa fa-play-button fa-lg"></span></a>
                                 }
-                                &nbsp;<a onclick="return maf_confirmDeleteScheduler();" href="@controllers.admin.routes.KpiManagerController.deleteScheduler(kpiDefinition.id).url"><span class="fa fa-trash glyphicons-panel"></span></a>
+                                &nbsp;<a onclick="return maf_confirmDeleteScheduler();" href="@controllers.admin.routes.KpiManagerController.deleteScheduler(kpiDefinition.id).url"><span class="fa fa-trash fa-lg"></span></a>
                                 <script type="text/javascript">
                                     function maf_confirmDeleteScheduler(){
                                         return window.confirm("@parts.Msg("admin.kpi.view.scheduler.delete.comfirm")");
                                     }
                                 </script>
                             } else {
-                                <a href="@controllers.admin.routes.KpiManagerController.editScheduler(kpiDefinition.id).url"><span class="fa fa-sliders glyphicons-panel"></span></a>
+                                <a href="@controllers.admin.routes.KpiManagerController.editScheduler(kpiDefinition.id).url"><span class="fa fa-sliders fa-lg"></span></a>
                             }
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                     @parts.Msg("admin.kpi.view.rules.title")
                     
                     <div class="pull-right">
-                        <a href="@controllers.admin.routes.KpiManagerController.manageRule(kpiDefinition.id).url"><span class="fa fa-plus glyphicons-panel"></span></a>
+                        <a href="@controllers.admin.routes.KpiManagerController.manageRule(kpiDefinition.id).url"><span class="fa fa-plus fa-lg"></span></a>
                     </div>
                 </div>
         

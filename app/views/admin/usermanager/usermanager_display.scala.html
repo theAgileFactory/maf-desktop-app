@@ -32,12 +32,12 @@
             <div class="pull-right">
             
                 @if(userAccount.isActive()){
-                    <a id="lockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), false)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.lock.help")"><i class="fa fa-lock glyphicons-panel"></i></a>
+                    <a id="lockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), false)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.lock.help")"><i class="fa fa-lock fa-lg"></i></a>
                     <script>
                         $('#lockAction').tooltip();
                     </script>
                 }else{
-                    <a id="unlockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), true)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.unlock.help")"><i class="fa fa-unlock glyphicons-panel"></i></a>
+                    <a id="unlockAction" onclick="return maf_confirmChangeActivationStatus();" href="@controllers.admin.routes.UserManager.changeActivationStatus(userAccount.getUid(), true)" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.unlock.help")"><i class="fa fa-unlock fa-lg"></i></a>
                     <script>
                         $('#unlockAction').tooltip();
                     </script>
@@ -45,14 +45,14 @@
                 &nbsp;
                 
                 @if(masterMode){
-                <a id="resetPasswordAction" onclick="return maf_confirmResetPassword();" href="@controllers.admin.routes.UserManager.resetPassword(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.reset_password.help")"><i class="fa fa-retweet glyphicons-panel"></i></a>
+                <a id="resetPasswordAction" onclick="return maf_confirmResetPassword();" href="@controllers.admin.routes.UserManager.resetPassword(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.reset_password.help")"><i class="fa fa-retweet fa-lg"></i></a>
                 <script>
                     $('#resetPasswordAction').tooltip();
                 </script>
                 &nbsp;
                 }
                 
-                <a id="deleteAction" onclick="return maf_confirmDelete();" href="@controllers.admin.routes.UserManager.deleteUser(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.delete.help")"><i class="fa fa-trash glyphicons-panel"></i></a>
+                <a id="deleteAction" onclick="return maf_confirmDelete();" href="@controllers.admin.routes.UserManager.deleteUser(userAccount.getUid())" data-toggle="tooltip" title="@parts.Msg("admin.user_manager.view.action.delete.help")"><i class="fa fa-trash fa-lg"></i></a>
                 <script>
                     $('#deleteAction').tooltip();
                 </script>

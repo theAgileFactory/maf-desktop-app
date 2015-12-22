@@ -52,11 +52,11 @@
             &nbsp;
             <div class="pull-right">
                 @if(isActiveReport) {
-                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)"><span class="fa fa-arrow-circle-o-down-alt glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)"><span class="fa fa-arrow-circle-o-down-alt fa-lg"></span></a>
                     &nbsp;
                 }
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id).url"><span class="fa fa-plus glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
         </div>
@@ -85,13 +85,13 @@
                     
                     <div class="pull-right">
                         @if(!viewAllRisks) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, true, viewAllIssues).url"><span class="fa fa-expand glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, true, viewAllIssues).url"><span class="fa fa-expand fa-lg"></span></a>
                         } else {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, false, viewAllIssues).url"><span class="fa fa-compress glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, false, viewAllIssues).url"><span class="fa fa-compress fa-lg"></span></a>
                         }
                         &nbsp;
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id).url"><span class="fa fa-plus glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>
@@ -112,13 +112,13 @@
                     
                     <div class="pull-right">
                         @if(!viewAllIssues) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, true).url"><span class="fa fa-expand glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, true).url"><span class="fa fa-expand fa-lg"></span></a>
                         } else {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, false).url"><span class="fa fa-compress glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, false).url"><span class="fa fa-compress fa-lg"></span></a>
                         }
                         &nbsp;
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, 0, false).url"><span class="fa fa-plus glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, 0, false).url"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>

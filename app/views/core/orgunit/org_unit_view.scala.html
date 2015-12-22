@@ -40,10 +40,10 @@
                     @parts.Msg("core.org_unit.view.details.title")
                     @restrict(la(as(constants.IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION))){
                         <div class="pull-right">
-                            <a href="@controllers.core.routes.OrgUnitController.edit(orgUnit.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.OrgUnitController.edit(orgUnit.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                             &nbsp;
                             <a class="pull-right" onclick="return maf_confirmDelete();" href="@controllers.core.routes.OrgUnitController.delete(orgUnit.id)">
-                                <span class="fa fa-trash glyphicons-panel"></span>
+                                <span class="fa fa-trash fa-lg"></span>
                             </a>
                         </div>
                         

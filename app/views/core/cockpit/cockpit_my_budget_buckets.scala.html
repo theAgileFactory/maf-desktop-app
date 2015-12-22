@@ -45,9 +45,9 @@
             
             <div class="pull-right">
                 @if(!viewAllAsOwner) {
-                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, true, viewAllAsResponsible).url"><span class="fa fa-expand glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, true, viewAllAsResponsible).url"><span class="fa fa-expand fa-lg"></span></a>
                 } else {
-                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, false, viewAllAsResponsible).url"><span class="fa fa-compress glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, false, viewAllAsResponsible).url"><span class="fa fa-compress fa-lg"></span></a>
                 }
             </div>
 
@@ -63,9 +63,9 @@
             
             <div class="pull-right">
                 @if(!viewAllAsResponsible) {
-                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, viewAllAsOwner, true).url"><span class="fa fa-expand glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, viewAllAsOwner, true).url"><span class="fa fa-expand fa-lg"></span></a>
                 } else {
-                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, viewAllAsOwner, false).url"><span class="fa fa-compress glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.CockpitController.budgetBuckets(0, 0, viewAllAsOwner, false).url"><span class="fa fa-compress fa-lg"></span></a>
                 }
             </div>
             

@@ -62,7 +62,7 @@
                     @parts.Msg("core.portfolio_entry_delivery.deliverable.view.details.title")
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryDeliveryController.manageDeliverable(portfolioEntry.id, deliverable.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryDeliveryController.manageDeliverable(portfolioEntry.id, deliverable.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                             &nbsp;
                         }
                     </div>
@@ -120,7 +120,7 @@
                     <div class="pull-right">
                         @if(!isDelegated) {
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryDeliveryController.editDeliverableRequirements(portfolioEntry.id, deliverable.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryDeliveryController.editDeliverableRequirements(portfolioEntry.id, deliverable.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                             &nbsp;
                         }
                         }

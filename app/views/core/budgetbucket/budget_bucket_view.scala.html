@@ -54,10 +54,10 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.BudgetBucketController.edit(budgetBucket.id).url"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.BudgetBucketController.edit(budgetBucket.id).url"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                             &nbsp;
                             <a class="pull-right" onclick="return maf_confirmDelete();" href="@controllers.core.routes.BudgetBucketController.delete(budgetBucket.id)">
-                                <span class="fa fa-trash glyphicons-panel"></span>
+                                <span class="fa fa-trash fa-lg"></span>
                             </a>
                             <script type="text/javascript">
                                 function maf_confirmDelete(){
@@ -116,7 +116,7 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.BUDGET_BUCKET_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.BudgetBucketController.manageLine(budgetBucket.id).url"><span class="fa fa-plus glyphicons-panel"></span></a>
+                            <a href="@controllers.core.routes.BudgetBucketController.manageLine(budgetBucket.id).url"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>

@@ -48,10 +48,10 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllPackages(portfolioEntry.id)"><span class="fa fa-pencil-square-o glyphicons-panel"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllPackages(portfolioEntry.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                     &nbsp; <div class="btn-group">
                         <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-plus glyphicons-panel"></i>
+                            <i class="fa fa-plus fa-lg"></i>
                         </a>
                         <ul class="dropdown-menu pull-right text-left">
                             <li><a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_planning.packages.new.package")</a></li>

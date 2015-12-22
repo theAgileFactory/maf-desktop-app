@@ -131,12 +131,12 @@
                       
                         @if(isMasterAgreementLink && agreementLink.getStatus.equals(services.datasyndication.models.DataSyndicationAgreement.Status.ONGOING)) {
                             <a class="btn btn-primary" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.synchronizeAgreementLink(portfolioEntry.id, agreementLink.id)">
-                                <span class="fa fa-play glyphicons-panel"></span> @parts.Msg("core.portfolio_entry_data_syndication.link.admin.trigger.label")
+                                <span class="fa fa-play fa-lg"></span> @parts.Msg("core.portfolio_entry_data_syndication.link.admin.trigger.label")
                             </a>
                             &nbsp;&nbsp;
                         }
                         <a class="btn btn-danger"  onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryDataSyndicationController.cancelAgreementLink(portfolioEntry.id, agreementLink.id)">
-                            <span class="fa fa-ban glyphicons-panel"></span> @parts.Msg("core.portfolio_entry_data_syndication.link.admin.cancel.label")
+                            <span class="fa fa-ban fa-lg"></span> @parts.Msg("core.portfolio_entry_data_syndication.link.admin.cancel.label")
                         </a>
                         <script type="text/javascript">
                             function maf_confirmDelete(){
