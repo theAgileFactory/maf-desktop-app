@@ -58,7 +58,7 @@
                 
                 @parts.multi_languages_input_text(kpiDefinitionForm("additional2Name"), parts.Msg.asString("object.kpi_definition.additional2.label"))
                 
-                @parts.radiobuttongroup(kpiDefinitionForm("cssGlyphicon"), parts.Msg.asString("object.kpi_definition.css_glyphicon.label"), framework.utils.Glyphicon.getGlyphiconsAsVHC())
+                @parts.radiobuttongroup(kpiDefinitionForm("cssGlyphicon"), parts.Msg.asString("object.kpi_definition.css_glyphicon.label"), framework.utils.Icon.getIconsAsVHC())
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href="@controllers.admin.routes.KpiManagerController.index().url">@parts.Msg("button.cancel")</a>

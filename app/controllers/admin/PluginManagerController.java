@@ -992,8 +992,7 @@ public class PluginManagerController extends Controller {
 
         SideBar sideBar = new SideBar();
 
-        HeaderMenuItem pluginsMenu = new HeaderMenuItem("admin.integration.sidebar.plugins", "fa fa-rss",
-                currentType.equals(MenuItemType.PLUGINS));
+        HeaderMenuItem pluginsMenu = new HeaderMenuItem("admin.integration.sidebar.plugins", "fa fa-rss", currentType.equals(MenuItemType.PLUGINS));
         pluginsMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION));
         sideBar.addMenuItem(pluginsMenu);
 
@@ -1022,15 +1021,14 @@ public class PluginManagerController extends Controller {
         apiMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
         sideBar.addMenuItem(apiMenu);
 
-        apiMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.api.keys", controllers.admin.routes.ApiManagerController.index(),
-                "fa fa-key", false));
+        apiMenu.addSubMenuItem(
+                new ClickableMenuItem("admin.integration.sidebar.api.keys", controllers.admin.routes.ApiManagerController.index(), "fa fa-key", false));
 
         apiMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.api.browser", controllers.admin.routes.ApiManagerController.displayBrowser(),
                 "fa fa-globe", false));
 
         ClickableMenuItem sharedStorageMenu = new ClickableMenuItem("admin.integration.sidebar.shared_storage",
-                controllers.admin.routes.SharedStorageManagerController.index(), "fa fa-inbox-in",
-                currentType.equals(MenuItemType.SHARED_STORAGE));
+                controllers.admin.routes.SharedStorageManagerController.index(), "fa fa-folder", currentType.equals(MenuItemType.SHARED_STORAGE));
         sharedStorageMenu.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.API_MANAGER_PERMISSION));
         sideBar.addMenuItem(sharedStorageMenu);
 

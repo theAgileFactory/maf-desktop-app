@@ -22,6 +22,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.api.core.RootApiController;
+import dao.pmo.PortfolioEntryEventDao;
+import dao.pmo.PortfolioEntryReportDao;
+import dao.pmo.PortfolioEntryRiskDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Color;
+import framework.utils.Icon;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.pmo.PortfolioEntryEventType;
 import models.pmo.PortfolioEntryReportStatusType;
 import models.pmo.PortfolioEntryRiskType;
@@ -34,19 +47,6 @@ import utils.form.PortfolioEntryRiskTypeFormData;
 import utils.table.PortfolioEntryEventTypeListView;
 import utils.table.PortfolioEntryReportStatusTypeListView;
 import utils.table.PortfolioEntryRiskTypeListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import constants.IMafConstants;
-import controllers.api.core.RootApiController;
-import dao.pmo.PortfolioEntryEventDao;
-import dao.pmo.PortfolioEntryReportDao;
-import dao.pmo.PortfolioEntryRiskDao;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Color;
-import framework.utils.Glyphicon;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * Manage the registers reference data.
@@ -63,7 +63,7 @@ public class ConfigurationRegisterController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
-    
+
     /**
      * Display the lists of data.
      */
@@ -77,8 +77,8 @@ public class ConfigurationRegisterController extends Controller {
             portfolioEntryRiskTypesListView.add(new PortfolioEntryRiskTypeListView(portfolioEntryRiskType));
         }
 
-        Table<PortfolioEntryRiskTypeListView> portfolioEntryRiskTypesTable =
-                PortfolioEntryRiskTypeListView.templateTable.fill(portfolioEntryRiskTypesListView);
+        Table<PortfolioEntryRiskTypeListView> portfolioEntryRiskTypesTable = PortfolioEntryRiskTypeListView.templateTable
+                .fill(portfolioEntryRiskTypesListView);
 
         // report status types
         List<PortfolioEntryReportStatusType> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeAsList();
@@ -88,8 +88,8 @@ public class ConfigurationRegisterController extends Controller {
             portfolioEntryReportStatusTypeListView.add(new PortfolioEntryReportStatusTypeListView(portfolioEntryReportStatusType, getI18nMessagesPlugin()));
         }
 
-        Table<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypesTable =
-                PortfolioEntryReportStatusTypeListView.templateTable.fill(portfolioEntryReportStatusTypeListView);
+        Table<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypesTable = PortfolioEntryReportStatusTypeListView.templateTable
+                .fill(portfolioEntryReportStatusTypeListView);
 
         // event types
         List<PortfolioEntryEventType> portfolioEntryEventTypes = PortfolioEntryEventDao.getPEEventTypeAsList();
@@ -99,8 +99,8 @@ public class ConfigurationRegisterController extends Controller {
             portfolioEntryEventTypeListView.add(new PortfolioEntryEventTypeListView(portfolioEntryEventType));
         }
 
-        Table<PortfolioEntryEventTypeListView> portfolioEntryEventTypesTable =
-                PortfolioEntryEventTypeListView.templateTable.fill(portfolioEntryEventTypeListView);
+        Table<PortfolioEntryEventTypeListView> portfolioEntryEventTypesTable = PortfolioEntryEventTypeListView.templateTable
+                .fill(portfolioEntryEventTypeListView);
 
         return ok(views.html.admin.config.datareference.register.list.render(portfolioEntryRiskTypesTable, portfolioEntryReportStatusTypesTable,
                 portfolioEntryEventTypesTable));
@@ -208,7 +208,7 @@ public class ConfigurationRegisterController extends Controller {
 
             PortfolioEntryReportStatusType reportStatusType = PortfolioEntryReportDao.getPEReportStatusTypeById(reportStatusTypeId);
 
-            reportStatusTypeForm = reportStatusTypeFormTemplate.fill(new PortfolioEntryReportStatusTypeFormData(reportStatusType,getI18nMessagesPlugin()));
+            reportStatusTypeForm = reportStatusTypeFormTemplate.fill(new PortfolioEntryReportStatusTypeFormData(reportStatusType, getI18nMessagesPlugin()));
 
         }
 
@@ -226,7 +226,8 @@ public class ConfigurationRegisterController extends Controller {
         Form<PortfolioEntryReportStatusTypeFormData> boundForm = reportStatusTypeFormTemplate.bindFromRequest();
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.admin.config.datareference.register.report_status_type_manage.render(boundForm, Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
+            return ok(views.html.admin.config.datareference.register.report_status_type_manage.render(boundForm,
+                    Color.getColorsAsValueHolderCollection(getI18nMessagesPlugin())));
         }
 
         PortfolioEntryReportStatusTypeFormData reportStatusTypeFormData = boundForm.get();
@@ -298,7 +299,7 @@ public class ConfigurationRegisterController extends Controller {
 
         }
 
-        return ok(views.html.admin.config.datareference.register.event_type_manage.render(eventTypeForm, Glyphicon.getGlyphiconsAsVHC()));
+        return ok(views.html.admin.config.datareference.register.event_type_manage.render(eventTypeForm, Icon.getIconsAsVHC()));
     }
 
     /**
@@ -310,7 +311,7 @@ public class ConfigurationRegisterController extends Controller {
         Form<PortfolioEntryEventTypeFormData> boundForm = eventTypeFormTemplate.bindFromRequest();
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.admin.config.datareference.register.event_type_manage.render(boundForm, Glyphicon.getGlyphiconsAsVHC()));
+            return ok(views.html.admin.config.datareference.register.event_type_manage.render(boundForm, Icon.getIconsAsVHC()));
         }
 
         PortfolioEntryEventTypeFormData eventTypeFormData = boundForm.get();

@@ -26,11 +26,7 @@
     <meta name="author" content="The Agile Factory">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
     @parts.framework_apibrowser_includes(routes.Assets.versioned("").url)
-    
-    <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons.css")">
-    <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-filetypes.css")">
-    <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-social.css")">
-    <link rel="stylesheet" href="@routes.Assets.at("lib/glyphicons/css/glyphicons-bootstrap.css")">
+    @parts.framework_font_awesome_includes(routes.Assets.versioned("").url)
     
     <style type="text/css">
      .swagger-section #header {
