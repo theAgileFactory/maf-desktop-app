@@ -260,7 +260,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         newMenuItem.addSubMenuItem(newSeparatorMenuItem);
 
         ClickableMenuItem newActorMenuItem = new ClickableMenuItem(TopMenus.NEW.name(3), "topmenubar.new.actor.menu.label",
-                controllers.core.routes.ActorController.create(), "fa fa-user-times", false);
+                controllers.core.routes.ActorController.create(), "fa fa-user", false);
         newActorMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ACTOR_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newActorMenuItem);
 

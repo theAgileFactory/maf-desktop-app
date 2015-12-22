@@ -114,7 +114,7 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
 
                 addColumn("reallocate", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("reallocate", new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>(
-                        "<a href=\"%s\"><span class=\"fa fa-user-times\"></span></a>",
+                        "<a href=\"%s\"><span class=\"fa fa-user\"></span></a>",
                         new StringFormatFormatter.Hook<PortfolioEntryResourcePlanAllocatedResourceListView>() {
                             @Override
                             public String convert(PortfolioEntryResourcePlanAllocatedResourceListView allocatedResourceListView) {
