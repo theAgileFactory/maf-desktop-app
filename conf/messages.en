@@ -103,8 +103,8 @@ form.input.url.help=Provide a valid URL that is prefixed by "http://" or "https:
 form.input.file_field.error=The file is missing or not well formated.
 form.input.file_field.name.label=Name
 form.input.file_field.type.label=Type
-form.input.file_field.type.UPLOAD.label=<span class="glyphicons glyphicons-upload"></span> Upload
-form.input.file_field.type.URL.label=<span class="glyphicons glyphicons-link"></span> URL
+form.input.file_field.type.UPLOAD.label=<span class="fa fa-arrow-circle-o-up"></span> Upload
+form.input.file_field.type.URL.label=<span class="fa fa-link"></span> URL
 form.input.file_field.file.label=File
 form.input.file_field.label=Upload a new file
 form.input.file_field.file.size.invalid=Cannot upload, the file size is limited to {0}
@@ -1758,7 +1758,7 @@ index.search.description=Find easily and quickly what you want
 # messaging
 #----------------
 
-messaging.breadcrumb=<i class="glyphicons glyphicons-conversation"></i>&nbsp;Messaging
+messaging.breadcrumb=<i class="fa fa-comments"></i>&nbsp;Messaging
 messaging.list.title=Your messages
 messaging.list.success.deleted=The message has been deleted.
 messaging.send.title=Send a message
@@ -1768,7 +1768,7 @@ messaging.send.success=Your message "{0}" has been successfully sent.
 # notifications
 #----------------
 
-notifications.breadcrumb=<i class="glyphicons glyphicons-bell"></i>&nbsp;Your notifications
+notifications.breadcrumb=<i class="fa fa-bell"></i>&nbsp;Your notifications
 notifications.list.title=Your notifications
 notifications.action.delete=Delete
 notifications.action.delete.confirmation.message=Are you sure you want to delete the selected notifications?
@@ -1780,7 +1780,7 @@ notifications.list.success.deleted=The notification has been deleted.
 #----------------------
 
 #my profile
-my.my_profile.breadcrumb=<i class="glyphicons glyphicons-nameplate"></i>&nbsp;My profile
+my.my_profile.breadcrumb=<i class="fa fa-street-view"></i>&nbsp;My profile
 my.my_profile.sidebar.details=Details
 my.my_profile.sidebar.update_data=Update basic information
 my.my_profile.sidebar.update_password=Change password
@@ -1798,7 +1798,7 @@ my.my_profile.update_email.validation.error=This validation URL is invalid or ex
 
 #personal storage
 my.personalstorage.tableview.title=My personal storage
-my.personalstorage.tableview.breadcrumb=<i class="glyphicons glyphicons-folder-open"></i>&nbsp;&nbsp;My personal storage
+my.personalstorage.tableview.breadcrumb=<i class="fa fa-folder-open"></i>&nbsp;&nbsp;My personal storage
 my.personalstorage.tableview.explanation.text=This is a temporary storage and the files are automatically deleted after 12 hours.
 my.personalstorage.file.name.label=File name
 my.personalstorage.file.lastmodified.label=Last update
@@ -1813,7 +1813,7 @@ my.personalstorage.file.size.label=Size
 #----------------------
 
 #roadmap
-core.roadmap.breadcrumb=<i class="glyphicons glyphicons-road"></i>&nbsp;Roadmap
+core.roadmap.breadcrumb=<i class="fa fa-road"></i>&nbsp;Roadmap
 core.roadmap.no_portfolio_entry.info=An initiative represents initially a demand / idea that can eventually end up in a project and enhancement. The roadmap is listing all the inititiaves based on your permissions.
 core.roadmap.no_portfolio_entry.create=Create your first initiative
 
@@ -1850,7 +1850,7 @@ core.roadmap.simulator.capacity_forecast.planned.label=Planned
 # search
 #----------------------
 
-core.search.breadcrumb=<i class="glyphicons glyphicons-search"></i>&nbsp;Search
+core.search.breadcrumb=<i class="fa fa-search"></i>&nbsp;Search
 core.search.header=You can use this form to search the principal data, such that the initiatives and the employees.<br/>The "*" (star) character represents a wildcard, for example "*test*" will return all entries including the key word "test" at any place.<br/><strong>Warning:</strong> the search results depends on your rights as a consequence the found entries may vary from one user to another.
 core.search.type.portfolio_entry=Initiative
 core.search.type.actor=Employee
@@ -1867,7 +1867,7 @@ core.search.submit.noresult=There is no result for your search
 #----------------------
 
 #helpers
-core.reporting.breadcrumb=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting
+core.reporting.breadcrumb=<i class="fa fa-pie-chart"></i>&nbsp;Reporting
 core.reporting.category.title=Reports repository
 
 #generate
@@ -1882,7 +1882,7 @@ core.reporting.generate.process.failure.message=An error has occured when creati
 #----------------------
 
 #helpers
-core.cockpit.breadcrumb=<i class="glyphicons glyphicons-dashboard"></i>&nbsp;Cockpit
+core.cockpit.breadcrumb=<i class="fa fa-tachometer"></i>&nbsp;Cockpit
 core.cockpit.sidebar.initiatives=Initiatives
 core.cockpit.sidebar.portfolios=Portfolios
 core.cockpit.sidebar.subordinates=Subordinates
@@ -1931,7 +1931,7 @@ core.budget_bucket.view.initiative.title=Initiative budget lines
 
 #new
 core.budget_bucket.new.title=Create a budget bucket
-core.budget_bucket.new.breadcrumb=<i class="glyphicons glyphicons-calculator"></i>&nbsp;Create a budget bucket
+core.budget_bucket.new.breadcrumb=<i class="fa fa-calculator"></i>&nbsp;Create a budget bucket
 core.budget_bucket.new.successful=The budget bucket has been correctly created.
 
 #edit
@@ -1955,12 +1955,12 @@ core.budget_bucket.line.delete.successful=The line has been correctly removed.
 #----------------------
 
 #helper
-core.timesheet.breadcrumb=<i class="glyphicons glyphicons-clock"></i>&nbsp;Timesheet
+core.timesheet.breadcrumb=<i class="fa fa-clock-o"></i>&nbsp;Timesheet
 core.timesheet.error=An error occurred, please try again.
 core.timesheet.empty=The timesheet is currently empty.
 
 #fill
-core.timesheet.fill.empty=The timesheet is currently empty. Please add an entry by clicking on the icon <span class="glyphicons glyphicons-plus"></span>
+core.timesheet.fill.empty=The timesheet is currently empty. Please add an entry by clicking on the icon <span class="fa fa-plus"></span>
 core.timesheet.fill.has_been_updated.message=Are you sure you want to leave this page without saving the data you have entered?
 core.timesheet.fill.add.initiative.label=Initiative
 core.timesheet.fill.add.activity.label=Other activity
@@ -2011,17 +2011,17 @@ core.timesheet.send_reminder.notification.message=Please fill and submit the tim
 #----------------------
 
 #helper
-core.milestone_approval.breadcrumb=<i class="glyphicons glyphicons-thumbs-up"></i>&nbsp;Provide approval
+core.milestone_approval.breadcrumb=<i class="fa fa-thumbs-up"></i>&nbsp;Provide approval
 
 #planning
-core.milestone.planning.breadcrumb=<i class="glyphicons glyphicons-calendar"></i>&nbsp;Milestone planning
+core.milestone.planning.breadcrumb=<i class="fa fa-calendar"></i>&nbsp;Milestone planning
 core.milestone.planning.header=Please find below <span class="label label-success">Passed</span>,  <span class="label label-danger">Rejected</span> and <span class="label label-warning">Pending</span> milestones for all public initiatives.<br/>\
 By clicking on a date, a short summary of all milestones is displayed; and by clicking on a bullet, a complete summary of the corresponding milestone is available.
 core.milestone.planning.today=Today
 core.milestone.planning.modal.approvers=Approvers
 
 #approval list
-core.milestone.approval.list.header=Please find below the milestones for which your approval is expected.<br><i style="color: red;" class="glyphicons glyphicons-bell"></i>&nbsp;means that the due date is in the 3 next days or that you are late in providing your feedback.
+core.milestone.approval.list.header=Please find below the milestones for which your approval is expected.<br><i style="color: red;" class="fa fa-bell"></i>&nbsp;means that the due date is in the 3 next days or that you are late in providing your feedback.
 
 #approval process
 core.milestone.approval.process.alreadyvoted=Your have already vote for this milestone!
@@ -2050,13 +2050,13 @@ core.milestone.approval.process.panel.decide.delete.successful=The milestone app
 #----------------------
 
 #review milestone request list
-core.process_transition_request.review_milestone_request_list.breadcrumb=<i class="glyphicons glyphicons-transfer"></i>&nbsp;Review milestone requests
+core.process_transition_request.review_milestone_request_list.breadcrumb=<i class="fa fa-exchange"></i>&nbsp;Review milestone requests
 core.process_transition_request.review_milestone_request_list.header=Thanks to review the following requests to trigger a milestone approval
 
 #process milestone request
 core.process_transition_request.process_milestone_request.message.already_processed=The milestone approval request has been already processed.
 core.process_transition_request.process_milestone_request.title=Accept or Reject a milestone approval request
-core.process_transition_request.process_milestone_request.header=Someone has sent a milestone approval request.<br>You may:<ul><li><span class="label label-success"><i class="glyphicons glyphicons-play"></i>&nbsp;Approve</span> the request and this will start an approval process</li><li><span class="label label-danger"><i class="glyphicons glyphicons-remove"></i>&nbsp;Reject</span> the request and the requester will be notified</li></ul>
+core.process_transition_request.process_milestone_request.header=Someone has sent a milestone approval request.<br>You may:<ul><li><span class="label label-success"><i class="fa fa-play"></i>&nbsp;Approve</span> the request and this will start an approval process</li><li><span class="label label-danger"><i class="fa fa-times"></i>&nbsp;Reject</span> the request and the requester will be notified</li></ul>
 core.process_transition_request.process_milestone_request.panel.request.title=Request
 core.process_transition_request.process_milestone_request.panel.request.download=Download the milestone description document
 core.process_transition_request.process_milestone_request.panel.portfolio_entry.title=Initiative details
@@ -2087,7 +2087,7 @@ core.portfolio.title=Portfolio
 
 #overview
 core.portfolio.overview.red_reports=Initiatives with <span class="label label-danger">Red</span> status
-core.portfolio.overview.late_milestones=Late planned milestones <i style="color: red;" class="glyphicons glyphicons-bell"></i>
+core.portfolio.overview.late_milestones=Late planned milestones <i style="color: red;" class="fa fa-bell"></i>
 
 #view
 core.portfolio.view.details.title=Details
@@ -2096,7 +2096,7 @@ core.portfolio.view.entries.title=Initiatives of the portfolio
 
 #new
 core.portfolio.new.title=Create a portfolio
-core.portfolio.new.breadcrumb=<i class="glyphicons glyphicons-sort"></i>&nbsp;Create a portfolio
+core.portfolio.new.breadcrumb=<i class="fa fa-folder"></i>&nbsp;Create a portfolio
 core.portfolio.new.successful=The portfolio has been created.
 
 #edit
@@ -2149,7 +2149,7 @@ core.portfolio_entry.breadcrump.view=Details
 core.portfolio_entry.breadcrump.new=New
 
 #create initiative
-core.portfolio_entry.create.initiative.breadcrumb=<i class="glyphicons glyphicons-wallet"></i>&nbsp;Submit a new initiative
+core.portfolio_entry.create.initiative.breadcrumb=<i class="fa fa-sticky-note"></i>&nbsp;Submit a new initiative
 core.portfolio_entry.create.initiative.title=Submit a new initiative
 core.portfolio_entry.create.initiative.success.message=Your initiative has been submitted.
 core.portfolio_entry.create.initiative.notification.title=New initiative
@@ -2157,7 +2157,7 @@ core.portfolio_entry.create.initiative.notification.message=A new initiative has
 core.portfolio_entry.create.initiative.notification.manager.message=A new initiative has been assigned to you.
 
 #create release
-core.portfolio_entry.create.release.breadcrumb=<i class="glyphicons glyphicons-git-branch"></i>&nbsp;Submit a new release
+core.portfolio_entry.create.release.breadcrumb=<i class="fa fa-code-fork"></i>&nbsp;Submit a new release
 core.portfolio_entry.create.release.title=Submit a new release
 core.portfolio_entry.create.release.success.message=Your release has been submitted.
 core.portfolio_entry.create.release.notification.title=New release
@@ -2265,7 +2265,7 @@ core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.h
 of the same expenditure type (CAPEX/OPEX) and the same currency as the work order otherwise it won''t be found.
 core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.error.notfound=Impossible to find the purchase order, please check the ref ID.
 core.portfolio_entry_financial.work_order.line_item_select.step1.purchaseorder.error.noitem=There is no available item for the selected purchase order.
-core.portfolio_entry_financial.work_order.line_item_select.step2.header=Please select a line item by clicking on <span class="glyphicons glyphicons-lock"></span>
+core.portfolio_entry_financial.work_order.line_item_select.step2.header=Please select a line item by clicking on <span class="fa fa-lock"></span>
 core.portfolio_entry_financial.work_order.line_item_select.step2.selectedpurchaseorder=The selected purchase order is <strong>{0}</strong>.
 core.portfolio_entry_financial.work_order.line_item_select.step2.lineitems.title=Select an item
 core.portfolio_entry_financial.work_order.line_item_select.step3.header=Please provide the amount you want allocate from the purchase order to the work order
@@ -2333,7 +2333,7 @@ core.portfolio_entry_governance.planning.edit.successful=The planning has been u
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Change the life cycle process
-core.portfolio_entry_governance.process.change.header=<span class="glyphicons glyphicons-circle-info"></span> Important notice: changing the life cycle process will reset ALL the passed milestones, the planning and the budget.<br>It will also set the initiative to "Concept".
+core.portfolio_entry_governance.process.change.header=<span class="fa fa-info-circle"></span> Important notice: changing the life cycle process will reset ALL the passed milestones, the planning and the budget.<br>It will also set the initiative to "Concept".
 core.portfolio_entry_governance.process.change.confirm=Are you sure you want to change the life cycle process of this initiative?
 core.portfolio_entry_governance.process.change.successful=The life cycle process has been changed successfully
 core.portfolio_entry_governance.process.change.notification.title=New life cycle process
@@ -2564,7 +2564,7 @@ core.portfolio_entry_data_syndication.link.submit.success=The relation request h
 
 #helpers
 core.purchase_order.title=Purchase order
-core.purchase_order.breadcrumb=<i class="glyphicons glyphicons-shopping-cart"></i>&nbsp;Purchase order "{0}"
+core.purchase_order.breadcrumb=<i class="fa fa-shopping-cart"></i>&nbsp;Purchase order "{0}"
 
 #view
 core.purchase_order.view.details.title=Details of the purchase order
@@ -2602,7 +2602,7 @@ core.actor.view.org_unit_actors.title=Employee of the same organizational unit
 
 #new
 core.actor.new.title=Create an employee
-core.actor.new.breadcrumb=<i class="glyphicons glyphicons-parents"></i>&nbsp;Create an employee
+core.actor.new.breadcrumb=<i class="fa fa-user"></i>&nbsp;Create an employee
 core.actor.new.successful=The employee has been created successfully.
 
 #edit
@@ -2652,7 +2652,7 @@ core.org_unit.view.details.title=Details
 
 #new
 core.org_unit.new.title=Create an org unit
-core.org_unit.new.breadcrumb=<i class="glyphicons glyphicons-building"></i>&nbsp;Create an org unit
+core.org_unit.new.breadcrumb=<i class="fa fa-building"></i>&nbsp;Create an org unit
 core.org_unit.new.successful=The org unit has been created successfully.
 
 #edit
@@ -2680,7 +2680,7 @@ core.org_unit.actor_allocated_activity.add.successful=The activity has been allo
 #----------------------
 
 #helper
-core.architecture.breadcrumb=<i class="glyphicons glyphicons-globe-af"></i>&nbsp;Architecture
+core.architecture.breadcrumb=<i class="fa fa-globe"></i>&nbsp;Architecture
 
 #index
 core.architecture.index.application_block.tree.title=Application blocks
@@ -2700,7 +2700,7 @@ core.architecture.application_block.view.root.label=Main
 #----------------------
 
 #helper
-admin.user_manager.breadcrumb=<i class="glyphicons glyphicons-user"></i>&nbsp;User administration
+admin.user_manager.breadcrumb=<i class="fa fa-user"></i>&nbsp;User administration
 admin.user_manager.unknown_user=Unknown user
 admin.user_manager.sidebar.search=Search and update a user
 admin.user_manager.sidebar.create=Create a new user
@@ -2791,7 +2791,7 @@ repair action.
 #----------------------
 
 #helpers
-admin.configuration.breadcrumb=<i class="glyphicons glyphicons-classic-hammer"></i>&nbsp;Configuration
+admin.configuration.breadcrumb=<i class="fa fa-gavel"></i>&nbsp;Configuration
 admin.configuration.system_preferences.title=System preferences
 admin.configuration.system_preferences.breadcrumb.edit=Update
 admin.configuration.system_preferences.category.general=General
@@ -3046,7 +3046,7 @@ admin.configuration.translations.edit.successful=The translation has been update
 #----------------------
 
 #helper
-admin.integration.breadcrumb=<i class="glyphicons glyphicons-cloud"></i>&nbsp;Integration
+admin.integration.breadcrumb=<i class="fa fa-cloud"></i>&nbsp;Integration
 admin.integration.sidebar.plugins=Plugins
 admin.integration.sidebar.plugins.active_plugins=Active plugins
 admin.integration.sidebar.plugins.available_plugins=Available plugins
@@ -3203,7 +3203,7 @@ admin.data_syndication.process_agreement_link.reject.success=The agreement relat
 #----------------------
 
 #helper
-admin.kpi.breadcrumb=<i class="glyphicons glyphicons-stats"></i>&nbsp;KPI manager
+admin.kpi.breadcrumb=<i class="fa fa-line-chart"></i>&nbsp;KPI manager
 
 #list
 admin.kpi.object_type.models.pmo.PortfolioEntry=Initiative
@@ -3213,7 +3213,7 @@ admin.kpi.object_type.models.pmo.Portfolio=Portfolio
 admin.kpi.view.details.title=Details
 admin.kpi.view.scheduler.title=Scheduler
 admin.kpi.view.scheduler.delete.comfirm=Are you sure you want to delete the scheduler of this KPI?
-admin.kpi.view.scheduler.no_scheduler=There is no scheduler configured. Please click on the icon <span class="glyphicons glyphicons-adjust-alt"></span> to configure it.
+admin.kpi.view.scheduler.no_scheduler=There is no scheduler configured. Please click on the icon <span class="fa fa-sliders"></span> to configure it.
 admin.kpi.scheduler.delete=The scheduler has been correctly removed
 admin.kpi.scheduler.trigger=The scheduler has been correctly triggered
 admin.kpi.view.values.title=Values'' definition
@@ -3252,7 +3252,7 @@ admin.kpi.delete.successful=The KPI has been deleted.
 #----------------------
 
 #helper
-admin.reporting.breadcrumb=<i class="glyphicons glyphicons-pie-chart"></i>&nbsp;Reporting manager
+admin.reporting.breadcrumb=<i class="fa fa-pie-chart"></i>&nbsp;Reporting manager
 admin.reporting.standard=Standard
 admin.reporting.customized=Customized
 
@@ -3284,7 +3284,7 @@ admin.systemowner.info.plugins.title=Available plugins
 #----------------------
 
 #helper
-admin.auditable.breadcrumb=<i class="glyphicons glyphicons-signal"></i>&nbsp;Audit log
+admin.auditable.breadcrumb=<i class="fa fa-signal"></i>&nbsp;Audit log
 admin.auditable.object_class.label=Object Class
 admin.auditable.is_auditable.label=Audited
 
