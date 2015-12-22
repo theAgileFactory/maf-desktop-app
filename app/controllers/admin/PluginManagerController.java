@@ -58,7 +58,6 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -416,7 +415,7 @@ public class PluginManagerController extends Controller {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.not_exists", pluginConfigurationId));
             return redirect(routes.PluginManagerController.index());
         }
-        String pluginConfigurationName=pluginInfo.getPluginConfigurationName();
+        String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
         try {
             getPluginManagerService().unregisterPlugin(pluginConfigurationId);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.success", pluginConfigurationName));
@@ -486,8 +485,8 @@ public class PluginManagerController extends Controller {
 
         Table<PluginLog> pluginLogsTable = pluginLogsTableTemplate.fill(pluginLogsPagination.getListOfObjects(), filterConfig.getColumnsToHide());
 
-        return ok(views.html.admin.plugin.pluginmanager_configuration_details.render(pluginInfo.getPluginConfigurationName(), pluginConfigurationId, pluginInfo,
-                configurationBlocksTableTemplate.fill(configurationBlocks), pluginLogsPagination, pluginLogsTable, filterConfig));
+        return ok(views.html.admin.plugin.pluginmanager_configuration_details.render(pluginInfo.getPluginConfigurationName(), pluginConfigurationId,
+                pluginInfo, configurationBlocksTableTemplate.fill(configurationBlocks), pluginLogsPagination, pluginLogsTable, filterConfig));
     }
 
     /**
@@ -537,16 +536,16 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result startPlugin(Long pluginConfigurationId) {
-        IPluginInfo pluginInfo=getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
-        if(pluginInfo==null){
+        IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
+        if (pluginInfo == null) {
             return badRequest();
         }
-        String pluginConfigurationName=pluginInfo.getPluginConfigurationName();
+        String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
         try {
             getPluginManagerService().startPlugin(pluginConfigurationId);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", Msg.get(pluginConfigurationName)));
         } catch (PluginException e) {
-            log.error("Exception while attempting to start the plugin "+pluginConfigurationId,e);
+            log.error("Exception while attempting to start the plugin " + pluginConfigurationId, e);
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.error", Msg.get(pluginConfigurationName)));
         }
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
@@ -561,11 +560,11 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result stopPlugin(Long pluginConfigurationId) {
-        IPluginInfo pluginInfo=getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
-        if(pluginInfo==null){
+        IPluginInfo pluginInfo = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfigurationId);
+        if (pluginInfo == null) {
             return badRequest();
-        }else{
-            String pluginConfigurationName=pluginInfo.getPluginConfigurationName();
+        } else {
+            String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
             getPluginManagerService().stopPlugin(pluginConfigurationId);
             Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", Msg.get(pluginConfigurationName)));
         }
@@ -597,15 +596,16 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result editConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
-        try{
-            Pair<IPluginConfigurationBlockDescriptor, byte[]> configBlock=getPluginManagerService().getPluginConfigurationBlock(pluginConfigurationId, pluginConfigurationBlockIdentifier);
+        try {
+            Pair<IPluginConfigurationBlockDescriptor, byte[]> configBlock = getPluginManagerService().getPluginConfigurationBlock(pluginConfigurationId,
+                    pluginConfigurationBlockIdentifier);
             PluginConfigurationBlockObject pluginConfigurationBlockObject = new PluginConfigurationBlockObject();
-            pluginConfigurationBlockObject.value=new String(configBlock.getRight());
+            pluginConfigurationBlockObject.value = new String(configBlock.getRight());
             return ok(views.html.admin.plugin.pluginmanager_configblock_edit.render(pluginConfigurationId, configBlock.getLeft(),
                     pluginConfigurationBlockFormTemplate.fill(pluginConfigurationBlockObject),
                     getSyntaxFromConfigurationBlockEditionType(configBlock.getLeft().getEditionType())));
-        }catch(PluginException e){
-            log.error("Error while downloading the plugin configuration "+pluginConfigurationBlockIdentifier+" for "+pluginConfigurationId, e);
+        } catch (PluginException e) {
+            log.error("Error while downloading the plugin configuration " + pluginConfigurationBlockIdentifier + " for " + pluginConfigurationId, e);
             return badRequest();
         }
     }
@@ -665,11 +665,12 @@ public class PluginManagerController extends Controller {
      */
     @Restrict({ @Group(IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION) })
     public Result updateConfigurationBlock(Long pluginConfigurationId, String pluginConfigurationBlockIdentifier) {
-        IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor=getPluginConfigurationBlockDescriptor(pluginConfigurationId, pluginConfigurationBlockIdentifier);
-        if(pluginConfigurationBlockDescriptor==null){
+        IPluginConfigurationBlockDescriptor pluginConfigurationBlockDescriptor = getPluginConfigurationBlockDescriptor(pluginConfigurationId,
+                pluginConfigurationBlockIdentifier);
+        if (pluginConfigurationBlockDescriptor == null) {
             return badRequest();
         }
-        
+
         Form<PluginConfigurationBlockObject> boundForm = pluginConfigurationBlockFormTemplate.bindFromRequest();
         if (boundForm.hasErrors()) {
             return ok(views.html.admin.plugin.pluginmanager_configblock_edit.render(pluginConfigurationId, pluginConfigurationBlockDescriptor, boundForm,
@@ -679,7 +680,8 @@ public class PluginManagerController extends Controller {
         // Update the configuration block
         PluginConfigurationBlockObject pluginConfigurationBlockObject = boundForm.get();
         try {
-            getPluginManagerService().updatePluginConfiguration(pluginConfigurationId, pluginConfigurationBlockIdentifier, (pluginConfigurationBlockObject.value != null ? pluginConfigurationBlockObject.value.getBytes():null));
+            getPluginManagerService().updatePluginConfiguration(pluginConfigurationId, pluginConfigurationBlockIdentifier,
+                    (pluginConfigurationBlockObject.value != null ? pluginConfigurationBlockObject.value.getBytes() : null));
             Utilities.sendWarningFlashMessage(
                     Msg.get("admin.plugin_manager.configuration_block.edit.success", Msg.get(pluginConfigurationBlockDescriptor.getName())));
         } catch (PluginException e) {
@@ -1009,10 +1011,10 @@ public class PluginManagerController extends Controller {
             sideBar.addMenuItem(dataSyndicationMenu);
 
             dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.master_agreements",
-                    controllers.admin.routes.DataSyndicationController.viewMasterAgreements(), "glyphicons glyphicons-queen", false));
+                    controllers.admin.routes.DataSyndicationController.viewMasterAgreements(), "fa fa-sign-out", false));
 
             dataSyndicationMenu.addSubMenuItem(new ClickableMenuItem("admin.integration.sidebar.data_syndication.consumer_agreements",
-                    controllers.admin.routes.DataSyndicationController.viewConsumerAgreements(), "glyphicons glyphicons-pawn", false));
+                    controllers.admin.routes.DataSyndicationController.viewConsumerAgreements(), "fa fa-sign-in", false));
 
         }
 

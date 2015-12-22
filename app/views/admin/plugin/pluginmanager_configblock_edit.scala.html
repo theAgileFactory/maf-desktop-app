@@ -45,7 +45,7 @@ syntax: framework.commons.IFrameworkConstants.Syntax)
                 @parts.code_editor(configurationBlockObjectForm("value"), "", syntax)
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href="@controllers.admin.routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId)">@parts.Msg("button.cancel")</a>
-                <a id="resetToDefault" href="#" class="pull-right btn btn-primary"><i class="glyphicons glyphicons-restart"></i>&nbsp;@parts.Msg("button.reset_to_default")</a>
+                <a id="resetToDefault" href="#" class="pull-right btn btn-primary">@parts.Msg("button.reset_to_default")</a>
             </fieldset>
        }
         </div>
