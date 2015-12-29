@@ -31,7 +31,7 @@
        sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_password", controllers.admin.routes.MyAccount.editPassword(), "fa fa-retweet", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_PASSWORD)));
     }
     if(selfEmailUpdate){
-       sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_email", controllers.admin.routes.MyAccount.editEmail(), "social social-e-mail", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_MAIL)));
+       sidebarInstance.addMenuItem(new ClickableMenuItem("my.my_profile.sidebar.update_email", controllers.admin.routes.MyAccount.editEmail(), "fa fa-envelope-o", currentType.equals(controllers.admin.MyAccount.MenuItemType.EDIT_MAIL)));
     }
     sidebarInstance;
 }
