@@ -28,12 +28,6 @@ import javax.inject.Inject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
-import play.Configuration;
-import play.Logger;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
-import play.mvc.Controller;
-import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
@@ -46,8 +40,12 @@ import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.formats.DateFormatter;
-import framework.utils.formats.StringFormatFormatter;
-import framework.utils.formats.StringFormatFormatter.Hook;
+import play.Configuration;
+import play.Logger;
+import play.libs.F.Function0;
+import play.libs.F.Promise;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 /**
  * Each user of MAF is allocated a personal storage space.<br/>
@@ -68,7 +66,7 @@ public class MyPersonalStorage extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    
+
     private static Logger.ALogger log = Logger.of(MyPersonalStorage.class);
 
     private static Table<PersonalStorageFile> tableFileTemplate = new Table<PersonalStorageFile>() {
@@ -80,23 +78,22 @@ public class MyPersonalStorage extends Controller {
 
             this.addColumn("length", "size", "my.personalstorage.file.size.label", SorterType.NONE, true);
 
-            this.addColumn("downloadActionLink", "id", "", SorterType.NONE);
-            this.setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<PersonalStorageFile>(IMafConstants.DOWNLOAD_URL_FORMAT,
-                    new Hook<PersonalStorageFile>() {
-                        @Override
-                        public String convert(PersonalStorageFile value) {
-                            return routes.MyPersonalStorage.download(value.getId()).url();
-                        }
-                    }));
-
             this.addColumn("deleteActionLink", "id", "", SorterType.NONE);
             setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PersonalStorageFile>() {
                 @Override
                 public String apply(PersonalStorageFile personalStorageFile, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
                     String url = routes.MyPersonalStorage.delete(personalStorageFile.getId()).url();
                     return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                }
+            });
+            this.setColumnValueCssClass("deleteActionLink", "rowlink-skip");
+
+            this.setLineAction(new IColumnFormatter<PersonalStorageFile>() {
+                @Override
+                public String apply(PersonalStorageFile personalStorageFile, Object value) {
+                    return routes.MyPersonalStorage.download(personalStorageFile.getId()).url();
                 }
             });
 
@@ -157,9 +154,9 @@ public class MyPersonalStorage extends Controller {
             @Override
             public Result apply() throws Throwable {
                 try {
-                    
+
                     String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-                    
+
                     String fileName = new String(Base64.decodeBase64(id));
                     getPersonalStoragePlugin().deleteFile(currentUserUid, fileName);
                     return redirect(routes.MyPersonalStorage.index());
