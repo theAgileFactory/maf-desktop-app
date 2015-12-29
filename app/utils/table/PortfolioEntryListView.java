@@ -121,6 +121,9 @@ public class PortfolioEntryListView {
                             SortStatusType.NONE);
                 }
 
+                addColumnConfiguration("stakeholders", "stakeholders.actor.id", "object.portfolio_entry.stakeholders.label",
+                        new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
+
                 ISelectableValueHolderCollection<Long> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessActiveAsVH();
                 if (lifeCycleProcesses != null && lifeCycleProcesses.getValues().size() > 0) {
                     addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
@@ -221,6 +224,10 @@ public class PortfolioEntryListView {
                 setJavaColumnFormatter("portfolios", new ListOfValuesFormatter<PortfolioEntryListView>());
                 this.setColumnValueCssClass("portfolios", "rowlink-skip");
 
+                addColumn("stakeholders", "stakeholders", "object.portfolio_entry.stakeholders.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("stakeholders", new ListOfValuesFormatter<PortfolioEntryListView>());
+                this.setColumnValueCssClass("stakeholders", "rowlink-skip");
+
                 addColumn("lifeCycleProcess", "lifeCycleProcess", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("lifeCycleProcess", new ObjectFormatter<PortfolioEntryListView>());
 
@@ -299,6 +306,7 @@ public class PortfolioEntryListView {
         columns.add("sponsoringUnit");
         columns.add("deliveryUnits");
         columns.add("portfolios");
+        columns.add("stakeholders");
         columns.add("lifeCycleProcess");
         columns.add("archived");
 
@@ -326,6 +334,7 @@ public class PortfolioEntryListView {
     public LifeCycleMilestoneInstance lastMilestone;
     public boolean isConcept;
     public boolean archived;
+    public List<Actor> stakeholders;
 
     // contextual attributes
     public List<String> stakeholderTypes = new ArrayList<String>();
@@ -353,6 +362,15 @@ public class PortfolioEntryListView {
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
         this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
         this.archived = portfolioEntry.archived;
+
+        this.stakeholders = new ArrayList<>();
+        Set<Long> actorIds = new HashSet<>();
+        for (Stakeholder stakehoder : portfolioEntry.stakeholders) {
+            if (!stakehoder.actor.deleted && !actorIds.contains(stakehoder.actor.id)) {
+                actorIds.add(stakehoder.actor.id);
+                this.stakeholders.add(stakehoder.actor);
+            }
+        }
 
     }
 

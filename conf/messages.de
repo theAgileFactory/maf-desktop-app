@@ -1044,6 +1044,7 @@ object.portfolio_entry.sponsoring_unit.label=Auftraggeber
 object.portfolio_entry.delivery_units.label=Interne Zulieferer
 object.portfolio_entry.portfolio.label=Portfolio
 object.portfolio_entry.portfolios.label=Portfolio(s)
+object.portfolio_entry.stakeholders.label=Projektbeteiligten
 object.portfolio_entry.life_cycle_process.label=Lieferzyklus
 object.portfolio_entry.status.label=Status
 object.portfolio_entry.last_milestone.label=Zuletzt erreichter Meilenstein

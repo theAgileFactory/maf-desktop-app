@@ -1032,6 +1032,7 @@ object.portfolio_entry.sponsoring_unit.label=Sponsoring unit
 object.portfolio_entry.delivery_units.label=Delivery unit(s)
 object.portfolio_entry.portfolio.label=Portfolio
 object.portfolio_entry.portfolios.label=Portfolio(s)
+object.portfolio_entry.stakeholders.label=Stakeholders
 object.portfolio_entry.life_cycle_process.label=Life cycle process
 object.portfolio_entry.status.label=Status
 object.portfolio_entry.last_milestone.label=Last milestone passed

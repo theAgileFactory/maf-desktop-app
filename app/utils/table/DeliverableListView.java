@@ -22,7 +22,10 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.CheckboxFilterComponent;
+import framework.utils.FilterConfig.NoneFilterComponent;
 import framework.utils.FilterConfig.SortStatusType;
+import framework.utils.FilterConfig.TextFieldFilterComponent;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -126,8 +129,7 @@ public class DeliverableListView {
                     public String apply(DeliverableListView deliverableListView, Object value) {
                         if (deliverableListView.isDelegated) {
                             String unassignConfirmationMessage = MessageFormat.format(
-                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">"
-                                            + "<span class=\"fa fa-times-2\"></span></a>",
+                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">" + "<span class=\"fa fa-times\"></span></a>",
                                     Msg.get("core.portfolio_entry_delivery.deliverable.unfollow.confirmation"));
                             String url = controllers.core.routes.PortfolioEntryDeliveryController
                                     .unfollowDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();

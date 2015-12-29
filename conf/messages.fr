@@ -1044,6 +1044,7 @@ object.portfolio_entry.sponsoring_unit.label=Client interne
 object.portfolio_entry.delivery_units.label=Fournisseur(s) interne(s)
 object.portfolio_entry.portfolio.label=Portefeuille
 object.portfolio_entry.portfolios.label=Portefeuille(s)
+object.portfolio_entry.stakeholders.label=Intervenants
 object.portfolio_entry.life_cycle_process.label=Processus de gouvernance
 object.portfolio_entry.status.label=Statut
 object.portfolio_entry.last_milestone.label=Dernier jalon passé
