@@ -28,6 +28,7 @@ import models.delivery.Deliverable;
 import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
+import models.pmo.PortfolioEntry;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -152,6 +153,9 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
         if (object instanceof Actor) {
             return views.html.modelsparts.display_actor.render((Actor) object).body();
+        }
+        if (object instanceof PortfolioEntry) {
+            return views.html.modelsparts.display_portfolio_entry.render((PortfolioEntry) object, true).body();
         }
         return object.toString();
     }

@@ -46,6 +46,7 @@ import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryReport;
 import models.pmo.PortfolioEntryType;
 import models.pmo.Stakeholder;
@@ -123,6 +124,9 @@ public class PortfolioEntryListView {
 
                 addColumnConfiguration("stakeholders", "stakeholders.actor.id", "object.portfolio_entry.stakeholders.label",
                         new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
+
+                addColumnConfiguration("dependencies", "dependencies.id", "object.portfolio_entry.dependencies.label", new NoneFilterComponent(), false,
+                        false, SortStatusType.NONE);
 
                 ISelectableValueHolderCollection<Long> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessActiveAsVH();
                 if (lifeCycleProcesses != null && lifeCycleProcesses.getValues().size() > 0) {
@@ -228,6 +232,10 @@ public class PortfolioEntryListView {
                 setJavaColumnFormatter("stakeholders", new ListOfValuesFormatter<PortfolioEntryListView>());
                 this.setColumnValueCssClass("stakeholders", "rowlink-skip");
 
+                addColumn("dependencies", "dependencies", "object.portfolio_entry.dependencies.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("dependencies", new ListOfValuesFormatter<PortfolioEntryListView>());
+                this.setColumnValueCssClass("dependencies", "rowlink-skip");
+
                 addColumn("lifeCycleProcess", "lifeCycleProcess", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("lifeCycleProcess", new ObjectFormatter<PortfolioEntryListView>());
 
@@ -307,6 +315,7 @@ public class PortfolioEntryListView {
         columns.add("deliveryUnits");
         columns.add("portfolios");
         columns.add("stakeholders");
+        columns.add("dependencies");
         columns.add("lifeCycleProcess");
         columns.add("archived");
 
@@ -335,6 +344,7 @@ public class PortfolioEntryListView {
     public boolean isConcept;
     public boolean archived;
     public List<Actor> stakeholders;
+    public List<PortfolioEntry> dependencies;
 
     // contextual attributes
     public List<String> stakeholderTypes = new ArrayList<String>();
@@ -369,6 +379,23 @@ public class PortfolioEntryListView {
             if (!stakehoder.actor.deleted && !actorIds.contains(stakehoder.actor.id)) {
                 actorIds.add(stakehoder.actor.id);
                 this.stakeholders.add(stakehoder.actor);
+            }
+        }
+
+        this.dependencies = new ArrayList<>();
+        Set<Long> dependencyIds = new HashSet<>();
+        for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getDestinationDependencies()) {
+            PortfolioEntry dependency = portfolioEntryDependency.getSourcePortfolioEntry();
+            if (!dependency.deleted && !dependencyIds.contains(dependency.id)) {
+                dependencyIds.add(dependency.id);
+                this.dependencies.add(dependency);
+            }
+        }
+        for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getSourceDependencies()) {
+            PortfolioEntry dependency = portfolioEntryDependency.getDestinationPortfolioEntry();
+            if (!dependency.deleted && !dependencyIds.contains(dependency.id)) {
+                dependencyIds.add(dependency.id);
+                this.dependencies.add(dependency);
             }
         }
 
