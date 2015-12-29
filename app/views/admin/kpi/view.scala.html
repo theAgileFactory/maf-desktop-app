@@ -119,7 +119,7 @@
                             @if(kpi.hasScheduler) {
                                 <a href="@controllers.admin.routes.KpiManagerController.editScheduler(kpiDefinition.id).url"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                                 @if(kpiDefinition.isActive) {
-                                    &nbsp;<a href="@controllers.admin.routes.KpiManagerController.triggerScheduler(kpiDefinition.id).url"><span class="fa fa-play-button fa-lg"></span></a>
+                                    &nbsp;<a href="@controllers.admin.routes.KpiManagerController.triggerScheduler(kpiDefinition.id).url"><span class="fa fa-play-circle-o fa-lg"></span></a>
                                 }
                                 &nbsp;<a onclick="return maf_confirmDeleteScheduler();" href="@controllers.admin.routes.KpiManagerController.deleteScheduler(kpiDefinition.id).url"><span class="fa fa-trash fa-lg"></span></a>
                                 <script type="text/javascript">
