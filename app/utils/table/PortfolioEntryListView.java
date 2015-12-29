@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import constants.IMafConstants;
 import controllers.core.CockpitController;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCycleProcessDao;
@@ -32,7 +31,13 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.AutocompleteFilterComponent;
+import framework.utils.FilterConfig.CheckboxFilterComponent;
+import framework.utils.FilterConfig.DateRangeFilterComponent;
+import framework.utils.FilterConfig.NoneFilterComponent;
+import framework.utils.FilterConfig.SelectFilterComponent;
 import framework.utils.FilterConfig.SortStatusType;
+import framework.utils.FilterConfig.TextFieldFilterComponent;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -243,13 +248,10 @@ public class PortfolioEntryListView {
                 setJavaColumnFormatter("portfolioEntryStatus", new IColumnFormatter<PortfolioEntryListView>() {
                     @Override
                     public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
-                        if (portfolioEntryView.portfolioEntryStatus != null) {
-                            return views.html.modelsparts.display_portfolio_entry_report_status_type
-                                    .render(portfolioEntryView.portfolioEntryStatus.portfolioEntryReportStatusType).body();
-                        }
-                        return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
+                        return views.html.modelsparts.display_portfolio_entry_report.render(portfolioEntryView.portfolioEntryStatus).body();
                     }
                 });
+                this.setColumnValueCssClass("portfolioEntryStatus", "rowlink-skip");
 
                 addColumn("archived", "archived", "object.portfolio_entry.archived.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("archived", new BooleanFormatter<PortfolioEntryListView>());

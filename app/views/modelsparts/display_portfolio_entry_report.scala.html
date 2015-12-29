@@ -1,0 +1,37 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+@(report: models.pmo.PortfolioEntryReport)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.commons._
+
+@if(report!= null && !report.deleted) {
+    @if(_securityService.dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", report.portfolioEntry.id)) {
+        <a id="report-status-@(report.id)" data-toggle="tooltip" data-html="true" title="@(report.comments.replace("\n", "<br />").replace("\"", "'"))" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(report.portfolioEntry.id)">
+            @display_portfolio_entry_report_status_type(report.portfolioEntryReportStatusType)
+        </a>
+        <script>
+            $('#report-status-@(report.id)').tooltip();
+        </script>
+    } else {
+        @display_portfolio_entry_report_status_type(report.portfolioEntryReportStatusType)
+    }
+} else {
+    @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
+}
