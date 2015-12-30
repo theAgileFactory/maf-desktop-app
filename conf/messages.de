@@ -677,6 +677,8 @@ preference.smtp_password_preference.name=Passwort
 preference.smtp_password_preference.description=Der SMTP-Server-Passwort
 preference.notification_sending_system_preference.name=System Mitteilungen
 preference.notification_sending_system_preference.description=Interne BizDock Mitteilung order via Email
+preference.budget_tracking_effort_based_preference.name=de: Effort-based budget/forecast
+preference.budget_tracking_effort_based_preference.description=de: Define if the financial part (budget and forecast) of an initiative automatically includes the effort of the resources. If true, by adding an allocation then a budget and forecast lines are also added.
 
 #----------------------
 # authentication
@@ -1036,6 +1038,8 @@ object.portfolio_entry.governance_id.label=ID
 object.portfolio_entry.erp_ref_id.label=ERP ID
 object.portfolio_entry.creation_date.label=Erstellungsdatum
 object.portfolio_entry.is_public.label=Öffentlich
+object.portfolio_entry.default_is_opex.label=de: OPEX by default
+object.portfolio_entry.default_is_opex.help=de: Default expenditure type. Used when no type is existing for a budget/forecast that has been generated with a resource allocation.
 object.portfolio_entry.name.label=Name
 object.portfolio_entry.description.label=Beschreibung
 object.portfolio_entry.type.label=Typ
@@ -1126,6 +1130,9 @@ object.portfolio_entry_planning_package.start_date.invalid=Wenn Sie nur ein Datu
 object.portfolio_entry_planning_package.end_date.label=Enddatum
 object.portfolio_entry_planning_package.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.portfolio_entry_planning_package.name.label=Name
+object.portfolio_entry_planning_package.is_opex.label=OPEX
+object.portfolio_entry_planning_package.is_opex.help=de: Check this box if the package is OPEX, else it means it''s CAPEX.
+object.portfolio_entry_planning_package.expenditure_type.label=Kosten
 object.portfolio_entry_planning_package.description.label=Beschreibung
 object.portfolio_entry_planning_package.group.label=Gruppe
 object.portfolio_entry_planning_package.type.label=Typ

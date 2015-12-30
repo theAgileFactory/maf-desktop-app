@@ -677,6 +677,8 @@ preference.smtp_password_preference.name=Mot de passe
 preference.smtp_password_preference.description=Le mot de passe du serveur SMTP
 preference.notification_sending_system_preference.name=Système d''envoi des notifications
 preference.notification_sending_system_preference.description=Le sytème utilisé pour l''envoi des notifications. Il peut être soit par notifications BizDock, soit par email.
+preference.budget_tracking_effort_based_preference.name=Budget/prévison basé sur l'effort
+preference.budget_tracking_effort_based_preference.description=Défini si la partie financière (budget et prévision) d''une initiative inclut automatiquement l''effort des ressources. Si actif, en ajoutant une affectation alors une ligne de budget et de prévision sont également ajoutées.
 
 #----------------------
 # authentication
@@ -1037,6 +1039,8 @@ object.portfolio_entry.erp_ref_id.label=No ERP
 object.portfolio_entry.creation_date.label=Date de création
 object.portfolio_entry.is_public.label=Publique
 object.portfolio_entry.name.label=Nom
+object.portfolio_entry.default_is_opex.label=OPEX par défaut
+object.portfolio_entry.default_is_opex.help=Type de dépense par défaut. Utilisé lorsque aucun type n''existe pour un budget/prévision généré par une affectation de ressource.
 object.portfolio_entry.description.label=Description
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Responsable
@@ -1126,6 +1130,9 @@ object.portfolio_entry_planning_package.start_date.invalid=La date de début ne 
 object.portfolio_entry_planning_package.end_date.label=Date de fin
 object.portfolio_entry_planning_package.end_date.invalid=La date de fin doit être ultérieure à la date de début.
 object.portfolio_entry_planning_package.name.label=Nom
+object.portfolio_entry_planning_package.is_opex.label=OPEX
+object.portfolio_entry_planning_package.is_opex.help=Cocher cette case si le résultat est de type OPEX, sinon il sera de type CAPEX.
+object.portfolio_entry_planning_package.expenditure_type.label=Type de dépense
 object.portfolio_entry_planning_package.description.label=Description
 object.portfolio_entry_planning_package.group.label=Groupe
 object.portfolio_entry_planning_package.type.label=Type

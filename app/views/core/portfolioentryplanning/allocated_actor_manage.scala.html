@@ -26,6 +26,7 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
+@import commons._
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor])
@@ -93,7 +94,7 @@
                             allocatedActorForm("portfolioEntryPlanningPackage"), 
                             parts.Msg.asString("object.allocated_resource.package.label"),
                             controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin).toString)
                         )
                         
                         @parts.checkbox(

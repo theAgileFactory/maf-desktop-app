@@ -18,7 +18,9 @@
 package controllers.admin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -26,7 +28,9 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
+import dao.finance.PortfolioEntryBudgetDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.CssValueForValueHolder;
@@ -63,6 +67,9 @@ public class ConfigurationPlanningPackageController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     /**
      * Display the list of package groups.
@@ -113,8 +120,13 @@ public class ConfigurationPlanningPackageController extends Controller {
             packagePatternListView.add(new PortfolioEntryPlanningPackagePatternListView(packagePattern, getI18nMessagesPlugin()));
         }
 
+        Set<String> columnsToHide = new HashSet<>();
+        if (!PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(getPreferenceManagerPlugin())) {
+            columnsToHide.add("isOpex");
+        }
+
         Table<PortfolioEntryPlanningPackagePatternListView> packagePatternsTable = PortfolioEntryPlanningPackagePatternListView.templateTable
-                .fill(packagePatternListView);
+                .fill(packagePatternListView, columnsToHide);
 
         return ok(views.html.admin.config.datareference.planning_package.package_group_view.render(packageGroup, packagePatternsTable));
 
@@ -431,8 +443,18 @@ public class ConfigurationPlanningPackageController extends Controller {
                 controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packagePattern.portfolioEntryPlanningPackageGroup.id));
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
-        return i18nMessagesPlugin;
+        return this.i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }

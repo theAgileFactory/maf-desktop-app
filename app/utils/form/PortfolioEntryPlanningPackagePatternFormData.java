@@ -39,6 +39,9 @@ public class PortfolioEntryPlanningPackagePatternFormData {
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String name;
 
+    @Required
+    public boolean isOpex;
+
     @MaxLength(value = IModelConstants.VLARGE_STRING)
     public String description;
 
@@ -63,6 +66,7 @@ public class PortfolioEntryPlanningPackagePatternFormData {
         this.packageGroupId = packagePattern.portfolioEntryPlanningPackageGroup.id;
 
         this.name = packagePattern.name;
+        this.isOpex = packagePattern.isOpex;
         this.description = packagePattern.description;
         this.type = packagePattern.portfolioEntryPlanningPackageType.id;
 
@@ -77,6 +81,7 @@ public class PortfolioEntryPlanningPackagePatternFormData {
     public void fill(PortfolioEntryPlanningPackagePattern packagePattern) {
 
         packagePattern.name = this.name;
+        packagePattern.isOpex = this.isOpex;
         packagePattern.description = this.description;
         packagePattern.portfolioEntryPlanningPackageType = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeById(this.type);
 

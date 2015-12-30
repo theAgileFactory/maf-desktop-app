@@ -20,14 +20,14 @@ package utils.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
+import dao.pmo.PortfolioEntryDao;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntry;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import dao.pmo.PortfolioEntryDao;
 
 /**
  * An portfolio entry edit form data is used to manage the fields when editing
@@ -42,6 +42,8 @@ public class PortfolioEntryEditFormData {
     public boolean isConfidential;
 
     public boolean isActive;
+
+    public boolean defaultIsOpex;
 
     @Required
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
@@ -84,6 +86,7 @@ public class PortfolioEntryEditFormData {
         this.id = portfolioEntry.id;
         this.isConfidential = !portfolioEntry.isPublic;
         this.isActive = !portfolioEntry.archived;
+        this.defaultIsOpex = portfolioEntry.defaultIsOpex;
         this.name = portfolioEntry.name;
         this.governanceId = portfolioEntry.governanceId;
         this.erpRefId = portfolioEntry.erpRefId;
@@ -109,6 +112,7 @@ public class PortfolioEntryEditFormData {
 
         portfolioEntry.isPublic = !this.isConfidential;
         portfolioEntry.archived = !this.isActive;
+        portfolioEntry.defaultIsOpex = this.defaultIsOpex;
         portfolioEntry.name = this.name;
         portfolioEntry.governanceId = this.governanceId;
         portfolioEntry.erpRefId = this.erpRefId;

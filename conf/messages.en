@@ -665,6 +665,8 @@ preference.smtp_password_preference.name=Password
 preference.smtp_password_preference.description=The SMTP server password
 preference.notification_sending_system_preference.name=Notifications sending system
 preference.notification_sending_system_preference.description=It could be either by BizDock notifications or email.
+preference.budget_tracking_effort_based_preference.name=Effort-based budget/forecast
+preference.budget_tracking_effort_based_preference.description=Define if the financial part (budget and forecast) of an initiative automatically includes the effort of the resources. If true, by adding an allocation then a budget and forecast lines are also added.
 
 #----------------------
 # authentication
@@ -1025,6 +1027,8 @@ object.portfolio_entry.erp_ref_id.label=ERP ref ID
 object.portfolio_entry.creation_date.label=Creation date
 object.portfolio_entry.is_public.label=Public
 object.portfolio_entry.name.label=Name
+object.portfolio_entry.default_is_opex.label=OPEX by default
+object.portfolio_entry.default_is_opex.help=Default expenditure type. Used when no type is existing for a budget/forecast that has been generated with a resource allocation.
 object.portfolio_entry.description.label=Description
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Manager
@@ -1114,6 +1118,9 @@ object.portfolio_entry_planning_package.start_date.invalid=The start date cannot
 object.portfolio_entry_planning_package.end_date.label=End date
 object.portfolio_entry_planning_package.end_date.invalid=The end date should be after the start date.
 object.portfolio_entry_planning_package.name.label=Name
+object.portfolio_entry_planning_package.is_opex.label=OPEX
+object.portfolio_entry_planning_package.is_opex.help=Check this box if the package is OPEX, else it means it''s CAPEX.
+object.portfolio_entry_planning_package.expenditure_type.label=Expenditure type
 object.portfolio_entry_planning_package.description.label=Description
 object.portfolio_entry_planning_package.group.label=Group
 object.portfolio_entry_planning_package.type.label=Type

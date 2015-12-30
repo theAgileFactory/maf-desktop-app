@@ -124,7 +124,7 @@
                             workOrderForm("portfolioEntryPlanningPackage"), 
                             parts.Msg.asString("object.work_order.portfolio_entry_planning_package.label"),
                             controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin).toString)
                         )
                         
                         @parts.checkbox(

@@ -19,18 +19,19 @@ package dao.finance;
 
 import java.util.List;
 
-import models.finance.PortfolioEntryBudget;
-import models.finance.PortfolioEntryBudgetLine;
-import models.sql.TotalAmount;
-import com.avaje.ebean.Model.Finder;
-
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
+import constants.IMafConstants;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Pagination;
+import models.finance.PortfolioEntryBudget;
+import models.finance.PortfolioEntryBudgetLine;
+import models.sql.TotalAmount;
 
 /**
  * DAO for the {@link PortfolioEntryBudget} and {@link PortfolioEntryBudgetLine}
@@ -71,10 +72,9 @@ public abstract class PortfolioEntryBudgetDAO {
      */
     public static Double getPEBudgetAsAmountById(Long portfolioEntryBudgetId, boolean isOpex) {
 
-        String sql =
-                "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl WHERE pebl.deleted = 0 AND pebl.is_opex =" + isOpex
-                        + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pebl.portfolio_entry_budget_id = '"
-                        + portfolioEntryBudgetId + "'";
+        String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl WHERE pebl.deleted = 0 AND pebl.is_opex =" + isOpex
+                + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pebl.portfolio_entry_budget_id = '" + portfolioEntryBudgetId
+                + "'";
         Double totalAmountBudget = Ebean.find(TotalAmount.class).setRawSql(RawSqlBuilder.parse(sql).create()).findUnique().totalAmount;
         if (totalAmountBudget != null) {
             return totalAmountBudget;
@@ -104,14 +104,13 @@ public abstract class PortfolioEntryBudgetDAO {
      */
     public static Double getBudgetAsAmountByBucketAndOpex(Long budgetBucketId, boolean isOpex) {
 
-        String sql =
-                "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl"
-                        + " JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id = peb.id"
-                        + " JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id"
-                        + " JOIN life_cycle_instance lci ON lcip.life_cycle_instance_id = lci.id"
-                        + " JOIN portfolio_entry pe ON lci.portfolio_entry_id = pe.id" + " WHERE pebl.deleted = 0 AND pebl.is_opex = " + isOpex
-                        + " AND pebl.currency_code = '" + CurrencyDAO.getCurrencyDefault().code + "' AND pebl.budget_bucket_id = " + budgetBucketId
-                        + " AND peb.deleted = 0 AND pe.deleted = 0 AND lci.deleted = 0 AND lci.is_active=1 AND lcip.deleted = 0 AND lcip.is_frozen = 0";
+        String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl"
+                + " JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id = peb.id"
+                + " JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id"
+                + " JOIN life_cycle_instance lci ON lcip.life_cycle_instance_id = lci.id" + " JOIN portfolio_entry pe ON lci.portfolio_entry_id = pe.id"
+                + " WHERE pebl.deleted = 0 AND pebl.is_opex = " + isOpex + " AND pebl.currency_code = '" + CurrencyDAO.getCurrencyDefault().code
+                + "' AND pebl.budget_bucket_id = " + budgetBucketId
+                + " AND peb.deleted = 0 AND pe.deleted = 0 AND lci.deleted = 0 AND lci.is_active=1 AND lcip.deleted = 0 AND lcip.is_frozen = 0";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -178,5 +177,15 @@ public abstract class PortfolioEntryBudgetDAO {
                 .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
                 .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false).findList();
 
+    }
+
+    /**
+     * Return true if the budget tracking effort-based is active.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
+     */
+    public static boolean isBudgetTrackingEffortBased(IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return preferenceManagerPlugin.getPreferenceValueAsBoolean(IMafConstants.BUDGET_TRACKING_EFFORT_BASED_PREFERENCE);
     }
 }

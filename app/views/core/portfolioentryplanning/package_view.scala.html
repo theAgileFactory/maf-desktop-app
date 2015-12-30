@@ -98,6 +98,12 @@
                                 <th>@parts.Msg("object.portfolio_entry_planning_package.timesheets_days.label")</th>
                                 <td>@display_number(timesheetsDays)</td>
                             </tr>
+                            @if(dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin)) {
+                                <tr>
+                                    <th>@parts.Msg("object.portfolio_entry_planning_package.expenditure_type.label")</th>
+                                    <td>@display_is_opex(planningPackage.isOpex)</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                     
