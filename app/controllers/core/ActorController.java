@@ -37,6 +37,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.core.TimesheetController.OptionData;
+import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioDao;
@@ -44,6 +45,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.IColumnFormatter;
@@ -97,6 +99,8 @@ import utils.table.TimesheetActivityAllocatedActorListView;
 public class ActorController extends Controller {
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     public static Form<ActorFormData> formTemplate = Form.form(ActorFormData.class);
 
@@ -607,6 +611,10 @@ public class ActorController extends Controller {
         columnsToHide.add("removeActionLink");
         columnsToHide.add("followPackageDates");
         columnsToHide.add("actor");
+        if (!PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(getPreferenceManagerPlugin())) {
+            columnsToHide.add("forecastDays");
+            columnsToHide.add("dailyRate");
+        }
 
         Table<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryTable = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
                 .fill(allocationListView, columnsToHide);
@@ -882,20 +890,18 @@ public class ActorController extends Controller {
 
         SideBar sideBar = new SideBar();
 
-        sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.overview", controllers.core.routes.ActorController.view(id),
-                "fa fa-search-plus", currentType.equals(MenuItemType.OVERVIEW)));
+        sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.overview", controllers.core.routes.ActorController.view(id), "fa fa-search-plus",
+                currentType.equals(MenuItemType.OVERVIEW)));
 
         if (securityService.dynamic(IMafConstants.ACTOR_VIEW_DYNAMIC_PERMISSION, "")) {
 
-            sideBar.addMenuItem(
-                    new ClickableMenuItem("core.actor.sidebar.portfolio_entries", controllers.core.routes.ActorController.listPortfolioEntries(id, 0),
-                            "fa fa-sticky-note", currentType.equals(MenuItemType.INITIATIVES)));
+            sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolio_entries",
+                    controllers.core.routes.ActorController.listPortfolioEntries(id, 0), "fa fa-sticky-note", currentType.equals(MenuItemType.INITIATIVES)));
 
             sideBar.addMenuItem(new ClickableMenuItem("core.actor.sidebar.portfolios", controllers.core.routes.ActorController.listPortfolios(id, 0),
                     "fa fa-folder", currentType.equals(MenuItemType.PORTFOLIOS)));
 
-            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.actor.sidebar.allocation", "fa fa-book",
-                    currentType.equals(MenuItemType.ALLOCATION));
+            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.actor.sidebar.allocation", "fa fa-book", currentType.equals(MenuItemType.ALLOCATION));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.actor.sidebar.allocation.overview",
                     controllers.core.routes.ActorController.allocation(id), "fa fa-tachometer", false));
@@ -929,6 +935,13 @@ public class ActorController extends Controller {
 
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
     }
 
 }

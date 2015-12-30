@@ -20,9 +20,6 @@ package utils.table;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
-import models.pmo.OrgUnit;
-import models.pmo.PortfolioEntryPlanningPackage;
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
 import framework.utils.IColumnFormatter;
@@ -32,6 +29,9 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.pmo.OrgUnit;
+import models.pmo.PortfolioEntryPlanningPackage;
 
 /**
  * A portfolio entry resource plan allocated org unit list view is used to
@@ -66,12 +66,18 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                 addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
+                addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("forecastDays", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
+
+                addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
+
                 addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("planningPackage", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                     @Override
                     public String apply(PortfolioEntryResourcePlanAllocatedOrgUnitListView portfolioEntryResourcePlanAllocatedOrgUnitListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry_planning_package.render(
-                                portfolioEntryResourcePlanAllocatedOrgUnitListView.planningPackage).body();
+                        return views.html.modelsparts.display_portfolio_entry_planning_package
+                                .render(portfolioEntryResourcePlanAllocatedOrgUnitListView.planningPackage).body();
                     }
                 });
                 setColumnValueCssClass("planningPackage", "rowlink-skip");
@@ -87,13 +93,14 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>(
                         IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
-                            @Override
-                            public String convert(PortfolioEntryResourcePlanAllocatedOrgUnitListView portfolioEntryResourcePlanAllocatedOrgUnitListView) {
-                                return controllers.core.routes.PortfolioEntryPlanningController.manageAllocatedOrgUnit(
-                                        portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId,
-                                        portfolioEntryResourcePlanAllocatedOrgUnitListView.id).url();
-                            }
-                        }));
+                    @Override
+                    public String convert(PortfolioEntryResourcePlanAllocatedOrgUnitListView portfolioEntryResourcePlanAllocatedOrgUnitListView) {
+                        return controllers.core.routes.PortfolioEntryPlanningController
+                                .manageAllocatedOrgUnit(portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId,
+                                        portfolioEntryResourcePlanAllocatedOrgUnitListView.id)
+                                .url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -101,12 +108,12 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                 setJavaColumnFormatter("removeActionLink", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                     @Override
                     public String apply(PortfolioEntryResourcePlanAllocatedOrgUnitListView portfolioEntryResourcePlanAllocatedOrgUnitListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.core.routes.PortfolioEntryPlanningController.deleteAllocatedOrgUnit(
-                                        portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId,
-                                        portfolioEntryResourcePlanAllocatedOrgUnitListView.id).url();
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = controllers.core.routes.PortfolioEntryPlanningController
+                                .deleteAllocatedOrgUnit(portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId,
+                                        portfolioEntryResourcePlanAllocatedOrgUnitListView.id)
+                                .url();
                         return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     }
                 });
@@ -136,6 +143,10 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
     public BigDecimal days;
 
+    public BigDecimal forecastDays;
+
+    public BigDecimal dailyRate;
+
     public String date;
 
     public PortfolioEntryPlanningPackage planningPackage;
@@ -160,6 +171,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
         this.planningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedOrgUnit.isConfirmed;
         this.followPackageDates = allocatedOrgUnit.followPackageDates;
+        this.forecastDays = allocatedOrgUnit.forecastDays;
+        this.dailyRate = allocatedOrgUnit.dailyRate;
 
     }
 

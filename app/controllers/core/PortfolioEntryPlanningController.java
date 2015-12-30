@@ -41,6 +41,7 @@ import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.delivery.IterationDAO;
+import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
@@ -1226,6 +1227,10 @@ public class PortfolioEntryPlanningController extends Controller {
             hideColumnsForResourcePlanTable.add("editActionLink");
             hideColumnsForResourcePlanTable.add("removeActionLink");
             hideColumnsForResourcePlanTable.add("reallocate");
+        }
+        if (!PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(getPreferenceManagerPlugin())) {
+            hideColumnsForResourcePlanTable.add("forecastDays");
+            hideColumnsForResourcePlanTable.add("dailyRate");
         }
 
         // get or create the resource plan

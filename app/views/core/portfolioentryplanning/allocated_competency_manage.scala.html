@@ -82,6 +82,14 @@
                         
                         @parts.input_text(allocatedCompetencyForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
+                        @if(dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin)) {
+                            @parts.input_text(allocatedCompetencyForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
+                            @parts.input_text(allocatedCompetencyForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
+                        } else {
+                            <input type="hidden" name="forecastDays" value="0" />
+                            <input type="hidden" name="dailyRate" value="0" />
+                        }
+                        
                         @parts.singlevalue_picker(
                             allocatedCompetencyForm("portfolioEntryPlanningPackage"), 
                             parts.Msg.asString("object.allocated_resource.package.label"),

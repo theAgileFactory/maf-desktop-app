@@ -24,6 +24,7 @@ import java.util.Date;
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -64,6 +65,12 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
                 addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
                         SortStatusType.UNSORTED);
+
+                addColumnConfiguration("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label",
+                        new NumericFieldFilterComponent("0", "="), true, false, SortStatusType.UNSORTED);
+
+                addColumnConfiguration("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", new NumericFieldFilterComponent("0", "="),
+                        true, false, SortStatusType.UNSORTED);
 
                 addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
                         new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
@@ -110,6 +117,12 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
                 addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+
+                addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("forecastDays", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+
+                addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
 
                 addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("planningPackage", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
@@ -184,6 +197,10 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
     public BigDecimal days;
 
+    public BigDecimal forecastDays;
+
+    public BigDecimal dailyRate;
+
     public Date startDate;
 
     public Date endDate;
@@ -211,6 +228,8 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
         this.planningPackage = allocatedActor.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedActor.isConfirmed;
         this.followPackageDates = allocatedActor.followPackageDates;
+        this.forecastDays = allocatedActor.forecastDays;
+        this.dailyRate = allocatedActor.dailyRate;
     }
 
 }

@@ -61,6 +61,12 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
 
     public boolean followPackageDates;
 
+    @Required
+    public BigDecimal dailyRate;
+
+    @Required
+    public BigDecimal forecastDays;
+
     /**
      * Validate the dates.
      */
@@ -116,6 +122,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
                 : null;
 
         this.isConfirmed = allocatedOrgUnit.isConfirmed;
+        this.dailyRate = allocatedOrgUnit.dailyRate;
+        this.forecastDays = allocatedOrgUnit.forecastDays;
 
         this.followPackageDates = allocatedOrgUnit.followPackageDates != null ? allocatedOrgUnit.followPackageDates : false;
 
@@ -155,6 +163,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
         }
 
         allocatedOrgUnit.isConfirmed = this.isConfirmed;
+        allocatedOrgUnit.dailyRate = this.dailyRate;
+        allocatedOrgUnit.forecastDays = this.forecastDays;
 
     }
 }
