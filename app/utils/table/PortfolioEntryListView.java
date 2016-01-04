@@ -31,6 +31,7 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -390,14 +391,14 @@ public class PortfolioEntryListView {
         Set<Long> dependencyIds = new HashSet<>();
         for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getDestinationDependencies()) {
             PortfolioEntry dependency = portfolioEntryDependency.getSourcePortfolioEntry();
-            if (!dependency.deleted && !dependencyIds.contains(dependency.id)) {
+            if (dependency != null && !dependencyIds.contains(dependency.id)) {
                 dependencyIds.add(dependency.id);
                 this.dependencies.add(dependency);
             }
         }
         for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getSourceDependencies()) {
             PortfolioEntry dependency = portfolioEntryDependency.getDestinationPortfolioEntry();
-            if (!dependency.deleted && !dependencyIds.contains(dependency.id)) {
+            if (dependency != null && !dependencyIds.contains(dependency.id)) {
                 dependencyIds.add(dependency.id);
                 this.dependencies.add(dependency);
             }
