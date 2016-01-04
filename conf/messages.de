@@ -2254,6 +2254,9 @@ core.portfolio_entry_financial.view.status.table.forecast.label=Kostenprognose
 core.portfolio_entry_financial.view.status.table.deviation.label=Abweichung
 core.portfolio_entry_financial.view.status.table.status.label=Status
 
+#run budget tracking
+core.portfolio_entry_financial.budget_tracking.run.successful=de: The budget and forecast efforts (from resources) are now up to date.
+
 #view budget line
 core.portfolio_entry_financial.budget_line.view.title=Budget Eintrag
 

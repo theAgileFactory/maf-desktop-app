@@ -2259,6 +2259,9 @@ core.portfolio_entry_financial.view.status.table.forecast.label=Prévision
 core.portfolio_entry_financial.view.status.table.deviation.label=Déviation
 core.portfolio_entry_financial.view.status.table.status.label=Statut
 
+#run budget tracking
+core.portfolio_entry_financial.budget_tracking.run.successful=Les efforts (des ressources) des budgets et prévisions ont été mis à jour.
+
 #view budget line
 core.portfolio_entry_financial.budget_line.view.title=Détails de la ligne de budget
 
