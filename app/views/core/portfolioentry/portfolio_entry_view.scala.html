@@ -111,7 +111,7 @@
                                 <th>@parts.Msg("object.portfolio_entry.delivery_units.label")</th>
                                 <td>@display_list_of_values(portfolioEntry.deliveryUnits, "display")</td>
                             </tr>
-                            @if(dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin)) {
+                            @if(_budgetTrackingService.isActive()) {
                                 <tr>
                                     <th>@parts.Msg("object.portfolio_entry.default_is_opex.label")</th>
                                     <td>@display_boolean(portfolioEntry.defaultIsOpex)</td>

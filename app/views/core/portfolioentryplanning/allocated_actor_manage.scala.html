@@ -90,7 +90,7 @@
                         
                         @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
-                        @if(dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin)) {
+                        @if(_budgetTrackingService.isActive()) {
                             @parts.input_text(allocatedActorForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
                             @parts.input_text(allocatedActorForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
                         } else {
@@ -102,7 +102,7 @@
                             allocatedActorForm("portfolioEntryPlanningPackage"), 
                             parts.Msg.asString("object.allocated_resource.package.label"),
                             controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin).toString)
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
                         )
                         
                         @parts.checkbox(

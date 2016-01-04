@@ -70,7 +70,7 @@
                             <input type="hidden" name="planningPackageId" value="@planningPackageForm("planningPackageId").value"/>
                         }
                         
-                        @if(dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin)) {
+                        @if(_budgetTrackingService.isActive()) {
                             @parts.checkbox(
                                 planningPackageForm("isOpex"), 
                                 parts.Msg.asString("object.portfolio_entry_planning_package.is_opex.label"), 

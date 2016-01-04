@@ -26,8 +26,6 @@ import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
-import constants.IMafConstants;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Pagination;
 import models.finance.PortfolioEntryBudget;
 import models.finance.PortfolioEntryBudgetLine;
@@ -180,12 +178,40 @@ public abstract class PortfolioEntryBudgetDAO {
     }
 
     /**
-     * Return true if the budget tracking effort-based is active.
+     * Get a portflio entry budget line that has been generated from an
+     * allocated resource.
      * 
-     * @param preferenceManagerPlugin
-     *            the preference manager service
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     * @param resourceObjectType
+     *            the type of the allocated resource
+     * @param resourceObjectId
+     *            the id of the allocated resource
      */
-    public static boolean isBudgetTrackingEffortBased(IPreferenceManagerPlugin preferenceManagerPlugin) {
-        return preferenceManagerPlugin.getPreferenceValueAsBoolean(IMafConstants.BUDGET_TRACKING_EFFORT_BASED_PREFERENCE);
+    public static PortfolioEntryBudgetLine getPEBudgetLineByPEAndResource(Long portfolioEntryId, String resourceObjectType, Long resourceObjectId) {
+        return findPortfolioEntryBudgetLine.where().eq("deleted", false).eq("resourceObjectType", resourceObjectType).eq("resourceObjectId", resourceObjectId)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId)
+                .eq("portfolioEntryBudget.deleted", false).eq("portfolioEntryBudget.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false).findUnique();
+    }
+
+    /**
+     * Get a portflio entry budget lines that has been generated from an
+     * allocated resource.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     */
+    public static List<PortfolioEntryBudgetLine> getPEBudgetLineAsListAndResourceByPE(Long portfolioEntryId) {
+        return findPortfolioEntryBudgetLine.where().eq("deleted", false).isNotNull("resourceObjectType")
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId)
+                .eq("portfolioEntryBudget.deleted", false).eq("portfolioEntryBudget.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false).findList();
     }
 }

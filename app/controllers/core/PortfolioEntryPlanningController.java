@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,6 @@ import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.delivery.IterationDAO;
-import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
@@ -95,6 +95,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
+import services.budgettracking.IBudgetTrackingService;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
@@ -138,6 +139,10 @@ public class PortfolioEntryPlanningController extends Controller {
     private IDataSyndicationService dataSyndicationService;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -1228,7 +1233,7 @@ public class PortfolioEntryPlanningController extends Controller {
             hideColumnsForResourcePlanTable.add("removeActionLink");
             hideColumnsForResourcePlanTable.add("reallocate");
         }
-        if (!PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(getPreferenceManagerPlugin())) {
+        if (!getBudgetTrackingService().isActive()) {
             hideColumnsForResourcePlanTable.add("forecastDays");
             hideColumnsForResourcePlanTable.add("dailyRate");
         }
@@ -1350,63 +1355,74 @@ public class PortfolioEntryPlanningController extends Controller {
 
         PortfolioEntryResourcePlanAllocatedActor allocatedActor = null;
 
-        if (portfolioEntryResourcePlanAllocatedActorFormData.allocatedActorId == null) { // create
-                                                                                         // case
+        Ebean.beginTransaction();
+        try {
 
-            // get current planning
-            LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+            if (portfolioEntryResourcePlanAllocatedActorFormData.allocatedActorId == null) { // create
 
-            // get the resource plan
-            PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
+                // get current planning
+                LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
-            allocatedActor = new PortfolioEntryResourcePlanAllocatedActor();
-            allocatedActor.portfolioEntryResourcePlan = resourcePlan;
+                // get the resource plan
+                PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-            portfolioEntryResourcePlanAllocatedActorFormData.fill(allocatedActor);
+                allocatedActor = new PortfolioEntryResourcePlanAllocatedActor();
+                allocatedActor.portfolioEntryResourcePlan = resourcePlan;
 
-            allocatedActor.save();
+                portfolioEntryResourcePlanAllocatedActorFormData.fill(allocatedActor);
 
-            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_actor.add.successful"));
+                allocatedActor.save();
 
-        } else { // edit case
+                // create the stakeholder if not already
+                if (StakeholderDao.getStakeholderByActorAndTypeAndPE(allocatedActor.actor.id,
+                        portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType, portfolioEntry.id) == null) {
+                    Stakeholder stakeholder = new Stakeholder();
+                    stakeholder.actor = allocatedActor.actor;
+                    stakeholder.portfolioEntry = portfolioEntry;
+                    stakeholder.stakeholderType = StakeholderDao.getStakeholderTypeById(portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType);
+                    stakeholder.save();
+                }
 
-            allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(portfolioEntryResourcePlanAllocatedActorFormData.allocatedActorId);
+                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_actor.add.successful"));
 
-            boolean oldIsConfirmed = allocatedActor.isConfirmed;
+            } else { // edit
 
-            // security: the portfolioEntry must be related to the object
-            if (!allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
-                return forbidden(views.html.error.access_forbidden.render(""));
+                allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(portfolioEntryResourcePlanAllocatedActorFormData.allocatedActorId);
+
+                boolean oldIsConfirmed = allocatedActor.isConfirmed;
+
+                // security: the portfolioEntry must be related to the object
+                if (!allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
+                    return forbidden(views.html.error.access_forbidden.render(""));
+                }
+
+                portfolioEntryResourcePlanAllocatedActorFormData.fill(allocatedActor);
+                allocatedActor.update();
+
+                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_actor.edit.successful"));
+
+                // if the allocation was previously confirmed, then we send a
+                // notification to the manager of the concerned actor
+                if (oldIsConfirmed) {
+                    ActorDao.sendNotification(allocatedActor.actor.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                            controllers.core.routes.ActorController.allocation(allocatedActor.actor.id).url(),
+                            "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title",
+                            "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message", allocatedActor.actor.getNameHumanReadable());
+                }
             }
 
-            portfolioEntryResourcePlanAllocatedActorFormData.fill(allocatedActor);
-            allocatedActor.update();
+            // save the custom attributes
+            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
 
-            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_actor.edit.successful"));
+            Ebean.commitTransaction();
+            Ebean.endTransaction();
 
-            // if the allocation was previously confirmed, then we send a
-            // notification to the manager of the concerned actor
-            if (oldIsConfirmed) {
-                ActorDao.sendNotification(allocatedActor.actor.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                        controllers.core.routes.ActorController.allocation(allocatedActor.actor.id).url(),
-                        "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title",
-                        "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message", allocatedActor.actor.getNameHumanReadable());
-            }
-        }
+        } catch (Exception e) {
 
-        // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
+            Ebean.rollbackTransaction();
+            Ebean.endTransaction();
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
 
-        // create the stakeholder if necessary: crate case AND not already
-        // stakeholder
-        if (portfolioEntryResourcePlanAllocatedActorFormData.allocatedActorId == null
-                && StakeholderDao.getStakeholderByActorAndTypeAndPE(allocatedActor.actor.id, portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType,
-                        portfolioEntry.id) == null) {
-            Stakeholder stakeholder = new Stakeholder();
-            stakeholder.actor = allocatedActor.actor;
-            stakeholder.portfolioEntry = portfolioEntry;
-            stakeholder.stakeholderType = StakeholderDao.getStakeholderTypeById(portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType);
-            stakeholder.save();
         }
 
         return redirect(controllers.core.routes.PortfolioEntryPlanningController.resources(id));
@@ -1509,51 +1525,64 @@ public class PortfolioEntryPlanningController extends Controller {
 
         PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = null;
 
-        if (portfolioEntryResourcePlanAllocatedOrgUnitFormData.allocatedOrgUnitId == null) { // create
-                                                                                             // case
+        Ebean.beginTransaction();
+        try {
 
-            // get current planning
-            LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+            if (portfolioEntryResourcePlanAllocatedOrgUnitFormData.allocatedOrgUnitId == null) { // create
 
-            // get the resource plan
-            PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
+                // get current planning
+                LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
-            allocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnit();
-            allocatedOrgUnit.portfolioEntryResourcePlan = resourcePlan;
+                // get the resource plan
+                PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-            portfolioEntryResourcePlanAllocatedOrgUnitFormData.fill(allocatedOrgUnit);
+                allocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnit();
+                allocatedOrgUnit.portfolioEntryResourcePlan = resourcePlan;
 
-            allocatedOrgUnit.save();
+                portfolioEntryResourcePlanAllocatedOrgUnitFormData.fill(allocatedOrgUnit);
 
-            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.add.successful"));
+                allocatedOrgUnit.save();
 
-        } else { // edit case
+                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.add.successful"));
 
-            allocatedOrgUnit = PortfolioEntryResourcePlanDAO
-                    .getPEResourcePlanAllocatedOrgUnitById(portfolioEntryResourcePlanAllocatedOrgUnitFormData.allocatedOrgUnitId);
+            } else { // edit
 
-            // security: the portfolioEntry must be related to the object
-            if (!allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
-                return forbidden(views.html.error.access_forbidden.render(""));
+                allocatedOrgUnit = PortfolioEntryResourcePlanDAO
+                        .getPEResourcePlanAllocatedOrgUnitById(portfolioEntryResourcePlanAllocatedOrgUnitFormData.allocatedOrgUnitId);
+
+                // security: the portfolioEntry must be related to the object
+                if (!allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
+                    return forbidden(views.html.error.access_forbidden.render(""));
+                }
+
+                portfolioEntryResourcePlanAllocatedOrgUnitFormData.fill(allocatedOrgUnit);
+                allocatedOrgUnit.update();
+
+                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.edit.successful"));
             }
 
-            portfolioEntryResourcePlanAllocatedOrgUnitFormData.fill(allocatedOrgUnit);
-            allocatedOrgUnit.update();
-
-            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_org_unit.edit.successful"));
-        }
-
-        // assign the delivery unit to the PE (if not already)
-        if (!PortfolioEntryDao.isDeliveryUnitOfPE(allocatedOrgUnit.orgUnit.id, portfolioEntry.id)) {
-            if (portfolioEntry.deliveryUnits == null) {
-                portfolioEntry.deliveryUnits = new ArrayList<>();
+            // assign the delivery unit to the PE (if not already)
+            if (!PortfolioEntryDao.isDeliveryUnitOfPE(allocatedOrgUnit.orgUnit.id, portfolioEntry.id)) {
+                if (portfolioEntry.deliveryUnits == null) {
+                    portfolioEntry.deliveryUnits = new ArrayList<>();
+                }
+                portfolioEntry.deliveryUnits.add(allocatedOrgUnit.orgUnit);
+                portfolioEntry.save();
             }
-            portfolioEntry.deliveryUnits.add(allocatedOrgUnit.orgUnit);
-            portfolioEntry.save();
-        }
 
-        // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class, allocatedOrgUnit.id);
+            // save the custom attributes
+            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class, allocatedOrgUnit.id);
+
+            Ebean.commitTransaction();
+            Ebean.endTransaction();
+
+        } catch (Exception e) {
+
+            Ebean.rollbackTransaction();
+            Ebean.endTransaction();
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
+        }
 
         return redirect(controllers.core.routes.PortfolioEntryPlanningController.resources(id));
     }
@@ -1650,41 +1679,56 @@ public class PortfolioEntryPlanningController extends Controller {
 
         PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency = null;
 
-        if (allocatedCompetencyFormData.allocatedCompetencyId == null) { // create
-                                                                         // case
+        Ebean.beginTransaction();
+        try {
 
-            // get current planning
-            LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+            if (allocatedCompetencyFormData.allocatedCompetencyId == null) { // create
 
-            // get the resource plan
-            PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
+                // get current planning
+                LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
-            allocatedCompetency = new PortfolioEntryResourcePlanAllocatedCompetency();
-            allocatedCompetency.portfolioEntryResourcePlan = resourcePlan;
+                // get the resource plan
+                PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-            allocatedCompetencyFormData.fill(allocatedCompetency);
+                allocatedCompetency = new PortfolioEntryResourcePlanAllocatedCompetency();
+                allocatedCompetency.portfolioEntryResourcePlan = resourcePlan;
 
-            allocatedCompetency.save();
+                allocatedCompetencyFormData.fill(allocatedCompetency);
 
-            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_competency.add.successful"));
+                allocatedCompetency.save();
 
-        } else { // edit case
+                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_competency.add.successful"));
 
-            allocatedCompetency = PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyById(allocatedCompetencyFormData.allocatedCompetencyId);
+            } else { // edit
 
-            // security: the portfolioEntry must be related to the object
-            if (!allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
-                return forbidden(views.html.error.access_forbidden.render(""));
+                allocatedCompetency = PortfolioEntryResourcePlanDAO
+                        .getPEResourcePlanAllocatedCompetencyById(allocatedCompetencyFormData.allocatedCompetencyId);
+
+                // security: the portfolioEntry must be related to the object
+                if (!allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
+                    return forbidden(views.html.error.access_forbidden.render(""));
+                }
+
+                allocatedCompetencyFormData.fill(allocatedCompetency);
+                allocatedCompetency.update();
+
+                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_competency.edit.successful"));
             }
 
-            allocatedCompetencyFormData.fill(allocatedCompetency);
-            allocatedCompetency.update();
+            // save the custom attributes
+            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedCompetency.class,
+                    allocatedCompetency.id);
 
-            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.allocated_competency.edit.successful"));
+            Ebean.commitTransaction();
+            Ebean.endTransaction();
+
+        } catch (Exception e) {
+
+            Ebean.rollbackTransaction();
+            Ebean.endTransaction();
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
         }
-
-        // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedCompetency.class, allocatedCompetency.id);
 
         return redirect(controllers.core.routes.PortfolioEntryPlanningController.resources(id));
 
@@ -2153,6 +2197,20 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the i18n messages service.
+     */
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 
 }

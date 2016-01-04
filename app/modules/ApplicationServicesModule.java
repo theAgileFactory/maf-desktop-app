@@ -92,6 +92,8 @@ import services.action_log.IMafActionLogService;
 import services.action_log.MafActionLogServiceImpl;
 import services.bizdockapi.BizdockApiClientImpl;
 import services.bizdockapi.IBizdockApiClient;
+import services.budgettracking.BudgetTrackingServiceImpl;
+import services.budgettracking.IBudgetTrackingService;
 import services.configuration.ImplementationDefinedObjectImpl;
 import services.configuration.TopMenuBarService;
 import services.database.DatabaseDependencyServiceImpl;
@@ -143,7 +145,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IImplementationDefinedObjectService.class).to(ImplementationDefinedObjectImpl.class).asEagerSingleton();
 
         bind(IScriptService.class).to(ScriptServiceImpl.class).asEagerSingleton();
-        
+
         bind(HandlerCache.class).to(SecurityServiceImpl.class).asEagerSingleton();
         bind(ISecurityService.class).to(SecurityServiceImpl.class);
         bind(ISecurityServiceConfiguration.class).to(SecurityServiceImpl.class);
@@ -178,6 +180,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IApiSignatureService.class).to(ApiSignatureServiceImpl.class).asEagerSingleton();
         bind(IBizdockApiClient.class).to(BizdockApiClientImpl.class).asEagerSingleton();
         bind(IEmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
+        bind(IBudgetTrackingService.class).to(BudgetTrackingServiceImpl.class).asEagerSingleton();
 
         // Initialize with a defined list of jobs
         List<IJobDescriptor> jobs = new ArrayList<>();

@@ -16,5 +16,5 @@ object commons extends framework.handlers.ViewsInjector{
     val _securityService=play.mvc.Http.Context.current().args.get(classOf[framework.security.ISecurityService].getName).asInstanceOf[framework.security.ISecurityService]
     val _notificationService=play.mvc.Http.Context.current().args.get(classOf[framework.services.notification.INotificationManagerPlugin].getName).asInstanceOf[framework.services.notification.INotificationManagerPlugin]
     val _adPanelManagerService=play.mvc.Http.Context.current().args.get(classOf[framework.services.remote.IAdPanelManagerService].getName).asInstanceOf[framework.services.remote.IAdPanelManagerService]
-
+    val _budgetTrackingService=play.mvc.Http.Context.current().args.get(classOf[services.budgettracking.IBudgetTrackingService].getName).asInstanceOf[services.budgettracking.IBudgetTrackingService]
 }

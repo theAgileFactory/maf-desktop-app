@@ -28,7 +28,6 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
-import dao.finance.PortfolioEntryBudgetDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -44,6 +43,7 @@ import models.pmo.PortfolioEntryPlanningPackageType;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.budgettracking.IBudgetTrackingService;
 import utils.form.PortfolioEntryPlanningPackageGroupFormData;
 import utils.form.PortfolioEntryPlanningPackagePatternFormData;
 import utils.form.PortfolioEntryPlanningPackageTypeFormData;
@@ -70,6 +70,9 @@ public class ConfigurationPlanningPackageController extends Controller {
 
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     /**
      * Display the list of package groups.
@@ -121,7 +124,7 @@ public class ConfigurationPlanningPackageController extends Controller {
         }
 
         Set<String> columnsToHide = new HashSet<>();
-        if (!PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(getPreferenceManagerPlugin())) {
+        if (!getBudgetTrackingService().isActive()) {
             columnsToHide.add("isOpex");
         }
 
@@ -455,6 +458,13 @@ public class ConfigurationPlanningPackageController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 
 }

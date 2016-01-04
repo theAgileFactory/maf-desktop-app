@@ -26,6 +26,7 @@ import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
+import services.budgettracking.IBudgetTrackingService;
 import services.datasyndication.IDataSyndicationService;
 import services.echannel.IEchannelService;
 
@@ -52,6 +53,8 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private IAdPanelManagerService adPanelManagerService;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     /**
      * Default constructor.
@@ -106,7 +109,8 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         injectCommonServicesIncontext(Http.Context.current());
         return Promise.promise(new Function0<Result>() {
             public Result apply() throws Throwable {
-                return (Result) ControllersUtils.logAndReturnUnexpectedError((Exception) t, getUserMailIfAvailableInContext(),log, getConfiguration(), getMessagesPlugin());
+                return (Result) ControllersUtils.logAndReturnUnexpectedError((Exception) t, getUserMailIfAvailableInContext(), log, getConfiguration(),
+                        getMessagesPlugin());
             }
         });
     }
@@ -120,6 +124,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         context.args.put(IEchannelService.class.getName(), echannelService);
         context.args.put(IPreferenceManagerPlugin.class.getName(), preferenceManagerPlugin);
         context.args.put(IAdPanelManagerService.class.getName(), adPanelManagerService);
+        context.args.put(IBudgetTrackingService.class.getName(), budgetTrackingService);
     }
 
     /**
@@ -131,12 +136,14 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
 
     /**
      * Return the currently logged user mail (if any)
+     * 
      * @return an email address
      */
-    private String getUserMailIfAvailableInContext(){
-        try {;
-            IUserAccount userAccount=securityService.getCurrentUser();
-            if(userAccount!=null){
+    private String getUserMailIfAvailableInContext() {
+        try {
+            ;
+            IUserAccount userAccount = securityService.getCurrentUser();
+            if (userAccount != null) {
                 return userAccount.getMail();
             }
         } catch (Exception e) {

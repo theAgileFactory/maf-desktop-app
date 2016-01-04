@@ -37,7 +37,6 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.core.TimesheetController.OptionData;
-import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioDao;
@@ -72,6 +71,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckActorExists;
+import services.budgettracking.IBudgetTrackingService;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.ActorCapacityFormData;
@@ -101,6 +101,8 @@ public class ActorController extends Controller {
     private ISecurityService securityService;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     public static Form<ActorFormData> formTemplate = Form.form(ActorFormData.class);
 
@@ -611,7 +613,7 @@ public class ActorController extends Controller {
         columnsToHide.add("removeActionLink");
         columnsToHide.add("followPackageDates");
         columnsToHide.add("actor");
-        if (!PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(getPreferenceManagerPlugin())) {
+        if (!getBudgetTrackingService().isActive()) {
             columnsToHide.add("forecastDays");
             columnsToHide.add("dailyRate");
         }
@@ -933,8 +935,18 @@ public class ActorController extends Controller {
         OVERVIEW, INITIATIVES, PORTFOLIOS, TIMESHEET, ALLOCATION;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 
     /**

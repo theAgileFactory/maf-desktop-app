@@ -26,6 +26,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.avaje.ebean.Ebean;
+
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
@@ -59,6 +61,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
+import services.budgettracking.IBudgetTrackingService;
 import utils.finance.Totals;
 import utils.form.EngageWorkOrderAmountSelectorFormData;
 import utils.form.PortfolioEntryBudgetLineFormData;
@@ -88,6 +91,8 @@ public class PortfolioEntryFinancialController extends Controller {
     private Configuration configuration;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
@@ -238,6 +243,46 @@ public class PortfolioEntryFinancialController extends Controller {
 
         return ok(views.html.core.portfolioentryfinancial.portfolio_entry_financial_details.render(portfolioEntry, budgetLinesTable,
                 costToCompleteWorkOrderTable, engagedWorkOrderTable, lineItemsTable));
+    }
+
+    /**
+     * Run the budget tracking, meaning update the budget and forecast according
+     * to resource allocations.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    public Result budgetTrackingRun(Long id) {
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get current planning
+        LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+
+        Ebean.beginTransaction();
+        try {
+
+            // process the run
+            getBudgetTrackingService().recomputeAllBugdetAndForecastFromResource(planning);
+
+            Ebean.commitTransaction();
+            Ebean.endTransaction();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.budget_tracking.run.successful"));
+
+            return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(id));
+
+        } catch (Exception e) {
+
+            Ebean.rollbackTransaction();
+            Ebean.endTransaction();
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
+        }
+
     }
 
     /**
@@ -1040,5 +1085,12 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 }

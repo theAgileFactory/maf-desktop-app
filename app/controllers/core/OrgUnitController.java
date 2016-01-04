@@ -39,7 +39,6 @@ import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import controllers.api.core.RootApiController;
-import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
@@ -74,6 +73,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckActorExists;
 import security.CheckOrgUnitExists;
+import services.budgettracking.IBudgetTrackingService;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.OrgUnitFormData;
@@ -100,7 +100,8 @@ public class OrgUnitController extends Controller {
     private Configuration configuration;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
-
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
 
@@ -461,7 +462,7 @@ public class OrgUnitController extends Controller {
         columnsToHide.add("removeActionLink");
         columnsToHide.add("followPackageDates");
         columnsToHide.add("orgUnit");
-        if (!PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(getPreferenceManagerPlugin())) {
+        if (!getBudgetTrackingService().isActive()) {
             columnsToHide.add("forecastDays");
             columnsToHide.add("dailyRate");
         }
@@ -763,10 +764,16 @@ public class OrgUnitController extends Controller {
         OVERVIEW, INITIATIVES, ALLOCATION;
     }
 
+    /**
+     * Get the i18n messages plugin.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }
@@ -777,4 +784,12 @@ public class OrgUnitController extends Controller {
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
     }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
+    }
+
 }

@@ -19,6 +19,7 @@ import play.mvc.Action;
 import play.mvc.Http.Context;
 import play.mvc.Http.Request;
 import play.mvc.Result;
+import services.budgettracking.IBudgetTrackingService;
 import services.datasyndication.IDataSyndicationService;
 import services.echannel.IEchannelService;
 
@@ -51,6 +52,9 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
 
     @Inject
     private IAdPanelManagerService adPanelManagerService;
+
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     /**
      * Default constructor.
@@ -97,5 +101,6 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
         context.args.put(IEchannelService.class.getName(), echannelService);
         context.args.put(IPreferenceManagerPlugin.class.getName(), preferenceManagerPlugin);
         context.args.put(IAdPanelManagerService.class.getName(), adPanelManagerService);
+        context.args.put(IBudgetTrackingService.class.getName(), budgetTrackingService);
     }
 }

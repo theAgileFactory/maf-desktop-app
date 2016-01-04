@@ -24,7 +24,7 @@
 
 @name=@{
     if(planningPackage != null) {
-        if(dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin)) {
+        if(_budgetTrackingService.isActive()) {
             planningPackage.getName + " (" + display_is_opex(planningPackage.isOpex).toString.trim + ")"
         } else {
             planningPackage.getName

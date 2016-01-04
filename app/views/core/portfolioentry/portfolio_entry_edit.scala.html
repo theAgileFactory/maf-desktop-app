@@ -76,7 +76,7 @@
                             ""
                         )
                         
-                        @if(dao.finance.PortfolioEntryBudgetDAO.isBudgetTrackingEffortBased(_preferenceManagerPlugin)) {
+                        @if(_budgetTrackingService.isActive()) {
                             @parts.checkbox(
                                 portfolioEntryForm("defaultIsOpex"), 
                                 parts.Msg.asString("object.portfolio_entry.default_is_opex.label"), 
