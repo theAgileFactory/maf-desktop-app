@@ -168,8 +168,10 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             Long actorId = timesheetLog.timesheetEntry.timesheetReport.actor.id;
             Long packageId = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage != null ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.id
                     : null;
-            Map<Long, Double> actorMap = !timesheetLogsAsMap.containsKey(actorId) ? timesheetLogsAsMap.put(actorId, new HashMap<>())
-                    : timesheetLogsAsMap.get(actorId);
+            if (!timesheetLogsAsMap.containsKey(actorId)) {
+                timesheetLogsAsMap.put(actorId, new HashMap<>());
+            }
+            Map<Long, Double> actorMap = timesheetLogsAsMap.get(actorId);
             Double total = actorMap.containsKey(packageId) ? actorMap.get(packageId) : 0.0;
             actorMap.put(packageId, total + timesheetLog.hours);
         }
