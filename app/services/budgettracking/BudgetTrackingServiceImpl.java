@@ -417,6 +417,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             engaged.purchaseOrderLineItem.amount = engagedAmount;
             engaged.purchaseOrderLineItem.amountReceived = engagedAmount;
             engaged.purchaseOrderLineItem.save();
+            engaged.save();
         }
     }
 

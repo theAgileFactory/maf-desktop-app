@@ -125,7 +125,7 @@
 
     @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)) {
     
-        @if(workOrder.purchaseOrderLineItem != null && workOrder.purchaseOrderLineItem.isCancelled == false) {
+        @if(workOrder.purchaseOrderLineItem != null && workOrder.purchaseOrderLineItem.isCancelled == false && !workOrder.purchaseOrderLineItem.purchaseOrder.refId.equals(constants.IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING)) {
             <div class="panel panel-default">
                 
                 <div class="panel-heading">
