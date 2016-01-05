@@ -377,10 +377,14 @@ public class PortfolioEntryFinancialController extends Controller {
         // initiate the form with the template
         Form<PortfolioEntryBudgetLineFormData> budgetLineForm = budgetLineFormTemplate;
 
+        boolean fromResource = false;
+
         // edit case: inject values
         if (!budgetLineId.equals(Long.valueOf(0))) {
 
             PortfolioEntryBudgetLine portfolioEntryBudgetLine = PortfolioEntryBudgetDAO.getPEBudgetLineById(budgetLineId);
+
+            fromResource = portfolioEntryBudgetLine.resourceObjectType != null;
 
             // security: the portfolioEntry must be related to the object
             if (!portfolioEntryBudgetLine.portfolioEntryBudget.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
@@ -396,7 +400,7 @@ public class PortfolioEntryFinancialController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(budgetLineForm, PortfolioEntryBudgetLine.class, null);
         }
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, budgetLineForm,
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, budgetLineForm,
                 CurrencyDAO.getCurrencySelectableAsVH()));
     }
 
@@ -414,8 +418,11 @@ public class PortfolioEntryFinancialController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        // get the fromResource flag
+        boolean fromResource = Boolean.valueOf(boundForm.data().get("fromResource"));
+
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryBudgetLine.class)) {
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, boundForm,
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
 
