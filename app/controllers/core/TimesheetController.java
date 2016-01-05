@@ -591,6 +591,7 @@ public class TimesheetController extends Controller {
         if (report == null) {
             report = new TimesheetReport();
             report.actor = actor;
+            report.orgUnit = actor.orgUnit;
             report.type = TimesheetReport.Type.WEEKLY;
             report.startDate = startDate;
             report.status = TimesheetReport.Status.OPEN;

@@ -488,6 +488,7 @@ public abstract class TimesheetDao {
 
                         report = new TimesheetReport();
                         report.actor = actor;
+                        report.orgUnit = actor.orgUnit;
                         report.type = TimesheetReport.Type.WEEKLY;
                         report.startDate = currentDate;
                         report.status = TimesheetReport.Status.OPEN;
