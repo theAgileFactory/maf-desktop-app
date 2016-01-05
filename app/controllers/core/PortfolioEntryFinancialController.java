@@ -545,10 +545,14 @@ public class PortfolioEntryFinancialController extends Controller {
         // initiate work order
         WorkOrder workOrder = null;
 
+        boolean fromResource = false;
+
         // edit case: inject values
         if (!workOrderId.equals(Long.valueOf(0))) {
 
             workOrder = WorkOrderDAO.getWorkOrderById(workOrderId);
+
+            fromResource = workOrder.resourceObjectType != null;
 
             // security: the portfolioEntry must be related to the object
             if (!workOrder.portfolioEntry.id.equals(id)) {
@@ -564,7 +568,7 @@ public class PortfolioEntryFinancialController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(workOrderForm, WorkOrder.class, null);
         }
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, workOrder, workOrderForm,
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, workOrderForm,
                 CurrencyDAO.getCurrencySelectableAsVH()));
     }
 
@@ -582,6 +586,8 @@ public class PortfolioEntryFinancialController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        boolean fromResource = Boolean.valueOf(boundForm.data().get("fromResource"));
+
         // get the work order (only for edit case)
         WorkOrder workOrder = null;
         if (boundForm.data().get("workOrderId") != null) {
@@ -590,7 +596,7 @@ public class PortfolioEntryFinancialController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, WorkOrder.class)) {
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, workOrder, boundForm,
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
 
@@ -599,7 +605,7 @@ public class PortfolioEntryFinancialController extends Controller {
         // if given, check the amount received (must be smaller than the amount)
         if (workOrderFormData.amountReceived != null && workOrderFormData.amountReceived.doubleValue() > workOrderFormData.amount.doubleValue() + 0.01) {
             boundForm.reject("amountReceived", Msg.get("object.work_order.amount_received.invalid"));
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, workOrder, boundForm,
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
 
