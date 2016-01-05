@@ -50,7 +50,9 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                    <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", framework.utils.Utilities.getDateFormat(framework.utils.Utilities.getDefaultDatePattern() + " kk:mm").format(portfolioEntry.budgetTrackingLastRun))" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
+                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+
                 }
             </div>
         </div>
@@ -69,7 +71,8 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                    <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", framework.utils.Utilities.getDateFormat(framework.utils.Utilities.getDefaultDatePattern() + " kk:mm").format(portfolioEntry.budgetTrackingLastRun))" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
+                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
         </div>
@@ -86,6 +89,13 @@
         
             <div class="panel-heading">
                 @parts.Msg("core.portfolio_entry_financial.view.forecast.panel.engaged_work_order.title")
+                
+                <div class="pull-right">
+                    @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                        <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", framework.utils.Utilities.getDateFormat(framework.utils.Utilities.getDefaultDatePattern() + " kk:mm").format(portfolioEntry.budgetTrackingLastRun))" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
+                    }
+                </div>
+                
             </div>
 
             <div class="panel-body">
@@ -108,6 +118,10 @@
         
         </div>
     }
+    
+    <script>
+        $('.run-budget-tracking-link').tooltip();
+    </script>
 
 
 }
