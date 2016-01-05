@@ -196,6 +196,9 @@ public class ApplicationServicesModule extends FrameworkModule {
         JobDescriptors.SynchronizeDataSyndicationJobDescriptor synchronizeDataSyndicationJobDescriptor = new JobDescriptors.SynchronizeDataSyndicationJobDescriptor();
         bind(JobDescriptors.SynchronizeDataSyndicationJobDescriptor.class).toInstance(synchronizeDataSyndicationJobDescriptor);
         jobs.add(synchronizeDataSyndicationJobDescriptor);
+        JobDescriptors.BudgetTrackingJobDescriptor budgetTrackingJobDescriptor = new JobDescriptors.BudgetTrackingJobDescriptor();
+        bind(JobDescriptors.BudgetTrackingJobDescriptor.class).toInstance(budgetTrackingJobDescriptor);
+        jobs.add(budgetTrackingJobDescriptor);
         bind(JobInitialConfig.class).annotatedWith(Names.named("JobConfig")).toInstance(new JobInitialConfig(jobs));
         bind(IJobsService.class).to(JobsServiceImpl.class).asEagerSingleton();
 
