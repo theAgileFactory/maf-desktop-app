@@ -1,6 +1,7 @@
 package services.budgettracking;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Map.Entry;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.apache.commons.collections.keyvalue.MultiKey;
 import org.apache.commons.lang3.tuple.Pair;
 
 import constants.IMafConstants;
@@ -82,7 +84,11 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
         PortfolioEntry portfolioEntry = planning.lifeCycleInstance.portfolioEntry;
 
-        Map<Long, Map<Long, Double>> timesheetLogsAsMap = getTimesheetLogsAsMapByPE(portfolioEntry.id);
+        TimesheetMap timesheetMap = new TimesheetMap();
+        List<TimesheetLog> timesheetLogs = TimesheetDao.getTimesheetLogActiveAsExprByPortfolioEntry(portfolioEntry.id).findList();
+        for (TimesheetLog timesheetLog : timesheetLogs) {
+            timesheetMap.put(timesheetLog);
+        }
 
         Map<Long, PortfolioEntryBudgetLine> budgetsAsMap = new HashMap<>();
         for (PortfolioEntryBudgetLine budgetLine : PortfolioEntryBudgetDAO.getPEBudgetLineAsListAndResourceByPE(portfolioEntry.id)) {
@@ -98,7 +104,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
             // compute the amounts
             BigDecimal budgetAmount = allocatedActor.dailyRate.multiply(allocatedActor.days);
-            Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedActor(allocatedActor, timesheetLogsAsMap);
+            Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedActor(allocatedActor, timesheetMap);
 
             genetateBudgetAndForecastFromResource(planning, allocatedActor.id, PortfolioEntryResourcePlanAllocatedActor.class.getName(),
                     allocatedActor.actor.getName(), allocatedActor.followPackageDates, allocatedActor.portfolioEntryPlanningPackage, allocatedActor.startDate,
@@ -111,7 +117,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
             // compute the amount
             BigDecimal budgetAmount = allocatedOrgUnit.dailyRate.multiply(allocatedOrgUnit.days);
-            Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedOrgUnit(allocatedOrgUnit, timesheetLogsAsMap);
+            Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedOrgUnit(allocatedOrgUnit, timesheetMap);
 
             genetateBudgetAndForecastFromResource(planning, allocatedOrgUnit.id, PortfolioEntryResourcePlanAllocatedOrgUnit.class.getName(),
                     allocatedOrgUnit.orgUnit.getName(), allocatedOrgUnit.followPackageDates, allocatedOrgUnit.portfolioEntryPlanningPackage,
@@ -125,7 +131,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
             // compute the budget
             BigDecimal budgetAmount = allocatedCompetency.dailyRate.multiply(allocatedCompetency.days);
-            Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedCompetency(allocatedCompetency, timesheetLogsAsMap);
+            Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedCompetency(allocatedCompetency, timesheetMap);
 
             genetateBudgetAndForecastFromResource(planning, allocatedCompetency.id, PortfolioEntryResourcePlanAllocatedCompetency.class.getName(),
                     allocatedCompetency.competency.getName(), allocatedCompetency.followPackageDates, allocatedCompetency.portfolioEntryPlanningPackage,
@@ -146,36 +152,9 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         }
 
         portfolioEntry.budgetTrackingLastRun = new Date();
-        portfolioEntry.budgetTrackingHasUnallocatedTimesheet = timesheetLogsAsMap.size() > 0;
+        portfolioEntry.budgetTrackingHasUnallocatedTimesheet = !timesheetMap.isEmpty();
         portfolioEntry.save();
 
-    }
-
-    /**
-     * Get the timesheet logs of a portfolio entry and reorganize them as a map:
-     * Actor[id]->Package[id]->Hours.
-     * 
-     * If the log concerns an entry without a planning package, then the "null"
-     * key is used.
-     * 
-     * @param portfolioEntryId
-     *            the portfolio entry id
-     */
-    private Map<Long, Map<Long, Double>> getTimesheetLogsAsMapByPE(Long portfolioEntryId) {
-        Map<Long, Map<Long, Double>> timesheetLogsAsMap = new HashMap<>();
-        List<TimesheetLog> timesheetLogs = TimesheetDao.getTimesheetLogActiveAsExprByPortfolioEntry(portfolioEntryId).findList();
-        for (TimesheetLog timesheetLog : timesheetLogs) {
-            Long actorId = timesheetLog.timesheetEntry.timesheetReport.actor.id;
-            Long packageId = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage != null ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.id
-                    : null;
-            if (!timesheetLogsAsMap.containsKey(actorId)) {
-                timesheetLogsAsMap.put(actorId, new HashMap<>());
-            }
-            Map<Long, Double> actorMap = timesheetLogsAsMap.get(actorId);
-            Double total = actorMap.containsKey(packageId) ? actorMap.get(packageId) : 0.0;
-            actorMap.put(packageId, total + timesheetLog.hours);
-        }
-        return timesheetLogsAsMap;
     }
 
     /**
@@ -184,31 +163,17 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
      * 
      * @param allocatedActor
      *            the allocated actor
-     * @param timesheetLogsAsMap
-     *            the timesheet logs of the portfolio entry as a map
+     * @param timesheetMap
+     *            the timesheet map
      */
-    private Pair<BigDecimal, BigDecimal> getForecastFromAllocatedActor(PortfolioEntryResourcePlanAllocatedActor allocatedActor,
-            Map<Long, Map<Long, Double>> timesheetLogsAsMap) {
+    private Pair<BigDecimal, BigDecimal> getForecastFromAllocatedActor(PortfolioEntryResourcePlanAllocatedActor allocatedActor, TimesheetMap timesheetMap) {
 
         Long packageId = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
 
-        BigDecimal engagedDays = BigDecimal.ZERO;
-        BigDecimal costToCompleteDays = allocatedActor.forecastDays;
+        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByActor(allocatedActor.actor.id, packageId));
+        BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
 
-        if (timesheetLogsAsMap.containsKey(allocatedActor.actor.id) && timesheetLogsAsMap.get(allocatedActor.actor.id).containsKey(packageId)) {
-
-            BigDecimal hours = new BigDecimal(timesheetLogsAsMap.get(allocatedActor.actor.id).get(packageId));
-            BigDecimal days = hours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
-
-            engagedDays = engagedDays.add(days);
-            costToCompleteDays = costToCompleteDays.subtract(days);
-
-            timesheetLogsAsMap.get(allocatedActor.actor.id).remove(packageId);
-            if (timesheetLogsAsMap.get(allocatedActor.actor.id).size() == 0) {
-                timesheetLogsAsMap.remove(allocatedActor.actor.id);
-            }
-        }
-
+        BigDecimal costToCompleteDays = allocatedActor.forecastDays.subtract(engagedDays);
         if (costToCompleteDays.compareTo(BigDecimal.ZERO) < 0) {
             costToCompleteDays = BigDecimal.ZERO;
         }
@@ -225,33 +190,18 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
      * 
      * @param allocatedOrgUnit
      *            the allocated org unit
-     * @param timesheetLogsAsMap
-     *            the timesheet logs of the portfolio entry as a map
+     * @param timesheetMap
+     *            the timesheet map
      */
     private Pair<BigDecimal, BigDecimal> getForecastFromAllocatedOrgUnit(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit,
-            Map<Long, Map<Long, Double>> timesheetLogsAsMap) {
+            TimesheetMap timesheetMap) {
 
         Long packageId = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id : null;
 
-        BigDecimal costToCompleteDays = allocatedOrgUnit.forecastDays;
-        BigDecimal engagedDays = BigDecimal.ZERO;
+        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByOrgUnit(allocatedOrgUnit.orgUnit.id, packageId));
+        BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
 
-        for (Actor actor : allocatedOrgUnit.orgUnit.actors) {
-            if (timesheetLogsAsMap.containsKey(actor.id) && timesheetLogsAsMap.get(actor.id).containsKey(packageId)) {
-
-                BigDecimal hours = new BigDecimal(timesheetLogsAsMap.get(actor.id).get(packageId));
-                BigDecimal days = hours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
-
-                engagedDays = engagedDays.add(days);
-                costToCompleteDays = costToCompleteDays.subtract(days);
-
-                timesheetLogsAsMap.get(actor.id).remove(packageId);
-                if (timesheetLogsAsMap.get(actor.id).size() == 0) {
-                    timesheetLogsAsMap.remove(actor.id);
-                }
-            }
-        }
-
+        BigDecimal costToCompleteDays = allocatedOrgUnit.forecastDays.subtract(engagedDays);
         if (costToCompleteDays.compareTo(BigDecimal.ZERO) < 0) {
             costToCompleteDays = BigDecimal.ZERO;
         }
@@ -260,7 +210,6 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         BigDecimal costToCompleteAmount = allocatedOrgUnit.dailyRate.multiply(costToCompleteDays);
 
         return Pair.of(costToCompleteAmount, engagedAmount);
-
     }
 
     /**
@@ -269,11 +218,11 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
      * 
      * @param allocatedCompetency
      *            the allocated competency
-     * @param timesheetLogsAsMap
-     *            the timesheet logs of the portfolio entry as a map
+     * @param timesheetMap
+     *            the timesheet map
      */
     private Pair<BigDecimal, BigDecimal> getForecastFromAllocatedCompetency(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency,
-            Map<Long, Map<Long, Double>> timesheetLogsAsMap) {
+            TimesheetMap timesheetMap) {
 
         Long packageId = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id : null;
 
@@ -281,19 +230,12 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         BigDecimal engagedDays = BigDecimal.ZERO;
 
         for (Actor actor : allocatedCompetency.competency.actors) {
-            if (timesheetLogsAsMap.containsKey(actor.id) && timesheetLogsAsMap.get(actor.id).containsKey(packageId)) {
 
-                BigDecimal hours = new BigDecimal(timesheetLogsAsMap.get(actor.id).get(packageId));
-                BigDecimal days = hours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
+            BigDecimal hours = new BigDecimal(timesheetMap.consumeByActor(actor.id, packageId));
+            BigDecimal days = hours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
 
-                engagedDays = engagedDays.add(days);
-                costToCompleteDays = costToCompleteDays.subtract(days);
-
-                timesheetLogsAsMap.get(actor.id).remove(packageId);
-                if (timesheetLogsAsMap.get(actor.id).size() == 0) {
-                    timesheetLogsAsMap.remove(actor.id);
-                }
-            }
+            engagedDays = engagedDays.add(days);
+            costToCompleteDays = costToCompleteDays.subtract(days);
         }
 
         if (costToCompleteDays.compareTo(BigDecimal.ZERO) < 0) {
@@ -426,6 +368,121 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * A complex Map to manage the timesheet logs.
+     * 
+     * @author Johann Kohler
+     *
+     */
+    private static class TimesheetMap {
+
+        /**
+         * <timesheetLogId, hours>.
+         */
+        private Map<Long, Double> values;
+
+        /**
+         * <Tuple[actorId, packageId], List[timesheetLogId]>.
+         */
+        private Map<MultiKey, List<Long>> byActor;
+
+        /**
+         * <Tuple[orgUnitId, packageId], List[timesheetLogId]>.
+         */
+        private Map<MultiKey, List<Long>> byOrgUnit;
+
+        /**
+         * Default constructor.
+         */
+        public TimesheetMap() {
+            this.values = new HashMap<>();
+            this.byActor = new HashMap<>();
+            this.byOrgUnit = new HashMap<>();
+        }
+
+        /**
+         * Return true if all logs have been consumed.
+         */
+        public boolean isEmpty() {
+            return this.values.size() == 0;
+        }
+
+        /**
+         * Put a timesheet log.
+         * 
+         * @param timesheetLog
+         *            the timesheet log
+         */
+        public void put(TimesheetLog timesheetLog) {
+
+            this.values.put(timesheetLog.id, timesheetLog.hours);
+
+            Long actorId = timesheetLog.timesheetEntry.timesheetReport.actor.id;
+            Long orgUnitId = timesheetLog.timesheetEntry.timesheetReport.orgUnit != null ? timesheetLog.timesheetEntry.timesheetReport.orgUnit.id
+                    : timesheetLog.timesheetEntry.timesheetReport.actor.orgUnit.id;
+            Long packageId = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage != null ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.id
+                    : null;
+
+            MultiKey byActorKey = new MultiKey(actorId, packageId);
+            MultiKey byOrgUnitKey = new MultiKey(orgUnitId, packageId);
+
+            List<Long> byActorList = this.byActor.containsKey(byActorKey) ? this.byActor.get(byActorKey) : new ArrayList<>();
+            List<Long> byOrgUnitList = this.byOrgUnit.containsKey(byOrgUnitKey) ? this.byOrgUnit.get(byOrgUnitKey) : new ArrayList<>();
+
+            byActorList.add(timesheetLog.id);
+            byOrgUnitList.add(timesheetLog.id);
+
+            this.byActor.put(byActorKey, byActorList);
+            this.byOrgUnit.put(byOrgUnitKey, byOrgUnitList);
+
+        }
+
+        /**
+         * Get the total hours for a tuple [actorId, packageId] and consume the
+         * corresponding timesheet logs.
+         * 
+         * @param actorId
+         *            the actor id
+         * @param packageId
+         *            the package id
+         */
+        public Double consumeByActor(Long actorId, Long packageId) {
+            MultiKey byActorKey = new MultiKey(actorId, packageId);
+            Double total = 0.0;
+            if (this.byActor.containsKey(byActorKey)) {
+                for (Long timesheetLogId : this.byActor.get(byActorKey)) {
+                    total += this.values.containsKey(timesheetLogId) ? this.values.get(timesheetLogId) : 0.0;
+                    this.values.remove(timesheetLogId);
+                }
+                this.byActor.remove(byActorKey);
+            }
+            return total;
+        }
+
+        /**
+         * Get the total hours for a tuple [orgUnitId, packageId] and consume
+         * the corresponding timesheet logs.
+         * 
+         * @param orgUnitId
+         *            the org unit id
+         * @param packageId
+         *            the package id
+         */
+        public Double consumeByOrgUnit(Long orgUnitId, Long packageId) {
+            MultiKey byOrgUnitKey = new MultiKey(orgUnitId, packageId);
+            Double total = 0.0;
+            if (this.byOrgUnit.containsKey(byOrgUnitKey)) {
+                for (Long timesheetLogId : this.byOrgUnit.get(byOrgUnitKey)) {
+                    total += this.values.containsKey(timesheetLogId) ? this.values.get(timesheetLogId) : 0.0;
+                    this.values.remove(timesheetLogId);
+                }
+                this.byOrgUnit.remove(byOrgUnitKey);
+            }
+            return total;
+        }
+
     }
 
 }
