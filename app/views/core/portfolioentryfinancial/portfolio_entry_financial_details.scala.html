@@ -94,6 +94,16 @@
                     @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
                         <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", framework.utils.Utilities.getDateFormat(framework.utils.Utilities.getDefaultDatePattern() + " kk:mm").format(portfolioEntry.budgetTrackingLastRun))" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
                     }
+                    @if(portfolioEntry.budgetTrackingHasUnallocatedTimesheet) {
+                        &nbsp
+                        <a data-toggle="tooltip" id="budget-tracking-unallocated-timesheet" href="@controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntry.id).url"
+                            title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help")">
+                            <span class="fa fa-exclamation-triangle fa-lg" style="color: red;"></span>
+                        </a> 
+                        <script>
+                            $('#budget-tracking-unallocated-timesheet').tooltip();
+                        </script>
+                    }
                 </div>
                 
             </div>

@@ -2243,9 +2243,10 @@ core.portfolio_entry_financial.view.status.table.forecast.label=Forecast
 core.portfolio_entry_financial.view.status.table.deviation.label=Deviation
 core.portfolio_entry_financial.view.status.table.status.label=Status
 
-#run budget tracking
+#budget tracking
 core.portfolio_entry_financial.budget_tracking.run.help=Refresh the budget and forecast of efforts. Last update: {0}
 core.portfolio_entry_financial.budget_tracking.run.successful=The budget and forecast of efforts are now up to date.
+core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help=There exist timesheets on this initiative that are not engaged because no resource allocation is corresponding.
 
 #view budget line
 core.portfolio_entry_financial.budget_line.view.title=Budget line details
