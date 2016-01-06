@@ -1,0 +1,522 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dashbaord</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BizDock">
+<meta name="author" content="The Agile Factory">
+<link rel="shortcut icon" type="image/png"
+	href="/assets/images/favicon.png">
+<link rel="stylesheet" media="screen"
+	href="/assets/stylesheets/main.css">
+
+
+
+<link href="/assets/framework/lib/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="/assets/framework/lib/bootstrap-jasny/css/jasny-bootstrap.min.css"
+	rel="stylesheet">
+
+<link href="/assets/framework/lib/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet">
+
+<script src="/assets/framework/lib/jquery/jquery-1.11.1.min.js"></script>
+
+<script src="/assets/framework/lib/bootstrap/js/bootstrap.min.js"></script>
+<script
+	src="/assets/framework/lib/bootstrap-jasny/js/jasny-bootstrap.min.js"></script>
+
+<script
+	src="/assets/framework/lib/datepicker/js/bootstrap-datepicker.js"></script>
+<link
+	href="/assets/framework/lib/x-editable/bootstrap3-editable/css/bootstrap-editable.css"
+	rel="stylesheet">
+<script
+	src="/assets/framework/lib/x-editable/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script
+	src="/assets/framework/lib/datepicker/js/locales/bootstrap-datepicker.de.js"></script>
+<script
+	src="/assets/framework/lib/datepicker/js/locales/bootstrap-datepicker.fr.js"></script>
+<link
+	href="/assets/framework/lib/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css"
+	rel="stylesheet">
+<script
+	src="/assets/framework/lib/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js"></script>
+<script
+	src="/assets/framework/lib/x-editable/inputs-ext/typeaheadjs/typeaheadjs.js"></script>
+<link href="/assets/framework/lib/jquery-gantt/css/style.css"
+	type="text/css" rel="stylesheet">
+<script
+	src="/assets/framework/lib/jquery-gantt/js/jquery.fn.gantt.min.js"></script>
+<script
+	src="/assets/framework/lib/jquery-gantt/js/jquery.fn.gantt.transl.js"></script>
+<link rel="stylesheet" media="screen"
+	href="/assets/framework/lib/jquery-taf-tree/css/taf-tree.css">
+<script src="/assets/framework/lib/jquery-taf-tree/js/taf-tree.js"></script>
+<link rel="stylesheet"
+	href="/assets/framework/lib/bootstrap-calendar/css/calendar.min.css">
+<script type="text/javascript"
+	src="/assets/framework/lib/bootstrap-calendar/components/underscore/underscore-min.js"></script>
+<script type="text/javascript"
+	src="/assets/framework/lib/bootstrap-calendar/components/jstimezonedetect/jstz.min.js"></script>
+<script type="text/javascript"
+	src="/assets/framework/lib/bootstrap-calendar/js/language/fr.js"></script>
+<script type="text/javascript"
+	src="/assets/framework/lib/bootstrap-calendar/js/language/de.js"></script>
+<script type="text/javascript"
+	src="/assets/framework/lib/bootstrap-calendar/js/calendar.js"></script>
+<script type="text/javascript"
+	src="/assets/framework/lib/highcharts/highcharts.js"></script>
+<script type="text/javascript"
+	src="/assets/framework/lib/bootstrap-tour/js/bootstrap-tour.min.js"></script>
+<link
+	href="/assets/framework/lib/bootstrap-tour/css/bootstrap-tour.min.css"
+	rel="stylesheet">
+
+<link
+	href='//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700'
+	rel='stylesheet' type='text/css'>
+
+
+
+<script
+	src="/assets/framework/javascripts/main.min.js?e8f04a2c87a597600d593158458d550b83de61bb"></script>
+<link
+	href="/assets/framework/stylesheets/main.css?058df649681b83a0d0c7e5ca339a000fc240d619"
+	type="text/css" rel="stylesheet">
+<script>
+	var _maf_translations = {
+		unchecked : "false",
+		checked : "true",
+		filtersSelectorTitle : "Select filters",
+		columnsSelectorTitle : "Select columns",
+		from : "from",
+		to : "to",
+		empty : "empty",
+		kpi : "KPI"
+	};
+	var _maf_language = "en";
+</script>
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  		<script src="/assets/framework/lib/html5shiv.js"></script>
+  		<script src="/assets/framework/lib/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+
+
+
+
+<script src="/assets/javascripts/interact.js"></script>
+<style>
+.draggable {
+	
+}
+
+.widget_area {
+	
+}
+
+.widget {
+	
+}
+
+.widget_placeholder {
+	background-color: silver;
+	border-color: #ccc;
+	border: dashed 1px;
+	border-radius: 1px;
+	margin: 1em;
+}
+
+.drop-active {
+	border-color: #aaa;
+	border: dashed 2px;
+	border-radius: 2px;
+}
+
+.drop-selected {
+	border-color: #ff0000;
+}
+</style>
+
+
+
+</head>
+<body>
+
+
+
+
+
+
+
+
+	<div class="navbar navbar-default navbar-static-top" role="navigation"
+		style="position: inherit;">
+		<div class="pull-left hidden-xs"
+			style="line-height: 50px; padding-left: 8px; padding-right: 8px;">
+
+
+
+
+
+			<img src="/assets/images/white-logo-ver1.0-32x32.png" />
+
+
+
+
+		</div>
+		<div class="pull-right"
+			style="line-height: 50px; padding-left: 50px; padding-right: 8px;">
+
+		</div>
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+
+
+				<a class="navbar-brand" href="/"> <span
+					style="font-size: 28px; font-family: 'Open Sans', sans-serif; font-weight: 600;">
+						<font color="#777777">Biz</font><font color="#558ed5">D</font><font
+						color="#777777">ock</font>
+				</span> &nbsp; <i></i>
+				</a>
+
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul id="topmenubar-navbar-left" class="nav navbar-nav navbar-left"></ul>
+				<ul class="nav navbar-nav navbar-right">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="container-fluid">
+
+
+
+
+		<div class="row">
+			<div class="col-md-12">
+
+				<div class="pull-right visible-lg visible-md"
+					style="padding-top: 5px; padding-right: 5px;">
+					<a id="pinThisPage" class="btn btn-default" href="#"><i
+						class="fa fa-thumb-tack fa-lg"></i></a> <a id="helpTarget"
+						class="btn btn-default" target="_blank"
+						href="/help?route=%2Fdash%2F"><i
+						class="fa fa-question-circle fa-lg"></i></a>
+				</div>
+
+				<ol class="breadcrumb">
+
+
+					<li class="active">Dashboard</li>
+
+
+				</ol>
+
+				<script type="text/javascript">
+					$("#pinThisPage")
+							.click(
+									function() {
+										var name = $(document).attr('title');
+										var route = window.location.pathname
+												+ window.location.search;
+										$
+												.ajax({
+													type : 'POST',
+													url : '/shortcut/add',
+													data : JSON.stringify({
+														'name' : name,
+														'route' : route
+													}),
+													contentType : "application/json; charset=utf-8",
+													dataType : 'json',
+													success : function(data) {
+														$
+																.ajax({
+																	type : 'GET',
+																	url : '/shortcuts/view',
+																	success : function(
+																			data) {
+																		$(
+																				"#topmenubar-navbar-left")
+																				.html(
+																						data);
+																	}
+																});
+														alert(data.message);
+													},
+													error : function(data) {
+														alert("Impossible to bookmark this page due to a technical error.");
+													}
+												});
+									});
+				</script>
+
+			</div>
+		</div>
+
+
+widget_placeholder
+
+
+		<div id="maf-flash-message" class="row"></div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-primary active"> <input type="radio"
+						name="options" id="option1" autocomplete="off" checked>
+						Page A
+					</label> <label class="btn btn-primary"> <input type="radio"
+						name="options" id="option2" autocomplete="off"> Page B
+					</label> <label class="btn btn-primary"> <input type="radio"
+						name="options" id="option3" autocomplete="off"> Page C
+					</label>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<p class="text-right">
+					<a class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
+						page</a>
+				</p>
+			</div>widget_placeholder
+		</div>
+		<div class="row">
+			<div id="workspace" class="col-md-12">
+				<div class="draggable">Hello</div>
+			</div>
+		</div>
+		<div class="row">
+			<div id="workspace" class="col-md-12">
+				<!-- Page wide widget -->
+				<div class="row">
+					<div id="widget1" class="col-md-12 widget_area"><div class="widget_placeholder draggable"><br/><br/><br/></div></div>
+				</div>
+				<!-- Two widgets -->
+				<div class="row">
+					<div id="widget2" class="col-md-6 widget_area"><div class="widget_placeholder draggable"><br/><br/><br/></div></div>
+					<div id="widget3" class="col-md-6 widget_area"><div class="widget_placeholder draggable"><br/><br/><br/></div></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				interact('.draggable').draggable({
+					accept: '.widget',
+					autoScroll: true,
+					onmove: dragMoveListener,
+					onend: function (event) {
+					}});
+				loadWidget($('#widget1'));
+				loadWidget($('#widget2'));
+
+				interact('.widget_area').dropzone({
+					overlap : 0.30,
+					ondropactivate : function(event) {
+						event.target.classList.add('drop-active');
+					},
+					ondragenter : function(event) {
+						var draggableElement = event.relatedTarget,
+				        dropzoneElement = event.target;
+						dropzoneElement.classList.add('drop-selected');
+					},
+					ondragleave : function(event) {
+						var draggableElement = event.relatedTarget,
+				        dropzoneElement = event.target;
+						dropzoneElement.classList.remove('drop-selected');
+					},
+					ondrop : function(event) {
+						var draggableElement = event.relatedTarget,
+				        dropzoneElement = event.target;
+						console.debug(draggableElement+"="+dropzoneElement);
+						var dropzoneJQueryElement=$(dropzoneElement);
+						var draggableJQueryElement=$(draggableElement);
+						var parentDraggableJQueryElement=draggableJQueryElement.parent();
+						var childDropzoneJQueryElement=dropzoneJQueryElement.children(":first");
+						draggableJQueryElement.detach();
+						childDropzoneJQueryElement.detach();
+						draggableJQueryElement.appendTo(dropzoneJQueryElement);
+						draggableJQueryElement.removeAttr('data-x');
+						draggableJQueryElement.removeAttr('data-y');
+						draggableJQueryElement.removeAttr('style');
+						childDropzoneJQueryElement.appendTo(parentDraggableJQueryElement);
+					    dropzoneElement.classList.remove('drop-selected');
+					},
+					ondropdeactivate : function(event) {
+						var draggableElement = event.relatedTarget,
+				        dropzoneElement = event.target;
+						var draggableJQueryElement=$(draggableElement);
+						draggableJQueryElement.removeAttr('data-x');
+						draggableJQueryElement.removeAttr('data-y');
+						draggableJQueryElement.removeAttr('style');
+						dropzoneElement.classList.remove('drop-active');
+					}
+				});
+			});
+			
+			function dragMoveListener(event){
+			    var target = event.target,
+		        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+		        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+			    target.style.webkitTransform =
+			    target.style.transform =
+			      'translate(' + x + 'px, ' + y + 'px)';
+			    target.setAttribute('data-x', x);
+			    target.setAttribute('data-y', y);
+			}
+
+			function loadWidget(snapingArea) {
+				snapingArea.html('<div>... Pending ...</div>');
+				var jqxhr = $.get("/dash/widget", function(data) {
+					snapingArea.html(data);
+				}).fail(function() {
+					snapingArea.html('<div>ERROR</div>');
+				});
+			}
+
+			function getWidgetPanel(widgetTitle, widgetContent) {
+				var widgetPanel = '<div class="panel panel-info">';
+				widgetPanel = widgetPanel + '<div class="panel-heading">'
+						+ widgetTitle + '</div>';
+				widgetPanel = widgetPanel
+						+ '<div id="widget_2" class="panel-body ">';
+				widgetPanel = widgetPanel + '</div>';
+				widgetPanel = widgetPanel + '</div>';
+				return widgetPanel;
+			}
+		</script>
+
+
+		<hr>
+
+
+
+		<script>
+			function removeURLParameter(url, parameter) {
+				//prefer to use l.search if you have a location/link object
+				var urlparts = url.split('?');
+				if (urlparts.length >= 2) {
+
+					var prefix = encodeURIComponent(parameter) + '=';
+					var pars = urlparts[1].split(/[&;]/g);
+
+					//reverse iteration as may be destructive
+					for (var i = pars.length; i-- > 0;) {
+						//idiom for string.startsWith
+						if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+							pars.splice(i, 1);
+						}
+					}
+
+					url = urlparts[0] + '?' + pars.join('&');
+					return url;
+				} else {
+					return url;
+				}
+			}
+		</script>
+		<footer>
+			<div class="pull-left">
+				&copy; <a href="http://www.the-agile-factory.com/">The Agile
+					Factory</a>
+			</div>
+			<div class="pull-right">
+				<div class="btn-group dropup" id="lang-selector">
+					<button data-toggle="dropdown"
+						class="btn btn-default btn-xs dropdown-toggle" type="button">
+						English <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu pull-right">
+
+						<li><a id="lang-0" href="#">English</a> <script>
+							var url = removeURLParameter(document.URL, "lang");
+							if (url.indexOf("?") <= -1) {
+								url = url + "?";
+							}
+							$("#lang-0").attr('href', url + '&lang=en');
+						</script></li>
+
+						<li><a id="lang-1" href="#">Français</a> <script>
+							var url = removeURLParameter(document.URL, "lang");
+							if (url.indexOf("?") <= -1) {
+								url = url + "?";
+							}
+							$("#lang-1").attr('href', url + '&lang=fr');
+						</script></li>
+
+						<li><a id="lang-2" href="#">Deutsch</a> <script>
+							var url = removeURLParameter(document.URL, "lang");
+							if (url.indexOf("?") <= -1) {
+								url = url + "?";
+							}
+							$("#lang-2").attr('href', url + '&lang=de');
+						</script></li>
+
+					</ul>
+				</div>
+			</div>
+		</footer>
+		<p>&nbsp;</p>
+	</div>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+

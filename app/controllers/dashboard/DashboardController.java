@@ -1,5 +1,8 @@
 package controllers.dashboard;
 
+import java.util.Date;
+import java.util.UUID;
+
 import framework.services.widgets.DashboardPageTemplate;
 import framework.services.widgets.DashboardWidgetPosition;
 import models.framework_models.widgets.DashboardPage;
@@ -30,5 +33,9 @@ public class DashboardController extends Controller{
     
     public Result edit() {
         return ok(views.html.dashboard.edit.render());
+    }
+    
+    public Result widget() {
+        return ok(views.html.dashboard.widget.render(UUID.randomUUID().toString()));
     }
 }

@@ -8,8 +8,15 @@
         ("Dashboard",null)
     )
 ){
+<script src="@routes.Assets.versioned("javascripts/interact.js")"></script>
 <style>
-.test{ padding-top: 2em;padding-bottom: 2em;
+.draggable{}
+.widget_area{}
+.widget{}
+.drop-active{
+	border-color: #aaa;
+	border: dashed 4px;
+	border-radius: 4px;
 }
 </style>
 }{
@@ -35,38 +42,57 @@
   <div id="workspace" class="col-md-12">
   	<!-- Page wide widget -->
   	<div class="row">
-  		<div id="widget1" class="col-md-12">
-  			<div class="panel panel-info">
-			  <div class="panel-heading">Panel heading without title 
-			  	<div class="pull-right">
-			  		<a href="#"><span class="fa fa-cog"></span></a>
-			  	</div>
-			  </div>
-			  <div class="panel-body">
-			    Panel content
-			  </div>
-			</div>
+  		<div id="widget1" class="col-md-12 widget_area">
   		</div>
   	</div>
     <!-- Two widgets -->
   	<div class="row">
-  		<div id="widget2" class="col-md-6">
-  			<div class="panel panel-info">
-			  <div class="panel-heading">Panel heading without title</div>
-			  <div class="panel-body">
-			    Panel content
-			  </div>
-			</div>
+  		<div id="widget2" class="col-md-6 widget_area">
   		</div>
-  		<div id="widget2" class="col-md-6">
-  			<div class="panel panel-info">
-			  <div class="panel-heading">Panel heading without title</div>
-			  <div class="panel-body">
-			    Panel content
-			  </div>
-			</div>
+  		<div id="widget3" class="col-md-6 widget_area">
   		</div>
   	</div>
   </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+	loadWidget($('#widget1'));
+	loadWidget($('#widget2'));
+	
+	interact('.widget_area').dropzone({
+		overlap: 0.75,
+		ondropactivate: function (event) {
+		    event.target.classList.add('drop-active');
+		  },
+		  ondragenter: function (event) {
+		  },
+		  ondragleave: function (event) {
+		  },
+		  ondrop: function (event) {
+		  },
+		  ondropdeactivate: function (event) {
+		  }
+	});
+});
+
+function loadWidget(snapingArea){
+	snapingArea.html('<div>... Pending ...</div>');
+	var jqxhr = $.get("/dash/widget", function(data) {
+		snapingArea.html(data);
+		interact('.draggable').draggable();
+		}).fail(function() {
+			snapingArea.html('<div>ERROR</div>');
+		});
+}
+
+function getWidgetPanel(widgetTitle, widgetContent) {
+	var widgetPanel = '<div class="panel panel-info">';
+	widgetPanel = widgetPanel + '<div class="panel-heading">' + widgetTitle
+			+ '</div>';
+	widgetPanel = widgetPanel + '<div id="widget_2" class="panel-body ">';
+	widgetPanel = widgetPanel + '</div>';
+	widgetPanel = widgetPanel + '</div>';
+	return widgetPanel;
+}
+</script>
 }

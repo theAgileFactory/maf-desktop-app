@@ -3,6 +3,7 @@
 #-------------------
 
 GET    /dash/                      controllers.dashboard.DashboardController.index()
+GET    /dash/widget                controllers.dashboard.DashboardController.widget()
 GET    /dash/edit                  controllers.dashboard.DashboardController.edit()
 
 #Custom router method
