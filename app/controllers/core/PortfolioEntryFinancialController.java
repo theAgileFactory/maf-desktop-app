@@ -307,53 +307,76 @@ public class PortfolioEntryFinancialController extends Controller {
         Double capexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false);
         Totals totals = new Totals(opexTotalBudget, capexTotalBudget, opexTotalCostToComplete, capexTotalCostToComplete, opexTotalEngaged, capexTotalEngaged);
 
-        // compute the totals for effort
-        Double effortOpexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, true, true);
-        Double effortCapexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false, true);
-        Double effortOpexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true, true);
-        Double effortCapexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false, true);
-        Double effortOpexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true, true);
-        Double effortCapexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false, true);
-        Totals effortTotals = new Totals(effortOpexTotalBudget, effortCapexTotalBudget, effortOpexTotalCostToComplete, effortCapexTotalCostToComplete,
-                effortOpexTotalEngaged, effortCapexTotalEngaged);
+        Totals effortTotals = null;
+        Totals costTotals = null;
 
-        // compute the totals for cost
-        Double costOpexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, true, false);
-        Double costCapexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false, false);
-        Double costOpexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true, false);
-        Double costCapexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
-        Double costOpexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true, false);
-        Double costCapexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
-        Totals costTotals = new Totals(costOpexTotalBudget, costCapexTotalBudget, costOpexTotalCostToComplete, costCapexTotalCostToComplete,
-                costOpexTotalEngaged, costCapexTotalEngaged);
+        if (this.getBudgetTrackingService().isActive()) {
+
+            // compute the totals for effort
+            Double effortOpexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, true, true);
+            Double effortCapexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false, true);
+            Double effortOpexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true, true);
+            Double effortCapexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false, true);
+            Double effortOpexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true, true);
+            Double effortCapexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false, true);
+            effortTotals = new Totals(effortOpexTotalBudget, effortCapexTotalBudget, effortOpexTotalCostToComplete, effortCapexTotalCostToComplete,
+                    effortOpexTotalEngaged, effortCapexTotalEngaged);
+
+            // compute the totals for cost
+            Double costOpexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, true, false);
+            Double costCapexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false, false);
+            Double costOpexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true, false);
+            Double costCapexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
+            Double costOpexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true, false);
+            Double costCapexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
+            costTotals = new Totals(costOpexTotalBudget, costCapexTotalBudget, costOpexTotalCostToComplete, costCapexTotalCostToComplete,
+                    costOpexTotalEngaged, costCapexTotalEngaged);
+
+        }
 
         BasicBar basicBar = new BasicBar();
         basicBar.addCategory(Msg.get("core.portfolio_entry_financial.view.status.table.budget.label"));
         basicBar.addCategory(Msg.get("core.portfolio_entry_financial.view.status.table.forecast.label"));
 
-        BasicBar.Elem effortCapexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.effort.label") + " - CAPEX");
-        effortCapexElem.setStack("1");
-        effortCapexElem.addValue(effortTotals.getCapexBudget());
-        effortCapexElem.addValue(effortTotals.getForecast(false));
-        basicBar.addElem(effortCapexElem);
+        if (this.getBudgetTrackingService().isActive()) {
 
-        BasicBar.Elem effortOpexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.effort.label") + " - OPEX");
-        effortOpexElem.setStack("1");
-        effortOpexElem.addValue(effortTotals.getOpexBudget());
-        effortOpexElem.addValue(effortTotals.getForecast(true));
-        basicBar.addElem(effortOpexElem);
+            BasicBar.Elem effortCapexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.effort.label") + " - CAPEX");
+            effortCapexElem.setStack("1");
+            effortCapexElem.addValue(effortTotals.getCapexBudget());
+            effortCapexElem.addValue(effortTotals.getForecast(false));
+            basicBar.addElem(effortCapexElem);
 
-        BasicBar.Elem costCapexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.cost.label") + " - CAPEX");
-        costCapexElem.setStack("2");
-        costCapexElem.addValue(costTotals.getCapexBudget());
-        costCapexElem.addValue(costTotals.getForecast(false));
-        basicBar.addElem(costCapexElem);
+            BasicBar.Elem effortOpexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.effort.label") + " - OPEX");
+            effortOpexElem.setStack("1");
+            effortOpexElem.addValue(effortTotals.getOpexBudget());
+            effortOpexElem.addValue(effortTotals.getForecast(true));
+            basicBar.addElem(effortOpexElem);
 
-        BasicBar.Elem costOpexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.cost.label") + " - OPEX");
-        costOpexElem.setStack("2");
-        costOpexElem.addValue(costTotals.getOpexBudget());
-        costOpexElem.addValue(costTotals.getForecast(true));
-        basicBar.addElem(costOpexElem);
+            BasicBar.Elem costCapexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.cost.label") + " - CAPEX");
+            costCapexElem.setStack("2");
+            costCapexElem.addValue(costTotals.getCapexBudget());
+            costCapexElem.addValue(costTotals.getForecast(false));
+            basicBar.addElem(costCapexElem);
+
+            BasicBar.Elem costOpexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.cost.label") + " - OPEX");
+            costOpexElem.setStack("2");
+            costOpexElem.addValue(costTotals.getOpexBudget());
+            costOpexElem.addValue(costTotals.getForecast(true));
+            basicBar.addElem(costOpexElem);
+
+        } else {
+
+            BasicBar.Elem effortCapexElem = new BasicBar.Elem("CAPEX");
+            effortCapexElem.addValue(totals.getCapexBudget());
+            effortCapexElem.addValue(totals.getForecast(false));
+            basicBar.addElem(effortCapexElem);
+
+            BasicBar.Elem effortOpexElem = new BasicBar.Elem("OPEX");
+            effortOpexElem.addValue(totals.getOpexBudget());
+            effortOpexElem.addValue(totals.getForecast(true));
+            basicBar.addElem(effortOpexElem);
+
+        }
 
         return ok(
                 views.html.core.portfolioentryfinancial.portfolio_entry_financial_status.render(portfolioEntry, basicBar, totals, effortTotals, costTotals));

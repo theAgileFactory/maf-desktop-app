@@ -28,6 +28,7 @@
 @import framework_views.parts
 @import framework_views.parts.formats._
 @import views.html.modelsparts._
+@import views.html.commons._
 
 @breadcrump=@{
     Seq(
@@ -59,54 +60,81 @@
                 <tbody>
                     <tr>
                         <td>
-                            <p>
-                                <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
-                                <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
-                            </p>
+                            @if(_budgetTrackingService.isActive()) {
+                                <p>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
+                                </p>
+                            }
                             <strong>@parts.Msg("core.portfolio_entry_financial.view.status.table.budget.label")</strong>
                         </td>
                         <td class="text-right">
-                            <p>
-                                <small>@display_number(effortTotals.getOpexBudget)</small><br/>
-                                <small>@display_number(costTotals.getOpexBudget)</small><br/>
-                            </p>
+                            @if(_budgetTrackingService.isActive()) {
+                                <p>
+                                    <small>@display_number(effortTotals.getOpexBudget)</small><br/>
+                                    <small>@display_number(costTotals.getOpexBudget)</small><br/>
+                                </p>
+                            }
                             <span id="financial-budget-opex-total">@display_number(totals.getOpexBudget)</span>
                         </td>
                         <td class="text-right">
-                            <p>
-                                <small>@display_number(effortTotals.getCapexBudget)</small><br/>
-                                <small>@display_number(costTotals.getCapexBudget)</small><br/>
-                            </p>
+                            @if(_budgetTrackingService.isActive()) {
+                                <p>
+                                    <small>@display_number(effortTotals.getCapexBudget)</small><br/>
+                                    <small>@display_number(costTotals.getCapexBudget)</small><br/>
+                                </p>
+                            }
                             <span id="financial-budget-capex-total">@display_number(totals.getCapexBudget)</span>
                         </td>
                     </tr>
                     
                     <tr>
                         <td>
-                            <p>
-                                <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
-                                <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
-                                <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
-                                <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
-                            </p>
+                            @if(_budgetTrackingService.isActive()) {
+                                <p>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
+                                </p>
+                            } else {
+                                <p>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label")</small><br/>
+                                </p>
+                            }
                             <strong>@parts.Msg("core.portfolio_entry_financial.view.status.table.forecast.label")</strong>
                         </td>
                         <td class="text-right">
-                            <p>
-                                <small>@display_number(effortTotals.getOpexCostToComplete)</small><br/>
-                                <small>@display_number(costTotals.getOpexCostToComplete)</small><br/>
-                                <small>@display_number(effortTotals.getOpexEngaged)</small><br/>
-                                <small>@display_number(costTotals.getOpexEngaged)</small><br/>
-                            </p>
+                            @if(_budgetTrackingService.isActive()) {
+                                <p>
+                                    <small>@display_number(effortTotals.getOpexCostToComplete)</small><br/>
+                                    <small>@display_number(costTotals.getOpexCostToComplete)</small><br/>
+                                    <small>@display_number(effortTotals.getOpexEngaged)</small><br/>
+                                    <small>@display_number(costTotals.getOpexEngaged)</small><br/>
+                                </p>
+                            } else {
+                                <p>
+                                    <small>@display_number(totals.getOpexCostToComplete)</small><br/>
+                                    <small>@display_number(totals.getOpexEngaged)</small><br/>
+                                </p>
+                            }
                             <span id="financial-forecast-opex-total">@display_number(totals.getForecast(true))</span>
                         </td>
                         <td class="text-right">
-                            <p>
-                                <small>@display_number(effortTotals.getCapexCostToComplete)</small><br/>
-                                <small>@display_number(costTotals.getCapexCostToComplete)</small><br/>
-                                <small>@display_number(effortTotals.getCapexEngaged)</small><br/>
-                                <small>@display_number(costTotals.getCapexEngaged)</small><br/>
-                            </p>
+                            @if(_budgetTrackingService.isActive()) {
+                                <p>
+                                    <small>@display_number(effortTotals.getCapexCostToComplete)</small><br/>
+                                    <small>@display_number(costTotals.getCapexCostToComplete)</small><br/>
+                                    <small>@display_number(effortTotals.getCapexEngaged)</small><br/>
+                                    <small>@display_number(costTotals.getCapexEngaged)</small><br/>
+                                </p>
+                            } else {
+                                <p>
+                                    <small>@display_number(totals.getCapexCostToComplete)</small><br/>
+                                    <small>@display_number(totals.getCapexEngaged)</small><br/>
+                                </p>
+                            }
                             <span id="financial-forecast-capex-total">@display_number(totals.getForecast(false))</span>
                         </td>
                     </tr>
