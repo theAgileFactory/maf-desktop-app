@@ -19,8 +19,9 @@ package dao.finance;
 
 import java.util.List;
 
-import models.finance.WorkOrder;
 import com.avaje.ebean.Model.Finder;
+
+import models.finance.WorkOrder;
 
 /**
  * DAO for the {@link WorkOrder} object.
@@ -58,6 +59,45 @@ public abstract class WorkOrderDAO {
      **/
     public static List<WorkOrder> getWorkOrderAsList(Long portfolioEntryId) {
         return WorkOrderDAO.findWorkOrder.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).findList();
+    }
+
+    /**
+     * Get the work order of a portfolio entry that has been generated from an
+     * allocated resource.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     * @param resourceObjectType
+     *            the type of the allocated resource
+     * @param resourceObjectId
+     *            the id of the allocated resource
+     * @param isEngaged
+     *            true to get the engaged work order, else the cost to complete
+     * @param usePurchaseOrder
+     *            true if the system is configured to use the purchase order,
+     *            else false
+     */
+    public static WorkOrder getWorkOrderByPEAndResource(Long portfolioEntryId, String resourceObjectType, Long resourceObjectId, boolean isEngaged,
+            boolean usePurchaseOrder) {
+        List<WorkOrder> workOrders = WorkOrderDAO.findWorkOrder.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId)
+                .eq("resourceObjectType", resourceObjectType).eq("resourceObjectId", resourceObjectId).findList();
+        for (WorkOrder workOrder : workOrders) {
+            if (workOrder.getComputedIsEngaged(usePurchaseOrder) == isEngaged) {
+                return workOrder;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the work orders of a portfolio entry that has been generated from an
+     * allocated resource.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
+     */
+    public static List<WorkOrder> getWorkOrderAsListAndResourceByPE(Long portfolioEntryId) {
+        return WorkOrderDAO.findWorkOrder.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).isNotNull("resourceObjectType").findList();
     }
 
 }

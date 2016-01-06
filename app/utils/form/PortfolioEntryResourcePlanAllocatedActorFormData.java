@@ -71,6 +71,12 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
     public boolean followPackageDates;
 
+    @Required
+    public BigDecimal dailyRate;
+
+    @Required
+    public BigDecimal forecastDays;
+
     /**
      * Validate the dates.
      */
@@ -124,6 +130,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.endDate = allocatedActor.endDate != null ? Utilities.getDateFormat(null).format(allocatedActor.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
         this.isConfirmed = allocatedActor.isConfirmed;
+        this.dailyRate = allocatedActor.dailyRate;
+        this.forecastDays = allocatedActor.forecastDays;
 
         this.followPackageDates = allocatedActor.followPackageDates != null ? allocatedActor.followPackageDates : false;
 
@@ -148,6 +156,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.portfolioEntryPlanningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id
                 : null;
         this.isConfirmed = true;
+        this.dailyRate = allocatedOrgUnit.dailyRate;
+        this.forecastDays = allocatedOrgUnit.forecastDays;
 
         this.followPackageDates = allocatedOrgUnit.followPackageDates != null ? allocatedOrgUnit.followPackageDates : false;
 
@@ -172,6 +182,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.portfolioEntryPlanningPackage = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id
                 : null;
         this.isConfirmed = true;
+        this.dailyRate = allocatedCompetency.dailyRate;
+        this.forecastDays = allocatedCompetency.forecastDays;
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
 
@@ -211,6 +223,9 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         }
 
         allocatedActor.isConfirmed = this.isConfirmed;
+
+        allocatedActor.dailyRate = this.dailyRate;
+        allocatedActor.forecastDays = this.forecastDays;
 
     }
 }

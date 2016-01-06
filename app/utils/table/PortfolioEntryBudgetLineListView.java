@@ -20,10 +20,6 @@ package utils.table;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 
-import models.finance.BudgetBucket;
-import models.finance.Currency;
-import models.finance.PortfolioEntryBudgetLine;
-import models.pmo.PortfolioEntry;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -31,6 +27,10 @@ import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.BudgetBucket;
+import models.finance.Currency;
+import models.finance.PortfolioEntryBudgetLine;
+import models.pmo.PortfolioEntry;
 
 /**
  * A portfolio entry budget line list view is used to display an portfolio entry
@@ -88,12 +88,12 @@ public class PortfolioEntryBudgetLineListView {
                 addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryBudgetLineListView>(IMafConstants.EDIT_URL_FORMAT,
                         new StringFormatFormatter.Hook<PortfolioEntryBudgetLineListView>() {
-                            @Override
-                            public String convert(PortfolioEntryBudgetLineListView portfolioEntryBudgetLineListView) {
-                                return controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(
-                                        portfolioEntryBudgetLineListView.portfolioEntryId, portfolioEntryBudgetLineListView.id).url();
-                            }
-                        }));
+                    @Override
+                    public String convert(PortfolioEntryBudgetLineListView portfolioEntryBudgetLineListView) {
+                        return controllers.core.routes.PortfolioEntryFinancialController
+                                .manageBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId, portfolioEntryBudgetLineListView.id).url();
+                    }
+                }));
                 setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -101,12 +101,15 @@ public class PortfolioEntryBudgetLineListView {
                 setJavaColumnFormatter("removeActionLink", new IColumnFormatter<PortfolioEntryBudgetLineListView>() {
                     @Override
                     public String apply(PortfolioEntryBudgetLineListView portfolioEntryBudgetLineListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.core.routes.PortfolioEntryFinancialController.deleteBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId,
-                                        portfolioEntryBudgetLineListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        if (!portfolioEntryBudgetLineListView.fromResource) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.PortfolioEntryFinancialController
+                                    .deleteBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId, portfolioEntryBudgetLineListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        } else {
+                            return null;
+                        }
                     }
                 });
                 setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -115,8 +118,8 @@ public class PortfolioEntryBudgetLineListView {
                 this.setLineAction(new IColumnFormatter<PortfolioEntryBudgetLineListView>() {
                     @Override
                     public String apply(PortfolioEntryBudgetLineListView portfolioEntryBudgetLineListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryFinancialController.viewBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId,
-                                portfolioEntryBudgetLineListView.id).url();
+                        return controllers.core.routes.PortfolioEntryFinancialController
+                                .viewBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId, portfolioEntryBudgetLineListView.id).url();
                     }
                 });
 
@@ -151,6 +154,8 @@ public class PortfolioEntryBudgetLineListView {
 
     public BudgetBucket budgetBucket;
 
+    public boolean fromResource;
+
     /**
      * Construct a list view with a DB entry.
      * 
@@ -170,5 +175,6 @@ public class PortfolioEntryBudgetLineListView {
         this.currency = budgetLine.currency;
         this.amount = budgetLine.amount;
         this.budgetBucket = budgetLine.budgetBucket;
+        this.fromResource = budgetLine.resourceObjectType != null;
     }
 }

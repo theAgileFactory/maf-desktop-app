@@ -45,6 +45,7 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
@@ -72,6 +73,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckActorExists;
 import security.CheckOrgUnitExists;
+import services.budgettracking.IBudgetTrackingService;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.OrgUnitFormData;
@@ -96,7 +98,10 @@ public class OrgUnitController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
 
@@ -455,7 +460,12 @@ public class OrgUnitController extends Controller {
         Set<String> columnsToHide = new HashSet<String>();
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
+        columnsToHide.add("followPackageDates");
         columnsToHide.add("orgUnit");
+        if (!getBudgetTrackingService().isActive()) {
+            columnsToHide.add("forecastDays");
+            columnsToHide.add("dailyRate");
+        }
 
         Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> portfolioEntryTable = PortfolioEntryResourcePlanAllocatedOrgUnitListView.templateTable
                 .fill(allocationListView, columnsToHide);
@@ -638,8 +648,7 @@ public class OrgUnitController extends Controller {
                     new ClickableMenuItem("core.org_unit.sidebar.portfolio_entries", controllers.core.routes.OrgUnitController.listPortfolioEntries(id, 0),
                             "fa fa-sticky-note", currentType.equals(MenuItemType.INITIATIVES)));
 
-            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.org_unit.sidebar.allocation", "fa fa-book",
-                    currentType.equals(MenuItemType.ALLOCATION));
+            HeaderMenuItem allocationMenu = new HeaderMenuItem("core.org_unit.sidebar.allocation", "fa fa-book", currentType.equals(MenuItemType.ALLOCATION));
 
             allocationMenu.addSubMenuItem(new ClickableMenuItem("core.org_unit.sidebar.allocation.overview",
                     controllers.core.routes.OrgUnitController.allocation(id), "fa fa-tachometer", false));
@@ -755,11 +764,32 @@ public class OrgUnitController extends Controller {
         OVERVIEW, INITIATIVES, ALLOCATION;
     }
 
+    /**
+     * Get the i18n messages plugin.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
+    }
+
 }

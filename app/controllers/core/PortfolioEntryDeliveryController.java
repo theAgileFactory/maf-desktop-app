@@ -449,7 +449,7 @@ public class PortfolioEntryDeliveryController extends Controller {
     }
 
     /**
-     * Unfollow a deliverable
+     * Unfollow a deliverable.
      * 
      * @param id
      *            the portfolio entry id

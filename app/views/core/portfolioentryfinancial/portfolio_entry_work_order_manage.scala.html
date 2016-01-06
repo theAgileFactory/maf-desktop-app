@@ -17,6 +17,7 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
+    fromResource: Boolean,
     workOrder: models.finance.WorkOrder,
     workOrderForm: Form[utils.form.WorkOrderFormData],
     currencies: framework.utils.ISelectableValueHolderCollection[_]
@@ -70,15 +71,17 @@
                     <fieldset>
                     
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        <input type="hidden" name="fromResource" value="@fromResource"/>
         
                         @if(workOrderForm("workOrderId").value!=null) {
                             <input type="hidden" name="workOrderId" value="@workOrderForm("workOrderId").value"/>
                         }
                         
-                        @***if edit case and the work order is engaged then the user can not update the isOpex and shared fields***@
-                        @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
-                            <input type="hidden" id="isOpex" data-primitive="true" name="isOpex" value="@workOrderForm("isOpex").value"/>
-                            <input type="hidden" id="shared" data-primitive="true" name="shared" value="@workOrderForm("shared").value"/>
+                        @***if fromResource or (edit case and the work order is engaged) then the user can not update the isOpex and shared fields***@
+                        @if(fromResource || (workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))) {
+                            <input type="hidden" id="@workOrderForm("isOpex").id" data-primitive="true" name="@workOrderForm("isOpex").name" value="@workOrderForm("isOpex").value"/>
+                            <input type="hidden" id="@workOrderForm("shared").id" data-primitive="true" name="@workOrderForm("shared").name" value="@workOrderForm("shared").value"/>
                         } else {
                             @parts.checkbox(
                                 workOrderForm("isOpex"), 
@@ -101,8 +104,8 @@
                         
                         @helper.textarea(workOrderForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.description.label"))
         
-                        @***if the purchase orders are disable or create case or the work order is not engaged then display the amount and currency fields***@
-                        @if(!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin) || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
+                        @***if not fromResource and (the purchase orders are disable or create case or the work order is not engaged) then display the amount and currency fields***@
+                        @if(!fromResource && (!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin) || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))) {
                         
                             @parts.input_text(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
         
@@ -110,46 +113,56 @@
                             
                         } else {
                         
-                            <input type="hidden" id="currency" data-primitive="true" name="currency" value="@workOrderForm("currency").value"/>
-                            <input type="hidden" id="amount" data-primitive="true" name="amount" value="@workOrderForm("amount").value"/>
+                            <input type="hidden" id="@workOrderForm("currency").id" data-primitive="true" name="@workOrderForm("currency").name" value="@workOrderForm("currency").value"/>
+                            <input type="hidden" id="@workOrderForm("amount").id" data-primitive="true" name="@workOrderForm("amount").name" value="@workOrderForm("amount").value"/>
                             
                         }
                         
                         @***if edit case and the work order is engaged and (the work order is shared or the purchase orders are disable) then the user can define the amount received***@
                         @if(workOrder != null && workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)) && (workOrder.shared || !dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin))) {
                             @parts.input_text(workOrderForm("amountReceived"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount_received.label"))
+                        } else {
+                            <input type="hidden" id="@workOrderForm("amountReceived").id" data-primitive="true" name="@workOrderForm("amountReceived").name" value="@workOrderForm("amountReceived").value"/>
                         }
                         
-                        @parts.singlevalue_picker(
-                            workOrderForm("portfolioEntryPlanningPackage"), 
-                            parts.Msg.asString("object.work_order.portfolio_entry_planning_package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
-                        )
+                        @if(!fromResource) {
+                            @parts.singlevalue_picker(
+                                workOrderForm("portfolioEntryPlanningPackage"), 
+                                parts.Msg.asString("object.work_order.portfolio_entry_planning_package.label"),
+                                controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
+                                Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                            )
+                            
+                            @parts.checkbox(
+                                workOrderForm("followPackageDates"), 
+                                parts.Msg.asString("object.work_order.follow_package_dates.label")
+                            )
+                            
+                            @parts.dateinput(workOrderForm("startDate"), "object.work_order.start_date.label")
+                            
+                            @parts.dateinput(workOrderForm("dueDate"), "object.work_order.due_date.label")
+                            
+                            @views.html.core.portfolioentryplanning.allocated_resource_manage_js()
                         
-                        @parts.checkbox(
-                            workOrderForm("followPackageDates"), 
-                            parts.Msg.asString("object.work_order.follow_package_dates.label")
-                        )
-                        
-                        @parts.dateinput(workOrderForm("startDate"), "object.work_order.start_date.label")
-                        
-                        @parts.dateinput(workOrderForm("dueDate"), "object.work_order.due_date.label")
+                            <script>
+            
+                                $('#@workOrderForm("portfolioEntryPlanningPackage").id').change(function() { 
+                                    maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id');
+                                });
+                                $('#@workOrderForm("followPackageDates").id').change(function() { 
+                                    maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id') 
+                                });
+                
+                                maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id');
+                                
+                            </script>
 
-                        @views.html.core.portfolioentryplanning.allocated_resource_manage_js()
-                        
-                        <script>
-        
-                        $('#@workOrderForm("portfolioEntryPlanningPackage").id').change(function() { 
-                            maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id');
-                        });
-                        $('#@workOrderForm("followPackageDates").id').change(function() { 
-                            maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id') 
-                        });
-        
-                        maf_recomputeFields('@workOrderForm("portfolioEntryPlanningPackage").id', '@workOrderForm("followPackageDates").id', '@workOrderForm("startDate").id', '@workOrderForm("dueDate").id');
-                        
-                        </script>
+                        } else {
+                            <input type="hidden" id="@workOrderForm("portfolioEntryPlanningPackage").id" data-primitive="true" name="@workOrderForm("portfolioEntryPlanningPackage").name" value="@workOrderForm("portfolioEntryPlanningPackage").value"/>
+                            <input type="hidden" id="@workOrderForm("followPackageDates").id" data-primitive="true" name="@workOrderForm("followPackageDates").name" value="@workOrderForm("followPackageDates").value"/>
+                            <input type="hidden" id="@workOrderForm("startDate").id" data-primitive="true" name="@workOrderForm("startDate").name" value="@workOrderForm("startDate").value"/>
+                            <input type="hidden" id="@workOrderForm("dueDate").id" data-primitive="true" name="@workOrderForm("dueDate").name" value="@workOrderForm("dueDate").value"/>
+                        }
         
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)'>@parts.Msg("button.cancel")</a>

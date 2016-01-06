@@ -44,6 +44,8 @@ public class WorkOrderFormData {
     // the portfolioEntry id
     public Long id;
 
+    public boolean fromResource;
+
     public Long workOrderId;
 
     @Required

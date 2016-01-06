@@ -677,6 +677,8 @@ preference.smtp_password_preference.name=Passwort
 preference.smtp_password_preference.description=Der SMTP-Server-Passwort
 preference.notification_sending_system_preference.name=System Mitteilungen
 preference.notification_sending_system_preference.description=Interne BizDock Mitteilung order via Email
+preference.budget_tracking_effort_based_preference.name=de: Effort-based budget/forecast
+preference.budget_tracking_effort_based_preference.description=de: Define if the financial part (budget and forecast) of an initiative automatically includes the effort of the resources. If true, by adding an allocation then a budget and forecast lines are also added.
 
 #----------------------
 # authentication
@@ -1036,6 +1038,8 @@ object.portfolio_entry.governance_id.label=ID
 object.portfolio_entry.erp_ref_id.label=ERP ID
 object.portfolio_entry.creation_date.label=Erstellungsdatum
 object.portfolio_entry.is_public.label=Öffentlich
+object.portfolio_entry.default_is_opex.label=de: OPEX by default
+object.portfolio_entry.default_is_opex.help=de: Default expenditure type. Used when no type is existing for a budget/forecast that has been generated with a resource allocation.
 object.portfolio_entry.name.label=Name
 object.portfolio_entry.description.label=Beschreibung
 object.portfolio_entry.type.label=Typ
@@ -1126,6 +1130,9 @@ object.portfolio_entry_planning_package.start_date.invalid=Wenn Sie nur ein Datu
 object.portfolio_entry_planning_package.end_date.label=Enddatum
 object.portfolio_entry_planning_package.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.portfolio_entry_planning_package.name.label=Name
+object.portfolio_entry_planning_package.is_opex.label=OPEX
+object.portfolio_entry_planning_package.is_opex.help=de: Check this box if the package is OPEX, else it means it''s CAPEX.
+object.portfolio_entry_planning_package.expenditure_type.label=Kosten
 object.portfolio_entry_planning_package.description.label=Beschreibung
 object.portfolio_entry_planning_package.group.label=Gruppe
 object.portfolio_entry_planning_package.type.label=Typ
@@ -1365,6 +1372,10 @@ object.allocated_resource.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.allocated_resource.package.label=Planungspaket
 object.allocated_resource.follow_package_dates.label=Folgt Packetdatum
 object.allocated_resource.is_confirmed.label=Bestätigt
+object.allocated_resource.daily_rate.label=de: Daily rate
+object.allocated_resource.daily_rate.help=de: The cost in the default currency per day for the allocated resource.
+object.allocated_resource.forecast_days.label=de: Forecast in days
+object.allocated_resource.forecast_days.help=de: Total forecast (effort done + remaining effort) in days for the allocated resource.
 object.allocated_resource.actor.table.empty=Keine Einträge
 object.allocated_resource.org_unit.table.empty=Keine Einträge
 object.allocated_resource.competency.table.empty=Keine Einträge
@@ -2236,12 +2247,19 @@ core.portfolio_entry_financial.view.forecast.title=Kostenprognose
 core.portfolio_entry_financial.view.forecast.panel.cost_to_complete.title=Geplante Aufträge
 core.portfolio_entry_financial.view.forecast.panel.engaged_work_order.title=Gestartete Aufträge
 core.portfolio_entry_financial.view.forecast.panel.engaged_purchase_order.title=Bestellungen
+core.portfolio_entry_financial.view.status.table.effort.label=de: Effort
+core.portfolio_entry_financial.view.status.table.cost.label=de: Expense
 core.portfolio_entry_financial.view.status.table.budget.label=Budget
 core.portfolio_entry_financial.view.status.table.cost_to_complete.label=Kosten der Fertigstellung
 core.portfolio_entry_financial.view.status.table.engaged.label=Istkosten
 core.portfolio_entry_financial.view.status.table.forecast.label=Kostenprognose
 core.portfolio_entry_financial.view.status.table.deviation.label=Abweichung
 core.portfolio_entry_financial.view.status.table.status.label=Status
+
+#budget tracking
+core.portfolio_entry_financial.budget_tracking.run.help=de: Refresh the budget and forecast of efforts. Last update: {0}
+core.portfolio_entry_financial.budget_tracking.run.successful=de: The budget and forecast of efforts are now up to date.
+core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help=de: There exist timesheets on this initiative that are not engaged because no resource allocation is corresponding.
 
 #view budget line
 core.portfolio_entry_financial.budget_line.view.title=Budget Eintrag

@@ -94,26 +94,36 @@ public class WorkOrderListView {
                 addCustomAttributeColumns(WorkOrder.class);
 
                 addColumn("selectLineItemActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("selectLineItemActionLink", new StringFormatFormatter<WorkOrderListView>(
-                        "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
+                setJavaColumnFormatter("selectLineItemActionLink", new IColumnFormatter<WorkOrderListView>() {
                     @Override
-                    public String convert(WorkOrderListView workOrderListView) {
-                        return controllers.core.routes.PortfolioEntryFinancialController
-                                .selectWorkOrderLineItemStep1(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                    public String apply(WorkOrderListView workOrderListView, Object value) {
+                        if (!workOrderListView.fromResource) {
+                            String url = controllers.core.routes.PortfolioEntryFinancialController
+                                    .selectWorkOrderLineItemStep1(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format
+                                    .render(url, "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>").body();
+                        } else {
+                            return null;
+                        }
                     }
-                }));
+                });
                 setColumnCssClass("selectLineItemActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("selectLineItemActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                 addColumn("engageWorkOrder", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("engageWorkOrder", new StringFormatFormatter<WorkOrderListView>(
-                        "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>", new StringFormatFormatter.Hook<WorkOrderListView>() {
+                setJavaColumnFormatter("engageWorkOrder", new IColumnFormatter<WorkOrderListView>() {
                     @Override
-                    public String convert(WorkOrderListView workOrderListView) {
-                        return controllers.core.routes.PortfolioEntryFinancialController
-                                .engageWorkOrderStep1(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                    public String apply(WorkOrderListView workOrderListView, Object value) {
+                        if (!workOrderListView.fromResource) {
+                            String url = controllers.core.routes.PortfolioEntryFinancialController
+                                    .engageWorkOrderStep1(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format
+                                    .render(url, "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>").body();
+                        } else {
+                            return null;
+                        }
                     }
-                }));
+                });
                 setColumnCssClass("engageWorkOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
                 setColumnValueCssClass("engageWorkOrder", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -133,11 +143,15 @@ public class WorkOrderListView {
                 setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<WorkOrderListView>() {
                     @Override
                     public String apply(WorkOrderListView workOrderListView, Object value) {
-                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                Msg.get("default.delete.confirmation.message"));
-                        String url = controllers.core.routes.PortfolioEntryFinancialController
-                                .deleteWorkOrder(workOrderListView.portfolioEntryId, workOrderListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        if (!workOrderListView.fromResource) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.PortfolioEntryFinancialController
+                                    .deleteWorkOrder(workOrderListView.portfolioEntryId, workOrderListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        } else {
+                            return null;
+                        }
                     }
                 });
                 setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -184,6 +198,8 @@ public class WorkOrderListView {
 
     public PortfolioEntryPlanningPackage planningPackage;
 
+    public boolean fromResource;
+
     /*
      * if engaged
      */
@@ -210,7 +226,7 @@ public class WorkOrderListView {
         this.dueDate = workOrder.dueDate;
         this.startDate = workOrder.startDate;
         this.planningPackage = workOrder.portfolioEntryPlanningPackage;
-
+        this.fromResource = workOrder.resourceObjectType != null;
         this.amountReceived = workOrder.getComputedAmountReceived(PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin));
     }
 }

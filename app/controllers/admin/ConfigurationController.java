@@ -101,6 +101,7 @@ public class ConfigurationController extends Controller {
             add(IMafConstants.TIMESHEET_HOURS_PER_DAY);
             add(IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE);
             add(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
+            add(IMafConstants.BUDGET_TRACKING_EFFORT_BASED_PREFERENCE);
             add(IFrameworkConstants.API_AUTHZ_MODE_PREFERENCE);
             add(IFrameworkConstants.NOTIFICATION_SENDING_SYSTEM_PREFERENCE);
         }

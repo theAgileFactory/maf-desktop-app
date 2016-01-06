@@ -37,6 +37,14 @@
     )
 }
 
+@budgetTrackingLastRun=@{
+    if(portfolioEntry.budgetTrackingLastRun != null) {
+        framework.utils.Utilities.getDateFormat(framework.utils.Utilities.getDefaultDatePattern() + " kk:mm").format(portfolioEntry.budgetTrackingLastRun)
+    } else {
+        framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
+    }
+}
+
 @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.FINANCIAL, breadcrump){
 
     <span id="portfolio-entry-@(portfolioEntry.id)-financial-details"></span>
@@ -50,7 +58,11 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                    @if(_budgetTrackingService.isActive()) {
+                        <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", budgetTrackingLastRun)" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
+                    }
+                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+
                 }
             </div>
         </div>
@@ -69,7 +81,10 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                    @if(_budgetTrackingService.isActive()) {
+                        <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", budgetTrackingLastRun)" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
+                    }
+                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
         </div>
@@ -86,6 +101,25 @@
         
             <div class="panel-heading">
                 @parts.Msg("core.portfolio_entry_financial.view.forecast.panel.engaged_work_order.title")
+                
+                <div class="pull-right">
+                    @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
+                        @if(_budgetTrackingService.isActive()) {
+                            <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", budgetTrackingLastRun)" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
+                        }
+                    }
+                    @if(portfolioEntry.budgetTrackingHasUnallocatedTimesheet) {
+                        &nbsp
+                        <a data-toggle="tooltip" id="budget-tracking-unallocated-timesheet" href="@controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntry.id).url"
+                            title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help")">
+                            <span class="fa fa-exclamation-triangle fa-lg" style="color: red;"></span>
+                        </a> 
+                        <script>
+                            $('#budget-tracking-unallocated-timesheet').tooltip();
+                        </script>
+                    }
+                </div>
+                
             </div>
 
             <div class="panel-body">
@@ -108,6 +142,10 @@
         
         </div>
     }
+    
+    <script>
+        $('.run-budget-tracking-link').tooltip();
+    </script>
 
 
 }

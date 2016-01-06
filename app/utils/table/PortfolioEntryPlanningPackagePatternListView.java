@@ -61,6 +61,14 @@ public class PortfolioEntryPlanningPackagePatternListView {
             addColumn("description", "description", "object.portfolio_entry_planning_package.description.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
 
+            addColumn("isOpex", "isOpex", "object.portfolio_entry_planning_package.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
+            setJavaColumnFormatter("isOpex", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
+                @Override
+                public String apply(PortfolioEntryPlanningPackagePatternListView portfolioEntryPlanningPackagePatternListView, Object value) {
+                    return views.html.modelsparts.display_is_opex.render(portfolioEntryPlanningPackagePatternListView.isOpex).body();
+                }
+            });
+
             addColumn("type", "type", "object.portfolio_entry_planning_package.type.label", Table.ColumnDef.SorterType.NONE);
             setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
                 @Override
@@ -115,6 +123,8 @@ public class PortfolioEntryPlanningPackagePatternListView {
 
     public PortfolioEntryPlanningPackageType type;
 
+    public boolean isOpex;
+
     /**
      * Construct a list view with a DB entry.
      * 
@@ -131,6 +141,7 @@ public class PortfolioEntryPlanningPackagePatternListView {
         this.name = packagePattern.name;
         this.description = packagePattern.description;
         this.type = packagePattern.portfolioEntryPlanningPackageType;
+        this.isOpex = packagePattern.isOpex;
 
     }
 }

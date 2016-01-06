@@ -20,12 +20,25 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.commons._
+@import commons._
+
+@name=@{
+    if(planningPackage != null) {
+        if(_budgetTrackingService.isActive()) {
+            planningPackage.getName + " (" + display_is_opex(planningPackage.isOpex).toString.trim + ")"
+        } else {
+            planningPackage.getName
+        }
+    } else {
+        ""
+    }
+}
 
 @if(planningPackage!= null && !planningPackage.deleted) {
     @if(_securityService.dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", planningPackage.portfolioEntry.id)) {
-        <a href="@controllers.core.routes.PortfolioEntryPlanningController.viewPackage(planningPackage.portfolioEntry.id, planningPackage.id)">@planningPackage.getName</a>
+        <a href="@controllers.core.routes.PortfolioEntryPlanningController.viewPackage(planningPackage.portfolioEntry.id, planningPackage.id)">@name</a>
     } else {
-        @planningPackage.getName
+        @name
     }
 } else {
     @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA

@@ -31,6 +31,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
+import com.avaje.ebean.TxIsolation;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
@@ -128,6 +129,8 @@ public class PortfolioEntryController extends Controller {
     private Configuration configuration;
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private II18nMessagesPlugin i18nMessagesPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -496,21 +499,35 @@ public class PortfolioEntryController extends Controller {
 
         PortfolioEntryEditFormData portfolioEntryFormData = boundForm.get();
 
-        // save the portfolio entry
-        PortfolioEntry updPortfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryFormData.id);
-        portfolioEntryFormData.fill(updPortfolioEntry);
-        updPortfolioEntry.update();
+        Ebean.beginTransaction(TxIsolation.READ_COMMITED);
+        try {
 
-        // update the licenses number (because the flag is archived is used for
-        // the computation and could be modified)
-        getLicensesManagementService().updateConsumedPortfolioEntries();
+            // save the portfolio entry
+            PortfolioEntry updPortfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryFormData.id);
+            portfolioEntryFormData.fill(updPortfolioEntry);
+            updPortfolioEntry.update();
 
-        // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, id);
+            // update the licenses number (because the flag is archived is used
+            // for the computation and could be modified)
+            getLicensesManagementService().updateConsumedPortfolioEntries();
 
-        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.edit.successful"));
+            // save the custom attributes
+            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, id);
 
-        return redirect(controllers.core.routes.PortfolioEntryController.view(portfolioEntryFormData.id, 0));
+            Ebean.commitTransaction();
+            Ebean.endTransaction();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.edit.successful"));
+
+            return redirect(controllers.core.routes.PortfolioEntryController.view(portfolioEntryFormData.id, 0));
+
+        } catch (Exception e) {
+
+            Ebean.rollbackTransaction();
+            Ebean.endTransaction();
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
+        }
     }
 
     /**
@@ -844,9 +861,8 @@ public class PortfolioEntryController extends Controller {
                     currentType.equals(MenuItemType.OVERVIEW)));
         }
 
-        sideBar.addMenuItem(
-                new ClickableMenuItem("core.portfolio_entry.sidebar.view.label", controllers.core.routes.PortfolioEntryController.view(portfolioEntryId, 0),
-                        "fa fa-search-plus", currentType.equals(MenuItemType.VIEW)));
+        sideBar.addMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.view.label",
+                controllers.core.routes.PortfolioEntryController.view(portfolioEntryId, 0), "fa fa-search-plus", currentType.equals(MenuItemType.VIEW)));
 
         if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION, "", portfolioEntryId)) {
 
@@ -909,8 +925,8 @@ public class PortfolioEntryController extends Controller {
                     currentType.equals(MenuItemType.REPORTING));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.registers.label",
-                    controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntryId, 0, 0, 0, false, false),
-                    "fa fa-inbox", false));
+                    controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntryId, 0, 0, 0, false, false), "fa fa-inbox",
+                    false));
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.events.label",
                     controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryId), "fa fa-bullhorn", false));
@@ -1007,5 +1023,12 @@ public class PortfolioEntryController extends Controller {
      */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return this.accountManagerPlugin;
+    }
+
+    /**
+     * Get the i18n messages service.
+     */
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
     }
 }

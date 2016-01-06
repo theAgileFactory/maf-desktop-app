@@ -23,12 +23,23 @@
 
 @if(report!= null && !report.deleted) {
     @if(_securityService.dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", report.portfolioEntry.id)) {
-        <a id="report-status-@(report.id)" data-toggle="tooltip" data-html="true" title="@(report.comments.replace("\n", "<br />").replace("\"", "'"))" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(report.portfolioEntry.id)">
-            @display_portfolio_entry_report_status_type(report.portfolioEntryReportStatusType)
-        </a>
-        <script>
-            $('#report-status-@(report.id)').tooltip();
-        </script>
+        
+        <style>
+            .report-status-container-@(report.id) .tooltip-inner {
+                max-width: 600px;
+                text-align: left;
+            }
+        </style>
+        
+        <div class="report-status-container-@(report.id)">
+            <a style="text-decoration: none;" id="report-status-@(report.id)" data-toggle="tooltip" data-html="true" title="@(report.comments.replace("\n", "<br />").replace("\"", "'"))" href="@controllers.core.routes.PortfolioEntryStatusReportingController.viewReport(report.portfolioEntry.id, report.id)">
+                @display_portfolio_entry_report_status_type(report.portfolioEntryReportStatusType)
+            </a>
+            <script>
+                $('#report-status-@(report.id)').tooltip();
+            </script>
+        </div>
+
     } else {
         @display_portfolio_entry_report_status_type(report.portfolioEntryReportStatusType)
     }

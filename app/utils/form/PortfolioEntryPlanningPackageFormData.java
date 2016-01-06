@@ -52,6 +52,9 @@ public class PortfolioEntryPlanningPackageFormData {
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String name;
 
+    @Required
+    public boolean isOpex;
+
     @MaxLength(value = IModelConstants.VLARGE_STRING)
     public String description;
 
@@ -115,6 +118,7 @@ public class PortfolioEntryPlanningPackageFormData {
         this.planningPackageId = portfolioEntryPlanningPackage.id;
 
         this.name = portfolioEntryPlanningPackage.name;
+        this.isOpex = portfolioEntryPlanningPackage.isOpex;
         this.description = portfolioEntryPlanningPackage.description;
         this.startDate = portfolioEntryPlanningPackage.startDate != null ? Utilities.getDateFormat(null).format(portfolioEntryPlanningPackage.startDate)
                 : null;
@@ -136,6 +140,7 @@ public class PortfolioEntryPlanningPackageFormData {
 
         portfolioEntryPlanningPackage.name = this.name;
         portfolioEntryPlanningPackage.description = this.description;
+        portfolioEntryPlanningPackage.isOpex = this.isOpex;
 
         try {
             portfolioEntryPlanningPackage.startDate = Utilities.getDateFormat(null).parse(this.startDate);

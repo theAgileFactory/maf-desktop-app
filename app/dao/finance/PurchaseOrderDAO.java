@@ -106,7 +106,8 @@ public abstract class PurchaseOrderDAO {
      * Get all active purchase orders.
      */
     public static List<PurchaseOrder> getPurchaseOrderActiveAsList() {
-        return PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).eq("isCancelled", false).findList();
+        return PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).ne("refId", IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING)
+                .eq("isCancelled", false).findList();
     }
 
     /**
@@ -117,7 +118,8 @@ public abstract class PurchaseOrderDAO {
      *            the search criteria (use % for wild cards)
      */
     public static List<PurchaseOrder> getPurchaseOrderAsListByRefIdLike(String key) {
-        return PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).ilike("refId", key + "%").findList();
+        return PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).ne("refId", IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING)
+                .ilike("refId", key + "%").findList();
     }
 
     /**
@@ -128,7 +130,8 @@ public abstract class PurchaseOrderDAO {
      *            the search criteria (use % for wild cards)
      */
     public static List<PurchaseOrder> getPurchaseOrderActiveAsListByRefIdLike(String key) {
-        return PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).eq("isCancelled", false).ilike("refId", key + "%").findList();
+        return PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).ne("refId", IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING)
+                .eq("isCancelled", false).ilike("refId", key + "%").findList();
     }
 
     /**
@@ -169,7 +172,8 @@ public abstract class PurchaseOrderDAO {
      **/
     public static List<PurchaseOrder> getPurchaseOrderAsListByFilter(Boolean isCancelled) {
 
-        ExpressionList<PurchaseOrder> e = PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false);
+        ExpressionList<PurchaseOrder> e = PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).ne("refId",
+                IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING);
 
         if (isCancelled != null) {
             e = e.eq("isCancelled", isCancelled);
@@ -212,8 +216,8 @@ public abstract class PurchaseOrderDAO {
      *            set to true for OPEX, else CAPEX
      */
     public static ExpressionList<PurchaseOrderLineItem> getPurchaseOrderLineItemActiveAsExprByCurrencyAndOpex(String currency, Boolean isOpex) {
-        return PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).eq("isCancelled", false).eq("isOpex", isOpex).eq("currency.code",
-                currency);
+        return PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).ne("refId", IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING)
+                .eq("isCancelled", false).eq("isOpex", isOpex).eq("currency.code", currency);
     }
 
     /**
@@ -242,8 +246,8 @@ public abstract class PurchaseOrderDAO {
      **/
     public static List<PurchaseOrderLineItem> getPurchaseOrderLineItemActiveAsListByPO(Long purchaseOrderId, Boolean isCancelled) {
 
-        ExpressionList<PurchaseOrderLineItem> e = PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).eq("purchaseOrder.id",
-                purchaseOrderId);
+        ExpressionList<PurchaseOrderLineItem> e = PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false)
+                .ne("refId", IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING).eq("purchaseOrder.id", purchaseOrderId);
 
         if (isCancelled != null) {
             e = e.eq("isCancelled", isCancelled);

@@ -27,6 +27,7 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
+@import commons._
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.pmo.PortfolioEntry])
@@ -74,6 +75,16 @@
                             parts.Msg.asString("object.portfolio_entry.is_active.label"), 
                             ""
                         )
+                        
+                        @if(_budgetTrackingService.isActive()) {
+                            @parts.checkbox(
+                                portfolioEntryForm("defaultIsOpex"), 
+                                parts.Msg.asString("object.portfolio_entry.default_is_opex.label"), 
+                                parts.Msg.asString("object.portfolio_entry.default_is_opex.help")
+                            )
+                        } else {
+                            <input type="hidden" name="defaultIsOpex" value="false" />
+                        }
         
                         @parts.input_text(portfolioEntryForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"), 'autofocus -> "autofocus")
                         

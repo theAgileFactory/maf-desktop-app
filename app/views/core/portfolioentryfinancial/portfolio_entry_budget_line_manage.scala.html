@@ -17,6 +17,7 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
+    fromResource: Boolean,
     budgetLineForm: Form[utils.form.PortfolioEntryBudgetLineFormData],
     currencies: framework.utils.ISelectableValueHolderCollection[_]
 )
@@ -62,25 +63,39 @@
                     <fieldset>
                     
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
+                        
+                        <input type="hidden" name="fromResource" value="@fromResource"/>
         
                         @if(budgetLineForm("budgetLineId").value!=null) {
                             <input type="hidden" name="budgetLineId" value="@budgetLineForm("budgetLineId").value"/>
                         }
                         
-                        @parts.checkbox(
-                            budgetLineForm("isOpex"), 
-                            parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.label"), 
-                            parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.help")
-                        )
+                        @if(!fromResource) {
+                            @parts.checkbox(
+                                budgetLineForm("isOpex"), 
+                                parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.label"), 
+                                parts.Msg.asString("object.portfolio_entry_budget_line.is_opex.help")
+                            )
+                        } else {
+                            <input type="hidden" name="@budgetLineForm("isOpex").name" value="@budgetLineForm("isOpex").value"/>
+                        }
                         
                         @parts.input_text(budgetLineForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.ref_id.label"), 'autofocus -> "autofocus")
                         
                         @parts.input_text(budgetLineForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.name.label"))
         
-                        @parts.input_text(budgetLineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.amount.label"))
+                        @if(!fromResource) {
+                            @parts.input_text(budgetLineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.amount.label"))
+                        } else {
+                            <input type="hidden" name="@budgetLineForm("amount").name" value="@budgetLineForm("amount").value"/>
+                        }
                         
-                        @parts.dropdownlist(budgetLineForm("currency"), parts.Msg.asString("object.portfolio_entry_budget_line.currency.label"), currencies, null, false)
-        
+                        @if(!fromResource) {
+                            @parts.dropdownlist(budgetLineForm("currency"), parts.Msg.asString("object.portfolio_entry_budget_line.currency.label"), currencies, null, false)
+                        } else {
+                            <input type="hidden" name="@budgetLineForm("currency").name" value="@budgetLineForm("currency").value"/>
+                        }
+                        
                         @parts.singlevalue_picker(
                             budgetLineForm("budgetBucket"), 
                             parts.Msg.asString("object.portfolio_entry_budget_line.budget_bucket.label"),

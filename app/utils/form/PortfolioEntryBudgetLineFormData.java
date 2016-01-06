@@ -19,12 +19,12 @@ package utils.form;
 
 import java.math.BigDecimal;
 
+import dao.finance.BudgetBucketDAO;
+import dao.finance.CurrencyDAO;
 import models.finance.PortfolioEntryBudgetLine;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import dao.finance.BudgetBucketDAO;
-import dao.finance.CurrencyDAO;
 
 /**
  * A portfolio entry budget line form data is used to manage the fields when
@@ -36,6 +36,8 @@ public class PortfolioEntryBudgetLineFormData {
 
     // the portfolioEntry id
     public Long id;
+
+    public boolean fromResource;
 
     public Long budgetLineId;
 

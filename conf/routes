@@ -240,6 +240,7 @@ GET    /portfolio-entry/search             controllers.core.PortfolioEntryContro
 
 GET    /portfolio-entry/financial/status                          controllers.core.PortfolioEntryFinancialController.status(id: Long)
 GET    /portfolio-entry/financial/details                         controllers.core.PortfolioEntryFinancialController.details(id: Long)
+GET    /portfolio-entry/financial/budget-tracking/run             controllers.core.PortfolioEntryFinancialController.budgetTrackingRun(id: Long)
 GET    /portfolio-entry/financial/budget-line/view                controllers.core.PortfolioEntryFinancialController.viewBudgetLine(id: Long, budgetLineId: Long ?= 0)
 GET    /portfolio-entry/financial/budget-line/manage              controllers.core.PortfolioEntryFinancialController.manageBudgetLine(id: Long, budgetLineId: Long ?= 0)
 POST   /portfolio-entry/financial/budget-line/manage              controllers.core.PortfolioEntryFinancialController.processManageBudgetLine()

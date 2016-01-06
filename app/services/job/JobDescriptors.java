@@ -22,13 +22,19 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import com.avaje.ebean.Ebean;
+
 import dao.pmo.ActorDao;
+import dao.pmo.PortfolioEntryDao;
 import framework.services.job.IJobDescriptor;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.Msg;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
+import models.governance.LifeCycleInstancePlanning;
+import models.pmo.PortfolioEntry;
 import play.Logger;
+import services.budgettracking.IBudgetTrackingService;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.IDataSyndicationService.DataSyndicationPostDataException;
 import services.datasyndication.models.DataSyndicationAgreement;
@@ -349,6 +355,92 @@ public interface JobDescriptors {
             }
 
             Logger.info("end trigger " + this.getId());
+
+        }
+
+        @Override
+        public String getTriggerUrl() {
+            return null;
+        }
+
+    }
+
+    /**
+     * Run budget tracking for all active PE.
+     * 
+     * @author Johann Kohler
+     * 
+     */
+    class BudgetTrackingJobDescriptor implements IJobDescriptor {
+
+        @Inject
+        private IBudgetTrackingService budgetTrackingService;
+
+        @Override
+        public String getId() {
+            return "BudgetTracking";
+        }
+
+        @Override
+        public String getName(String languageCode) {
+            return "Budget tracking";
+        }
+
+        @Override
+        public String getDescription(String languageCode) {
+            return "Run budget tracking for all active initiatives.";
+        }
+
+        @Override
+        public Frequency getFrequency() {
+            return Frequency.DAILY;
+        }
+
+        @Override
+        public int getStartHour() {
+            return 1;
+        }
+
+        @Override
+        public int getStartMinute() {
+            return 0;
+        }
+
+        @Override
+        public void trigger() {
+
+            if (budgetTrackingService.isActive()) {
+
+                Logger.info("start trigger " + this.getId());
+
+                for (PortfolioEntry portfolioEntry : PortfolioEntryDao.getPEAsExpr(false).findList()) {
+
+                    // get current planning
+                    LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+
+                    Ebean.beginTransaction();
+                    try {
+
+                        // process the run
+                        budgetTrackingService.recomputeAllBugdetAndForecastFromResource(planning);
+
+                        Ebean.commitTransaction();
+                        Ebean.endTransaction();
+
+                    } catch (Exception e) {
+
+                        Ebean.rollbackTransaction();
+                        Ebean.endTransaction();
+
+                        Logger.error(this.getId() + " unexpected error", e);
+
+                    }
+
+                }
+
+                Logger.info("end trigger " + this.getId());
+
+            }
 
         }
 

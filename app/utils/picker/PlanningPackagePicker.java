@@ -43,14 +43,30 @@ public class PlanningPackagePicker {
         @Override
         public ISelectableValueHolderCollection<Long> getInitialValueHolders(List<Long> values, Map<String, String> context) {
             Long portfolioEntryId = Long.valueOf(context.get("portfolioEntryId"));
-            return PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntryId);
+            return PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntryId, getDisplayExpenditureType(context));
         }
 
         @Override
         public ISelectableValueHolderCollection<Long> getFoundValueHolders(String searchString, Map<String, String> context) {
             Long portfolioEntryId = Long.valueOf(context.get("portfolioEntryId"));
             searchString = searchString.replaceAll("\\*", "%");
-            return PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByKeywordsAndPE(searchString, portfolioEntryId);
+            return PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByKeywordsAndPE(searchString, portfolioEntryId,
+                    getDisplayExpenditureType(context));
+        }
+
+        /**
+         * Return true if the expenditure type should be displayed.
+         * 
+         * @param context
+         *            the context
+         */
+        private boolean getDisplayExpenditureType(Map<String, String> context) {
+            String displayExpenditureTypeAsString = context.get("displayExpenditureType");
+            if (displayExpenditureTypeAsString == null || displayExpenditureTypeAsString.equals("")) {
+                return false;
+            } else {
+                return Boolean.valueOf(displayExpenditureTypeAsString);
+            }
         }
 
     });

@@ -107,6 +107,21 @@ public abstract class PortfolioEntryDao {
      *            set to true for OPEX value, else CAPEX
      */
     public static Double getPEAsBudgetAmountByOpex(Long id, boolean isOpex) {
+        return getPEAsBudgetAmountByOpex(id, isOpex, null);
+    }
+
+    /**
+     * Get the budget of a portfolio entry.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param isOpex
+     *            set to true for OPEX value, else CAPEX
+     * @param onlyEffort
+     *            true for only effort (from allocation), false for only cost
+     *            (direct), null for all
+     */
+    public static Double getPEAsBudgetAmountByOpex(Long id, boolean isOpex, Boolean onlyEffort) {
 
         String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl "
                 + "JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id=peb.id "
@@ -114,6 +129,14 @@ public abstract class PortfolioEntryDao {
                 + "JOIN portfolio_entry pe ON lcip.life_cycle_instance_id = pe.active_life_cycle_instance_id " + "WHERE pebl.deleted=0 AND pebl.is_opex="
                 + isOpex + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' "
                 + "AND peb.deleted=0 AND lcip.deleted=0 AND lcip.is_frozen=0 " + "AND pe.id=" + id;
+
+        if (onlyEffort != null) {
+            if (onlyEffort) {
+                sql += " AND pebl.resource_object_type IS NOT NULL";
+            } else {
+                sql += " AND pebl.resource_object_type IS NULL";
+            }
+        }
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -139,11 +162,36 @@ public abstract class PortfolioEntryDao {
      *            set to true for OPEX value, else CAPEX
      */
     public static Double getPEAsCostToCompleteAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex) {
+        return getPEAsCostToCompleteAmountByOpex(preferenceManagerPlugin, id, isOpex, null);
+    }
+
+    /**
+     * Get the "cost to complete" of a portfolio entry.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
+     * @param id
+     *            the portfolio entry id
+     * @param isOpex
+     *            set to true for OPEX value, else CAPEX
+     * @param onlyEffort
+     *            true for only effort (from allocation), false for only cost
+     *            (direct), null for all
+     */
+    public static Double getPEAsCostToCompleteAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex, Boolean onlyEffort) {
 
         String baseSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
         String baseSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pe.id="
                 + id;
+
+        if (onlyEffort != null) {
+            if (onlyEffort) {
+                baseSqlCond += " AND wo.resource_object_type IS NOT NULL";
+            } else {
+                baseSqlCond += " AND wo.resource_object_type IS NULL";
+            }
+        }
 
         List<String> sqls = new ArrayList<>();
 
@@ -187,11 +235,36 @@ public abstract class PortfolioEntryDao {
      *            set to true for OPEX value, else CAPEX
      */
     public static Double getPEAsEngagedAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex) {
+        return getPEAsEngagedAmountByOpex(preferenceManagerPlugin, id, isOpex, null);
+    }
+
+    /**
+     * Get the engaged amount of a portfolio entry.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
+     * @param id
+     *            the portfolio entry id
+     * @param isOpex
+     *            set to true for OPEX value, else CAPEX
+     * @param onlyEffort
+     *            true for only effort (from allocation), false for only cost
+     *            (direct), null for all
+     */
+    public static Double getPEAsEngagedAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex, Boolean onlyEffort) {
 
         String baseWOSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
         String baseWOSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code
                 + "' AND pe.id=" + id;
+
+        if (onlyEffort != null) {
+            if (onlyEffort) {
+                baseWOSqlCond += " AND wo.resource_object_type IS NOT NULL";
+            } else {
+                baseWOSqlCond += " AND wo.resource_object_type IS NULL";
+            }
+        }
 
         List<String> sqls = new ArrayList<>();
 
@@ -205,10 +278,14 @@ public abstract class PortfolioEntryDao {
 
             // or the purchase order lines assigned to an entry of the portfolio
             // but never engaged by a work order
-            sqls.add("SELECT SUM(poli.amount) AS totalAmount FROM purchase_order_line_item poli " + "JOIN purchase_order po ON poli.purchase_order_id=po.id "
-                    + "JOIN portfolio_entry pe ON po.portfolio_entry_id = pe.id " + "LEFT OUTER JOIN work_order wo ON poli.id=wo.purchase_order_line_item_id "
-                    + "WHERE poli.deleted=0 AND poli.is_cancelled=0 AND poli.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND poli.is_opex="
-                    + isOpex + " AND po.deleted=0 AND po.is_cancelled=0 AND pe.id=" + id + " AND wo.purchase_order_line_item_id IS NULL");
+            if (onlyEffort == null || !onlyEffort) {
+                sqls.add("SELECT SUM(poli.amount) AS totalAmount FROM purchase_order_line_item poli "
+                        + "JOIN purchase_order po ON poli.purchase_order_id=po.id " + "JOIN portfolio_entry pe ON po.portfolio_entry_id = pe.id "
+                        + "LEFT OUTER JOIN work_order wo ON poli.id=wo.purchase_order_line_item_id "
+                        + "WHERE poli.deleted=0 AND poli.is_cancelled=0 AND poli.currency_code='" + CurrencyDAO.getCurrencyDefault().code
+                        + "' AND poli.is_opex=" + isOpex + " AND po.deleted=0 AND po.is_cancelled=0 AND pe.id=" + id
+                        + " AND wo.purchase_order_line_item_id IS NULL");
+            }
 
         } else { // if purchase orders are not enable
             // the is_engaged flag is settled to true

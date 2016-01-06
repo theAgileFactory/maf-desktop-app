@@ -27,6 +27,8 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
@@ -61,6 +63,12 @@ public class PortfolioEntryPlanningPackageListView {
 
                 addColumnConfiguration("name", "name", "object.portfolio_entry_planning_package.name.label", new TextFieldFilterComponent("*"), true, false,
                         SortStatusType.UNSORTED);
+
+                ISelectableValueHolderCollection<String> expenditureTypes = new DefaultSelectableValueHolderCollection<String>();
+                expenditureTypes.add(new DefaultSelectableValueHolder<String>("0", "CAPEX"));
+                expenditureTypes.add(new DefaultSelectableValueHolder<String>("1", "OPEX"));
+                addColumnConfiguration("isOpex", "isOpex", "object.portfolio_entry_planning_package.expenditure_type.label",
+                        new SelectFilterComponent("0", expenditureTypes), false, false, SortStatusType.NONE);
 
                 addColumnConfiguration("startDate", "startDate", "object.portfolio_entry_planning_package.start_date.label",
                         new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
@@ -120,6 +128,14 @@ public class PortfolioEntryPlanningPackageListView {
 
                 addColumn("name", "name", "object.portfolio_entry_planning_package.name.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackageListView>());
+
+                addColumn("isOpex", "isOpex", "object.portfolio_entry_planning_package.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("isOpex", new IColumnFormatter<PortfolioEntryPlanningPackageListView>() {
+                    @Override
+                    public String apply(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView, Object value) {
+                        return views.html.modelsparts.display_is_opex.render(portfolioEntryPlanningPackageListView.isOpex).body();
+                    }
+                });
 
                 addColumn("startDate", "startDate", "object.portfolio_entry_planning_package.start_date.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("startDate", new DateFormatter<PortfolioEntryPlanningPackageListView>());
@@ -214,6 +230,7 @@ public class PortfolioEntryPlanningPackageListView {
     public String status;
     public BigDecimal allocatedResourcesDays;
     public BigDecimal timesheetsDays;
+    public boolean isOpex;
 
     /**
      * Construct a list view with a DB entry.
@@ -236,6 +253,8 @@ public class PortfolioEntryPlanningPackageListView {
         this.endDate = portfolioEntryPlanningPackage.endDate;
 
         this.group = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageGroup;
+
+        this.isOpex = portfolioEntryPlanningPackage.isOpex;
 
         this.status = Msg.get("object.portfolio_entry_planning_package.status." + portfolioEntryPlanningPackage.status.name() + ".label");
 

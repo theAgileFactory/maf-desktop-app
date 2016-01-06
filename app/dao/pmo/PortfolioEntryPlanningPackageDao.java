@@ -30,6 +30,7 @@ import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackageGroup;
 import models.pmo.PortfolioEntryPlanningPackagePattern;
 import models.pmo.PortfolioEntryPlanningPackageType;
+import views.html.modelsparts.display_is_opex;
 
 /**
  * DAO for the {@link PortfolioEntryPlanningPackage} and
@@ -104,9 +105,16 @@ public abstract class PortfolioEntryPlanningPackageDao {
      * 
      * @param portfolioEntryId
      *            the portfolio entry id
+     * @param displayExpenditureType
+     *            if true then the expenditure type is displayed (after the
+     *            package name)
      */
-    public static ISelectableValueHolderCollection<Long> getPEPlanningPackageAsVHByPE(Long portfolioEntryId) {
-        return new DefaultSelectableValueHolderCollection<>(getPEPlanningPackageAsListByPE(portfolioEntryId));
+    public static ISelectableValueHolderCollection<Long> getPEPlanningPackageAsVHByPE(Long portfolioEntryId, boolean displayExpenditureType) {
+        if (displayExpenditureType) {
+            return getPEPlanningPackageAsVHWithExpenditureType(getPEPlanningPackageAsListByPE(portfolioEntryId));
+        } else {
+            return new DefaultSelectableValueHolderCollection<>(getPEPlanningPackageAsListByPE(portfolioEntryId));
+        }
     }
 
     /**
@@ -129,9 +137,33 @@ public abstract class PortfolioEntryPlanningPackageDao {
      *            the key word
      * @param portfolioEntryId
      *            the portfolio entry id
+     * @param displayExpenditureType
+     *            if true then the expenditure type is displayed (after the
+     *            package name)
      */
-    public static ISelectableValueHolderCollection<Long> getPEPlanningPackageAsVHByKeywordsAndPE(String key, Long portfolioEntryId) {
-        return new DefaultSelectableValueHolderCollection<>(getPEPlanningPackageAsListByKeywordsAndPE(key, portfolioEntryId));
+    public static ISelectableValueHolderCollection<Long> getPEPlanningPackageAsVHByKeywordsAndPE(String key, Long portfolioEntryId,
+            boolean displayExpenditureType) {
+        if (displayExpenditureType) {
+            return getPEPlanningPackageAsVHWithExpenditureType(getPEPlanningPackageAsListByKeywordsAndPE(key, portfolioEntryId));
+        } else {
+            return new DefaultSelectableValueHolderCollection<>(getPEPlanningPackageAsListByKeywordsAndPE(key, portfolioEntryId));
+        }
+    }
+
+    /**
+     * Transform a list of planning packages to a value holder collection by
+     * including the expenditure type in the name.
+     * 
+     * @param planningPackages
+     *            the list of planning packages
+     */
+    private static ISelectableValueHolderCollection<Long> getPEPlanningPackageAsVHWithExpenditureType(List<PortfolioEntryPlanningPackage> planningPackages) {
+        ISelectableValueHolderCollection<Long> selectableObjects = new DefaultSelectableValueHolderCollection<Long>();
+        for (PortfolioEntryPlanningPackage planningPackage : planningPackages) {
+            selectableObjects.add(new DefaultSelectableValueHolder<Long>(planningPackage.id,
+                    planningPackage.getName() + " (" + display_is_opex.render(planningPackage.isOpex).toString().trim() + ")"));
+        }
+        return selectableObjects;
     }
 
     /**

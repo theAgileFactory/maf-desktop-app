@@ -23,6 +23,7 @@
 
 @import helper._
 @import bootstrap3._
+@import commons._
 @import framework_views.parts
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -50,13 +51,22 @@
 
                 <input type="hidden" name="packageGroupId" value="@packageGroup.id"/>
     
-
                 @if(packagePatternForm("id").value!=null) {
                     <input type="hidden" name="id" value="@packagePatternForm("id").value"/>
                 }
                 
-                @parts.input_text(packagePatternForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
+                @if(_budgetTrackingService.isActive()) {
+                    @parts.checkbox(
+                        packagePatternForm("isOpex"), 
+                        parts.Msg.asString("object.portfolio_entry_planning_package.is_opex.label"), 
+                        parts.Msg.asString("object.portfolio_entry_planning_package.is_opex.help")
+                    )
+                } else {
+                    <input type="hidden" name="isOpex" value="false" />
+                }
                 
+                @parts.input_text(packagePatternForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
+
                 @helper.textarea(packagePatternForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))
                 
                 @parts.radiobuttongroup(packagePatternForm("type"), parts.Msg.asString("object.portfolio_entry_planning_package.type.label"), selectablePortfolioEntryPlanningPackageTypes)

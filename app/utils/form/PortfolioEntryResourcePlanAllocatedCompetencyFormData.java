@@ -61,6 +61,12 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
 
     public boolean followPackageDates;
 
+    @Required
+    public BigDecimal dailyRate;
+
+    @Required
+    public BigDecimal forecastDays;
+
     /**
      * Validate the dates.
      */
@@ -116,6 +122,8 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
                 : null;
 
         this.isConfirmed = allocatedCompetency.isConfirmed;
+        this.dailyRate = allocatedCompetency.dailyRate;
+        this.forecastDays = allocatedCompetency.forecastDays;
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
 
@@ -155,6 +163,8 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
         }
 
         allocatedCompetency.isConfirmed = this.isConfirmed;
+        allocatedCompetency.dailyRate = this.dailyRate;
+        allocatedCompetency.forecastDays = this.forecastDays;
 
     }
 }

@@ -26,6 +26,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.avaje.ebean.Ebean;
+
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
@@ -59,6 +61,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
+import services.budgettracking.IBudgetTrackingService;
 import utils.finance.Totals;
 import utils.form.EngageWorkOrderAmountSelectorFormData;
 import utils.form.PortfolioEntryBudgetLineFormData;
@@ -88,6 +91,8 @@ public class PortfolioEntryFinancialController extends Controller {
     private Configuration configuration;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
@@ -241,6 +246,46 @@ public class PortfolioEntryFinancialController extends Controller {
     }
 
     /**
+     * Run the budget tracking, meaning update the budget and forecast according
+     * to resource allocations.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION)
+    public Result budgetTrackingRun(Long id) {
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get current planning
+        LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+
+        Ebean.beginTransaction();
+        try {
+
+            // process the run
+            getBudgetTrackingService().recomputeAllBugdetAndForecastFromResource(planning);
+
+            Ebean.commitTransaction();
+            Ebean.endTransaction();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.budget_tracking.run.successful"));
+
+            return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(id));
+
+        } catch (Exception e) {
+
+            Ebean.rollbackTransaction();
+            Ebean.endTransaction();
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
+        }
+
+    }
+
+    /**
      * Display the status page.
      * 
      * @param id
@@ -260,28 +305,81 @@ public class PortfolioEntryFinancialController extends Controller {
         Double capexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false);
         Double opexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true);
         Double capexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false);
-
-        /*
-         * compute the financial status
-         */
-
         Totals totals = new Totals(opexTotalBudget, capexTotalBudget, opexTotalCostToComplete, capexTotalCostToComplete, opexTotalEngaged, capexTotalEngaged);
+
+        Totals effortTotals = null;
+        Totals costTotals = null;
+
+        if (this.getBudgetTrackingService().isActive()) {
+
+            // compute the totals for effort
+            Double effortOpexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, true, true);
+            Double effortCapexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false, true);
+            Double effortOpexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true, true);
+            Double effortCapexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false, true);
+            Double effortOpexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true, true);
+            Double effortCapexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false, true);
+            effortTotals = new Totals(effortOpexTotalBudget, effortCapexTotalBudget, effortOpexTotalCostToComplete, effortCapexTotalCostToComplete,
+                    effortOpexTotalEngaged, effortCapexTotalEngaged);
+
+            // compute the totals for cost
+            Double costOpexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, true, false);
+            Double costCapexTotalBudget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(id, false, false);
+            Double costOpexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, true, false);
+            Double costCapexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
+            Double costOpexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true, false);
+            Double costCapexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
+            costTotals = new Totals(costOpexTotalBudget, costCapexTotalBudget, costOpexTotalCostToComplete, costCapexTotalCostToComplete,
+                    costOpexTotalEngaged, costCapexTotalEngaged);
+
+        }
 
         BasicBar basicBar = new BasicBar();
         basicBar.addCategory(Msg.get("core.portfolio_entry_financial.view.status.table.budget.label"));
         basicBar.addCategory(Msg.get("core.portfolio_entry_financial.view.status.table.forecast.label"));
 
-        BasicBar.Elem capexElem = new BasicBar.Elem("CAPEX");
-        capexElem.addValue(totals.getCapexBudget());
-        capexElem.addValue(totals.getForecast(false));
-        basicBar.addElem(capexElem);
+        if (this.getBudgetTrackingService().isActive()) {
 
-        BasicBar.Elem opexElem = new BasicBar.Elem("OPEX");
-        opexElem.addValue(totals.getOpexBudget());
-        opexElem.addValue(totals.getForecast(true));
-        basicBar.addElem(opexElem);
+            BasicBar.Elem effortCapexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.effort.label") + " - CAPEX");
+            effortCapexElem.setStack("1");
+            effortCapexElem.addValue(effortTotals.getCapexBudget());
+            effortCapexElem.addValue(effortTotals.getForecast(false));
+            basicBar.addElem(effortCapexElem);
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_financial_status.render(portfolioEntry, basicBar, totals));
+            BasicBar.Elem effortOpexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.effort.label") + " - OPEX");
+            effortOpexElem.setStack("1");
+            effortOpexElem.addValue(effortTotals.getOpexBudget());
+            effortOpexElem.addValue(effortTotals.getForecast(true));
+            basicBar.addElem(effortOpexElem);
+
+            BasicBar.Elem costCapexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.cost.label") + " - CAPEX");
+            costCapexElem.setStack("2");
+            costCapexElem.addValue(costTotals.getCapexBudget());
+            costCapexElem.addValue(costTotals.getForecast(false));
+            basicBar.addElem(costCapexElem);
+
+            BasicBar.Elem costOpexElem = new BasicBar.Elem(Msg.get("core.portfolio_entry_financial.view.status.table.cost.label") + " - OPEX");
+            costOpexElem.setStack("2");
+            costOpexElem.addValue(costTotals.getOpexBudget());
+            costOpexElem.addValue(costTotals.getForecast(true));
+            basicBar.addElem(costOpexElem);
+
+        } else {
+
+            BasicBar.Elem effortCapexElem = new BasicBar.Elem("CAPEX");
+            effortCapexElem.addValue(totals.getCapexBudget());
+            effortCapexElem.addValue(totals.getForecast(false));
+            basicBar.addElem(effortCapexElem);
+
+            BasicBar.Elem effortOpexElem = new BasicBar.Elem("OPEX");
+            effortOpexElem.addValue(totals.getOpexBudget());
+            effortOpexElem.addValue(totals.getForecast(true));
+            basicBar.addElem(effortOpexElem);
+
+        }
+
+        return ok(
+                views.html.core.portfolioentryfinancial.portfolio_entry_financial_status.render(portfolioEntry, basicBar, totals, effortTotals, costTotals));
 
     }
 
@@ -332,10 +430,14 @@ public class PortfolioEntryFinancialController extends Controller {
         // initiate the form with the template
         Form<PortfolioEntryBudgetLineFormData> budgetLineForm = budgetLineFormTemplate;
 
+        boolean fromResource = false;
+
         // edit case: inject values
         if (!budgetLineId.equals(Long.valueOf(0))) {
 
             PortfolioEntryBudgetLine portfolioEntryBudgetLine = PortfolioEntryBudgetDAO.getPEBudgetLineById(budgetLineId);
+
+            fromResource = portfolioEntryBudgetLine.resourceObjectType != null;
 
             // security: the portfolioEntry must be related to the object
             if (!portfolioEntryBudgetLine.portfolioEntryBudget.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id.equals(id)) {
@@ -351,7 +453,7 @@ public class PortfolioEntryFinancialController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(budgetLineForm, PortfolioEntryBudgetLine.class, null);
         }
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, budgetLineForm,
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, budgetLineForm,
                 CurrencyDAO.getCurrencySelectableAsVH()));
     }
 
@@ -369,8 +471,11 @@ public class PortfolioEntryFinancialController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        // get the fromResource flag
+        boolean fromResource = Boolean.valueOf(boundForm.data().get("fromResource"));
+
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryBudgetLine.class)) {
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, boundForm,
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
 
@@ -493,10 +598,14 @@ public class PortfolioEntryFinancialController extends Controller {
         // initiate work order
         WorkOrder workOrder = null;
 
+        boolean fromResource = false;
+
         // edit case: inject values
         if (!workOrderId.equals(Long.valueOf(0))) {
 
             workOrder = WorkOrderDAO.getWorkOrderById(workOrderId);
+
+            fromResource = workOrder.resourceObjectType != null;
 
             // security: the portfolioEntry must be related to the object
             if (!workOrder.portfolioEntry.id.equals(id)) {
@@ -512,7 +621,7 @@ public class PortfolioEntryFinancialController extends Controller {
             CustomAttributeFormAndDisplayHandler.fillWithValues(workOrderForm, WorkOrder.class, null);
         }
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, workOrder, workOrderForm,
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, workOrderForm,
                 CurrencyDAO.getCurrencySelectableAsVH()));
     }
 
@@ -530,6 +639,8 @@ public class PortfolioEntryFinancialController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        boolean fromResource = Boolean.valueOf(boundForm.data().get("fromResource"));
+
         // get the work order (only for edit case)
         WorkOrder workOrder = null;
         if (boundForm.data().get("workOrderId") != null) {
@@ -538,7 +649,7 @@ public class PortfolioEntryFinancialController extends Controller {
         }
 
         if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, WorkOrder.class)) {
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, workOrder, boundForm,
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
 
@@ -547,7 +658,7 @@ public class PortfolioEntryFinancialController extends Controller {
         // if given, check the amount received (must be smaller than the amount)
         if (workOrderFormData.amountReceived != null && workOrderFormData.amountReceived.doubleValue() > workOrderFormData.amount.doubleValue() + 0.01) {
             boundForm.reject("amountReceived", Msg.get("object.work_order.amount_received.invalid"));
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, workOrder, boundForm,
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
 
@@ -1040,5 +1151,12 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 }

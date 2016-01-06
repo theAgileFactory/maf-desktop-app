@@ -31,13 +31,7 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.AutocompleteFilterComponent;
-import framework.utils.FilterConfig.CheckboxFilterComponent;
-import framework.utils.FilterConfig.DateRangeFilterComponent;
-import framework.utils.FilterConfig.NoneFilterComponent;
-import framework.utils.FilterConfig.SelectFilterComponent;
 import framework.utils.FilterConfig.SortStatusType;
-import framework.utils.FilterConfig.TextFieldFilterComponent;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -173,6 +167,9 @@ public class PortfolioEntryListView {
                 addColumnConfiguration("isConcept", "activeLifeCycleInstance.isConcept", "object.portfolio_entry.is_concept.label",
                         new CheckboxFilterComponent(false), false, false, SortStatusType.NONE);
 
+                addColumnConfiguration("defaultIsOpex", "defaultIsOpex", "object.portfolio_entry.default_is_opex.label", new CheckboxFilterComponent(false),
+                        false, false, SortStatusType.NONE);
+
                 addKpis("id", PortfolioEntry.class);
 
                 addCustomAttributesColumns("id", PortfolioEntry.class);
@@ -259,6 +256,9 @@ public class PortfolioEntryListView {
                 addColumn("isConcept", "isConcept", "object.portfolio_entry.is_concept.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("isConcept", new BooleanFormatter<PortfolioEntryListView>());
 
+                addColumn("defaultIsOpex", "defaultIsOpex", "object.portfolio_entry.default_is_opex.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("defaultIsOpex", new BooleanFormatter<PortfolioEntryListView>());
+
                 addColumn("lastMilestone", "lastMilestone", "object.portfolio_entry.last_milestone.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("lastMilestone", new IColumnFormatter<PortfolioEntryListView>() {
                     @Override
@@ -320,6 +320,7 @@ public class PortfolioEntryListView {
         columns.add("dependencies");
         columns.add("lifeCycleProcess");
         columns.add("archived");
+        columns.add("defaultIsOpex");
 
         return columns;
     }
@@ -347,6 +348,7 @@ public class PortfolioEntryListView {
     public boolean archived;
     public List<Actor> stakeholders;
     public List<PortfolioEntry> dependencies;
+    public boolean defaultIsOpex;
 
     // contextual attributes
     public List<String> stakeholderTypes = new ArrayList<String>();
@@ -374,6 +376,7 @@ public class PortfolioEntryListView {
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
         this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
         this.archived = portfolioEntry.archived;
+        this.defaultIsOpex = portfolioEntry.defaultIsOpex;
 
         this.stakeholders = new ArrayList<>();
         Set<Long> actorIds = new HashSet<>();
@@ -388,14 +391,14 @@ public class PortfolioEntryListView {
         Set<Long> dependencyIds = new HashSet<>();
         for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getDestinationDependencies()) {
             PortfolioEntry dependency = portfolioEntryDependency.getSourcePortfolioEntry();
-            if (!dependency.deleted && !dependencyIds.contains(dependency.id)) {
+            if (dependency != null && !dependencyIds.contains(dependency.id)) {
                 dependencyIds.add(dependency.id);
                 this.dependencies.add(dependency);
             }
         }
         for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getSourceDependencies()) {
             PortfolioEntry dependency = portfolioEntryDependency.getDestinationPortfolioEntry();
-            if (!dependency.deleted && !dependencyIds.contains(dependency.id)) {
+            if (dependency != null && !dependencyIds.contains(dependency.id)) {
                 dependencyIds.add(dependency.id);
                 this.dependencies.add(dependency);
             }

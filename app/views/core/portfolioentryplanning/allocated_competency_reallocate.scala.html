@@ -27,6 +27,7 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
+@import commons._
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor])
@@ -84,11 +85,19 @@
                         
                         @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
+                        @if(_budgetTrackingService.isActive()) {
+                            @parts.input_text(allocatedActorForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
+                            @parts.input_text(allocatedActorForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
+                        } else {
+                            <input type="hidden" name="forecastDays" value="0" />
+                            <input type="hidden" name="dailyRate" value="0" />
+                        }
+                        
                         @parts.singlevalue_picker(
                             allocatedActorForm("portfolioEntryPlanningPackage"), 
                             parts.Msg.asString("object.allocated_resource.package.label"),
                             controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
                         )
                         
                         @parts.checkbox(
