@@ -291,7 +291,7 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
         this.planningPackage = allocatedCompetency.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedCompetency.isConfirmed;
         this.followPackageDates = allocatedCompetency.followPackageDates;
-        this.forecastDays = allocatedCompetency.forecastDays;
+        this.forecastDays = null;
         this.dailyRate = allocatedCompetency.dailyRate;
     }
 

@@ -28,7 +28,6 @@ import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.finance.PurchaseOrderLineItem;
 import models.finance.WorkOrder;
 import models.governance.LifeCycleInstancePlanning;
-import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.timesheet.TimesheetLog;
@@ -115,7 +114,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         // org unit
         for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : planning.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedOrgUnits) {
 
-            // compute the amount
+            // compute the amounts
             BigDecimal budgetAmount = allocatedOrgUnit.dailyRate.multiply(allocatedOrgUnit.days);
             Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedOrgUnit(allocatedOrgUnit, timesheetMap);
 
@@ -127,16 +126,15 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         }
 
         // competency
-        for (PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency : planning.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedCompetencies) {
+        List<PortfolioEntryResourcePlanAllocatedCompetency> ac = planning.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedCompetencies;
+        for (PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency : ac) {
 
             // compute the budget
             BigDecimal budgetAmount = allocatedCompetency.dailyRate.multiply(allocatedCompetency.days);
-            Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedCompetency(allocatedCompetency, timesheetMap);
 
             genetateBudgetAndForecastFromResource(planning, allocatedCompetency.id, PortfolioEntryResourcePlanAllocatedCompetency.class.getName(),
                     allocatedCompetency.competency.getName(), allocatedCompetency.followPackageDates, allocatedCompetency.portfolioEntryPlanningPackage,
-                    allocatedCompetency.startDate, allocatedCompetency.endDate, budgetAmount, forecast.getLeft(), forecast.getRight(), budgetsAsMap,
-                    workOrdersAsMap);
+                    allocatedCompetency.startDate, allocatedCompetency.endDate, budgetAmount, null, null, budgetsAsMap, workOrdersAsMap);
 
         }
 
@@ -213,42 +211,6 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
     }
 
     /**
-     * Compute and get the forecast amounts (cost to complete and engage) from
-     * an allocated competency.
-     * 
-     * @param allocatedCompetency
-     *            the allocated competency
-     * @param timesheetMap
-     *            the timesheet map
-     */
-    private Pair<BigDecimal, BigDecimal> getForecastFromAllocatedCompetency(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency,
-            TimesheetMap timesheetMap) {
-
-        Long packageId = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id : null;
-
-        BigDecimal costToCompleteDays = allocatedCompetency.forecastDays;
-        BigDecimal engagedDays = BigDecimal.ZERO;
-
-        for (Actor actor : allocatedCompetency.competency.actors) {
-
-            BigDecimal hours = new BigDecimal(timesheetMap.consumeByActor(actor.id, packageId));
-            BigDecimal days = hours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
-
-            engagedDays = engagedDays.add(days);
-            costToCompleteDays = costToCompleteDays.subtract(days);
-        }
-
-        if (costToCompleteDays.compareTo(BigDecimal.ZERO) < 0) {
-            costToCompleteDays = BigDecimal.ZERO;
-        }
-
-        BigDecimal engagedAmount = allocatedCompetency.dailyRate.multiply(engagedDays);
-        BigDecimal costToCompleteAmount = allocatedCompetency.dailyRate.multiply(costToCompleteDays);
-
-        return Pair.of(costToCompleteAmount, engagedAmount);
-    }
-
-    /**
      * Generate the budget and the forecast for a resource.
      * 
      * @param planning
@@ -288,78 +250,85 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         boolean usePurchaseOrder = PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(getPreferenceManagerPlugin());
 
         // budget
-        PortfolioEntryBudgetLine budget = PortfolioEntryBudgetDAO.getPEBudgetLineByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId);
-        if (budget == null) {
-            budget = new PortfolioEntryBudgetLine();
-            budget.currency = CurrencyDAO.getCurrencyDefault();
-            budget.name = name;
-            budget.portfolioEntryBudget = planning.portfolioEntryBudget;
-            budget.resourceObjectId = resourceObjectId;
-            budget.resourceObjectType = resourceObjectType;
+        if (budgetAmount != null) {
+            PortfolioEntryBudgetLine budget = PortfolioEntryBudgetDAO.getPEBudgetLineByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId);
+            if (budget == null) {
+                budget = new PortfolioEntryBudgetLine();
+                budget.currency = CurrencyDAO.getCurrencyDefault();
+                budget.name = name;
+                budget.portfolioEntryBudget = planning.portfolioEntryBudget;
+                budget.resourceObjectId = resourceObjectId;
+                budget.resourceObjectType = resourceObjectType;
+            }
+            budget.amount = budgetAmount;
+            budget.isOpex = planningPackage != null ? planningPackage.isOpex : portfolioEntry.defaultIsOpex;
+            budget.save();
+            budgetsAsMap.remove(budget.id);
         }
-        budget.amount = budgetAmount;
-        budget.isOpex = planningPackage != null ? planningPackage.isOpex : portfolioEntry.defaultIsOpex;
-        budget.save();
-        budgetsAsMap.remove(budget.id);
 
         // cost to complete
-        WorkOrder costToComplete = WorkOrderDAO.getWorkOrderByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId, false, usePurchaseOrder);
-        if (costToComplete == null) {
-            costToComplete = new WorkOrder();
-            costToComplete.creationDate = new Date();
-            costToComplete.currency = CurrencyDAO.getCurrencyDefault();
-            costToComplete.isEngaged = false;
-            costToComplete.name = name;
-            costToComplete.portfolioEntry = portfolioEntry;
-            costToComplete.resourceObjectId = resourceObjectId;
-            costToComplete.resourceObjectType = resourceObjectType;
-            costToComplete.shared = false;
+        if (costToCompleteAmount != null) {
+            WorkOrder costToComplete = WorkOrderDAO.getWorkOrderByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId, false,
+                    usePurchaseOrder);
+            if (costToComplete == null) {
+                costToComplete = new WorkOrder();
+                costToComplete.creationDate = new Date();
+                costToComplete.currency = CurrencyDAO.getCurrencyDefault();
+                costToComplete.isEngaged = false;
+                costToComplete.name = name;
+                costToComplete.portfolioEntry = portfolioEntry;
+                costToComplete.resourceObjectId = resourceObjectId;
+                costToComplete.resourceObjectType = resourceObjectType;
+                costToComplete.shared = false;
+            }
+            costToComplete.amount = costToCompleteAmount;
+            costToComplete.followPackageDates = followPackageDates;
+            costToComplete.portfolioEntryPlanningPackage = planningPackage;
+            costToComplete.startDate = startDate;
+            costToComplete.dueDate = endDate;
+            costToComplete.isOpex = planningPackage != null ? planningPackage.isOpex : portfolioEntry.defaultIsOpex;
+            costToComplete.save();
+            workOrdersAsMap.remove(costToComplete.id);
         }
-        costToComplete.amount = costToCompleteAmount;
-        costToComplete.followPackageDates = followPackageDates;
-        costToComplete.portfolioEntryPlanningPackage = planningPackage;
-        costToComplete.startDate = startDate;
-        costToComplete.dueDate = endDate;
-        costToComplete.isOpex = planningPackage != null ? planningPackage.isOpex : portfolioEntry.defaultIsOpex;
-        costToComplete.save();
-        workOrdersAsMap.remove(costToComplete.id);
 
         // engaged
-        WorkOrder engaged = WorkOrderDAO.getWorkOrderByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId, true, usePurchaseOrder);
-        if (engaged == null) {
-            engaged = new WorkOrder();
-            engaged.creationDate = new Date();
-            engaged.currency = CurrencyDAO.getCurrencyDefault();
-            engaged.isEngaged = true;
-            engaged.name = name;
-            engaged.portfolioEntry = portfolioEntry;
-            engaged.resourceObjectId = resourceObjectId;
-            engaged.resourceObjectType = resourceObjectType;
-            engaged.shared = false;
-        }
-        engaged.amount = engagedAmount;
-        engaged.followPackageDates = followPackageDates;
-        engaged.portfolioEntryPlanningPackage = planningPackage;
-        engaged.startDate = startDate;
-        engaged.dueDate = endDate;
-        engaged.isOpex = planningPackage != null ? planningPackage.isOpex : portfolioEntry.defaultIsOpex;
-        engaged.save();
-        workOrdersAsMap.remove(engaged.id);
-        if (usePurchaseOrder) {
-            if (engaged.purchaseOrderLineItem == null) {
-                engaged.purchaseOrderLineItem = new PurchaseOrderLineItem();
-                engaged.purchaseOrderLineItem.creationDate = new Date();
-                engaged.purchaseOrderLineItem.currency = CurrencyDAO.getCurrencyDefault();
-                engaged.purchaseOrderLineItem.isCancelled = false;
-                engaged.purchaseOrderLineItem.isOpex = engaged.isOpex;
-                engaged.purchaseOrderLineItem.purchaseOrder = PurchaseOrderDAO
-                        .getPurchaseOrderByRefId(IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING);
-                engaged.purchaseOrderLineItem.refId = IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING + "_" + engaged.id;
+        if (engagedAmount != null) {
+            WorkOrder engaged = WorkOrderDAO.getWorkOrderByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId, true, usePurchaseOrder);
+            if (engaged == null) {
+                engaged = new WorkOrder();
+                engaged.creationDate = new Date();
+                engaged.currency = CurrencyDAO.getCurrencyDefault();
+                engaged.isEngaged = true;
+                engaged.name = name;
+                engaged.portfolioEntry = portfolioEntry;
+                engaged.resourceObjectId = resourceObjectId;
+                engaged.resourceObjectType = resourceObjectType;
+                engaged.shared = false;
             }
-            engaged.purchaseOrderLineItem.amount = engagedAmount;
-            engaged.purchaseOrderLineItem.amountReceived = engagedAmount;
-            engaged.purchaseOrderLineItem.save();
+            engaged.amount = engagedAmount;
+            engaged.followPackageDates = followPackageDates;
+            engaged.portfolioEntryPlanningPackage = planningPackage;
+            engaged.startDate = startDate;
+            engaged.dueDate = endDate;
+            engaged.isOpex = planningPackage != null ? planningPackage.isOpex : portfolioEntry.defaultIsOpex;
             engaged.save();
+            workOrdersAsMap.remove(engaged.id);
+            if (usePurchaseOrder) {
+                if (engaged.purchaseOrderLineItem == null) {
+                    engaged.purchaseOrderLineItem = new PurchaseOrderLineItem();
+                    engaged.purchaseOrderLineItem.creationDate = new Date();
+                    engaged.purchaseOrderLineItem.currency = CurrencyDAO.getCurrencyDefault();
+                    engaged.purchaseOrderLineItem.isCancelled = false;
+                    engaged.purchaseOrderLineItem.isOpex = engaged.isOpex;
+                    engaged.purchaseOrderLineItem.purchaseOrder = PurchaseOrderDAO
+                            .getPurchaseOrderByRefId(IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING);
+                    engaged.purchaseOrderLineItem.refId = IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING + "_" + engaged.id;
+                }
+                engaged.purchaseOrderLineItem.amount = engagedAmount;
+                engaged.purchaseOrderLineItem.amountReceived = engagedAmount;
+                engaged.purchaseOrderLineItem.save();
+                engaged.save();
+            }
         }
     }
 
