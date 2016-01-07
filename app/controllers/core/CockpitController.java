@@ -863,8 +863,7 @@ public class CockpitController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.cockpit.sidebar.portfolios", controllers.core.routes.CockpitController.portfolios(0, 0, false),
                 "fa fa-folder", currentType.equals(MenuItemType.MY_PORTFOLIOS)));
 
-        HeaderMenuItem employeesMenu = new HeaderMenuItem("core.cockpit.sidebar.subordinates", "fa fa-child",
-                currentType.equals(MenuItemType.MY_EMPLOYEES));
+        HeaderMenuItem employeesMenu = new HeaderMenuItem("core.cockpit.sidebar.subordinates", "fa fa-child", currentType.equals(MenuItemType.MY_EMPLOYEES));
 
         ClickableMenuItem employeesOverviewMenu = new ClickableMenuItem("core.cockpit.sidebar.subordinates.members",
                 controllers.core.routes.CockpitController.subordinates(), "fa fa-list", false);
@@ -905,8 +904,7 @@ public class CockpitController extends Controller {
             Actor actor = ActorDao.getActorByUid(uid);
 
             ClickableMenuItem myEmployeeCardMenu = new ClickableMenuItem("core.cockpit.sidebar.my_allocations",
-                    controllers.core.routes.ActorController.allocation(actor.id), "fa fa-book",
-                    currentType.equals(MenuItemType.MY_EMPLOYEE_CARD));
+                    controllers.core.routes.ActorController.allocation(actor.id), "fa fa-book", currentType.equals(MenuItemType.MY_EMPLOYEE_CARD));
             myEmployeeCardMenu.setIsImportant(true);
             sideBar.addMenuItem(myEmployeeCardMenu);
 
@@ -944,6 +942,8 @@ public class CockpitController extends Controller {
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
+        columnsToHide.add("forecastDays");
+        columnsToHide.add("dailyRate");
 
         Table<PortfolioEntryResourcePlanAllocatedActorListView> table = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
                 .fillForFilterConfig(listView, columnsToHide);

@@ -24,7 +24,6 @@ import java.util.Date;
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -65,12 +64,6 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
                 addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
                         SortStatusType.UNSORTED);
-
-                addColumnConfiguration("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label",
-                        new NumericFieldFilterComponent("0", "="), true, false, SortStatusType.UNSORTED);
-
-                addColumnConfiguration("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", new NumericFieldFilterComponent("0", "="),
-                        true, false, SortStatusType.UNSORTED);
 
                 addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
                         new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
