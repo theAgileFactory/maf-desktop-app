@@ -168,7 +168,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
         Long packageId = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
 
-        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByActor(allocatedActor.actor.id, packageId));
+        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByActor(allocatedActor.actor.id, packageId)).setScale(5);
         BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
 
         BigDecimal costToCompleteDays = allocatedActor.forecastDays.subtract(engagedDays);
@@ -196,7 +196,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
         Long packageId = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id : null;
 
-        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByOrgUnit(allocatedOrgUnit.orgUnit.id, packageId));
+        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByOrgUnit(allocatedOrgUnit.orgUnit.id, packageId)).setScale(5);
         BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
 
         BigDecimal costToCompleteDays = allocatedOrgUnit.forecastDays.subtract(engagedDays);
