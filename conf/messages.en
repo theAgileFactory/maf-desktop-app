@@ -1276,6 +1276,7 @@ object.process_transition_request.table.milestone.empty=There is no milestone ap
 # actor
 #----------------------
 
+object.actor.ref_id.label=Ref ID
 object.actor.employee_id.label=Employee ID
 object.actor.title.label=Title
 object.actor.name.label=Name

@@ -1288,6 +1288,7 @@ object.process_transition_request.table.milestone.empty=Il n''existe aucune requ
 # actor
 #----------------------
 
+object.actor.ref_id.label=Référence
 object.actor.employee_id.label=No d''employé
 object.actor.title.label=Titre
 object.actor.name.label=Nom

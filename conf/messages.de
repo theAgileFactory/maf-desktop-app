@@ -1288,7 +1288,8 @@ object.process_transition_request.table.milestone.empty=Es gibt keinen Antrag
 # actor
 #----------------------
 
-object.actor.employee_id.label=ID
+object.actor.ref_id.label=ID
+object.actor.employee_id.label=de: Employee ID
 object.actor.title.label=Stellenbezeichnung
 object.actor.name.label=Name
 object.actor.is_active.label=Aktiv
