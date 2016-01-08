@@ -2142,7 +2142,7 @@ public class PortfolioEntryPlanningController extends Controller {
                 try {
                     return new ObjectMapper().readValue(overviewPreferenceAsJson, OverviewConfiguration.class);
                 } catch (Exception e) {
-                    Logger.error("impossible to parse the value of PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE", e);
+                    Logger.warn("impossible to parse the value of PORTFOLIO_ENTRY_PLANNING_OVERVIEW_PREFERENCE", e);
                     OverviewConfiguration conf = new OverviewConfiguration(true);
                     store(preferenceManagerPlugin, conf);
                     return conf;
