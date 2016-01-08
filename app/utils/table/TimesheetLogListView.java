@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import dao.pmo.OrgUnitDao;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FilterConfig;
@@ -32,6 +33,7 @@ import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.NumberFormatter;
 import models.pmo.Actor;
+import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.timesheet.TimesheetLog;
 import models.timesheet.TimesheetReport;
@@ -54,6 +56,10 @@ public class TimesheetLogListView {
 
                 addColumnConfiguration("actor", "timesheetEntry.timesheetReport.actor.id", "object.timesheet_report.actor.label",
                         new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.NONE);
+
+                ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
+                addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
+                        new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), true, false, SortStatusType.NONE);
 
                 addColumnConfiguration("logDate", "logDate", "object.timesheet_log.log_date.label",
                         new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
@@ -95,6 +101,15 @@ public class TimesheetLogListView {
                     }
                 });
                 this.setColumnValueCssClass("actor", "rowlink-skip");
+
+                addColumn("orgUnit", "orgUnit", "object.timesheet_report.org_unit.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("orgUnit", new IColumnFormatter<TimesheetLogListView>() {
+                    @Override
+                    public String apply(TimesheetLogListView timesheetLogListView, Object value) {
+                        return views.html.modelsparts.display_org_unit.render(timesheetLogListView.orgUnit).body();
+                    }
+                });
+                this.setColumnValueCssClass("orgUnit", "rowlink-skip");
 
                 addColumn("logDate", "logDate", "object.timesheet_log.log_date.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("logDate", new DateFormatter<TimesheetLogListView>());
@@ -150,6 +165,7 @@ public class TimesheetLogListView {
     public PortfolioEntryPlanningPackage planningPackage;
 
     public Actor actor;
+    public OrgUnit orgUnit;
     public TimesheetReport.Status status;
     public String statusClass;
     public Date startDate;
@@ -170,6 +186,7 @@ public class TimesheetLogListView {
         this.planningPackage = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage;
 
         this.actor = timesheetLog.timesheetEntry.timesheetReport.actor;
+        this.orgUnit = timesheetLog.timesheetEntry.timesheetReport.orgUnit;
         this.status = timesheetLog.timesheetEntry.timesheetReport.status;
         this.statusClass = timesheetLog.timesheetEntry.timesheetReport.getStatusCssClass();
         this.startDate = timesheetLog.timesheetEntry.timesheetReport.startDate;

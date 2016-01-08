@@ -997,6 +997,7 @@ object.timesheet_activity_type.table.empty=Il n''existe aucun type d''activité 
 #----------------------
 
 object.timesheet_report.actor.label=Employé
+object.timesheet_report.org_unit.label=Unité d''organisation
 object.timesheet_report.period.label=Période
 object.timesheet_report.period.value=du {0} au {1}
 object.timesheet_report.hours.label=Heures reportées
