@@ -32,6 +32,7 @@ import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
+import models.finance.WorkOrder;
 import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCycleMilestone;
 import models.governance.LifeCycleMilestoneInstance;
@@ -40,6 +41,7 @@ import models.governance.LifeCycleMilestoneInstanceStatusType;
 import models.governance.LifeCyclePhase;
 import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.PortfolioEntry;
+import services.budgettracking.IBudgetTrackingService;
 
 /**
  * DAO for the {@link LifeCycleMilestone} and {@link LifeCycleMilestoneInstance}
@@ -212,11 +214,13 @@ public abstract class LifeCycleMilestoneDao {
      * 
      * @param lifeCycleMilestoneInstanceId
      *            the milestone instance to pass
+     * @param budgetTrackingService
+     *            the budget tracking service
      */
-    public static LifeCycleMilestoneInstance doPassed(Long lifeCycleMilestoneInstanceId) {
+    public static LifeCycleMilestoneInstance doPassed(Long lifeCycleMilestoneInstanceId, IBudgetTrackingService budgetTrackingService) {
         LifeCycleMilestoneInstance lifeCycleMilestoneInstance = getLCMilestoneInstanceById(lifeCycleMilestoneInstanceId);
         return doPassed(lifeCycleMilestoneInstanceId, lifeCycleMilestoneInstance.lifeCycleMilestone.defaultLifeCycleMilestoneInstanceStatusType,
-                lifeCycleMilestoneInstance.gateComments);
+                lifeCycleMilestoneInstance.gateComments, budgetTrackingService);
     }
 
     /**
@@ -232,9 +236,11 @@ public abstract class LifeCycleMilestoneDao {
      *            the status type of the passed milestone
      * @param gateComments
      *            the gate comments
+     * @param budgetTrackingService
+     *            the budget tracking service
      */
     public static LifeCycleMilestoneInstance doPassed(Long lifeCycleMilestoneInstanceId,
-            LifeCycleMilestoneInstanceStatusType lifeCycleMilestoneInstanceStatusType, String gateComments) {
+            LifeCycleMilestoneInstanceStatusType lifeCycleMilestoneInstanceStatusType, String gateComments, IBudgetTrackingService budgetTrackingService) {
 
         LifeCycleMilestoneInstance lifeCycleMilestoneInstance = getLCMilestoneInstanceById(lifeCycleMilestoneInstanceId);
 
@@ -256,6 +262,11 @@ public abstract class LifeCycleMilestoneDao {
         lifeCycleMilestoneInstance.portfolioEntryBudget = currentPlanning.portfolioEntryBudget;
         lifeCycleMilestoneInstance.portfolioEntryResourcePlan = currentPlanning.portfolioEntryResourcePlan;
         lifeCycleMilestoneInstance.save();
+
+        // recompute the budget tracking for resources
+        if (budgetTrackingService.isActive()) {
+            budgetTrackingService.recomputeAllBugdetAndForecastFromResource(currentPlanning);
+        }
 
         /*
          * update the life cycle instance
@@ -292,8 +303,17 @@ public abstract class LifeCycleMilestoneDao {
         // create the new planning
         LifeCycleInstancePlanning planning = new LifeCycleInstancePlanning(lifeCycleMilestoneInstance.lifeCycleInstance);
         if (currentPlanning.portfolioEntryBudget != null && currentPlanning.portfolioEntryResourcePlan != null) {
-            planning.portfolioEntryBudget = currentPlanning.portfolioEntryBudget.cloneInDB();
-            planning.portfolioEntryResourcePlan = currentPlanning.portfolioEntryResourcePlan.cloneInDB();
+            Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew = new HashMap<>();
+            planning.portfolioEntryResourcePlan = currentPlanning.portfolioEntryResourcePlan.cloneInDB(allocatedResourcesMapOldToNew);
+            planning.portfolioEntryBudget = currentPlanning.portfolioEntryBudget.cloneInDB(allocatedResourcesMapOldToNew);
+
+            // reassign the new allocated resources to existing work order
+            for (WorkOrder workOrder : lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.workOrders) {
+                if (workOrder.resourceObjectType != null) {
+                    workOrder.resourceObjectId = allocatedResourcesMapOldToNew.get(workOrder.resourceObjectType).get(workOrder.resourceObjectId);
+                    workOrder.save();
+                }
+            }
         }
         planning.save();
 

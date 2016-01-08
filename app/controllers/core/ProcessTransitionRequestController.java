@@ -60,6 +60,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
+import services.budgettracking.IBudgetTrackingService;
 import utils.form.ProcessMilestoneRequestFormData;
 import utils.form.RequestMilestoneFormData;
 import utils.table.MilestoneRequestListView;
@@ -87,6 +88,8 @@ public class ProcessTransitionRequestController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
@@ -264,7 +267,7 @@ public class ProcessTransitionRequestController extends Controller {
             } else { // if there aren't approvers then we set the milestone
                      // instance as passed
 
-                lifeCycleMilestoneInstance = LifeCycleMilestoneDao.doPassed(lifeCycleMilestoneInstance.id);
+                lifeCycleMilestoneInstance = LifeCycleMilestoneDao.doPassed(lifeCycleMilestoneInstance.id, this.getBudgetTrackingService());
 
                 // set the current actor as approver (if exists)
                 Actor actor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
@@ -349,23 +352,45 @@ public class ProcessTransitionRequestController extends Controller {
 
     }
 
+    /**
+     * Get the attachment manager service.
+     */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 }
