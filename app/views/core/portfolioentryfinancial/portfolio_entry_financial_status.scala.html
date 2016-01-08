@@ -92,10 +92,10 @@
                         <td>
                             @if(_budgetTrackingService.isActive()) {
                                 <p>
-                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
-                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
-                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label")</small><br/>
-                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.effort.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.cost_to_complete.label")</small><br/>
+                                    <small>@parts.Msg("core.portfolio_entry_financial.view.status.table.cost.label") - @parts.Msg("core.portfolio_entry_financial.view.status.table.engaged.label")</small><br/>
                                 </p>
                             } else {
                                 <p>
@@ -109,8 +109,8 @@
                             @if(_budgetTrackingService.isActive()) {
                                 <p>
                                     <small>@display_number(effortTotals.getOpexCostToComplete)</small><br/>
-                                    <small>@display_number(costTotals.getOpexCostToComplete)</small><br/>
                                     <small>@display_number(effortTotals.getOpexEngaged)</small><br/>
+                                    <small>@display_number(costTotals.getOpexCostToComplete)</small><br/>
                                     <small>@display_number(costTotals.getOpexEngaged)</small><br/>
                                 </p>
                             } else {
@@ -125,8 +125,8 @@
                             @if(_budgetTrackingService.isActive()) {
                                 <p>
                                     <small>@display_number(effortTotals.getCapexCostToComplete)</small><br/>
-                                    <small>@display_number(costTotals.getCapexCostToComplete)</small><br/>
                                     <small>@display_number(effortTotals.getCapexEngaged)</small><br/>
+                                    <small>@display_number(costTotals.getCapexCostToComplete)</small><br/>
                                     <small>@display_number(costTotals.getCapexEngaged)</small><br/>
                                 </p>
                             } else {

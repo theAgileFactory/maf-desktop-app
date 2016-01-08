@@ -387,6 +387,8 @@ public class TimesheetController extends Controller {
             return redirect(controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)));
         }
 
+        report.orgUnit = actor.orgUnit;
+
         if (TimesheetDao.getTimesheetReportMustApprove()) {
             report.status = TimesheetReport.Status.SUBMITTED;
 
