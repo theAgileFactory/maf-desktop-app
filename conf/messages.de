@@ -997,6 +997,7 @@ object.timesheet_activity_type.table.empty=Kein Typ eingetragen
 #----------------------
 
 object.timesheet_report.actor.label=Mitarbeiter
+object.timesheet_report.org_unit.label=Org.-Einheit
 object.timesheet_report.period.label=Zeit
 object.timesheet_report.period.value=von {0} bis {1}
 object.timesheet_report.hours.label=Berichtet Stunden
@@ -1288,7 +1289,8 @@ object.process_transition_request.table.milestone.empty=Es gibt keinen Antrag
 # actor
 #----------------------
 
-object.actor.employee_id.label=ID
+object.actor.ref_id.label=ID
+object.actor.employee_id.label=de: Employee ID
 object.actor.title.label=Stellenbezeichnung
 object.actor.name.label=Name
 object.actor.is_active.label=Aktiv

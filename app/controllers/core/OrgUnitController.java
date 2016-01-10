@@ -690,6 +690,8 @@ public class OrgUnitController extends Controller {
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
+        columnsToHide.add("forecastDays");
+        columnsToHide.add("dailyRate");
 
         Table<PortfolioEntryResourcePlanAllocatedActorListView> table = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
                 .fillForFilterConfig(listView, columnsToHide);

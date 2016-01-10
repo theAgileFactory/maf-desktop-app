@@ -17,13 +17,13 @@
  */
 package utils.form;
 
+import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.Actor;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
 
 /**
  * An actor form data is used to manage the fields when managing an actor.
@@ -35,6 +35,9 @@ public class ActorFormData {
     public Long id;
 
     public String employeeId;
+
+    @MaxLength(value = IModelConstants.LARGE_STRING)
+    public String refId;
 
     @Required
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
@@ -86,6 +89,7 @@ public class ActorFormData {
     public ActorFormData(Actor actor) {
 
         this.id = actor.id;
+        this.refId = actor.refId;
         this.employeeId = actor.employeeId;
         this.firstName = actor.firstName;
         this.lastName = actor.lastName;
@@ -111,6 +115,7 @@ public class ActorFormData {
     public void fill(Actor actor) {
 
         actor.isActive = this.isActive;
+        actor.refId = this.refId;
         actor.employeeId = this.employeeId;
         actor.firstName = this.firstName;
         actor.lastName = this.lastName;

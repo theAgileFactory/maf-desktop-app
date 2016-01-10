@@ -75,6 +75,7 @@ import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 import play.mvc.Http.Context;
 import scala.concurrent.duration.Duration;
+import services.budgettracking.IBudgetTrackingService;
 
 /**
  * Provides the methods to manage the jasper reports.
@@ -83,6 +84,8 @@ import scala.concurrent.duration.Duration;
  */
 @Singleton
 public class ReportingUtilsImpl implements IReportingUtils {
+
+    private IBudgetTrackingService budgetTrackingService;
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     private IPersonalStoragePlugin personalStoragePlugin;
     private INotificationManagerPlugin notificationManagerPlugin;
@@ -127,7 +130,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
     public ReportingUtilsImpl(ApplicationLifecycle lifecycle, Configuration configuration, Environment environment,
             IUserSessionManagerPlugin userSessionManagerPlugin, IPersonalStoragePlugin personalStoragePlugin,
             INotificationManagerPlugin notificationManagerPlugin, ISysAdminUtils sysAdminUtils, IDatabaseDependencyService databaseDependencyService,
-            IPreferenceManagerPlugin preferenceManagerPlugin) {
+            IPreferenceManagerPlugin preferenceManagerPlugin, IBudgetTrackingService budgetTrackingService) {
         log.info("SERVICE>>> ReportingUtilsImpl starting...");
         this.configuration = configuration;
         this.environment = environment;
@@ -136,6 +139,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
         this.notificationManagerPlugin = notificationManagerPlugin;
         this.sysAdminUtils = sysAdminUtils;
         this.preferenceManagerPlugin = preferenceManagerPlugin;
+        this.budgetTrackingService = budgetTrackingService;
         loadDefinitions();
         lifecycle.addStopHook(() -> {
             log.info("SERVICE>>> ReportingUtilsImpl stopping...");
@@ -192,6 +196,9 @@ public class ReportingUtilsImpl implements IReportingUtils {
 
         // set the default currency code
         parameters.put("default_currency_code", CurrencyDAO.getCurrencyDefault().code);
+
+        // set the budget tracking "isActive" flag
+        parameters.put("budget_tracking_active", getBudgetTrackingService().isActive());
 
         // set report parameters
         parameters.putAll(reportParameters);
@@ -425,5 +432,14 @@ public class ReportingUtilsImpl implements IReportingUtils {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the budget tracking service.
+     * 
+     * @return
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 }

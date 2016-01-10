@@ -58,7 +58,9 @@
                             parts.Msg.asString("object.actor.is_active.help")
                         )
                         
-                        @parts.input_text(actorForm("employeeId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.employee_id.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(actorForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.ref_id.label"), 'autofocus -> "autofocus")
+                        
+                        @parts.input_text(actorForm("employeeId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.employee_id.label"))
                         
                         @parts.input_text(actorForm("firstName"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.first_name.label"))
                         

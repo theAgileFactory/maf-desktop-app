@@ -64,6 +64,7 @@ import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.budgettracking.IBudgetTrackingService;
 import utils.form.ProcessMilestoneApprovalFormData;
 import utils.form.ProcessMilestoneDecisionFormData;
 import utils.table.MilestoneApprovalListView;
@@ -100,6 +101,8 @@ public class MilestoneApprovalController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -396,7 +399,8 @@ public class MilestoneApprovalController extends Controller {
             LifeCycleMilestoneInstanceStatusType status = LifeCycleMilestoneDao
                     .getLCMilestoneInstanceStatusTypeById(processMilestoneDecisionFormData.lifeCycleMilestoneInstanceStatusType);
 
-            milestoneInstance = LifeCycleMilestoneDao.doPassed(milestoneInstance.id, status, processMilestoneDecisionFormData.comments);
+            milestoneInstance = LifeCycleMilestoneDao.doPassed(milestoneInstance.id, status, processMilestoneDecisionFormData.comments,
+                    this.getBudgetTrackingService());
 
             // save the passed date
             milestoneInstance.passedDate = Utilities.getDateFormat(null).parse(processMilestoneDecisionFormData.passedDate);
@@ -438,6 +442,9 @@ public class MilestoneApprovalController extends Controller {
 
     /**
      * Delete the milestone instance.
+     * 
+     * @param milestoneInstanceId
+     *            the milestone instance id
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
     public Result delete(Long milestoneInstanceId) {
@@ -551,28 +558,53 @@ public class MilestoneApprovalController extends Controller {
 
     }
 
+    /**
+     * Get the use session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the attachment plugin service.
+     */
     private IAttachmentManagerPlugin getAttachmentPluginManager() {
         return attachmentPluginManager;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 
 }

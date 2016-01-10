@@ -985,6 +985,7 @@ object.timesheet_activity_type.table.empty=There is currently no timesheet activ
 #----------------------
 
 object.timesheet_report.actor.label=Employee
+object.timesheet_report.org_unit.label=Org unit
 object.timesheet_report.period.label=Period
 object.timesheet_report.period.value=from {0} to {1}
 object.timesheet_report.hours.label=Reported hours
@@ -1276,6 +1277,7 @@ object.process_transition_request.table.milestone.empty=There is no milestone ap
 # actor
 #----------------------
 
+object.actor.ref_id.label=Ref ID
 object.actor.employee_id.label=Employee ID
 object.actor.title.label=Title
 object.actor.name.label=Name
