@@ -400,19 +400,43 @@
 						event.preventDefault();
 						_dashboardServiceInstance.toggleEditonMode();
 					});
-					//Register to the dashboard row template selector
-					$('#dashboardRowTemplateSelectorAddButton').click(function(event){
+					
+					//Dashboard row template selector
+					$('#dashboardRowTemplateSelectorCloseButton').click(function(event){
 						$('#dashboardRowTemplateSelector').modal('hide');
 					});
-					$('#dashboardRowTemplateSelector').on('hide.bs.modal',function(event){
-						var modal = $(this);
-						var selectDashboardRow=modal.data("mafSourceDashboardRow");
+					$('#dashboardRowTemplateSelectorAddButton').click(function(event){
+						var modal = $('#dashboardRowTemplateSelector');
+						modal.modal('hide');
+						var dashboardRowElement=modal.data("mafSourceDashboardRowElement");
 						var numberOfColumns=$("#dashboardRowTemplateSelector input:radio[name='dashboardRowOption']:checked").val();
-						var jqxhr = $.get("/dash/row/"+numberOfColumns, function(data) {
-							_dashboardServiceInstance.toggleEditonMode();
-							selectDashboardRow.after(data);
-							_dashboardServiceInstance.toggleEditonMode();
-						});
+						_maf_widget_addDashboardRow(dashboardRowElement, numberOfColumns);
+					});
+					
+					//Widget catalog
+					$('#widgetCatalogCloseButton').click(function(){
+						$('#widgetCatalog').modal('hide');
+					});
+					$('#widgetCatalogAddButton').click(function(){
+						$('#widgetCatalog').modal('hide');
+					});
+					var widgetCatalogSelect=$('#widgetCatalogSelect');
+					for(var widgetCatalogIndex=0; widgetCatalogIndex < _dashboardServiceInstance.widgetCatalog.length; widgetCatalogIndex++){
+						var widgetCatalogEntry=_dashboardServiceInstance.widgetCatalog[widgetCatalogIndex];
+						$('<option>').val(widgetCatalogEntry.identifier).text(widgetCatalogEntry.name).appendTo(widgetCatalogSelect);
+					}
+					for (var widgetCatalogEntryIdentifier in _dashboardServiceInstance.widgetCatalog) {
+					    if (_dashboardServiceInstance.widgetCatalog.hasOwnProperty(widgetCatalogEntryIdentifier)) {
+					    	var widgetCatalogEntry=_dashboardServiceInstance.widgetCatalog[widgetCatalogEntryIdentifier];
+							$('<option>').val(widgetCatalogEntry.identifier).text(widgetCatalogEntry.name).appendTo(widgetCatalogSelect);
+					    }
+					}
+					$('#widgetCatalogSelect').change(function(event){
+					    var optionSelected = $(this).find("option:selected");
+						var widgetCatalogEntryIdentifier  = optionSelected.val();
+						var widgetCatalogEntryName   = optionSelected.text();
+						$('#widgetCatalogEntryName').html(widgetCatalogEntryName);
+						$('#widgetCatalogEntryDescription').html(_dashboardServiceInstance.widgetCatalog[widgetCatalogEntryIdentifier].description);
 					});
 				});
 			});
@@ -423,11 +447,36 @@
 			function _maf_widget_dashboardService(){
 				this.editionMode=false;
 				this.dashboardData=[];
-				this.placeHolderMessage='<div class="_maf_widget_widget_placeholder"><br/><br/><h4 class="text-center">Drag your widgets here or <a class="._maf_widget_add" href="#">add a new widget</a></h4><br/><br/></div>';
+				this.widgetCatalog=[];
+				this.placeHolderMessage='<div class="_maf_widget_widget_placeholder"><br/><br/><h4 class="text-center">Drag your widgets here or <a class="_maf_widget_add" href="#">add a new widget</a></h4><br/><br/></div>';
+				
+				/**
+				 * Set the place holder message into the specified widget container
+				 */
+				this.setPlaceHolderMessage=function(widgetAreaElement){
+					widgetAreaElement.html(_dashboardServiceInstance.placeHolderMessage);
+					$('._maf_widget_add').off('click');
+					$('._maf_widget_add').click(function(event){
+						event.preventDefault();
+						_maf_widget_openWidgetSelector(widgetAreaElement);
+					});
+				};
+				
+				/**
+				 * Load the dashboard configuration from the server
+				 */
 				this.refresh=function(callback){
-					this.dashboardData=[{rowColumns: 1, widgets: [1]},{rowColumns: 2, widgets: [2,-1]},{rowColumns: 3, widgets: [2,-1,-1]}];
+					this.dashboardData=[{widgets: [1]},{widgets: [2,-1]},{widgets: [3,-1,-1]}];
+					this.widgetCatalog={
+					 "WG1" : {identifier: "WG1", name : "Une super widget", description : "Widget de la mort qui tue<br/>Sans blague !"}
+					,"WG2" : {identifier: "WG2", name : "Cool la widget", description : "Widget qui le fait bien<br/>Ouais !"}
+					,"WG3" : {identifier: "WG3", name : "Top la widget", description : "Widget pas mal du tout<br/>Yesss !"}
+					};
 					callback();
 				};
+				/**
+				 * Switch from edition mode to display mode
+				 */
 				this.toggleEditonMode=function(){
 					if(this.editionMode){
 						_maf_widget_disableDashboardEdition();
@@ -441,21 +490,90 @@
 						this.editionMode=true;
 					}
 				}
+				/**
+				 * Update the dashboard data when adding a widget
+				 */
+				this.swapWidget=function(widgetElementA, widgetElementB){
+					var widgetLocationA=this.findWidgetLocation(widgetElementA);
+					var selectedRowIndexA=widgetLocationA.selectedRowIndex;
+					var selectedWidgetIndexA=widgetLocationA.selectedWidgetIndex;
+					
+					var widgetLocationB=this.findWidgetLocation(widgetElementB);
+					var selectedRowIndexB=widgetLocationB.selectedRowIndex;
+					var selectedWidgetIndexB=widgetLocationB.selectedWidgetIndex;
+					
+					var widgetIdA=this.dashboardData[selectedRowIndexA].widgets[selectedWidgetIndexA];
+					var widgetIdB=this.dashboardData[selectedRowIndexB].widgets[selectedWidgetIndexB];
+					
+					this.dashboardData[selectedRowIndexA].widgets[selectedWidgetIndexA]=widgetIdB;
+					this.dashboardData[selectedRowIndexB].widgets[selectedWidgetIndexB]=widgetIdA;
+				};
+				/**
+				 * Update the dashboard data when adding a widget
+				 */
 				this.addWidget=function(){
 					
 				};
+				/**
+				 * Update the dashboard data when removing a widget
+				 */
 				this.removeWidget=function(widgetElement){
-					var widgetElementId=widgetElement.attr('id');
+					var widgetLocation=this.findWidgetLocation(widgetElement);
+					var selectedRowIndex=widgetLocation.selectedRowIndex;
+					var selectedWidgetIndex=widgetLocation.selectedWidgetIndex;
+					if(selectedWidgetIndex!=-1){
+						this.dashboardData[selectedRowIndex].widgets[selectedWidgetIndex]=-1;
+					}
+				};
+				/**
+				 * Update the dashboard data when adding a row
+				 */
+				this.addRow=function(dashboardRowElement, numberOfColumns){
+					var selectedRowIndex=this.findRowIndex(dashboardRowElement);
+					if(selectedRowIndex!=-1){
+						var widgetArray=[];
+						for(var widgetCount=0; widgetCount<numberOfColumns; widgetCount++){
+							widgetArray.push(-1);
+						}
+						var newRowData={widgets : widgetArray};
+						this.dashboardData.splice(selectedRowIndex+1,0,newRowData);
+					}
+				};
+				/**
+				 * Update the dashboard data when removing a row
+				 */
+				this.removeRow=function(dashboardRowElement){
+					var selectedRowIndex=this.findRowIndex(dashboardRowElement);
+					if(selectedRowIndex!=-1){
+						this.dashboardData.splice(selectedRowIndex,1);
+					}
+				};
+				/**
+				 * Find the index of the specified row in the dashboard page
+				 */
+				this.findRowIndex=function(dashboardRowElement){
+					var rowIndex=0;
+					var selectedRowIndex=-1;
+					$("._maf_widget_dashboard_row").each(function(){
+						if(dashboardRowElement.is($(this))){
+							selectedRowIndex=rowIndex;
+						}
+						rowIndex++;
+					});
+					return selectedRowIndex;
+				};
+				/**
+				 * Find the specified widget element in the dashboard page
+				 */
+				this.findWidgetLocation=function(widgetElement){
 					var selectedRowIndex=-1;
 					var selectedWidgetIndex=-1;
 					var rowIndex=0;
-					var localDashboardData=this.dashboardData;
 					$("._maf_widget_dashboard_row").each(function(){
 						var widgetIndex=0;
-						var rowConfig=localDashboardData[rowIndex];
-						$(this).children("._maf_widget_widget_area").each(function(){
-							var widgetId=rowConfig.widgets[widgetIndex];
-							if(("maf_widget_widget_id_"+widgetId)==widgetElementId){
+						$(this).find("._maf_widget_widget_area").each(function(){
+							var localWidgetContent=$(this).children(":first");
+							if(widgetElement.is(localWidgetContent)){
 								selectedRowIndex=rowIndex;
 								selectedWidgetIndex=widgetIndex;
 							}
@@ -463,26 +581,7 @@
 						});
 						rowIndex++;
 					});
-					if(selectedWidgetIndex!=-1){
-						this.dashboardData[selectedRowIndex].widgets.splice(selectedWidgetIndex,1);
-						console.debug(JSON.stringify(this.dashboardData));
-					}
-				};
-				this.addRow=function(){
-					
-				};
-				this.removeRow=function(dashBoardRowElement){
-					var rowIndex=0;
-					var selectedRowIndex=-1;
-					$("._maf_widget_dashboard_row").each(function(){
-						if(dashBoardRowElement==$(this)){
-							selectedRowIndex=rowIndex;
-						}
-						rowIndex++;
-					});
-					if(selectedRowIndex!=-1){
-						this.dashboardData.splice(selectedRowIndex,1);
-					}
+					return  {"selectedRowIndex" : selectedRowIndex, "selectedWidgetIndex" : selectedWidgetIndex};
 				};
 			}
 			
@@ -582,6 +681,10 @@
 						var draggableJQueryElement=$(draggableElement);
 						var parentDraggableJQueryElement=draggableJQueryElement.parent();
 						var childDropzoneJQueryElement=dropzoneJQueryElement.children(":first");
+						
+						//Swap both widgets
+						_dashboardServiceInstance.swapWidget(draggableJQueryElement, childDropzoneJQueryElement);
+						
 						draggableJQueryElement.detach();
 						childDropzoneJQueryElement.detach();
 						draggableJQueryElement.appendTo(dropzoneJQueryElement);
@@ -624,46 +727,60 @@
 				$("._maf_widget_widget_area").each(function() {
 					//Add a place holder for visualizing the "empty" areas
 					if($(this).html().trim()==""){
-						var widgetArea=$(this);
-						widgetArea.html(_dashboardServiceInstance.placeHolderMessage);
+						var widgetAreaElement=$(this);
+						_dashboardServiceInstance.setPlaceHolderMessage(widgetAreaElement);
 					}
 				});
 			}
 			
 			/**
 			 * Remove a dashboard row
-			 * dashBoardRowElement : the jQuery element of the row
+			 * dashboardRowElement : the jQuery element of the row
 			 */
-			function _maf_widget_removeDashboardRow(dashBoardRowElement){
-				_dashboardServiceInstance.removeRow(dashBoardRowElement);
-				dashBoardRowElement.detach();
+			function _maf_widget_removeDashboardRow(dashboardRowElement){
+				_dashboardServiceInstance.removeRow(dashboardRowElement);
+				dashboardRowElement.detach();
+			}
+			
+			/**
+			 * Add a dashboard row
+			 * dashboardRowElement : the jQuery element of the row under which the new row must be added
+			 * numberOfColumns : the number of columns of the new row to be added
+			 */
+			function _maf_widget_addDashboardRow(dashboardRowElement, numberOfColumns){
+				var jqxhr = $.get("/dash/row/"+numberOfColumns, function(data) {
+					_dashboardServiceInstance.toggleEditonMode();
+					dashboardRowElement.after(data);
+					_dashboardServiceInstance.toggleEditonMode();
+					_dashboardServiceInstance.addRow(dashboardRowElement, numberOfColumns);
+				});
 			}
 			
 			/**
 			 * Open a popup to select the dashboard row template (1, 2 or 3 columns)
 			 */
-			function _maf_widget_openDashboardRowTemplateSelector(dashBoardRowElement){
+			function _maf_widget_openDashboardRowTemplateSelector(dashboardRowElement){
 				$('#dashboardRowTemplateSelector').modal('show');
-				$('#dashboardRowTemplateSelector').data("mafSourceDashboardRow",dashBoardRowElement);
+				$('#dashboardRowTemplateSelector').data("mafSourceDashboardRowElement",dashboardRowElement);
 			}
 			
 			/**
 			 * Remove a widget from the dashboard
 			 * widgetElement : the jQuery element for the widget
-			 * placeHolderMessage : the content to be added in place of the widget
 			 */
 			function _maf_widget_removeWidgetFromDashboard(widgetElement){
 				_dashboardServiceInstance.removeWidget(widgetElement);
-				var widgetArea=widgetElement.parent();
+				var widgetAreaElement=widgetElement.parent();
 				widgetElement.detach();
-				widgetArea.html(_dashboardServiceInstance.placeHolderMessage);
+				_dashboardServiceInstance.setPlaceHolderMessage(widgetAreaElement);
 			}
 			
 			/**
-			 * Open the widget catalog for selecting a new widget
+			 * Open the widget catalog for selecting a new widget to be set in the specified area
 			 */
-			function _maf_widget_openWidgetSelector(widgetElement){
-				
+			function _maf_widget_openWidgetSelector(widgetAreaElement){
+				$('#widgetCatalog').modal('show');
+				$('#widgetCatalog').data("mafSourceWidgetAreaElement",widgetAreaElement);
 			}
 		</script>
 		
@@ -697,7 +814,7 @@
 		          	<div class="radio">
 					  <label>
 					    <input type="radio" name="dashboardRowOption" value="2">
-					    3 columns
+					    2 columns
 					  </label>
 					</div>
 		          </div>
@@ -729,13 +846,40 @@
 		        </div>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" id="dashboardRowTemplateSelectorCloseButton" class="btn btn-default">Close</button>
 		        <button type="button" id="dashboardRowTemplateSelectorAddButton" class="btn btn-primary">Add row</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 
+		<!-- The widget catalog -->
+		<div id="widgetCatalog" class="modal fade" tabindex="-1" role="dialog">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title">Widget catalog</h4>
+		      </div>
+		      <div class="modal-body">
+		        <div class="row" style="padding: 1em;">
+		          <div class="col-md-6">
+		          	<select id="widgetCatalogSelect" size="10" class="form-control">
+					</select>
+		          </div>
+		          <div class="col-md-6">
+		          	<h4 id="widgetCatalogEntryName"></h4>
+		          	<p style="font-style: italic;" id="widgetCatalogEntryDescription"></p>
+		          </div>
+		        </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" id="widgetCatalogCloseButton" class="btn btn-default">Close</button>
+		        <button type="button" id="widgetCatalogAddButton" class="btn btn-primary">Add widget</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 		<hr>
 
