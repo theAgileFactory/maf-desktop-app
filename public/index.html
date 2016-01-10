@@ -115,33 +115,79 @@
 
 <script src="/assets/javascripts/interact.js"></script>
 <style>
-.draggable {
+._maf_widget_dashboard_row {
+}
+
+._maf_widget_dashboard_row_activated{
+	border-color: #bbb;
+	border: dashed 1px;
+	margin: 1em;
+	padding: 1em;
+}
+
+._maf_widget_dashboard_row_trash {
+	padding-bottom: 1em;
+	font-size: 1em;
+}
+
+._maf_widget_dashboard_row_trash_button {
+}
+
+._maf_widget_dashboard_row_add {
+	padding-top: 0.5em;
+	padding-bottom: 1em;
+	font-size: 1em;
+	clear:both;
+}
+
+._maf_widget_dashboard_row_add_button {
+}
+
+._maf_widget_widget_commands{
+}
+
+._maf_widget_widget_command_trash{
+}
+
+._maf_widget_widget_command_configure{
+}
+
+._maf_widget_dashboard_template_cell {
+	background-color: silver;
+	border: solid 1px;
+}
+
+._maf_widget_dashboard_template_row {
+	border-color: #ccc;
+	border: solid 1px;
+}
+
+._maf_widget_draggable {
+}
+._maf_widget_widget_area {
 	
 }
 
-.widget_area {
-	
+._maf_widget_widget {
 }
 
-.widget {
-	
+._maf_widget_error{
+	margin: 1em;
+	padding: 1em;
 }
 
-.widget_placeholder {
+._maf_widget_widget_placeholder {
 	background-color: silver;
 	border-color: #ccc;
 	border: dashed 1px;
-	border-radius: 1px;
-	margin: 1em;
+	border-radius: 5px;
 }
-
-.drop-active {
+._maf_widget_drop-active {
 	border-color: #aaa;
 	border: dashed 2px;
 	border-radius: 2px;
 }
-
-.drop-selected {
+._maf_widget_drop-selected {
 	border-color: #ff0000;
 }
 </style>
@@ -289,10 +335,6 @@
 			</div>
 		</div>
 
-
-widget_placeholder
-
-
 		<div id="maf-flash-message" class="row"></div>
 
 		<div class="row">
@@ -310,59 +352,232 @@ widget_placeholder
 			</div>
 			<div class="col-md-6">
 				<p class="text-right">
-					<a class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
+					<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
 						page</a>
 				</p>
-			</div>widget_placeholder
-		</div>
-		<div class="row">
-			<div id="workspace" class="col-md-12">
-				<div class="draggable">Hello</div>
 			</div>
 		</div>
 		<div class="row">
 			<div id="workspace" class="col-md-12">
 				<!-- Page wide widget -->
-				<div class="row">
-					<div id="widget1" class="col-md-12 widget_area"><div class="widget_placeholder"><br/><br/><br/></div></div>
+				<div class="row _maf_widget_dashboard_row">
+					<div class="col-md-12 _maf_widget_widget_area"></div>
 				</div>
 				<!-- Two widgets -->
-				<div class="row">
-					<div id="widget2" class="col-md-6 widget_area"><div class="widget_placeholder"><br/><br/><br/></div></div>
-					<div id="widget3" class="col-md-6 widget_area"><div class="widget_placeholder"><br/><br/><br/></div></div>
+				<div class="row _maf_widget_dashboard_row">
+					<div class="col-md-6 _maf_widget_widget_area"></div>
+					<div class="col-md-6 _maf_widget_widget_area"></div>
+				</div>
+				<!-- Three widgets -->
+				<div class="row _maf_widget_dashboard_row">
+					<div class="col-md-4 _maf_widget_widget_area"></div>
+					<div class="col-md-4 _maf_widget_widget_area"></div>
+					<div class="col-md-4 _maf_widget_widget_area"></div>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript">
+			var _dashboardServiceInstance={};
 			$(document).ready(function() {
-				interact('.draggable').draggable({
+				_dashboardServiceInstance=new _maf_widget_dashboardService();
+				_dashboardServiceInstance.refresh(function (){
+					//Add the widgets to the dashboard page
+					var rowIndex=0;
+					$("._maf_widget_dashboard_row").each(function(){
+						var widgetIndex=0;
+						var rowConfig=_dashboardServiceInstance.dashboardData[rowIndex];
+						$(this).children("._maf_widget_widget_area").each(function(){
+							var widgetId=rowConfig.widgets[widgetIndex];
+							if(widgetId!=-1){
+								_maf_widget_loadWidget($(this),"/dash/widget/"+widgetId,"/assets/images/ajax-loader.gif","Unable to load the widget");
+							}
+							widgetIndex++;
+						});
+						rowIndex++;
+					});
+					//Activate the edition mode selector
+					$("#_maf_widget_edition_mode").click(function(event){
+						event.preventDefault();
+						_dashboardServiceInstance.toggleEditonMode();
+					});
+					//Register to the dashboard row template selector
+					$('#dashboardRowTemplateSelectorAddButton').click(function(event){
+						$('#dashboardRowTemplateSelector').modal('hide');
+					});
+					$('#dashboardRowTemplateSelector').on('hide.bs.modal',function(event){
+						var modal = $(this);
+						var selectDashboardRow=modal.data("mafSourceDashboardRow");
+						var numberOfColumns=$("#dashboardRowTemplateSelector input:radio[name='dashboardRowOption']:checked").val();
+						var jqxhr = $.get("/dash/row/"+numberOfColumns, function(data) {
+							_dashboardServiceInstance.toggleEditonMode();
+							selectDashboardRow.after(data);
+							_dashboardServiceInstance.toggleEditonMode();
+						});
+					});
+				});
+			});
+			
+			/**
+			 * The service which is managing the dashboard data
+			 */
+			function _maf_widget_dashboardService(){
+				this.editionMode=false;
+				this.dashboardData=[];
+				this.placeHolderMessage='<div class="_maf_widget_widget_placeholder"><br/><br/><h4 class="text-center">Drag your widgets here or <a class="._maf_widget_add" href="#">add a new widget</a></h4><br/><br/></div>';
+				this.refresh=function(callback){
+					this.dashboardData=[{rowColumns: 1, widgets: [1]},{rowColumns: 2, widgets: [2,-1]},{rowColumns: 3, widgets: [2,-1,-1]}];
+					callback();
+				};
+				this.toggleEditonMode=function(){
+					if(this.editionMode){
+						_maf_widget_disableDashboardEdition();
+						$("#_maf_widget_edition_mode").removeClass('btn btn-warning').addClass('btn btn-primary').html('<i class="fa fa-cog"></i>&nbsp;Edit page');
+						_maf_widgets_toggleEdition(false);
+						this.editionMode=false;
+					}else{
+						_maf_widget_activateDashboardEdition();
+						$("#_maf_widget_edition_mode").removeClass('btn btn-primary').addClass('btn btn-warning').html('<i class="fa fa-play"></i>&nbsp;Display page');
+						_maf_widgets_toggleEdition(true);
+						this.editionMode=true;
+					}
+				}
+				this.addWidget=function(){
+					
+				};
+				this.removeWidget=function(widgetElement){
+					var widgetElementId=widgetElement.attr('id');
+					var selectedRowIndex=-1;
+					var selectedWidgetIndex=-1;
+					var rowIndex=0;
+					var localDashboardData=this.dashboardData;
+					$("._maf_widget_dashboard_row").each(function(){
+						var widgetIndex=0;
+						var rowConfig=localDashboardData[rowIndex];
+						$(this).children("._maf_widget_widget_area").each(function(){
+							var widgetId=rowConfig.widgets[widgetIndex];
+							if(("maf_widget_widget_id_"+widgetId)==widgetElementId){
+								selectedRowIndex=rowIndex;
+								selectedWidgetIndex=widgetIndex;
+							}
+							widgetIndex++;
+						});
+						rowIndex++;
+					});
+					if(selectedWidgetIndex!=-1){
+						this.dashboardData[selectedRowIndex].widgets.splice(selectedWidgetIndex,1);
+						console.debug(JSON.stringify(this.dashboardData));
+					}
+				};
+				this.addRow=function(){
+					
+				};
+				this.removeRow=function(dashBoardRowElement){
+					var rowIndex=0;
+					var selectedRowIndex=-1;
+					$("._maf_widget_dashboard_row").each(function(){
+						if(dashBoardRowElement==$(this)){
+							selectedRowIndex=rowIndex;
+						}
+						rowIndex++;
+					});
+					if(selectedRowIndex!=-1){
+						this.dashboardData.splice(selectedRowIndex,1);
+					}
+				};
+			}
+			
+			/**
+			 * Load a widget at the specified location and
+			 * with the specified URL
+			 * snapingArea : a jQuery element
+			 * url : the URL to be loaded asynchronously with a GET request
+			 * ajaxWaitImage : the animated gif displayed while the widget is loading
+			 * errorMessage : an error message displayed if the widget cannot display
+			 */
+			function _maf_widget_loadWidget(snapingArea, url, ajaxWaitImage, errorMessage) {
+				snapingArea.html('<div><img src="'+ajaxWaitImage+'"/></div>');
+				var jqxhr = $.get(url, function(data) {
+					snapingArea.html(data);
+					_maf_widgets_toggleEdition(false);
+				}).fail(function() {
+					snapingArea.html('<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;'+errorMessage+'</div>');
+				});
+			}
+			
+			/**
+			 * Change the widget state to edition mode or display mode
+			 * isEditionMode : true if the widget is to be set in "edition mode" (the configuration button is visible)
+			 */
+			function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
+				if(isEditionMode){
+					$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_trash" href="#"><i class="fa fa-trash"></i></a>');
+					$("._maf_widget_widget_command_trash").click(function(){
+						var widgetElement=$(this).closest("._maf_widget_widget");
+						_maf_widget_removeWidgetFromDashboard(widgetElement);
+					});
+				}else{
+					$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_configure" href="#"><i class="fa fa-cog"></i></a>');
+					$("._maf_widget_widget_command_configure").click(function(){
+						
+					});
+				}
+			}
+			
+			/**
+			 * Set the dashboard page in display mode
+			 */
+			function _maf_widget_disableDashboardEdition(){
+				$("._maf_widget_widget_placeholder").detach();
+				$("._maf_widget_dashboard_row_trash").detach();
+				$("._maf_widget_dashboard_row_add").detach();
+				interact('._maf_widget_draggable').draggable({enabled: false});
+				interact('._maf_widget_widget_area').dropzone({enabled:false});
+				$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
+			}
+			
+			/**
+			 * Set the dashboard page in edition mode
+			 */
+			function _maf_widget_activateDashboardEdition(){
+				_maf_widget_addPlaceHolderToEmptyCells();
+				$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
+				$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a class="_maf_widget_dashboard_row_trash_button" href="#"><i class="fa fa-trash text-primary"></i></a></div>');
+				$("._maf_widget_dashboard_row").append('<div class="_maf_widget_dashboard_row_add"><a class="_maf_widget_dashboard_row_add_button" href="#"><i class="fa fa-plus text-primary"></i></a></div>');
+				$("._maf_widget_dashboard_row_trash_button").click(function(event){
+					event.preventDefault();
+					var rowElement=$(this).closest("._maf_widget_dashboard_row");
+					_maf_widget_removeDashboardRow(rowElement);
+				});
+				$("._maf_widget_dashboard_row_add_button").click(function(event){
+					event.preventDefault();
+					var rowElement=$(this).closest("._maf_widget_dashboard_row");
+					_maf_widget_openDashboardRowTemplateSelector(rowElement);
+				});
+				
+				//Activate the draggability
+				interact('._maf_widget_draggable').draggable({
 					accept: '.widget',
 					autoScroll: true,
-					onmove: dragMoveListener,
-					onend: function (event) {
-					}});
-				loadWidget($('#widget1'));
-				loadWidget($('#widget2'));
-
-				interact('.widget_area').dropzone({
+					onmove: _maf_widget_dragMoveListener});
+				//Activate the management of the drag and drop
+				interact('._maf_widget_widget_area').dropzone({
 					overlap : 0.30,
 					ondropactivate : function(event) {
-						event.target.classList.add('drop-active');
+						event.target.classList.add('_maf_widget_drop-active');
 					},
 					ondragenter : function(event) {
 						var draggableElement = event.relatedTarget,
 				        dropzoneElement = event.target;
-						dropzoneElement.classList.add('drop-selected');
+						dropzoneElement.classList.add('_maf_widget_drop-selected');
 					},
 					ondragleave : function(event) {
 						var draggableElement = event.relatedTarget,
 				        dropzoneElement = event.target;
-						dropzoneElement.classList.remove('drop-selected');
+						dropzoneElement.classList.remove('_maf_widget_drop-selected');
 					},
 					ondrop : function(event) {
 						var draggableElement = event.relatedTarget,
 				        dropzoneElement = event.target;
-						console.debug(draggableElement+"="+dropzoneElement);
 						var dropzoneJQueryElement=$(dropzoneElement);
 						var draggableJQueryElement=$(draggableElement);
 						var parentDraggableJQueryElement=draggableJQueryElement.parent();
@@ -374,7 +589,7 @@ widget_placeholder
 						draggableJQueryElement.removeAttr('data-y');
 						draggableJQueryElement.removeAttr('style');
 						childDropzoneJQueryElement.appendTo(parentDraggableJQueryElement);
-					    dropzoneElement.classList.remove('drop-selected');
+					    dropzoneElement.classList.remove('_maf_widget_drop-selected');
 					},
 					ondropdeactivate : function(event) {
 						var draggableElement = event.relatedTarget,
@@ -383,42 +598,143 @@ widget_placeholder
 						draggableJQueryElement.removeAttr('data-x');
 						draggableJQueryElement.removeAttr('data-y');
 						draggableJQueryElement.removeAttr('style');
-						dropzoneElement.classList.remove('drop-active');
+						dropzoneElement.classList.remove('_maf_widget_drop-active');
 					}
 				});
-			});
+			}
 			
-			function dragMoveListener(event){
+			/**
+			 * Listener used by _maf_widget_activateDashboardEdition() managing the 
+			 * drag movements
+			 */
+			function _maf_widget_dragMoveListener(event){
 			    var target = event.target,
 		        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
 		        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 			    target.style.webkitTransform =
-			    target.style.transform =
-			      'translate(' + x + 'px, ' + y + 'px)';
+			    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
 			    target.setAttribute('data-x', x);
 			    target.setAttribute('data-y', y);
 			}
-
-			function loadWidget(snapingArea) {
-				snapingArea.html('<div>... Pending ...</div>');
-				var jqxhr = $.get("/dash/widget", function(data) {
-					snapingArea.html(data);
-				}).fail(function() {
-					snapingArea.html('<div>ERROR</div>');
+			
+			/**
+			 * Add a widget placeholder to any empty row cell
+			 */
+			function _maf_widget_addPlaceHolderToEmptyCells(){
+				$("._maf_widget_widget_area").each(function() {
+					//Add a place holder for visualizing the "empty" areas
+					if($(this).html().trim()==""){
+						var widgetArea=$(this);
+						widgetArea.html(_dashboardServiceInstance.placeHolderMessage);
+					}
 				});
 			}
-
-			function getWidgetPanel(widgetTitle, widgetContent) {
-				var widgetPanel = '<div class="panel panel-info">';
-				widgetPanel = widgetPanel + '<div class="panel-heading">'
-						+ widgetTitle + '</div>';
-				widgetPanel = widgetPanel
-						+ '<div id="widget_2" class="panel-body ">';
-				widgetPanel = widgetPanel + '</div>';
-				widgetPanel = widgetPanel + '</div>';
-				return widgetPanel;
+			
+			/**
+			 * Remove a dashboard row
+			 * dashBoardRowElement : the jQuery element of the row
+			 */
+			function _maf_widget_removeDashboardRow(dashBoardRowElement){
+				_dashboardServiceInstance.removeRow(dashBoardRowElement);
+				dashBoardRowElement.detach();
+			}
+			
+			/**
+			 * Open a popup to select the dashboard row template (1, 2 or 3 columns)
+			 */
+			function _maf_widget_openDashboardRowTemplateSelector(dashBoardRowElement){
+				$('#dashboardRowTemplateSelector').modal('show');
+				$('#dashboardRowTemplateSelector').data("mafSourceDashboardRow",dashBoardRowElement);
+			}
+			
+			/**
+			 * Remove a widget from the dashboard
+			 * widgetElement : the jQuery element for the widget
+			 * placeHolderMessage : the content to be added in place of the widget
+			 */
+			function _maf_widget_removeWidgetFromDashboard(widgetElement){
+				_dashboardServiceInstance.removeWidget(widgetElement);
+				var widgetArea=widgetElement.parent();
+				widgetElement.detach();
+				widgetArea.html(_dashboardServiceInstance.placeHolderMessage);
+			}
+			
+			/**
+			 * Open the widget catalog for selecting a new widget
+			 */
+			function _maf_widget_openWidgetSelector(widgetElement){
+				
 			}
 		</script>
+		
+		<!-- The dashboard row template selector -->
+		<div id="dashboardRowTemplateSelector" class="modal fade" tabindex="-1" role="dialog">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title">Dashboard row template</h4>
+		      </div>
+		      <div class="modal-body">
+		        <div class="row" style="padding: 1em;">
+		          <div class="col-md-12">
+		          	<div class="radio">
+					  <label>
+					    <input type="radio" name="dashboardRowOption" value="1" checked>
+					    1 column
+					  </label>
+					</div>
+		          </div>
+		          <div class="col-md-12">
+		          	<div class="row _maf_widget_dashboard_template_row">
+		          		<div class="col-md-12 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+		          	</div>
+		          </div>
+		          <div class="col-md-12"><br/></div>
+		        </div>
+		        <div class="row" style="padding: 1em;">
+		          <div class="col-md-12">
+		          	<div class="radio">
+					  <label>
+					    <input type="radio" name="dashboardRowOption" value="2">
+					    3 columns
+					  </label>
+					</div>
+		          </div>
+		          <div class="col-md-12">
+					<div class="row _maf_widget_dashboard_template_row">
+		          		<div class="col-md-6 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+		          		<div class="col-md-6 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+		          	</div>
+		          </div>
+		          <div class="col-md-12"><br/></div>
+		        </div>
+		        <div class="row" style="padding: 1em;">
+		          <div class="col-md-12">
+		          	<div class="radio">
+					  <label>
+					    <input type="radio" name="dashboardRowOption"value="3">
+					    3 columns
+					  </label>
+					</div>
+		          </div>
+		          <div class="col-md-12">
+					<div class="row _maf_widget_dashboard_template_row">
+		          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+		          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+		          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+		          	</div>
+		          </div>
+		          <div class="col-md-12"><br/></div>
+		        </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" id="dashboardRowTemplateSelectorAddButton" class="btn btn-primary">Add row</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 
 		<hr>
