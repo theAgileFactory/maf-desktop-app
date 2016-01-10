@@ -3,7 +3,8 @@
 #-------------------
 
 GET    /dash/                      controllers.dashboard.DashboardController.index()
-GET    /dash/widget                controllers.dashboard.DashboardController.widget()
+GET    /dash/widget/:id            controllers.dashboard.DashboardController.widget(id: Long)
+GET    /dash/row/:numberOfColumns  controllers.dashboard.DashboardController.row(numberOfColumns: Integer)
 GET    /dash/edit                  controllers.dashboard.DashboardController.edit()
 
 #Custom router method

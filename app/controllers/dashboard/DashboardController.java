@@ -35,7 +35,18 @@ public class DashboardController extends Controller{
         return ok(views.html.dashboard.edit.render());
     }
     
-    public Result widget() {
-        return ok(views.html.dashboard.widget.render(UUID.randomUUID().toString()));
+    public Result row(Integer numberOfColumns) {
+        return ok(views.html.dashboard.row.render(numberOfColumns));
+    }
+    
+    public Result widget(Long id) {
+        if(id==3){
+            return badRequest();
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        return ok(views.html.dashboard.widget.render(id,UUID.randomUUID().toString()));
     }
 }

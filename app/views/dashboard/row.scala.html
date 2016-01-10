@@ -1,0 +1,6 @@
+@(numberOfColumns: Integer)
+<div class="row _maf_widget_dashboard_row">
+	@for(index <- 0 until numberOfColumns){
+	<div class="col-md-@(12/numberOfColumns) _maf_widget_widget_area"></div>
+	}
+</div>
