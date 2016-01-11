@@ -9,6 +9,8 @@ import models.framework_models.widgets.DashboardPage;
 import models.framework_models.widgets.DashboardWidget;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.libs.F.Promise;
+import play.libs.Json;
 
 public class DashboardController extends Controller{
 
@@ -35,18 +37,22 @@ public class DashboardController extends Controller{
         return ok(views.html.dashboard.edit.render());
     }
     
-    public Result row(Integer numberOfColumns) {
-        return ok(views.html.dashboard.row.render(numberOfColumns));
+    public Promise<Result> getNewRow(Integer numberOfColumns) {
+        return Promise.promise(() -> ok(views.html.dashboard.row.render(numberOfColumns)));
     }
     
-    public Result widget(Long id) {
+    public Promise<Result> createNewWidget(String newIdentifier){
+        return Promise.promise(() -> ok(Json.parse("{ \"widgetId\" : 1}")));
+    }
+    
+    public Promise<Result> getExistingWidget(Long id) {
         if(id==3){
-            return badRequest();
+            return Promise.promise(() ->badRequest());
         }
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
         }
-        return ok(views.html.dashboard.widget.render(id,UUID.randomUUID().toString()));
+        return Promise.promise(() -> ok(views.html.dashboard.widget.render(id,UUID.randomUUID().toString())));
     }
 }

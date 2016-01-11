@@ -2,10 +2,11 @@
 # Root module
 #-------------------
 
-GET    /dash/                      controllers.dashboard.DashboardController.index()
-GET    /dash/widget/:id            controllers.dashboard.DashboardController.widget(id: Long)
-GET    /dash/row/:numberOfColumns  controllers.dashboard.DashboardController.row(numberOfColumns: Integer)
-GET    /dash/edit                  controllers.dashboard.DashboardController.edit()
+GET    /dash/                        controllers.dashboard.DashboardController.index()
+GET    /dash/edit                    controllers.dashboard.DashboardController.edit()
+GET    /dash/widget/:id              controllers.dashboard.DashboardController.getExistingWidget(id: Long)
+GET    /dash/widget/new/:identifier  controllers.dashboard.DashboardController.createNewWidget(identifier: String)
+GET    /dash/row/:numberOfColumns    controllers.dashboard.DashboardController.getNewRow(numberOfColumns: Integer)
 
 #Custom router method
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)
