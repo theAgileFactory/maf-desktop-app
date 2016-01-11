@@ -412,8 +412,8 @@
 						var modal = $('#dashboardRowTemplateSelector');
 						modal.modal('hide');
 						var dashboardRowElement=modal.data("mafSourceDashboardRowElement");
-						var numberOfColumns=$("#dashboardRowTemplateSelector input:radio[name='dashboardRowOption']:checked").val();
-						_maf_widget_addDashboardRow(dashboardRowElement, numberOfColumns);
+						var templateName=$("#dashboardRowTemplateSelector input:radio[name='dashboardRowOption']:checked").val();
+						_maf_widget_addDashboardRow(dashboardRowElement, templateName);
 					});
 					
 					//Widget catalog
@@ -480,6 +480,8 @@
 				this.createNewRowAjaxServiceUrl="";
 				//The URL to ask the creation of a new widget from a widget identifier
 				this.createNewWidgetAjaxServiceUrl="";
+				//The URL to ask updating the dashboard page
+				this.updateDashboardPageAjaxServiceUrl="";
 				
 				/**
 				 * Load the dashboard configuration from the server and call the provided callback
@@ -490,6 +492,7 @@
 					this.displayWidgetAjaxServiceUrl="/dash/widget/display/";
 					this.editWidgetAjaxServiceUrl="/dash/widget/edit/";
 					this.createNewWidgetAjaxServiceUrl="/dash/widget/new/";
+					this.updateDashboardPageAjaxServiceUrl="/dash/update";
 					this.ajaxWaitImage="/assets/images/ajax-loader.gif";
 					this.unableToLoadWidgetErrorMessage="Unable to load the widget";
 					this.confirmWidgetRemoveMessage="Do you really want to remove this widget ?";
@@ -557,6 +560,8 @@
 					
 					this.dashboardData[selectedRowIndexA].widgets[selectedWidgetIndexA]=widgetIdB;
 					this.dashboardData[selectedRowIndexB].widgets[selectedWidgetIndexB]=widgetIdA;
+					
+					this.updateDashboard();
 				};
 				
 				/**
@@ -571,6 +576,7 @@
 					if(selectedWidgetIndex!=-1){
 						this.dashboardData[selectedRowIndex].widgets[selectedRowIndex]=widgetId;
 					}
+					this.updateDashboard();
 				};
 				
 				/**
@@ -584,12 +590,14 @@
 					if(selectedWidgetIndex!=-1){
 						this.dashboardData[selectedRowIndex].widgets[selectedWidgetIndex]=-1;
 					}
+					this.updateDashboard();
 				};
 				
 				/**
 				 * Update the dashboard data when adding a row
 				 */
-				this.addRow=function(dashboardRowElement, numberOfColumns){
+				this.addRow=function(dashboardRowElement, templateIdentifier){
+					var numberOfColumns=templateIdentifier.substring(templateIdentifier.indexOf('_')+1);
 					var selectedRowIndex=this.findRowIndex(dashboardRowElement);
 					if(selectedRowIndex!=-1){
 						var widgetArray=[];
@@ -599,6 +607,7 @@
 						var newRowData={widgets : widgetArray};
 						this.dashboardData.splice(selectedRowIndex+1,0,newRowData);
 					}
+					this.updateDashboard();
 				};
 				
 				/**
@@ -609,6 +618,18 @@
 					if(selectedRowIndex!=-1){
 						this.dashboardData.splice(selectedRowIndex,1);
 					}
+					this.updateDashboard();
+				};
+				
+				/**
+				 * Call an AJAX service to "post" the update of the dasboard page configuration
+				 */
+				this.updateDashboard=function(){
+					maf_performPostJsonReceiveJson(
+							this.updateDashboardPageAjaxServiceUrl,
+							JSON.stringify(this.dashboardData),
+							function(){},
+							function(){});
 				};
 				
 				/**
@@ -845,14 +866,14 @@
 			/**
 			 * Add an empty row to the dashboard
 			 * dashboardRowElement : the jQuery element of the row under which the new row must be added
-			 * numberOfColumns : the number of columns of the new row to be added
+			 * templateIdentifier : the number of columns of the new row to be added
 			 */
-			function _maf_widget_addDashboardRow(dashboardRowElement, numberOfColumns){
-				var jqxhr = $.get(_dashboardServiceInstance.createNewRowAjaxServiceUrl+numberOfColumns, function(data) {
+			function _maf_widget_addDashboardRow(dashboardRowElement, templateIdentifier){
+				var jqxhr = $.get(_dashboardServiceInstance.createNewRowAjaxServiceUrl+templateIdentifier, function(data) {
 					_dashboardServiceInstance.toggleEditonMode();
 					dashboardRowElement.after(data);
 					_dashboardServiceInstance.toggleEditonMode();
-					_dashboardServiceInstance.addRow(dashboardRowElement, numberOfColumns);
+					_dashboardServiceInstance.addRow(dashboardRowElement, templateIdentifier);
 				});
 			}
 			
@@ -944,8 +965,7 @@
 		          <div class="col-md-12">
 		          	<div class="radio">
 					  <label>
-					    <input type="radio" name="dashboardRowOption" value="1" checked>
-					    1 column
+					    <input type="radio" name="dashboardRowOption" value="TPL12COL_1" checked>
 					  </label>
 					</div>
 		          </div>
@@ -960,8 +980,7 @@
 		          <div class="col-md-12">
 		          	<div class="radio">
 					  <label>
-					    <input type="radio" name="dashboardRowOption" value="2">
-					    2 columns
+					    <input type="radio" name="dashboardRowOption" value="TPL66COL_2">
 					  </label>
 					</div>
 		          </div>
@@ -977,8 +996,7 @@
 		          <div class="col-md-12">
 		          	<div class="radio">
 					  <label>
-					    <input type="radio" name="dashboardRowOption"value="3">
-					    3 columns
+					    <input type="radio" name="dashboardRowOption"value="TPL444COL_3">
 					  </label>
 					</div>
 		          </div>
