@@ -152,6 +152,9 @@
 ._maf_widget_widget_command_configure{
 }
 
+._maf_widget_widget_command_display{
+}
+
 ._maf_widget_dashboard_template_cell {
 	background-color: silver;
 	border: solid 1px;
@@ -389,7 +392,7 @@
 						$(this).children("._maf_widget_widget_area").each(function(){
 							var widgetId=rowConfig.widgets[widgetIndex];
 							if(widgetId!=-1){
-								_maf_widget_loadWidget($(this),widgetId, false);
+								_maf_widget_displayWidget($(this),widgetId, false);
 							}
 							widgetIndex++;
 						});
@@ -457,6 +460,10 @@
 				this.ajaxWaitImage="";
 				//An error message to be displayed when a widget cannot be loaded
 				this.unableToLoadWidgetErrorMessage="";
+				//The message to be displayed to confirm the removal of a widget
+				this.confirmWidgetRemoveMessage="";
+				//The message to be displayed to confirm the removal of a dashboard row
+				this.confirmDashboardRowRemoveMessage="";
 				//The array which contains the dashboard page configuration
 				this.dashboardData=[];
 				//The array which contains the widget catalog
@@ -465,8 +472,10 @@
 				this.dragWidgetMessage="";
 				//The second part of the message to be displayed in "empty" widget areas
 				this.addANewWidgetMessage="";
-				//The URL to get a widget from the widget Id
-				this.getWidgetAjaxServiceUrl="";
+				//The URL to get a widget from the widget Id in display mode
+				this.displayWidgetAjaxServiceUrl="";
+				//The URL to get a widget from the widget Id in edit mode
+				this.editWidgetAjaxServiceUrl="";
 				//The URL to request the creation of a new empty dashboard row (passing the requested number of columns)
 				this.createNewRowAjaxServiceUrl="";
 				//The URL to ask the creation of a new widget from a widget identifier
@@ -477,11 +486,14 @@
 				 */
 				this.refresh=function(callback){
 					this.maxNumberOfRows=6;
-					this.getWidgetAjaxServiceUrl="/dash/widget/";
 					this.createNewRowAjaxServiceUrl="/dash/row/";
+					this.displayWidgetAjaxServiceUrl="/dash/widget/display/";
+					this.editWidgetAjaxServiceUrl="/dash/widget/edit/";
 					this.createNewWidgetAjaxServiceUrl="/dash/widget/new/";
 					this.ajaxWaitImage="/assets/images/ajax-loader.gif";
 					this.unableToLoadWidgetErrorMessage="Unable to load the widget";
+					this.confirmWidgetRemoveMessage="Do you really want to remove this widget ?";
+					this.confirmDashboardRowRemoveMessage="Do you really want to delete this dashboard row as well as all the widgets which it includes ?";
 					this.dragWidgetMessage="Drag your widgets here or";
 					this.addANewWidgetMessage="add a new widget";
 					this.dashboardData=[{widgets: [1]},{widgets: [2,-1]},{widgets: [3,-1,-1]}];
@@ -553,14 +565,12 @@
 				 * widgetId : the newly created widget id
 				 */
 				this.addWidget=function(widgetElement, widgetId){
-					 console.debug(JSON.stringify(this.dashboardData));
 					var widgetLocationA=this.findWidgetLocation(widgetElement);
 					var selectedRowIndex=widgetLocationA.selectedRowIndex;
 					var selectedWidgetIndex=widgetLocationA.selectedWidgetIndex;
 					if(selectedWidgetIndex!=-1){
 						this.dashboardData[selectedRowIndex].widgets[selectedRowIndex]=widgetId;
 					}
-					console.debug(JSON.stringify(this.dashboardData));
 				};
 				
 				/**
@@ -646,14 +656,30 @@
 			function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 				if(isEditionMode){
 					$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_trash" href="#"><i class="fa fa-trash"></i></a>');
-					$("._maf_widget_widget_command_trash").click(function(){
-						var widgetElement=$(this).closest("._maf_widget_widget");
-						_maf_widget_removeWidgetFromDashboard(widgetElement);
+					$("._maf_widget_widget_command_trash").click(function(event){
+						event.preventDefault();
+						if(maf_confirmAction(_dashboardServiceInstance.confirmWidgetRemoveMessage)){
+							var widgetElement=$(this).closest("._maf_widget_widget");
+							_maf_widget_removeWidgetFromDashboard(widgetElement);
+						}
 					});
 				}else{
-					$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_configure" href="#"><i class="fa fa-cog"></i></a>');
-					$("._maf_widget_widget_command_configure").click(function(){
-						
+					$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_display" href="#"><i class="fa fa-square-o"></i></a>&nbsp;<a class="_maf_widget_widget_command_configure" href="#"><i class="fa fa-cog"></i></a>');
+					$("._maf_widget_widget_command_configure").click(function(event){
+						event.preventDefault();
+						var widgetElement=$(this).closest("._maf_widget_widget");
+						//Format of the element id is maf_widget_widget_id_@id
+						var widgetId=widgetElement.attr('id').substring("maf_widget_widget_id_".length);
+						var widgetAreaElement=$(this).closest("._maf_widget_widget_area");
+						_maf_widget_editWidget(widgetAreaElement, widgetId);
+					});
+					$("._maf_widget_widget_command_display").click(function(event){
+						event.preventDefault();
+						var widgetElement=$(this).closest("._maf_widget_widget");
+						//Format of the element id is maf_widget_widget_id_@id
+						var widgetId=widgetElement.attr('id').substring("maf_widget_widget_id_".length);
+						var widgetAreaElement=$(this).closest("._maf_widget_widget_area");
+						_maf_widget_displayWidget(widgetAreaElement, widgetId, false);
 					});
 				}
 			}
@@ -680,8 +706,10 @@
 				$("._maf_widget_dashboard_row").append('<div class="_maf_widget_dashboard_row_add"><a class="_maf_widget_dashboard_row_add_button" href="#"><i class="fa fa-plus text-primary"></i></a></div>');
 				$("._maf_widget_dashboard_row_trash_button").click(function(event){
 					event.preventDefault();
-					var rowElement=$(this).closest("._maf_widget_dashboard_row");
-					_maf_widget_removeDashboardRow(rowElement);
+					if(maf_confirmAction(_dashboardServiceInstance.confirmDashboardRowRemoveMessage)){
+						var rowElement=$(this).closest("._maf_widget_dashboard_row");
+						_maf_widget_removeDashboardRow(rowElement);
+					}
 				});
 				$("._maf_widget_dashboard_row_add_button").click(function(event){
 					event.preventDefault();
@@ -771,7 +799,7 @@
 			
 			/**
 			 * Remove a dashboard row
-			 * dashboardRowElement : the jQuery element of the row
+			 * dashboardRowElement : the jQuery element for a dashboard row
 			 */
 			function _maf_widget_removeDashboardRow(dashboardRowElement){
 				_dashboardServiceInstance.removeRow(dashboardRowElement);
@@ -780,6 +808,7 @@
 			
 			/**
 			 * Open a popup to select the dashboard row template (1, 2 or 3 columns)
+			 * dashboardRowElement : the jQuery element for a dashboard row
 			 */
 			function _maf_widget_openDashboardRowTemplateSelector(dashboardRowElement){
 				//Check if the number of row is not exceeded
@@ -806,6 +835,7 @@
 			
 			/**
 			 * Open the widget catalog for selecting a new widget to be set in the specified area
+			 * widgetAreaElement : the area which in which the new widget is to be set
 			 */
 			function _maf_widget_openWidgetSelector(widgetAreaElement){
 				$('#widgetCatalog').modal('show');
@@ -813,7 +843,7 @@
 			}
 			
 			/**
-			 * Add a dashboard row
+			 * Add an empty row to the dashboard
 			 * dashboardRowElement : the jQuery element of the row under which the new row must be added
 			 * numberOfColumns : the number of columns of the new row to be added
 			 */
@@ -827,16 +857,16 @@
 			}
 			
 			/**
-			 * Add a new widget to the dashboard
+			 * Add a new widget to the dashboard created from the specified widget identifier
 			 * widgetAreaElement : a jQuery element, the place holder to welcome the widget content
 			 * newWidgetIdentifier : the identifier of the widget type to be created
 			 */
 			function _maf_widget_addNewWdiget(widgetAreaElement, newWidgetIdentifier){
 				widgetAreaElement.html('<div><img src="'+_dashboardServiceInstance.ajaxWaitImage+'"/></div>');
 				var jqxhr = $.get(_dashboardServiceInstance.createNewWidgetAjaxServiceUrl+newWidgetIdentifier, function(data) {
-					_maf_widget_loadWidget(widgetAreaElement, data.widgetId, true, function(widgetId){
+					_maf_widget_displayWidget(widgetAreaElement, data.widgetId, true, function(){
 						var widgetElement=widgetAreaElement.children(":first");
-						_dashboardServiceInstance.addWidget(widgetElement, widgetId);
+						_dashboardServiceInstance.addWidget(widgetElement, data.widgetId);
 					});
 				}).fail(function() {
 					widgetAreaElement.html('<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;'+_dashboardServiceInstance.unableToLoadWidgetErrorMessage+'</div>');
@@ -844,20 +874,56 @@
 			}
 			
 			/**
-			 * Load a widget at the specified location and
+			 * Display a widget at the specified location and
 			 * with the specified URL
 			 * widgetAreaElement : a jQuery element, the place holder to welcome the widget content
 			 * widgetId : the id of the widget to be displayed
 			 * editionMode : true if the widget must be in edition mode false otherwise
 			 * callback : a callback method to be used once the widget is loaded
 			 */
-			function _maf_widget_loadWidget(widgetAreaElement, widgetId, editionMode, callback) {
+			function _maf_widget_displayWidget(widgetAreaElement, widgetId, editionMode, callback) {
+				_maf_widget_loadWidgetContent(
+						widgetAreaElement, 
+						_dashboardServiceInstance.displayWidgetAjaxServiceUrl+widgetId, 
+						function(){
+							_maf_widgets_toggleEdition(editionMode);
+							if(callback){
+								callback();
+							}
+						});
+			}
+			
+			/**
+			 * Display a widget in EDIT mode at the specified location and
+			 * with the specified URL
+			 * widgetAreaElement : a jQuery element, the place holder to welcome the widget content
+			 * widgetId : the id of the widget to be displayed
+			 * callback : a callback method to be used once the widget is loaded
+			 */
+			function _maf_widget_editWidget(widgetAreaElement, widgetId, callback) {
+				_maf_widget_loadWidgetContent(
+						widgetAreaElement, 
+						_dashboardServiceInstance.editWidgetAjaxServiceUrl+widgetId, 
+						function(){
+							_maf_widgets_toggleEdition(false);
+							if(callback){
+								callback();
+							}
+						});
+			}
+			
+			/**
+			 * Load a some widget content based from the specified URL
+			 * widgetAreaElement : a jQuery element, the place holder to welcome the widget content
+			 * url : an AJAX URL to be called
+			 * callback : a callback method to be used once the widget is loaded
+			 */
+			function _maf_widget_loadWidgetContent(widgetAreaElement, url, callback) {
 				widgetAreaElement.html('<div><img src="'+_dashboardServiceInstance.ajaxWaitImage+'"/></div>');
-				var jqxhr = $.get(_dashboardServiceInstance.getWidgetAjaxServiceUrl+widgetId, function(data) {
+				var jqxhr = $.get(url, function(data) {
 					widgetAreaElement.html(data);
-					_maf_widgets_toggleEdition(editionMode);
 					if(callback){
-						callback(widgetId);
+						callback();
 					}
 				}).fail(function() {
 					widgetAreaElement.html('<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;'+_dashboardServiceInstance.unableToLoadWidgetErrorMessage+'</div>');
