@@ -3,10 +3,10 @@
 #-------------------
 
 GET    /dash/                        controllers.dashboard.DashboardController.index()
-GET    /dash/edit                    controllers.dashboard.DashboardController.edit()
-GET    /dash/widget/:id              controllers.dashboard.DashboardController.getExistingWidget(id: Long)
+GET    /dash/widget/display/:id      controllers.dashboard.DashboardController.displayWidget(id: Long)
+GET    /dash/widget/edit/:id         controllers.dashboard.DashboardController.editWidget(id: Long)
 GET    /dash/widget/new/:identifier  controllers.dashboard.DashboardController.createNewWidget(identifier: String)
-GET    /dash/row/:numberOfColumns    controllers.dashboard.DashboardController.getNewRow(numberOfColumns: Integer)
+GET    /dash/row/:numberOfColumns    controllers.dashboard.DashboardController.createNewRow(numberOfColumns: Integer)
 
 #Custom router method
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)

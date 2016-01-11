@@ -18,26 +18,10 @@ public class DashboardController extends Controller{
     }
 
     public Result index() {
-        DashboardPage page=new DashboardPage();
-        page.name="A page";
-        page.template=DashboardPageTemplate.FULL_PAGE.name();
-        page.save();
-        
-        DashboardWidget widget=new DashboardWidget();
-        widget.dashboardPage=page;
-        widget.identifier="TOTO";
-        widget.order=1;
-        widget.position=DashboardWidgetPosition.LEFT.name();
-        widget.save();
-        
         return ok(views.html.dashboard.index.render());
     }
     
-    public Result edit() {
-        return ok(views.html.dashboard.edit.render());
-    }
-    
-    public Promise<Result> getNewRow(Integer numberOfColumns) {
+    public Promise<Result> createNewRow(Integer numberOfColumns) {
         return Promise.promise(() -> ok(views.html.dashboard.row.render(numberOfColumns)));
     }
     
@@ -45,7 +29,7 @@ public class DashboardController extends Controller{
         return Promise.promise(() -> ok(Json.parse("{ \"widgetId\" : 1}")));
     }
     
-    public Promise<Result> getExistingWidget(Long id) {
+    public Promise<Result> displayWidget(Long id) {
         if(id==3){
             return Promise.promise(() ->badRequest());
         }
@@ -53,6 +37,17 @@ public class DashboardController extends Controller{
             Thread.sleep(1000);
         } catch (InterruptedException e) {
         }
-        return Promise.promise(() -> ok(views.html.dashboard.widget.render(id,UUID.randomUUID().toString())));
+        return Promise.promise(() -> ok(views.html.dashboard.display_widget.render(id,UUID.randomUUID().toString())));
+    }
+    
+    public Promise<Result> editWidget(Long id) {
+        if(id==3){
+            return Promise.promise(() ->badRequest());
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        return Promise.promise(() -> ok(views.html.dashboard.edit_widget.render(id,UUID.randomUUID().toString())));
     }
 }
