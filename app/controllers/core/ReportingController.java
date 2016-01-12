@@ -26,6 +26,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.avaje.ebean.Expr;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
@@ -99,6 +101,7 @@ public class ReportingController extends Controller {
      * @param categoryId
      *            the category id
      */
+    @Restrict({ @Group(IMafConstants.REPORTING_VIEW_ALL_PERMISSION), @Group(IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION) })
     public Result indexForCategory(Long categoryId) {
         return ok(views.html.core.reporting.index.render(categoryId));
     }
@@ -106,6 +109,7 @@ public class ReportingController extends Controller {
     /**
      * Action that loads the children of a category.
      */
+    @Restrict({ @Group(IMafConstants.REPORTING_VIEW_ALL_PERMISSION), @Group(IMafConstants.REPORTING_VIEW_AS_VIEWER_PERMISSION) })
     public Result loadChildren() {
 
         try {
@@ -221,7 +225,18 @@ public class ReportingController extends Controller {
                 if (customAttributeValues != null) {
                     for (ICustomAttributeValue customAttributeValue : customAttributeValues) {
                         String fieldName = CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid);
-                        customAttributeValue.parse(data.get(fieldName));
+                        if (customAttributeValue.getAttributeType().isMultiValued()) {
+                            List<String> stringValues = new ArrayList<String>();
+                            for (String key : data.keySet()) {
+                                if (key.startsWith(fieldName + "[")) {
+                                    String stringValue = data.get(key);
+                                    stringValues.add(stringValue);
+                                }
+                            }
+                            customAttributeValue.parse(StringUtils.join(stringValues, ICustomAttributeValue.MULTI_VALUE_SEPARATOR));
+                        } else {
+                            customAttributeValue.parse(data.get(fieldName));
+                        }
                         reportParameters.put(customAttributeValue.getDefinition().uuid, customAttributeValue.getValueAsObject());
                     }
                 }
