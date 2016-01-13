@@ -53,18 +53,28 @@ import play.mvc.Result;
  */
 @Singleton
 public class Authenticator extends AbstractAuthenticator {
+
     /**
-     * Creates a new Authenticator
+     * Create a new Authenticator.
      * 
      * @param configuration
+     *            the Play configuration service.
+     * @param cache
+     *            the Play cache service
      * @param userSessionManagerPlugin
+     *            the user session manager service
      * @param accountManagerPlugin
+     *            the account manager service
      * @param authenticationAccountReader
+     *            the authentication account reader service
      * @param instanceAccessSupervisor
+     *            the instance access supervisor
      * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param i18nMessagesPlugin
+     *            the i18n messages service
      * @param authenticationMode
-     * @throws MalformedURLException
+     *            the authentication mode
      */
     @Inject
     public Authenticator(Configuration configuration, CacheApi cache, IUserSessionManagerPlugin userSessionManagerPlugin,

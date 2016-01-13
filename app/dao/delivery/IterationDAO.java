@@ -83,6 +83,9 @@ public abstract class IterationDAO {
 
     /**
      * Get iterations of a portfolio entry as a value holder collection.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry id
      */
     public static ISelectableValueHolderCollection<Long> getIterationsAsVHByPE(Long portfolioEntryId) {
         return new DefaultSelectableValueHolderCollection<>(getIterationAllAsListByPE(portfolioEntryId));

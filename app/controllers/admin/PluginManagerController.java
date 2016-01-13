@@ -58,6 +58,7 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -258,7 +259,7 @@ public class PluginManagerController extends Controller {
     };
 
     /**
-     * Default controller.
+     * Default constructor.
      */
     public PluginManagerController() {
     }

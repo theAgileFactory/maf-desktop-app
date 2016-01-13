@@ -229,18 +229,30 @@ public class MyPersonalStorage extends Controller {
         }
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

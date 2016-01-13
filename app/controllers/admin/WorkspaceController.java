@@ -23,7 +23,7 @@ public class WorkspaceController extends Controller {
     private IApiControllerUtilsService apiControllerUtilsService;
 
     /**
-     * Default controller.
+     * Default constructor.
      */
     public WorkspaceController() {
     }

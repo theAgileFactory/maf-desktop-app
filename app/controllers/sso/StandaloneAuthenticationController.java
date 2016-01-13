@@ -48,11 +48,11 @@ import views.html.sso.reset_password;
  * @author Pierre-Yves Cloux
  */
 public class StandaloneAuthenticationController extends AbstractStandaloneAuthenticationController {
-    @Inject 
+    @Inject
     private ILicensesManagementService licensesManagementService;
     @Inject
     private UserManager userManagerController;
-    
+
     private static Form<ResetPasswordRequest> passwordResetRequestForm = Form.form(ResetPasswordRequest.class);
 
     /**
@@ -65,12 +65,12 @@ public class StandaloneAuthenticationController extends AbstractStandaloneAuthen
      * Display the authentication form.
      */
     public Result displayLoginForm() {
-        LoginInfo loginInfo=getLoginInfo();
+        LoginInfo loginInfo = getLoginInfo();
         if (loginInfo.hasErrors()) {
 
             // event: wrong credential / STANDALONE
-            getLicensesManagementService().addLoginEvent(
-                    request().getQueryString(loginInfo.getUserLogin()), false, ErrorCode.WRONG_CREDENTIAL, loginInfo.getErrorMessage());
+            getLicensesManagementService().addLoginEvent(request().getQueryString(loginInfo.getUserLogin()), false, ErrorCode.WRONG_CREDENTIAL,
+                    loginInfo.getErrorMessage());
         }
         return ok(login.render(loginInfo.getLoginFormActionUrl(), loginInfo.hasErrors(), loginInfo.isAccountLocked()));
     }
@@ -140,10 +140,16 @@ public class StandaloneAuthenticationController extends AbstractStandaloneAuthen
         public String captchaText;
     }
 
+    /**
+     * Get the licenses management service.
+     */
     private ILicensesManagementService getLicensesManagementService() {
         return licensesManagementService;
     }
 
+    /**
+     * Get the user manager controller.
+     */
     private UserManager getUserManagerController() {
         return userManagerController;
     }
