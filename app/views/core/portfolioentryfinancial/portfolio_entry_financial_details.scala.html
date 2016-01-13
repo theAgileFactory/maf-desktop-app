@@ -74,6 +74,12 @@
     
     <h4>@parts.Msg("core.portfolio_entry_financial.view.forecast.title")</h4>
     
+    @if(portfolioEntry.budgetTrackingHasUnallocatedTimesheet) {
+        <div class="alert alert-warning">
+            @parts.Msg("core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help")
+        </div>
+    }
+    
     <div class="panel panel-default">
     
         <div class="panel-heading">
@@ -107,16 +113,6 @@
                         @if(_budgetTrackingService.isActive()) {
                             <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", budgetTrackingLastRun)" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
                         }
-                    }
-                    @if(portfolioEntry.budgetTrackingHasUnallocatedTimesheet) {
-                        &nbsp
-                        <a data-toggle="tooltip" id="budget-tracking-unallocated-timesheet" href="@controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntry.id).url"
-                            title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help")">
-                            <span class="fa fa-exclamation-triangle fa-lg" style="color: red;"></span>
-                        </a> 
-                        <script>
-                            $('#budget-tracking-unallocated-timesheet').tooltip();
-                        </script>
                     }
                 </div>
                 

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import framework.services.api.IApiControllerUtilsService;
+import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -37,7 +38,12 @@ public class WorkspaceController extends Controller {
         Map<String, String> messages = new HashMap<>();
         messages.put("admin.workspace.admin.panel.title", "Workspace as administrator");
         messages.put("admin.workspace.member.panel.title", "Workspace as member");
-        return Promise.promise(() -> ok(views.html.admin.workspace.edition.render("Title", getApiControllerUtilsService().convertAsJsonString(messages))));
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                return ok(views.html.admin.workspace.edition.render("Title", getApiControllerUtilsService().convertAsJsonString(messages)));
+            }
+        });
     }
 
     /**
