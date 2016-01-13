@@ -58,7 +58,6 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -234,29 +233,34 @@ public class PluginManagerController extends Controller {
     /**
      * Table listing the various plugin instances (PluginConfiguration).
      */
-    public static Table<PluginConfigurationDescriptionTableObject> pluginConfigurationsTableTemplate = new Table<PluginManagerController.PluginConfigurationDescriptionTableObject>() {
-        {
-            this.addColumn("id", "id", "object.plugin_configuration.id.label", SorterType.NONE);
-            this.addColumn("name", "name", "object.plugin_configuration.name.label", SorterType.NONE);
-            this.addColumn("definitionName", "definitionName", "object.plugin_definition.name.label", SorterType.NONE);
-            this.addColumn("definitionVersion", "definitionVersion", "object.plugin_definition.version.label", SorterType.NONE);
-            this.addColumn("status", "status", "object.plugin_configuration.status.label", SorterType.NONE);
-            this.setJavaColumnFormatter("status", new IColumnFormatter<PluginConfigurationDescriptionTableObject>() {
-                @Override
-                public String apply(PluginConfigurationDescriptionTableObject object, Object value) {
-                    return getHtmlFromPluginStatus(object.status);
-                }
-            });
-            this.setLineAction(new IColumnFormatter<PluginConfigurationDescriptionTableObject>() {
-                @Override
-                public String apply(PluginConfigurationDescriptionTableObject object, Object value) {
-                    return routes.PluginManagerController.pluginConfigurationDetails(object.id).url();
-                }
+    public static Table<PluginConfigurationDescriptionTableObject> pluginConfigurationsTableTemplate;
 
-            });
-            this.setIdFieldName("id");
-        }
-    };
+    static {
+        pluginConfigurationsTableTemplate = new Table<PluginManagerController.PluginConfigurationDescriptionTableObject>() {
+
+            {
+                this.addColumn("id", "id", "object.plugin_configuration.id.label", SorterType.NONE);
+                this.addColumn("name", "name", "object.plugin_configuration.name.label", SorterType.NONE);
+                this.addColumn("definitionName", "definitionName", "object.plugin_definition.name.label", SorterType.NONE);
+                this.addColumn("definitionVersion", "definitionVersion", "object.plugin_definition.version.label", SorterType.NONE);
+                this.addColumn("status", "status", "object.plugin_configuration.status.label", SorterType.NONE);
+                this.setJavaColumnFormatter("status", new IColumnFormatter<PluginConfigurationDescriptionTableObject>() {
+                    @Override
+                    public String apply(PluginConfigurationDescriptionTableObject object, Object value) {
+                        return getHtmlFromPluginStatus(object.status);
+                    }
+                });
+                this.setLineAction(new IColumnFormatter<PluginConfigurationDescriptionTableObject>() {
+                    @Override
+                    public String apply(PluginConfigurationDescriptionTableObject object, Object value) {
+                        return routes.PluginManagerController.pluginConfigurationDetails(object.id).url();
+                    }
+
+                });
+                this.setIdFieldName("id");
+            }
+        };
+    }
 
     /**
      * Default constructor.
