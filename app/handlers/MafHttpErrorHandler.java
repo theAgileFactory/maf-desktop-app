@@ -135,7 +135,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     }
 
     /**
-     * Return the currently logged user mail (if any)
+     * Return the currently logged user mail (if any).
      * 
      * @return an email address
      */

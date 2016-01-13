@@ -50,12 +50,39 @@ import security.dynamic.PortfolioEntryDynamicHelper;
 import security.dynamic.ReportingDynamicHelper;
 import security.dynamic.TimesheetReportDynamicHelper;
 
+/**
+ * The security service.
+ * 
+ * @author Johann Kohler
+ */
 @Singleton
 public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
     private static Logger.ALogger log = Logger.of(SecurityServiceImpl.class);
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     private II18nMessagesPlugin messagesPlugins;
 
+    /**
+     * Default constructor.
+     * 
+     * @param deadBoltAnalyzer
+     *            the deadbold analyzer
+     * @param subjectCache
+     *            the deadbold cache for subject
+     * @param configuration
+     *            the Play configuration service
+     * @param userSessionManagerPlugin
+     *            the user session manager service
+     * @param accountManagerPlugin
+     *            the account manager service
+     * @param cacheApi
+     *            the Play cache service
+     * @param authenticator
+     *            the authenticator service
+     * @param preferenceManagerPlugin
+     *            the preference manager service
+     * @param messagesPlugins
+     *            the i18n messages service
+     */
     @Inject
     public SecurityServiceImpl(JavaAnalyzer deadBoltAnalyzer, SubjectCache subjectCache, Configuration configuration,
             IUserSessionManagerPlugin userSessionManagerPlugin, IAccountManagerPlugin accountManagerPlugin, CacheApi cacheApi, IAuthenticator authenticator,
@@ -320,10 +347,16 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
         return Controller.badRequest(views.html.error.access_forbidden.render(getMessagesPlugins().get("forbidden.access.title")));
     }
 
+    /**
+     * Get the preference manager service.
+     */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugins() {
         return messagesPlugins;
     }

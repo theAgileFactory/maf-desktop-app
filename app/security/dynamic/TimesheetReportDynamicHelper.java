@@ -39,7 +39,6 @@ import play.Logger;
  * report.
  * 
  * @author Johann Kohler
- * 
  */
 public class TimesheetReportDynamicHelper {
 
@@ -55,8 +54,8 @@ public class TimesheetReportDynamicHelper {
      * @param securityService
      *            the security service
      */
-    public static ExpressionList<TimesheetReport> getTimesheetReportsApprovalAllowedAsQuery(Expression expression, OrderBy<TimesheetReport> orderBy, ISecurityService securityService)
-            throws AccountManagementException {
+    public static ExpressionList<TimesheetReport> getTimesheetReportsApprovalAllowedAsQuery(Expression expression, OrderBy<TimesheetReport> orderBy,
+            ISecurityService securityService) throws AccountManagementException {
 
         IUserAccount userAccount = securityService.getCurrentUser();
 
@@ -64,7 +63,7 @@ public class TimesheetReportDynamicHelper {
 
         // user has permission TIMESHEET_APPROVAL_ALL_PERMISSION
         // OR
-        if (securityService.restrict( IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION,userAccount)) {
+        if (securityService.restrict(IMafConstants.TIMESHEET_APPROVAL_ALL_PERMISSION, userAccount)) {
             raw += "1 = '1' OR ";
         }
 
@@ -72,7 +71,7 @@ public class TimesheetReportDynamicHelper {
         // TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION AND
         // user or his subordinates is manager of the actor of the report OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && securityService.restrict( IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION,userAccount)) {
+        if (actor != null && securityService.restrict(IMafConstants.TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION, userAccount)) {
 
             raw += "actor.manager.id=" + actor.id + " OR ";
 
@@ -114,7 +113,7 @@ public class TimesheetReportDynamicHelper {
      */
     public static boolean isTimesheetReportApprovalAllowed(Long timesheetReportId, ISecurityService securityService) {
         try {
-            return getTimesheetReportsApprovalAllowedAsQuery(Expr.eq("id", timesheetReportId), null,securityService).findRowCount() > 0 ? true : false;
+            return getTimesheetReportsApprovalAllowedAsQuery(Expr.eq("id", timesheetReportId), null, securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error(e.getMessage());
             return false;

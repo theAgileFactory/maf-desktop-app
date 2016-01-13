@@ -15,6 +15,12 @@ import framework.utils.Utilities;
 import play.Configuration;
 import play.inject.ApplicationLifecycle;
 
+/**
+ * The top menu bar service.
+ * 
+ * @author Johann Kohler
+ *
+ */
 @Singleton
 public class TopMenuBarService extends AbstractTopMenuBarService {
     private HeaderMenuItem toolsMenuItem;
@@ -38,6 +44,18 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         }
     }
 
+    /**
+     * Default constructor.
+     * 
+     * @param lifecycle
+     *            the Play lifecycle service
+     * @param configuration
+     *            the Play configuration service
+     * @param preferenceManagerPlugin
+     *            the preference manager service
+     * @param userSessionManagerPlugin
+     *            the user session manager service
+     */
     @Inject
     public TopMenuBarService(ApplicationLifecycle lifecycle, Configuration configuration, IPreferenceManagerPlugin preferenceManagerPlugin,
             IUserSessionManagerPlugin userSessionManagerPlugin) {
@@ -196,8 +214,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
      *            the perspective key, let null for the main
      */
     private void defineGovernanceMenu(String perspectiveKey) {
-        HeaderMenuItem governanceMenuItem = new HeaderMenuItem(TopMenus.GOVERNANCE.name(), "topmenubar.governance.menu.label",
-                "fa fa-university", false);
+        HeaderMenuItem governanceMenuItem = new HeaderMenuItem(TopMenus.GOVERNANCE.name(), "topmenubar.governance.menu.label", "fa fa-university", false);
         governanceMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION,
                 IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION,
                 IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_ALL_PERMISSION, IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION));
@@ -208,8 +225,8 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         }
 
         ClickableMenuItem milestonePlanningMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(1),
-                "topmenubar.governance.milestone_planning.menu.label", controllers.core.routes.MilestoneApprovalController.overview(),
-                "fa fa-calendar", false);
+                "topmenubar.governance.milestone_planning.menu.label", controllers.core.routes.MilestoneApprovalController.overview(), "fa fa-calendar",
+                false);
         milestonePlanningMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_OVERVIEW_PERMISSION));
         governanceMenuItem.addSubMenuItem(milestonePlanningMenuItem);
 

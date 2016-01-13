@@ -32,12 +32,10 @@ import models.pmo.Actor;
 import models.sql.ActorHierarchy;
 import play.Logger;
 
-
 /**
  * Provides all method to compute the dynamic permissions for an actor.
  * 
  * @author Johann Kohler
- * 
  */
 public class ActorDynamicHelper {
 
@@ -52,8 +50,9 @@ public class ActorDynamicHelper {
      * @param securityService
      *            the security service
      */
-    public static ExpressionList<Actor> getActorsViewAllowedAsQuery(Expression expression, OrderBy<Actor> orderBy, ISecurityService securityService) throws AccountManagementException {
-        IUserAccount currentUserAccount=securityService.getCurrentUser();
+    public static ExpressionList<Actor> getActorsViewAllowedAsQuery(Expression expression, OrderBy<Actor> orderBy, ISecurityService securityService)
+            throws AccountManagementException {
+        IUserAccount currentUserAccount = securityService.getCurrentUser();
         String raw = "(";
 
         // user has permission ACTOR_VIEW_ALL_PERMISSION
@@ -88,8 +87,8 @@ public class ActorDynamicHelper {
 
         if (orderBy != null) {
             expressionList = ActorDao.findActor.where();
-            Utilities.updateExpressionListWithOrderBy(orderBy,expressionList);
-            
+            Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
+
         } else {
             expressionList = ActorDao.findActor.where();
         }
@@ -133,7 +132,7 @@ public class ActorDynamicHelper {
     public static boolean isActorEditAllowed(Actor actor, ISecurityService securityService) {
 
         try {
-            IUserAccount currentUserAccount=securityService.getCurrentUser();
+            IUserAccount currentUserAccount = securityService.getCurrentUser();
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
             if (securityService.restrict(IMafConstants.ACTOR_EDIT_ALL_PERMISSION, currentUserAccount)) {
                 return true;
@@ -166,7 +165,7 @@ public class ActorDynamicHelper {
     public static boolean isActorDeleteAllowed(Actor actor, ISecurityService securityService) {
 
         try {
-            IUserAccount currentUserAccount=securityService.getCurrentUser();
+            IUserAccount currentUserAccount = securityService.getCurrentUser();
             // user has permission ACTOR_EDIT_ALL_PERMISSION OR
             if (securityService.restrict(IMafConstants.ACTOR_EDIT_ALL_PERMISSION, currentUserAccount)) {
                 return true;

@@ -38,7 +38,6 @@ import play.Logger;
  * Provides all method to compute the dynamic permissions for a budget bucket.
  * 
  * @author Johann Kohler
- * 
  */
 public class BudgetBucketDynamicHelper {
 
@@ -53,8 +52,8 @@ public class BudgetBucketDynamicHelper {
      * @param securityService
      *            the security service
      */
-    public static ExpressionList<BudgetBucket> getBudgetBucketsViewAllowedAsQuery(Expression expression, OrderBy<BudgetBucket> orderBy, ISecurityService securityService)
-            throws AccountManagementException {
+    public static ExpressionList<BudgetBucket> getBudgetBucketsViewAllowedAsQuery(Expression expression, OrderBy<BudgetBucket> orderBy,
+            ISecurityService securityService) throws AccountManagementException {
 
         IUserAccount userAccount = securityService.getCurrentUser();
 
@@ -86,7 +85,7 @@ public class BudgetBucketDynamicHelper {
 
         if (orderBy != null) {
             expressionList = BudgetBucketDAO.findBudgetBucket.where();
-            Utilities.updateExpressionListWithOrderBy(orderBy,expressionList);
+            Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         } else {
             expressionList = BudgetBucketDAO.findBudgetBucket.where();
         }

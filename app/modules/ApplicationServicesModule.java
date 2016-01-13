@@ -108,7 +108,7 @@ import utils.reporting.IReportingUtils;
 import utils.reporting.ReportingUtilsImpl;
 
 /**
- * The module which configure the dependency injection for the application
+ * The module which configure the dependency injection for the application.
  * 
  * @author Pierre-Yves Cloux
  */
@@ -117,13 +117,21 @@ public class ApplicationServicesModule extends FrameworkModule {
 
     private final Configuration configuration;
 
+    /**
+     * Default constructor.
+     * 
+     * @param environment
+     *            the Play environment
+     * @param configuration
+     *            the Play configuration service
+     */
     public ApplicationServicesModule(Environment environment, Configuration configuration) {
         this.configuration = configuration;
     }
 
     /**
      * The method deals with the initializations required for the application to
-     * run
+     * run.
      */
     protected void beforeInjection() {
         super.beforeInjection();
@@ -190,10 +198,12 @@ public class ApplicationServicesModule extends FrameworkModule {
         JobDescriptors.SendNotificationEventsJobDescriptor sendNotificationEventsJobDescriptor = new JobDescriptors.SendNotificationEventsJobDescriptor();
         bind(JobDescriptors.SendNotificationEventsJobDescriptor.class).toInstance(sendNotificationEventsJobDescriptor);
         jobs.add(sendNotificationEventsJobDescriptor);
-        JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor activatePendingInstanceAgreementJobDescriptor = new JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor();
+        JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor activatePendingInstanceAgreementJobDescriptor;
+        activatePendingInstanceAgreementJobDescriptor = new JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor();
         bind(JobDescriptors.ActivatePendingInstanceAgreementJobDescriptor.class).toInstance(activatePendingInstanceAgreementJobDescriptor);
         jobs.add(activatePendingInstanceAgreementJobDescriptor);
-        JobDescriptors.SynchronizeDataSyndicationJobDescriptor synchronizeDataSyndicationJobDescriptor = new JobDescriptors.SynchronizeDataSyndicationJobDescriptor();
+        JobDescriptors.SynchronizeDataSyndicationJobDescriptor synchronizeDataSyndicationJobDescriptor;
+        synchronizeDataSyndicationJobDescriptor = new JobDescriptors.SynchronizeDataSyndicationJobDescriptor();
         bind(JobDescriptors.SynchronizeDataSyndicationJobDescriptor.class).toInstance(synchronizeDataSyndicationJobDescriptor);
         jobs.add(synchronizeDataSyndicationJobDescriptor);
         JobDescriptors.BudgetTrackingJobDescriptor budgetTrackingJobDescriptor = new JobDescriptors.BudgetTrackingJobDescriptor();
@@ -320,12 +330,15 @@ public class ApplicationServicesModule extends FrameworkModule {
 
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }
 
     /**
-     * The authentication mode is either:
+     * Get the configured authentication mode. It could be:
      * <ul>
      * <li>read from the database (if a record exists)</li>
      * <li>read from the configuration file (default option)</li>

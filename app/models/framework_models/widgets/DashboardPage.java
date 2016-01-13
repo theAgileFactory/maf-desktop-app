@@ -18,24 +18,29 @@ import models.framework_models.parent.IModelConstants;
  * A dashboard page has:
  * <ul>
  * <li>a name which is displayed to the end user (as the title of the page)</li>
- * <li>a template which is identifying a template type (= how the widgets are distributed on the page)</li>
+ * <li>a template which is identifying a template type (= how the widgets are
+ * distributed on the page)</li>
  * </ul>
+ * 
  * @author Pierre-Yves Cloux
  */
 @Entity
-public class DashboardPage  extends Model {    
+public class DashboardPage extends Model {
     @Id
     public Long id;
-    
+
     @Column(length = IModelConstants.LARGE_STRING, nullable = false)
     public String name;
 
     @Column(length = IModelConstants.SMALL_STRING, nullable = false)
     public String template;
-    
-    @OneToMany(mappedBy = "dashboardPage", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+
+    @OneToMany(mappedBy = "dashboardPage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<DashboardWidget> dashboardWidgets;
 
+    /**
+     * Default constructor.
+     */
     public DashboardPage() {
     }
 }

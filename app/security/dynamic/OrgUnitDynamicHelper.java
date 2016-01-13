@@ -34,12 +34,10 @@ import models.pmo.OrgUnit;
 import models.sql.ActorHierarchy;
 import play.Logger;
 
-
 /**
  * Provides all method to compute the dynamic permissions for an org unit.
  * 
  * @author Johann Kohler
- * 
  */
 public class OrgUnitDynamicHelper {
 
@@ -54,7 +52,8 @@ public class OrgUnitDynamicHelper {
      * @param securityService
      *            the security service
      */
-    public static ExpressionList<OrgUnit> getOrgUnitsViewAllowedAsQuery(Expression expression, OrderBy<OrgUnit> orderBy, ISecurityService securityService) throws AccountManagementException {
+    public static ExpressionList<OrgUnit> getOrgUnitsViewAllowedAsQuery(Expression expression, OrderBy<OrgUnit> orderBy, ISecurityService securityService)
+            throws AccountManagementException {
 
         IUserAccount userAccount = securityService.getCurrentUser();
         String raw = "(";
@@ -68,7 +67,7 @@ public class OrgUnitDynamicHelper {
         // user has permission ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION AND
         // user or his subordinates is manager of the orgUnit OR
         Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-        if (actor != null && securityService.restrict( IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION, userAccount)) {
+        if (actor != null && securityService.restrict(IMafConstants.ORG_UNIT_VIEW_AS_RESPONSIBLE_PERMISSION, userAccount)) {
 
             raw += "manager.id = " + actor.id + " OR ";
 
@@ -110,7 +109,7 @@ public class OrgUnitDynamicHelper {
      */
     public static boolean isOrgUnitViewAllowed(Long orgUnitId, ISecurityService securityService) {
         try {
-            return getOrgUnitsViewAllowedAsQuery(Expr.eq("id", orgUnitId), null,securityService).findRowCount() > 0 ? true : false;
+            return getOrgUnitsViewAllowedAsQuery(Expr.eq("id", orgUnitId), null, securityService).findRowCount() > 0 ? true : false;
         } catch (AccountManagementException e) {
             Logger.error("OrgUnitDynamicHelper.isOrgUnitViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());
