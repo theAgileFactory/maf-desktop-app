@@ -24,7 +24,7 @@
 
 @templates.main_bc_iconsbar(
     parts.Msg.asString("core.cockpit.sidebar.subordinates"),
-    controllers.core.CockpitController.getSideBar(controllers.core.CockpitController.MenuItemType.MY_EMPLOYEES, _securityService),
+    controllers.core.CockpitController.getSideBar(controllers.core.CockpitController.MenuItemType.MY_EMPLOYEES, _securityService, _usession),
     Seq(
         ("core.cockpit.breadcrumb", controllers.core.routes.CockpitController.initiatives().url),
         ("core.cockpit.sidebar.subordinates", controllers.core.routes.CockpitController.subordinates().url),

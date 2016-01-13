@@ -26,7 +26,7 @@
 
 @templates.main_bc_iconsbar(
     parts.Msg.asString("topmenubar.cockpit.menu.label"),
-    controllers.core.CockpitController.getSideBar(controllers.core.CockpitController.MenuItemType.MY_ORG_UNITS, _securityService),
+    controllers.core.CockpitController.getSideBar(controllers.core.CockpitController.MenuItemType.MY_ORG_UNITS, _securityService, _usession),
     Seq(
         ("core.cockpit.breadcrumb", controllers.core.routes.CockpitController.initiatives().url),
         ("core.cockpit.sidebar.org_units", null)

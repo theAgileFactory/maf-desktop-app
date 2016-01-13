@@ -47,7 +47,6 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -852,9 +851,11 @@ public class CockpitController extends Controller {
      *            the current menu item type, useful to select the correct item
      * @param securityService
      *            the security service
-     * @throws AccountManagementException
+     * @param userSessionManagerService
+     *            the user session manager service
      */
-    public static SideBar getSideBar(MenuItemType currentType, ISecurityService securityService) throws AccountManagementException {
+    public static SideBar getSideBar(MenuItemType currentType, ISecurityService securityService, IUserSessionManagerPlugin userSessionManagerService)
+            throws AccountManagementException {
 
         SideBar sideBar = new SideBar();
 
@@ -901,7 +902,7 @@ public class CockpitController extends Controller {
 
         try {
 
-            String uid = ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx());
+            String uid = userSessionManagerService.getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
             ClickableMenuItem myEmployeeCardMenu = new ClickableMenuItem("core.cockpit.sidebar.my_allocations",

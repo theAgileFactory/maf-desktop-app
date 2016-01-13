@@ -38,7 +38,6 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import framework.commons.DataType;
-import framework.services.ServiceStaticAccessor;
 import framework.services.audit.Auditable;
 import framework.services.audit.IAuditLoggerService;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -363,7 +362,7 @@ public class AuditableController extends Controller {
         PickerHandler<String> singleValuePickerObjectClass = new PickerHandler<String>(String.class, new Handle<String>() {
             @Override
             public ISelectableValueHolderCollection<String> getInitialValueHolders(List<String> values, Map<String, String> context) {
-                return AuditableController.getSelectableValuesListForObjectClass(context.get("currentObjectClass"));
+                return AuditableController.getSelectableValuesListForObjectClass(context.get("currentObjectClass"), getAuditLoggerService());
             }
         });
         return singleValuePickerObjectClass.handle(request());
@@ -375,15 +374,18 @@ public class AuditableController extends Controller {
      * 
      * @param currentObjectClass
      *            the class name of the current object
+     * @param auditLoggerService
+     *            the audit logger service
      */
-    public static ISelectableValueHolderCollection<String> getSelectableValuesListForObjectClass(String currentObjectClass) {
+    private static ISelectableValueHolderCollection<String> getSelectableValuesListForObjectClass(String currentObjectClass,
+            IAuditLoggerService auditLoggerService) {
         // Get all the selectable entities from the configuration
         ISelectableValueHolderCollection<String> selectableObjects = new DefaultSelectableValueHolderCollection<String>();
         for (DataType dataType : DataType.getAllAuditableDataTypes()) {
             selectableObjects.add(new DefaultSelectableValueHolder<String>(dataType.getDataTypeClassName(), Msg.get(dataType.getLabel())));
         }
         // Remove the previously selected entities
-        List<Auditable> auditables = ServiceStaticAccessor.getAuditLoggerService().getAllActiveAuditable();
+        List<Auditable> auditables = auditLoggerService.getAllActiveAuditable();
         for (Auditable auditable : auditables) {
             selectableObjects.remove(auditable.objectClass);
         }
