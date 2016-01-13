@@ -371,6 +371,9 @@ public class ApiManagerController extends Controller {
         return ok(views.html.admin.api.apibrowser.render(applicationKey, applicationName, null));
     }
 
+    /**
+     * Get the API signature service.
+     */
     private IApiSignatureService getApiSignatureService() {
         return apiSignatureService;
     }

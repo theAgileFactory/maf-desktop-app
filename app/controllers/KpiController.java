@@ -32,6 +32,7 @@ import play.mvc.Result;
  */
 @SubjectPresent
 public class KpiController extends Controller {
+
     @Inject
     private IKpiService kpiService;
 
@@ -42,6 +43,9 @@ public class KpiController extends Controller {
         return getKpiService().trend(Context.current());
     }
 
+    /**
+     * Get the KPI service.
+     */
     private IKpiService getKpiService() {
         return kpiService;
     }

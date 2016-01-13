@@ -77,6 +77,7 @@ import scala.concurrent.duration.Duration;
  */
 @Restrict({ @Group(IMafConstants.ADMIN_AUDIT_LOG_PERMISSION) })
 public class AuditableController extends Controller {
+
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
@@ -121,40 +122,34 @@ public class AuditableController extends Controller {
 
     private static Form<Auditable> auditableForm = Form.form(Auditable.class);
 
-    /*--------------------------------------------------------------------------------
-     Controllers actions                               
-     --------------------------------------------------------------------------------*/
-
     /**
-     * Return the application logs
-     * @return
+     * Return the application logs.
      */
-    public Promise<Result> downloadApplicationLog(){
+    public Promise<Result> downloadApplicationLog() {
         return Promise.promise(new Function0<Result>() {
             @Override
             public Result apply() throws Throwable {
-                try{
+                try {
                     response().setContentType("text/plain");
-                    response().setHeader("Content-disposition","attachment; filename=application.log");
+                    response().setHeader("Content-disposition", "attachment; filename=application.log");
                     return ok(getAuditLoggerService().getApplicationLog());
-                }catch(Exception e){
-                    log.error("Unable to download the application log",e);
+                } catch (Exception e) {
+                    log.error("Unable to download the application log", e);
                     Utilities.sendErrorFlashMessage(Msg.get("unexpected.error.title"));
                 }
                 return redirect(routes.AuditableController.listAuditable());
             }
         });
     }
-    
+
     /**
-     * Change the log level to debug
-     * @return
+     * Change the log level to debug.
      */
-    public Result switchToDebug(){
+    public Result switchToDebug() {
         getAuditLoggerService().changeLogLevelToDebug(getConfiguration().getInt("maf.audit.application.log.debug.duration"));
         return redirect(routes.AuditableController.listAuditable());
     }
-    
+
     /**
      * Display a list of Auditable.
      */
@@ -411,30 +406,51 @@ public class AuditableController extends Controller {
         return new DefaultSelectableValueHolder<String>(object.objectClass, Msg.get(DataType.getDataTypeFromClassName(object.objectClass).getLabel()));
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the system admin utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the audit logger service.
+     */
     private IAuditLoggerService getAuditLoggerService() {
         return auditLoggerService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

@@ -98,6 +98,7 @@ import play.mvc.Result;
  * @author Pierre-Yves Cloux
  */
 public class PluginManagerController extends Controller {
+
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
@@ -691,7 +692,7 @@ public class PluginManagerController extends Controller {
     }
 
     /**
-     * Export the plugin configuration as an XML file
+     * Export the plugin configuration as an XML file.
      * 
      * @param pluginConfigurationId
      *            the plugin configuration id
@@ -1045,10 +1046,16 @@ public class PluginManagerController extends Controller {
         PLUGINS, DATA_SYNDICATION, API, SHARED_STORAGE;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

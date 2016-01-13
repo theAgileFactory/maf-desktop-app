@@ -879,32 +879,67 @@ public class UserManager extends Controller {
         return redirect(routes.UserManager.displayUserSearchForm());
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the licenses management service.
+     */
     private ILicensesManagementService getLicensesManagementService() {
         return licensesManagementService;
     }
 
+    /**
+     * Get the notification manager service.
+     */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
     }
 
+    /**
+     * Get the personal storage service.
+     */
     private IPersonalStoragePlugin getPersonalStoragePlugin() {
         return personalStoragePlugin;
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the system utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the preference manager service.
+     */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the i18n messages service.
+     */
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the Play configuration service.
+     */
+    private Configuration getConfiguration() {
+        return configuration;
     }
 
     /**
@@ -1165,11 +1200,4 @@ public class UserManager extends Controller {
         NONE, SEARCH, CREATE;
     }
 
-    private II18nMessagesPlugin getI18nMessagesPlugin() {
-        return i18nMessagesPlugin;
-    }
-
-    private Configuration getConfiguration() {
-        return configuration;
-    }
 }

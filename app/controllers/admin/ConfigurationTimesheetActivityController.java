@@ -22,15 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import models.timesheet.TimesheetActivity;
-import models.timesheet.TimesheetActivityType;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import utils.form.TimesheetActivityFormData;
-import utils.form.TimesheetActivityTypeFormData;
-import utils.table.TimesheetActivityListView;
-import utils.table.TimesheetActivityTypeListView;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
@@ -40,6 +31,15 @@ import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.timesheet.TimesheetActivity;
+import models.timesheet.TimesheetActivityType;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import utils.form.TimesheetActivityFormData;
+import utils.form.TimesheetActivityTypeFormData;
+import utils.table.TimesheetActivityListView;
+import utils.table.TimesheetActivityTypeListView;
 
 /**
  * Manage the timesheet activities reference data.
@@ -56,7 +56,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
-    
+
     /**
      * Reference data: timesheet activities.
      */
@@ -99,7 +99,8 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
             TimesheetActivityType timesheetActivityType = TimesheetDao.getTimesheetActivityTypeById(timesheetActivityTypeId);
 
-            timesheetActivityTypeForm = timesheetActivityTypeFormTemplate.fill(new TimesheetActivityTypeFormData(timesheetActivityType, getI18nMessagesPlugin()));
+            timesheetActivityTypeForm = timesheetActivityTypeFormTemplate
+                    .fill(new TimesheetActivityTypeFormData(timesheetActivityType, getI18nMessagesPlugin()));
 
         }
 
@@ -261,6 +262,9 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }

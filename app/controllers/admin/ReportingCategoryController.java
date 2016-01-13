@@ -71,10 +71,10 @@ public class ReportingCategoryController extends Controller {
                 return badRequest(Msg.get("object.reporting.category.delete.error"));
             }
 
-            TafTreeHelper.fill(request(), new EntityTafTreeNodeWrapper<ReportingCategory>(category),getMessagesPlugin());
+            TafTreeHelper.fill(request(), new EntityTafTreeNodeWrapper<ReportingCategory>(category), getMessagesPlugin());
             category.save();
 
-            return ok(TafTreeHelper.get(new EntityTafTreeNodeWrapper<ReportingCategory>(category),getMessagesPlugin()));
+            return ok(TafTreeHelper.get(new EntityTafTreeNodeWrapper<ReportingCategory>(category), getMessagesPlugin()));
 
         } catch (IllegalArgumentException e) {
             return badRequest();
@@ -115,7 +115,7 @@ public class ReportingCategoryController extends Controller {
         if (query != null) {
             ISelectableValueHolderCollection<Long> categories = new DefaultSelectableValueHolderCollection<Long>();
             for (ReportingCategory category : ReportingDao.getReportingCategoryAsListByKeywords(query)) {
-                EntityTafTreeNodeWrapper<ReportingCategory> nodeWraper=new EntityTafTreeNodeWrapper<ReportingCategory>(category);
+                EntityTafTreeNodeWrapper<ReportingCategory> nodeWraper = new EntityTafTreeNodeWrapper<ReportingCategory>(category);
                 categories.add(new DefaultSelectableValueHolder<Long>(category.id, nodeWraper.getTranslatedFullName(getMessagesPlugin())));
             }
             return ok(Utilities.marshallAsJson(categories.getValues()));
@@ -123,8 +123,9 @@ public class ReportingCategoryController extends Controller {
 
         if (value != null) {
             ReportingCategory category = ReportingDao.getReportingCategoryById(Long.valueOf(value));
-            EntityTafTreeNodeWrapper<ReportingCategory> nodeWraper=new EntityTafTreeNodeWrapper<ReportingCategory>(category);
-            ISelectableValueHolder<Long> categoryAsValueHolder = new DefaultSelectableValueHolder<Long>(category.id, nodeWraper.getTranslatedFullName(getMessagesPlugin()));
+            EntityTafTreeNodeWrapper<ReportingCategory> nodeWraper = new EntityTafTreeNodeWrapper<ReportingCategory>(category);
+            ISelectableValueHolder<Long> categoryAsValueHolder = new DefaultSelectableValueHolder<Long>(category.id,
+                    nodeWraper.getTranslatedFullName(getMessagesPlugin()));
             return ok(Utilities.marshallAsJson(categoryAsValueHolder, 0));
         }
 
@@ -132,6 +133,9 @@ public class ReportingCategoryController extends Controller {
 
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }

@@ -29,7 +29,6 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.CssValueForValueHolder;
@@ -67,9 +66,6 @@ public class ConfigurationPlanningPackageController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
-
-    @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     @Inject
     private IBudgetTrackingService budgetTrackingService;
@@ -451,13 +447,6 @@ public class ConfigurationPlanningPackageController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return this.i18nMessagesPlugin;
-    }
-
-    /**
-     * Get the preference manager service.
-     */
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return this.preferenceManagerPlugin;
     }
 
     /**

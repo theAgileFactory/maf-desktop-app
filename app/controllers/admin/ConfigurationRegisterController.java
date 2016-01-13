@@ -363,6 +363,9 @@ public class ConfigurationRegisterController extends Controller {
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }

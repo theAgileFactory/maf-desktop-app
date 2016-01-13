@@ -652,6 +652,8 @@ public class KpiManagerController extends Controller {
     /**
      * Reload the KPI definition.
      * 
+     * @param kpiService
+     *            the KPI service
      * @param uid
      *            the KPI definition uid
      */
@@ -673,14 +675,23 @@ public class KpiManagerController extends Controller {
         return renderTypes;
     }
 
+    /**
+     * Get the KPI service.
+     */
     private IKpiService getKpiService() {
         return kpiService;
     }
 
+    /**
+     * Get the system utils.
+     */
     private ISysAdminUtils getSysAdminUtils() {
         return sysAdminUtils;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }

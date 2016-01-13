@@ -367,6 +367,9 @@ public class ConfigurationPortfolioController extends Controller {
         return redirect(controllers.admin.routes.ConfigurationPortfolioController.list());
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }

@@ -79,8 +79,8 @@ public class MyAccount extends Controller {
         try {
 
             IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
-            return ok(views.html.admin.myaccount.myaccount_display.render(
-                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), account));
+            return ok(views.html.admin.myaccount.myaccount_display.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                    getAccountManagerPlugin().isSelfMailUpdateAllowed(), account));
         } catch (AccountManagementException e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
@@ -95,9 +95,8 @@ public class MyAccount extends Controller {
 
             IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
             Form<UserAccountFormData> userAccountFormLoaded = basicDataUpdateForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.myaccount.myaccount_editbasicdata.render(
-                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
-                    userAccountFormLoaded));
+            return ok(views.html.admin.myaccount.myaccount_editbasicdata.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                    getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
@@ -115,9 +114,8 @@ public class MyAccount extends Controller {
             }
             IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
             Form<UserAccountFormData> userAccountFormLoaded = mailUpdateForm.fill(new UserAccountFormData(account));
-            return ok(views.html.admin.myaccount.myaccount_editmail.render(
-                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
-                    userAccountFormLoaded));
+            return ok(views.html.admin.myaccount.myaccount_editmail.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                    getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
@@ -134,9 +132,8 @@ public class MyAccount extends Controller {
                 throw new Exception("Not allowed to update password if the system is not in master mode");
             }
             Form<UserAccountFormData> userAccountFormLoaded = passwordUpdateForm.fill(new UserAccountFormData());
-            return ok(views.html.admin.myaccount.myaccount_editpassword.render(
-                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
-                    userAccountFormLoaded));
+            return ok(views.html.admin.myaccount.myaccount_editpassword.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                    getAccountManagerPlugin().isSelfMailUpdateAllowed(), userAccountFormLoaded));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
@@ -151,8 +148,8 @@ public class MyAccount extends Controller {
 
             Form<UserAccountFormData> boundForm = basicDataUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.myaccount.myaccount_editbasicdata.render(
-                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
+                return badRequest(views.html.admin.myaccount.myaccount_editbasicdata.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                        getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
 
@@ -179,8 +176,8 @@ public class MyAccount extends Controller {
             }
             Form<UserAccountFormData> boundForm = mailUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.myaccount.myaccount_editmail.render(
-                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
+                return badRequest(views.html.admin.myaccount.myaccount_editmail.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                        getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
             IUserAccount account = getCurrentUserAccount(getAccountManagerPlugin());
@@ -192,9 +189,8 @@ public class MyAccount extends Controller {
                 String currentUserUid = getUserSessionManagerPlugin().getUserSessionId(ctx());
                 if (!userAccount.getUid().equals(currentUserUid)) {
                     boundForm.reject("mail", Msg.get("object.user_account.email.already_exists"));
-                    return badRequest(views.html.admin.myaccount.myaccount_editmail.render(
-                            getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(),
-                            boundForm));
+                    return badRequest(views.html.admin.myaccount.myaccount_editmail.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                            getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
                 }
             }
 
@@ -257,8 +253,8 @@ public class MyAccount extends Controller {
             }
             Form<UserAccountFormData> boundForm = passwordUpdateForm.bindFromRequest();
             if (boundForm.hasErrors()) {
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
-                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                        getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
             UserAccountFormData accountDataForm = boundForm.get();
             // Authenticate the user against the old password
@@ -266,21 +262,21 @@ public class MyAccount extends Controller {
             if (accountDataForm.oldPasswordCheck == null
                     || !getAuthenticationReader().checkPassword(getUserSessionManagerPlugin().getUserSessionId(ctx()), accountDataForm.oldPasswordCheck)) {
                 boundForm.reject("oldPasswordCheck", Msg.get("form.input.oldpassword.invalid"));
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
-                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                        getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
             // New password does not match check
             if (!accountDataForm.password.equals(accountDataForm.passwordCheck)) {
                 boundForm.reject("password", Msg.get("form.input.confirmationpassword.invalid"));
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
-                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                        getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
             if (Utilities.getPasswordStrength(accountDataForm.password) < 1) {
                 boundForm.reject("password", Msg.get("form.input.password.error.insufficient_strength"));
-                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(
-                        getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
+                return badRequest(views.html.admin.myaccount.myaccount_editpassword.render(getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                        getAccountManagerPlugin().isSelfMailUpdateAllowed(), boundForm));
             }
 
             getAccountManagerPlugin().updatePassword(getUserSessionManagerPlugin().getUserSessionId(ctx()), accountDataForm.password);
@@ -397,26 +393,44 @@ public class MyAccount extends Controller {
         VIEW, EDIT_DATA, EDIT_PASSWORD, EDIT_MAIL;
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the user session manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return userSessionManagerPlugin;
     }
 
+    /**
+     * Get the authentication reader service.
+     */
     private IAuthenticationAccountReaderPlugin getAuthenticationReader() {
         return authenticationReader;
     }
 
+    /**
+     * Get the preference manager service.
+     */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return preferenceManagerPlugin;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

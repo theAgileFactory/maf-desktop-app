@@ -20,6 +20,11 @@ package controllers.admin;
 import javax.inject.Inject;
 import javax.persistence.Transient;
 
+import controllers.ControllersUtils;
+import framework.services.account.IAccountManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Msg;
+import framework.utils.Utilities;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -27,11 +32,6 @@ import play.data.validation.Constraints.Required;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
-import controllers.ControllersUtils;
-import framework.services.account.IAccountManagerPlugin;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Msg;
-import framework.utils.Utilities;
 
 /**
  * This controller is used in combination with the {@link UserManager}
@@ -54,9 +54,9 @@ public class PasswordReset extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private II18nMessagesPlugin messagesPlugin;
-    @Inject 
+    @Inject
     private Configuration configuration;
-    
+
     private static Logger.ALogger log = Logger.of(PasswordReset.class);
     public static final String CURRENT_USER_UID = "MAF_USER_ID";
     private static Form<PasswordFormData> passwordUpdateForm = Form.form(PasswordFormData.class);
@@ -121,7 +121,7 @@ public class PasswordReset extends Controller {
             session().clear();
             return redirect(controllers.routes.Application.index());
         } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log,getConfiguration(),getMessagesPlugin());
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
     }
 
@@ -141,14 +141,23 @@ public class PasswordReset extends Controller {
         public String passwordCheck;
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

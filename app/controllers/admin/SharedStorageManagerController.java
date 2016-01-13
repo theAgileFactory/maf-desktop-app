@@ -75,7 +75,7 @@ public class SharedStorageManagerController extends Controller {
     public static final int MAX_FILE_SIZE = 2 * 1024 * 1024;
 
     /**
-     * Default constroller.
+     * Default controller.
      */
     public SharedStorageManagerController() {
     }
@@ -216,8 +216,7 @@ public class SharedStorageManagerController extends Controller {
      *            settled to true for input, to false for ouput
      */
     public Result uploadForm(String folderName, Boolean isInput) {
-        return ok(views.html.admin.plugin.sharedstorage_upload.render(folderName, isInput,
-                getConfiguration().getInt("maf.sftp.store.maxfilenumber")));
+        return ok(views.html.admin.plugin.sharedstorage_upload.render(folderName, isInput, getConfiguration().getInt("maf.sftp.store.maxfilenumber")));
     }
 
     /**
@@ -364,14 +363,23 @@ public class SharedStorageManagerController extends Controller {
         }
     }
 
+    /**
+     * Get the shared storage service.
+     */
     private ISharedStorageService getSharedStorageService() {
         return sharedStorageService;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

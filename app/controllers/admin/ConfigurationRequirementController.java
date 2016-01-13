@@ -22,6 +22,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.api.core.RootApiController;
+import dao.delivery.RequirementDAO;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.delivery.RequirementPriority;
 import models.delivery.RequirementSeverity;
 import models.delivery.RequirementStatus;
@@ -35,18 +47,6 @@ import utils.form.RequirementStatusFormData;
 import utils.table.RequirementPriorityListView;
 import utils.table.RequirementSeverityListView;
 import utils.table.RequirementStatusListView;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import constants.IMafConstants;
-import controllers.api.core.RootApiController;
-import dao.delivery.RequirementDAO;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
 
 /**
  * Manage the requirements reference data.
@@ -63,7 +63,7 @@ public class ConfigurationRequirementController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
-    
+
     /**
      * Display the lists of data.
      */
@@ -362,6 +362,9 @@ public class ConfigurationRequirementController extends Controller {
         return statusTypes;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }

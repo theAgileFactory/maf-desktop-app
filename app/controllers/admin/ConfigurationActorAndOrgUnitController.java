@@ -24,6 +24,17 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import constants.IMafConstants;
+import controllers.api.core.RootApiController;
+import dao.pmo.ActorDao;
+import dao.pmo.OrgUnitDao;
+import dao.pmo.StakeholderDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.pmo.ActorType;
 import models.pmo.Competency;
 import models.pmo.OrgUnitType;
@@ -39,17 +50,6 @@ import utils.table.ActorTypeListView;
 import utils.table.CompetencyListView;
 import utils.table.OrgUnitTypeListView;
 import utils.table.StakeholderTypeListView;
-import constants.IMafConstants;
-import controllers.api.core.RootApiController;
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import dao.pmo.StakeholderDao;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 
 /**
  * Manage the actors and org units reference data.
@@ -67,7 +67,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
     private static Form<CompetencyFormData> competencyFormTemplate = Form.form(CompetencyFormData.class);
 
     private static Form<StakeholderTypeFormData> stakeholderTypeFormTemplate = Form.form(StakeholderTypeFormData.class);
-    
+
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
 
@@ -473,6 +473,9 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }

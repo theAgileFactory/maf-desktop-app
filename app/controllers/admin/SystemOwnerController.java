@@ -56,7 +56,7 @@ public class SystemOwnerController extends Controller {
     private IPluginManagerService pluginManagerService;
     @Inject
     private Configuration configuration;
-    
+
     private static Logger.ALogger log = Logger.of(SystemOwnerController.class);
     /**
      * Table listing the various plugin definitions.
@@ -123,10 +123,10 @@ public class SystemOwnerController extends Controller {
 
         // List of available plugins
         List<PluginDefinitionTableObject> pluginDescriptions = new ArrayList<PluginDefinitionTableObject>();
-        
+
         for (Pair<Boolean, IPluginDescriptor> pluginDefinitionRecord : getPluginManagerService().getAllPluginDescriptors().values()) {
             PluginDefinitionTableObject tableObject = new PluginDefinitionTableObject();
-            IPluginDescriptor pluginDescriptor=pluginDefinitionRecord.getRight();
+            IPluginDescriptor pluginDescriptor = pluginDefinitionRecord.getRight();
             tableObject.identifier = pluginDescriptor.getIdentifier();
             tableObject.name = Msg.get(pluginDescriptor.getName());
             tableObject.version = pluginDescriptor.getVersion();
@@ -135,10 +135,16 @@ public class SystemOwnerController extends Controller {
         return ok(views.html.admin.systemowner.info.render(systemInfo, pluginDefinitionsTableTemplate.fill(pluginDescriptions)));
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the plugin manager service.
+     */
     private IPluginManagerService getPluginManagerService() {
         return pluginManagerService;
     }
@@ -156,7 +162,7 @@ public class SystemOwnerController extends Controller {
         private String systemSizing;
         private String remainingStorageSpace;
         private String authenticationMode;
-    
+
         /**
          * Constructor.
          * 
@@ -186,35 +192,35 @@ public class SystemOwnerController extends Controller {
             this.remainingStorageSpace = remainingStorageSpace;
             this.authenticationMode = authenticationMode;
         }
-    
+
         /**
          * Get the number of active users.
          */
         public int getNumberOfActiveUsers() {
             return numberOfActiveUsers;
         }
-    
+
         /**
          * Get the number of registered users.
          */
         public int getNumberOfRegisteredUsers() {
             return numberOfRegisteredUsers;
         }
-    
+
         /**
          * Get the system owners.
          */
         public List<String> getSystemOwners() {
             return systemOwners;
         }
-    
+
         /**
          * Get the BizDock version.
          */
         public String getBizDockVersion() {
             return bizDockVersion;
         }
-    
+
         /**
          * Get the system sizing.
          * 
@@ -223,14 +229,14 @@ public class SystemOwnerController extends Controller {
         public String getSystemSizing() {
             return systemSizing;
         }
-    
+
         /**
          * Get the remaining storage space.
          */
         public String getRemainingStorageSpace() {
             return remainingStorageSpace;
         }
-    
+
         /**
          * Get the the authentication mode.
          */
@@ -252,6 +258,9 @@ public class SystemOwnerController extends Controller {
         public String isAvailable;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }
