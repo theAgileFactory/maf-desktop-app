@@ -64,7 +64,7 @@ import utils.table.CustomAttributeListView;
 @Restrict({ @Group(IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION) })
 public class ConfigurationCustomAttributeController extends Controller {
 
-    public static Set<String> unauthorizedAttributeTypes = new HashSet<String>(Arrays.asList("DYNAMIC_SINGLE_ITEM", "IMAGE"));
+    public static Set<String> unauthorizedAttributeTypes = new HashSet<String>(Arrays.asList("DYNAMIC_SINGLE_ITEM", "DYNAMIC_MULTI_ITEM", "IMAGE"));
     public static Set<String> itemizableAttributeTypes = new HashSet<String>(Arrays.asList("SINGLE_ITEM", "MULTI_ITEM"));
 
     private static Logger.ALogger log = Logger.of(ConfigurationCustomAttributeController.class);
