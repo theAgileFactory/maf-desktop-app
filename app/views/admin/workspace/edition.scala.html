@@ -25,24 +25,24 @@
     ),
     false
 ){
-	<script type="text/javascript">
-	var _maf_Msg=@Html(i18messages);
-	var _maf_app_paths={
-		"basePath" : "@routes.Assets.at("app/admin/workspace/")",
-		"homeRoute" : "@controllers.admin.routes.WorkspaceController.display()"
-	};
-	</script>
-	@framework_views.parts.framework_bootstrap_css_includes(routes.Assets.versioned("").url)
-	@framework_views.parts.framework_jquery_includes(routes.Assets.versioned("").url)
+    <script type="text/javascript">
+    var _maf_Msg=@Html(i18messages);
+    var _maf_app_paths={
+        "basePath" : "@routes.Assets.at("app/admin/workspace/")",
+        "homeRoute" : "@controllers.admin.routes.WorkspaceController.display()"
+    };
+    </script>
+    @framework_views.parts.framework_bootstrap_css_includes(routes.Assets.versioned("").url)
+    @framework_views.parts.framework_jquery_includes(routes.Assets.versioned("").url)
     @framework_views.parts.framework_bootstrap_js_includes(routes.Assets.versioned("").url)
-	@framework_views.parts.framework_angular_dev_includes(routes.Assets.versioned("").url)
-	<script src="@routes.Assets.at("app/admin/workspace/js/app.js")"></script>
-	<script src="@routes.Assets.at("app/common/js/services.js")"></script>
-	<script src="@routes.Assets.at("app/admin/workspace/js/animations.js")"></script>
-	<script src="@routes.Assets.at("app/admin/workspace/js/controllers.js")"></script>
-	<script src="@routes.Assets.at("app/admin/workspace/js/filters.js")"></script>
-	<script src="@routes.Assets.at("app/admin/workspace/js/services.js")"></script>
-	@framework_views.parts.framework_iecompatibility_libs_includes(routes.Assets.versioned("").url)
+    @framework_views.parts.framework_angular_dev_includes(routes.Assets.versioned("").url)
+    <script src="@routes.Assets.at("app/admin/workspace/js/app.js")"></script>
+    <script src="@routes.Assets.at("app/common/js/services.js")"></script>
+    <script src="@routes.Assets.at("app/admin/workspace/js/animations.js")"></script>
+    <script src="@routes.Assets.at("app/admin/workspace/js/controllers.js")"></script>
+    <script src="@routes.Assets.at("app/admin/workspace/js/filters.js")"></script>
+    <script src="@routes.Assets.at("app/admin/workspace/js/services.js")"></script>
+    @framework_views.parts.framework_iecompatibility_libs_includes(routes.Assets.versioned("").url)
 }{
 <div class="row" ng-app="workspaceApp">
   <div ng-view class="col-md-12">

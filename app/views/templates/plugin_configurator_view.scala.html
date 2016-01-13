@@ -20,7 +20,7 @@
 @import views.html.modelsparts._
 
 @if(dataType.equals(constants.MafDataType.getPortfolioEntry())){
-	@defining(dao.pmo.PortfolioEntryDao.getPEById(objectId)) { portfolioEntry =>
+    @defining(dao.pmo.PortfolioEntryDao.getPEById(objectId)) { portfolioEntry =>
             @views.html.core.portfolioentry.portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.INTEGRATION, Seq(
                 (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
                 (pageHtmlTitle, controllers.core.routes.PortfolioEntryController.pluginConfig(portfolioEntry.id).url),
