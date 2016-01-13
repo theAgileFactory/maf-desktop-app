@@ -443,7 +443,7 @@ public class CockpitController extends Controller {
                 .getCurrent(uid, request());
 
         Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> portfolioEntryTable;
-        portfolioEntryTable = getPortfolioEntryAllocationsTable(actorId, portfolioEntryFilter);
+        portfolioEntryTable = getPEAllocationsTable(actorId, portfolioEntryFilter);
 
         // construct the activity table
 
@@ -488,7 +488,7 @@ public class CockpitController extends Controller {
 
                 // get the table
                 Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t;
-                t = getPortfolioEntryAllocationsTable(actorId, filterConfig);
+                t = getPEAllocationsTable(actorId, filterConfig);
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
@@ -925,7 +925,7 @@ public class CockpitController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getPortfolioEntryAllocationsTable(
+    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getPEAllocationsTable(
             Long actorId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig

@@ -47,11 +47,6 @@ public abstract class PurchaseOrderDAO {
      * Default finder for the entity class.
      */
     public static Finder<Long, PurchaseOrderLineItem> findPurchaseOrderLineItem = new Finder<>(PurchaseOrderLineItem.class);
-    /**
-     * Default finder for the entity class.
-     */
-    public static Finder<Long, PurchaseOrderLineShipmentStatusType> findPurchaseOrderLineShipmentStatusType = new Finder<Long, PurchaseOrderLineShipmentStatusType>(
-            PurchaseOrderLineShipmentStatusType.class);
 
     /**
      * Default constructor.
