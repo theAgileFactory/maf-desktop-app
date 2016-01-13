@@ -48,6 +48,8 @@ public class ReportingParamsFormData {
      * 
      * @param report
      *            a reporting
+     * @param language
+     *            the language of the report
      */
     public ReportingParamsFormData(Reporting report, String language) {
         this.id = report.id;

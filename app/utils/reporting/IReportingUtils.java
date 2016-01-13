@@ -3,9 +3,15 @@ package utils.reporting;
 import java.sql.Connection;
 import java.util.Map;
 
-import play.mvc.Http.Context;
 import models.reporting.Reporting;
+import play.mvc.Http.Context;
 
+/**
+ * The reporting utils.
+ * 
+ * @author Johann Kohler
+ *
+ */
 public interface IReportingUtils {
 
     /**

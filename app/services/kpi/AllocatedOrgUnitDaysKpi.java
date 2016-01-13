@@ -71,7 +71,8 @@ public class AllocatedOrgUnitDaysKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi,
+            Long objectId) {
         return null;
     }
 

@@ -168,7 +168,8 @@ public class ReleaseBurndownKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi,
+            Long objectId) {
 
         Pair<Date, Date> dates = this.getTrendPeriod(preferenceManagerPlugin, scriptService, kpi, objectId);
 
