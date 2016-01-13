@@ -66,6 +66,7 @@ import utils.table.WorkOrderListView;
  * @author Johann Kohler
  */
 public class RootApiController extends ApiController {
+
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
@@ -77,7 +78,7 @@ public class RootApiController extends ApiController {
     @Inject
     private IReportingUtils reportingUtils;
     @Inject
-    private Configuration Configuration;
+    private Configuration configuration;
 
     /**
      * Get the status of the instance.
@@ -366,28 +367,46 @@ public class RootApiController extends ApiController {
         public Map<String, JsonNode> attributes;
     }
 
+    /**
+     * Get the account manager service.
+     */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return accountManagerPlugin;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI8nMessagesPlugin() {
         return i8nMessagesPlugin;
     }
 
+    /**
+     * Get the ad panel manager service.
+     */
     private IAdPanelManagerService getAdPanelManagerService() {
         return adPanelManagerService;
     }
 
+    /**
+     * Get the KPI service.
+     */
     private IKpiService getKpiService() {
         return kpiService;
     }
 
+    /**
+     * Get the reporting utils.
+     */
     private IReportingUtils getReportingUtils() {
         return reportingUtils;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
-        return Configuration;
+        return configuration;
     }
 
 }

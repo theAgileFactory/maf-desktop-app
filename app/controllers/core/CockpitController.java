@@ -95,6 +95,7 @@ import utils.table.TimesheetReportListView;
  */
 @Restrict({ @Group(IMafConstants.COCKPIT_DISPLAY_PERMISSION) })
 public class CockpitController extends Controller {
+
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
@@ -441,8 +442,8 @@ public class CockpitController extends Controller {
         FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
                 .getCurrent(uid, request());
 
-        Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> portfolioEntryTable = getPortfolioEntryAllocationsTable(
-                actorId, portfolioEntryFilter);
+        Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> portfolioEntryTable;
+        portfolioEntryTable = getPortfolioEntryAllocationsTable(actorId, portfolioEntryFilter);
 
         // construct the activity table
 
@@ -486,8 +487,8 @@ public class CockpitController extends Controller {
             } else {
 
                 // get the table
-                Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getPortfolioEntryAllocationsTable(
-                        actorId, filterConfig);
+                Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t;
+                t = getPortfolioEntryAllocationsTable(actorId, filterConfig);
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
@@ -1030,10 +1031,16 @@ public class CockpitController extends Controller {
         MY_INITIATIVES, MY_PORTFOLIOS, MY_EMPLOYEES, MY_ORG_UNITS, MY_BUDGET_BUCKETS, MY_EMPLOYEE_CARD;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

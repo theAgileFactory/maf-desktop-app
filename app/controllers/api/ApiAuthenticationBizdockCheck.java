@@ -21,8 +21,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import services.licensesmanagement.ILicensesManagementService;
 import framework.services.api.server.IApiAuthenticationAdditionalCheck;
+import services.licensesmanagement.ILicensesManagementService;
 
 /**
  * The BizDock additional check.
@@ -31,9 +31,10 @@ import framework.services.api.server.IApiAuthenticationAdditionalCheck;
  * 
  */
 public class ApiAuthenticationBizdockCheck implements IApiAuthenticationAdditionalCheck {
+
     @Inject
     private static ILicensesManagementService licensesManagementService;
-    
+
     @Override
     public Pair<Boolean, String> before() {
         if (!getLicensesManagementService().isInstanceAccessible()) {
@@ -47,6 +48,9 @@ public class ApiAuthenticationBizdockCheck implements IApiAuthenticationAddition
         return Pair.of(true, null);
     }
 
+    /**
+     * Get the licenses management service.
+     */
     private static ILicensesManagementService getLicensesManagementService() {
         return licensesManagementService;
     }

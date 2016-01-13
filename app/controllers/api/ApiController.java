@@ -18,6 +18,7 @@
 package controllers.api;
 
 import javax.inject.Inject;
+
 import framework.services.api.AbstractApiController;
 import framework.services.configuration.II18nMessagesPlugin;
 
@@ -27,9 +28,13 @@ import framework.services.configuration.II18nMessagesPlugin;
  * @author Pierre-Yves Cloux
  */
 public class ApiController extends AbstractApiController {
+
     @Inject
     private II18nMessagesPlugin messagesPlugin;
 
+    /**
+     * Get the i18n messages service.
+     */
     protected II18nMessagesPlugin getMessagesPlugin() {
         return messagesPlugin;
     }

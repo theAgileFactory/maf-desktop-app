@@ -169,7 +169,8 @@ public class PortfolioEntryGovernanceController extends Controller {
         // initiate the tables
         List<Table<MilestoneApproverListView>> approversTables = new ArrayList<Table<MilestoneApproverListView>>();
         List<Table<PortfolioEntryBudgetLineListView>> budgetLinesTables = new ArrayList<Table<PortfolioEntryBudgetLineListView>>();
-        List<Table<PortfolioEntryResourcePlanAllocatedResourceListView>> resourcesTables = new ArrayList<Table<PortfolioEntryResourcePlanAllocatedResourceListView>>();
+        List<Table<PortfolioEntryResourcePlanAllocatedResourceListView>> resourcesTables;
+        resourcesTables = new ArrayList<Table<PortfolioEntryResourcePlanAllocatedResourceListView>>();
         List<Attachment> attachments = new ArrayList<Attachment>();
 
         // columns to hide
@@ -238,19 +239,23 @@ public class PortfolioEntryGovernanceController extends Controller {
             if (lifeCycleMilestoneInstance.isPassed) {
 
                 // initiate the list view
-                List<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourceListView = new ArrayList<PortfolioEntryResourcePlanAllocatedResourceListView>();
+                List<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourceListView;
+                allocatedResourceListView = new ArrayList<PortfolioEntryResourcePlanAllocatedResourceListView>();
 
                 // add the lines
                 SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
-                List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedActors;
+                List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors;
+                allocatedActors = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedActors;
                 for (PortfolioEntryResourcePlanAllocatedActor resource : allocatedActors) {
                     sortableCollection.addObject(new DateSortableObject(resource.endDate, resource));
                 }
-                List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedCompetencies;
+                List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies;
+                allocatedCompetencies = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedCompetencies;
                 for (PortfolioEntryResourcePlanAllocatedCompetency resource : allocatedCompetencies) {
                     sortableCollection.addObject(new DateSortableObject(resource.endDate, resource));
                 }
-                List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedOrgUnits;
+                List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits;
+                allocatedOrgUnits = lifeCycleMilestoneInstance.portfolioEntryResourcePlan.portfolioEntryResourcePlanAllocatedOrgUnits;
                 for (PortfolioEntryResourcePlanAllocatedOrgUnit resource : allocatedOrgUnits) {
                     sortableCollection.addObject(new DateSortableObject(resource.endDate, resource));
                 }

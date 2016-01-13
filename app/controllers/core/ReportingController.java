@@ -254,18 +254,30 @@ public class ReportingController extends Controller {
         }
     }
 
+    /**
+     * Get the reporting utils.
+     */
     private IReportingUtils getReportingUtils() {
         return reportingUtils;
     }
 
+    /**
+     * Get the i18n messages service.
+     */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

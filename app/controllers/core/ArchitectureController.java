@@ -68,7 +68,6 @@ import utils.table.ApplicationBlockListView;
 /**
  * The architecture controller (DevDock).
  * 
- * 
  * @author Johann Kohler
  */
 public class ArchitectureController extends Controller {
@@ -479,6 +478,9 @@ public class ArchitectureController extends Controller {
         return messagesPlugin;
     }
 
+    /**
+     * Get the Play configuration service.
+     */
     private Configuration getConfiguration() {
         return configuration;
     }

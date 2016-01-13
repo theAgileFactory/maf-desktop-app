@@ -45,7 +45,6 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
@@ -94,12 +93,11 @@ import utils.table.TimesheetActivityAllocatedActorListView;
  * @author Johann Kohler
  */
 public class OrgUnitController extends Controller {
+
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
-    @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private IBudgetTrackingService budgetTrackingService;
     @Inject
@@ -481,8 +479,8 @@ public class OrgUnitController extends Controller {
         // construct the actors portfolio entry table
 
         String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> actorsPortfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
-                .getCurrent(uid, request());
+        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> actorsPortfolioEntryFilter;
+        actorsPortfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig.getCurrent(uid, request());
 
         Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> actorsPortfolioEntryTable;
         actorsPortfolioEntryTable = getActorsPEAllocTable(id, actorsPortfolioEntryFilter);
@@ -778,13 +776,6 @@ public class OrgUnitController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
-    }
-
-    /**
-     * Get the preference manager service.
-     */
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
     }
 
     /**

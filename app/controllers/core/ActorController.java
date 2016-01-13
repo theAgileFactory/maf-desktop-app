@@ -44,7 +44,6 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
-import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.IColumnFormatter;
@@ -93,14 +92,13 @@ import utils.table.TimesheetActivityAllocatedActorListView;
 /**
  * The controller which displays / allows to edit an actor.
  * 
- * 
  * @author Johann Kohler
  */
 public class ActorController extends Controller {
+
     @Inject
     private ISecurityService securityService;
-    @Inject
-    private IPreferenceManagerPlugin preferenceManagerPlugin;
+
     @Inject
     private IBudgetTrackingService budgetTrackingService;
 
@@ -947,13 +945,6 @@ public class ActorController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
-    }
-
-    /**
-     * Get the preference manager service.
-     */
-    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return preferenceManagerPlugin;
     }
 
 }

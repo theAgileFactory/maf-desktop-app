@@ -80,8 +80,8 @@ public class PortfolioEntryStakeholderController extends Controller {
         hideColumnsForPortfolioStakeholders.add("editActionLink");
         hideColumnsForPortfolioStakeholders.add("removeActionLink");
 
-        Table<PortfolioStakeholderListView> filledPortfolioTable =
-                PortfolioStakeholderListView.templateTable.fill(stakeholdersForPortfolioListView, hideColumnsForPortfolioStakeholders);
+        Table<PortfolioStakeholderListView> filledPortfolioTable = PortfolioStakeholderListView.templateTable.fill(stakeholdersForPortfolioListView,
+                hideColumnsForPortfolioStakeholders);
 
         // get the stakeholders
         List<Stakeholder> stakeholders = StakeholderDao.getStakeholderAsListByPE(id);
@@ -97,8 +97,8 @@ public class PortfolioEntryStakeholderController extends Controller {
             hideColumnsForStakeholder.add("removeActionLink");
         }
 
-        Table<PortfolioEntryStakeholderListView> filledTable =
-                PortfolioEntryStakeholderListView.templateTable.fill(stakeholdersListView, hideColumnsForStakeholder);
+        Table<PortfolioEntryStakeholderListView> filledTable = PortfolioEntryStakeholderListView.templateTable.fill(stakeholdersListView,
+                hideColumnsForStakeholder);
 
         return ok(views.html.core.portfolioentrystakeholder.stakeholder_index.render(portfolioEntry, filledTable, filledPortfolioTable));
     }
@@ -157,8 +157,8 @@ public class PortfolioEntryStakeholderController extends Controller {
         StakeholderFormData stakeholderFormData = boundForm.get();
 
         // check the unicity
-        Stakeholder stakeholderForUnicity =
-                StakeholderDao.getStakeholderByActorAndTypeAndPE(stakeholderFormData.actor, stakeholderFormData.stakeholderType, id);
+        Stakeholder stakeholderForUnicity = StakeholderDao.getStakeholderByActorAndTypeAndPE(stakeholderFormData.actor, stakeholderFormData.stakeholderType,
+                id);
         if (stakeholderForUnicity != null && stakeholderForUnicity.id != stakeholderFormData.stakeholderId) {
             boundForm.reject("stakeholderType", Msg.get("object.stakeholder.role.invalid"));
             return ok(views.html.core.portfolioentrystakeholder.stakeholder_manage.render(portfolioEntry, boundForm));
@@ -220,6 +220,9 @@ public class PortfolioEntryStakeholderController extends Controller {
         return redirect(controllers.core.routes.PortfolioEntryStakeholderController.index(id));
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }

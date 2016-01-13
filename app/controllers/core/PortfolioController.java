@@ -312,6 +312,9 @@ public class PortfolioController extends Controller {
         OVERVIEW, VIEW;
     }
 
+    /**
+     * Get the security service.
+     */
     private ISecurityService getSecurityService() {
         return securityService;
     }
