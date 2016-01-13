@@ -125,6 +125,8 @@ public class ReportingUtilsImpl implements IReportingUtils {
      *            the database dependency service
      * @param preferenceManagerPlugin
      *            the preference manager service
+     * @param budgetTrackingService
+     *            the budget tracking service
      */
     @Inject
     public ReportingUtilsImpl(ApplicationLifecycle lifecycle, Configuration configuration, Environment environment,

@@ -99,6 +99,8 @@ public class KpiDefinitionListView {
      * 
      * @param kpiDefinition
      *            the KPI definition in the DB
+     * @param kpiService
+     *            the KPI service
      */
     public KpiDefinitionListView(KpiDefinition kpiDefinition, IKpiService kpiService) {
 

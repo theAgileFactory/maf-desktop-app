@@ -23,7 +23,6 @@ import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import dao.delivery.RequirementDAO;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;

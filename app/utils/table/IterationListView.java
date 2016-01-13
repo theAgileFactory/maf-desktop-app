@@ -21,7 +21,6 @@ import java.util.Date;
 
 import constants.IMafConstants;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.Utilities;
