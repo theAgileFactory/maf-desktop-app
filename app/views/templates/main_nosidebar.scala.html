@@ -24,7 +24,7 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @idZoneData=@{
-    controllers.Application.getIDZoneData();
+    controllers.Application.getIDZoneData(_usession, _accmngr, _notificationService, _pluginManagerService);
 }
 
 @applicationLogo=@{

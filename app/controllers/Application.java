@@ -56,13 +56,13 @@ import be.objectify.deadbolt.java.actions.SubjectPresent;
 import dao.datasyndication.DataSyndicationDao;
 import dao.pmo.ActorDao;
 import framework.security.ISecurityService;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
+import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.api.IPluginMenuDescriptor;
 import framework.services.remote.IAdPanelManagerService;
@@ -813,26 +813,35 @@ public class Application extends Controller {
     /**
      * Returns the data associated with the IDZone component.
      * 
+     * @param userSessionManagerService
+     *            the user session manager service
+     * @param accountManagerService
+     *            the account manager service
+     * @param notificationManagerService
+     *            the notification manager service
+     * @param pluginManagerService
+     *            the plugin manager service
+     * 
      * @return an IDZone instance if the user is logged or null otherwise
      */
-    public static IDZoneData getIDZoneData() {
-        String loggedUser = ServiceStaticAccessor.getUserSessionManagerPlugin().getUserSessionId(ctx());
+    public static IDZoneData getIDZoneData(IUserSessionManagerPlugin userSessionManagerService, IAccountManagerPlugin accountManagerService,
+            INotificationManagerPlugin notificationManagerService, IPluginManagerService pluginManagerService) {
+        String loggedUser = userSessionManagerService.getUserSessionId(ctx());
         try {
             if (!StringUtils.isBlank(loggedUser)) {
-                IUserAccount userAccount = ServiceStaticAccessor.getAccountManagerPlugin().getUserAccountFromUid(loggedUser);
-                INotificationManagerPlugin notificationManagerPlugin = ServiceStaticAccessor.getNotificationManagerPlugin();
+                IUserAccount userAccount = accountManagerService.getUserAccountFromUid(loggedUser);
                 if (userAccount != null) {
                     IDZoneData idZoneData = new IDZoneData();
                     idZoneData.isAuthorized = userAccount.isActive();
-                    idZoneData.hasNotifications = notificationManagerPlugin.hasNotifications(loggedUser);
-                    idZoneData.nbNotReadNotifications = notificationManagerPlugin.nbNotReadNotifications(loggedUser);
-                    idZoneData.notifications = notificationManagerPlugin.getNotReadNotificationsForUid(loggedUser);
-                    idZoneData.hasMessages = notificationManagerPlugin.hasMessages(loggedUser);
-                    idZoneData.nbNotReadMessages = notificationManagerPlugin.nbNotReadMessages(loggedUser);
-                    idZoneData.messages = notificationManagerPlugin.getNotReadMessagesForUid(loggedUser);
+                    idZoneData.hasNotifications = notificationManagerService.hasNotifications(loggedUser);
+                    idZoneData.nbNotReadNotifications = notificationManagerService.nbNotReadNotifications(loggedUser);
+                    idZoneData.notifications = notificationManagerService.getNotReadNotificationsForUid(loggedUser);
+                    idZoneData.hasMessages = notificationManagerService.hasMessages(loggedUser);
+                    idZoneData.nbNotReadMessages = notificationManagerService.nbNotReadMessages(loggedUser);
+                    idZoneData.messages = notificationManagerService.getNotReadMessagesForUid(loggedUser);
                     idZoneData.login = userAccount.getFirstName() + " " + userAccount.getLastName();
                     idZoneData.pluginMenuDesriptors = new HashMap<Long, Pair<String, IPluginMenuDescriptor>>();
-                    Map<Long, IPluginInfo> pluginInfos = ServiceStaticAccessor.getPluginManagerService().getRegisteredPluginDescriptors();
+                    Map<Long, IPluginInfo> pluginInfos = pluginManagerService.getRegisteredPluginDescriptors();
                     for (Long pluginConfigirationId : pluginInfos.keySet()) {
                         if (pluginInfos.get(pluginConfigirationId).getMenuDescriptor() != null) {
                             IPluginInfo pluginInfo = pluginInfos.get(pluginConfigirationId);

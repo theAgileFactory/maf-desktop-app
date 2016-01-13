@@ -13,6 +13,7 @@ import framework.services.api.AbstractApiController;
 import framework.services.api.ApiError;
 import framework.services.api.IApiControllerUtilsService;
 import framework.services.notification.INotificationManagerPlugin;
+import framework.services.plugins.IPluginManagerService;
 import framework.services.remote.IAdPanelManagerService;
 import play.Configuration;
 import play.Environment;
@@ -55,6 +56,8 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
     private IAdPanelManagerService adPanelManagerService;
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+    @Inject
+    private IPluginManagerService pluginManagerService;
 
     /**
      * Default constructor.
@@ -125,6 +128,7 @@ public class MafHttpErrorHandler extends AbstractErrorHandler {
         context.args.put(IPreferenceManagerPlugin.class.getName(), preferenceManagerPlugin);
         context.args.put(IAdPanelManagerService.class.getName(), adPanelManagerService);
         context.args.put(IBudgetTrackingService.class.getName(), budgetTrackingService);
+        context.args.put(IPluginManagerService.class.getName(), pluginManagerService);
     }
 
     /**
