@@ -167,8 +167,9 @@ public interface JobDescriptors {
                         switch (notificationEvent.recipientsDescriptor.type) {
                         case ACTORS:
                             for (Long actorId : notificationEvent.recipientsDescriptor.actors) {
-                                ActorDao.sendNotificationWithContent(ActorDao.getActorById(actorId), NotificationCategory.getByCode(Code.INFORMATION),
-                                        notificationEvent.actionLink, notificationEvent.title, notificationEvent.message);
+                                ActorDao.sendNotificationWithContent(notificationManagerPlugin, ActorDao.getActorById(actorId),
+                                        NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.actionLink, notificationEvent.title,
+                                        notificationEvent.message);
                             }
                             break;
                         case PERMISSIONS:
@@ -179,8 +180,8 @@ public interface JobDescriptors {
                             break;
                         case PRINCIPALS:
                             for (String uid : notificationEvent.recipientsDescriptor.principals) {
-                                ActorDao.sendNotificationWithContent(uid, NotificationCategory.getByCode(Code.INFORMATION), notificationEvent.actionLink,
-                                        notificationEvent.title, notificationEvent.message);
+                                ActorDao.sendNotificationWithContent(notificationManagerPlugin, uid, NotificationCategory.getByCode(Code.INFORMATION),
+                                        notificationEvent.actionLink, notificationEvent.title, notificationEvent.message);
                             }
                             break;
                         default:

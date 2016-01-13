@@ -32,11 +32,12 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.SqlUpdate;
 
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -435,6 +436,8 @@ public abstract class ActorDao {
      * Send a notification to a user with direct content (no keys used for title
      * and message).
      * 
+     * @param notificationManagerService
+     *            the notification manager service
      * @param recipient
      *            the uid of the user (principal)
      * @param category
@@ -446,19 +449,24 @@ public abstract class ActorDao {
      * @param message
      *            the message
      */
-    public static void sendNotificationWithContent(String recipient, NotificationCategory category, String url, String title, String message) {
+    public static void sendNotificationWithContent(INotificationManagerPlugin notificationManagerService, String recipient, NotificationCategory category,
+            String url, String title, String message) {
 
         // get the principal
         Principal principal = Principal.getPrincipalFromUid(recipient);
 
         if (principal != null) {
-            ServiceStaticAccessor.getNotificationManagerPlugin().sendNotification(recipient, category, title, message, url);
+            notificationManagerService.sendNotification(recipient, category, title, message, url);
         }
     }
 
     /**
      * Send a notification to a user (principal).
      * 
+     * @param notificationManagerService
+     *            the notification manager service
+     * @param i18nMessagesService
+     *            the i18n messages service
      * @param recipient
      *            the uid of the user (principal)
      * @param category
@@ -472,7 +480,8 @@ public abstract class ActorDao {
      * @param args
      *            the arguments for the message
      */
-    public static void sendNotification(String recipient, NotificationCategory category, String url, String titleKey, String messageKey, Object... args) {
+    public static void sendNotification(INotificationManagerPlugin notificationManagerService, II18nMessagesPlugin i18nMessagesService, String recipient,
+            NotificationCategory category, String url, String titleKey, String messageKey, Object... args) {
 
         // get the principal
         Principal principal = Principal.getPrincipalFromUid(recipient);
@@ -485,7 +494,7 @@ public abstract class ActorDao {
             // construct the title and the message
             String message = null;
             String title = null;
-            if (ServiceStaticAccessor.getMessagesPlugin().isLanguageValid(language.getCode())) {
+            if (i18nMessagesService.isLanguageValid(language.getCode())) {
                 message = Msg.get(language.getLang(), messageKey, args);
                 title = Msg.get(language.getLang(), titleKey);
             } else {
@@ -493,7 +502,7 @@ public abstract class ActorDao {
                 title = Msg.get(titleKey);
             }
 
-            ServiceStaticAccessor.getNotificationManagerPlugin().sendNotification(recipient, category, title, message, url);
+            notificationManagerService.sendNotification(recipient, category, title, message, url);
         }
     }
 
@@ -502,6 +511,9 @@ public abstract class ActorDao {
      * message) to the user (principal) associated to an actor. If the actor is
      * not linked to a principal then the notification is not sent.
      * 
+     * @param notificationManagerService
+     *            the notification manager service
+     * 
      * @param actor
      *            the actor for which the notification should be sent
      * @param category
@@ -512,10 +524,12 @@ public abstract class ActorDao {
      *            the title
      * @param message
      *            the message
+     * 
      */
-    public static void sendNotificationWithContent(Actor actor, NotificationCategory category, String url, String title, String message) {
+    public static void sendNotificationWithContent(INotificationManagerPlugin notificationManagerService, Actor actor, NotificationCategory category,
+            String url, String title, String message) {
         if (actor != null && actor.uid != null && !actor.uid.equals("")) {
-            sendNotificationWithContent(actor.uid, category, url, title, message);
+            sendNotificationWithContent(notificationManagerService, actor.uid, category, url, title, message);
         }
     }
 
@@ -523,6 +537,10 @@ public abstract class ActorDao {
      * Send a notification to the user (principal) associated to an actor. If
      * the actor is not linked to a principal then the notification is not sent.
      * 
+     * @param notificationManagerService
+     *            the notification manager service
+     * @param i18nMessagesService
+     *            the i18n messages service
      * @param actor
      *            the actor for which the notification should be sent
      * @param category
@@ -536,9 +554,10 @@ public abstract class ActorDao {
      * @param args
      *            the arguments for the message
      */
-    public static void sendNotification(Actor actor, NotificationCategory category, String url, String titleKey, String messageKey, Object... args) {
+    public static void sendNotification(INotificationManagerPlugin notificationManagerService, II18nMessagesPlugin i18nMessagesService, Actor actor,
+            NotificationCategory category, String url, String titleKey, String messageKey, Object... args) {
         if (actor != null && actor.uid != null && !actor.uid.equals("")) {
-            sendNotification(actor.uid, category, url, titleKey, messageKey, args);
+            sendNotification(notificationManagerService, i18nMessagesService, actor.uid, category, url, titleKey, messageKey, args);
         }
     }
 
@@ -547,6 +566,8 @@ public abstract class ActorDao {
      * message) to a list of actors. For each actor we take the principal (only
      * if it exists).
      * 
+     * @param notificationManagerService
+     *            the notification manager service
      * @param actors
      *            the list of actors for which the notification should be sent
      * @param category
@@ -558,7 +579,8 @@ public abstract class ActorDao {
      * @param message
      *            the message
      */
-    public static void sendNotificationWithContent(List<Actor> actors, NotificationCategory category, String url, String title, String message) {
+    public static void sendNotificationWithContent(INotificationManagerPlugin notificationManagerService, List<Actor> actors, NotificationCategory category,
+            String url, String title, String message) {
         Set<String> recipients = new HashSet<>();
         for (Actor actor : actors) {
             if (actor != null && actor.uid != null && !actor.uid.equals("")) {
@@ -566,7 +588,7 @@ public abstract class ActorDao {
             }
         }
         for (String recipient : recipients) {
-            sendNotificationWithContent(recipient, category, url, title, message);
+            sendNotificationWithContent(notificationManagerService, recipient, category, url, title, message);
         }
     }
 
@@ -574,6 +596,10 @@ public abstract class ActorDao {
      * Send a notification to a list of actors. For each actor we take the
      * principal (only if it exists).
      * 
+     * @param notificationManagerService
+     *            the notification manager service
+     * @param i18nMessagesService
+     *            the i18n messages service
      * @param actors
      *            the list of actors for which the notification should be sent
      * @param category
@@ -587,7 +613,8 @@ public abstract class ActorDao {
      * @param args
      *            the arguments for the message
      */
-    public static void sendNotification(List<Actor> actors, NotificationCategory category, String url, String titleKey, String messageKey, Object... args) {
+    public static void sendNotification(INotificationManagerPlugin notificationManagerService, II18nMessagesPlugin i18nMessagesService, List<Actor> actors,
+            NotificationCategory category, String url, String titleKey, String messageKey, Object... args) {
         Set<String> recipients = new HashSet<>();
         for (Actor actor : actors) {
             if (actor != null && actor.uid != null && !actor.uid.equals("")) {
@@ -595,7 +622,7 @@ public abstract class ActorDao {
             }
         }
         for (String recipient : recipients) {
-            sendNotification(recipient, category, url, titleKey, messageKey, args);
+            sendNotification(notificationManagerService, i18nMessagesService, recipient, category, url, titleKey, messageKey, args);
         }
     }
 

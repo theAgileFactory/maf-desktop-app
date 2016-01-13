@@ -53,6 +53,7 @@ import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.CssValueForValueHolder;
@@ -143,6 +144,8 @@ public class PortfolioEntryPlanningController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+    @Inject
+    private INotificationManagerPlugin notificationManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -1034,7 +1037,8 @@ public class PortfolioEntryPlanningController extends Controller {
                 || (oldEndDate == null && planningPackage.endDate != null) || (oldEndDate != null && !oldEndDate.equals(planningPackage.endDate))) {
             for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : planningPackage.portfolioEntryResourcePlanAllocatedActors) {
                 if (allocatedActor.isConfirmed && allocatedActor.followPackageDates != null && allocatedActor.followPackageDates) {
-                    ActorDao.sendNotification(allocatedActor.actor.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                    ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), allocatedActor.actor.manager,
+                            NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                             controllers.core.routes.ActorController.allocation(allocatedActor.actor.id).url(),
                             "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title",
                             "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message", allocatedActor.actor.getNameHumanReadable());
@@ -1404,7 +1408,8 @@ public class PortfolioEntryPlanningController extends Controller {
                 // if the allocation was previously confirmed, then we send a
                 // notification to the manager of the concerned actor
                 if (oldIsConfirmed) {
-                    ActorDao.sendNotification(allocatedActor.actor.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                    ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), allocatedActor.actor.manager,
+                            NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                             controllers.core.routes.ActorController.allocation(allocatedActor.actor.id).url(),
                             "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title",
                             "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message", allocatedActor.actor.getNameHumanReadable());
@@ -2211,6 +2216,13 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
+    }
+
+    /**
+     * Get the notification manager service.
+     */
+    private INotificationManagerPlugin getNotificationManagerService() {
+        return this.notificationManagerService;
     }
 
 }

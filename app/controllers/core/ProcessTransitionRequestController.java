@@ -37,6 +37,7 @@ import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FileAttachmentHelper;
@@ -90,6 +91,8 @@ public class ProcessTransitionRequestController extends Controller {
     private Configuration configuration;
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+    @Inject
+    private INotificationManagerPlugin notificationManagerService;
 
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
@@ -249,7 +252,8 @@ public class ProcessTransitionRequestController extends Controller {
 
                 // notification (manager + requester)
                 List<Actor> actors = new ArrayList<Actor>(Arrays.asList(portfolioEntry.manager, request.requester));
-                ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.REQUEST_REVIEW),
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
+                        NotificationCategory.getByCode(Code.REQUEST_REVIEW),
                         controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
                         "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.title",
                         "core.process_transition_request.process_milestone_request.panel.form.accept.instance.notification.message",
@@ -257,7 +261,8 @@ public class ProcessTransitionRequestController extends Controller {
 
                 // notification (approvers)
                 String approversUrl = controllers.core.routes.MilestoneApprovalController.process(lifeCycleMilestoneInstance.id).url();
-                ActorDao.sendNotification(approvers, NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), approvers,
+                        NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
                         "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.title",
                         "core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message", portfolioEntry.getName());
 
@@ -278,7 +283,8 @@ public class ProcessTransitionRequestController extends Controller {
 
                 // notification
                 List<Actor> actors = new ArrayList<Actor>(Arrays.asList(portfolioEntry.manager, request.requester));
-                ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.APPROVAL),
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
+                        NotificationCategory.getByCode(Code.APPROVAL),
                         controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
                         "core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title",
                         "core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message",
@@ -343,7 +349,8 @@ public class ProcessTransitionRequestController extends Controller {
 
         // send notification (manager + requester)
         List<Actor> actors = new ArrayList<Actor>(Arrays.asList(portfolioEntry.manager, request.requester));
-        ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.REQUEST_REVIEW),
+        ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
+                NotificationCategory.getByCode(Code.REQUEST_REVIEW),
                 controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
                 "core.process_transition_request.process_milestone_request.panel.form.reject.notification.title",
                 "core.process_transition_request.process_milestone_request.panel.form.reject.notification.message", portfolioEntry.getName());
@@ -392,5 +399,12 @@ public class ProcessTransitionRequestController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
+    }
+
+    /**
+     * Get the notification manager service.
+     */
+    private INotificationManagerPlugin getNotificationManagerService() {
+        return this.notificationManagerService;
     }
 }

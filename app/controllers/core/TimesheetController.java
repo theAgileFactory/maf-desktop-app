@@ -45,6 +45,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Msg;
 import framework.utils.Utilities;
@@ -79,6 +80,8 @@ public class TimesheetController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private INotificationManagerPlugin notificationManagerService;
 
     private static Logger.ALogger log = Logger.of(TimesheetController.class);
 
@@ -393,7 +396,8 @@ public class TimesheetController extends Controller {
             report.status = TimesheetReport.Status.SUBMITTED;
 
             if (actor.manager != null) {
-                ActorDao.sendNotification(actor.manager, NotificationCategory.getByCode(Code.TIMESHEET),
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actor.manager,
+                        NotificationCategory.getByCode(Code.TIMESHEET),
                         controllers.core.routes.ActorController.viewWeeklyTimesheet(report.actor.id, sdf.format(report.startDate)).url(),
                         "core.timesheet.fill.submit.notification.title.with_approval", "core.timesheet.fill.submit.notification.message.with_approval",
                         actor.getName());
@@ -481,13 +485,15 @@ public class TimesheetController extends Controller {
 
             if (formData.comments != null && !formData.comments.equals("")) {
                 // with comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
+                        NotificationCategory.getByCode(Code.TIMESHEET),
                         controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
                         "core.timesheet.approve.notification.title", "core.timesheet.approve.notification.message.with_comments", startDate, endDate,
                         formData.comments);
             } else {
                 // without comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
+                        NotificationCategory.getByCode(Code.TIMESHEET),
                         controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
                         "core.timesheet.approve.notification.title", "core.timesheet.approve.notification.message.without_comments", startDate, endDate);
             }
@@ -502,13 +508,15 @@ public class TimesheetController extends Controller {
 
             if (formData.comments != null && !formData.comments.equals("")) {
                 // with comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
+                        NotificationCategory.getByCode(Code.TIMESHEET),
                         controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
                         "core.timesheet.reject.notification.title", "core.timesheet.reject.notification.message.with_comments", startDate, endDate,
                         formData.comments);
             } else {
                 // without comments
-                ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
+                        NotificationCategory.getByCode(Code.TIMESHEET),
                         controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
                         "core.timesheet.reject.notification.title", "core.timesheet.reject.notification.message.without_comments", startDate, endDate);
             }
@@ -536,9 +544,9 @@ public class TimesheetController extends Controller {
         String endDate = Utilities.getDateFormat(null).format(report.getEndDate());
 
         // send the notification
-        ActorDao.sendNotification(report.actor, NotificationCategory.getByCode(Code.TIMESHEET),
-                controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(), "core.timesheet.send_reminder.notification.title",
-                "core.timesheet.send_reminder.notification.message", startDate, endDate);
+        ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
+                NotificationCategory.getByCode(Code.TIMESHEET), controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
+                "core.timesheet.send_reminder.notification.title", "core.timesheet.send_reminder.notification.message", startDate, endDate);
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.send_reminder.successful"));
 
@@ -666,5 +674,12 @@ public class TimesheetController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the notification manager service.
+     */
+    private INotificationManagerPlugin getNotificationManagerService() {
+        return this.notificationManagerService;
     }
 }

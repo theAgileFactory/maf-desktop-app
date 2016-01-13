@@ -50,6 +50,7 @@ import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -131,6 +132,8 @@ public class PortfolioEntryController extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private INotificationManagerPlugin notificationManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -270,18 +273,18 @@ public class PortfolioEntryController extends Controller {
 
         // send a notification to the portfolio manager (if it exists)
         if (portfolio != null) {
-            ActorDao.sendNotification(portfolio.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), keyPrefix + "notification.title",
-                    keyPrefix + "notification.message", portfolio.name);
+            ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), portfolio.manager,
+                    NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY), controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
+                    keyPrefix + "notification.title", keyPrefix + "notification.message", portfolio.name);
         }
 
         // send a notification to the initiative manager (if he is not the
         // current one)
         Actor actor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
         if (!actor.id.equals(portfolioEntry.manager.id)) {
-            ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(), keyPrefix + "notification.title",
-                    keyPrefix + "notification.manager.message");
+            ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), portfolioEntry.manager,
+                    NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY), controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
+                    keyPrefix + "notification.title", keyPrefix + "notification.manager.message");
 
         }
 
@@ -1030,5 +1033,12 @@ public class PortfolioEntryController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the notification manager service.
+     */
+    private INotificationManagerPlugin getNotificationManagerService() {
+        return this.notificationManagerService;
     }
 }

@@ -38,6 +38,7 @@ import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FileAttachmentHelper;
@@ -99,6 +100,8 @@ public class PortfolioEntryGovernanceController extends Controller {
     private Configuration configuration;
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+    @Inject
+    private INotificationManagerPlugin notificationManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryGovernanceController.class);
 
@@ -408,7 +411,8 @@ public class PortfolioEntryGovernanceController extends Controller {
             String url = controllers.core.routes.ProcessTransitionRequestController
                     .processMilestoneRequest(requestMilestoneFormData.id, processTransitionRequest.id).url();
             for (Portfolio portfolio : portfolioEntry.portfolios) {
-                ActorDao.sendNotification(portfolio.manager, NotificationCategory.getByCode(Code.REQUEST_REVIEW), url,
+                ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), portfolio.manager,
+                        NotificationCategory.getByCode(Code.REQUEST_REVIEW), url,
                         "core.portfolio_entry_governance.milestone.request.approval.notification.title",
                         "core.portfolio_entry_governance.milestone.request.approval.notification.message", portfolioEntry.getName());
             }
@@ -451,7 +455,8 @@ public class PortfolioEntryGovernanceController extends Controller {
 
                     // notification (approvers)
                     String approversUrl = controllers.core.routes.MilestoneApprovalController.process(lifeCycleMilestoneInstance.id).url();
-                    ActorDao.sendNotification(lifeCycleMilestone.approvers, NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
+                    ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), lifeCycleMilestone.approvers,
+                            NotificationCategory.getByCode(Code.APPROVAL), approversUrl,
                             "core.portfolio_entry_governance.milestone.request.voterequired.notification.title",
                             "core.portfolio_entry_governance.milestone.request.voterequired.notification.message", portfolioEntry.getName());
 
@@ -464,7 +469,8 @@ public class PortfolioEntryGovernanceController extends Controller {
                     lifeCycleMilestoneInstance = LifeCycleMilestoneDao.doPassed(lifeCycleMilestoneInstance.id, this.getBudgetTrackingService());
 
                     // notification
-                    ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.APPROVAL),
+                    ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), portfolioEntry.manager,
+                            NotificationCategory.getByCode(Code.APPROVAL),
                             controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
                             "core.portfolio_entry_governance.milestone.request.approved.notification.title",
                             "core.portfolio_entry_governance.milestone.request.approved.notification.message", portfolioEntry.getName());
@@ -663,7 +669,8 @@ public class PortfolioEntryGovernanceController extends Controller {
         for (Portfolio portfolio : portfolioEntry.portfolios) {
             actors.add(portfolio.manager);
         }
-        ActorDao.sendNotification(actors, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+        ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
+                NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
                 controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
                 "core.portfolio_entry_governance.process.change.notification.title", "core.portfolio_entry_governance.process.change.notification.message",
                 portfolioEntry.getName(), lifeCycleProcess.getName());
@@ -755,6 +762,13 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
+    }
+
+    /**
+     * Get the notification manager service.
+     */
+    private INotificationManagerPlugin getNotificationManagerService() {
+        return this.notificationManagerService;
     }
 
 }

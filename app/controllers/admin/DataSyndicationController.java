@@ -29,6 +29,8 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -75,6 +77,12 @@ public class DataSyndicationController extends Controller {
 
     @Inject
     private IDataSyndicationService dataSyndicationService;
+
+    @Inject
+    private INotificationManagerPlugin notificationManagerService;
+
+    @Inject
+    private II18nMessagesPlugin i18nMessagesService;
 
     /**
      * Display the list of master agreements.
@@ -802,8 +810,8 @@ public class DataSyndicationController extends Controller {
             }
 
             // send a notification to the initiative manager
-            ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
+            ActorDao.sendNotification(getNotificationManagerService(), getI18nMessagesService(), portfolioEntry.manager,
+                    NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY), controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
                     "admin.data_syndication.process_agreement_link.pe.accept.new.notification.title",
                     "admin.data_syndication.process_agreement_link.pe.accept.new.notification.message", agreementLink.name);
 
@@ -861,8 +869,8 @@ public class DataSyndicationController extends Controller {
             }
 
             // send a notification to the initiative manager
-            ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                    controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
+            ActorDao.sendNotification(getNotificationManagerService(), getI18nMessagesService(), portfolioEntry.manager,
+                    NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY), controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
                     "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.title",
                     "admin.data_syndication.process_agreement_link.pe.accept.existing.notification.message", portfolioEntry.getName(), agreementLink.name);
 
@@ -931,5 +939,19 @@ public class DataSyndicationController extends Controller {
         @Required
         public String keywords;
 
+    }
+
+    /**
+     * Get the notification manager service.
+     */
+    private INotificationManagerPlugin getNotificationManagerService() {
+        return this.notificationManagerService;
+    }
+
+    /**
+     * Get the i18n messages service.
+     */
+    private II18nMessagesPlugin getI18nMessagesService() {
+        return this.i18nMessagesService;
     }
 }

@@ -40,6 +40,7 @@ import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
@@ -103,6 +104,8 @@ public class MilestoneApprovalController extends Controller {
     private Configuration configuration;
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+    @Inject
+    private INotificationManagerPlugin notificationManagerService;
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -360,8 +363,8 @@ public class MilestoneApprovalController extends Controller {
 
             for (Principal principal : principals) {
 
-                ActorDao.sendNotification(principal.uid, NotificationCategory.getByCode(Code.APPROVAL), url,
-                        "core.milestone.approval.process.panel.vote.decisionrequired.notification.title",
+                ActorDao.sendNotification(getNotificationManagerService(), getI18nMessagesPlugin(), principal.uid,
+                        NotificationCategory.getByCode(Code.APPROVAL), url, "core.milestone.approval.process.panel.vote.decisionrequired.notification.title",
                         "core.milestone.approval.process.panel.vote.decisionrequired.notification.message", portfolioEntry.getName());
             }
 
@@ -420,12 +423,12 @@ public class MilestoneApprovalController extends Controller {
             PortfolioEntry portfolioEntry = milestoneInstance.lifeCycleInstance.portfolioEntry;
             String url = controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url();
             if (status.isApproved) {
-                ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.APPROVAL), url,
-                        "core.milestone.approval.process.panel.decide.approve.notification.title",
+                ActorDao.sendNotification(getNotificationManagerService(), getI18nMessagesPlugin(), portfolioEntry.manager,
+                        NotificationCategory.getByCode(Code.APPROVAL), url, "core.milestone.approval.process.panel.decide.approve.notification.title",
                         "core.milestone.approval.process.panel.decide.approve.notification.message", portfolioEntry.getName());
             } else {
-                ActorDao.sendNotification(portfolioEntry.manager, NotificationCategory.getByCode(Code.APPROVAL), url,
-                        "core.milestone.approval.process.panel.decide.reject.notification.title",
+                ActorDao.sendNotification(getNotificationManagerService(), getI18nMessagesPlugin(), portfolioEntry.manager,
+                        NotificationCategory.getByCode(Code.APPROVAL), url, "core.milestone.approval.process.panel.decide.reject.notification.title",
                         "core.milestone.approval.process.panel.decide.reject.notification.message", portfolioEntry.getName());
             }
 
@@ -605,6 +608,13 @@ public class MilestoneApprovalController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
+    }
+
+    /**
+     * Get the notification manager service.
+     */
+    private INotificationManagerPlugin getNotificationManagerService() {
+        return this.notificationManagerService;
     }
 
 }
