@@ -61,7 +61,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
             }
         }
 
-        return convertInDays(total);
+        return convertInDays(total, preferenceManagerPlugin);
 
     }
 
@@ -77,7 +77,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
             }
         }
 
-        return convertInDays(total);
+        return convertInDays(total, preferenceManagerPlugin);
 
     }
 
@@ -93,7 +93,7 @@ public class ReleaseBurndownKpi implements IKpiRunner {
             }
         }
 
-        return convertInDays(total);
+        return convertInDays(total, preferenceManagerPlugin);
 
     }
 
@@ -112,9 +112,12 @@ public class ReleaseBurndownKpi implements IKpiRunner {
      * 
      * @param hours
      *            the number of hours
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    private BigDecimal convertInDays(BigDecimal hours) {
-        return hours.setScale(2, BigDecimal.ROUND_HALF_UP).divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
+    private BigDecimal convertInDays(BigDecimal hours, IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return hours.setScale(2, BigDecimal.ROUND_HALF_UP).divide(TimesheetDao.getTimesheetReportHoursPerDay(preferenceManagerPlugin),
+                BigDecimal.ROUND_HALF_UP);
     }
 
     @Override

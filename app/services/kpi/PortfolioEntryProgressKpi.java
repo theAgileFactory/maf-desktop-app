@@ -118,7 +118,7 @@ public class PortfolioEntryProgressKpi implements IKpiRunner {
             value = value.add(TimesheetDao.getTimesheetLogAsTotalHoursByPEPlanningPackage(planningPackage));
         }
 
-        return value.divide(TimesheetDao.getTimesheetReportHoursPerDay(), RoundingMode.HALF_UP);
+        return value.divide(TimesheetDao.getTimesheetReportHoursPerDay(preferenceManagerPlugin), RoundingMode.HALF_UP);
     }
 
     @Override

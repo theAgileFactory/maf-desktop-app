@@ -26,6 +26,7 @@ import controllers.core.PortfolioEntryPlanningController;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -221,8 +222,11 @@ public class PortfolioEntryPlanningPackageListView {
      *            the portfolio entry planning package in the DB
      * @param messagesPlugin
      *            the i18n service
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public PortfolioEntryPlanningPackageListView(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage, II18nMessagesPlugin messagesPlugin) {
+    public PortfolioEntryPlanningPackageListView(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage, II18nMessagesPlugin messagesPlugin,
+            IPreferenceManagerPlugin preferenceManagerPlugin) {
 
         this.id = portfolioEntryPlanningPackage.id;
         this.portfolioEntryId = portfolioEntryPlanningPackage.portfolioEntry.id;
@@ -243,7 +247,7 @@ public class PortfolioEntryPlanningPackageListView {
                 .add(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedCompetencyAsDaysByPlanningPackage(portfolioEntryPlanningPackage));
 
         this.timesheetsDays = TimesheetDao.getTimesheetLogAsTotalHoursByPEPlanningPackage(portfolioEntryPlanningPackage)
-                .divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
+                .divide(TimesheetDao.getTimesheetReportHoursPerDay(preferenceManagerPlugin), BigDecimal.ROUND_HALF_UP);
 
     }
 }

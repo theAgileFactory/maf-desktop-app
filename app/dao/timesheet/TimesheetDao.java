@@ -31,7 +31,6 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
 import constants.IMafConstants;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -537,9 +536,12 @@ public abstract class TimesheetDao {
 
     /**
      * Return the expected number of hours for a day.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static BigDecimal getTimesheetReportHoursPerDay() {
-        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsDecimal(IMafConstants.TIMESHEET_HOURS_PER_DAY);
+    public static BigDecimal getTimesheetReportHoursPerDay(IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return preferenceManagerPlugin.getPreferenceValueAsDecimal(IMafConstants.TIMESHEET_HOURS_PER_DAY);
     }
 
 }

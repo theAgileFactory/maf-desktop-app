@@ -606,7 +606,8 @@ public class PortfolioEntryPlanningController extends Controller {
 
         List<PortfolioEntryPlanningPackageListView> portfolioEntryPlanningPackageListView = new ArrayList<PortfolioEntryPlanningPackageListView>();
         for (PortfolioEntryPlanningPackage portfolioEntryPlanningPackage : pagination.getListOfObjects()) {
-            portfolioEntryPlanningPackageListView.add(new PortfolioEntryPlanningPackageListView(portfolioEntryPlanningPackage, messagesPlugin));
+            portfolioEntryPlanningPackageListView.add(new PortfolioEntryPlanningPackageListView(portfolioEntryPlanningPackage, this.getI18nMessagesPlugin(),
+                    this.getPreferenceManagerPlugin()));
         }
 
         Set<String> hideColumnsForPackage = filterConfig.getColumnsToHide();
@@ -655,7 +656,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         // get the timesheets' days
         BigDecimal timesheetsDays = TimesheetDao.getTimesheetLogAsTotalHoursByPEPlanningPackage(planningPackage)
-                .divide(TimesheetDao.getTimesheetReportHoursPerDay(), BigDecimal.ROUND_HALF_UP);
+                .divide(TimesheetDao.getTimesheetReportHoursPerDay(this.getPreferenceManagerPlugin()), BigDecimal.ROUND_HALF_UP);
 
         /*
          * Get the attachments
