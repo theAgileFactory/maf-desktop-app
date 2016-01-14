@@ -32,6 +32,7 @@ import com.avaje.ebean.RawSqlBuilder;
 
 import constants.IMafConstants;
 import framework.services.ServiceStaticAccessor;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
@@ -512,9 +513,12 @@ public abstract class TimesheetDao {
 
     /**
      * Return true if the timesheets should be approved by the managers.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static boolean getTimesheetReportMustApprove() {
-        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.TIMESHEET_MUST_APPROVE_PREFERENCE);
+    public static boolean getTimesheetReportMustApprove(IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return preferenceManagerPlugin.getPreferenceValueAsBoolean(IMafConstants.TIMESHEET_MUST_APPROVE_PREFERENCE);
     }
 
     /**

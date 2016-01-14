@@ -44,6 +44,7 @@ import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.timesheet.TimesheetDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -82,6 +83,8 @@ public class TimesheetController extends Controller {
     private Configuration configuration;
     @Inject
     private INotificationManagerPlugin notificationManagerService;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(TimesheetController.class);
 
@@ -392,7 +395,7 @@ public class TimesheetController extends Controller {
 
         report.orgUnit = actor.orgUnit;
 
-        if (TimesheetDao.getTimesheetReportMustApprove()) {
+        if (TimesheetDao.getTimesheetReportMustApprove(this.getPreferenceManagerPlugin())) {
             report.status = TimesheetReport.Status.SUBMITTED;
 
             if (actor.manager != null) {
@@ -681,5 +684,12 @@ public class TimesheetController extends Controller {
      */
     private INotificationManagerPlugin getNotificationManagerService() {
         return this.notificationManagerService;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }

@@ -36,7 +36,7 @@
 
     <span id="cockpit-subordinates-timesheet"></span>
     
-    @if(dao.timesheet.TimesheetDao.getTimesheetReportMustApprove) {
+    @if(dao.timesheet.TimesheetDao.getTimesheetReportMustApprove(_preferenceManagerPlugin)) {
     
          <div class="panel panel-default">
                     
