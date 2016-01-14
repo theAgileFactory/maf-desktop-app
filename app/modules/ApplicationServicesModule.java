@@ -104,6 +104,8 @@ import services.echannel.IEchannelService;
 import services.job.JobDescriptors;
 import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
+import services.picker.IPickerService;
+import services.picker.PickerServiceImpl;
 import utils.reporting.IReportingUtils;
 import utils.reporting.ReportingUtilsImpl;
 
@@ -189,6 +191,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IBizdockApiClient.class).to(BizdockApiClientImpl.class).asEagerSingleton();
         bind(IEmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(IBudgetTrackingService.class).to(BudgetTrackingServiceImpl.class).asEagerSingleton();
+        bind(IPickerService.class).to(PickerServiceImpl.class).asEagerSingleton();
 
         // Initialize with a defined list of jobs
         List<IJobDescriptor> jobs = new ArrayList<>();

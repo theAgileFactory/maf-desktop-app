@@ -24,7 +24,6 @@ import services.echannel.request.LoginEventRequest.ErrorCode;
  * The licenses management service.
  * 
  * @author Johann Kohler
- * 
  */
 public interface ILicensesManagementService extends IInstanceAccessSupervisor {
 

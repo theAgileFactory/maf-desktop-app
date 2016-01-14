@@ -17,19 +17,12 @@
  */
 package controllers;
 
+import javax.inject.Inject;
+
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.picker.ActorPicker;
-import utils.picker.BudgetBucketPicker;
-import utils.picker.CostCenterPicker;
-import utils.picker.DeliverablePicker;
-import utils.picker.OrgUnitPicker;
-import utils.picker.PlanningPackagePicker;
-import utils.picker.PortfolioEntryTypePicker;
-import utils.picker.PortfolioPicker;
-import utils.picker.PortfolioTypePicker;
-import utils.picker.PrincipalPicker;
+import services.picker.IPickerService;
 
 /**
  * The controller that provides the pickers.
@@ -39,32 +32,35 @@ import utils.picker.PrincipalPicker;
 @SubjectPresent
 public class PickerController extends Controller {
 
+    @Inject
+    private IPickerService pickerService;
+
     /**
      * The manager picker.
      */
     public Result manager() {
-        return ActorPicker.pickerTemplate.handle(request());
+        return this.getPickerService().getActor().handle(request());
     }
 
     /**
      * The owner picker.
      */
     public Result owner() {
-        return ActorPicker.pickerTemplate.handle(request());
+        return this.getPickerService().getActor().handle(request());
     }
 
     /**
      * The actor picker.
      */
     public Result actor() {
-        return ActorPicker.pickerTemplate.handle(request());
+        return this.getPickerService().getActor().handle(request());
     }
 
     /**
      * The actors without uid (null or empty).
      */
     public Result actorWithoutUid() {
-        return ActorPicker.pickerWithoutUidTemplate.handle(request());
+        return this.getPickerService().getActorWithoutUid().handle(request());
     }
 
     /**
@@ -73,7 +69,7 @@ public class PickerController extends Controller {
      * The org unit id is given as a picker parameter.
      */
     public Result actorOfOrgUnit() {
-        return ActorPicker.pickerForOrgUnitTemplate.handle(request());
+        return this.getPickerService().getActorByOrgUnit().handle(request());
     }
 
     /**
@@ -82,56 +78,56 @@ public class PickerController extends Controller {
      * The competency id is given as a picker parameter.
      */
     public Result actorWithCompetency() {
-        return ActorPicker.pickerWithCompetencyTemplate.handle(request());
+        return this.getPickerService().getActorByCompetency().handle(request());
     }
 
     /**
      * The org unit picker.
      */
     public Result orgUnit() {
-        return OrgUnitPicker.pickerTemplate.handle(request());
+        return this.getPickerService().getOrgUnit().handle(request());
     }
 
     /**
      * The sponsoring unit picker.
      */
     public Result sponsoringUnit() {
-        return OrgUnitPicker.canSponsorPickerTemplate.handle(request());
+        return this.getPickerService().getSponsoringUnit().handle(request());
     }
 
     /**
      * The delivery units picker.
      */
     public Result deliveryUnits() {
-        return OrgUnitPicker.canDeliverPickerTemplate.handle(request());
+        return this.getPickerService().getDeliveryUnit().handle(request());
     }
 
     /**
      * The cost center picker.
      */
     public Result costCenter() {
-        return CostCenterPicker.pickerTemplate.handle(request());
+        return this.getPickerService().getCostCenter().handle(request());
     }
 
     /**
      * The portfolio picker.
      */
     public Result portfolio() {
-        return PortfolioPicker.portfolioPickerHandler.handle(request());
+        return this.getPickerService().getPortfolio().handle(request());
     }
 
     /**
      * The budget bucket picker.
      */
     public Result budgetBucket() {
-        return BudgetBucketPicker.pickerTemplate.handle(request());
+        return this.getPickerService().getBudgetBucket().handle(request());
     }
 
     /**
      * The principals picker (multi and by uid).
      */
     public Result principalsUid() {
-        return PrincipalPicker.pickerTemplateUid.handle(request());
+        return this.getPickerService().getPrincipal().handle(request());
     }
 
     /**
@@ -140,7 +136,7 @@ public class PickerController extends Controller {
      * The portfolio entry id is given as a picker parameter.
      */
     public Result planningPackageOfPortfolioEntry() {
-        return PlanningPackagePicker.pickerTemplate.handle(request());
+        return this.getPickerService().getPlanningPackage().handle(request());
     }
 
     /**
@@ -149,21 +145,28 @@ public class PickerController extends Controller {
      * The portfolio entry id is given as a picker parameter.
      */
     public Result deliverableOfPortfolioEntry() {
-        return DeliverablePicker.pickerTemplate.handle(request());
+        return this.getPickerService().getDeliverableByPortfolioEntry().handle(request());
     }
 
     /**
      * The portfolio type picker.
      */
     public Result portfolioType() {
-        return PortfolioTypePicker.pickerTemplate.handle(request());
+        return this.getPickerService().getPortfolioType().handle(request());
     }
 
     /**
      * The portfolio entry type picker.
      */
     public Result portfolioEntryType() {
-        return PortfolioEntryTypePicker.pickerTemplate.handle(request());
+        return this.getPickerService().getPortfolioEntryType().handle(request());
+    }
+
+    /**
+     * Get the picker service.
+     */
+    private IPickerService getPickerService() {
+        return this.pickerService;
     }
 
 }
