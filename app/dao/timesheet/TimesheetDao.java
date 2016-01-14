@@ -415,8 +415,10 @@ public abstract class TimesheetDao {
      * 
      * @param managerId
      *            the manager id
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static List<TimesheetReport> getTimesheetReportLateAsListByManager(Long managerId) {
+    public static List<TimesheetReport> getTimesheetReportLateAsListByManager(Long managerId, IPreferenceManagerPlugin preferenceManagerPlugin) {
 
         // compute the period aggregate
         Calendar cal = Calendar.getInstance();
@@ -429,7 +431,7 @@ public abstract class TimesheetDao {
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         cal.add(Calendar.WEEK_OF_YEAR, -1);
         Date periodEndDate = cal.getTime();
-        cal.add(Calendar.WEEK_OF_YEAR, -1 * getTimesheetReportReminderLimit() + 1);
+        cal.add(Calendar.WEEK_OF_YEAR, -1 * getTimesheetReportReminderLimit(preferenceManagerPlugin) + 1);
         Date periodStartDate = cal.getTime();
 
         return findTimesheetReport.orderBy("startDate, actor.id").where().eq("deleted", false).eq("actor.manager.id", managerId)
@@ -448,8 +450,10 @@ public abstract class TimesheetDao {
      *            the report type
      * @param actor
      *            the actor
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static void createMissingTimesheetReport(Type type, Actor actor) {
+    public static void createMissingTimesheetReport(Type type, Actor actor, IPreferenceManagerPlugin preferenceManagerPlugin) {
 
         switch (type) {
         case WEEKLY:
@@ -465,7 +469,7 @@ public abstract class TimesheetDao {
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             cal.add(Calendar.WEEK_OF_YEAR, -1);
             Date periodEndDate = cal.getTime();
-            cal.add(Calendar.WEEK_OF_YEAR, -1 * getTimesheetReportReminderLimit() + 1);
+            cal.add(Calendar.WEEK_OF_YEAR, -1 * getTimesheetReportReminderLimit(preferenceManagerPlugin) + 1);
             Date periodStartDate = cal.getTime();
 
             // compute the number of existing reports
@@ -473,11 +477,11 @@ public abstract class TimesheetDao {
                     .ge("startDate", periodStartDate).findRowCount();
 
             // create the reports only if at least one is missing
-            if (n != getTimesheetReportReminderLimit()) {
+            if (n != getTimesheetReportReminderLimit(preferenceManagerPlugin)) {
 
                 Logger.debug("some reports are missing for the actor " + actor.uid);
 
-                for (int i = 0; i < getTimesheetReportReminderLimit(); i++) {
+                for (int i = 0; i < getTimesheetReportReminderLimit(preferenceManagerPlugin); i++) {
 
                     // at start the current date is equal to periodStartDate
                     Date currentDate = cal.getTime();
@@ -523,9 +527,12 @@ public abstract class TimesheetDao {
 
     /**
      * Return the reminder limit (number of reports of the past for an actor).
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static Integer getTimesheetReportReminderLimit() {
-        return ServiceStaticAccessor.getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.TIMESHEET_REMINDER_LIMIT_PREFERENCE);
+    public static Integer getTimesheetReportReminderLimit(IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return preferenceManagerPlugin.getPreferenceValueAsInteger(IMafConstants.TIMESHEET_REMINDER_LIMIT_PREFERENCE);
     }
 
     /**

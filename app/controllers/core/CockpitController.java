@@ -48,6 +48,7 @@ import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
@@ -103,6 +104,8 @@ public class CockpitController extends Controller {
     private II18nMessagesPlugin messagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(CockpitController.class);
 
@@ -643,10 +646,10 @@ public class CockpitController extends Controller {
         // create missing timesheet reports
         List<Actor> actors = ActorDao.getActorAsListByManager(actorId);
         for (Actor a : actors) {
-            TimesheetDao.createMissingTimesheetReport(TimesheetReport.Type.WEEKLY, a);
+            TimesheetDao.createMissingTimesheetReport(TimesheetReport.Type.WEEKLY, a, this.getPreferenceManagerPlugin());
         }
 
-        List<TimesheetReport> lateReports = TimesheetDao.getTimesheetReportLateAsListByManager(actorId);
+        List<TimesheetReport> lateReports = TimesheetDao.getTimesheetReportLateAsListByManager(actorId, this.getPreferenceManagerPlugin());
 
         List<TimesheetReportListView> lateReportListView = new ArrayList<TimesheetReportListView>();
         for (TimesheetReport r : lateReports) {
@@ -1044,5 +1047,12 @@ public class CockpitController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the preference manager plugin.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }
