@@ -1,14 +1,14 @@
 package framework.services.plugins;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import framework.security.ISecurityService;
 import framework.services.account.IUserAccount;
+import framework.services.ext.api.IExtensionDescriptor.IWidgetDescriptor;
+import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import models.framework_models.account.Principal;
 import models.framework_models.plugin.DashboardPage;
 import models.framework_models.plugin.DashboardWidget;
@@ -31,6 +33,7 @@ import play.libs.F.Promise;
  * The service which is managing the dashboards
  * @author Pierre-Yves Cloux
  */
+@Singleton
 public class DashboardServiceImpl implements IDashboardService {
     private static Logger.ALogger log = Logger.of(DashboardServiceImpl.class);
     private IPluginManagerService pluginManagerService;
@@ -54,7 +57,32 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public Long createNewWidget(WidgetCatalogEntry widgetCatalogEntry) throws DashboardException {
+    public List<WidgetCatalogEntry> getWidgetCatalog() throws DashboardException {
+        List<WidgetCatalogEntry> catalog=new ArrayList<>();
+        Map<Long, IPluginInfo> registeredPlugins=getPluginManagerService().getRegisteredPluginDescriptors();
+        if(registeredPlugins!=null){
+            for(Long pluginConfigurationId : registeredPlugins.keySet()){
+                IPluginInfo info=registeredPlugins.get(pluginConfigurationId);
+                Map<String, IWidgetDescriptor> widgetDescriptors=info.getDescriptor().getWidgetDescriptors();
+                if(widgetDescriptors!=null){
+                    for(String identifier : widgetDescriptors.keySet()){
+                        IWidgetDescriptor widgetDescriptor=widgetDescriptors.get(identifier);
+                        WidgetCatalogEntry entry=new WidgetCatalogEntry();
+                        entry.setPluginConfigurationId(pluginConfigurationId);
+                        entry.setPluginConfigurationName(info.getPluginConfigurationName());
+                        entry.setIdentifier(identifier);
+                        entry.setName(widgetDescriptor.getName());
+                        entry.setDescription(widgetDescriptor.getDescription());
+                        catalog.add(entry);
+                    }
+                }
+            }
+        }
+        return catalog;
+    }
+
+    @Override
+    public Long createNewWidget(Long dashboardPageId, String uid, WidgetCatalogEntry widgetCatalogEntry) throws DashboardException {
         return null;
     }
 
@@ -94,9 +122,9 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public Triple<String, Boolean, List<DashboardRowConfiguration>> getDashboardPageConfiguration(Long id, String uid) throws DashboardException {
+    public Triple<String, Boolean, List<DashboardRowConfiguration>> getDashboardPageConfiguration(Long dashboardPageId, String uid) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Request for dashboard page "+id+" configuration for user "+(uid==null?"current":uid));
+            log.debug("Request for dashboard page "+dashboardPageId+" configuration for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         String pageName=null;
@@ -104,10 +132,10 @@ public class DashboardServiceImpl implements IDashboardService {
         List<DashboardRowConfiguration> rows=null;
         Ebean.beginTransaction();
         try {
-            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", id).findUnique();
+            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", dashboardPageId).findUnique();
             if(dashboardPage==null || !userAccount.getUid().equals(dashboardPage.getPrincipal().uid)){
                 if(log.isDebugEnabled()){
-                    log.debug("No page found for id "+id+" and user "+userAccount.getUid());
+                    log.debug("No page found for id "+dashboardPageId+" and user "+userAccount.getUid());
                 }
                 return null;
             }
@@ -123,7 +151,7 @@ public class DashboardServiceImpl implements IDashboardService {
             Ebean.commitTransaction();
         } catch (Exception e) {
             Ebean.rollbackTransaction();
-            String message = String.format("No dashboard configuration page for ", id);
+            String message = String.format("No dashboard configuration page for %d", dashboardPageId);
             log.error(message, e);
             throw new DashboardException(message, e);
         } finally {
@@ -145,6 +173,9 @@ public class DashboardServiceImpl implements IDashboardService {
                 //Check if a home page is already defined and then change it
                 DashboardPage existingHomePage=DashboardPage.find.where().eq("principal.id", userAccount.getMafUid()).eq("isHome", true).findUnique();
                 if(existingHomePage!=null){
+                    if(log.isDebugEnabled()){
+                        log.debug("Found another home page "+existingHomePage.id+" updating");
+                    }
                     existingHomePage.isHome=false;
                     existingHomePage.save();
                 }
@@ -155,11 +186,14 @@ public class DashboardServiceImpl implements IDashboardService {
                 dashboardPage.layout=getMapper().writeValueAsBytes(config);
                 dashboardPage.principal=Principal.getPrincipalFromId(userAccount.getMafUid());
                 dashboardPage.save();
+                if(log.isDebugEnabled()){
+                    log.debug("Dashboard page has been created with id "+dashboardPage.id);
+                }
             }
             Ebean.commitTransaction();
         }catch (Exception e) {
             Ebean.rollbackTransaction();
-            String message = String.format("Cannot update dashboard page for user ");
+            String message = String.format("Cannot create a new dashboard page for user %s",uid);
             log.error(message, e);
             throw new DashboardException(message, e);
         } finally {
@@ -168,18 +202,18 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public void updateDashboardPageConfiguration(Long id, String uid, List<DashboardRowConfiguration> config) throws DashboardException {
+    public void updateDashboardPageConfiguration(Long dashboardPageId, String uid, List<DashboardRowConfiguration> config) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Updating dashboard page "+id+" for user "+(uid==null?"current":uid));
+            log.debug("Updating dashboard page "+dashboardPageId+" for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
         try {
-            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", id).findUnique();
+            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", dashboardPageId).findUnique();
             //Check the user is the right one
             if(dashboardPage==null || !userAccount.getUid().equals(dashboardPage.getPrincipal().uid)){
                 if(log.isDebugEnabled()){
-                    log.debug("No page found for id "+id+" and user "+userAccount.getUid());
+                    log.debug("No page found for id "+dashboardPageId+" and user "+userAccount.getUid());
                 }
                 return;
             }
@@ -192,7 +226,7 @@ public class DashboardServiceImpl implements IDashboardService {
             for(DashboardWidget dashboardWidget : dashboardPage.dashboardWidgets){
                 if(!newWidgetIds.contains(dashboardWidget.id)){
                     if(log.isDebugEnabled()){
-                        log.debug("The widget "+dashboardWidget.id+" hash been removed from the dashboard "+id);
+                        log.debug("The widget "+dashboardWidget.id+" hash been removed from the dashboard "+dashboardPageId);
                     }
                     //This is a widget which has been deleted (delete it from the database)
                     dashboardWidget.delete();
@@ -209,7 +243,7 @@ public class DashboardServiceImpl implements IDashboardService {
             Ebean.commitTransaction();
         }catch (Exception e) {
             Ebean.rollbackTransaction();
-            String message = String.format("Cannot update dashboard page ", id);
+            String message = String.format("Cannot update dashboard page %d", dashboardPageId);
             log.error(message, e);
             throw new DashboardException(message, e);
         } finally {
@@ -218,18 +252,18 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public void updateDashboardPageName(Long id, String uid, String name) throws DashboardException {
+    public void updateDashboardPageName(Long dashboardPageId, String uid, String name) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Updating dashboard page "+id+" for user "+(uid==null?"current":uid));
+            log.debug("Updating dashboard page "+dashboardPageId+" for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
         try {
-            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", id).findUnique();
+            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", dashboardPageId).findUnique();
             //Check the user is the right one
             if(dashboardPage==null || !userAccount.getUid().equals(dashboardPage.getPrincipal().uid)){
                 if(log.isDebugEnabled()){
-                    log.debug("No page found for id "+id+" and user "+userAccount.getUid());
+                    log.debug("No page found for id "+dashboardPageId+" and user "+userAccount.getUid());
                 }
                 return;
             }
@@ -238,7 +272,7 @@ public class DashboardServiceImpl implements IDashboardService {
             Ebean.commitTransaction();
         }catch (Exception e) {
             Ebean.rollbackTransaction();
-            String message = String.format("Cannot update dashboard page ", id);
+            String message = String.format("Cannot update dashboard page %d", dashboardPageId);
             log.error(message, e);
             throw new DashboardException(message, e);
         } finally {
@@ -247,18 +281,18 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public void setDashboardPageAsHome(Long id, String uid) throws DashboardException {
+    public void setDashboardPageAsHome(Long dashboardPageId, String uid) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Updating dashboard page "+id+" for user "+(uid==null?"current":uid));
+            log.debug("Updating dashboard page "+dashboardPageId+" for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
         try {            
-            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", id).findUnique();
+            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", dashboardPageId).findUnique();
             //Check the user is the right one
             if(dashboardPage==null || !userAccount.getUid().equals(dashboardPage.getPrincipal().uid)){
                 if(log.isDebugEnabled()){
-                    log.debug("No page found for id "+id+" and user "+userAccount.getUid());
+                    log.debug("No page found for id "+dashboardPageId+" and user "+userAccount.getUid());
                 }
                 return;
             }
@@ -275,7 +309,7 @@ public class DashboardServiceImpl implements IDashboardService {
             Ebean.commitTransaction();
         }catch (Exception e) {
             Ebean.rollbackTransaction();
-            String message = String.format("Cannot update dashboard page ", id);
+            String message = String.format("Cannot update dashboard page %d", dashboardPageId);
             log.error(message, e);
             throw new DashboardException(message, e);
         } finally {
@@ -284,25 +318,25 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public void deleteDashboardPage(Long id, String uid) throws DashboardException {
+    public void deleteDashboardPage(Long dashboardPageId, String uid) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Deleting dashboard page "+id+" for user "+(uid==null?"current":uid));
+            log.debug("Deleting dashboard page "+dashboardPageId+" for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
         try {
-            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", id).findUnique();
+            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", dashboardPageId).findUnique();
             //Check the user is the right one
             if(dashboardPage==null || !userAccount.getUid().equals(dashboardPage.getPrincipal().uid)){
                 if(log.isDebugEnabled()){
-                    log.debug("No page found for id "+id+" and user "+userAccount.getUid());
+                    log.debug("No page found for id "+dashboardPageId+" and user "+userAccount.getUid());
                 }
                 return;
             }
             dashboardPage.delete();
         }catch (Exception e) {
             Ebean.rollbackTransaction();
-            String message = String.format("Cannot delete dashboard page ", id);
+            String message = String.format("Cannot delete dashboard page %d", dashboardPageId);
             log.error(message, e);
             throw new DashboardException(message, e);
         } finally {
@@ -321,6 +355,7 @@ public class DashboardServiceImpl implements IDashboardService {
             }catch(Exception e){
                 throw new DashboardException("Unable to retreive the pages of the specified user",e);
             }
+        if(userAccount==null) throw new DashboardException("No user account available, cannot proceed with the requested operation");
         return userAccount;
     }
 

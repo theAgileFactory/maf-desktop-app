@@ -1,9 +1,13 @@
 package framework.services.plugins;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.framework_models.plugin.DashboardRowTemplate;
 
@@ -14,6 +18,23 @@ import models.framework_models.plugin.DashboardRowTemplate;
 public interface IDashboardService {
     public static final Long NO_WIDGET_ID=-1l;
     
+    /**
+     * Return the currently available widgets
+     * @return a list of catalog entry
+     * @throws DashboardException
+     */
+    public List<WidgetCatalogEntry> getWidgetCatalog() throws DashboardException;
+    
+    /**
+     * Creates a new widget from the widget catalog entry
+     * and return its unique id.<br/>
+     * This throws an exception of this widget entry is not consistent.
+     * @param dashboardPageId the id of the dashboard page
+     * @param uid the UID of a user or null (if null the current user is used)
+     * @param widgetCatalogEntry an entry of the widget catalog (list of active and available widgets)
+     */
+    public Long createNewWidget(Long dashboardPageId, String uid, WidgetCatalogEntry widgetCatalogEntry) throws DashboardException;
+
     /**
      * Return the ordered list of dashboard pages for a named user.<br/>
      * This is a list of tuples:
@@ -35,41 +56,41 @@ public interface IDashboardService {
      * <li>[2] true if the page is the user home page (default displayed)</li>
      * <li>[3] the page content configuration</li>
      * </ul>
-     * @param id a unique dashboard page Id
+     * @param dashboardPageId a unique dashboard page Id
      * @param uid the UID of a user or null (if null the current user is used)
      * @return 
      */
-    public Triple<String, Boolean, List<DashboardRowConfiguration>> getDashboardPageConfiguration(Long id, String uid) throws DashboardException;
+    public Triple<String, Boolean, List<DashboardRowConfiguration>> getDashboardPageConfiguration(Long dashboardPageId, String uid) throws DashboardException;
     
     /**
      * Update the configuration of the dashboard page.<br/>
      * The code must check if the specified dashboard page belongs to the specified user.
-     * @param id the id of the dashboard page
+     * @param dashboardPageId the id of the dashboard page
      * @param uid the UID of a user or null (if null the current user is used)
      * @param config the page configuration
      * @throws DashboardException
      */
-    public void updateDashboardPageConfiguration(Long id, String uid, List<DashboardRowConfiguration> config) throws DashboardException;
+    public void updateDashboardPageConfiguration(Long dashboardPageId, String uid, List<DashboardRowConfiguration> config) throws DashboardException;
     
     /**
      * Update the name of a dashboard page.<br/>
      * The code must check if the specified dashboard page belongs to the specified user.
-     * @param id the id of the dashboard page
+     * @param dashboardPageId the id of the dashboard page
      * @param uid the UID of a user or null (if null the current user is used)
      * @param name the name of the page to be updated
      * @throws DashboardException
      */
-    public void updateDashboardPageName(Long id, String uid, String name) throws DashboardException;
+    public void updateDashboardPageName(Long dashboardPageId, String uid, String name) throws DashboardException;
     
     
     /**
      * Set the specified page as home.<br/>
      * The code must check if the specified dashboard page belongs to the specified user.
-     * @param id the id of the dashboard page
+     * @param dashboardPageId the id of the dashboard page
      * @param uid the UID of a user or null (if null the current user is used)
      * @throws DashboardException
      */
-    public void setDashboardPageAsHome(Long id, String uid) throws DashboardException;
+    public void setDashboardPageAsHome(Long dashboardPageId, String uid) throws DashboardException;
     
     
     /**
@@ -85,19 +106,12 @@ public interface IDashboardService {
     /**
      * Delete the configuration of the dashboard page.<br/>
      * The code must check if the specified dashboard page belongs to the specified user.
-     * @param id the id of the dashboard page
+     * @param dashboardPageId the id of the dashboard page
      * @param uid the UID of a user or null (if null the current user is used)
      * @throws DashboardException
      */
-    public void deleteDashboardPage(Long id, String uid) throws DashboardException;
+    public void deleteDashboardPage(Long dashboardPageId, String uid) throws DashboardException;
     
-    
-    /**
-     * Creates a new widget from the widget catalog entry
-     * and return its unique id.<br/>
-     * This throws an exception of this widget entry is not consistent.
-     */
-    public Long createNewWidget(WidgetCatalogEntry widgetCatalogEntry) throws DashboardException;
     
     /**
      * A data structure which represents a dashboard row configuration.<br/>
@@ -110,7 +124,7 @@ public interface IDashboardService {
      */
     public static class DashboardRowConfiguration{        
         private DashboardRowTemplate layout;
-        private List<Long> widgetIds;
+        private List<WidgetConfiguration> widgetConfigs;
         
         public DashboardRowConfiguration() {
             super();
@@ -122,11 +136,39 @@ public interface IDashboardService {
         public void setLayout(DashboardRowTemplate layout) {
             this.layout = layout;
         }
-        public List<Long> getWidgetIds() {
+        public List<WidgetConfiguration> getWidgetConfigs() {
+            return widgetConfigs;
+        }
+        public void setWidgetConfigs(List<WidgetConfiguration> widgetConfigs) {
+            this.widgetConfigs = widgetConfigs;
+        }
+        
+        @JsonIgnore
+        public Set<Long> getWidgetIds(){
+            HashSet<Long> widgetIds=new HashSet<>();
+            if(widgetConfigs!=null){
+                for(WidgetConfiguration widgetConfig:widgetConfigs){
+                    widgetIds.add(widgetConfig.getId());
+                }
+            }
             return widgetIds;
         }
-        public void setWidgetIds(List<Long> widgetIds) {
-            this.widgetIds = widgetIds;
+        
+        public static class WidgetConfiguration{
+            private Long id;
+            private String url;
+            public Long getId() {
+                return id;
+            }
+            public void setId(Long id) {
+                this.id = id;
+            }
+            public String getUrl() {
+                return url;
+            }
+            public void setUrl(String url) {
+                this.url = url;
+            }
         }
     }
     

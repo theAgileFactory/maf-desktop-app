@@ -1,12 +1,20 @@
 package controllers.dashboard;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+
+import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import framework.services.plugins.IDashboardService;
+import framework.services.plugins.IDashboardService.DashboardRowConfiguration;
+import framework.services.plugins.IDashboardService.DashboardRowConfiguration.WidgetConfiguration;
 import models.framework_models.plugin.DashboardRowTemplate;
 import play.libs.F.Promise;
 import play.mvc.BodyParser;
@@ -20,7 +28,8 @@ import play.mvc.Result;
  *
  */
 public class DashboardController extends Controller {
-
+    @Inject
+    private IDashboardService dashboardService;
     private ObjectMapper objectMapper;
 
     /**
@@ -34,6 +43,28 @@ public class DashboardController extends Controller {
      * The index page.
      */
     public Result index() {
+        try {
+            byte[] out=objectMapper.writeValueAsBytes(dashboardService.getWidgetCatalog());
+            System.out.println("Catalog : "+new String(out));
+            
+            List<DashboardRowConfiguration> page=new ArrayList<>();
+            DashboardRowConfiguration dbc1=new DashboardRowConfiguration();
+            page.add(dbc1);
+            dbc1.setLayout(DashboardRowTemplate.TPL48_OL_2);
+            WidgetConfiguration wc1=new WidgetConfiguration();
+            wc1.setId(1l);
+            wc1.setUrl("http://www.google.com");
+            WidgetConfiguration wc2=new WidgetConfiguration();
+            wc1.setId(1l);
+            wc1.setUrl("http://www.google.com");
+            List<WidgetConfiguration> widgetConfig= Arrays.asList(wc1,wc2);
+            dbc1.setWidgetConfigs(widgetConfig);
+            dashboardService.createDashboardPage(null, "MyPage", true, page);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         return ok(views.html.dashboard.index.render());
     }
 

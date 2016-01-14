@@ -63,6 +63,8 @@ import framework.services.kpi.IKpiService;
 import framework.services.kpi.KpiServiceImpl;
 import framework.services.notification.DefaultNotificationManagerPlugin;
 import framework.services.notification.INotificationManagerPlugin;
+import framework.services.plugins.DashboardServiceImpl;
+import framework.services.plugins.IDashboardService;
 import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.PluginManagerServiceImpl;
@@ -193,6 +195,8 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IEmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(IBudgetTrackingService.class).to(BudgetTrackingServiceImpl.class).asEagerSingleton();
         bind(IPickerService.class).to(PickerServiceImpl.class).asEagerSingleton();
+        
+        bind(IDashboardService.class).to(DashboardServiceImpl.class).asEagerSingleton();
 
         // Initialize with a defined list of jobs
         List<IJobDescriptor> jobs = new ArrayList<>();
