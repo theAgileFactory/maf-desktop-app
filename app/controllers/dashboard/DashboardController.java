@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import framework.services.widgets.DashboardRowTemplate;
+import models.framework_models.plugin.DashboardRowTemplate;
 import play.libs.F.Promise;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -80,7 +80,7 @@ public class DashboardController extends Controller {
      * @return JSON structure
      */
     public Promise<Result> createNewWidget(String identifier) {
-        return Promise.promise(() -> ok(getObjectMapper().readTree("{ \"widgetId\" : 1}")));
+        return Promise.promise(() -> ok(getObjectMapper().readTree("{ \"widgetId\" : 1, \"widgetUrl\" : \"/dash/widget/display/1\"}")));
     }
 
     /**
