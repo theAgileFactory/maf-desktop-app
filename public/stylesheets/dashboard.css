@@ -1,0 +1,53 @@
+/* Dashboard stylesheet */
+._maf_widget_dashboard_row {}
+._maf_widget_dashboard_row_activated {
+	border-color: #bbb;
+	border: dashed 1px;
+	margin: 1em;
+	padding: 1em;
+}
+._maf_widget_dashboard_row_trash {
+	padding-bottom: 1em;
+	font-size: 1em;
+}
+._maf_widget_dashboard_row_trash_button {}
+._maf_widget_dashboard_row_add {
+	padding-top: 0.5em;
+	padding-bottom: 1em;
+	font-size: 1em;
+	clear: both;
+}
+._maf_widget_dashboard_row_add_button {}
+._maf_widget_widget_commands {}
+._maf_widget_widget_command_trash {}
+._maf_widget_widget_command_configure {}
+._maf_widget_widget_command_display {}
+._maf_widget_dashboard_template_cell {
+	background-color: silver;
+	border: solid 1px;
+}
+._maf_widget_dashboard_template_row {
+	border-color: #ccc;
+	border: solid 1px;
+}
+._maf_widget_draggable {}
+._maf_widget_widget_area {}
+._maf_widget_widget {}
+._maf_widget_error {
+	margin: 1em;
+	padding: 1em;
+}
+._maf_widget_widget_placeholder {
+	background-color: silver;
+	border-color: #ccc;
+	border: dashed 1px;
+	border-radius: 5px;
+}
+._maf_widget_drop-active {
+	border-color: #aaa;
+	border: dashed 2px;
+	border-radius: 2px;
+}
+._maf_widget_drop-selected {
+	border-color: #ff0000;
+}
