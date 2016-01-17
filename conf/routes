@@ -2,12 +2,15 @@
 # Root module
 #-------------------
 
-GET    /dash                          controllers.dashboard.DashboardController.index()
-GET    /dash/widget/display/:id       controllers.dashboard.DashboardController.displayWidget(id: Long)
-GET    /dash/widget/edit/:id          controllers.dashboard.DashboardController.editWidget(id: Long)
-GET    /dash/widget/new/:identifier   controllers.dashboard.DashboardController.createNewWidget(identifier: String)
-GET    /dash/row/:templateIdentifier  controllers.dashboard.DashboardController.createNewRow(templateIdentifier: String)
-POST   /dash/update                   controllers.dashboard.DashboardController.updateDashboardPage()
+#Dashboard
+GET    /dash/open/:id            		    controllers.dashboard.DashboardController.index(id: Long)
+GET    /dash/configure/:id            		controllers.dashboard.DashboardController.configure(id: Long)
+GET    /dash/widget/catalog                 controllers.dashboard.DashboardController.getWidgetCatalog()
+POST   /dash/update                   		controllers.dashboard.DashboardController.updateDashboardPage()
+GET    /dash/widget/new/:id/:identifier   	controllers.dashboard.DashboardController.createNewWidget(id: Long, identifier: String)
+GET    /dash/row/new/:templateIdentifier    controllers.dashboard.DashboardController.createNewRow(templateIdentifier: String)
+
+GET    /dash/widget/display/:id             controllers.dashboard.DashboardController.displayWidget(id: Long)
 
 #Custom router method
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)

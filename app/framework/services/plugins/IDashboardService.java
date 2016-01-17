@@ -1,5 +1,6 @@
 package framework.services.plugins;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import models.framework_models.plugin.DashboardRowTemplate;
 
@@ -27,14 +29,25 @@ public interface IDashboardService {
     
     /**
      * Creates a new widget from the widget catalog entry
-     * and return its unique id.<br/>
+     * and return its unique id as well as its display URL.<br/>
      * This throws an exception of this widget entry is not consistent.
      * @param dashboardPageId the id of the dashboard page
      * @param uid the UID of a user or null (if null the current user is used)
      * @param widgetCatalogEntry an entry of the widget catalog (list of active and available widgets)
+     * @param widgetTitle a title for the widget (as displayed in the widget header)
      */
-    public Long createNewWidget(Long dashboardPageId, String uid, WidgetCatalogEntry widgetCatalogEntry) throws DashboardException;
+    public Pair<Long,String> createNewWidget(Long dashboardPageId, String uid, WidgetCatalogEntry widgetCatalogEntry, String widgetTitle) throws DashboardException;
 
+    /**
+     * Delete a new widget from a dashboard page.
+     * This throws an exception of this widget entry is not consistent.
+     * @param dashboardPageId the id of the dashboard page
+     * @param uid the UID of a user or null (if null the current user is used)
+     * @param widgetId the unique id of the widget to be deleted
+     */
+    public void removeWidget(Long dashboardPageId, String uid, Long widgetId) throws DashboardException;
+
+    
     /**
      * Return the ordered list of dashboard pages for a named user.<br/>
      * This is a list of tuples:
@@ -99,9 +112,10 @@ public interface IDashboardService {
      * @param name the name/title of the page
      * @param isHome true if the page is the home page of the dashboard
      * @param config the page configuration
+     * @return the unique id of the dashboard page
      * @throws DashboardException
      */
-    public void createDashboardPage(String uid, String name, Boolean isHome, List<DashboardRowConfiguration> config) throws DashboardException;
+    public Long createDashboardPage(String uid, String name, Boolean isHome, List<DashboardRowConfiguration> config) throws DashboardException;
     
     /**
      * Delete the configuration of the dashboard page.<br/>
@@ -124,7 +138,7 @@ public interface IDashboardService {
      */
     public static class DashboardRowConfiguration{        
         private DashboardRowTemplate layout;
-        private List<WidgetConfiguration> widgetConfigs;
+        private List<WidgetConfiguration> widgets;
         
         public DashboardRowConfiguration() {
             super();
@@ -136,18 +150,18 @@ public interface IDashboardService {
         public void setLayout(DashboardRowTemplate layout) {
             this.layout = layout;
         }
-        public List<WidgetConfiguration> getWidgetConfigs() {
-            return widgetConfigs;
+        public List<WidgetConfiguration> getWidgets() {
+            return widgets;
         }
-        public void setWidgetConfigs(List<WidgetConfiguration> widgetConfigs) {
-            this.widgetConfigs = widgetConfigs;
+        public void setWidgets(List<WidgetConfiguration> widgets) {
+            this.widgets = widgets;
         }
         
         @JsonIgnore
         public Set<Long> getWidgetIds(){
             HashSet<Long> widgetIds=new HashSet<>();
-            if(widgetConfigs!=null){
-                for(WidgetConfiguration widgetConfig:widgetConfigs){
+            if(widgets!=null){
+                for(WidgetConfiguration widgetConfig:widgets){
                     widgetIds.add(widgetConfig.getId());
                 }
             }
@@ -157,6 +171,15 @@ public interface IDashboardService {
         public static class WidgetConfiguration{
             private Long id;
             private String url;
+            
+            public WidgetConfiguration() {
+                super();
+            }
+            public WidgetConfiguration(Long id, String url) {
+                super();
+                this.id = id;
+                this.url = url;
+            }
             public Long getId() {
                 return id;
             }
@@ -219,6 +242,11 @@ public interface IDashboardService {
         }
         public void setDescription(String description) {
             this.description = description;
+        }
+        @Override
+        public String toString() {
+            return "WidgetCatalogEntry [pluginConfigurationName=" + pluginConfigurationName + ", pluginConfigurationId=" + pluginConfigurationId
+                    + ", identifier=" + identifier + ", name=" + name + ", description=" + description + "]";
         }
     }
 }

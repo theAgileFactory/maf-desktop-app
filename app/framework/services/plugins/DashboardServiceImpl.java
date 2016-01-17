@@ -23,9 +23,10 @@ import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import models.framework_models.account.Principal;
 import models.framework_models.plugin.DashboardPage;
 import models.framework_models.plugin.DashboardWidget;
+import models.framework_models.plugin.DashboardWidgetColor;
+import models.framework_models.plugin.PluginConfiguration;
 import play.Configuration;
 import play.Logger;
-import play.cache.CacheApi;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
 
@@ -37,15 +38,13 @@ import play.libs.F.Promise;
 public class DashboardServiceImpl implements IDashboardService {
     private static Logger.ALogger log = Logger.of(DashboardServiceImpl.class);
     private IPluginManagerService pluginManagerService;
-    private CacheApi cacheApi;
     private ISecurityService securityService;
     private ObjectMapper mapper;
     
     @Inject
-    public DashboardServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IPluginManagerService pluginManagerService, CacheApi cacheApi, ISecurityService securityService) {
+    public DashboardServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IPluginManagerService pluginManagerService, ISecurityService securityService) {
         log.info("SERVICE>>> DashboardServiceImpl starting...");
         this.pluginManagerService=pluginManagerService;
-        this.cacheApi=cacheApi;
         this.securityService=securityService;
         this.mapper=new ObjectMapper();
         lifecycle.addStopHook(() -> {
@@ -82,8 +81,87 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public Long createNewWidget(Long dashboardPageId, String uid, WidgetCatalogEntry widgetCatalogEntry) throws DashboardException {
-        return null;
+    public Pair<Long, String> createNewWidget(Long dashboardPageId, String uid, WidgetCatalogEntry widgetCatalogEntry, String widgetTitle) throws DashboardException {
+        if(log.isDebugEnabled()){
+            log.debug("Creating widget "+widgetCatalogEntry+" for user "+(uid==null?"current":uid));
+        }
+        IUserAccount userAccount = getUserAccount(uid);
+        
+        Pair<Long, String> widgetConfig=null;
+        Ebean.beginTransaction();
+        try {
+            DashboardPage dashboardPage=DashboardPage.find.where().eq("id", dashboardPageId).findUnique();
+            if(dashboardPage==null || !userAccount.getUid().equals(dashboardPage.getPrincipal().uid)){
+                if(log.isDebugEnabled()){
+                    log.debug("No page found for id "+dashboardPageId+" and user "+userAccount.getUid());
+                }
+                return null;
+            }
+            if(log.isDebugEnabled()){
+                log.debug("Trying to find an active widget "+widgetCatalogEntry);
+            }
+            IPluginInfo info=getPluginManagerService().getRegisteredPluginDescriptors().get(widgetCatalogEntry.getPluginConfigurationId());
+            if(log.isDebugEnabled()){
+                log.debug("Found an active plugin with id "+widgetCatalogEntry.getPluginConfigurationId());
+            }
+            IWidgetDescriptor widgetDescriptor=info.getDescriptor().getWidgetDescriptors().get(widgetCatalogEntry.getIdentifier());
+            if(log.isDebugEnabled()){
+                log.debug("Widget "+widgetCatalogEntry+" found, creating the widget entry");
+            }
+            DashboardWidget widget=new DashboardWidget();
+            widget.color=DashboardWidgetColor.PRIMARY.name();
+            widget.dashboardPage=dashboardPage;
+            widget.identifier=widgetDescriptor.getIdentifier();
+            widget.pluginConfiguration=PluginConfiguration.getPluginById(widgetCatalogEntry.getPluginConfigurationId());
+            widget.title=widgetTitle;
+            widget.config=null;
+            widget.save();
+            if(log.isDebugEnabled()){
+                log.debug("Widget "+widgetCatalogEntry+" created with id "+widget.id);
+            }
+            String widgetUrl=info.getLinkToDisplayWidget(widgetDescriptor.getIdentifier(), widget.id);
+            if(log.isDebugEnabled()){
+                log.debug("Widget "+widget.id+" is associated with display url "+widgetUrl);
+            }
+            widgetConfig=Pair.of(widget.id, widgetUrl);
+            Ebean.commitTransaction();
+        } catch (Exception e) {
+            Ebean.rollbackTransaction();
+            String message = String.format("Error while creating the widget "+widgetCatalogEntry+" for user uid=%s", userAccount.getUid());
+            log.error(message, e);
+            throw new DashboardException(message, e);
+        } finally {
+            Ebean.endTransaction();
+        }
+        return widgetConfig;
+    }
+
+
+    @Override
+    public void removeWidget(Long dashboardPageId, String uid, Long widgetId) throws DashboardException {
+        if(log.isDebugEnabled()){
+            log.debug("Request for dashboard pages for user "+(uid==null?"current":uid));
+        }
+        IUserAccount userAccount = getUserAccount(uid);
+        
+        Ebean.beginTransaction();
+        try {
+            DashboardWidget widget=DashboardWidget.find.where().eq("id", dashboardPageId).eq("dashboardPage.id", dashboardPageId).findUnique();
+            if(widget!=null){
+                if(log.isDebugEnabled()){
+                    log.debug("Found a widget with id "+widgetId+" in dashboard page "+dashboardPageId+" : deleting");
+                }
+                widget.delete();
+            }
+            Ebean.commitTransaction();
+        } catch (Exception e) {
+            Ebean.rollbackTransaction();
+            String message = String.format("Error while getting the dashboard configuration for account uid=%s", userAccount.getUid());
+            log.error(message, e);
+            throw new DashboardException(message, e);
+        } finally {
+            Ebean.endTransaction();
+        }
     }
 
     @Override
@@ -161,13 +239,14 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public void createDashboardPage(String uid, String name, Boolean isHome, List<DashboardRowConfiguration> config)
+    public Long createDashboardPage(String uid, String name, Boolean isHome, List<DashboardRowConfiguration> config)
             throws DashboardException {
         if(log.isDebugEnabled()){
             log.debug("Creating dashboard page for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
+        Long dashboardPageId=null;
         try {
             if(isHome){
                 //Check if a home page is already defined and then change it
@@ -189,6 +268,7 @@ public class DashboardServiceImpl implements IDashboardService {
                 if(log.isDebugEnabled()){
                     log.debug("Dashboard page has been created with id "+dashboardPage.id);
                 }
+                dashboardPageId=dashboardPage.id;
             }
             Ebean.commitTransaction();
         }catch (Exception e) {
@@ -199,6 +279,7 @@ public class DashboardServiceImpl implements IDashboardService {
         } finally {
             Ebean.endTransaction();
         }
+        return dashboardPageId;
     }
 
     @Override
@@ -361,10 +442,6 @@ public class DashboardServiceImpl implements IDashboardService {
 
     private IPluginManagerService getPluginManagerService() {
         return pluginManagerService;
-    }
-
-    private CacheApi getCacheApi() {
-        return cacheApi;
     }
 
     private ISecurityService getSecurityService() {

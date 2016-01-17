@@ -1,3 +1,5 @@
+@(dashboardPageId: Long, configureUrl: String)
+
 @import framework_views.parts
 @import helper._
 @import bootstrap3._
@@ -9,90 +11,202 @@
     )
 ){
 <script src="@routes.Assets.versioned("javascripts/interact.js")"></script>
-<style>
-.draggable{}
-.widget_area{}
-.widget{}
-.drop-active{
-	border-color: #aaa;
-	border: dashed 4px;
-	border-radius: 4px;
-}
-</style>
+<script src="@routes.Assets.versioned("javascripts/dashboard.js")"></script>
+<link href="@routes.Assets.versioned("stylesheets/dashboard.css")" type="text/css" rel="stylesheet">
 }{
-<div class="row test">
+<div class="row">
 	<div class="col-md-6">
 		<div class="btn-group" data-toggle="buttons">
-		  <label class="btn btn-primary active">
-		    <input type="radio" name="options" id="option1" autocomplete="off" checked> Page A
-		  </label>
-		  <label class="btn btn-primary">
-		    <input type="radio" name="options" id="option2" autocomplete="off"> Page B
-		  </label>
-		  <label class="btn btn-primary">
-		    <input type="radio" name="options" id="option3" autocomplete="off"> Page C
-		  </label>
+			<label class="btn btn-primary active"> <input type="radio"
+				name="options" id="option1" autocomplete="off" checked>
+				Page A
+			</label> <label class="btn btn-primary"> <input type="radio"
+				name="options" id="option2" autocomplete="off"> Page B
+			</label> <label class="btn btn-primary"> <input type="radio"
+				name="options" id="option3" autocomplete="off"> Page C
+			</label>
 		</div>
 	</div>
 	<div class="col-md-6">
-		<p class="text-right"><a class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit page</a></p>
+		<p class="text-right">
+			<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
+				page</a>
+		</p>
 	</div>
 </div>
 <div class="row">
-  <div id="workspace" class="col-md-12">
-  	<!-- Page wide widget -->
-  	<div class="row">
-  		<div id="widget1" class="col-md-12 widget_area">
-  		</div>
-  	</div>
-    <!-- Two widgets -->
-  	<div class="row">
-  		<div id="widget2" class="col-md-6 widget_area">
-  		</div>
-  		<div id="widget3" class="col-md-6 widget_area">
-  		</div>
-  	</div>
-  </div>
+	<div id="workspace" class="col-md-12">
+		<!-- Page wide widget -->
+		<div class="row _maf_widget_dashboard_row">
+			<div class="col-md-12 _maf_widget_widget_area"></div>
+		</div>
+		<!-- Two widgets -->
+		<div class="row _maf_widget_dashboard_row">
+			<div class="col-md-6 _maf_widget_widget_area"></div>
+			<div class="col-md-6 _maf_widget_widget_area"></div>
+		</div>
+		<!-- Three widgets -->
+		<div class="row _maf_widget_dashboard_row">
+			<div class="col-md-4 _maf_widget_widget_area"></div>
+			<div class="col-md-4 _maf_widget_widget_area"></div>
+			<div class="col-md-4 _maf_widget_widget_area"></div>
+		</div>
+	</div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){
-	loadWidget($('#widget1'));
-	loadWidget($('#widget2'));
-	
-	interact('.widget_area').dropzone({
-		overlap: 0.75,
-		ondropactivate: function (event) {
-		    event.target.classList.add('drop-active');
-		  },
-		  ondragenter: function (event) {
-		  },
-		  ondragleave: function (event) {
-		  },
-		  ondrop: function (event) {
-		  },
-		  ondropdeactivate: function (event) {
-		  }
-	});
-});
-
-function loadWidget(snapingArea){
-	snapingArea.html('<div>... Pending ...</div>');
-	var jqxhr = $.get("/dash/widget", function(data) {
-		snapingArea.html(data);
-		interact('.draggable').draggable();
-		}).fail(function() {
-			snapingArea.html('<div>ERROR</div>');
+	var _dashboardServiceInstance={};
+	$(document).ready(function() {
+		_dashboardServiceInstance=new _maf_widget_dashboardService(@dashboardPageId, "@configureUrl");
+		_dashboardServiceInstance.refresh(function (){
+			//Add the widgets to the dashboard page
+			var rowIndex=0;
+			$("._maf_widget_dashboard_row").each(function(){
+				var widgetIndex=0;
+				var rowConfig=_dashboardServiceInstance.dashboardData[rowIndex];
+				$(this).children("._maf_widget_widget_area").each(function(){
+					var widget=rowConfig.widgets[widgetIndex];
+					if(widget.id!=-1){
+						_maf_widget_loadWidgetContent($(this), widget.url, function(){
+							_maf_widgets_toggleEdition(false);
+						});
+					}
+					widgetIndex++;
+				});
+				rowIndex++;
+			});
+			//Activate the edition mode selector
+			$("#_maf_widget_edition_mode").click(function(event){
+				event.preventDefault();
+				_dashboardServiceInstance.toggleEditonMode();
+			});
+			
+			//Dashboard row template selector
+			$('#dashboardRowTemplateSelectorCloseButton').click(function(event){
+				$('#dashboardRowTemplateSelector').modal('hide');
+			});
+			$('#dashboardRowTemplateSelectorAddButton').click(function(event){
+				var modal = $('#dashboardRowTemplateSelector');
+				modal.modal('hide');
+				var dashboardRowElement=modal.data("mafSourceDashboardRowElement");
+				var templateName=$("#dashboardRowTemplateSelector input:radio[name='dashboardRowOption']:checked").val();
+				_maf_widget_addDashboardRow(dashboardRowElement, templateName);
+			});
+			
+			//Widget catalog
+			$('#widgetCatalogCloseButton').click(function(){
+				$('#widgetCatalog').modal('hide');
+			});
+			$('#widgetCatalogAddButton').click(function(){
+				var modal = $('#widgetCatalog');
+				modal.modal('hide');
+				var widgetAreaElement=modal.data("mafSourceWidgetAreaElement");
+				var newWidgetIdentifier=$('#widgetCatalogSelect').val();
+				_maf_widget_addNewWdiget(widgetAreaElement, newWidgetIdentifier);
+			});
+			$('#widgetCatalogSelect').change(function(event){
+			    var optionSelected = $(this).find("option:selected");
+				var widgetCatalogEntryIdentifier  = optionSelected.val();
+				var widgetCatalogEntryName   = optionSelected.text();
+				$('#widgetCatalogEntryName').html(widgetCatalogEntryName);
+				$('#widgetCatalogEntryDescription').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].description);
+				$('#widgetCatalogEntryImage').html('<img src="'+_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].image+'"/>');
+			});
 		});
-}
-
-function getWidgetPanel(widgetTitle, widgetContent) {
-	var widgetPanel = '<div class="panel panel-info">';
-	widgetPanel = widgetPanel + '<div class="panel-heading">' + widgetTitle
-			+ '</div>';
-	widgetPanel = widgetPanel + '<div id="widget_2" class="panel-body ">';
-	widgetPanel = widgetPanel + '</div>';
-	widgetPanel = widgetPanel + '</div>';
-	return widgetPanel;
-}
+	});
 </script>
+
+<!-- The dashboard row template selector -->
+<div id="dashboardRowTemplateSelector" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Dashboard row template</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row" style="padding: 1em;">
+          <div class="col-md-12">
+          	<div class="radio">
+			  <label>
+			    <input type="radio" name="dashboardRowOption" value="TPL12COL_1" checked>
+			  </label>
+			</div>
+          </div>
+          <div class="col-md-12">
+          	<div class="row _maf_widget_dashboard_template_row">
+          		<div class="col-md-12 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          	</div>
+          </div>
+          <div class="col-md-12"><br/></div>
+        </div>
+        <div class="row" style="padding: 1em;">
+          <div class="col-md-12">
+          	<div class="radio">
+			  <label>
+			    <input type="radio" name="dashboardRowOption" value="TPL66COL_2">
+			  </label>
+			</div>
+          </div>
+          <div class="col-md-12">
+			<div class="row _maf_widget_dashboard_template_row">
+          		<div class="col-md-6 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          		<div class="col-md-6 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          	</div>
+          </div>
+          <div class="col-md-12"><br/></div>
+        </div>
+        <div class="row" style="padding: 1em;">
+          <div class="col-md-12">
+          	<div class="radio">
+			  <label>
+			    <input type="radio" name="dashboardRowOption"value="TPL444COL_3">
+			  </label>
+			</div>
+          </div>
+          <div class="col-md-12">
+			<div class="row _maf_widget_dashboard_template_row">
+          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          	</div>
+          </div>
+          <div class="col-md-12"><br/></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="dashboardRowTemplateSelectorCloseButton" class="btn btn-default">Close</button>
+        <button type="button" id="dashboardRowTemplateSelectorAddButton" class="btn btn-primary">Add row</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- The widget catalog -->
+<div id="widgetCatalog" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Widget catalog</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row" style="padding: 1em;">
+          <div class="col-md-6">
+          	<select id="widgetCatalogSelect" size="10" class="form-control">
+			</select>
+          </div>
+          <div class="col-md-6">
+          	<h4 id="widgetCatalogEntryName"></h4>
+          	<p style="font-style: italic;" id="widgetCatalogEntryDescription"></p>
+          	<p id="widgetCatalogEntryImage" class="text-center"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="widgetCatalogCloseButton" class="btn btn-default">Close</button>
+        <button type="button" id="widgetCatalogAddButton" class="btn btn-primary">Add widget</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 }
