@@ -124,54 +124,25 @@
         <h4 class="modal-title">Dashboard row template</h4>
       </div>
       <div class="modal-body">
+      	@for((template, index) <- models.framework_models.plugin.DashboardRowTemplate.values().zipWithIndex){
         <div class="row" style="padding: 1em;">
           <div class="col-md-12">
           	<div class="radio">
 			  <label>
-			    <input type="radio" name="dashboardRowOption" value="TPL12COL_1" checked>
+			    <input type="radio" name="dashboardRowOption" value="@template.name" @if(index==0){checked}>
 			  </label>
 			</div>
           </div>
           <div class="col-md-12">
           	<div class="row _maf_widget_dashboard_template_row">
-          		<div class="col-md-12 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          		@for(columnSize <- template.getColumnsSizes()){
+          		<div class="col-md-@columnSize _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+          		}
           	</div>
           </div>
           <div class="col-md-12"><br/></div>
         </div>
-        <div class="row" style="padding: 1em;">
-          <div class="col-md-12">
-          	<div class="radio">
-			  <label>
-			    <input type="radio" name="dashboardRowOption" value="TPL66COL_2">
-			  </label>
-			</div>
-          </div>
-          <div class="col-md-12">
-			<div class="row _maf_widget_dashboard_template_row">
-          		<div class="col-md-6 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
-          		<div class="col-md-6 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
-          	</div>
-          </div>
-          <div class="col-md-12"><br/></div>
-        </div>
-        <div class="row" style="padding: 1em;">
-          <div class="col-md-12">
-          	<div class="radio">
-			  <label>
-			    <input type="radio" name="dashboardRowOption"value="TPL444COL_3">
-			  </label>
-			</div>
-          </div>
-          <div class="col-md-12">
-			<div class="row _maf_widget_dashboard_template_row">
-          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
-          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
-          		<div class="col-md-4 _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
-          	</div>
-          </div>
-          <div class="col-md-12"><br/></div>
-        </div>
+        }
       </div>
       <div class="modal-footer">
         <button type="button" id="dashboardRowTemplateSelectorCloseButton" class="btn btn-default">Close</button>
