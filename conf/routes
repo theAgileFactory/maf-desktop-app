@@ -3,11 +3,12 @@
 #-------------------
 
 #Dashboard
-GET    /dash/open/:id            		    controllers.dashboard.DashboardController.index(id: Long)
+GET    /dash/error/:id/:message				controllers.dashboard.DashboardController.indexError(id: Long, message: String)
+GET    /dash/open            		        controllers.dashboard.DashboardController.index(id:  Long ?= 0)
 GET    /dash/configure/:id            		controllers.dashboard.DashboardController.configure(id: Long)
 GET    /dash/widget/catalog                 controllers.dashboard.DashboardController.getWidgetCatalog()
-POST   /dash/update                   		controllers.dashboard.DashboardController.updateDashboardPage()
-GET    /dash/widget/new/:id/:identifier   	controllers.dashboard.DashboardController.createNewWidget(id: Long, identifier: String)
+POST   /dash/update/:id                     controllers.dashboard.DashboardController.updateDashboardPage(id: Long)
+POST   /dash/widget/new/:id   	            controllers.dashboard.DashboardController.createNewWidget(id: Long)
 GET    /dash/row/new/:templateIdentifier    controllers.dashboard.DashboardController.createNewRow(templateIdentifier: String)
 
 GET    /dash/widget/display/:id             controllers.dashboard.DashboardController.displayWidget(id: Long)

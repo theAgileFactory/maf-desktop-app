@@ -109,7 +109,7 @@ public class DashboardServiceImpl implements IDashboardService {
                 log.debug("Widget "+widgetCatalogEntry+" found, creating the widget entry");
             }
             DashboardWidget widget=new DashboardWidget();
-            widget.color=DashboardWidgetColor.PRIMARY.name();
+            widget.color=DashboardWidgetColor.PRIMARY.getColor();
             widget.dashboardPage=dashboardPage;
             widget.identifier=widgetDescriptor.getIdentifier();
             widget.pluginConfiguration=PluginConfiguration.getPluginById(widgetCatalogEntry.getPluginConfigurationId());
@@ -165,13 +165,46 @@ public class DashboardServiceImpl implements IDashboardService {
     }
 
     @Override
-    public List<Pair<String, Long>> getDashboardPages(String uid) throws DashboardException {
+    public Long getHomeDashboardPageId(String uid) throws DashboardException {
         if(log.isDebugEnabled()){
             log.debug("Request for dashboard pages for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         
-        List<Pair<String, Long>> dashboardConfig=null;
+        Long dashboardPageId=null;
+        Ebean.beginTransaction();
+        try {
+            DashboardPage dashboardHomePage=DashboardPage.find.where().eq("principal.id", userAccount.getMafUid()).eq("isHome", true).findUnique();
+            if(dashboardHomePage!=null){
+                dashboardPageId=dashboardHomePage.id;
+                if(log.isDebugEnabled()){
+                    log.debug("Found "+dashboardPageId+" home page for user "+userAccount.getUid());
+                }
+            }else{
+                if(log.isDebugEnabled()){
+                    log.debug("Found no home page for user "+userAccount.getUid());
+                }
+            }
+            Ebean.commitTransaction();
+        } catch (Exception e) {
+            Ebean.rollbackTransaction();
+            String message = String.format("Error while getting the dashboard configuration for account uid=%s", userAccount.getUid());
+            log.error(message, e);
+            throw new DashboardException(message, e);
+        } finally {
+            Ebean.endTransaction();
+        }
+        return dashboardPageId;
+    }
+
+    @Override
+    public List<Triple<String, Boolean, Long>> getDashboardPages(String uid) throws DashboardException {
+        if(log.isDebugEnabled()){
+            log.debug("Request for dashboard pages for user "+(uid==null?"current":uid));
+        }
+        IUserAccount userAccount = getUserAccount(uid);
+        
+        List<Triple<String, Boolean, Long>> dashboardConfig=null;
         Ebean.beginTransaction();
         try {
             List<DashboardPage> dashboardPages=DashboardPage.find.where().eq("principal.id", userAccount.getMafUid()).findList();
@@ -184,7 +217,7 @@ public class DashboardServiceImpl implements IDashboardService {
                     if(log.isDebugEnabled()){
                         log.debug("Found dashboard page "+dashboardPage.name+" with id "+dashboardPage.id);
                     }
-                    dashboardConfig.add(Pair.of(dashboardPage.name, dashboardPage.id));
+                    dashboardConfig.add(Triple.of(dashboardPage.name, dashboardPage.isHome, dashboardPage.id));
                 }
             }
             Ebean.commitTransaction();
@@ -314,6 +347,8 @@ public class DashboardServiceImpl implements IDashboardService {
                 }
                 newWidgetIds.remove(dashboardWidget.id);
             }
+            //Remove the "empty" widgets
+            newWidgetIds.remove(-1l);
             //Check if there are some unknown widget ids
             if(newWidgetIds.size()>0){
                 throw new DashboardException("Unknown widgets in the dashboard update set "+newWidgetIds);

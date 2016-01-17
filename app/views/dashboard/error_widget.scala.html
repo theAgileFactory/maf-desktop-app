@@ -1,0 +1,8 @@
+@(id: Long)
+@widget(id, "Unable to load the widget"){
+	<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;Unable to load the widget</div>
+	<script type="text/javascript">
+	bizdock_widget_addEventListener(@id, function(event){
+	});
+	</script>
+}

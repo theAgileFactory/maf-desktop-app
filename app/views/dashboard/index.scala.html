@@ -1,4 +1,10 @@
-@(dashboardPageId: Long, configureUrl: String)
+@(currentDashboardPageId: Long, 
+	currentDashboardPageIsHome: Boolean, 
+	currentDashboardPageName: String, 
+	currentDashboardPageConfiguration: List[framework.services.plugins.IDashboardService.DashboardRowConfiguration], 
+	dashboardPages: List[org.apache.commons.lang3.tuple.Triple[String, Boolean, Long]],
+	configureUrl: String,
+	errorUrl: String)
 
 @import framework_views.parts
 @import helper._
@@ -17,14 +23,22 @@
 <div class="row">
 	<div class="col-md-6">
 		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-primary active"> <input type="radio"
-				name="options" id="option1" autocomplete="off" checked>
-				Page A
-			</label> <label class="btn btn-primary"> <input type="radio"
-				name="options" id="option2" autocomplete="off"> Page B
-			</label> <label class="btn btn-primary"> <input type="radio"
-				name="options" id="option3" autocomplete="off"> Page C
-			</label>
+			@for(pair <- dashboardPages){
+				@if(pair.getMiddle()){
+				<label class="btn btn-primary active"> <input type="radio"
+					name="options" id="page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked}>
+					@pair.getLeft()
+				</label>
+				}
+			}
+			@for(pair <- dashboardPages){
+				@if(!pair.getMiddle()){
+				<label class="btn btn-primary active"> <input type="radio"
+					name="options" id="page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked}>
+					@pair.getLeft()
+				</label>
+				}
+			}
 		</div>
 	</div>
 	<div class="col-md-6">
@@ -36,27 +50,20 @@
 </div>
 <div class="row">
 	<div id="workspace" class="col-md-12">
-		<!-- Page wide widget -->
-		<div class="row _maf_widget_dashboard_row">
-			<div class="col-md-12 _maf_widget_widget_area"></div>
-		</div>
-		<!-- Two widgets -->
-		<div class="row _maf_widget_dashboard_row">
-			<div class="col-md-6 _maf_widget_widget_area"></div>
-			<div class="col-md-6 _maf_widget_widget_area"></div>
-		</div>
-		<!-- Three widgets -->
-		<div class="row _maf_widget_dashboard_row">
-			<div class="col-md-4 _maf_widget_widget_area"></div>
-			<div class="col-md-4 _maf_widget_widget_area"></div>
-			<div class="col-md-4 _maf_widget_widget_area"></div>
-		</div>
+	&nbsp;
+	</div>
+</div>
+<div class="row">
+	<div id="workspace" class="col-md-12">
+		@for(rowConfig <- currentDashboardPageConfiguration){
+			@row(rowConfig.getLayout().getColumnsSizes())
+		}
 	</div>
 </div>
 <script type="text/javascript">
 	var _dashboardServiceInstance={};
 	$(document).ready(function() {
-		_dashboardServiceInstance=new _maf_widget_dashboardService(@dashboardPageId, "@configureUrl");
+		_dashboardServiceInstance=new _maf_widget_dashboardService(@currentDashboardPageId, "@configureUrl","@errorUrl");
 		_dashboardServiceInstance.refresh(function (){
 			//Add the widgets to the dashboard page
 			var rowIndex=0;
@@ -101,7 +108,7 @@
 				modal.modal('hide');
 				var widgetAreaElement=modal.data("mafSourceWidgetAreaElement");
 				var newWidgetIdentifier=$('#widgetCatalogSelect').val();
-				_maf_widget_addNewWdiget(widgetAreaElement, newWidgetIdentifier);
+				_maf_widget_addNewWidget(widgetAreaElement, _dashboardServiceInstance.loadedWidgetCatalog[newWidgetIdentifier]);
 			});
 			$('#widgetCatalogSelect').change(function(event){
 			    var optionSelected = $(this).find("option:selected");

@@ -47,18 +47,25 @@ public interface IDashboardService {
      */
     public void removeWidget(Long dashboardPageId, String uid, Long widgetId) throws DashboardException;
 
-    
     /**
-     * Return the ordered list of dashboard pages for a named user.<br/>
+     * Return the list of dashboard pages for a named user.<br/>
      * This is a list of tuples:
      * <ul>
      * <li>[1] the page title/name</li>
-     * <li>[2] the dashboard page id</li>
+     * <li>[2] true if the page is the user home page (default displayed)</li>
+     * <li>[3] the dashboard page id</li>
      * </ul>
      * @param uid the UID of a user or null (if null the current user is used)
      * @return 
      */
-    public List<Pair<String, Long>> getDashboardPages(String uid) throws DashboardException;
+    public List<Triple<String, Boolean, Long>> getDashboardPages(String uid) throws DashboardException;
+    
+    /**
+     * Return the id of the dashboard page.
+     * @param uid the UID of a user or null (if null the current user is used)
+     * @return 
+     */
+    public Long getHomeDashboardPageId(String uid) throws DashboardException;
     
     /**
      * Return the DashboardPage configuration for the specified id and the specified user.<br/>

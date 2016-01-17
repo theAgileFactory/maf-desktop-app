@@ -18,6 +18,10 @@
 	clear: both;
 }
 ._maf_widget_dashboard_row_add_button {}
+._maf_widget_widget {}
+._maf_widget_widget_message{}
+._maf_widget_widget_content {}
+._maf_widget_widget_link {}
 ._maf_widget_widget_commands {}
 ._maf_widget_widget_command_trash {}
 ._maf_widget_widget_command_configure {}
@@ -32,7 +36,6 @@
 }
 ._maf_widget_draggable {}
 ._maf_widget_widget_area {}
-._maf_widget_widget {}
 ._maf_widget_error {
 	margin: 1em;
 	padding: 1em;

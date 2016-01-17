@@ -1,7 +1,71 @@
 /**
- * The service which is managing the dashboard data
+ * The service which is managing the dashboard pages view and edition
  */
-function _maf_widget_dashboardService(dashboardPageId, configurationUrl){
+
+/**
+ * Register an event listener for a widget.<br/>
+ * This method is to be called by the widget developer.
+ */
+function bizdock_widget_addEventListener(widgetId, eventListener){
+	$('#maf_widget_widget_id_'+widgetId).ready(function (){
+		$('#maf_widget_widget_id_'+widgetId).on('maf.event.widget.'+widgetId, eventListener);
+		$('#maf_widget_widget_id_'+widgetId+' ._maf_widget_widget_link').click(function(event){
+			event.preventDefault();
+			var urlOfLink=$(this).attr('href');
+			_maf_widget_sendLinkEvent(widgetId, urlOfLink);
+		});
+	});
+}
+
+/**
+ * Display an error message in the message area of the widget
+ * - widgetId : the unique id of the widget
+ * - message : the success message
+ */
+function bizdock_widget_displaySuccessMessage(widgetId, message){
+	var msg='<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	msg=msg+message;
+	msg=msg+'</div>';
+	$('#maf_widget_widget_id_'+widgetId).find('._maf_widget_widget_message').html(msg);
+}
+
+/**
+ * Display an error message in the message area of the widget
+ * - widgetId : the unique id of the widget
+ * - message : the error message
+ */
+function bizdock_widget_displayErrorMessage(widgetId, message){
+	var msg='<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	msg=msg+message;
+	msg=msg+'</div>';
+	$('#maf_widget_widget_id_'+widgetId).find('._maf_widget_widget_message').html(msg);
+}
+
+/**
+ * A method to send an edition event (when the Edit button is pressed)
+ * @param widgetId a widget id
+ */
+function _maf_widget_sendEditEvent(widgetId){
+	var e = jQuery.Event('maf.event.widget.'+widgetId, { action: "EDIT"} );
+	$('#maf_widget_widget_id_'+widgetId).trigger(e);
+}
+
+/**
+ * A method to send a link event (when a link of class _maf_widget_widget_link is pressed)
+ * @param widgetId a widget id
+ * @param urlOfLink the URL of the link (to be provided with the url parameter of the event)
+ */
+function _maf_widget_sendLinkEvent(widgetId, urlOfLink){
+	var e = jQuery.Event('maf.event.widget.'+widgetId, { action: "LINK", url:  urlOfLink} );
+	$('#maf_widget_widget_id_'+widgetId).trigger(e);
+}
+
+/**
+ * The main object which manages the dashboard system
+ */
+function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUrl){
+	//The URL to be redirected to if something harmfull and unexpected happen
+	this.errorUrl=errorUrl;
 	//The URL to get the configuration of the dashboard page
 	this.configurationUrl=configurationUrl;
 	//The dashbord page id
@@ -42,7 +106,8 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl){
 	 */
 	this.refresh=function(callback){
 		var currentObject=this;
-		var jqxhr = $.get(this.configurationUrl+this.dashboardPageId, function(data) {
+		var jqxhr = $.get(currentObject.configurationUrl, function(data) {
+			alert(JSON.stringify(data));
 			currentObject.maxNumberOfRows=data.maxNumberOfRows;
 			currentObject.createNewRowAjaxServiceUrl=data.createNewRowAjaxServiceUrl;
 			currentObject.createNewWidgetAjaxServiceUrl=data.createNewWidgetAjaxServiceUrl;
@@ -57,7 +122,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl){
 			currentObject.dashboardData=data.dashboardData;
 			callback();
 		}).fail(function() {
-			alert("ERROR");
+			window.location.replace(currentObject.errorUrl+"REFRESH");
 		});	
 	};
 	
@@ -275,7 +340,10 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 		$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_display" href="#"><i class="fa fa-square-o"></i></a>&nbsp;<a class="_maf_widget_widget_command_configure" href="#"><i class="fa fa-cog"></i></a>');
 		$("._maf_widget_widget_command_configure").click(function(event){
 			event.preventDefault();
-			alert("hop");
+			var widgetElement=$(this).closest("._maf_widget_widget");
+			//Format of the element id is maf_widget_widget_id_@id
+			var widgetId=widgetElement.attr('id').substring("maf_widget_widget_id_".length);
+			_maf_widget_sendEditEvent(widgetId);
 		});
 		$("._maf_widget_widget_command_display").click(function(event){
 			event.preventDefault();
@@ -483,19 +551,25 @@ function _maf_widget_addDashboardRow(dashboardRowElement, templateIdentifier){
 /**
  * Add a new widget to the dashboard created from the specified widget identifier
  * widgetAreaElement : a jQuery element, the place holder to welcome the widget content
- * newWidgetIdentifier : the identifier of the widget type to be created
+ * widgetCatalogEntry : an entry from the widget catalog
  */
-function _maf_widget_addNewWdiget(widgetAreaElement, newWidgetIdentifier){
+function _maf_widget_addNewWidget(widgetAreaElement, widgetCatalogEntry){
 	widgetAreaElement.html('<div><img src="'+_dashboardServiceInstance.ajaxWaitImage+'"/></div>');
-	var jqxhr = $.get(_dashboardServiceInstance.createNewWidgetAjaxServiceUrl+_dashboardServiceInstance.dashboardPageId+"/"+newWidgetIdentifier, function(data) {
-		_maf_widget_loadWidgetContent(widgetAreaElement, data.url, function(){
-			var widgetElement=widgetAreaElement.children(":first");
-			_dashboardServiceInstance.addWidget(widgetElement, data.id, data.url);
-			_maf_widgets_toggleEdition(true);
+	
+	maf_performPostJsonReceiveJson(
+		_dashboardServiceInstance.createNewWidgetAjaxServiceUrl,
+		JSON.stringify(widgetCatalogEntry),
+		function(data){
+			_maf_widget_loadWidgetContent(widgetAreaElement, data.url, function(){
+				var widgetElement=widgetAreaElement.children(":first");
+				_dashboardServiceInstance.addWidget(widgetElement, data.id, data.url);
+				_maf_widgets_toggleEdition(true);
+			});
+		},
+		function(){
+			alert(_dashboardServiceInstance.unableToLoadWidgetErrorMessage);
+			_dashboardServiceInstance.setPlaceHolderMessage(widgetAreaElement);
 		});
-	}).fail(function() {
-		widgetAreaElement.html('<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;'+_dashboardServiceInstance.unableToLoadWidgetErrorMessage+'</div>');
-	});
 }
 
 

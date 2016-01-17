@@ -8,30 +8,37 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import framework.services.plugins.DashboardException;
 import framework.services.plugins.IDashboardService;
 import framework.services.plugins.IDashboardService.DashboardRowConfiguration;
 import framework.services.plugins.IDashboardService.DashboardRowConfiguration.WidgetConfiguration;
+import framework.services.plugins.IDashboardService.WidgetCatalogEntry;
 import models.framework_models.plugin.DashboardRowTemplate;
+import play.Logger;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.dashboard.widget;
 
 /**
- * The controlle which deals with dashboards
+ * The controller which deals with dashboards.<br/>
  * 
  * @author Pierre-Yves Cloux
  *
  */
 @SubjectPresent
 public class DashboardController extends Controller {
+    private static Logger.ALogger log = Logger.of(DashboardController.class);
     @Inject
     private IDashboardService dashboardService;
     private ObjectMapper objectMapper;
@@ -43,8 +50,49 @@ public class DashboardController extends Controller {
         objectMapper = new ObjectMapper();
     }
     
+    /**
+     * Display the specified dashboard page
+     * @param dashboardPageId a unique dashboard page id
+     * @return
+     */
     public Result index(Long dashboardPageId){
-        return ok(views.html.dashboard.index.render(1l,routes.DashboardController.configure(1l).url()));
+        try{
+            List<Triple<String, Boolean, Long>> pages=getDashboardService().getDashboardPages(null);
+            if(pages==null || pages.size()==0){
+                //Creates a default home page
+                List<DashboardRowConfiguration> defaultConfig=new ArrayList<>();
+                DashboardRowConfiguration row=new DashboardRowConfiguration();
+                row.setLayout(DashboardRowTemplate.TPL12COL_1);
+                row.setWidgets(Arrays.asList(new WidgetConfiguration(-1l,null)));
+                defaultConfig.add(row);
+                getDashboardService().createDashboardPage(null, "Home", true, defaultConfig);
+                pages=getDashboardService().getDashboardPages(null);
+            }
+            if(dashboardPageId==0){
+                dashboardPageId=getDashboardService().getHomeDashboardPageId(null);
+            }
+            Triple<String, Boolean, List<DashboardRowConfiguration>> dashboardPageConfiguration=getDashboardService().getDashboardPageConfiguration(dashboardPageId, null);
+            return ok(views.html.dashboard.index.render(
+                dashboardPageId,
+                dashboardPageConfiguration.getMiddle(),
+                dashboardPageConfiguration.getLeft(),
+                dashboardPageConfiguration.getRight(),
+                pages,
+                routes.DashboardController.configure(dashboardPageId).url(),
+                routes.DashboardController.indexError(dashboardPageId,"").url()));
+        }catch(DashboardException e){
+            throw new RuntimeException(e);
+        }
+    }
+    
+    /**
+     * Display an unexpected error in case the dashboard cannot be displayed
+     * @param dashboardPageId a unique dashboard page id
+     * @param message a message to be logged
+     * @return
+     */
+    public Result indexError(Long dashboardPageId, String message){
+        throw new RuntimeException(new DashboardException("Unable to load the dashboard with id "+dashboardPageId+" : "+message));
     }
 
     /**
@@ -58,22 +106,21 @@ public class DashboardController extends Controller {
             return Promise.promise(new Function0<Result>() {
                 @Override
                 public Result apply() throws Throwable {
-                    DashboardPageConfiguration dpc=new DashboardPageConfiguration();
-                    List<DashboardRowConfiguration> list=new ArrayList<>();
-                    DashboardRowConfiguration drc1=new DashboardRowConfiguration();
-                    drc1.setLayout(DashboardRowTemplate.TPL12COL_1);
-                    drc1.setWidgets(Arrays.asList(new WidgetConfiguration(1l,"/dash/widget/display/1")));
-                    list.add(drc1);
-                    DashboardRowConfiguration drc2=new DashboardRowConfiguration();
-                    drc2.setLayout(DashboardRowTemplate.TPL66COL_2);
-                    drc2.setWidgets(Arrays.asList(new WidgetConfiguration(2l,"/dash/widget/display/2"), new WidgetConfiguration(-1l,null)));
-                    list.add(drc2);
-                    DashboardRowConfiguration drc3=new DashboardRowConfiguration();
-                    drc3.setLayout(DashboardRowTemplate.TPL444COL_3);
-                    drc3.setWidgets(Arrays.asList(new WidgetConfiguration(3l,"/dash/widget/display/3"), new WidgetConfiguration(-1l,null), new WidgetConfiguration(-1l,null)));
-                    list.add(drc3);
-                    dpc.setDashboardData(list);
-                    JsonNode node=getObjectMapper().valueToTree(dpc);
+                    Triple<String, Boolean, List<DashboardRowConfiguration>>  dashboardPageConfiguration=getDashboardService().getDashboardPageConfiguration(dashboardPageId, null);
+                    DashboardParameters parameters=new DashboardParameters();
+                    parameters.setDragWidgetMessage("Drag your widgets here or");
+                    parameters.setAddANewWidgetMessage("add a new widget");
+                    parameters.setConfirmDashboardRowRemoveMessage("Do you really want to delete this dashboard row as well as all the widgets which it includes ?");
+                    parameters.setConfirmWidgetRemoveMessage("Do you really want to remove this widget ?");
+                    parameters.setUnableToLoadWidgetErrorMessage("Unable to load the widget");
+                    parameters.setDashboardData(dashboardPageConfiguration.getRight());
+                    parameters.setMaxNumberOfRows(6);
+                    parameters.setAjaxWaitImage("/assets/images/ajax-loader.gif");
+                    parameters.setUpdateDashboardPageAjaxServiceUrl(routes.DashboardController.updateDashboardPage(dashboardPageId).url());
+                    parameters.setWidgetCatalogServiceUrl(routes.DashboardController.getWidgetCatalog().url());
+                    parameters.setCreateNewRowAjaxServiceUrl(routes.DashboardController.createNewRow("").url());
+                    parameters.setCreateNewWidgetAjaxServiceUrl(routes.DashboardController.createNewWidget(dashboardPageId).url());
+                    JsonNode node=getObjectMapper().valueToTree(parameters);
                     return ok(node);
                 }
             });
@@ -85,25 +132,42 @@ public class DashboardController extends Controller {
     /**
      * Update the dashboard page configuration.<br/>
      * This method expects a POST with a JSON structure.
-     * 
+     * @param dashboardPageId the unique id of a dashboard page
      * @return
      */
     @BodyParser.Of(BodyParser.Json.class)
-    public Promise<Result> updateDashboardPage() {
-        JsonNode json = request().body().asJson();
-        System.out.println("page : " + json);
-        return Promise.promise(() -> ok());
+    public Promise<Result> updateDashboardPage(Long dashboardPageId) {
+        try {
+            return Promise.promise(new Function0<Result>() {
+                @Override
+                public Result apply() throws Throwable {
+                    JsonNode json = request().body().asJson();
+                    List<DashboardRowConfiguration> dashboardPageConfiguration=getObjectMapper().readValue(json.toString(), new TypeReference<List<DashboardRowConfiguration>>() {});
+                    getDashboardService().updateDashboardPageConfiguration(dashboardPageId, null, dashboardPageConfiguration);
+                    return ok();
+                }
+            });
+        } catch (Exception e) {
+            return Promise.promise(() -> badRequest());
+        }
     }
     
     /**
-     * Return the widget catalog
+     * Return the widget catalog as JSON
      * @return
      */
     public Promise<Result> getWidgetCatalog(){
-        String catalog="[{\"identifier\": \"WG1\", \"name\" : \"Une super widget\", \"description\" : \"Widget de la mort qui tue<br/>Sans blague !\", \"image\": \"/assets/images/logo.png\"}"
-        +",{\"identifier\": \"WG2\", \"name\" : \"Cool la widget\", \"description\" : \"Widget qui le fait bien<br/>Ouais !\", \"image\": \"/assets/images/logo.png\"}"
-        +",{\"identifier\": \"WG3\", \"name\" : \"Top la widget\", \"description\" : \"Widget pas mal du tout<br/>Yesss !\", \"image\": \"/assets/images/logo.png\"}]";
-        return Promise.promise(() -> ok(getObjectMapper().readTree(catalog)));
+        try {
+            return Promise.promise(new Function0<Result>() {
+                @Override
+                public Result apply() throws Throwable {
+                    JsonNode node=getObjectMapper().valueToTree(getDashboardService().getWidgetCatalog());
+                    return ok(node);
+                }
+            });
+        } catch (Exception e) {
+            return Promise.promise(() -> badRequest());
+        }
     }
 
     /**
@@ -131,13 +195,37 @@ public class DashboardController extends Controller {
      * }
      * </pre>
      * 
+     * A POST parameter (as JSON is expected) : a widget entry.
+     * 
      * @param dashboardPageId the unique Id for the dashboard page which is to be associated with this widget
-     * @param identifier
-     *            a widget identifier
      * @return JSON structure
      */
-    public Promise<Result> createNewWidget(Long dashboardPageId, String identifier) {
-        return Promise.promise(() -> ok(getObjectMapper().readTree("{ \"id\" : 1, \"url\" : \"/dash/widget/display/1\"}")));
+    @BodyParser.Of(BodyParser.Json.class)
+    public Promise<Result> createNewWidget(Long dashboardPageId) {
+        try {
+            return Promise.promise(new Function0<Result>() {
+                @Override
+                public Result apply() throws Throwable {
+                    JsonNode json = request().body().asJson();
+                    WidgetCatalogEntry widgetCatalogEntry=getObjectMapper().readValue(json.toString(), WidgetCatalogEntry.class);
+                    Pair<Long, String> widgetConfig=getDashboardService().createNewWidget(dashboardPageId, null, widgetCatalogEntry, "A title");
+                    JsonNode node=getObjectMapper().readTree("{\"id\" : "+widgetConfig.getLeft()+",\"url\" : \""+widgetConfig.getRight()+"\"}");
+                    return ok(node);
+                }
+            });
+        } catch (Exception e) {
+            return Promise.promise(() -> badRequest());
+        }
+    }
+    
+    /**
+     * Return an error widget associated with the specified id
+     * @param id
+     *            a widget id
+     * @return an HTML widget part with a standard error message     
+     */
+    public Result getErrorWidget(Long id){
+        return ok(views.html.dashboard.error_widget.render(id));
     }
 
     /**
@@ -171,18 +259,18 @@ public class DashboardController extends Controller {
      * The data structure (to be serialized to JSON) provided to the dashboard javascript client
      * @author Pierre-Yves Cloux
      */
-    public static class DashboardPageConfiguration{
+    public static class DashboardParameters{
         private Integer maxNumberOfRows=6;
-        private String createNewRowAjaxServiceUrl="/dash/row/new/";
-        private String createNewWidgetAjaxServiceUrl="/dash/widget/new/";
-        private String updateDashboardPageAjaxServiceUrl="/dash/update";
-        private String widgetCatalogServiceUrl="/dash/widget/catalog";
-        private String ajaxWaitImage="/assets/images/ajax-loader.gif";
-        private String unableToLoadWidgetErrorMessage="Unable to load the widget";
-        private String confirmWidgetRemoveMessage="Do you really want to remove this widget ?";
-        private String confirmDashboardRowRemoveMessage="Do you really want to delete this dashboard row as well as all the widgets which it includes ?";
-        private String dragWidgetMessage="Drag your widgets here or";
-        private String addANewWidgetMessage="add a new widget";
+        private String createNewRowAjaxServiceUrl;
+        private String createNewWidgetAjaxServiceUrl;
+        private String updateDashboardPageAjaxServiceUrl;
+        private String widgetCatalogServiceUrl;
+        private String ajaxWaitImage;
+        private String unableToLoadWidgetErrorMessage;
+        private String confirmWidgetRemoveMessage;
+        private String confirmDashboardRowRemoveMessage;
+        private String dragWidgetMessage;
+        private String addANewWidgetMessage;
         private List<DashboardRowConfiguration> dashboardData;
         public Integer getMaxNumberOfRows() {
             return maxNumberOfRows;
