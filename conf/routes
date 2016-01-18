@@ -10,6 +10,8 @@ GET    /dash/widget/catalog                 controllers.dashboard.DashboardContr
 POST   /dash/update/:id                     controllers.dashboard.DashboardController.updateDashboardPage(id: Long)
 POST   /dash/widget/new/:id   	            controllers.dashboard.DashboardController.createNewWidget(id: Long)
 GET    /dash/row/new/:templateIdentifier    controllers.dashboard.DashboardController.createNewRow(templateIdentifier: String)
+GET    /dash/page/remove/:id                controllers.dashboard.DashboardController.deleteDashboardPage(id: Long)
+POST   /dash/page/add						controllers.dashboard.DashboardController.addNewDashboardPage()
 
 GET    /dash/widget/display/:id             controllers.dashboard.DashboardController.displayWidget(id: Long)
 
