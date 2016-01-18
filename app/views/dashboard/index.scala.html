@@ -44,12 +44,11 @@
 	<div class="col-md-6">
 		<p class="text-right">
 			@if(!currentDashboardPageIsHome){
-			<span style="display: none;" id="_maf_widget_currentPageIsHomeContainer"><input id="_maf_widget_currentPageIsHome" type="checkbox">Home page&nbsp;</span>
+			<span style="display: none;" id="_maf_widget_currentPageIsHomeContainer"><input id="_maf_widget_currentPageIsHome" type="checkbox">&nbsp;@parts.Msg("dashboard.page.ishome.button")&nbsp;</span>
 			}
-			<a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;New page</a>
-			<a id="_maf_widget_removePage" style="display: none;" class="btn btn-danger" href="#"><i class="fa fa-trash"></i>&nbsp;Delete page</a>
-			<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
-				page</a>
+			<a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;@parts.Msg("dashboard.page.new.button")</a>
+			<a id="_maf_widget_removePage" style="display: none;" class="btn btn-danger" href="#"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("dashboard.page.delete.button")</a>
+			<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;@parts.Msg("dashboard.page.edit.button")</a>
 		</p>
 	</div>
 </div>
@@ -157,7 +156,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Dashboard row template</h4>
+        <h4 class="modal-title">@parts.Msg("dashboard.row.template.selector.title")</h4>
       </div>
       <div class="modal-body">
       	@for((template, index) <- models.framework_models.plugin.DashboardRowTemplate.values().zipWithIndex){
@@ -181,8 +180,8 @@
         }
       </div>
       <div class="modal-footer">
-        <button type="button" id="_maf_widget_dashboardRowTemplateSelectorCloseButton" class="btn btn-default">Close</button>
-        <button type="button" id="_maf_widget_dashboardRowTemplateSelectorAddButton" class="btn btn-primary">Add row</button>
+        <button type="button" id="_maf_widget_dashboardRowTemplateSelectorCloseButton" class="btn btn-default">@parts.Msg("button.close")</button>
+        <button type="button" id="_maf_widget_dashboardRowTemplateSelectorAddButton" class="btn btn-primary">@parts.Msg("button.add")</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -193,8 +192,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Widget catalog</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="@parts.Msg("button.close")"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">@parts.Msg("dashboard.widget.catalog.title")</h4>
       </div>
       <div class="modal-body">
         <div class="row" style="padding: 1em;">
@@ -210,8 +209,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="_maf_widget_CatalogCloseButton" class="btn btn-default">Close</button>
-        <button type="button" id="_maf_widget_CatalogAddButton" class="btn btn-primary">Add widget</button>
+        <button type="button" id="_maf_widget_CatalogAddButton" class="btn btn-primary">@parts.Msg("button.add")</button>
+		<button type="button" id="_maf_widget_CatalogCloseButton" class="btn btn-default">@parts.Msg("button.close")</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -222,26 +221,27 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Add a new page</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="@parts.Msg("button.close")"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">@parts.Msg("dashboard.addpage.form.title")</h4>
       </div>
       <div class="modal-body">
       		<form>
       			  <div class="form-group">
-				    <label for="_maf_widget_AddNewPage_Name">Page name</label>
-				    <input type="text" class="form-control" id="_maf_widget_AddNewPage_Name">
+				    <label for="_maf_widget_AddNewPage_Name">@parts.Msg("dashboard.addpage.form.name")</label>
+				    <input type="text" maxlength="30" class="form-control" id="_maf_widget_AddNewPage_Name">
+				    <p class="help-block">@parts.Msg("dashboard.addpage.form.name.message")</p>
 				  </div>
 				  <div class="checkbox">
 				    <label>
-				      <input id="_maf_widget_AddNewPage_isHome" type="checkbox"> is Home page ?
+				      <input id="_maf_widget_AddNewPage_isHome" type="checkbox"> @parts.Msg("dashboard.addpage.form.ishome")
 				    </label>
 				  </div>
       		</form>
       </div>
       <div class="modal-footer">
       	<div class="text-center"> 
-        <button type="button" id="_maf_widget_AddNewPageOKButton" class="btn btn-primary">OK</button>
-        <button type="button" id="_maf_widget_AddNewPageCloseButton" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="_maf_widget_AddNewPageOKButton" class="btn btn-primary">@parts.Msg("button.add")</button>
+        <button type="button" id="_maf_widget_AddNewPageCloseButton" class="btn btn-default" data-dismiss="modal">@parts.Msg("button.close")</button>
         </div>
       </div>
     </div><!-- /.modal-content -->
@@ -253,15 +253,15 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="@parts.Msg("button.close")"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title"></h4>
       </div>
       <div class="modal-body">
       </div>
       <div class="modal-footer">
       	<div class="text-center"> 
-        <button type="button" id="_maf_widget_MessageOKButton" class="btn btn-primary">OK</button>
-        <button type="button" id="_maf_widget_MessageCloseButton" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="_maf_widget_MessageOKButton" class="btn btn-primary">@parts.Msg("button.confirm")</button>
+        <button type="button" id="_maf_widget_MessageCloseButton" class="btn btn-default" data-dismiss="modal">@parts.Msg("button.close")</button>
         </div>
       </div>
     </div><!-- /.modal-content -->

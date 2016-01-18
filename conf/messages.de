@@ -356,6 +356,31 @@ notification.sending_system.email=E-Mail
 ########################
 
 #----------------------
+# Dashboard
+#----------------------
+dashboard.addpage.form.title=de: Add a new page
+dashboard.addpage.form.ishome=de: is Home page ?
+dashboard.addpage.form.name=de: Name
+dashboard.addpage.form.name.message=de: Please provide a page name
+dashboard.widget.catalog.title=de: Widget catalog
+dashboard.row.template.selector.title=de: Dashboard row template
+dashboard.page.edit.button=de: Edit page
+dashboard.page.delete.button=de: Delete page
+dashboard.page.new.button=de: New page
+dashboard.page.ishome.button=de: Home page
+dashboard.drag.widget.message=de: Drag your widgets here or
+dashboard.add.new.widget.message=de: add a new widget
+dashboard.confirm.row.remove.message=de: Do you really want to delete this dashboard row as well as all the widgets which it includes ?
+dashboard.confirm.widget.remove.message=de: Do you really want to remove this widget ?
+dashboard.unable.load.widget.error.message=de: Unable to load the widget
+dashboard.cannot.delete.last.row.message=de: A dashboard page must have at least one row !
+dashboard.warning.messagebox.title.message=de: WARNING
+dashboard.maxnumber.row.message=de: You reached the max number of rows :
+dashboard.unexpected.error.message=de: An unexpected error has occured, the current page will be automatically refreshed.
+dashboard.confirm.currentpage.remove.message=de: Do you really want to delete the current dashboard page ?
+
+
+#----------------------
 # ID zone
 #----------------------
 

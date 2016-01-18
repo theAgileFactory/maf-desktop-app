@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.plugins.DashboardException;
 import framework.services.plugins.IDashboardService;
 import framework.services.plugins.IDashboardService.DashboardRowConfiguration;
@@ -28,7 +30,6 @@ import play.libs.F.Promise;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.dashboard.widget;
 
 /**
  * The controller which deals with dashboards.<br/>
@@ -39,8 +40,14 @@ import views.html.dashboard.widget;
 @SubjectPresent
 public class DashboardController extends Controller {
     private static Logger.ALogger log = Logger.of(DashboardController.class);
+    
     @Inject
     private IDashboardService dashboardService;
+    @Inject
+    private II18nMessagesPlugin i18nMessagePlugin;
+    @Inject
+    private IImplementationDefinedObjectService implementationDefinedObjectService;
+    
     private ObjectMapper objectMapper;
 
     /**
@@ -165,19 +172,19 @@ public class DashboardController extends Controller {
                 try{
                     Triple<String, Boolean, List<DashboardRowConfiguration>>  dashboardPageConfiguration=getDashboardService().getDashboardPageConfiguration(dashboardPageId, null);
                     DashboardParameters parameters=new DashboardParameters();
-                    parameters.setDragWidgetMessage("Drag your widgets here or");
-                    parameters.setAddANewWidgetMessage("add a new widget");
-                    parameters.setConfirmDashboardRowRemoveMessage("Do you really want to delete this dashboard row as well as all the widgets which it includes ?");
-                    parameters.setConfirmWidgetRemoveMessage("Do you really want to remove this widget ?");
-                    parameters.setUnableToLoadWidgetErrorMessage("Unable to load the widget");
-                    parameters.setCannotDeleteTheLastRowMessage("A dashboard page must have at least one row !");
-                    parameters.setWarningMessageBoxTitleMessage("WARNING");
-                    parameters.setMaxNumberOfRowReachedMessage("You reached the max number of rows : ");
-                    parameters.setUnexpectedErrorMessage("An unexpected error has occured, the current page will be automatically refreshed.");
-                    parameters.setConfirmCurrentPageRemoveMessage("Do you really want to delete the current dashboard page ?");
+                    parameters.setDragWidgetMessage(getI18nMessagePlugin().get("dashboard.drag.widget.message"));
+                    parameters.setAddANewWidgetMessage(getI18nMessagePlugin().get("dashboard.add.new.widget.message"));
+                    parameters.setConfirmDashboardRowRemoveMessage(getI18nMessagePlugin().get("dashboard.confirm.row.remove.message"));
+                    parameters.setConfirmWidgetRemoveMessage(getI18nMessagePlugin().get("dashboard.confirm.widget.remove.message"));
+                    parameters.setUnableToLoadWidgetErrorMessage(getI18nMessagePlugin().get("dashboard.unable.load.widget.error.message"));
+                    parameters.setCannotDeleteTheLastRowMessage(getI18nMessagePlugin().get("dashboard.cannot.delete.last.row.message"));
+                    parameters.setWarningMessageBoxTitleMessage(getI18nMessagePlugin().get("dashboard.warning.messagebox.title.message"));
+                    parameters.setMaxNumberOfRowReachedMessage(getI18nMessagePlugin().get("dashboard.maxnumber.row.message"));
+                    parameters.setUnexpectedErrorMessage(getI18nMessagePlugin().get("dashboard.unexpected.error.message"));
+                    parameters.setConfirmCurrentPageRemoveMessage(getI18nMessagePlugin().get("dashboard.confirm.currentpage.remove.message"));
                     parameters.setDashboardData(dashboardPageConfiguration.getRight());
-                    parameters.setMaxNumberOfRows(6);
-                    parameters.setAjaxWaitImage("/assets/images/ajax-loader.gif");
+                    parameters.setMaxNumberOfRows(4);
+                    parameters.setAjaxWaitImage(getImplementationDefinedObjectService().getRouteForAjaxWaitImage().url());
                     parameters.setUpdateDashboardPageAjaxServiceUrl(routes.DashboardController.updateDashboardPage(dashboardPageId).url());
                     parameters.setWidgetCatalogServiceUrl(routes.DashboardController.getWidgetCatalog().url());
                     parameters.setCreateNewRowAjaxServiceUrl(routes.DashboardController.createNewRow("").url());
@@ -339,6 +346,14 @@ public class DashboardController extends Controller {
         return dashboardService;
     }
     
+    private II18nMessagesPlugin getI18nMessagePlugin() {
+        return i18nMessagePlugin;
+    }
+
+    private IImplementationDefinedObjectService getImplementationDefinedObjectService() {
+        return implementationDefinedObjectService;
+    }
+
     /**
      * The data structure (to be serialized to JSON) provided to the dashboard javascript client
      * @author Pierre-Yves Cloux

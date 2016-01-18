@@ -356,6 +356,31 @@ notification.sending_system.email=Email
 ########################
 
 #----------------------
+# Dashboard
+#----------------------
+dashboard.addpage.form.title=Ajouter une nouvelle page
+dashboard.addpage.form.ishome=Home page ?
+dashboard.addpage.form.name=Nom
+dashboard.addpage.form.name.message=Veuillez fournir un nom pour la page
+dashboard.widget.catalog.title=Catalogue de widget
+dashboard.row.template.selector.title=Template de ligne
+dashboard.page.edit.button=Modifier
+dashboard.page.delete.button=Effacer
+dashboard.page.new.button=Nouvelle page
+dashboard.page.ishome.button=Home page
+dashboard.drag.widget.message=Déplpacez vos widgets ici ou
+dashboard.add.new.widget.message=ajouter une nouvelle widget
+dashboard.confirm.row.remove.message=Voulez-vous effacer cette ligne de dashboard de même que toutes les widgets qu'elle contient ?
+dashboard.confirm.widget.remove.message=Voulez-vous effacer cette widget ?
+dashboard.unable.load.widget.error.message=Impossible de charger la widget
+dashboard.cannot.delete.last.row.message=Une page de dashboard doit avoir au moins une ligne !
+dashboard.warning.messagebox.title.message=ATTENTION
+dashboard.maxnumber.row.message=Vous avez atteint le nombre de ligne maximum :
+dashboard.unexpected.error.message=Une erreur inattendue est survenue, la page va être automatiquement rechargée.
+dashboard.confirm.currentpage.remove.message=Souhaitez-vous effacer la page ?
+
+
+#----------------------
 # ID zone
 #----------------------
 

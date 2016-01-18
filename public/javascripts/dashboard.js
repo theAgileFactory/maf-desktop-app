@@ -394,7 +394,8 @@ function _maf_widget_openNewDashboardPageForm(){
 		newPageConfig.name=$("#_maf_widget_AddNewPage_Name").val();
 		newPageConfig.isHome=$("#_maf_widget_AddNewPage_isHome").is(':checked');
 		console.debug(JSON.stringify(newPageConfig));
-		if(newPageConfig.name.length>2){
+		if(newPageConfig.name.length>0){
+			$("#_maf_widget_AddNewPage_Name").closest(".form-group").removeClass('has-error');
 			$("#_maf_widget_AddNewPageOKButton").prop('disabled', true);
 			$("#_maf_widget_AddNewPageCloseButton").prop('disabled', true);
 			maf_performPostJsonReceiveJson(
@@ -408,7 +409,7 @@ function _maf_widget_openNewDashboardPageForm(){
 					_maf_widget_unexpectedErrorRefreshPage();
 				});
 		}else{
-			alert("trop court");
+			$("#_maf_widget_AddNewPage_Name").closest(".form-group").addClass('has-error');
 		}
 	});
 }

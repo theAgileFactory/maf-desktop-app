@@ -418,8 +418,6 @@ public class DashboardServiceImpl implements IDashboardService {
                 }
                 return;
             }
-            dashboardPage.isHome=true;
-            dashboardPage.save();
             
             //Check if a home page is already defined and then change it
             DashboardPage existingHomePage=DashboardPage.find.where().eq("principal.id", userAccount.getMafUid()).eq("isHome", true).findUnique();
@@ -430,6 +428,9 @@ public class DashboardServiceImpl implements IDashboardService {
                 existingHomePage.isHome=false;
                 existingHomePage.save();
             }
+            
+            dashboardPage.isHome=true;
+            dashboardPage.save();
             
             Ebean.commitTransaction();
         }catch (Exception e) {
