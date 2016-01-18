@@ -450,6 +450,14 @@ public class DashboardServiceImpl implements IDashboardService {
                 return;
             }
             dashboardPage.delete();
+            if(dashboardPage.isHome){
+                //If the page is "home" check if a new page can be elected "home"
+                List<DashboardPage> dashboardPages=DashboardPage.find.where().eq("principal.id", userAccount.getMafUid()).findList();
+                if(dashboardPages!=null && dashboardPages.size()!=0){
+                    dashboardPages.get(0).isHome=true;
+                    dashboardPages.get(0).save();
+                }
+            }
         }catch (Exception e) {
             Ebean.rollbackTransaction();
             String message = String.format("Cannot delete dashboard page %d", dashboardPageId);

@@ -94,6 +94,63 @@ public class DashboardController extends Controller {
     public Result indexError(Long dashboardPageId, String message){
         throw new RuntimeException(new DashboardException("Unable to load the dashboard with id "+dashboardPageId+" : "+message));
     }
+    
+    /**
+     * Delete the specified dashboard page
+     * @param dashboardPageId a unique dashboard page id
+     * @return
+     */
+    public Promise<Result> deleteDashboardPage(Long dashboardPageId){
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try{
+                    getDashboardService().deleteDashboardPage(dashboardPageId, null);
+                    return ok();
+                } catch (Exception e) {
+                    log.error("Unable to delete the dashboard page",e);
+                    return badRequest();
+                }
+            }
+        });
+    }
+    
+    /**
+     * Add a new dashboard page.<br/>
+     * This is a JSON post of the following format:
+     * <pre>
+     * {@code
+     *      {name : "pageName", "isHome" : true}
+     * }
+     * </pre>
+     * @return the id of the newly created page as JSON
+     */
+    @BodyParser.Of(BodyParser.Json.class)
+    public Promise<Result> addNewDashboardPage(){
+            return Promise.promise(new Function0<Result>() {
+                @Override
+                public Result apply() throws Throwable {
+                    try {
+                        JsonNode json = request().body().asJson();
+                        List<DashboardRowConfiguration> defaultConfig=new ArrayList<>();
+                        DashboardRowConfiguration row=new DashboardRowConfiguration();
+                        row.setLayout(DashboardRowTemplate.TPL12COL_1);
+                        row.setWidgets(Arrays.asList(new WidgetConfiguration(-1l,null)));
+                        defaultConfig.add(row);
+                        Long newDashboardPageId=getDashboardService().createDashboardPage(null, 
+                                json.get("name").asText(), 
+                                json.get("isHome").asBoolean(), 
+                                defaultConfig);
+                        JsonNode node=getObjectMapper().readTree("{\"id\" : "+newDashboardPageId+"}");
+                        return ok(node);
+                    } catch (Exception e) {
+                        log.error("Unable to add a new dashboard page",e);
+                        return badRequest();
+                    }
+                }
+            });
+
+    }
 
     /**
      * Ajax method returning the dashboard configuration for the specified 
@@ -102,10 +159,10 @@ public class DashboardController extends Controller {
      * @return
      */
     public Promise<Result> configure(Long dashboardPageId) {
-        try {
-            return Promise.promise(new Function0<Result>() {
-                @Override
-                public Result apply() throws Throwable {
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try{
                     Triple<String, Boolean, List<DashboardRowConfiguration>>  dashboardPageConfiguration=getDashboardService().getDashboardPageConfiguration(dashboardPageId, null);
                     DashboardParameters parameters=new DashboardParameters();
                     parameters.setDragWidgetMessage("Drag your widgets here or");
@@ -116,6 +173,8 @@ public class DashboardController extends Controller {
                     parameters.setCannotDeleteTheLastRowMessage("A dashboard page must have at least one row !");
                     parameters.setWarningMessageBoxTitleMessage("WARNING");
                     parameters.setMaxNumberOfRowReachedMessage("You reached the max number of rows : ");
+                    parameters.setUnexpectedErrorMessage("An unexpected error has occured, the current page will be automatically refreshed.");
+                    parameters.setConfirmCurrentPageRemoveMessage("Do you really want to delete the current dashboard page ?");
                     parameters.setDashboardData(dashboardPageConfiguration.getRight());
                     parameters.setMaxNumberOfRows(6);
                     parameters.setAjaxWaitImage("/assets/images/ajax-loader.gif");
@@ -123,13 +182,17 @@ public class DashboardController extends Controller {
                     parameters.setWidgetCatalogServiceUrl(routes.DashboardController.getWidgetCatalog().url());
                     parameters.setCreateNewRowAjaxServiceUrl(routes.DashboardController.createNewRow("").url());
                     parameters.setCreateNewWidgetAjaxServiceUrl(routes.DashboardController.createNewWidget(dashboardPageId).url());
+                    parameters.setRemoveCurrentDashboardPageServiceUrl(routes.DashboardController.deleteDashboardPage(dashboardPageId).url());
+                    parameters.setAddNewDashboardPageServiceUrl(routes.DashboardController.addNewDashboardPage().url());
+                    parameters.setDisplayDashboardPageServiceUrl(routes.DashboardController.index(0).url());
                     JsonNode node=getObjectMapper().valueToTree(parameters);
                     return ok(node);
+                } catch (Exception e) {
+                    log.error("Unable to configure the dashboard page",e);
+                    return badRequest();
                 }
-            });
-        } catch (Exception e) {
-            return Promise.promise(() -> badRequest());
-        }
+            }
+        });
     }
 
     /**
@@ -140,19 +203,20 @@ public class DashboardController extends Controller {
      */
     @BodyParser.Of(BodyParser.Json.class)
     public Promise<Result> updateDashboardPage(Long dashboardPageId) {
-        try {
-            return Promise.promise(new Function0<Result>() {
-                @Override
-                public Result apply() throws Throwable {
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try{
                     JsonNode json = request().body().asJson();
                     List<DashboardRowConfiguration> dashboardPageConfiguration=getObjectMapper().readValue(json.toString(), new TypeReference<List<DashboardRowConfiguration>>() {});
                     getDashboardService().updateDashboardPageConfiguration(dashboardPageId, null, dashboardPageConfiguration);
                     return ok();
+                } catch (Exception e) {
+                    log.error("Unable to update the dashboard page",e);
+                    return badRequest();
                 }
-            });
-        } catch (Exception e) {
-            return Promise.promise(() -> badRequest());
-        }
+            }
+        });
     }
     
     /**
@@ -160,17 +224,18 @@ public class DashboardController extends Controller {
      * @return
      */
     public Promise<Result> getWidgetCatalog(){
-        try {
-            return Promise.promise(new Function0<Result>() {
-                @Override
-                public Result apply() throws Throwable {
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try {
                     JsonNode node=getObjectMapper().valueToTree(getDashboardService().getWidgetCatalog());
                     return ok(node);
+                } catch (Exception e) {
+                    log.error("Unable to return the widget catalog",e);
+                    return badRequest();
                 }
-            });
-        } catch (Exception e) {
-            return Promise.promise(() -> badRequest());
-        }
+            }
+        });
     }
 
     /**
@@ -205,20 +270,21 @@ public class DashboardController extends Controller {
      */
     @BodyParser.Of(BodyParser.Json.class)
     public Promise<Result> createNewWidget(Long dashboardPageId) {
-        try {
-            return Promise.promise(new Function0<Result>() {
-                @Override
-                public Result apply() throws Throwable {
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try{
                     JsonNode json = request().body().asJson();
                     WidgetCatalogEntry widgetCatalogEntry=getObjectMapper().readValue(json.toString(), WidgetCatalogEntry.class);
                     Pair<Long, String> widgetConfig=getDashboardService().createNewWidget(dashboardPageId, null, widgetCatalogEntry, "A title");
                     JsonNode node=getObjectMapper().readTree("{\"id\" : "+widgetConfig.getLeft()+",\"url\" : \""+widgetConfig.getRight()+"\"}");
                     return ok(node);
+                } catch (Exception e) {
+                    log.error("Unable to create a new widget",e);
+                    return badRequest();
                 }
-            });
-        } catch (Exception e) {
-            return Promise.promise(() -> badRequest());
-        }
+            }
+        });
     }
     
     /**
@@ -267,7 +333,10 @@ public class DashboardController extends Controller {
         private String createNewRowAjaxServiceUrl;
         private String createNewWidgetAjaxServiceUrl;
         private String updateDashboardPageAjaxServiceUrl;
+        private String removeCurrentDashboardPageServiceUrl;
+        private String addNewDashboardPageServiceUrl;
         private String widgetCatalogServiceUrl;
+        private String displayDashboardPageServiceUrl;
         private String ajaxWaitImage;
         private String unableToLoadWidgetErrorMessage;
         private String confirmWidgetRemoveMessage;
@@ -277,6 +346,8 @@ public class DashboardController extends Controller {
         private String cannotDeleteTheLastRowMessage;
         private String warningMessageBoxTitleMessage;
         private String maxNumberOfRowReachedMessage;
+        private String unexpectedErrorMessage;
+        private String confirmCurrentPageRemoveMessage;
         private List<DashboardRowConfiguration> dashboardData;
         public Integer getMaxNumberOfRows() {
             return maxNumberOfRows;
@@ -367,6 +438,36 @@ public class DashboardController extends Controller {
         }
         public void setMaxNumberOfRowReachedMessage(String maxNumberOfRowReachedMessage) {
             this.maxNumberOfRowReachedMessage = maxNumberOfRowReachedMessage;
+        }
+        public String getUnexpectedErrorMessage() {
+            return unexpectedErrorMessage;
+        }
+        public void setUnexpectedErrorMessage(String unexpectedErrorMessage) {
+            this.unexpectedErrorMessage = unexpectedErrorMessage;
+        }
+        public String getRemoveCurrentDashboardPageServiceUrl() {
+            return removeCurrentDashboardPageServiceUrl;
+        }
+        public void setRemoveCurrentDashboardPageServiceUrl(String removeCurrentDashboardPageServiceUrl) {
+            this.removeCurrentDashboardPageServiceUrl = removeCurrentDashboardPageServiceUrl;
+        }
+        public String getAddNewDashboardPageServiceUrl() {
+            return addNewDashboardPageServiceUrl;
+        }
+        public void setAddNewDashboardPageServiceUrl(String addNewDashboardPageServiceUrl) {
+            this.addNewDashboardPageServiceUrl = addNewDashboardPageServiceUrl;
+        }
+        public String getConfirmCurrentPageRemoveMessage() {
+            return confirmCurrentPageRemoveMessage;
+        }
+        public void setConfirmCurrentPageRemoveMessage(String confirmCurrentPageRemoveMessage) {
+            this.confirmCurrentPageRemoveMessage = confirmCurrentPageRemoveMessage;
+        }
+        public String getDisplayDashboardPageServiceUrl() {
+            return displayDashboardPageServiceUrl;
+        }
+        public void setDisplayDashboardPageServiceUrl(String displayDashboardPageServiceUrl) {
+            this.displayDashboardPageServiceUrl = displayDashboardPageServiceUrl;
         }
     }
 }

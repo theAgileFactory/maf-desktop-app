@@ -43,6 +43,8 @@
 	</div>
 	<div class="col-md-6">
 		<p class="text-right">
+			<a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;New page</a>
+			<a id="_maf_widget_removePage" style="display: none;" class="btn btn-danger" href="#"><i class="fa fa-trash"></i>&nbsp;Delete page</a>
 			<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
 				page</a>
 		</p>
@@ -88,42 +90,52 @@
 			});
 			
 			//Dashboard row template selector
-			$('#dashboardRowTemplateSelectorCloseButton').click(function(event){
-				$('#dashboardRowTemplateSelector').modal('hide');
+			$('#_maf_widget_dashboardRowTemplateSelectorCloseButton').click(function(event){
+				$('#_maf_widget_dashboardRowTemplateSelector').modal('hide');
 			});
-			$('#dashboardRowTemplateSelectorAddButton').click(function(event){
-				var modal = $('#dashboardRowTemplateSelector');
+			$('#_maf_widget_dashboardRowTemplateSelectorAddButton').click(function(event){
+				var modal = $('#_maf_widget_dashboardRowTemplateSelector');
 				modal.modal('hide');
 				var dashboardRowElement=modal.data("mafSourceDashboardRowElement");
-				var templateName=$("#dashboardRowTemplateSelector input:radio[name='dashboardRowOption']:checked").val();
+				var templateName=$("#_maf_widget_dashboardRowTemplateSelector input:radio[name='_maf_widget_dashboardRowOption']:checked").val();
 				_maf_widget_addDashboardRow(dashboardRowElement, templateName);
 			});
 			
 			//Widget catalog
-			$('#widgetCatalogCloseButton').click(function(){
-				$('#widgetCatalog').modal('hide');
+			$('#_maf_widget_CatalogCloseButton').click(function(){
+				$('#_maf_widget_Catalog').modal('hide');
 			});
-			$('#widgetCatalogAddButton').click(function(){
-				var modal = $('#widgetCatalog');
+			$('#_maf_widget_CatalogAddButton').click(function(){
+				var modal = $('#_maf_widget_Catalog');
 				modal.modal('hide');
 				var widgetAreaElement=modal.data("mafSourceWidgetAreaElement");
-				var newWidgetIdentifier=$('#widgetCatalogSelect').val();
+				var newWidgetIdentifier=$('#_maf_widget_CatalogSelect').val();
 				_maf_widget_addNewWidget(widgetAreaElement, _dashboardServiceInstance.loadedWidgetCatalog[newWidgetIdentifier]);
 			});
-			$('#widgetCatalogSelect').change(function(event){
+			$('#_maf_widget_CatalogSelect').change(function(event){
 			    var optionSelected = $(this).find("option:selected");
 				var widgetCatalogEntryIdentifier  = optionSelected.val();
 				var widgetCatalogEntryName   = optionSelected.text();
-				$('#widgetCatalogEntryName').html(widgetCatalogEntryName);
-				$('#widgetCatalogEntryDescription').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].description);
-				$('#widgetCatalogEntryImage').html('<img src="'+_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].image+'"/>');
+				$('#_maf_widget_CatalogEntryName').html(widgetCatalogEntryName);
+				$('#_maf_widget_CatalogEntryDescription').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].description);
+				$('#_maf_widget_CatalogEntryImage').html('<img src="'+_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].image+'"/>');
+			});
+			
+			//Delete page
+			$('#_maf_widget_removePage').click(function(){
+				_maf_widget_removeCurrentDashboardPage();
+			});
+			
+			//New page editor
+			$('#_maf_widget_addNewPage').click(function(){
+				_maf_widget_openNewDashboardPageForm();
 			});
 		});
 	});
 </script>
 
 <!-- The dashboard row template selector -->
-<div id="dashboardRowTemplateSelector" class="modal fade" tabindex="-1" role="dialog">
+<div id="_maf_widget_dashboardRowTemplateSelector" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -136,7 +148,7 @@
           <div class="col-md-12">
           	<div class="radio">
 			  <label>
-			    <input type="radio" name="dashboardRowOption" value="@template.name" @if(index==0){checked}>
+			    <input type="radio" name="_maf_widget_dashboardRowOption" value="@template.name" @if(index==0){checked}>
 			  </label>
 			</div>
           </div>
@@ -152,15 +164,15 @@
         }
       </div>
       <div class="modal-footer">
-        <button type="button" id="dashboardRowTemplateSelectorCloseButton" class="btn btn-default">Close</button>
-        <button type="button" id="dashboardRowTemplateSelectorAddButton" class="btn btn-primary">Add row</button>
+        <button type="button" id="_maf_widget_dashboardRowTemplateSelectorCloseButton" class="btn btn-default">Close</button>
+        <button type="button" id="_maf_widget_dashboardRowTemplateSelectorAddButton" class="btn btn-primary">Add row</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- The widget catalog -->
-<div id="widgetCatalog" class="modal fade" tabindex="-1" role="dialog">
+<div id="_maf_widget_Catalog" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -170,26 +182,57 @@
       <div class="modal-body">
         <div class="row" style="padding: 1em;">
           <div class="col-md-6">
-          	<select id="widgetCatalogSelect" size="10" class="form-control">
+          	<select id="_maf_widget_CatalogSelect" size="10" class="form-control">
 			</select>
           </div>
           <div class="col-md-6">
-          	<h4 id="widgetCatalogEntryName"></h4>
-          	<p style="font-style: italic;" id="widgetCatalogEntryDescription"></p>
-          	<p id="widgetCatalogEntryImage" class="text-center"></p>
+          	<h4 id="_maf_widget_CatalogEntryName"></h4>
+          	<p style="font-style: italic;" id="_maf_widget_CatalogEntryDescription"></p>
+          	<p id="_maf_widget_CatalogEntryImage" class="text-center"></p>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="widgetCatalogCloseButton" class="btn btn-default">Close</button>
-        <button type="button" id="widgetCatalogAddButton" class="btn btn-primary">Add widget</button>
+        <button type="button" id="_maf_widget_CatalogCloseButton" class="btn btn-default">Close</button>
+        <button type="button" id="_maf_widget_CatalogAddButton" class="btn btn-primary">Add widget</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Add a new page -->
+<div id="_maf_widget_AddNewPageForm" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add a new page</h4>
+      </div>
+      <div class="modal-body">
+      		<form>
+      			  <div class="form-group">
+				    <label for="_maf_widget_AddNewPage_Name">Page name</label>
+				    <input type="text" class="form-control" id="_maf_widget_AddNewPage_Name">
+				  </div>
+				  <div class="checkbox">
+				    <label>
+				      <input id="_maf_widget_AddNewPage_isHome" type="checkbox"> is Home page ?
+				    </label>
+				  </div>
+      		</form>
+      </div>
+      <div class="modal-footer">
+      	<div class="text-center"> 
+        <button type="button" id="_maf_widget_AddNewPageOKButton" class="btn btn-primary">OK</button>
+        <button type="button" id="_maf_widget_AddNewPageCloseButton" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- Message -->
-<div id="mafWidgetMessage" class="modal" tabindex="-1" role="dialog">
+<div id="_maf_widget_MessageBox" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -200,8 +243,8 @@
       </div>
       <div class="modal-footer">
       	<div class="text-center"> 
-        <button type="button" id="widgetMessageOKButton" class="btn btn-primary">OK</button>
-        <button type="button" id="widgetMessageCloseButton" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="_maf_widget_MessageOKButton" class="btn btn-primary">OK</button>
+        <button type="button" id="_maf_widget_MessageCloseButton" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div><!-- /.modal-content -->

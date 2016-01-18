@@ -88,6 +88,12 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.cannotDeleteTheLastRowMessage="";
 	//The title of the WARNING message boxes
 	this.warningMessageBoxTitleMessage="";
+	//The maximum number of rows for the current page has been reached
+	this.maxNumberOfRowReachedMessage="";
+	//Unexpected error message
+	this.unexpectedErrorMessage="";
+	//Message displayed to confirm that the current page must be deleted
+	this.confirmCurrentPageRemoveMessage="";
 	//The array which contains the dashboard page configuration
 	this.dashboardData=[];
 	//The first part of the message to be displayed in "empty" widget areas
@@ -102,6 +108,12 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.updateDashboardPageAjaxServiceUrl="";
 	//The URL to get the widget catalog
 	this.widgetCatalogServiceUrl="";
+	//The URL to remove the current dashboard page
+	this.removeCurrentDashboardPageServiceUrl="";
+	//The URL to add a new dashboard page
+	this.addNewDashboardPageServiceUrl="";
+	//The URL to display a dashboard page
+	this.displayDashboardPageServiceUrl="";
 	//An object which stores the widget catalog (indexed by widget identifier)
 	this.loadedWidgetCatalog={};
 	
@@ -117,6 +129,9 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 			currentObject.createNewWidgetAjaxServiceUrl=data.createNewWidgetAjaxServiceUrl;
 			currentObject.updateDashboardPageAjaxServiceUrl=data.updateDashboardPageAjaxServiceUrl;
 			currentObject.widgetCatalogServiceUrl=data.widgetCatalogServiceUrl;
+			currentObject.removeCurrentDashboardPageServiceUrl=data.removeCurrentDashboardPageServiceUrl;
+			currentObject.addNewDashboardPageServiceUrl=data.addNewDashboardPageServiceUrl;
+			currentObject.displayDashboardPageServiceUrl=data.displayDashboardPageServiceUrl;
 			currentObject.ajaxWaitImage=data.ajaxWaitImage;
 			currentObject.unableToLoadWidgetErrorMessage=data.unableToLoadWidgetErrorMessage;
 			currentObject.confirmWidgetRemoveMessage=data.confirmWidgetRemoveMessage;
@@ -125,6 +140,9 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 			currentObject.addANewWidgetMessage=data.addANewWidgetMessage;
 			currentObject.cannotDeleteTheLastRowMessage=data.cannotDeleteTheLastRowMessage;
 			currentObject.warningMessageBoxTitleMessage=data.warningMessageBoxTitleMessage;
+			currentObject.maxNumberOfRowReachedMessage=data.maxNumberOfRowReachedMessage;
+			currentObject.unexpectedErrorMessage=data.unexpectedErrorMessage;
+			currentObject.confirmCurrentPageRemoveMessage=data.confirmCurrentPageRemoveMessage;
 			currentObject.dashboardData=data.dashboardData;
 			callback();
 		}).fail(function() {
@@ -330,6 +348,55 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 }
 
 /**
+ * Remove the current dashboard page
+ */
+function _maf_widget_removeCurrentDashboardPage(){
+	_maf_widget_ConfirmationBox(
+		_dashboardServiceInstance.warningMessageBoxTitleMessage,
+		_dashboardServiceInstance.confirmCurrentPageRemoveMessage,
+		function(){
+			var jqxhr = $.get(_dashboardServiceInstance.removeCurrentDashboardPageServiceUrl, function(data) {
+				window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl);//Redirect to the default page
+			}).fail(function(){
+				_maf_widget_unexpectedErrorRefreshPage();
+			});
+		});
+}
+
+/**
+ * Add a new page
+ */
+function _maf_widget_openNewDashboardPageForm(){
+	$("#_maf_widget_AddNewPage_Name").val('');
+	$("#_maf_widget_AddNewPage_isHome").attr('checked', false);
+	$("#_maf_widget_AddNewPageOKButton").prop('disabled', false);
+	$("#_maf_widget_AddNewPageCloseButton").prop('disabled', false);
+	$("#_maf_widget_AddNewPageForm").modal('show');
+	$("#_maf_widget_AddNewPageOKButton").off('click');
+	$("#_maf_widget_AddNewPageOKButton").click(function(){
+		var newPageConfig={};
+		newPageConfig.name=$("#_maf_widget_AddNewPage_Name").val();
+		newPageConfig.isHome=$("#_maf_widget_AddNewPage_isHome").attr('checked');
+		if(newPageConfig.name.length>2){
+			$("#_maf_widget_AddNewPageOKButton").prop('disabled', true);
+			$("#_maf_widget_AddNewPageCloseButton").prop('disabled', true);
+			maf_performPostJsonReceiveJson(
+				_dashboardServiceInstance.addNewDashboardPageServiceUrl,
+				JSON.stringify(newPageConfig),
+				function(data){
+					$("#_maf_widget_AddNewPageForm").modal('hide');
+					window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+data.id);
+				},
+				function(){
+					_maf_widget_unexpectedErrorRefreshPage();
+				});
+		}else{
+			alert("trop court");
+		}
+	});
+}
+
+/**
  * Change the widget state to edition mode or display mode
  * isEditionMode : true if the widget is to be set in "edition mode" (the configuration button is visible)
  */
@@ -374,6 +441,8 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
  * Set the dashboard page in display mode
  */
 function _maf_widget_disableDashboardEdition(){
+	$("#_maf_widget_addNewPage").show();
+	$("#_maf_widget_removePage").hide();
 	$("._maf_widget_widget_placeholder").detach();
 	$("._maf_widget_dashboard_row_trash").detach();
 	$("._maf_widget_dashboard_row_add").detach();
@@ -387,6 +456,8 @@ function _maf_widget_disableDashboardEdition(){
  */
 function _maf_widget_activateDashboardEdition(){
 	_maf_widget_addPlaceHolderToEmptyCells();
+	$("#_maf_widget_addNewPage").hide();
+	$("#_maf_widget_removePage").show();
 	$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
 	$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a class="_maf_widget_dashboard_row_trash_button" href="#"><i class="fa fa-trash text-primary"></i></a></div>');
 	$("._maf_widget_dashboard_row").append('<div class="_maf_widget_dashboard_row_add"><a class="_maf_widget_dashboard_row_add_button" href="#"><i class="fa fa-plus text-primary"></i></a></div>');
@@ -512,8 +583,8 @@ function _maf_widget_openDashboardRowTemplateSelector(dashboardRowElement){
 		_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.maxNumberOfRowReachedMessage+_dashboardServiceInstance.maxNumberOfRows);
 	}else{
 		//Open the row template selector
-		$('#dashboardRowTemplateSelector').modal('show');
-		$('#dashboardRowTemplateSelector').data("mafSourceDashboardRowElement",dashboardRowElement);
+		$('#_maf_widget_dashboardRowTemplateSelector').modal('show');
+		$('#_maf_widget_dashboardRowTemplateSelector').data("mafSourceDashboardRowElement",dashboardRowElement);
 	}
 }
 
@@ -533,21 +604,21 @@ function _maf_widget_removeWidgetFromDashboard(widgetElement){
  * widgetAreaElement : the area which in which the new widget is to be set
  */
 function _maf_widget_openWidgetSelector(widgetAreaElement){
-	$('#widgetCatalogSelect').html("");
-	$('#widgetCatalog').modal('show');
-	$('#widgetCatalog').data("mafSourceWidgetAreaElement",widgetAreaElement);
-	$('#widgetCatalogAddButton').prop('disabled', true);
+	$('#_maf_widget_CatalogSelect').html("");
+	$('#_maf_widget_Catalog').modal('show');
+	$('#_maf_widget_Catalog').data("mafSourceWidgetAreaElement",widgetAreaElement);
+	$('#_maf_widget_CatalogAddButton').prop('disabled', true);
 	_dashboardServiceInstance.getWidgetCatalog(function(isSuccess, catalog){
 		if(isSuccess){
-			var widgetCatalogSelect=$('#widgetCatalogSelect');
+			var widgetCatalogSelect=$('#_maf_widget_CatalogSelect');
 			for(widgetIdentifier in catalog){
 				var widgetCatalogEntry=catalog[widgetIdentifier];
 				$('<option>').val(widgetCatalogEntry.identifier).text(widgetCatalogEntry.name).appendTo(widgetCatalogSelect);
 			}
-			$('#widgetCatalogAddButton').prop('disabled', false);
+			$('#_maf_widget_CatalogAddButton').prop('disabled', false);
 		}else{
-			$('#widgetCatalog').modal('hide');
-			$('#widgetCatalogAddButton').prop('disabled', false);
+			$('#_maf_widget_Catalog').modal('hide');
+			$('#_maf_widget_CatalogAddButton').prop('disabled', false);
 			_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.unableToLoadWidgetCatalogErrorMessage);
 		}
 	});
@@ -564,6 +635,8 @@ function _maf_widget_addDashboardRow(dashboardRowElement, templateIdentifier){
 		dashboardRowElement.after(data);
 		_dashboardServiceInstance.toggleEditonMode();
 		_dashboardServiceInstance.addRow(dashboardRowElement, templateIdentifier);
+	}).fail(function(){
+		_maf_widget_unexpectedErrorRefreshPage();
 	});
 }
 
@@ -611,29 +684,44 @@ function _maf_widget_loadWidgetContent(widgetAreaElement, url, callback) {
 }
 
 /**
+ * An unexpected error occurred, refresh the page
+ */
+function _maf_widget_unexpectedErrorRefreshPage(){
+	_maf_widget_MessageBox(
+			_dashboardServiceInstance.warningMessageBoxTitleMessage,
+			_dashboardServiceInstance.unexpectedErrorMessage,
+			function(){
+				location.reload();
+			});
+}
+
+/**
  * Display a modal with a message for the end user
  */
-function _maf_widget_MessageBox(title, content){
-	$("#widgetMessageOKButton").hide();
-	$("#widgetMessageCloseButton").show();
-	$("#widgetMessageOKButton").off('click');
-	$("#mafWidgetMessage").modal('show');
-	$("#mafWidgetMessage .modal-title").html(title);
-	$("#mafWidgetMessage .modal-body").html('<div class="alert alert-warning" role="alert">'+content+'</div>');
+function _maf_widget_MessageBox(title, content, callback){
+	$("#_maf_widget_MessageOKButton").hide();
+	$("#_maf_widget_MessageCloseButton").show();
+	$("#_maf_widget_MessageOKButton").off('click');
+	$("#_maf_widget_MessageBox").modal('show');
+	$("#_maf_widget_MessageBox .modal-title").html(title);
+	$("#_maf_widget_MessageBox .modal-body").html('<div class="alert alert-warning" role="alert">'+content+'</div>');
+	if(callback){
+		callback();
+	}
 }
 
 /**
  * Display a modal with a message for the end user
  */
 function _maf_widget_ConfirmationBox(title, content, callback){
-	$("#widgetMessageOKButton").show();
-	$("#widgetMessageCloseButton").show();
-	$("#widgetMessageOKButton").off('click');
-	$("#widgetMessageOKButton").click(function(){
-		$("#mafWidgetMessage").modal('hide');
+	$("#_maf_widget_MessageOKButton").show();
+	$("#_maf_widget_MessageCloseButton").show();
+	$("#_maf_widget_MessageOKButton").off('click');
+	$("#_maf_widget_MessageOKButton").click(function(){
+		$("#_maf_widget_MessageBox").modal('hide');
 		callback();
 	});
-	$("#mafWidgetMessage").modal('show');
-	$("#mafWidgetMessage .modal-title").html(title);
-	$("#mafWidgetMessage .modal-body").html('<div class="alert alert-warning" role="alert">'+content+'</div>');
+	$("#_maf_widget_MessageBox").modal('show');
+	$("#_maf_widget_MessageBox .modal-title").html(title);
+	$("#_maf_widget_MessageBox .modal-body").html('<div class="alert alert-warning" role="alert">'+content+'</div>');
 }
