@@ -114,6 +114,8 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.addNewDashboardPageServiceUrl="";
 	//The URL to display a dashboard page
 	this.displayDashboardPageServiceUrl="";
+	//The URL to change the home page status of the current page
+	this.setAsHomePageServiceUrl="";
 	//An object which stores the widget catalog (indexed by widget identifier)
 	this.loadedWidgetCatalog={};
 	
@@ -132,6 +134,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 			currentObject.removeCurrentDashboardPageServiceUrl=data.removeCurrentDashboardPageServiceUrl;
 			currentObject.addNewDashboardPageServiceUrl=data.addNewDashboardPageServiceUrl;
 			currentObject.displayDashboardPageServiceUrl=data.displayDashboardPageServiceUrl;
+			currentObject.setAsHomePageServiceUrl=data.setAsHomePageServiceUrl;
 			currentObject.ajaxWaitImage=data.ajaxWaitImage;
 			currentObject.unableToLoadWidgetErrorMessage=data.unableToLoadWidgetErrorMessage;
 			currentObject.confirmWidgetRemoveMessage=data.confirmWidgetRemoveMessage;
@@ -275,6 +278,8 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.addRow=function(dashboardRowElement, templateIdentifier){
 		var numberOfColumns=templateIdentifier.substring(templateIdentifier.indexOf('_')+1);
 		var selectedRowIndex=this.findRowIndex(dashboardRowElement);
+		console.debug(numberOfColumns);
+		console.debug(selectedRowIndex);
 		if(selectedRowIndex!=-1){
 			var widgetArray=[];
 			for(var widgetCount=0; widgetCount<numberOfColumns; widgetCount++){
@@ -364,6 +369,17 @@ function _maf_widget_removeCurrentDashboardPage(){
 }
 
 /**
+ * Set the current page as home page
+ */
+function _maf_widget_setCurrentPageAsHomePage(){
+	var jqxhr = $.get(_dashboardServiceInstance.setAsHomePageServiceUrl, function(data) {
+		window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl);
+	}).fail(function(){
+		_maf_widget_unexpectedErrorRefreshPage();
+	});
+}
+
+/**
  * Add a new page
  */
 function _maf_widget_openNewDashboardPageForm(){
@@ -376,7 +392,8 @@ function _maf_widget_openNewDashboardPageForm(){
 	$("#_maf_widget_AddNewPageOKButton").click(function(){
 		var newPageConfig={};
 		newPageConfig.name=$("#_maf_widget_AddNewPage_Name").val();
-		newPageConfig.isHome=$("#_maf_widget_AddNewPage_isHome").attr('checked');
+		newPageConfig.isHome=$("#_maf_widget_AddNewPage_isHome").is(':checked');
+		console.debug(JSON.stringify(newPageConfig));
 		if(newPageConfig.name.length>2){
 			$("#_maf_widget_AddNewPageOKButton").prop('disabled', true);
 			$("#_maf_widget_AddNewPageCloseButton").prop('disabled', true);
@@ -385,7 +402,7 @@ function _maf_widget_openNewDashboardPageForm(){
 				JSON.stringify(newPageConfig),
 				function(data){
 					$("#_maf_widget_AddNewPageForm").modal('hide');
-					window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+data.id);
+					window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+"?id="+data.id);
 				},
 				function(){
 					_maf_widget_unexpectedErrorRefreshPage();
@@ -443,6 +460,7 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 function _maf_widget_disableDashboardEdition(){
 	$("#_maf_widget_addNewPage").show();
 	$("#_maf_widget_removePage").hide();
+	$("#_maf_widget_currentPageIsHomeContainer").hide();
 	$("._maf_widget_widget_placeholder").detach();
 	$("._maf_widget_dashboard_row_trash").detach();
 	$("._maf_widget_dashboard_row_add").detach();
@@ -458,6 +476,7 @@ function _maf_widget_activateDashboardEdition(){
 	_maf_widget_addPlaceHolderToEmptyCells();
 	$("#_maf_widget_addNewPage").hide();
 	$("#_maf_widget_removePage").show();
+	$("#_maf_widget_currentPageIsHomeContainer").show();
 	$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
 	$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a class="_maf_widget_dashboard_row_trash_button" href="#"><i class="fa fa-trash text-primary"></i></a></div>');
 	$("._maf_widget_dashboard_row").append('<div class="_maf_widget_dashboard_row_add"><a class="_maf_widget_dashboard_row_add_button" href="#"><i class="fa fa-plus text-primary"></i></a></div>');

@@ -185,6 +185,7 @@ public class DashboardController extends Controller {
                     parameters.setRemoveCurrentDashboardPageServiceUrl(routes.DashboardController.deleteDashboardPage(dashboardPageId).url());
                     parameters.setAddNewDashboardPageServiceUrl(routes.DashboardController.addNewDashboardPage().url());
                     parameters.setDisplayDashboardPageServiceUrl(routes.DashboardController.index(0).url());
+                    parameters.setSetAsHomePageServiceUrl(routes.DashboardController.setAsHomePage(dashboardPageId).url());
                     JsonNode node=getObjectMapper().valueToTree(parameters);
                     return ok(node);
                 } catch (Exception e) {
@@ -248,6 +249,20 @@ public class DashboardController extends Controller {
         try {
             DashboardRowTemplate template = DashboardRowTemplate.valueOf(templateIdentifier);
             return Promise.promise(() -> ok(views.html.dashboard.row.render(StringUtils.split(template.getLayout(), ','))));
+        } catch (Exception e) {
+            return Promise.promise(() -> badRequest());
+        }
+    }
+    
+    /**
+     * Set the specfied page as home page.
+     * 
+     * @param dashboardPageId the unique id of a dashboard page
+     */
+    public Promise<Result> setAsHomePage(Long dashboardPageId) {
+        try {
+            getDashboardService().setDashboardPageAsHome(dashboardPageId, null);
+            return Promise.promise(() -> ok());
         } catch (Exception e) {
             return Promise.promise(() -> badRequest());
         }
@@ -337,6 +352,7 @@ public class DashboardController extends Controller {
         private String addNewDashboardPageServiceUrl;
         private String widgetCatalogServiceUrl;
         private String displayDashboardPageServiceUrl;
+        private String setAsHomePageServiceUrl;
         private String ajaxWaitImage;
         private String unableToLoadWidgetErrorMessage;
         private String confirmWidgetRemoveMessage;
@@ -468,6 +484,12 @@ public class DashboardController extends Controller {
         }
         public void setDisplayDashboardPageServiceUrl(String displayDashboardPageServiceUrl) {
             this.displayDashboardPageServiceUrl = displayDashboardPageServiceUrl;
+        }
+        public String getSetAsHomePageServiceUrl() {
+            return setAsHomePageServiceUrl;
+        }
+        public void setSetAsHomePageServiceUrl(String setAsHomePageServiceUrl) {
+            this.setAsHomePageServiceUrl = setAsHomePageServiceUrl;
         }
     }
 }

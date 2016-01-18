@@ -25,16 +25,16 @@
 		<div class="btn-group" data-toggle="buttons">
 			@for(pair <- dashboardPages){
 				@if(pair.getMiddle()){
-				<label class="btn btn-primary active"> <input type="radio"
-					name="options" id="page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked}>
+				<label class="btn @if(currentDashboardPageId==pair.getRight()){btn-primary active}else{btn-default}"> <input type="radio"
+					name="_maf_widget_dashboardPage" id="_maf_widget_page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked="checked"}>
 					@pair.getLeft()
 				</label>
 				}
 			}
 			@for(pair <- dashboardPages){
 				@if(!pair.getMiddle()){
-				<label class="btn btn-primary active"> <input type="radio"
-					name="options" id="page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked}>
+				<label class="btn @if(currentDashboardPageId==pair.getRight()){btn-primary active}else{btn-default}"> <input type="radio"
+					name="_maf_widget_dashboardPage" id="_maf_widget_page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked="checked"}>
 					@pair.getLeft()
 				</label>
 				}
@@ -43,6 +43,9 @@
 	</div>
 	<div class="col-md-6">
 		<p class="text-right">
+			@if(!currentDashboardPageIsHome){
+			<span style="display: none;" id="_maf_widget_currentPageIsHomeContainer"><input id="_maf_widget_currentPageIsHome" type="checkbox">Home page&nbsp;</span>
+			}
 			<a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;New page</a>
 			<a id="_maf_widget_removePage" style="display: none;" class="btn btn-danger" href="#"><i class="fa fa-trash"></i>&nbsp;Delete page</a>
 			<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
@@ -67,6 +70,20 @@
 	$(document).ready(function() {
 		_dashboardServiceInstance=new _maf_widget_dashboardService(@currentDashboardPageId, "@configureUrl","@errorUrl");
 		_dashboardServiceInstance.refresh(function (){
+			//Page selector
+			$('input[name="_maf_widget_dashboardPage"]').change(function(){
+				var pageSelectorButtonId=$(this).attr('id');
+				var pageId=pageSelectorButtonId.substring("_maf_widget_page-".length);
+				window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+"?id="+pageId);
+			});
+			
+			//Set as home page
+			if($("#_maf_widget_currentPageIsHome")){
+				$("#_maf_widget_currentPageIsHome").change(function(){
+					_maf_widget_setCurrentPageAsHomePage();
+				});
+			}
+			
 			//Add the widgets to the dashboard page
 			var rowIndex=0;
 			$("._maf_widget_dashboard_row").each(function(){

@@ -57,6 +57,9 @@ public class DashboardServiceImpl implements IDashboardService {
 
     @Override
     public List<WidgetCatalogEntry> getWidgetCatalog() throws DashboardException {
+        if(log.isDebugEnabled()){
+            log.debug("Requesting the widget catalog");
+        }
         List<WidgetCatalogEntry> catalog=new ArrayList<>();
         Map<Long, IPluginInfo> registeredPlugins=getPluginManagerService().getRegisteredPluginDescriptors();
         if(registeredPlugins!=null){
@@ -76,6 +79,9 @@ public class DashboardServiceImpl implements IDashboardService {
                     }
                 }
             }
+        }
+        if(log.isDebugEnabled()){
+            log.debug("Returning the catalog "+catalog);
         }
         return catalog;
     }
@@ -291,18 +297,18 @@ public class DashboardServiceImpl implements IDashboardService {
                     existingHomePage.isHome=false;
                     existingHomePage.save();
                 }
-                //Create a new dashboard page
-                DashboardPage dashboardPage=new DashboardPage();
-                dashboardPage.name=name;
-                dashboardPage.isHome=isHome;
-                dashboardPage.layout=getMapper().writeValueAsBytes(config);
-                dashboardPage.principal=Principal.getPrincipalFromId(userAccount.getMafUid());
-                dashboardPage.save();
-                if(log.isDebugEnabled()){
-                    log.debug("Dashboard page has been created with id "+dashboardPage.id);
-                }
-                dashboardPageId=dashboardPage.id;
             }
+            //Create a new dashboard page
+            DashboardPage dashboardPage=new DashboardPage();
+            dashboardPage.name=name;
+            dashboardPage.isHome=isHome;
+            dashboardPage.layout=getMapper().writeValueAsBytes(config);
+            dashboardPage.principal=Principal.getPrincipalFromId(userAccount.getMafUid());
+            dashboardPage.save();
+            if(log.isDebugEnabled()){
+                log.debug("Dashboard page has been created with id "+dashboardPage.id);
+            }
+            dashboardPageId=dashboardPage.id;
             Ebean.commitTransaction();
         }catch (Exception e) {
             Ebean.rollbackTransaction();
@@ -318,7 +324,7 @@ public class DashboardServiceImpl implements IDashboardService {
     @Override
     public void updateDashboardPageConfiguration(Long dashboardPageId, String uid, List<DashboardRowConfiguration> config) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Updating dashboard page "+dashboardPageId+" for user "+(uid==null?"current":uid));
+            log.debug("Updating dashboard page configuration "+dashboardPageId+" for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
@@ -370,7 +376,7 @@ public class DashboardServiceImpl implements IDashboardService {
     @Override
     public void updateDashboardPageName(Long dashboardPageId, String uid, String name) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Updating dashboard page "+dashboardPageId+" for user "+(uid==null?"current":uid));
+            log.debug("Updating dashboard page name "+dashboardPageId+" for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
@@ -399,7 +405,7 @@ public class DashboardServiceImpl implements IDashboardService {
     @Override
     public void setDashboardPageAsHome(Long dashboardPageId, String uid) throws DashboardException {
         if(log.isDebugEnabled()){
-            log.debug("Updating dashboard page "+dashboardPageId+" for user "+(uid==null?"current":uid));
+            log.debug("Changing dashboard home page to "+dashboardPageId+" for user "+(uid==null?"current":uid));
         }
         IUserAccount userAccount = getUserAccount(uid);
         Ebean.beginTransaction();
@@ -418,6 +424,9 @@ public class DashboardServiceImpl implements IDashboardService {
             //Check if a home page is already defined and then change it
             DashboardPage existingHomePage=DashboardPage.find.where().eq("principal.id", userAccount.getMafUid()).eq("isHome", true).findUnique();
             if(existingHomePage!=null){
+                if(log.isDebugEnabled()){
+                    log.debug("Changing the current home page "+existingHomePage.id);
+                }
                 existingHomePage.isHome=false;
                 existingHomePage.save();
             }
@@ -449,15 +458,23 @@ public class DashboardServiceImpl implements IDashboardService {
                 }
                 return;
             }
+            if(log.isDebugEnabled()){
+                log.debug("Deleting dashboard page "+dashboardPageId);
+            }
             dashboardPage.delete();
             if(dashboardPage.isHome){
                 //If the page is "home" check if a new page can be elected "home"
                 List<DashboardPage> dashboardPages=DashboardPage.find.where().eq("principal.id", userAccount.getMafUid()).findList();
                 if(dashboardPages!=null && dashboardPages.size()!=0){
-                    dashboardPages.get(0).isHome=true;
-                    dashboardPages.get(0).save();
+                    DashboardPage newHomePage=dashboardPages.get(0);
+                    if(log.isDebugEnabled()){
+                        log.debug("Changing home page to "+newHomePage.id);
+                    }
+                    newHomePage.isHome=true;
+                    newHomePage.save();
                 }
             }
+            Ebean.commitTransaction();
         }catch (Exception e) {
             Ebean.rollbackTransaction();
             String message = String.format("Cannot delete dashboard page %d", dashboardPageId);
