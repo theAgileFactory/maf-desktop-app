@@ -84,6 +84,10 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.confirmDashboardRowRemoveMessage="";
 	//The message to be displayed when the widget catalog cannot be loaded
 	this.unableToLoadWidgetCatalogErrorMessage="";
+	//The message to be displayed when the user attempt to remove the last row
+	this.cannotDeleteTheLastRowMessage="";
+	//The title of the WARNING message boxes
+	this.warningMessageBoxTitleMessage="";
 	//The array which contains the dashboard page configuration
 	this.dashboardData=[];
 	//The first part of the message to be displayed in "empty" widget areas
@@ -107,7 +111,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.refresh=function(callback){
 		var currentObject=this;
 		var jqxhr = $.get(currentObject.configurationUrl, function(data) {
-			alert(JSON.stringify(data));
+			console.debug(JSON.stringify(data));
 			currentObject.maxNumberOfRows=data.maxNumberOfRows;
 			currentObject.createNewRowAjaxServiceUrl=data.createNewRowAjaxServiceUrl;
 			currentObject.createNewWidgetAjaxServiceUrl=data.createNewWidgetAjaxServiceUrl;
@@ -119,6 +123,8 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 			currentObject.confirmDashboardRowRemoveMessage=data.confirmDashboardRowRemoveMessage;
 			currentObject.dragWidgetMessage=data.dragWidgetMessage;
 			currentObject.addANewWidgetMessage=data.addANewWidgetMessage;
+			currentObject.cannotDeleteTheLastRowMessage=data.cannotDeleteTheLastRowMessage;
+			currentObject.warningMessageBoxTitleMessage=data.warningMessageBoxTitleMessage;
 			currentObject.dashboardData=data.dashboardData;
 			callback();
 		}).fail(function() {
@@ -254,9 +260,9 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 		if(selectedRowIndex!=-1){
 			var widgetArray=[];
 			for(var widgetCount=0; widgetCount<numberOfColumns; widgetCount++){
-				widgetArray.push(-1);
+				widgetArray.push({id : -1, url : null});
 			}
-			var newRowData={widgets : widgetArray};
+			var newRowData={layout : templateIdentifier, widgets : widgetArray};
 			this.dashboardData.splice(selectedRowIndex+1, 0, newRowData);
 		}
 		this.updateDashboard();
@@ -277,6 +283,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	 * Call an AJAX service to "post" the update of the dasboard page configuration
 	 */
 	this.updateDashboard=function(){
+		console.debug(JSON.stringify(this.dashboardData));
 		maf_performPostJsonReceiveJson(
 				this.updateDashboardPageAjaxServiceUrl,
 				JSON.stringify(this.dashboardData),
@@ -328,16 +335,19 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
  */
 function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 	if(isEditionMode){
-		$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_trash" href="#"><i class="fa fa-trash"></i></a>');
+		$("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_trash fa fa-trash"></i>');
 		$("._maf_widget_widget_command_trash").click(function(event){
 			event.preventDefault();
-			if(maf_confirmAction(_dashboardServiceInstance.confirmWidgetRemoveMessage)){
-				var widgetElement=$(this).closest("._maf_widget_widget");
-				_maf_widget_removeWidgetFromDashboard(widgetElement);
-			}
+			var widgetElement=$(this).closest("._maf_widget_widget");
+			_maf_widget_ConfirmationBox(
+					_dashboardServiceInstance.warningMessageBoxTitleMessage,
+					_dashboardServiceInstance.confirmWidgetRemoveMessage,
+					function(){
+						_maf_widget_removeWidgetFromDashboard(widgetElement);
+					});
 		});
 	}else{
-		$("._maf_widget_widget_commands").html('<a class="_maf_widget_widget_command_display" href="#"><i class="fa fa-square-o"></i></a>&nbsp;<a class="_maf_widget_widget_command_configure" href="#"><i class="fa fa-cog"></i></a>');
+		$("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_display fa fa-square-o"></i>&nbsp;<i class="_maf_widget_widget_command_configure fa fa-cog"></i>');
 		$("._maf_widget_widget_command_configure").click(function(event){
 			event.preventDefault();
 			var widgetElement=$(this).closest("._maf_widget_widget");
@@ -382,10 +392,13 @@ function _maf_widget_activateDashboardEdition(){
 	$("._maf_widget_dashboard_row").append('<div class="_maf_widget_dashboard_row_add"><a class="_maf_widget_dashboard_row_add_button" href="#"><i class="fa fa-plus text-primary"></i></a></div>');
 	$("._maf_widget_dashboard_row_trash_button").click(function(event){
 		event.preventDefault();
-		if(maf_confirmAction(_dashboardServiceInstance.confirmDashboardRowRemoveMessage)){
-			var rowElement=$(this).closest("._maf_widget_dashboard_row");
-			_maf_widget_removeDashboardRow(rowElement);
-		}
+		var rowElement=$(this).closest("._maf_widget_dashboard_row");
+		_maf_widget_ConfirmationBox(
+				_dashboardServiceInstance.warningMessageBoxTitleMessage,
+				_dashboardServiceInstance.confirmDashboardRowRemoveMessage,
+				function(){
+					_maf_widget_removeDashboardRow(rowElement);
+				});
 	});
 	$("._maf_widget_dashboard_row_add_button").click(function(event){
 		event.preventDefault();
@@ -478,8 +491,14 @@ function _maf_widget_addPlaceHolderToEmptyCells(){
  * dashboardRowElement : the jQuery element for a dashboard row
  */
 function _maf_widget_removeDashboardRow(dashboardRowElement){
-	_dashboardServiceInstance.removeRow(dashboardRowElement);
-	dashboardRowElement.detach();
+	//Count the number of row (prevent removing the last row)
+	var rowCount=$("._maf_widget_dashboard_row").length;
+	if(rowCount > 1){
+		_dashboardServiceInstance.removeRow(dashboardRowElement);
+		dashboardRowElement.detach();
+	}else{
+		_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.cannotDeleteTheLastRowMessage);
+	}
 }
 
 /**
@@ -490,7 +509,7 @@ function _maf_widget_openDashboardRowTemplateSelector(dashboardRowElement){
 	//Check if the number of row is not exceeded
 	var rowCount = $('._maf_widget_dashboard_row').length;
 	if(rowCount >= _dashboardServiceInstance.maxNumberOfRows){
-		alert("You reached the max number of rows (max "+_dashboardServiceInstance.maxNumberOfRows+")");
+		_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.maxNumberOfRowReachedMessage+_dashboardServiceInstance.maxNumberOfRows);
 	}else{
 		//Open the row template selector
 		$('#dashboardRowTemplateSelector').modal('show');
@@ -529,7 +548,7 @@ function _maf_widget_openWidgetSelector(widgetAreaElement){
 		}else{
 			$('#widgetCatalog').modal('hide');
 			$('#widgetCatalogAddButton').prop('disabled', false);
-			alert(_dashboardServiceInstance.unableToLoadWidgetCatalogErrorMessage);
+			_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.unableToLoadWidgetCatalogErrorMessage);
 		}
 	});
 }
@@ -567,7 +586,7 @@ function _maf_widget_addNewWidget(widgetAreaElement, widgetCatalogEntry){
 			});
 		},
 		function(){
-			alert(_dashboardServiceInstance.unableToLoadWidgetErrorMessage);
+			_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.unableToLoadWidgetErrorMessage);
 			_dashboardServiceInstance.setPlaceHolderMessage(widgetAreaElement);
 		});
 }
@@ -589,4 +608,32 @@ function _maf_widget_loadWidgetContent(widgetAreaElement, url, callback) {
 	}).fail(function() {
 		widgetAreaElement.html('<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;'+_dashboardServiceInstance.unableToLoadWidgetErrorMessage+'</div>');
 	});
+}
+
+/**
+ * Display a modal with a message for the end user
+ */
+function _maf_widget_MessageBox(title, content){
+	$("#widgetMessageOKButton").hide();
+	$("#widgetMessageCloseButton").show();
+	$("#widgetMessageOKButton").off('click');
+	$("#mafWidgetMessage").modal('show');
+	$("#mafWidgetMessage .modal-title").html(title);
+	$("#mafWidgetMessage .modal-body").html('<div class="alert alert-warning" role="alert">'+content+'</div>');
+}
+
+/**
+ * Display a modal with a message for the end user
+ */
+function _maf_widget_ConfirmationBox(title, content, callback){
+	$("#widgetMessageOKButton").show();
+	$("#widgetMessageCloseButton").show();
+	$("#widgetMessageOKButton").off('click');
+	$("#widgetMessageOKButton").click(function(){
+		$("#mafWidgetMessage").modal('hide');
+		callback();
+	});
+	$("#mafWidgetMessage").modal('show');
+	$("#mafWidgetMessage .modal-title").html(title);
+	$("#mafWidgetMessage .modal-body").html('<div class="alert alert-warning" role="alert">'+content+'</div>');
 }

@@ -113,6 +113,9 @@ public class DashboardController extends Controller {
                     parameters.setConfirmDashboardRowRemoveMessage("Do you really want to delete this dashboard row as well as all the widgets which it includes ?");
                     parameters.setConfirmWidgetRemoveMessage("Do you really want to remove this widget ?");
                     parameters.setUnableToLoadWidgetErrorMessage("Unable to load the widget");
+                    parameters.setCannotDeleteTheLastRowMessage("A dashboard page must have at least one row !");
+                    parameters.setWarningMessageBoxTitleMessage("WARNING");
+                    parameters.setMaxNumberOfRowReachedMessage("You reached the max number of rows : ");
                     parameters.setDashboardData(dashboardPageConfiguration.getRight());
                     parameters.setMaxNumberOfRows(6);
                     parameters.setAjaxWaitImage("/assets/images/ajax-loader.gif");
@@ -271,6 +274,9 @@ public class DashboardController extends Controller {
         private String confirmDashboardRowRemoveMessage;
         private String dragWidgetMessage;
         private String addANewWidgetMessage;
+        private String cannotDeleteTheLastRowMessage;
+        private String warningMessageBoxTitleMessage;
+        private String maxNumberOfRowReachedMessage;
         private List<DashboardRowConfiguration> dashboardData;
         public Integer getMaxNumberOfRows() {
             return maxNumberOfRows;
@@ -343,6 +349,24 @@ public class DashboardController extends Controller {
         }
         public void setDashboardData(List<DashboardRowConfiguration> dashboardData) {
             this.dashboardData = dashboardData;
+        }
+        public String getCannotDeleteTheLastRowMessage() {
+            return cannotDeleteTheLastRowMessage;
+        }
+        public void setCannotDeleteTheLastRowMessage(String cannotDeleteTheLastRowMessage) {
+            this.cannotDeleteTheLastRowMessage = cannotDeleteTheLastRowMessage;
+        }
+        public String getWarningMessageBoxTitleMessage() {
+            return warningMessageBoxTitleMessage;
+        }
+        public void setWarningMessageBoxTitleMessage(String warningMessageBoxTitleMessage) {
+            this.warningMessageBoxTitleMessage = warningMessageBoxTitleMessage;
+        }
+        public String getMaxNumberOfRowReachedMessage() {
+            return maxNumberOfRowReachedMessage;
+        }
+        public void setMaxNumberOfRowReachedMessage(String maxNumberOfRowReachedMessage) {
+            this.maxNumberOfRowReachedMessage = maxNumberOfRowReachedMessage;
         }
     }
 }

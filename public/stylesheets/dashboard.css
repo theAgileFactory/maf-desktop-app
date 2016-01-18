@@ -23,9 +23,15 @@
 ._maf_widget_widget_content {}
 ._maf_widget_widget_link {}
 ._maf_widget_widget_commands {}
-._maf_widget_widget_command_trash {}
-._maf_widget_widget_command_configure {}
-._maf_widget_widget_command_display {}
+._maf_widget_widget_command_trash {
+	 cursor: pointer;
+}
+._maf_widget_widget_command_configure {
+	 cursor: pointer;
+}
+._maf_widget_widget_command_display {
+	 cursor: pointer;
+}
 ._maf_widget_dashboard_template_cell {
 	background-color: silver;
 	border: solid 1px;
