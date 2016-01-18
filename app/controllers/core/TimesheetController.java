@@ -581,7 +581,7 @@ public class TimesheetController extends Controller {
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 date = formatter.parse(stringDate);
             } catch (ParseException e) {
-                Logger.error(e.getMessage());
+                log.error(e.getMessage());
                 return null;
             }
         } else {
@@ -623,14 +623,18 @@ public class TimesheetController extends Controller {
         try {
 
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            return ActorDao.getActorByUid(uid);
+            Actor a = ActorDao.getActorByUid(uid);
+            if (a != null) {
+                return a;
+            } else {
+                log.warn("impossible to find the actor of the sign-in user");
+            }
 
         } catch (Exception e) {
-
-            Logger.error("impossible to find the actor of the sign-in user");
-            return null;
-
+            log.error("error when getting the actor of the current user", e);
         }
+
+        return null;
     }
 
     /**

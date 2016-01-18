@@ -123,18 +123,12 @@ public class CockpitController extends Controller {
      */
     public Result initiatives(Integer asManagerPage, Integer asStakeholderPage, Boolean viewAllAsManager) {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         /**
          * get the portfolio entries for which the current actor is the manager
@@ -189,18 +183,12 @@ public class CockpitController extends Controller {
      */
     public Result portfolios(Integer asManagerPage, Integer asStakeholderPage, Boolean viewAllAsManager) {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         /**
          * get the portfolios for which the current actor is the manager
@@ -247,19 +235,12 @@ public class CockpitController extends Controller {
      */
     public Result subordinates() {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         // construct the subordinate table
 
@@ -284,19 +265,12 @@ public class CockpitController extends Controller {
      */
     public Result subordinatesAllocations() {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         // prepare the data (to order them)
         SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
@@ -411,7 +385,7 @@ public class CockpitController extends Controller {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             ganttSource = ow.writeValueAsString(items);
         } catch (JsonProcessingException e) {
-            Logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
 
         return ok(views.html.core.cockpit.cockpit_subordinates_allocations.render(ganttSource));
@@ -424,19 +398,12 @@ public class CockpitController extends Controller {
      */
     public Result subordinatesAllocationsDetails() {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         // construct the portfolio entry table
 
@@ -466,18 +433,12 @@ public class CockpitController extends Controller {
 
         try {
 
-            /**
-             * get the current actor id
-             */
-            Long actorId = null;
-            try {
-                String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-                Actor actor = ActorDao.getActorByUid(uid);
-                actorId = actor.id;
-            } catch (Exception e) {
-                Logger.error("impossible to find the actor of the sign-in user");
+            // get the current actor
+            Actor actor = getCurrentActor();
+            if (actor == null) {
                 return redirect(controllers.routes.Application.index());
             }
+            Long actorId = actor.id;
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
@@ -510,8 +471,10 @@ public class CockpitController extends Controller {
 
         try {
 
-            // fill the filter config
+            // get the uid of the current user
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+
+            // fill the filter config
             FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
                     .persistCurrentInDefault(uid, request());
 
@@ -544,7 +507,6 @@ public class CockpitController extends Controller {
         try {
 
             // get the current actor
-
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
 
@@ -559,18 +521,14 @@ public class CockpitController extends Controller {
                 if (allocatedActor.actor.manager.id.equals(actor.id)) {
                     allocatedActor.isConfirmed = true;
                     allocatedActor.update();
-                    Logger.debug("confirm: " + allocatedActor.id);
                 } else {
-                    Logger.error("impossible to confirm the allocation " + allocatedActor.id + " because the manager (" + allocatedActor.actor.manager.id
+                    log.error("impossible to confirm the allocation " + allocatedActor.id + " because the manager (" + allocatedActor.actor.manager.id
                             + ") of the concerned actor is not the current one (" + actor.id + ").");
                 }
             }
 
             return ok("<div class=\"alert alert-success\">"
                     + Msg.get("core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm.successful") + "</div>");
-
-            // return
-            // redirect(controllers.core.routes.CockpitController.subordinatesAllocationsDetails());
 
         } catch (Exception e) {
             return internalServerError();
@@ -584,18 +542,12 @@ public class CockpitController extends Controller {
 
         try {
 
-            /**
-             * get the current actor id
-             */
-            Long actorId = null;
-            try {
-                String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-                Actor actor = ActorDao.getActorByUid(uid);
-                actorId = actor.id;
-            } catch (Exception e) {
-                Logger.error("impossible to find the actor of the sign-in user");
+            // get the current actor
+            Actor actor = getCurrentActor();
+            if (actor == null) {
                 return redirect(controllers.routes.Application.index());
             }
+            Long actorId = actor.id;
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
@@ -625,19 +577,12 @@ public class CockpitController extends Controller {
      */
     public Result subordinatesTimesheet() {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         /**
          * Construct the late timesheets table
@@ -691,19 +636,12 @@ public class CockpitController extends Controller {
      */
     public Result orgUnits(Integer page, Boolean viewAll) {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         Pagination<OrgUnit> pagination = OrgUnitDao.getOrgUnitAsPaginationByActor(actorId, viewAll);
         pagination.setCurrentPage(page);
@@ -743,19 +681,12 @@ public class CockpitController extends Controller {
      */
     public Result budgetBuckets(Integer asOwnerPage, Integer asResponsiblePage, Boolean viewAllAsOwner, Boolean viewAllAsResponsible) {
 
-        /**
-         * get the current actor id
-         */
-        Long actorId = null;
-        try {
-
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            actorId = actor.id;
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
+        // get the current actor
+        Actor actor = getCurrentActor();
+        if (actor == null) {
             return redirect(controllers.routes.Application.index());
         }
+        Long actorId = actor.id;
 
         // as owner table
 
@@ -797,6 +728,28 @@ public class CockpitController extends Controller {
     }
 
     /**
+     * Get the current actor.
+     */
+    private Actor getCurrentActor() {
+
+        try {
+
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            Actor a = ActorDao.getActorByUid(uid);
+            if (a != null) {
+                return a;
+            } else {
+                log.warn("impossible to find the actor of the sign-in user");
+            }
+
+        } catch (Exception e) {
+            log.error("error when getting the actor of the current user", e);
+        }
+
+        return null;
+    }
+
+    /**
      * Get the pagination object for the authorized budget buckets according to
      * a filter on the owner.
      * 
@@ -811,7 +764,7 @@ public class CockpitController extends Controller {
         try {
             query = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(ownerIdExpression, null, getSecurityService());
         } catch (Exception e) {
-            Logger.error("impossible to construct the \"budget bucket view all\" query", e);
+            log.error("impossible to construct the \"budget bucket view all\" query", e);
         }
 
         Pagination<BudgetBucket> pagination = new Pagination<BudgetBucket>(query);
@@ -903,19 +856,12 @@ public class CockpitController extends Controller {
                             "fa fa-calculator", currentType.equals(MenuItemType.MY_BUDGET_BUCKETS)));
         }
 
-        try {
-
-            String uid = userSessionManagerService.getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-
-            ClickableMenuItem myEmployeeCardMenu = new ClickableMenuItem("core.cockpit.sidebar.my_allocations",
-                    controllers.core.routes.ActorController.allocation(actor.id), "fa fa-book", currentType.equals(MenuItemType.MY_EMPLOYEE_CARD));
-            myEmployeeCardMenu.setIsImportant(true);
-            sideBar.addMenuItem(myEmployeeCardMenu);
-
-        } catch (Exception e) {
-            Logger.error("impossible to find the actor of the sign-in user");
-        }
+        String uid = userSessionManagerService.getUserSessionId(ctx());
+        Actor actor = ActorDao.getActorByUid(uid);
+        ClickableMenuItem myEmployeeCardMenu = new ClickableMenuItem("core.cockpit.sidebar.my_allocations",
+                controllers.core.routes.ActorController.allocation(actor.id), "fa fa-book", currentType.equals(MenuItemType.MY_EMPLOYEE_CARD));
+        myEmployeeCardMenu.setIsImportant(true);
+        sideBar.addMenuItem(myEmployeeCardMenu);
 
         return sideBar;
 
