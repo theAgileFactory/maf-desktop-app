@@ -119,6 +119,8 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.setAsHomePageServiceUrl="";
 	//The URL to rename a page
 	this.renamePageServiceUrl="";
+	//The URL to retrieve an error widget
+	this.errorWidgetServiceUrl="";
 	//An object which stores the widget catalog (indexed by widget identifier)
 	this.loadedWidgetCatalog={};
 	
@@ -151,6 +153,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 			currentObject.unexpectedErrorMessage=data.unexpectedErrorMessage;
 			currentObject.confirmCurrentPageRemoveMessage=data.confirmCurrentPageRemoveMessage;
 			currentObject.dashboardData=data.dashboardData;
+			currentObject.errorWidgetServiceUrl=data.errorWidgetServiceUrl;
 			callback();
 		}).fail(function() {
 			window.location.replace(currentObject.errorUrl+"REFRESH");
@@ -480,7 +483,7 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 			//Find the corresponding url
 			var widgetUrl=_dashboardServiceInstance.getWidgetUrlFromId(widgetId);
 			var widgetAreaElement=$(this).closest("._maf_widget_widget_area");
-			_maf_widget_loadWidgetContent(widgetAreaElement, widgetUrl, function(){
+			_maf_widget_loadWidgetContent(widgetAreaElement, widgetUrl, widgetId, function(){
 				_maf_widgets_toggleEdition(false);
 			});
 		});
@@ -709,7 +712,7 @@ function _maf_widget_addNewWidget(widgetAreaElement, widgetCatalogEntry){
 		_dashboardServiceInstance.createNewWidgetAjaxServiceUrl,
 		JSON.stringify(widgetCatalogEntry),
 		function(data){
-			_maf_widget_loadWidgetContent(widgetAreaElement, data.url, function(){
+			_maf_widget_loadWidgetContent(widgetAreaElement, data.url, data.id, function(){
 				var widgetElement=widgetAreaElement.children(":first");
 				_dashboardServiceInstance.addWidget(widgetElement, data.id, data.url);
 				_maf_widgets_toggleEdition(true);
@@ -726,17 +729,25 @@ function _maf_widget_addNewWidget(widgetAreaElement, widgetCatalogEntry){
  * Load a some widget content based from the specified URL
  * widgetAreaElement : a jQuery element, the place holder to welcome the widget content
  * url : an AJAX URL to be called
+ * widgetId : the unique id of the widget
  * callback : a callback method to be used once the widget is loaded
  */
-function _maf_widget_loadWidgetContent(widgetAreaElement, url, callback) {
+function _maf_widget_loadWidgetContent(widgetAreaElement, url, widgetId, callback) {
 	widgetAreaElement.html('<div><img src="'+_dashboardServiceInstance.ajaxWaitImage+'"/></div>');
-	var jqxhr = $.get(url, function(data) {
+	$.get(url, function(data) {
 		widgetAreaElement.html(data);
 		if(callback){
 			callback();
 		}
 	}).fail(function() {
-		widgetAreaElement.html('<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;'+_dashboardServiceInstance.unableToLoadWidgetErrorMessage+'</div>');
+		$.get(_dashboardServiceInstance.errorWidgetServiceUrl+"?id="+widgetId, function(data) {
+			widgetAreaElement.html(data);
+			if(callback){
+				callback();
+			}
+		}).fail(function() {
+			widgetAreaElement.html('<div class="bg-danger _maf_widget_error"><i class="fa fa-exclamation-triangle"></i>&nbsp;UNEXPECTED ERROR</div>');
+		});
 	});
 }
 

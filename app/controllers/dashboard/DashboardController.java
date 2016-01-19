@@ -191,6 +191,7 @@ public class DashboardController extends Controller {
                     parameters.setRemoveCurrentDashboardPageServiceUrl(routes.DashboardController.deleteDashboardPage(dashboardPageId).url());
                     parameters.setAddNewDashboardPageServiceUrl(routes.DashboardController.addNewDashboardPage().url());
                     parameters.setDisplayDashboardPageServiceUrl(routes.DashboardController.index(0).url());
+                    parameters.setErrorWidgetServiceUrl(routes.DashboardController.getErrorWidget(0).url());
                     parameters.setSetAsHomePageServiceUrl(routes.DashboardController.setAsHomePage(dashboardPageId).url());
                     parameters.setRenamePageServiceUrl(routes.DashboardController.renameDashboardPage(dashboardPageId, "").url());
                     JsonNode node=getObjectMapper().valueToTree(parameters);
@@ -323,6 +324,41 @@ public class DashboardController extends Controller {
             }
         });
     }
+    
+    /**
+     * Return an error widget to be displayed when loading a widget failed
+     * @param widgetId the widget id
+     * @return an error widget fragment
+     */
+    public Promise<Result> getErrorWidget(Long widgetId){
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
+                try{
+                    //Check if the widget exists
+                    if(getDashboardService().isWidgetExists(widgetId)){
+                        return ok(
+                                views.html.framework_views.dashboard.error_widget.render(
+                                        widgetId, 
+                                        getI18nMessagePlugin().get("dashboard.widget.error.title", String.valueOf(widgetId)), 
+                                        getI18nMessagePlugin().get("dashboard.widget.error.unexpected")));
+                    }
+                    return ok(
+                            views.html.framework_views.dashboard.error_widget.render(
+                                    widgetId, 
+                                    getI18nMessagePlugin().get("dashboard.widget.error.title", String.valueOf(widgetId)), 
+                                    getI18nMessagePlugin().get("dashboard.widget.error.deleted")));
+                } catch (Exception e) {
+                    log.error("Unexpected error for the widget error !",e);
+                    return ok(
+                            views.html.framework_views.dashboard.error_widget.render(
+                                    widgetId, 
+                                    getI18nMessagePlugin().get("dashboard.widget.error.title", String.valueOf(widgetId)), 
+                                    getI18nMessagePlugin().get("dashboard.widget.error.unexpected")));
+                }
+            }
+        });
+    }
 
     private ObjectMapper getObjectMapper() {
         return objectMapper;
@@ -355,6 +391,7 @@ public class DashboardController extends Controller {
         private String displayDashboardPageServiceUrl;
         private String setAsHomePageServiceUrl;
         private String renamePageServiceUrl;
+        private String errorWidgetServiceUrl;
         private String ajaxWaitImage;
         private String unableToLoadWidgetErrorMessage;
         private String confirmWidgetRemoveMessage;
@@ -498,6 +535,12 @@ public class DashboardController extends Controller {
         }
         public void setRenamePageServiceUrl(String renamePageServiceUrl) {
             this.renamePageServiceUrl = renamePageServiceUrl;
+        }
+        public String getErrorWidgetServiceUrl() {
+            return errorWidgetServiceUrl;
+        }
+        public void setErrorWidgetServiceUrl(String errorWidgetServiceUrl) {
+            this.errorWidgetServiceUrl = errorWidgetServiceUrl;
         }
     }
 }
