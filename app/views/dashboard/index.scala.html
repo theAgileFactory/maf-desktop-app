@@ -134,7 +134,7 @@
 				var widgetCatalogEntryName   = optionSelected.text();
 				$('#_maf_widget_CatalogEntryName').html(widgetCatalogEntryName);
 				$('#_maf_widget_CatalogEntryDescription').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].description);
-				$('#_maf_widget_CatalogEntryImage').html('<img src="'+_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].image+'"/>');
+				$('#_maf_widget_pluginConfigurationName').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].pluginConfigurationName);
 			});
 			
 			//Delete page
@@ -202,9 +202,13 @@
 			</select>
           </div>
           <div class="col-md-6">
-          	<h4 id="_maf_widget_CatalogEntryName"></h4>
-          	<p style="font-style: italic;" id="_maf_widget_CatalogEntryDescription"></p>
-          	<p id="_maf_widget_CatalogEntryImage" class="text-center"></p>
+          	<div class="panel panel-default">
+			  <div class="panel-body">
+			  	<h4 id="_maf_widget_CatalogEntryName"></h4>
+          		<small id="_maf_widget_pluginConfigurationName"></small>
+			  </div>
+			</div>
+          	<p class="well" style="margin-top: 0.5em;" id="_maf_widget_CatalogEntryDescription"></p>
           </div>
         </div>
       </div>

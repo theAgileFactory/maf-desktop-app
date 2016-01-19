@@ -625,6 +625,9 @@ function _maf_widget_removeWidgetFromDashboard(widgetElement){
  */
 function _maf_widget_openWidgetSelector(widgetAreaElement){
 	$('#_maf_widget_CatalogSelect').html("");
+	$('#_maf_widget_CatalogEntryName').html("");
+	$('#_maf_widget_CatalogEntryDescription').html("");
+	$('#_maf_widget_pluginConfigurationName').html("");
 	$('#_maf_widget_Catalog').modal('show');
 	$('#_maf_widget_Catalog').data("mafSourceWidgetAreaElement",widgetAreaElement);
 	$('#_maf_widget_CatalogAddButton').prop('disabled', true);
