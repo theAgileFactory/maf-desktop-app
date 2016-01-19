@@ -31,7 +31,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
-import com.avaje.ebean.TxIsolation;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
@@ -502,7 +501,7 @@ public class PortfolioEntryController extends Controller {
 
         PortfolioEntryEditFormData portfolioEntryFormData = boundForm.get();
 
-        Ebean.beginTransaction(TxIsolation.READ_COMMITED);
+        Ebean.beginTransaction();
         try {
 
             // save the portfolio entry
