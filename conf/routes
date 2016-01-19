@@ -15,8 +15,6 @@ POST   /dash/page/add						controllers.dashboard.DashboardController.addNewDashb
 GET    /dash/page/home/:id                  controllers.dashboard.DashboardController.setAsHomePage(id: Long)
 GET    /dash/page/rename/:id/:name          controllers.dashboard.DashboardController.renameDashboardPage(id: Long, name: String)
 
-GET    /dash/widget/display/:id             controllers.dashboard.DashboardController.displayWidget(id: Long)
-
 #Custom router method
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)
 POST   /ext/*path                  framework.services.router.CustomRouterController.perform(path)

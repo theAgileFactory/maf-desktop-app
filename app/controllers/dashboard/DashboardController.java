@@ -3,7 +3,6 @@ package controllers.dashboard;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -323,35 +322,6 @@ public class DashboardController extends Controller {
                 }
             }
         });
-    }
-    
-    /**
-     * Return an error widget associated with the specified id
-     * @param id
-     *            a widget id
-     * @return an HTML widget part with a standard error message     
-     */
-    public Result getErrorWidget(Long id){
-        return ok(views.html.dashboard.error_widget.render(id));
-    }
-
-    /**
-     * Return a widget in DISPLAY mode.
-     * 
-     * @param id
-     *            a widget id
-     * 
-     * @return an HTML widget part
-     */
-    public Promise<Result> displayWidget(Long id) {
-        if (id == 3) {
-            return Promise.promise(() -> badRequest());
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
-        return Promise.promise(() -> ok(views.html.dashboard.display_widget.render(id, UUID.randomUUID().toString())));
     }
 
     private ObjectMapper getObjectMapper() {
