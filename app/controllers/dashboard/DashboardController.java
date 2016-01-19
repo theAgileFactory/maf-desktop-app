@@ -193,6 +193,7 @@ public class DashboardController extends Controller {
                     parameters.setAddNewDashboardPageServiceUrl(routes.DashboardController.addNewDashboardPage().url());
                     parameters.setDisplayDashboardPageServiceUrl(routes.DashboardController.index(0).url());
                     parameters.setSetAsHomePageServiceUrl(routes.DashboardController.setAsHomePage(dashboardPageId).url());
+                    parameters.setRenamePageServiceUrl(routes.DashboardController.renameDashboardPage(dashboardPageId, "").url());
                     JsonNode node=getObjectMapper().valueToTree(parameters);
                     return ok(node);
                 } catch (Exception e) {
@@ -269,6 +270,21 @@ public class DashboardController extends Controller {
     public Promise<Result> setAsHomePage(Long dashboardPageId) {
         try {
             getDashboardService().setDashboardPageAsHome(dashboardPageId, null);
+            return Promise.promise(() -> ok());
+        } catch (Exception e) {
+            return Promise.promise(() -> badRequest());
+        }
+    }
+    
+    /**
+     * Rename the current page
+     * 
+     * @param dashboardPageId the unique id of a dashboard page
+     * @param name the new name for the page
+     */
+    public Promise<Result> renameDashboardPage(Long dashboardPageId, String name) {
+        try {
+            getDashboardService().updateDashboardPageName(dashboardPageId, null, name);;
             return Promise.promise(() -> ok());
         } catch (Exception e) {
             return Promise.promise(() -> badRequest());
@@ -368,6 +384,7 @@ public class DashboardController extends Controller {
         private String widgetCatalogServiceUrl;
         private String displayDashboardPageServiceUrl;
         private String setAsHomePageServiceUrl;
+        private String renamePageServiceUrl;
         private String ajaxWaitImage;
         private String unableToLoadWidgetErrorMessage;
         private String confirmWidgetRemoveMessage;
@@ -505,6 +522,12 @@ public class DashboardController extends Controller {
         }
         public void setSetAsHomePageServiceUrl(String setAsHomePageServiceUrl) {
             this.setAsHomePageServiceUrl = setAsHomePageServiceUrl;
+        }
+        public String getRenamePageServiceUrl() {
+            return renamePageServiceUrl;
+        }
+        public void setRenamePageServiceUrl(String renamePageServiceUrl) {
+            this.renamePageServiceUrl = renamePageServiceUrl;
         }
     }
 }

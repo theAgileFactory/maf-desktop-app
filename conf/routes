@@ -13,6 +13,7 @@ GET    /dash/row/new/:templateIdentifier    controllers.dashboard.DashboardContr
 GET    /dash/page/remove/:id                controllers.dashboard.DashboardController.deleteDashboardPage(id: Long)
 POST   /dash/page/add						controllers.dashboard.DashboardController.addNewDashboardPage()
 GET    /dash/page/home/:id                  controllers.dashboard.DashboardController.setAsHomePage(id: Long)
+GET    /dash/page/rename/:id/:name          controllers.dashboard.DashboardController.renameDashboardPage(id: Long, name: String)
 
 GET    /dash/widget/display/:id             controllers.dashboard.DashboardController.displayWidget(id: Long)
 

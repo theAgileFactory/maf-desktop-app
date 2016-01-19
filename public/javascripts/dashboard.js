@@ -2,20 +2,6 @@
  * The service which is managing the dashboard pages view and edition
  */
 
-/**
- * Register an event listener for a widget.<br/>
- * This method is to be called by the widget developer.
- */
-function bizdock_widget_addEventListener(widgetId, eventListener){
-	$('#maf_widget_widget_id_'+widgetId).ready(function (){
-		$('#maf_widget_widget_id_'+widgetId).on('maf.event.widget.'+widgetId, eventListener);
-		$('#maf_widget_widget_id_'+widgetId+' ._maf_widget_widget_link').click(function(event){
-			event.preventDefault();
-			var urlOfLink=$(this).attr('href');
-			_maf_widget_sendLinkEvent(widgetId, urlOfLink);
-		});
-	});
-}
 
 /**
  * Display an error message in the message area of the widget
@@ -42,21 +28,36 @@ function bizdock_widget_displayErrorMessage(widgetId, message){
 }
 
 /**
+ * Register an event listener for a widget.<br/>
+ * This method is to be called by the widget developer.
+ */
+function bizdock_widget_addEventListener(widgetId, eventListener){
+	$('#maf_widget_widget_id_'+widgetId).ready(function (){
+		$('#maf_widget_widget_id_'+widgetId).on('maf.event.widget.'+widgetId, eventListener);
+		$('#maf_widget_widget_id_'+widgetId+' ._maf_widget_widget_link').click(function(event){
+			event.preventDefault();
+			var sourceElement=$(this).get();
+			_maf_widget_sendLinkEvent(widgetId, sourceElement);
+		});
+	});
+}
+
+/**
  * A method to send an edition event (when the Edit button is pressed)
  * @param widgetId a widget id
  */
 function _maf_widget_sendEditEvent(widgetId){
-	var e = jQuery.Event('maf.event.widget.'+widgetId, { action: "EDIT"} );
+	var e = jQuery.Event('maf.event.widget.'+widgetId, { nature: "EDIT"} );
 	$('#maf_widget_widget_id_'+widgetId).trigger(e);
 }
 
 /**
  * A method to send a link event (when a link of class _maf_widget_widget_link is pressed)
  * @param widgetId a widget id
- * @param urlOfLink the URL of the link (to be provided with the url parameter of the event)
+ * @param sourceElement the DOM element which triggered the event
  */
-function _maf_widget_sendLinkEvent(widgetId, urlOfLink){
-	var e = jQuery.Event('maf.event.widget.'+widgetId, { action: "LINK", url:  urlOfLink} );
+function _maf_widget_sendLinkEvent(widgetId, sourceElement){
+	var e = jQuery.Event('maf.event.widget.'+widgetId, { nature: "ACTION", source:  sourceElement} );
 	$('#maf_widget_widget_id_'+widgetId).trigger(e);
 }
 
@@ -116,6 +117,8 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.displayDashboardPageServiceUrl="";
 	//The URL to change the home page status of the current page
 	this.setAsHomePageServiceUrl="";
+	//The URL to rename a page
+	this.renamePageServiceUrl="";
 	//An object which stores the widget catalog (indexed by widget identifier)
 	this.loadedWidgetCatalog={};
 	
@@ -135,6 +138,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 			currentObject.addNewDashboardPageServiceUrl=data.addNewDashboardPageServiceUrl;
 			currentObject.displayDashboardPageServiceUrl=data.displayDashboardPageServiceUrl;
 			currentObject.setAsHomePageServiceUrl=data.setAsHomePageServiceUrl;
+			currentObject.renamePageServiceUrl=data.renamePageServiceUrl;
 			currentObject.ajaxWaitImage=data.ajaxWaitImage;
 			currentObject.unableToLoadWidgetErrorMessage=data.unableToLoadWidgetErrorMessage;
 			currentObject.confirmWidgetRemoveMessage=data.confirmWidgetRemoveMessage;
@@ -380,6 +384,34 @@ function _maf_widget_setCurrentPageAsHomePage(){
 }
 
 /**
+ * Rename the current page according to the specified name
+ */
+function _maf_widget_openRenameDashboardPageForm(newName){	
+	$("#_maf_widget_RenamePage_Name").val('');
+	$("#_maf_widget_RenamePageOKButton").prop('disabled', false);
+	$("#_maf_widget_RenamePageCloseButton").prop('disabled', false);
+	$("#_maf_widget_RenamePageForm").modal('show');
+	$("#_maf_widget_RenamePageOKButton").off('click');
+	$("#_maf_widget_RenamePageOKButton").click(function(){
+		var newName=$("#_maf_widget_RenamePage_Name").val();
+		if(newName.length>0){
+			$("#_maf_widget_RenamePage_Name").closest(".form-group").removeClass('has-error');
+			$("#_maf_widget_RenamePageOKButton").prop('disabled', true);
+			$("#_maf_widget_RenamePageCloseButton").prop('disabled', true);
+			
+			var jqxhr = $.get(_dashboardServiceInstance.renamePageServiceUrl+newName, function(data) {
+				$("#_maf_widget_RenamePageForm").modal('hide');
+				window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl);
+			}).fail(function(){
+				_maf_widget_unexpectedErrorRefreshPage();
+			});
+		}else{
+			$("#_maf_widget_RenamePage_Name").closest(".form-group").addClass('has-error');
+		}
+	});
+}
+
+/**
  * Add a new page
  */
 function _maf_widget_openNewDashboardPageForm(){
@@ -461,6 +493,7 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 function _maf_widget_disableDashboardEdition(){
 	$("#_maf_widget_addNewPage").show();
 	$("#_maf_widget_removePage").hide();
+	$("#_maf_widget_renamePage").hide();
 	$("#_maf_widget_currentPageIsHomeContainer").hide();
 	$("._maf_widget_widget_placeholder").detach();
 	$("._maf_widget_dashboard_row_trash").detach();
@@ -477,6 +510,7 @@ function _maf_widget_activateDashboardEdition(){
 	_maf_widget_addPlaceHolderToEmptyCells();
 	$("#_maf_widget_addNewPage").hide();
 	$("#_maf_widget_removePage").show();
+	$("#_maf_widget_renamePage").show();
 	$("#_maf_widget_currentPageIsHomeContainer").show();
 	$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
 	$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a class="_maf_widget_dashboard_row_trash_button" href="#"><i class="fa fa-trash text-primary"></i></a></div>');

@@ -44,10 +44,13 @@
 	<div class="col-md-6">
 		<p class="text-right">
 			@if(!currentDashboardPageIsHome){
+			<a id="_maf_widget_removePage" style="display: none;" class="btn btn-danger" href="#"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("dashboard.page.delete.button")</a>&nbsp;&nbsp;
+			}
+			@if(!currentDashboardPageIsHome){
 			<span style="display: none;" id="_maf_widget_currentPageIsHomeContainer"><input id="_maf_widget_currentPageIsHome" type="checkbox">&nbsp;@parts.Msg("dashboard.page.ishome.button")&nbsp;</span>
 			}
+			<a id="_maf_widget_renamePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-edit"></i>&nbsp;@parts.Msg("dashboard.page.rename.button")</a>
 			<a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;@parts.Msg("dashboard.page.new.button")</a>
-			<a id="_maf_widget_removePage" style="display: none;" class="btn btn-danger" href="#"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("dashboard.page.delete.button")</a>
 			<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;@parts.Msg("dashboard.page.edit.button")</a>
 		</p>
 	</div>
@@ -137,6 +140,11 @@
 				$('#_maf_widget_pluginConfigurationName').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].pluginConfigurationName);
 			});
 			
+			//Rename page
+			$('#_maf_widget_renamePage').click(function(){
+				_maf_widget_openRenameDashboardPageForm();
+			});
+			
 			//Delete page
 			$('#_maf_widget_removePage').click(function(){
 				_maf_widget_removeCurrentDashboardPage();
@@ -220,6 +228,33 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- Rename a page -->
+<div id="_maf_widget_RenamePageForm" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="@parts.Msg("button.close")"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">@parts.Msg("dashboard.renamepage.form.title")</h4>
+      </div>
+      <div class="modal-body">
+      		<form>
+      			  <div class="form-group">
+				    <label for="_maf_widget_RenamePage_Name">@parts.Msg("dashboard.page.form.name")</label>
+				    <input type="text" maxlength="30" class="form-control" id="_maf_widget_RenamePage_Name">
+				    <p class="help-block">@parts.Msg("dashboard.page.form.name.message")</p>
+				  </div>
+      		</form>
+      </div>
+      <div class="modal-footer">
+      	<div class="text-center"> 
+        <button type="button" id="_maf_widget_RenamePageOKButton" class="btn btn-primary">@parts.Msg("button.update")</button>
+        <button type="button" id="_maf_widget_RenamePageCloseButton" class="btn btn-default" data-dismiss="modal">@parts.Msg("button.close")</button>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <!-- Add a new page -->
 <div id="_maf_widget_AddNewPageForm" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog">
@@ -231,9 +266,9 @@
       <div class="modal-body">
       		<form>
       			  <div class="form-group">
-				    <label for="_maf_widget_AddNewPage_Name">@parts.Msg("dashboard.addpage.form.name")</label>
+				    <label for="_maf_widget_AddNewPage_Name">@parts.Msg("dashboard.page.form.name")</label>
 				    <input type="text" maxlength="30" class="form-control" id="_maf_widget_AddNewPage_Name">
-				    <p class="help-block">@parts.Msg("dashboard.addpage.form.name.message")</p>
+				    <p class="help-block">@parts.Msg("dashboard.page.form.name.message")</p>
 				  </div>
 				  <div class="checkbox">
 				    <label>
