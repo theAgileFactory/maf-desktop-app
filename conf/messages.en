@@ -348,13 +348,15 @@ notification.sending_system.email=Email
 #----------------------
 dashboard.addpage.form.title=Add a new page
 dashboard.addpage.form.ishome=is Home page ?
-dashboard.addpage.form.name=Name
-dashboard.addpage.form.name.message=Please provide a page name
+dashboard.page.form.name=Name
+dashboard.page.form.name.message=Please provide a page name
+dashboard.renamepage.form.title=Rename a page
 dashboard.widget.catalog.title=Widget catalog
 dashboard.row.template.selector.title=Dashboard row template
 dashboard.page.edit.button=Edit page
 dashboard.page.delete.button=Delete page
 dashboard.page.new.button=New page
+dashboard.page.rename.button=Rename
 dashboard.page.ishome.button=Home page
 dashboard.drag.widget.message=Drag your widgets here or
 dashboard.add.new.widget.message=add a new widget
