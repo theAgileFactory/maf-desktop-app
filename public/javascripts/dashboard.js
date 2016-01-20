@@ -130,7 +130,6 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.refresh=function(callback){
 		var currentObject=this;
 		var jqxhr = $.get(currentObject.configurationUrl, function(data) {
-			console.debug(JSON.stringify(data));
 			currentObject.maxNumberOfRows=data.maxNumberOfRows;
 			currentObject.createNewRowAjaxServiceUrl=data.createNewRowAjaxServiceUrl;
 			currentObject.createNewWidgetAjaxServiceUrl=data.createNewWidgetAjaxServiceUrl;
@@ -260,7 +259,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 		var selectedRowIndex=widgetLocationA.selectedRowIndex;
 		var selectedWidgetIndex=widgetLocationA.selectedWidgetIndex;
 		if(selectedWidgetIndex!=-1){
-			this.dashboardData[selectedRowIndex].widgets[selectedRowIndex]={id: widgetId, url: widgetUrl};
+			this.dashboardData[selectedRowIndex].widgets[selectedWidgetIndex]={id: widgetId, url: widgetUrl};
 		}
 		this.updateDashboard();
 	};
@@ -285,8 +284,6 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.addRow=function(dashboardRowElement, templateIdentifier){
 		var numberOfColumns=templateIdentifier.substring(templateIdentifier.indexOf('_')+1);
 		var selectedRowIndex=this.findRowIndex(dashboardRowElement);
-		console.debug(numberOfColumns);
-		console.debug(selectedRowIndex);
 		if(selectedRowIndex!=-1){
 			var widgetArray=[];
 			for(var widgetCount=0; widgetCount<numberOfColumns; widgetCount++){
@@ -313,7 +310,6 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	 * Call an AJAX service to "post" the update of the dasboard page configuration
 	 */
 	this.updateDashboard=function(){
-		console.debug(JSON.stringify(this.dashboardData));
 		maf_performPostJsonReceiveJson(
 				this.updateDashboardPageAjaxServiceUrl,
 				JSON.stringify(this.dashboardData),
@@ -428,7 +424,6 @@ function _maf_widget_openNewDashboardPageForm(){
 		var newPageConfig={};
 		newPageConfig.name=$("#_maf_widget_AddNewPage_Name").val();
 		newPageConfig.isHome=$("#_maf_widget_AddNewPage_isHome").is(':checked');
-		console.debug(JSON.stringify(newPageConfig));
 		if(newPageConfig.name.length>0){
 			$("#_maf_widget_AddNewPage_Name").closest(".form-group").removeClass('has-error');
 			$("#_maf_widget_AddNewPageOKButton").prop('disabled', true);
@@ -467,7 +462,7 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 					});
 		});
 	}else{
-		$("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_display fa fa-square-o"></i>&nbsp;<i class="_maf_widget_widget_command_configure fa fa-cog"></i>');
+		$("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_display fa fa-square-o fa-lg"></i>&nbsp;&nbsp;<i class="_maf_widget_widget_command_configure fa fa-cog fa-lg"></i>');
 		$("._maf_widget_widget_command_configure").click(function(event){
 			event.preventDefault();
 			var widgetElement=$(this).closest("._maf_widget_widget");
@@ -541,13 +536,12 @@ function _maf_widget_activateDashboardEdition(){
 		onmove: _maf_widget_dragMoveListener});
 	//Activate the management of the drag and drop
 	interact('._maf_widget_widget_area').dropzone({
-		overlap : 0.30,
 		ondropactivate : function(event) {
 			event.target.classList.add('_maf_widget_drop-active');
 		},
 		ondragenter : function(event) {
-			var draggableElement = event.relatedTarget,
-	        dropzoneElement = event.target;
+			var draggableElement = event.relatedTarget;
+	        var dropzoneElement = event.target;
 			dropzoneElement.classList.add('_maf_widget_drop-selected');
 		},
 		ondragleave : function(event) {
