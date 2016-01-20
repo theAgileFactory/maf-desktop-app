@@ -188,6 +188,14 @@ VALUES
 VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
+(select system_permission.id from system_permission where system_permission.name='ADMIN_TRANSLATION_KEY_EDIT_PERMISSION')
+);
+    INSERT INTO `system_level_role_type_has_system_permission`
+(`system_level_role_type_id`,
+`system_permission_id`)
+VALUES
+(
+(select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
@@ -1976,6 +1984,8 @@ INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES (
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('notification1', 'services.plugins.system.notification1.EventNotificationPluginRunner', '1');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('genint1', 'services.plugins.system.genint1.GenericExternalIntegrationPluginRunner', '0');
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('schedule1', 'services.plugins.system.schedule1.HookScriptSchedulerPluginRunner', '0');
+INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('widgetkit1', 'services.plugins.system.widgetkit1.StandardWidgetKitPlugin', '1');
+
 
 -- API root key
 
