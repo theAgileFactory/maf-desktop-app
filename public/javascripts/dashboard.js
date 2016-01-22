@@ -218,14 +218,16 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 		$("._maf_widget_dashboard_row").each(function(){
 			var widgetIndex=0;
 			var rowConfig=_dashboardServiceInstance.dashboardData[rowIndex];
-			$(this).children("._maf_widget_widget_area").each(function(){
-				var widget=rowConfig.widgets[widgetIndex];
-				if(widget.id!=-1){
-					_maf_widget_toggleEdition(editionMode, $(this), widget.identifier);
-				}
-				widgetIndex++;
-			});
-			rowIndex++;
+			if (rowConfig != null) {
+				$(this).children("._maf_widget_widget_area").each(function(){
+					var widget=rowConfig.widgets[widgetIndex];
+					if(widget.id!=-1){
+						_maf_widget_toggleEdition(editionMode, $(this), widget.identifier);
+					}
+					widgetIndex++;
+				});
+				rowIndex++;
+			}
 		});
 
 	}
