@@ -94,8 +94,9 @@
 				$(this).children("._maf_widget_widget_area").each(function(){
 					var widget=rowConfig.widgets[widgetIndex];
 					if(widget.id!=-1){
-						_maf_widget_loadWidgetContent($(this), widget.url, widget.id, function(){
-							_maf_widgets_toggleEdition(false);
+						var that = $(this);
+						_maf_widget_loadWidgetContent(that, widget.url, widget.id, function(){
+							_maf_widget_toggleEdition(false, that, widget.identifier);
 						});
 					}
 					widgetIndex++;

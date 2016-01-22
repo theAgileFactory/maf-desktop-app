@@ -122,7 +122,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	//The URL to retrieve an error widget
 	this.errorWidgetServiceUrl="";
 	//An object which stores the widget catalog (indexed by widget identifier)
-	this.loadedWidgetCatalog={};
+	this.loadedWidgetCatalog=[];
 	
 	/**
 	 * Load the dashboard configuration from the server and call the provided callback
@@ -153,29 +153,18 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 			currentObject.confirmCurrentPageRemoveMessage=data.confirmCurrentPageRemoveMessage;
 			currentObject.dashboardData=data.dashboardData;
 			currentObject.errorWidgetServiceUrl=data.errorWidgetServiceUrl;
+			
+			for(var widgetCatalogIndex=0; widgetCatalogIndex < data.widgetCatalog.length; widgetCatalogIndex++){
+				var widgetCatalogEntry=data.widgetCatalog[widgetCatalogIndex];
+				currentObject.loadedWidgetCatalog[widgetCatalogEntry.identifier]=widgetCatalogEntry;
+			}
+
 			callback();
 		}).fail(function() {
 			window.location.replace(currentObject.errorUrl+"REFRESH");
 		});	
 	};
-	
-	/**
-	 * Load the widget catalog from the server and callback the provided method passing as parameters:
-     * - a success or failure flag (true if success)
-     * - the catalog (in case of success)
-	 */ 
-	this.getWidgetCatalog=function(callback){
-		var widgetCatalog=this.loadedWidgetCatalog;
-		var jqxhr = $.get(_dashboardServiceInstance.widgetCatalogServiceUrl, function(data) {
-			for(var widgetCatalogIndex=0; widgetCatalogIndex < data.length; widgetCatalogIndex++){
-				var widgetCatalogEntry=data[widgetCatalogIndex];
-				widgetCatalog[widgetCatalogEntry.identifier]=widgetCatalogEntry;
-			}
-			callback(true, widgetCatalog);
-		}).fail(function() {
-			callback(false);
-		});	
-	}
+
 	
 	/**
 	 * Return the widget URL associated with the specified id
@@ -213,17 +202,32 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	 * Switch from edition mode to display mode
 	 */
 	this.toggleEditonMode=function(){
+		
 		if(this.editionMode){
 			_maf_widget_disableDashboardEdition();
 			$("#_maf_widget_edition_mode").removeClass('btn btn-warning').addClass('btn btn-primary').html('<i class="fa fa-cog"></i>&nbsp;Edit page');
-			_maf_widgets_toggleEdition(false);
 			this.editionMode=false;
 		}else{
 			_maf_widget_activateDashboardEdition();
 			$("#_maf_widget_edition_mode").removeClass('btn btn-primary').addClass('btn btn-warning').html('<i class="fa fa-play"></i>&nbsp;Display page');
-			_maf_widgets_toggleEdition(true);
 			this.editionMode=true;
 		}
+		
+		var editionMode = this.editionMode;
+		var rowIndex=0;
+		$("._maf_widget_dashboard_row").each(function(){
+			var widgetIndex=0;
+			var rowConfig=_dashboardServiceInstance.dashboardData[rowIndex];
+			$(this).children("._maf_widget_widget_area").each(function(){
+				var widget=rowConfig.widgets[widgetIndex];
+				if(widget.id!=-1){
+					_maf_widget_toggleEdition(editionMode, $(this), widget.identifier);
+				}
+				widgetIndex++;
+			});
+			rowIndex++;
+		});
+
 	}
 	
 	/**
@@ -253,13 +257,14 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	 * Update the dashboard data when adding a widget
 	 * widgetElement : the widget content element
 	 * widgetId : the newly created widget id
+	 * widgetIdentifier : the identifier of the widget catalog entry
 	 */
-	this.addWidget=function(widgetElement, widgetId, widgetUrl){
+	this.addWidget=function(widgetElement, widgetId, widgetUrl, widgetIdentifier){
 		var widgetLocationA=this.findWidgetLocation(widgetElement);
 		var selectedRowIndex=widgetLocationA.selectedRowIndex;
 		var selectedWidgetIndex=widgetLocationA.selectedWidgetIndex;
 		if(selectedWidgetIndex!=-1){
-			this.dashboardData[selectedRowIndex].widgets[selectedWidgetIndex]={id: widgetId, url: widgetUrl};
+			this.dashboardData[selectedRowIndex].widgets[selectedWidgetIndex]={id: widgetId, url: widgetUrl, identifier: widgetIdentifier};
 		}
 		this.updateDashboard();
 	};
@@ -447,11 +452,25 @@ function _maf_widget_openNewDashboardPageForm(){
 /**
  * Change the widget state to edition mode or display mode
  * isEditionMode : true if the widget is to be set in "edition mode" (the configuration button is visible)
+ * widgetAreaElement: the dom container of the widget (jQuery form)
+ * widgetCatalogEntryIdentifer: the identifier of the widget catalog entry (for example WG3)
  */
-function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
+function _maf_widget_toggleEdition(isEditionMode, widgetAreaElement, widgetCatalogEntryIdentifer){
+
+	/**
+	 * true if the widget has an edit mode (meaning a configuration mode).
+	 * 
+	 * Note: do not be confused with the isEditionMode which means that the current 
+	 * window is in the edit mode (to add/move/delete the widgets in the panels)
+	 */
+	var hasEditMode = true;
+	if (widgetCatalogEntryIdentifer != null) {
+		hasEditMode = _dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifer].hasEditMode;
+	}
+
 	if(isEditionMode){
-		$("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_trash fa fa-trash"></i>');
-		$("._maf_widget_widget_command_trash").click(function(event){
+		widgetAreaElement.find("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_trash fa fa-trash fa-lg"></i>');
+		widgetAreaElement.find("._maf_widget_widget_command_trash").click(function(event){
 			event.preventDefault();
 			var widgetElement=$(this).closest("._maf_widget_widget");
 			_maf_widget_ConfirmationBox(
@@ -461,16 +480,16 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 						_maf_widget_removeWidgetFromDashboard(widgetElement);
 					});
 		});
-	}else{
-		$("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_display fa fa-square-o fa-lg"></i>&nbsp;&nbsp;<i class="_maf_widget_widget_command_configure fa fa-cog fa-lg"></i>');
-		$("._maf_widget_widget_command_configure").click(function(event){
+	}else if(hasEditMode){
+		widgetAreaElement.find("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_display fa fa-square-o fa-lg"></i>&nbsp;&nbsp;<i class="_maf_widget_widget_command_configure fa fa-cog fa-lg"></i>');
+		widgetAreaElement.find("._maf_widget_widget_command_configure").click(function(event){
 			event.preventDefault();
 			var widgetElement=$(this).closest("._maf_widget_widget");
 			//Format of the element id is maf_widget_widget_id_@id
 			var widgetId=widgetElement.attr('id').substring("maf_widget_widget_id_".length);
 			_maf_widget_sendEditEvent(widgetId);
 		});
-		$("._maf_widget_widget_command_display").click(function(event){
+		widgetAreaElement.find("._maf_widget_widget_command_display").click(function(event){
 			event.preventDefault();
 			var widgetElement=$(this).closest("._maf_widget_widget");
 			//Format of the element id is maf_widget_widget_id_@id
@@ -479,9 +498,11 @@ function _maf_widgets_toggleEdition(isEditionMode, dashboardData){
 			var widgetUrl=_dashboardServiceInstance.getWidgetUrlFromId(widgetId);
 			var widgetAreaElement=$(this).closest("._maf_widget_widget_area");
 			_maf_widget_loadWidgetContent(widgetAreaElement, widgetUrl, widgetId, function(){
-				_maf_widgets_toggleEdition(false);
+				_maf_widget_toggleEdition(false, widgetAreaElement, widgetCatalogEntryIdentifer);
 			});
 		});
+	} else {
+		widgetAreaElement.find("._maf_widget_widget_commands").html('');
 	}
 }
 
@@ -662,20 +683,15 @@ function _maf_widget_openWidgetSelector(widgetAreaElement){
 	$('#_maf_widget_Catalog').modal('show');
 	$('#_maf_widget_Catalog').data("mafSourceWidgetAreaElement",widgetAreaElement);
 	$('#_maf_widget_CatalogAddButton').prop('disabled', true);
-	_dashboardServiceInstance.getWidgetCatalog(function(isSuccess, catalog){
-		if(isSuccess){
-			var widgetCatalogSelect=$('#_maf_widget_CatalogSelect');
-			for(widgetIdentifier in catalog){
-				var widgetCatalogEntry=catalog[widgetIdentifier];
-				$('<option>').val(widgetCatalogEntry.identifier).text(widgetCatalogEntry.name).appendTo(widgetCatalogSelect);
-			}
-			$('#_maf_widget_CatalogAddButton').prop('disabled', false);
-		}else{
-			$('#_maf_widget_Catalog').modal('hide');
-			$('#_maf_widget_CatalogAddButton').prop('disabled', false);
-			_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.unableToLoadWidgetCatalogErrorMessage);
-		}
-	});
+	
+	var catalog = _dashboardServiceInstance.loadedWidgetCatalog;
+	var widgetCatalogSelect=$('#_maf_widget_CatalogSelect');
+	for(widgetIdentifier in catalog){
+		var widgetCatalogEntry=catalog[widgetIdentifier];
+		$('<option>').val(widgetCatalogEntry.identifier).text(widgetCatalogEntry.name).appendTo(widgetCatalogSelect);
+	}
+	$('#_maf_widget_CatalogAddButton').prop('disabled', false);
+
 }
 
 /**
@@ -701,15 +717,14 @@ function _maf_widget_addDashboardRow(dashboardRowElement, templateIdentifier){
  */
 function _maf_widget_addNewWidget(widgetAreaElement, widgetCatalogEntry){
 	widgetAreaElement.html('<div><img src="'+_dashboardServiceInstance.ajaxWaitImage+'"/></div>');
-	
 	maf_performPostJsonReceiveJson(
 		_dashboardServiceInstance.createNewWidgetAjaxServiceUrl,
 		JSON.stringify(widgetCatalogEntry),
 		function(data){
 			_maf_widget_loadWidgetContent(widgetAreaElement, data.url, data.id, function(){
 				var widgetElement=widgetAreaElement.children(":first");
-				_dashboardServiceInstance.addWidget(widgetElement, data.id, data.url);
-				_maf_widgets_toggleEdition(true);
+				_dashboardServiceInstance.addWidget(widgetElement, data.id, data.url, widgetCatalogEntry.identifier);
+				_maf_widget_toggleEdition(true, widgetAreaElement, widgetCatalogEntry.identifier);
 			});
 		},
 		function(){
