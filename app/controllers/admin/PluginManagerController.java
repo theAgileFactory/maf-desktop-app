@@ -421,13 +421,15 @@ public class PluginManagerController extends Controller {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.not_exists", pluginConfigurationId));
             return redirect(routes.PluginManagerController.index());
         }
-        String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
-        try {
-            getPluginManagerService().unregisterPlugin(pluginConfigurationId);
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.success", pluginConfigurationName));
-        } catch (Exception e) {
-            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.error", pluginConfigurationName));
-            log.error("Fail to unregister a plugin configuration manually", e);
+        if(!pluginInfo.getDescriptor().autoRegister()){
+            String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
+            try {
+                getPluginManagerService().unregisterPlugin(pluginConfigurationId);
+                Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.success", pluginConfigurationName));
+            } catch (Exception e) {
+                Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.delete.error", pluginConfigurationName));
+                log.error("Fail to unregister a plugin configuration manually", e);
+            }
         }
         return redirect(routes.PluginManagerController.index());
     }
@@ -546,13 +548,15 @@ public class PluginManagerController extends Controller {
         if (pluginInfo == null) {
             return badRequest();
         }
-        String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
-        try {
-            getPluginManagerService().startPlugin(pluginConfigurationId);
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", Msg.get(pluginConfigurationName)));
-        } catch (PluginException e) {
-            log.error("Exception while attempting to start the plugin " + pluginConfigurationId, e);
-            Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.error", Msg.get(pluginConfigurationName)));
+        if(!pluginInfo.getDescriptor().autoRegister()){
+            String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
+            try {
+                getPluginManagerService().startPlugin(pluginConfigurationId);
+                Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", Msg.get(pluginConfigurationName)));
+            } catch (PluginException e) {
+                log.error("Exception while attempting to start the plugin " + pluginConfigurationId, e);
+                Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.error", Msg.get(pluginConfigurationName)));
+            }
         }
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }
@@ -570,9 +574,11 @@ public class PluginManagerController extends Controller {
         if (pluginInfo == null) {
             return badRequest();
         } else {
-            String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
-            getPluginManagerService().stopPlugin(pluginConfigurationId);
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", Msg.get(pluginConfigurationName)));
+            if(!pluginInfo.getDescriptor().autoRegister()){
+                String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
+                getPluginManagerService().stopPlugin(pluginConfigurationId);
+                Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", Msg.get(pluginConfigurationName)));
+            }
         }
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
     }

@@ -94,10 +94,17 @@
                     @parts.Msg("admin.plugin_manager.configuration.view.panel.admin.title")
                 </div>
                 <div class="panel-body">
+                    @if(!pluginInfo.getDescriptor().autoRegister()){
                     <p class="text-center">
                         <a class="btn btn-success @startDisabled" href="@controllers.admin.routes.PluginManagerController.startPlugin(pluginConfigurationId).url"><i class="fa fa-play"></i>&nbsp;@parts.Msg("button.start")</a>
                         <a class="btn btn-danger @stopDisabled" href="@controllers.admin.routes.PluginManagerController.stopPlugin(pluginConfigurationId).url"><i class="fa fa-stop"></i>&nbsp;@parts.Msg("button.stop")</a>
                     </p>
+                    }else{
+                    	<h3 class="text-center">
+                    		<span class="label label-default">Auto-register</span>
+                    	</3>
+                    }
+                    
                     @if(pluginInfo.getActionDescriptors()!=null){
                     <hr/>
                     <p class="text-center">
@@ -110,6 +117,7 @@
                         }
                     </p>
                     }
+                    @if(!pluginInfo.getDescriptor().autoRegister()){
                     <hr/>
                     <p class="text-center">
                         <a onclick="return maf_confirmRemoveRegistration();" class="btn btn-danger @unregisterDisabled" href="@controllers.admin.routes.PluginManagerController.unregisterPlugin(pluginConfigurationId).url"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("button.delete")</a>
@@ -119,6 +127,7 @@
                             }
                         </script>
                     </p>
+                    }
                 </div>
             </div>
         </div>
