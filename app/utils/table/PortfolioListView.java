@@ -22,16 +22,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import models.pmo.Actor;
-import models.pmo.Portfolio;
-import models.pmo.PortfolioType;
-import models.pmo.Stakeholder;
 import controllers.core.CockpitController;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.pmo.Actor;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioType;
+import models.pmo.Stakeholder;
 
 /**
  * A portfolio list view is used to display an portfolio row in a table.
@@ -50,6 +50,9 @@ public class PortfolioListView {
             {
 
                 setIdFieldName("id");
+
+                addColumn("refId", "refId", "object.portfolio.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                setJavaColumnFormatter("refId", new ObjectFormatter<PortfolioListView>());
 
                 addColumn("name", "name", "object.portfolio.name.label", Table.ColumnDef.SorterType.NONE);
                 setJavaColumnFormatter("name", new ObjectFormatter<PortfolioListView>());
@@ -107,6 +110,7 @@ public class PortfolioListView {
     }
 
     public Long id;
+    public String refId;
     public String name;
     public PortfolioType type;
     public Boolean isActive;
@@ -122,6 +126,7 @@ public class PortfolioListView {
     public PortfolioListView(Portfolio portfolio) {
 
         this.id = portfolio.id;
+        this.refId = portfolio.refId;
         this.name = portfolio.name;
         this.type = portfolio.portfolioType;
         this.manager = portfolio.manager;
