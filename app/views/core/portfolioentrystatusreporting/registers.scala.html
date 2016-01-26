@@ -52,7 +52,7 @@
             &nbsp;
             <div class="pull-right">
                 @if(isActiveReport) {
-                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)"><span class="fa fa-arrow-circle-o-down-alt fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)"><span class="fa fa-download fa-lg"></span></a>
                     &nbsp;
                 }
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
