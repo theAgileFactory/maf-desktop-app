@@ -55,7 +55,7 @@ public class PortfolioEntryEditFormData {
     @MaxLength(value = IModelConstants.SMALL_STRING)
     public String governanceId;
 
-    @MaxLength(value = IModelConstants.SMALL_STRING)
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String erpRefId;
 
     @Required

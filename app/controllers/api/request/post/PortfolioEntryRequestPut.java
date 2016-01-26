@@ -22,17 +22,16 @@ import java.util.List;
 
 import javax.persistence.Column;
 
-import models.framework_models.parent.IModelConstants;
-import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.Required;
-import play.data.validation.ValidationError;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
+import models.framework_models.parent.IModelConstants;
+import play.data.validation.Constraints.MaxLength;
+import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 
 /**
  * The portfolio entry put request.
@@ -57,7 +56,7 @@ public class PortfolioEntryRequestPut {
     public String governanceId;
 
     @JsonProperty
-    @MaxLength(value = IModelConstants.SMALL_STRING)
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String erpRefId;
 
     @JsonProperty

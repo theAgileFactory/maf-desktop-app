@@ -65,7 +65,7 @@ public class PortfolioEntryRequestPost {
     public String governanceId;
 
     @JsonProperty
-    @MaxLength(value = IModelConstants.SMALL_STRING)
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String erpRefId;
 
     @JsonProperty
