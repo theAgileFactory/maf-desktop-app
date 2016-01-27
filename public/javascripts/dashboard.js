@@ -62,6 +62,15 @@ function _maf_widget_sendLinkEvent(widgetId, sourceElement){
 }
 
 /**
+ * Change the title of the widget.
+ * @param widgetId a widget id
+ * @param title the new title
+ */
+function bizdock_widget_changeTitle(widgetId, title){
+	$("#maf_widget_widget_title_" + widgetId).html(title);
+}
+
+/**
  * The main object which manages the dashboard system
  */
 function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUrl){
