@@ -82,6 +82,11 @@ public class DashboardController extends Controller {
             }
             Triple<String, Boolean, List<DashboardRowConfiguration>> dashboardPageConfiguration = getDashboardService()
                     .getDashboardPageConfiguration(dashboardPageId, null);
+
+            if (dashboardPageConfiguration == null) {
+                return notFound(views.html.error.not_found.render(""));
+            }
+
             return ok(views.html.dashboard.index.render(dashboardPageId, dashboardPageConfiguration.getMiddle(), dashboardPageConfiguration.getLeft(),
                     dashboardPageConfiguration.getRight(), pages, routes.DashboardController.configure(dashboardPageId).url(),
                     routes.DashboardController.indexError(dashboardPageId, "").url()));
