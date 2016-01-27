@@ -365,7 +365,8 @@ dashboard.object.page.is_home.label=Défaut
 
 dashboard.page.edit.button=Mode édition
 dashboard.page.display.button=Quitter
-dashboard.page.delete.button=Effacer la page
+dashboard.page.delete.button=Supprimer la page
+dashboard.page.delete.confirm.message=Etes-vous sûr(e) de vouloir supprimer cette page?
 dashboard.page.new.button=Nouvelle page
 dashboard.page.rename.button=Renommer la page
 dashboard.page.ishome.button=Mettre par défaut
@@ -375,22 +376,21 @@ dashboard.renamepage.form.title=Renommer une page
 dashboard.widget.catalog.title=Catalogue de widget
 dashboard.addrow.title=Ajouter une ligne
 
+dashboard.drag.widget.message=Déplacez vos widgets ici ou
+dashboard.drag.widget.link=ajoutez un nouveau widget
 
+dashboard.row.delete.confirm.message=Etes-vous sûr(e) de vouloir supprimer cette ligne? Tous les widgets inclus seront également supprimés.
+dashboard.row.delete.error.message=Une page doit avoir au moins une ligne.
 
+dashboard.widget.delete.confirm.message=Etes-vous sûr(e) de vouloir supprimer ce widget?
 
-dashboard.drag.widget.message=Déplpacez vos widgets ici ou
-dashboard.add.new.widget.message=ajouter une nouvelle widget
-dashboard.confirm.row.remove.message=Voulez-vous effacer cette ligne de dashboard de même que toutes les widgets qu''elle contient ?
-dashboard.confirm.widget.remove.message=Voulez-vous effacer cette widget ?
-dashboard.widget.error.title=Erreur - widget {0}
-dashboard.widget.error.deleted=Une erreur est survenue lors du chargement de la widget.<br/>Celle-ci a été désactivée par l''administrateur, vous pouvez l''enlever de votre page.
-dashboard.widget.error.unexpected=Erreur inattendue.<br/> Rechargez la page et contactez votre administrateur si le problème persiste.
-dashboard.cannot.delete.last.row.message=Une page de dashboard doit avoir au moins une ligne !
+dashboard.widget.error.title=Erreur pour le widget {0}
+dashboard.widget.error.deleted=Une erreur est survenue lors du chargement du widget.<br/>Celui-ci a été supprimé par l''administrateur, vous devez l''enlever de cette page.
+dashboard.widget.error.unexpected=Erreur inattendue.<br/> Veuillez recharger la page et contacter votre administrateur si le problème persiste.
+
 dashboard.warning.messagebox.title.message=ATTENTION
-dashboard.maxnumber.row.message=Vous avez atteint le nombre de ligne maximum :
+dashboard.maxnumber.row.message=Vous avez atteint le nombre maximum de ligne:
 dashboard.unexpected.error.message=Une erreur inattendue est survenue, la page va être automatiquement rechargée.
-dashboard.confirm.currentpage.remove.message=Souhaitez-vous effacer la page ?
-
 
 #----------------------
 # ID zone

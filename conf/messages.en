@@ -354,6 +354,7 @@ dashboard.object.page.is_home.label=Default
 dashboard.page.edit.button=Edit mode
 dashboard.page.display.button=Exit
 dashboard.page.delete.button=Delete page
+dashboard.page.delete.confirm.message=Are you sure you want to delete this page?
 dashboard.page.new.button=New page
 dashboard.page.rename.button=Rename page
 dashboard.page.ishome.button=Set as default
@@ -363,22 +364,21 @@ dashboard.renamepage.form.title=Rename a page
 dashboard.widget.catalog.title=Widget catalog
 dashboard.addrow.title=Add a row
 
-
-
-
-
 dashboard.drag.widget.message=Drag your widgets here or
-dashboard.add.new.widget.message=add a new widget
-dashboard.confirm.row.remove.message=Do you really want to delete this dashboard row as well as all the widgets which it includes ?
-dashboard.confirm.widget.remove.message=Do you really want to remove this widget ?
+dashboard.drag.widget.link=add a new widget
+
+dashboard.row.delete.confirm.message=Are you sure you want to delete this row? All included widgets will be also deleted.
+dashboard.row.delete.error.message=A page must have at least one row.
+
+dashboard.widget.delete.confirm.message=Are you sure you want to delete this widget?
+
 dashboard.widget.error.title=Error for widget {0}
-dashboard.widget.error.deleted=Unable to load the widget.<br/>This one has been deleted by the administrator, you should remove it from your dashboard page.
+dashboard.widget.error.deleted=Unable to load the widget.<br/>This one has been deleted by the administrator, you should remove it from this page.
 dashboard.widget.error.unexpected=Unexpected widget error.<br/> Please refresh and contact the administrator if this problem persists.
-dashboard.cannot.delete.last.row.message=A dashboard page must have at least one row !
+
 dashboard.warning.messagebox.title.message=WARNING
-dashboard.maxnumber.row.message=You reached the max number of rows :
-dashboard.unexpected.error.message=An unexpected error has occured, the current page will be automatically refreshed.
-dashboard.confirm.currentpage.remove.message=Do you really want to delete the current dashboard page ?
+dashboard.maxnumber.row.message=You reached the max number of rows:
+dashboard.unexpected.error.message=An unexpected error has occurred, the current page will be automatically refreshed.
 
 #----------------------
 # ID zone
