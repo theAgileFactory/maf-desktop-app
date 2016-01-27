@@ -527,7 +527,7 @@ public class TimesheetController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.reject.successful"));
         }
 
-        return redirect(controllers.core.routes.CockpitController.subordinatesTimesheet());
+        return redirect(request().getHeader("referer"));
     }
 
     /**
@@ -553,7 +553,7 @@ public class TimesheetController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.send_reminder.successful"));
 
-        return redirect(controllers.core.routes.CockpitController.subordinatesTimesheet());
+        return redirect(request().getHeader("referer"));
     }
 
     /**
