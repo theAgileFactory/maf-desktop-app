@@ -358,18 +358,26 @@ notification.sending_system.email=Email
 #----------------------
 # Dashboard
 #----------------------
-dashboard.addpage.form.title=Ajouter une nouvelle page
-dashboard.addpage.form.ishome=Home page ?
-dashboard.page.form.name=Nom
-dashboard.page.form.name.message=Veuillez fournir un nom pour la page
-dashboard.renamepage.form.title=Renommer
-dashboard.widget.catalog.title=Catalogue de widget
-dashboard.row.template.selector.title=Template de ligne
-dashboard.page.edit.button=Modifier
-dashboard.page.delete.button=Effacer
+dashboard.object.page.name.label=Nom
+dashboard.object.page.name.help=Veuillez fournir un nom de page
+dashboard.object.page.name.default=Défaut
+dashboard.object.page.is_home.label=Défaut
+
+dashboard.page.edit.button=Mode édition
+dashboard.page.display.button=Quitter
+dashboard.page.delete.button=Effacer la page
 dashboard.page.new.button=Nouvelle page
-dashboard.page.rename.button=Renommer
-dashboard.page.ishome.button=Home page
+dashboard.page.rename.button=Renommer la page
+dashboard.page.ishome.button=Mettre par défaut
+
+dashboard.addpage.form.title=Ajouter une nouvelle page
+dashboard.renamepage.form.title=Renommer une page
+dashboard.widget.catalog.title=Catalogue de widget
+dashboard.addrow.title=Ajouter une ligne
+
+
+
+
 dashboard.drag.widget.message=Déplpacez vos widgets ici ou
 dashboard.add.new.widget.message=ajouter une nouvelle widget
 dashboard.confirm.row.remove.message=Voulez-vous effacer cette ligne de dashboard de même que toutes les widgets qu''elle contient ?
@@ -1788,6 +1796,7 @@ unexpected.error.home.link=Retour à la page d''accueil
 # home
 #----------------------
 
+index.title=Accueil
 index.noemployee.notif=Votre compte utilisateur BizDock n''est pas associé à un employé. Par conséquent, certaines fonctionnalités ne sont pas disponibles.\
  Pour créer un employé et l''associer à votre compte, veuillez sélectionner "Employé" dans le menu "Nouveau" (des permissions spécifiques sont nécessaires pour réaliser cette action).
 index.notifications.title=Notifications non lues

@@ -358,18 +358,26 @@ notification.sending_system.email=E-Mail
 #----------------------
 # Dashboard
 #----------------------
-dashboard.addpage.form.title=de: Add a new page
-dashboard.addpage.form.ishome=de: is Home page ?
-dashboard.page.form.name=de: Name
-dashboard.page.form.name.message=de: Please provide a page name
-dashboard.renamepage.form.title=de: Rename a page
-dashboard.widget.catalog.title=de: Widget catalog
-dashboard.row.template.selector.title=de: Dashboard row template
-dashboard.page.edit.button=de: Edit page
+dashboard.object.page.name.label=Name
+dashboard.object.page.name.help=de: Please provide a page name
+dashboard.object.page.name.default=de: Default
+dashboard.object.page.is_home.label=de: Default
+
+dashboard.page.edit.button=de: Edit mode
+dashboard.page.display.button=de: Exit
 dashboard.page.delete.button=de: Delete page
 dashboard.page.new.button=de: New page
-dashboard.page.rename.button=de: Rename
-dashboard.page.ishome.button=de: Home page
+dashboard.page.rename.button=de: Rename page
+dashboard.page.ishome.button=de: Set as default
+
+dashboard.addpage.form.title=de: Add a new page
+dashboard.renamepage.form.title=de: Rename a page
+dashboard.widget.catalog.title=de: Widget catalog
+dashboard.addrow.title=de: Add a row
+
+
+
+
 dashboard.drag.widget.message=de: Drag your widgets here or
 dashboard.add.new.widget.message=de: add a new widget
 dashboard.confirm.row.remove.message=de: Do you really want to delete this dashboard row as well as all the widgets which it includes ?
@@ -1788,6 +1796,7 @@ unexpected.error.home.link=Zurück zur Startseite
 # home
 #----------------------
 
+index.title=de: Home
 index.noemployee.notif=Ihr BizDock-Konto ist mit keinem Mitarbeiter verknüpft, dadurch stehen einige Funktion nicht zur verfügung.\
  Im Menu "Neu" können Sie mit "Mitarbeiter" einen Mitarbeiter generieren und mit Ihrem Konto verknüpfen (vorausgesetzt Sie haben die entsprechenden Benutzerrechte).
 index.notifications.title=Ungelesene Mitteilungen

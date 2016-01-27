@@ -22,6 +22,7 @@ import framework.services.plugins.IDashboardService;
 import framework.services.plugins.IDashboardService.DashboardRowConfiguration;
 import framework.services.plugins.IDashboardService.DashboardRowConfiguration.WidgetConfiguration;
 import framework.services.plugins.IDashboardService.WidgetCatalogEntry;
+import framework.utils.Msg;
 import models.framework_models.plugin.DashboardRowTemplate;
 import play.Logger;
 import play.libs.F.Function0;
@@ -73,7 +74,7 @@ public class DashboardController extends Controller {
                 row.setLayout(DashboardRowTemplate.TPL12COL_1);
                 row.setWidgets(Arrays.asList(new WidgetConfiguration(-1l, null, null)));
                 defaultConfig.add(row);
-                getDashboardService().createDashboardPage(null, "Home", true, defaultConfig);
+                getDashboardService().createDashboardPage(null, Msg.get("dashboard.object.page.name.default"), true, defaultConfig);
                 pages = getDashboardService().getDashboardPages(null);
             }
             if (dashboardPageId == 0) {

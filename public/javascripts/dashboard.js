@@ -73,7 +73,7 @@ function bizdock_widget_changeTitle(widgetId, title){
 /**
  * The main object which manages the dashboard system
  */
-function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUrl){
+function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUrl, translations){
 	//The URL to be redirected to if something harmfull and unexpected happen
 	this.errorUrl=errorUrl;
 	//The URL to get the configuration of the dashboard page
@@ -130,8 +130,10 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	this.renamePageServiceUrl="";
 	//The URL to retrieve an error widget
 	this.errorWidgetServiceUrl="";
-	//An object which stores the widget catalog (indexed by widget identifier)
+	//An array which stores the widget catalog (indexed by widget identifier)
 	this.loadedWidgetCatalog=[];
+	//An object with needed translations
+	this.translations=translations;
 	
 	/**
 	 * Load the dashboard configuration from the server and call the provided callback
@@ -214,11 +216,11 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 		
 		if(this.editionMode){
 			_maf_widget_disableDashboardEdition();
-			$("#_maf_widget_edition_mode").removeClass('btn btn-warning').addClass('btn btn-primary').html('<i class="fa fa-cog"></i>&nbsp;Edit page');
+			$("#_maf_widget_edition_mode").html('<i class="fa fa-cog"></i>&nbsp;' + this.translations.edit_button);
 			this.editionMode=false;
 		}else{
 			_maf_widget_activateDashboardEdition();
-			$("#_maf_widget_edition_mode").removeClass('btn btn-primary').addClass('btn btn-warning').html('<i class="fa fa-play"></i>&nbsp;Display page');
+			$("#_maf_widget_edition_mode").html('<i class="fa fa-sign-out"></i>&nbsp;'  + this.translations.display_button);
 			this.editionMode=true;
 		}
 		

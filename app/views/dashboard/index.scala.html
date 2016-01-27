@@ -1,19 +1,21 @@
-@(currentDashboardPageId: Long, 
-	currentDashboardPageIsHome: Boolean, 
-	currentDashboardPageName: String, 
-	currentDashboardPageConfiguration: List[framework.services.plugins.IDashboardService.DashboardRowConfiguration], 
-	dashboardPages: List[org.apache.commons.lang3.tuple.Triple[String, Boolean, Long]],
-	configureUrl: String,
-	errorUrl: String)
+@(  
+    currentDashboardPageId: Long, 
+    currentDashboardPageIsHome: Boolean, 
+    currentDashboardPageName: String, 
+    currentDashboardPageConfiguration: List[framework.services.plugins.IDashboardService.DashboardRowConfiguration], 
+    dashboardPages: List[org.apache.commons.lang3.tuple.Triple[String, Boolean, Long]],
+    configureUrl: String,
+    errorUrl: String
+)
 
 @import framework_views.parts
 @import helper._
 @import bootstrap3._
 
 @templates.main_bc_nosidebar(
-    "Dashbaord",
+    "main.application.title.header",
     Seq(
-        ("Dashboard",null)
+        (parts.Msg.asString("index.title"),null)
     )
 ){
 <script src="@routes.Assets.versioned("javascripts/interact.js")"></script>
@@ -21,142 +23,150 @@
 <link href="@routes.Assets.versioned("stylesheets/dashboard.css")" type="text/css" rel="stylesheet">
 }{
 <div class="row">
-	<div class="col-md-6">
-		<div class="btn-group" data-toggle="buttons">
-			@for(pair <- dashboardPages){
-				@if(pair.getMiddle()){
-				<label class="btn @if(currentDashboardPageId==pair.getRight()){btn-primary active}else{btn-default}"> <input type="radio"
-					name="_maf_widget_dashboardPage" id="_maf_widget_page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked="checked"}>
-					@pair.getLeft()
-				</label>
-				}
-			}
-			@for(pair <- dashboardPages){
-				@if(!pair.getMiddle()){
-				<label class="btn @if(currentDashboardPageId==pair.getRight()){btn-primary active}else{btn-default}"> <input type="radio"
-					name="_maf_widget_dashboardPage" id="_maf_widget_page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked="checked"}>
-					@pair.getLeft()
-				</label>
-				}
-			}
-		</div>
-	</div>
-	<div class="col-md-6">
-		<p class="text-right">
-			@if(!currentDashboardPageIsHome){
-			<a id="_maf_widget_removePage" style="display: none;" class="btn btn-danger" href="#"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("dashboard.page.delete.button")</a>&nbsp;&nbsp;
-			}
-			@if(!currentDashboardPageIsHome){
-			<span style="display: none;" id="_maf_widget_currentPageIsHomeContainer"><input id="_maf_widget_currentPageIsHome" type="checkbox">&nbsp;@parts.Msg("dashboard.page.ishome.button")&nbsp;</span>
-			}
-			<a id="_maf_widget_renamePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-edit"></i>&nbsp;@parts.Msg("dashboard.page.rename.button")</a>
-			<a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;@parts.Msg("dashboard.page.new.button")</a>
-			<a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;@parts.Msg("dashboard.page.edit.button")</a>
-		</p>
-	</div>
+    <div class="col-md-6">
+        <div class="btn-group" data-toggle="buttons">
+            @for(pair <- dashboardPages){
+                @if(pair.getMiddle()){
+                <label class="btn @if(currentDashboardPageId==pair.getRight()){btn-primary active}else{btn-default}"> <input type="radio"
+                    name="_maf_widget_dashboardPage" id="_maf_widget_page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked="checked"}>
+                    @pair.getLeft()
+                </label>
+                }
+            }
+            @for(pair <- dashboardPages){
+                @if(!pair.getMiddle()){
+                <label class="btn @if(currentDashboardPageId==pair.getRight()){btn-primary active}else{btn-default}"> <input type="radio"
+                    name="_maf_widget_dashboardPage" id="_maf_widget_page-@pair.getRight()" autocomplete="off"  @if(currentDashboardPageId==pair.getRight()){checked="checked"}>
+                    @pair.getLeft()
+                </label>
+                }
+            }
+        </div>
+    </div>
+    <div class="col-md-5">
+        <p class="text-right">
+            @if(!currentDashboardPageIsHome){
+                <span style="display: none;" id="_maf_widget_currentPageIsHomeContainer"><input id="_maf_widget_currentPageIsHome" type="checkbox">&nbsp;@parts.Msg("dashboard.page.ishome.button")&nbsp;</span>
+            }
+            
+            <a id="_maf_widget_renamePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-edit"></i>&nbsp;@parts.Msg("dashboard.page.rename.button")</a>
+            
+            @if(!currentDashboardPageIsHome){
+                <a id="_maf_widget_removePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("dashboard.page.delete.button")</a>&nbsp;&nbsp;
+            }
+            
+            <a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;@parts.Msg("dashboard.page.new.button")</a>
+        </p>
+    </div>
+    <div class="col-md-1">
+        <p class="text-right">
+            <a id="_maf_widget_edition_mode" class="btn btn-primary" href="#"><i class="fa fa-cog"></i>&nbsp;@parts.Msg("dashboard.page.edit.button")</a>
+        </p>
+    </div>
 </div>
 <div class="row">
-	<div id="workspace" class="col-md-12">
-	&nbsp;
-	</div>
+    <div id="workspace" class="col-md-12">
+    &nbsp;
+    </div>
 </div>
 <div class="row">
-	<div id="workspace" class="col-md-12">
-		@for(rowConfig <- currentDashboardPageConfiguration){
-			@row(rowConfig.getLayout().getColumnsSizes())
-		}
-	</div>
+    <div id="workspace" class="col-md-12">
+        @for(rowConfig <- currentDashboardPageConfiguration){
+            @row(rowConfig.getLayout().getColumnsSizes())
+        }
+    </div>
 </div>
 <script type="text/javascript">
-	var _dashboardServiceInstance={};
-	$(document).ready(function() {
-		_dashboardServiceInstance=new _maf_widget_dashboardService(@currentDashboardPageId, "@configureUrl","@errorUrl");
-		_dashboardServiceInstance.refresh(function (){
-			//Page selector
-			$('input[name="_maf_widget_dashboardPage"]').change(function(){
-				var pageSelectorButtonId=$(this).attr('id');
-				var pageId=pageSelectorButtonId.substring("_maf_widget_page-".length);
-				window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+"?id="+pageId);
-			});
-			
-			//Set as home page
-			if($("#_maf_widget_currentPageIsHome")){
-				$("#_maf_widget_currentPageIsHome").change(function(){
-					_maf_widget_setCurrentPageAsHomePage();
-				});
-			}
-			
-			//Add the widgets to the dashboard page
-			var rowIndex=0;
-			$("._maf_widget_dashboard_row").each(function(){
-				var widgetIndex=0;
-				var rowConfig=_dashboardServiceInstance.dashboardData[rowIndex];
-				$(this).children("._maf_widget_widget_area").each(function(){
-					var widget=rowConfig.widgets[widgetIndex];
-					if(widget.id!=-1){
-						var that = $(this);
-						_maf_widget_loadWidgetContent(that, widget.url, widget.id, function(){
-							_maf_widget_toggleEdition(false, that, widget.identifier);
-						});
-					}
-					widgetIndex++;
-				});
-				rowIndex++;
-			});
-			//Activate the edition mode selector
-			$("#_maf_widget_edition_mode").click(function(event){
-				event.preventDefault();
-				_dashboardServiceInstance.toggleEditonMode();
-			});
-			
-			//Dashboard row template selector
-			$('#_maf_widget_dashboardRowTemplateSelectorCloseButton').click(function(event){
-				$('#_maf_widget_dashboardRowTemplateSelector').modal('hide');
-			});
-			$('#_maf_widget_dashboardRowTemplateSelectorAddButton').click(function(event){
-				var modal = $('#_maf_widget_dashboardRowTemplateSelector');
-				modal.modal('hide');
-				var dashboardRowElement=modal.data("mafSourceDashboardRowElement");
-				var templateName=$("#_maf_widget_dashboardRowTemplateSelector input:radio[name='_maf_widget_dashboardRowOption']:checked").val();
-				_maf_widget_addDashboardRow(dashboardRowElement, templateName);
-			});
-			
-			//Widget catalog
-			$('#_maf_widget_CatalogCloseButton').click(function(){
-				$('#_maf_widget_Catalog').modal('hide');
-			});
-			$('#_maf_widget_CatalogAddButton').click(function(){
-				var modal = $('#_maf_widget_Catalog');
-				modal.modal('hide');
-				var widgetAreaElement=modal.data("mafSourceWidgetAreaElement");
-				var newWidgetIdentifier=$('#_maf_widget_CatalogSelect').val();
-				_maf_widget_addNewWidget(widgetAreaElement, _dashboardServiceInstance.loadedWidgetCatalog[newWidgetIdentifier]);
-			});
-			$('#_maf_widget_CatalogSelect').change(function(event){
-			    var optionSelected = $(this).find("option:selected");
-				var widgetCatalogEntryIdentifier  = optionSelected.val();
-				var widgetCatalogEntryName   = optionSelected.text();
-				$('#_maf_widget_CatalogEntryName').html(widgetCatalogEntryName);
-				$('#_maf_widget_CatalogEntryDescription').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].description);
-				$('#_maf_widget_pluginConfigurationName').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].pluginConfigurationName);
-			});
-			
-			//Rename page
-			$('#_maf_widget_renamePage').click(function(){
-				_maf_widget_openRenameDashboardPageForm();
-			});
-			
-			//Delete page
-			$('#_maf_widget_removePage').click(function(){
-				_maf_widget_removeCurrentDashboardPage();
-			});
-			
-			//New page editor
-			$('#_maf_widget_addNewPage').click(function(){
-				_maf_widget_openNewDashboardPageForm();
-			});
-		});
-	});
+    var translations = {"edit_button" : "@parts.Msg("dashboard.page.edit.button")", "display_button" : "@parts.Msg("dashboard.page.display.button")"}
+    var _dashboardServiceInstance={};
+    $(document).ready(function() {
+        _dashboardServiceInstance=new _maf_widget_dashboardService(@currentDashboardPageId, "@configureUrl","@errorUrl", translations);
+        _dashboardServiceInstance.refresh(function (){
+            //Page selector
+            $('input[name="_maf_widget_dashboardPage"]').change(function(){
+                var pageSelectorButtonId=$(this).attr('id');
+                var pageId=pageSelectorButtonId.substring("_maf_widget_page-".length);
+                window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+"?id="+pageId);
+            });
+            
+            //Set as home page
+            if($("#_maf_widget_currentPageIsHome")){
+                $("#_maf_widget_currentPageIsHome").change(function(){
+                    _maf_widget_setCurrentPageAsHomePage();
+                });
+            }
+            
+            //Add the widgets to the dashboard page
+            var rowIndex=0;
+            $("._maf_widget_dashboard_row").each(function(){
+                var widgetIndex=0;
+                var rowConfig=_dashboardServiceInstance.dashboardData[rowIndex];
+                $(this).children("._maf_widget_widget_area").each(function(){
+                    var widget=rowConfig.widgets[widgetIndex];
+                    if(widget.id!=-1){
+                        var that = $(this);
+                        _maf_widget_loadWidgetContent(that, widget.url, widget.id, function(){
+                            _maf_widget_toggleEdition(false, that, widget.identifier);
+                        });
+                    }
+                    widgetIndex++;
+                });
+                rowIndex++;
+            });
+            //Activate the edition mode selector
+            $("#_maf_widget_edition_mode").click(function(event){
+                event.preventDefault();
+                _dashboardServiceInstance.toggleEditonMode();
+            });
+            
+            //Dashboard row template selector
+            $('#_maf_widget_dashboardRowTemplateSelectorCloseButton').click(function(event){
+                $('#_maf_widget_dashboardRowTemplateSelector').modal('hide');
+            });
+            $('#_maf_widget_dashboardRowTemplateSelectorAddButton').click(function(event){
+                var modal = $('#_maf_widget_dashboardRowTemplateSelector');
+                modal.modal('hide');
+                var dashboardRowElement=modal.data("mafSourceDashboardRowElement");
+                var templateName=$("#_maf_widget_dashboardRowTemplateSelector input:radio[name='_maf_widget_dashboardRowOption']:checked").val();
+                _maf_widget_addDashboardRow(dashboardRowElement, templateName);
+            });
+            
+            //Widget catalog
+            $('#_maf_widget_CatalogCloseButton').click(function(){
+                $('#_maf_widget_Catalog').modal('hide');
+            });
+            $('#_maf_widget_CatalogAddButton').click(function(){
+                var modal = $('#_maf_widget_Catalog');
+                modal.modal('hide');
+                var widgetAreaElement=modal.data("mafSourceWidgetAreaElement");
+                var newWidgetIdentifier=$('#_maf_widget_CatalogSelect').val();
+                _maf_widget_addNewWidget(widgetAreaElement, _dashboardServiceInstance.loadedWidgetCatalog[newWidgetIdentifier]);
+            });
+            $('#_maf_widget_CatalogSelect').change(function(event){
+                var optionSelected = $(this).find("option:selected");
+                var widgetCatalogEntryIdentifier  = optionSelected.val();
+                var widgetCatalogEntryName   = optionSelected.text();
+                $('#_maf_widget_CatalogEntryName').html(widgetCatalogEntryName);
+                $('#_maf_widget_CatalogEntryDescription').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].description);
+                $('#_maf_widget_pluginConfigurationName').html(_dashboardServiceInstance.loadedWidgetCatalog[widgetCatalogEntryIdentifier].pluginConfigurationName);
+            });
+            
+            //Rename page
+            $('#_maf_widget_renamePage').click(function(){
+                _maf_widget_openRenameDashboardPageForm();
+            });
+            
+            //Delete page
+            $('#_maf_widget_removePage').click(function(){
+                _maf_widget_removeCurrentDashboardPage();
+            });
+            
+            //New page editor
+            $('#_maf_widget_addNewPage').click(function(){
+                _maf_widget_openNewDashboardPageForm();
+            });
+        });
+    });
 </script>
 
 <!-- The dashboard row template selector -->
@@ -165,24 +175,24 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">@parts.Msg("dashboard.row.template.selector.title")</h4>
+        <h4 class="modal-title">@parts.Msg("dashboard.addrow.title")</h4>
       </div>
       <div class="modal-body">
-      	@for((template, index) <- models.framework_models.plugin.DashboardRowTemplate.values().zipWithIndex){
+          @for((template, index) <- models.framework_models.plugin.DashboardRowTemplate.values().zipWithIndex){
         <div class="row" style="padding: 1em;">
           <div class="col-md-12">
-          	<div class="radio">
-			  <label>
-			    <input type="radio" name="_maf_widget_dashboardRowOption" value="@template.name" @if(index==0){checked}>
-			  </label>
-			</div>
+              <div class="radio">
+              <label>
+                <input type="radio" name="_maf_widget_dashboardRowOption" value="@template.name" @if(index==0){checked}>
+              </label>
+            </div>
           </div>
           <div class="col-md-12">
-          	<div class="row _maf_widget_dashboard_template_row">
-          		@for(columnSize <- template.getColumnsSizes()){
-          		<div class="col-md-@columnSize _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
-          		}
-          	</div>
+              <div class="row _maf_widget_dashboard_template_row">
+                  @for(columnSize <- template.getColumnsSizes()){
+                  <div class="col-md-@columnSize _maf_widget_dashboard_template_cell text-center">&nbsp;<i class="fa fa-navicon"></i>&nbsp;</div>
+                  }
+              </div>
           </div>
           <div class="col-md-12"><br/></div>
         </div>
@@ -207,23 +217,23 @@
       <div class="modal-body">
         <div class="row" style="padding: 1em;">
           <div class="col-md-6">
-          	<select id="_maf_widget_CatalogSelect" size="10" class="form-control">
-			</select>
+              <select id="_maf_widget_CatalogSelect" size="10" class="form-control">
+            </select>
           </div>
           <div class="col-md-6">
-          	<div class="panel panel-default">
-			  <div class="panel-body">
-			  	<h4 id="_maf_widget_CatalogEntryName"></h4>
-          		<small id="_maf_widget_pluginConfigurationName"></small>
-			  </div>
-			</div>
-          	<p class="well" style="margin-top: 0.5em;" id="_maf_widget_CatalogEntryDescription"></p>
+              <div class="panel panel-default">
+              <div class="panel-body">
+                  <h4 id="_maf_widget_CatalogEntryName"></h4>
+                  <small id="_maf_widget_pluginConfigurationName"></small>
+              </div>
+            </div>
+              <p class="well" style="margin-top: 0.5em;" id="_maf_widget_CatalogEntryDescription"></p>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" id="_maf_widget_CatalogAddButton" class="btn btn-primary">@parts.Msg("button.add")</button>
-		<button type="button" id="_maf_widget_CatalogCloseButton" class="btn btn-default">@parts.Msg("button.close")</button>
+        <button type="button" id="_maf_widget_CatalogCloseButton" class="btn btn-default">@parts.Msg("button.close")</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -238,16 +248,16 @@
         <h4 class="modal-title">@parts.Msg("dashboard.renamepage.form.title")</h4>
       </div>
       <div class="modal-body">
-      		<form>
-      			  <div class="form-group">
-				    <label for="_maf_widget_RenamePage_Name">@parts.Msg("dashboard.page.form.name")</label>
-				    <input type="text" maxlength="30" class="form-control" id="_maf_widget_RenamePage_Name">
-				    <p class="help-block">@parts.Msg("dashboard.page.form.name.message")</p>
-				  </div>
-      		</form>
+              <form>
+                    <div class="form-group">
+                    <label for="_maf_widget_RenamePage_Name">@parts.Msg("dashboard.object.page.name.label")</label>
+                    <input type="text" maxlength="30" class="form-control" id="_maf_widget_RenamePage_Name">
+                    <p class="help-block">@parts.Msg("dashboard.object.page.name.help")</p>
+                  </div>
+              </form>
       </div>
       <div class="modal-footer">
-      	<div class="text-center"> 
+          <div class="text-center"> 
         <button type="button" id="_maf_widget_RenamePageOKButton" class="btn btn-primary">@parts.Msg("button.update")</button>
         <button type="button" id="_maf_widget_RenamePageCloseButton" class="btn btn-default" data-dismiss="modal">@parts.Msg("button.close")</button>
         </div>
@@ -265,21 +275,21 @@
         <h4 class="modal-title">@parts.Msg("dashboard.addpage.form.title")</h4>
       </div>
       <div class="modal-body">
-      		<form>
-      			  <div class="form-group">
-				    <label for="_maf_widget_AddNewPage_Name">@parts.Msg("dashboard.page.form.name")</label>
-				    <input type="text" maxlength="30" class="form-control" id="_maf_widget_AddNewPage_Name">
-				    <p class="help-block">@parts.Msg("dashboard.page.form.name.message")</p>
-				  </div>
-				  <div class="checkbox">
-				    <label>
-				      <input id="_maf_widget_AddNewPage_isHome" type="checkbox"> @parts.Msg("dashboard.addpage.form.ishome")
-				    </label>
-				  </div>
-      		</form>
+              <form>
+                    <div class="form-group">
+                    <label for="_maf_widget_AddNewPage_Name">@parts.Msg("dashboard.object.page.name.label")</label>
+                    <input type="text" maxlength="30" class="form-control" id="_maf_widget_AddNewPage_Name">
+                    <p class="help-block">@parts.Msg("dashboard.object.page.name.help")</p>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                      <input id="_maf_widget_AddNewPage_isHome" type="checkbox"> @parts.Msg("dashboard.object.page.is_home.label")
+                    </label>
+                  </div>
+              </form>
       </div>
       <div class="modal-footer">
-      	<div class="text-center"> 
+          <div class="text-center"> 
         <button type="button" id="_maf_widget_AddNewPageOKButton" class="btn btn-primary">@parts.Msg("button.add")</button>
         <button type="button" id="_maf_widget_AddNewPageCloseButton" class="btn btn-default" data-dismiss="modal">@parts.Msg("button.close")</button>
         </div>
@@ -299,7 +309,7 @@
       <div class="modal-body">
       </div>
       <div class="modal-footer">
-      	<div class="text-center"> 
+          <div class="text-center"> 
         <button type="button" id="_maf_widget_MessageOKButton" class="btn btn-primary">@parts.Msg("button.confirm")</button>
         <button type="button" id="_maf_widget_MessageCloseButton" class="btn btn-default" data-dismiss="modal">@parts.Msg("button.close")</button>
         </div>

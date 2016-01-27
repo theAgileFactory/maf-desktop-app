@@ -346,18 +346,27 @@ notification.sending_system.email=Email
 #----------------------
 # Dashboard
 #----------------------
-dashboard.addpage.form.title=Add a new page
-dashboard.addpage.form.ishome=is Home page ?
-dashboard.page.form.name=Name
-dashboard.page.form.name.message=Please provide a page name
-dashboard.renamepage.form.title=Rename a page
-dashboard.widget.catalog.title=Widget catalog
-dashboard.row.template.selector.title=Dashboard row template
-dashboard.page.edit.button=Edit page
+dashboard.object.page.name.label=Name
+dashboard.object.page.name.help=Please provide a page name
+dashboard.object.page.name.default=Default
+dashboard.object.page.is_home.label=Default
+
+dashboard.page.edit.button=Edit mode
+dashboard.page.display.button=Exit
 dashboard.page.delete.button=Delete page
 dashboard.page.new.button=New page
-dashboard.page.rename.button=Rename
-dashboard.page.ishome.button=Home page
+dashboard.page.rename.button=Rename page
+dashboard.page.ishome.button=Set as default
+
+dashboard.addpage.form.title=Add a new page
+dashboard.renamepage.form.title=Rename a page
+dashboard.widget.catalog.title=Widget catalog
+dashboard.addrow.title=Add a row
+
+
+
+
+
 dashboard.drag.widget.message=Drag your widgets here or
 dashboard.add.new.widget.message=add a new widget
 dashboard.confirm.row.remove.message=Do you really want to delete this dashboard row as well as all the widgets which it includes ?
@@ -1775,6 +1784,7 @@ unexpected.error.home.link=Back to home page
 # home
 #----------------------
 
+index.title=Home
 index.noemployee.notif=Your BizDock user account is not associated with an employee. Consequently, some features are not available.\
  To create an employee and associate it to your account, please click on "Employee" inside the "New" menu (some specific permissions are required to do this action).
 index.notifications.title=Unread notifications
