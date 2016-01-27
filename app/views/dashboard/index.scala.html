@@ -46,7 +46,7 @@
     <div class="col-md-5">
         <p class="text-right">
             @if(!currentDashboardPageIsHome){
-                <span style="display: none;" id="_maf_widget_currentPageIsHomeContainer"><input id="_maf_widget_currentPageIsHome" type="checkbox">&nbsp;@parts.Msg("dashboard.page.ishome.button")&nbsp;</span>
+                <a id="_maf_widget_setAsIsHome" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-check-square-o"></i>&nbsp;@parts.Msg("dashboard.page.ishome.button")</a>
             }
             
             <a id="_maf_widget_renamePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-edit"></i>&nbsp;@parts.Msg("dashboard.page.rename.button")</a>
@@ -90,12 +90,11 @@
             });
             
             //Set as home page
-            if($("#_maf_widget_currentPageIsHome")){
-                $("#_maf_widget_currentPageIsHome").change(function(){
-                    _maf_widget_setCurrentPageAsHomePage();
-                });
-            }
-            
+            $("#_maf_widget_setAsIsHome").click(function(event){
+                event.preventDefault();
+                _maf_widget_setCurrentPageAsHomePage();
+            });
+        
             //Add the widgets to the dashboard page
             var rowIndex=0;
             $("._maf_widget_dashboard_row").each(function(){

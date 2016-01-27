@@ -526,7 +526,7 @@ function _maf_widget_disableDashboardEdition(){
 	$("#_maf_widget_addNewPage").show();
 	$("#_maf_widget_removePage").hide();
 	$("#_maf_widget_renamePage").hide();
-	$("#_maf_widget_currentPageIsHomeContainer").hide();
+	$("#_maf_widget_setAsIsHome").hide();
 	$("._maf_widget_widget_placeholder").detach();
 	$("._maf_widget_dashboard_row_trash").detach();
 	$("._maf_widget_dashboard_row_add").detach();
@@ -543,7 +543,7 @@ function _maf_widget_activateDashboardEdition(){
 	$("#_maf_widget_addNewPage").hide();
 	$("#_maf_widget_removePage").show();
 	$("#_maf_widget_renamePage").show();
-	$("#_maf_widget_currentPageIsHomeContainer").show();
+	$("#_maf_widget_setAsIsHome").show();
 	$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
 	$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a class="_maf_widget_dashboard_row_trash_button" href="#"><i class="fa fa-trash text-primary"></i></a></div>');
 	$("._maf_widget_dashboard_row").append('<div class="_maf_widget_dashboard_row_add"><a class="_maf_widget_dashboard_row_add_button" href="#"><i class="fa fa-plus text-primary"></i></a></div>');
