@@ -41,6 +41,7 @@ import framework.services.notification.INotificationManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
+import framework.utils.Pagination;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.Principal;
 import models.pmo.Actor;
@@ -268,6 +269,16 @@ public abstract class ActorDao {
      */
     public static List<Actor> getActorAsListByManager(Long manageId) {
         return findActor.where().eq("deleted", false).eq("manager.id", manageId).findList();
+    }
+
+    /**
+     * Get the active actors of a manager as a pagination object.
+     * 
+     * @param manageId
+     *            the actor id of the manager
+     */
+    public static Pagination<Actor> getActorActiveAsPaginationByManager(Long manageId) {
+        return new Pagination<>(findActor.where().eq("deleted", false).eq("isActive", true).eq("manager.id", manageId));
     }
 
     /**
