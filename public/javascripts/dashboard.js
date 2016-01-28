@@ -198,7 +198,7 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
 	 * widgetAreaElement : the widget area in which the placeholder (empty) will be set
 	 */
 	this.setPlaceHolderMessage=function(widgetAreaElement){
-		var template='<div class="_maf_widget_widget_placeholder"><br/><br/><h4 class="text-center">'+this.dragWidgetMessage+' <a class="_maf_widget_add" href="#">'+this.addANewWidgetMessage+'</a></h4><br/><br/></div>';
+		var template='<div class="_maf_widget_widget_placeholder" style="min-height: 100px; display: flex; align-items: center;"><h4 style="width: 100%;" class="text-center">'+this.dragWidgetMessage+' <a class="_maf_widget_add" href="#">'+this.addANewWidgetMessage+'</a></h4></div>';
 		widgetAreaElement.html(template);
 		$('._maf_widget_add').off('click');
 		$('._maf_widget_add').click(function(event){
