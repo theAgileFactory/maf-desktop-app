@@ -121,22 +121,22 @@ public class TourUtils {
                         "#lang-selector", "left", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step2.title"), messagesPlugin.get("tour.top_menu_bar.step2.content"), "#menu-my",
                         "left", null));
+
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step3.title"), messagesPlugin.get("tour.top_menu_bar.step3.content"),
                         "#topmenubar-item-0", "bottom", null));
-                tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step4.title"), messagesPlugin.get("tour.top_menu_bar.step4.content"),
-                        "#topmenubar-item-1", "bottom", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step14.title"), messagesPlugin.get("tour.top_menu_bar.step14.content"),
-                        "#topmenubar-item-2", "bottom", null));
+                        "#topmenubar-item-1", "bottom", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step5.title"), messagesPlugin.get("tour.top_menu_bar.step5.content"),
-                        "#topmenubar-item-3", "bottom", null));
+                        "#topmenubar-item-2", "bottom", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step6.title"), messagesPlugin.get("tour.top_menu_bar.step6.content"),
-                        "#topmenubar-item-4", "bottom", null));
+                        "#topmenubar-item-3", "bottom", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step8.title"), messagesPlugin.get("tour.top_menu_bar.step8.content"),
-                        "#topmenubar-item-5", "bottom", null));
+                        "#topmenubar-item-4", "bottom", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step9.title"), messagesPlugin.get("tour.top_menu_bar.step9.content"),
-                        "#topmenubar-item-6", "bottom", null));
+                        "#topmenubar-item-5", "bottom", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step10.title"), messagesPlugin.get("tour.top_menu_bar.step10.content"),
-                        "#topmenubar-item-7", "bottom", null));
+                        "#topmenubar-item-6", "bottom", null));
+
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step11.title"), messagesPlugin.get("tour.top_menu_bar.step11.content"),
                         "#menu-messages", "bottom", null));
                 tour.addStep(new Step(messagesPlugin.get("tour.top_menu_bar.step12.title"), messagesPlugin.get("tour.top_menu_bar.step12.content"),

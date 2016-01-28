@@ -31,7 +31,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
      * @author Pierre-Yves Cloux
      */
     public enum TopMenus {
-        ROADMAP, COCKPIT, NEW, GOVERNANCE, DELIVERY, TOOLS, ADMIN, SEARCH, SPECIAL, ARCHITECTURE;
+        ROADMAP, NEW, GOVERNANCE, DELIVERY, TOOLS, ADMIN, SEARCH, SPECIAL, ARCHITECTURE;
 
         /**
          * Get the name with an index (useful for the help tour).

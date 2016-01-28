@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import controllers.core.CockpitController;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
@@ -139,8 +138,8 @@ public class PortfolioListView {
      * displayed.
      * 
      * note: this constructor is called when displaying the portfolios for which
-     * the current user is a stakeholder (see {@link CockpitController}), in
-     * order to display his roles on the portfolio
+     * the current user is a stakeholder, in order to display his roles on the
+     * portfolio
      * 
      * @param portfolio
      *            the portfolio

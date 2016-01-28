@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import controllers.core.CockpitController;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCycleProcessDao;
 import dao.pmo.OrgUnitDao;
@@ -31,6 +30,7 @@ import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -401,9 +401,8 @@ public class PortfolioEntryListView {
      * displayed.
      * 
      * note: this constructor is called when displaying the portfolio entries
-     * for which the current user is a direct stakeholder (see
-     * {@link CockpitController}), in order to display his roles on the
-     * portfolio entry
+     * for which the current user is a direct stakeholder, in order to display
+     * his roles on the portfolio entry
      * 
      * @param portfolioEntry
      *            the portfolio entry
