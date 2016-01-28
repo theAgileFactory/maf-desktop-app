@@ -365,10 +365,10 @@ dashboard.object.page.is_home.label=Défaut
 
 dashboard.page.edit.button=Mode édition
 dashboard.page.display.button=Quitter
-dashboard.page.delete.button=Supprimer la page
+dashboard.page.delete.button=Supprimer
 dashboard.page.delete.confirm.message=Etes-vous sûr(e) de vouloir supprimer cette page?
 dashboard.page.new.button=Nouvelle page
-dashboard.page.rename.button=Renommer la page
+dashboard.page.rename.button=Renommer
 dashboard.page.ishome.button=Mettre par défaut
 
 dashboard.addpage.form.title=Ajouter une nouvelle page
