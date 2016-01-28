@@ -527,9 +527,9 @@ function _maf_widget_disableDashboardEdition(){
 	$("#_maf_widget_removePage").hide();
 	$("#_maf_widget_renamePage").hide();
 	$("#_maf_widget_setAsIsHome").hide();
+	$("#_maf_widget_row_add").hide();
 	$("._maf_widget_widget_placeholder").detach();
 	$("._maf_widget_dashboard_row_trash").detach();
-	$("._maf_widget_dashboard_row_add").detach();
 	interact('._maf_widget_draggable').draggable({enabled: false});
 	interact('._maf_widget_widget_area').dropzone({enabled:false});
 	$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
@@ -544,9 +544,9 @@ function _maf_widget_activateDashboardEdition(){
 	$("#_maf_widget_removePage").show();
 	$("#_maf_widget_renamePage").show();
 	$("#_maf_widget_setAsIsHome").show();
+	$("#_maf_widget_row_add").show();
 	$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
 	$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a class="_maf_widget_dashboard_row_trash_button" href="#"><i class="fa fa-trash text-primary"></i></a></div>');
-	$("._maf_widget_dashboard_row").append('<div class="_maf_widget_dashboard_row_add"><a class="_maf_widget_dashboard_row_add_button" href="#"><i class="fa fa-plus text-primary"></i></a></div>');
 	$("._maf_widget_dashboard_row_trash_button").click(function(event){
 		event.preventDefault();
 		var rowElement=$(this).closest("._maf_widget_dashboard_row");
@@ -557,12 +557,7 @@ function _maf_widget_activateDashboardEdition(){
 					_maf_widget_removeDashboardRow(rowElement);
 				});
 	});
-	$("._maf_widget_dashboard_row_add_button").click(function(event){
-		event.preventDefault();
-		var rowElement=$(this).closest("._maf_widget_dashboard_row");
-		_maf_widget_openDashboardRowTemplateSelector(rowElement);
-	});
-	
+
 	//Activate the draggability
 	interact('._maf_widget_draggable').draggable({
 		accept: '.widget',
@@ -665,7 +660,7 @@ function _maf_widget_openDashboardRowTemplateSelector(dashboardRowElement){
 	//Check if the number of row is not exceeded
 	var rowCount = $('._maf_widget_dashboard_row').length;
 	if(rowCount >= _dashboardServiceInstance.maxNumberOfRows){
-		_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.maxNumberOfRowReachedMessage+_dashboardServiceInstance.maxNumberOfRows);
+		_maf_widget_MessageBox(_dashboardServiceInstance.warningMessageBoxTitleMessage,_dashboardServiceInstance.maxNumberOfRowReachedMessage + " " + _dashboardServiceInstance.maxNumberOfRows);
 	}else{
 		//Open the row template selector
 		$('#_maf_widget_dashboardRowTemplateSelector').modal('show');
