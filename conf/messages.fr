@@ -379,6 +379,7 @@ dashboard.addrow.title=Ajouter une ligne
 dashboard.drag.widget.message=Déplacez vos widgets ici ou
 dashboard.drag.widget.link=ajoutez un nouveau widget
 
+dashboard.row.delete.button=Supprimer la ligne
 dashboard.row.delete.confirm.message=Etes-vous sûr(e) de vouloir supprimer cette ligne? Tous les widgets inclus seront également supprimés.
 dashboard.row.delete.error.message=Une page doit avoir au moins une ligne.
 

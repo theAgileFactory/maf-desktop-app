@@ -52,7 +52,7 @@
             <a id="_maf_widget_renamePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-edit"></i>&nbsp;@parts.Msg("dashboard.page.rename.button")</a>
             
             @if(!currentDashboardPageIsHome){
-                <a id="_maf_widget_removePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("dashboard.page.delete.button")</a>&nbsp;&nbsp;
+                <a id="_maf_widget_removePage" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-trash"></i>&nbsp;@parts.Msg("dashboard.page.delete.button")</a>
             }
             
             <a id="_maf_widget_addNewPage" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;@parts.Msg("dashboard.page.new.button")</a>
@@ -76,11 +76,11 @@
         }
     </div>
     <div class="col-md-12">
-        <a id="_maf_widget_row_add" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-plus"></i></a>
+        <a id="_maf_widget_row_add" style="display: none;" class="btn btn-default" href="#"><i class="fa fa-plus"></i>&nbsp;@parts.Msg("dashboard.addrow.title")</a>
     </div>
 </div>
 <script type="text/javascript">
-    var translations = {"edit_button" : "@parts.Msg("dashboard.page.edit.button")", "display_button" : "@parts.Msg("dashboard.page.display.button")"}
+    var translations = {"edit_button" : "@parts.Msg("dashboard.page.edit.button")", "display_button" : "@parts.Msg("dashboard.page.display.button")", "delete_row_button" : "@parts.Msg("dashboard.row.delete.button")"}
     var _dashboardServiceInstance={};
     $(document).ready(function() {
         _dashboardServiceInstance=new _maf_widget_dashboardService(@currentDashboardPageId, "@configureUrl","@errorUrl", translations);

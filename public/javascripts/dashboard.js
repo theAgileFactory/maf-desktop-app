@@ -546,7 +546,7 @@ function _maf_widget_activateDashboardEdition(){
 	$("#_maf_widget_setAsIsHome").show();
 	$("#_maf_widget_row_add").show();
 	$("._maf_widget_dashboard_row").toggleClass("_maf_widget_dashboard_row_activated");
-	$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a class="_maf_widget_dashboard_row_trash_button" href="#"><i class="fa fa-trash text-primary"></i></a></div>');
+	$("._maf_widget_dashboard_row").prepend('<div class="_maf_widget_dashboard_row_trash"><a href="#" class="_maf_widget_dashboard_row_trash_button pull-right btn btn-default"><i class="fa fa-trash "></i>&nbsp;' + _dashboardServiceInstance.translations.delete_row_button + '</a><br/><br/></div>');
 	$("._maf_widget_dashboard_row_trash_button").click(function(event){
 		event.preventDefault();
 		var rowElement=$(this).closest("._maf_widget_dashboard_row");

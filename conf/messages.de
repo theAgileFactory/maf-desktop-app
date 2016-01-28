@@ -379,6 +379,7 @@ dashboard.addrow.title=de: Add a row
 dashboard.drag.widget.message=de: Drag your widgets here or
 dashboard.drag.widget.link=de: add a new widget
 
+dashboard.row.delete.button=de: Delete row
 dashboard.row.delete.confirm.message=de: Are you sure you want to delete this row? All included widgets will be also deleted.
 dashboard.row.delete.error.message=de: A page must have at least one row.
 
