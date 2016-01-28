@@ -442,8 +442,6 @@ tour.top_menu_bar.step2.title=Sprache
 tour.top_menu_bar.step2.content=Unter "Mein Profil" können Sie die Spracheinstellung jederzeit ändern.
 tour.top_menu_bar.step3.title=Roadmap
 tour.top_menu_bar.step3.content=Auf der Roadmap sehen Sie alle aktiven Initiativen (sofern Sie entsprechende Zugriffsrechte haben). Sie können sortieren und filtern um sich überblick zu verschaffen.
-tour.top_menu_bar.step4.title=Cockpit
-tour.top_menu_bar.step4.content=Im Cockpit finden Sie alle Informationen die Sie betreffen, zum Beispiel ihre Initiativen oder ihre Mitarbeiter.
 tour.top_menu_bar.step14.title=Architektur
 tour.top_menu_bar.step14.content=Das Architektur Modul erlaubt Ihnen die Applicationsblöcke in einer Baumstrukture abzubilden.
 tour.top_menu_bar.step5.title=Neu
@@ -456,6 +454,7 @@ tour.top_menu_bar.step9.title=Admin
 tour.top_menu_bar.step9.content=Passen Sie Ihre BizDock Instanz an! Hier ist auch die Benutzerverwaltung.
 tour.top_menu_bar.step10.title=Suche
 tour.top_menu_bar.step10.content=Ganz einfach BizDock Daten finden.
+
 tour.top_menu_bar.step11.title=Nachrichten
 tour.top_menu_bar.step11.content=BizDock enthält auch ein Nachrichtensystem um mit den anderen Benuztern zu kommunizieren.
 tour.top_menu_bar.step12.title=Mitteilungen
@@ -474,9 +473,6 @@ tour.breadcrumb.step1.content=Brauchen Sie weitere Information bezüglich einer 
 
 #roadmap
 topmenubar.roadmap.menu.label=Roadmap
-
-#cockpit
-topmenubar.cockpit.menu.label=Cockpit
 
 #new
 topmenubar.new.menu.label=Neu
@@ -604,7 +600,6 @@ report.milestones_overdue.description=Liste der späten Meilensteine für die ak
 #----------------------
 
 permission.roadmap_display_permission.description="Roadmap" Link und Zugriff auf Seite. Beeinflusst nicht welche Initiativen angezeigt werden.
-permission.cockpit_display_permission.description="Cockpit" Link und Zugriff auf Seite. Beeinflusst nicht welche Initiativen angezeigt werden.
 permission.portfolio_entry_view_public_permission.description=Grunddaten von öffentlichen und "nicht-konzeptionellen" Initiativen einsehbar.
 permission.portfolio_entry_view_details_all_permission.description=Alle Informationen von sämtlichen Initiativen einsehen (ausgenommen Finanzdaten).
 permission.portfolio_entry_view_details_as_manager_permission.description=Verantwortlicher kann alle Informationen seiner Initiativen einsehen (ausgenommen Finanzdaten).
@@ -690,7 +685,7 @@ preference.homepage_logo_preference.description=Logo erscheint auf der Homepage 
 preference.homepage_logo_preference.name=Homepage Logo
 preference.timesheet_must_approve_preference.description=Wenn eingeschaltet, mussen Timesheet von den Vorgesetzten genehmigt werden.
 preference.timesheet_must_approve_preference.name=Timesheet genehmigen
-preference.timesheet_reminder_limit_preference.description=Maximale Anzahl verspätete Timesheets (pro Mitarbeiter) die im Manager Cockpit angezeigt werden.<br/>Als verspätet gelten Timesheets die nicht eingreicht wurden und zu einer vergangenen Verrechnungsperiode gehören.
+preference.timesheet_reminder_limit_preference.description=de: The reminder limit is the maximal number of late timesheets (for each subordinate) that are displayed for a manager.<br/>A late timesheet is a timesheet that is not submitted and which belongs to a past period.
 preference.timesheet_reminder_limit_preference.name=Timesheet Mahnungslimit
 preference.timesheet_hours_per_day.description=Erwartete Anzahl Stunden pro Tag.
 preference.timesheet_hours_per_day.name=Stunden pro Tag
@@ -1808,15 +1803,12 @@ index.help.title=Hilfe
 index.help.bizdock.label=Was ist BizDock?
 index.help.intake.label=Neue Initiative erstellen
 index.help.roadmap.label=Roadmap
-index.help.cockpit.label=Cockpit
 index.help.profile.label=Mein Profil
 index.quick_links.title=Quick Links
 index.intake.label=Hinzufügen
 index.intake.description=Neue Initiative starten
 index.roadmap.label=Roadmap
 index.roadmap.description=Öffentliche Initiativen anschauen
-index.cockpit.label=Cockpit
-index.cockpit.description=Verwalten Sie Ihre Initiativen
 index.search.label=Suche
 index.search.description=Finden Sie was Sie wollen
 
@@ -1942,43 +1934,6 @@ core.reporting.generate.process.success.title=Neuer Bericht ist bereit für Down
 core.reporting.generate.process.success.message=Der Export wurde erfolgreich in Ihre persönliche Ablage gespeichert
 core.reporting.generate.process.failure.title=Berichterstellung fehlgeschlagen
 core.reporting.generate.process.failure.message=Fehler: Berichterstellung fehlgeschlagen, kontaktieren Sie bitte den Administrator (oder später versuchen)
-
-#----------------------
-# cockpit
-#----------------------
-
-core.cockpit.breadcrumb=<i class="fa fa-tachometer"></i>&nbsp;Cockpit
-core.cockpit.sidebar.initiatives=Initiativen
-core.cockpit.sidebar.portfolios=Portfolios
-core.cockpit.sidebar.subordinates=Arbeitnehmer
-core.cockpit.sidebar.subordinates.members=Mitarbeiter
-core.cockpit.sidebar.subordinates.allocations_overview=Zuweisungs Übersicht
-core.cockpit.sidebar.subordinates.allocations_details=Zuweisungs Details
-core.cockpit.sidebar.subordinates.timesheet=Zeiterfassung
-core.cockpit.sidebar.org_units=Organisationseinheit
-core.cockpit.sidebar.budget_buckets=Budgetposten
-core.cockpit.sidebar.my_allocations=Zuweisungen
-
-#initiatives
-core.cockpit.my_initiatives.as_manager=Meine Initiativen als Manager
-core.cockpit.my_initiatives.as_stakeholder=Meine Initiativen als Projektbeteiligter
-
-#portfolios
-core.cockpit.my_portfolios.as_manager=Meine Portfolio als Manager
-core.cockpit.my_portfolios.as_stakeholder=Meine Portfolio als Projektbeteiligter
-
-#subordinates
-core.cockpit.subordinates.timesheet.late.title=Erfassung verspätet
-core.cockpit.subordinates.timesheet.submitted.title=Zeiterfassung genehmigen
-core.cockpit.subordinates.allocations.no_data=Keine Zuweisungen
-core.cockpit.subordinates.allocations.details.portfolio_entry.title=Initiativen Mitarbeiterzuweisungen
-core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm=Bestätigen
-core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm.successful=Die Zuweisungen haben erfolgreich bestätigt.
-core.cockpit.subordinates.allocations.details.activity.title=Aktivitäten Mitarbeiterzuweisungen
-
-#budget buckets
-core.cockpit.my_budget_buckets.as_owner=Budgetposten als Besitzer
-core.cockpit.my_budget_buckets.as_responsible=Budgetposten als Vorgesetzter
 
 #----------------------
 # budget bucket

@@ -430,8 +430,6 @@ tour.top_menu_bar.step2.title=Language
 tour.top_menu_bar.step2.content=You can then modify your account in order to set your preferred language for future connections.
 tour.top_menu_bar.step3.title=Roadmap
 tour.top_menu_bar.step3.content=The roadmap shows all active initiatives (according to your permissions). You can easily sort and filter them!
-tour.top_menu_bar.step4.title=Cockpit
-tour.top_menu_bar.step4.content=You cockpit contains all information that concerns you, for example your initiatives as manager or your team''s members.
 tour.top_menu_bar.step14.title=Architecture
 tour.top_menu_bar.step14.content=The architecture module allows you to model application blocks in a hierarchical manner.
 tour.top_menu_bar.step5.title=New
@@ -444,6 +442,7 @@ tour.top_menu_bar.step9.title=Admin
 tour.top_menu_bar.step9.content=Customize here your BizDock instance! You can change the configuration and manage the BizDock users.
 tour.top_menu_bar.step10.title=Search
 tour.top_menu_bar.step10.content=The search page allows you to find easily the main BizDock data.
+
 tour.top_menu_bar.step11.title=Messages
 tour.top_menu_bar.step11.content=BizDock includes a messaging system in order to directly communicate with other users.
 tour.top_menu_bar.step12.title=Notifications
@@ -462,9 +461,6 @@ tour.breadcrumb.step1.content=You need more information about the current page? 
 
 #roadmap
 topmenubar.roadmap.menu.label=Roadmap
-
-#cockpit
-topmenubar.cockpit.menu.label=Cockpit
 
 #new
 topmenubar.new.menu.label=New
@@ -592,7 +588,6 @@ report.milestones_overdue.description=List of late milestones for the active ini
 #----------------------
 
 permission.roadmap_display_permission.description=Permission which allows a user to see the "Roadmap" link and to access the page. It does not restrict WHICH initiatives are displayed.
-permission.cockpit_display_permission.description=Permission which allows a user to see the "Cockpit" link and to access the page. It does not restrict WHICH initiatives are displayed
 permission.portfolio_entry_view_public_permission.description=Permission which allows a user to list and see basic data of all public and non-conceptual initiatives.
 permission.portfolio_entry_view_details_all_permission.description=Permission which allows a user to view all the details of any initiatives (except the financial details).
 permission.portfolio_entry_view_details_as_manager_permission.description=Permission which allows a user to view all the details of an initiative (except the financial details) for which he is the manager.
@@ -678,7 +673,7 @@ preference.homepage_logo_preference.description=Logo that is displayed on the ho
 preference.homepage_logo_preference.name=Homepage logo
 preference.timesheet_must_approve_preference.description=If true then the timesheets should be approved by the managers.
 preference.timesheet_must_approve_preference.name=Approve timesheet
-preference.timesheet_reminder_limit_preference.description=The reminder limit is the maximal number of late timesheets (for each subordinate) that are displayed in the cockpit of a manager.<br/>A late timesheet is a timesheet that is not submitted and which belongs to a past period.
+preference.timesheet_reminder_limit_preference.description=The reminder limit is the maximal number of late timesheets (for each subordinate) that are displayed for a manager.<br/>A late timesheet is a timesheet that is not submitted and which belongs to a past period.
 preference.timesheet_reminder_limit_preference.name=Reminder limit for late timesheets
 preference.timesheet_hours_per_day.description=Defines the expected number of hours for a day when filling a timesheet.
 preference.timesheet_hours_per_day.name=Number of hours per day
@@ -1796,15 +1791,12 @@ index.help.title=Help
 index.help.bizdock.label=What is BizDock?
 index.help.intake.label=Create an initiative
 index.help.roadmap.label=Roadmap
-index.help.cockpit.label=Cockpit
 index.help.profile.label=My profile
 index.quick_links.title=Quick links
 index.intake.label=Intake
 index.intake.description=Submit an idea or start a new project
 index.roadmap.label=Roadmap
 index.roadmap.description=View all initiatives and filter them according to your needs
-index.cockpit.label=Cockpit
-index.cockpit.description=Manage your initiatives.
 index.search.label=Search
 index.search.description=Find easily and quickly what you want
 
@@ -1930,44 +1922,6 @@ core.reporting.generate.process.success.title=A new report is ready to dowload
 core.reporting.generate.process.success.message=A new report is available in your personal space and could be downloaded.
 core.reporting.generate.process.failure.title=Error during report creation
 core.reporting.generate.process.failure.message=An error has occured when creating a requested report, please try later.
-
-#----------------------
-# cockpit
-#----------------------
-
-#helpers
-core.cockpit.breadcrumb=<i class="fa fa-tachometer"></i>&nbsp;Cockpit
-core.cockpit.sidebar.initiatives=Initiatives
-core.cockpit.sidebar.portfolios=Portfolios
-core.cockpit.sidebar.subordinates=Subordinates
-core.cockpit.sidebar.subordinates.members=Employees
-core.cockpit.sidebar.subordinates.allocations_overview=Allocations overview
-core.cockpit.sidebar.subordinates.allocations_details=Allocations details
-core.cockpit.sidebar.subordinates.timesheet=Timesheets
-core.cockpit.sidebar.org_units=Org units
-core.cockpit.sidebar.budget_buckets=Budget buckets
-core.cockpit.sidebar.my_allocations=Allocations
-
-#initiatives
-core.cockpit.my_initiatives.as_manager=My initiatives as manager
-core.cockpit.my_initiatives.as_stakeholder=My initiatives as stakeholder
-
-#portfolios
-core.cockpit.my_portfolios.as_manager=My portfolios as manager
-core.cockpit.my_portfolios.as_stakeholder=My portfolios as stakeholder
-
-#subordinates
-core.cockpit.subordinates.timesheet.late.title=Late timesheets
-core.cockpit.subordinates.timesheet.submitted.title=Timesheets to review
-core.cockpit.subordinates.allocations.no_data=There is no allocation to display.
-core.cockpit.subordinates.allocations.details.portfolio_entry.title=Initiative''s allocations for the subordinates
-core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm=Confirm
-core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm.successful=The allocations have been confirmed successfully.
-core.cockpit.subordinates.allocations.details.activity.title=Activity''s allocations for the subordinates
-
-#budget buckets
-core.cockpit.my_budget_buckets.as_owner=My budget buckets as owner
-core.cockpit.my_budget_buckets.as_responsible=My budget buckets as responsible
 
 #----------------------
 # budget bucket

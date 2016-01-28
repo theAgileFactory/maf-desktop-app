@@ -193,23 +193,6 @@ POST   /budget-bucket/line/save                      controllers.core.BudgetBuck
 GET    /budget-bucket/line/delete                    controllers.core.BudgetBucketController.deleteLine(id: Long, lineId: Long)
 
 #-------------------
-# Core: Cockpit
-#-------------------
-
-GET    /cockpit/initiatives                                       controllers.core.CockpitController.initiatives(asManagerPage: Integer ?= 0, asStakeholderPage: Integer ?=0, viewAllAsManager: Boolean ?= false)
-GET    /cockpit/portfolios                                        controllers.core.CockpitController.portfolios(asManagerPage: Integer ?= 0, asStakeholderPage: Integer ?=0, viewAllAsManager: Boolean ?= false)
-GET    /cockpit/subordinates                                      controllers.core.CockpitController.subordinates()
-GET    /cockpit/subordinates/allocations                          controllers.core.CockpitController.subordinatesAllocations()
-GET    /cockpit/subordinates/allocations/details                  controllers.core.CockpitController.subordinatesAllocationsDetails()
-POST   /cockpit/subordinates/allocations/portfolio-entry/filter   controllers.core.CockpitController.portfolioEntryAllocationsFilter()
-POST   /cockpit/subordinates/allocations/portfolio-entry/all-ids  controllers.core.CockpitController.getAllportfolioEntryAllocationIds()
-POST   /cockpit/subordinates/allocations/portfolio-entry/confirm  controllers.core.CockpitController.confirmPortfolioEntryAllocations()
-POST   /cockpit/subordinates/allocations/activity/filter          controllers.core.CockpitController.activityAllocationsFilter()
-GET    /cockpit/subordinates/timesheet                            controllers.core.CockpitController.subordinatesTimesheet()
-GET    /cockpit/org-units                                         controllers.core.CockpitController.orgUnits(page: Integer ?= 0, viewAll: Boolean ?= false)
-GET    /cockpit/budget-buckets                                    controllers.core.CockpitController.budgetBuckets(asOwnerPage: Integer ?= 0, asResponsiblePage: Integer ?= 0, viewAllAsOwner: Boolean ?= false, viewAllAsResponsible: Boolean ?= false)
-
-#-------------------
 # Core: Roadmap
 #-------------------
 

@@ -442,8 +442,6 @@ tour.top_menu_bar.step2.title=Langue
 tour.top_menu_bar.step2.content=Vous pourrez par la suite modifier votre compte afin de configurer votre langue préférée qui sera automatiquement sélectionnée après chaque connexion.
 tour.top_menu_bar.step3.title=Feuille de route
 tour.top_menu_bar.step3.content=La feuille de route vous montre les initiatives actives (selon vos permissions). Vous pouvez ensuite les trier et les filtrer selon vos besoins.
-tour.top_menu_bar.step4.title=Cockpit
-tour.top_menu_bar.step4.content=Votre cockpit contient toutes les informations qui vous concernent, par exemple vos initiatives en tant que responsable ou les membres de votre équipe.
 tour.top_menu_bar.step14.title=Architecture
 tour.top_menu_bar.step14.content=Le module architecture vous permet de gérer des blocs applicatifs de manière hierarchique.
 tour.top_menu_bar.step5.title=Nouveau
@@ -456,6 +454,7 @@ tour.top_menu_bar.step9.title=Admin
 tour.top_menu_bar.step9.content=Personnalisez ici votre instance de BizDock! Vous pouvez changer la configuration ainsi que gérer les utilisateurs de BizDock.
 tour.top_menu_bar.step10.title=Rechercher
 tour.top_menu_bar.step10.content=La page de recherche vous permet de trouver facilement les données principales de BizDock.
+
 tour.top_menu_bar.step11.title=Messages
 tour.top_menu_bar.step11.content=BizDock intègre un outil de messagerie afin de communiquer directement avec les autres utilisateurs.
 tour.top_menu_bar.step12.title=Notifications
@@ -474,9 +473,6 @@ tour.breadcrumb.step1.content=Vous avez besoin de plus d''information sur la pag
 
 #roadmap
 topmenubar.roadmap.menu.label=Feuille de route
-
-#cockpit
-topmenubar.cockpit.menu.label=Cockpit
 
 #new
 topmenubar.new.menu.label=Nouveau
@@ -604,7 +600,6 @@ report.milestones_overdue.description=Liste des jalons en retard pour les initia
 #----------------------
 
 permission.roadmap_display_permission.description=Autorise un utilisateur à voir le lien "Feuille de route" et d''accéder à la page.
-permission.cockpit_display_permission.description=Autorise un utilisateur à voir le lien "Cockpit" et d''accéder à la page.
 permission.portfolio_entry_view_public_permission.description=Autorise un utilisateur à lister et à voir les données de base de toutes les initiatives publiques et non-conceptuelles.
 permission.portfolio_entry_view_details_all_permission.description=Autorise un utilisateur à voir tous les détails (sauf les données financières) de toute initiative.
 permission.portfolio_entry_view_details_as_manager_permission.description=Autorise un utilisateur à voir tous les détails (sauf les données financières) d''une initiative pour laquelle il est le responsable.
@@ -690,7 +685,7 @@ preference.homepage_logo_preference.description=Logo qui est affiché sur la pag
 preference.homepage_logo_preference.name=Logo de la page d''accueil
 preference.timesheet_must_approve_preference.description=Si l''approbation des feuilles de temps est activée alors les responsables doivent les approuver manuellement.
 preference.timesheet_must_approve_preference.name=Approbation des feuilles de temps
-preference.timesheet_reminder_limit_preference.description=La limite de rappel est le nombre maximal de feuilles de temps en retard (pour chaque subordonné) qui sont affichées dans le cockpit d''un responsable<br/>Une feuille de temps est en retard si elle n''a pas été soumise et qu''elle correspond à une période passée.
+preference.timesheet_reminder_limit_preference.description=La limite de rappel est le nombre maximal de feuilles de temps en retard (pour chaque subordonné) qui sont affichées à un responsable<br/>Une feuille de temps est en retard si elle n''a pas été soumise et qu''elle correspond à une période passée.
 preference.timesheet_reminder_limit_preference.name=Limite de rappel pour les feuilles de temps en retard
 preference.timesheet_hours_per_day.description=Définis le nombre attendu d''heures pour un jour lors du remplissage d''une feuille de temps.
 preference.timesheet_hours_per_day.name=Nombre d''heures par jour
@@ -1808,15 +1803,12 @@ index.help.title=Aide
 index.help.bizdock.label=Qu''est-ce que BizDock?
 index.help.intake.label=Créer une initiative
 index.help.roadmap.label=Feuille de route
-index.help.cockpit.label=Cockpit
 index.help.profile.label=Mon profil
 index.quick_links.title=Liens rapides
 index.intake.label=Nouveau
 index.intake.description=Soumettre une idée ou démarrer un nouveau projet.
 index.roadmap.label=Feuille de route
 index.roadmap.description=Découvrir toutes les initiatives et les filtrer selon vos besoins.
-index.cockpit.label=Cockpit
-index.cockpit.description=Gérer ses initiatives.
 index.search.label=Rechercher
 index.search.description=Trouver facilement et rapidement ce que vous désirez.
 
@@ -1946,43 +1938,6 @@ core.reporting.generate.process.success.title=Un rapport est disponible au tél�
 core.reporting.generate.process.success.message=Un nouveau rapport est disponible dans votre espace de stockage personnel et peut être téléchargé.
 core.reporting.generate.process.failure.title=Erreur lors de la création d''un rapport
 core.reporting.generate.process.failure.message=Une erreur s''est produite lors de la création d''un rapport, veuillez réessayer ultérieurement.
-
-#----------------------
-# cockpit
-#----------------------
-
-core.cockpit.breadcrumb=<i class="fa fa-tachometer"></i>&nbsp;Cockpit
-core.cockpit.sidebar.initiatives=Initiatives
-core.cockpit.sidebar.portfolios=Portefeuilles
-core.cockpit.sidebar.subordinates=Subordonnés
-core.cockpit.sidebar.subordinates.members=Employés
-core.cockpit.sidebar.subordinates.allocations_overview=Vue d''ensemble des affectations
-core.cockpit.sidebar.subordinates.allocations_details=Détails de affectations
-core.cockpit.sidebar.subordinates.timesheet=Feuilles de temps
-core.cockpit.sidebar.org_units=Unités d''organisation
-core.cockpit.sidebar.budget_buckets=Enveloppes budgétaires
-core.cockpit.sidebar.my_allocations=Affectations
-
-#initiatives
-core.cockpit.my_initiatives.as_manager=Mes initiatives en tant que responsable
-core.cockpit.my_initiatives.as_stakeholder=Mes initiatives en tant qu''intervenant
-
-#portfolios
-core.cockpit.my_portfolios.as_manager=Mes portefeuilles en tant que responsable
-core.cockpit.my_portfolios.as_stakeholder=Mes portefeuilles en tant qu''intervenant
-
-#subordinates
-core.cockpit.subordinates.timesheet.late.title=Feuilles de temps en retard
-core.cockpit.subordinates.timesheet.submitted.title=Feuilles de temps à approuver
-core.cockpit.subordinates.allocations.no_data=Il n''y a pas d''affectation à afficher.
-core.cockpit.subordinates.allocations.details.portfolio_entry.title=Affectations d''initiative des subordonnés
-core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm=Confirmer
-core.cockpit.subordinates.allocations.details.portfolio_entry.action.confirm.successful=Les affectations ont été confirmées.
-core.cockpit.subordinates.allocations.details.activity.title=Affectations d''activité des subordonnés
-
-#budget buckets
-core.cockpit.my_budget_buckets.as_owner=Mes enveloppes en tant que propriétaire
-core.cockpit.my_budget_buckets.as_responsible=Mes enveloppes en tant que responsable
 
 #----------------------
 # budget bucket
