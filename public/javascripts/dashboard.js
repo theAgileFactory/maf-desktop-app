@@ -377,16 +377,13 @@ function _maf_widget_dashboardService(dashboardPageId, configurationUrl, errorUr
  * Remove the current dashboard page
  */
 function _maf_widget_removeCurrentDashboardPage(){
-	_maf_widget_ConfirmationBox(
-		_dashboardServiceInstance.warningMessageBoxTitleMessage,
-		_dashboardServiceInstance.confirmCurrentPageRemoveMessage,
-		function(){
-			var jqxhr = $.get(_dashboardServiceInstance.removeCurrentDashboardPageServiceUrl, function(data) {
-				window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl);//Redirect to the default page
-			}).fail(function(){
-				_maf_widget_unexpectedErrorRefreshPage();
-			});
+	if (maf_confirmAction(_dashboardServiceInstance.confirmCurrentPageRemoveMessage)) {
+		var jqxhr = $.get(_dashboardServiceInstance.removeCurrentDashboardPageServiceUrl, function(data) {
+			window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl);//Redirect to the default page
+		}).fail(function(){
+			_maf_widget_unexpectedErrorRefreshPage();
 		});
+	}
 }
 
 /**
@@ -550,12 +547,9 @@ function _maf_widget_activateDashboardEdition(){
 	$("._maf_widget_dashboard_row_trash_button").click(function(event){
 		event.preventDefault();
 		var rowElement=$(this).closest("._maf_widget_dashboard_row");
-		_maf_widget_ConfirmationBox(
-				_dashboardServiceInstance.warningMessageBoxTitleMessage,
-				_dashboardServiceInstance.confirmDashboardRowRemoveMessage,
-				function(){
-					_maf_widget_removeDashboardRow(rowElement);
-				});
+		if(maf_confirmAction(_dashboardServiceInstance.confirmDashboardRowRemoveMessage)) {
+			_maf_widget_removeDashboardRow(rowElement);
+		}
 	});
 
 	//Activate the draggability
