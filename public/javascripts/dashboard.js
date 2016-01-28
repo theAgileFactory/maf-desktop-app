@@ -404,7 +404,7 @@ function _maf_widget_setCurrentPageAsHomePage(){
  * Rename the current page according to the specified name
  */
 function _maf_widget_openRenameDashboardPageForm(newName){	
-	$("#_maf_widget_RenamePage_Name").val('');
+	$("#_maf_widget_RenamePage_Name").val($('<div/>').html(newName).text());
 	$("#_maf_widget_RenamePageOKButton").prop('disabled', false);
 	$("#_maf_widget_RenamePageCloseButton").prop('disabled', false);
 	$("#_maf_widget_RenamePageForm").modal('show');
@@ -418,7 +418,7 @@ function _maf_widget_openRenameDashboardPageForm(newName){
 			
 			var jqxhr = $.get(_dashboardServiceInstance.renamePageServiceUrl+newName, function(data) {
 				$("#_maf_widget_RenamePageForm").modal('hide');
-				window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl);
+				window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+"?id="+data.id+"&editMode=true");
 			}).fail(function(){
 				_maf_widget_unexpectedErrorRefreshPage();
 			});

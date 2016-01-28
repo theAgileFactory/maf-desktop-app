@@ -308,8 +308,8 @@ public class DashboardController extends Controller {
     public Promise<Result> renameDashboardPage(Long dashboardPageId, String name) {
         try {
             getDashboardService().updateDashboardPageName(dashboardPageId, null, name);
-            ;
-            return Promise.promise(() -> ok());
+            JsonNode node = getObjectMapper().readTree("{\"id\" : " + dashboardPageId + "}");
+            return Promise.promise(() -> ok(node));
         } catch (Exception e) {
             return Promise.promise(() -> badRequest());
         }
