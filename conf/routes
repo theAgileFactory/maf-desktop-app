@@ -5,7 +5,7 @@
 #Dashboard
 GET    /dash/error/:id/:message				controllers.dashboard.DashboardController.indexError(id: Long, message: String)
 GET    /dash/error/widget                   controllers.dashboard.DashboardController.getErrorWidget(id:  Long ?= 0)
-GET    /dash/open            		        controllers.dashboard.DashboardController.index(id:  Long ?= 0)
+GET    /dash/open            		        controllers.dashboard.DashboardController.index(id:  Long ?= 0, editMode: Boolean ?= false)
 GET    /dash/configure/:id            		controllers.dashboard.DashboardController.configure(id: Long)
 GET    /dash/widget/catalog                 controllers.dashboard.DashboardController.getWidgetCatalog()
 POST   /dash/update/:id                     controllers.dashboard.DashboardController.updateDashboardPage(id: Long)

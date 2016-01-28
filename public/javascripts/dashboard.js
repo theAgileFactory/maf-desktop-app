@@ -451,7 +451,7 @@ function _maf_widget_openNewDashboardPageForm(){
 				JSON.stringify(newPageConfig),
 				function(data){
 					$("#_maf_widget_AddNewPageForm").modal('hide');
-					window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+"?id="+data.id);
+					window.location.replace(_dashboardServiceInstance.displayDashboardPageServiceUrl+"?id="+data.id+"&editMode=true");
 				},
 				function(){
 					_maf_widget_unexpectedErrorRefreshPage();

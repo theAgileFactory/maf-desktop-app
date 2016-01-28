@@ -1,5 +1,6 @@
 @(  
     currentDashboardPageId: Long, 
+    editMode: Boolean,
     currentDashboardPageIsHome: Boolean, 
     currentDashboardPageName: String, 
     currentDashboardPageConfiguration: List[framework.services.plugins.IDashboardService.DashboardRowConfiguration], 
@@ -174,6 +175,10 @@
                 var rowElement=$("._maf_widget_dashboard_row").last();
                 _maf_widget_openDashboardRowTemplateSelector(rowElement);
             });
+            
+            @if(editMode) {
+                $("#_maf_widget_edition_mode").trigger("click");
+            }
         });
     });
 </script>

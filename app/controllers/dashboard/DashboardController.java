@@ -60,11 +60,12 @@ public class DashboardController extends Controller {
     /**
      * Display the specified dashboard page
      * 
-     * @param dashboardPageId
+     * @param id
      *            a unique dashboard page id
-     * @return
+     * @param editMode
+     *            true if the edit mode should be opened
      */
-    public Result index(Long dashboardPageId) {
+    public Result index(Long id, Boolean editMode) {
         try {
             List<Triple<String, Boolean, Long>> pages = getDashboardService().getDashboardPages(null);
             if (pages == null || pages.size() == 0) {
@@ -77,19 +78,19 @@ public class DashboardController extends Controller {
                 getDashboardService().createDashboardPage(null, Msg.get("dashboard.object.page.name.default"), true, defaultConfig);
                 pages = getDashboardService().getDashboardPages(null);
             }
-            if (dashboardPageId == 0) {
-                dashboardPageId = getDashboardService().getHomeDashboardPageId(null);
+            if (id == 0) {
+                id = getDashboardService().getHomeDashboardPageId(null);
             }
-            Triple<String, Boolean, List<DashboardRowConfiguration>> dashboardPageConfiguration = getDashboardService()
-                    .getDashboardPageConfiguration(dashboardPageId, null);
+            Triple<String, Boolean, List<DashboardRowConfiguration>> dashboardPageConfiguration = getDashboardService().getDashboardPageConfiguration(id,
+                    null);
 
             if (dashboardPageConfiguration == null) {
                 return notFound(views.html.error.not_found.render(""));
             }
 
-            return ok(views.html.dashboard.index.render(dashboardPageId, dashboardPageConfiguration.getMiddle(), dashboardPageConfiguration.getLeft(),
-                    dashboardPageConfiguration.getRight(), pages, routes.DashboardController.configure(dashboardPageId).url(),
-                    routes.DashboardController.indexError(dashboardPageId, "").url()));
+            return ok(views.html.dashboard.index.render(id, editMode, dashboardPageConfiguration.getMiddle(), dashboardPageConfiguration.getLeft(),
+                    dashboardPageConfiguration.getRight(), pages, routes.DashboardController.configure(id).url(),
+                    routes.DashboardController.indexError(id, "").url()));
         } catch (DashboardException e) {
             throw new RuntimeException(e);
         }
@@ -203,7 +204,7 @@ public class DashboardController extends Controller {
                     parameters.setCreateNewWidgetAjaxServiceUrl(routes.DashboardController.createNewWidget(dashboardPageId).url());
                     parameters.setRemoveCurrentDashboardPageServiceUrl(routes.DashboardController.deleteDashboardPage(dashboardPageId).url());
                     parameters.setAddNewDashboardPageServiceUrl(routes.DashboardController.addNewDashboardPage().url());
-                    parameters.setDisplayDashboardPageServiceUrl(routes.DashboardController.index(0).url());
+                    parameters.setDisplayDashboardPageServiceUrl(routes.DashboardController.index(0, false).url());
                     parameters.setErrorWidgetServiceUrl(routes.DashboardController.getErrorWidget(0).url());
                     parameters.setSetAsHomePageServiceUrl(routes.DashboardController.setAsHomePage(dashboardPageId).url());
                     parameters.setRenamePageServiceUrl(routes.DashboardController.renameDashboardPage(dashboardPageId, "").url());
