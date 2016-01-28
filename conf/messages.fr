@@ -1800,7 +1800,7 @@ unexpected.error.home.link=Retour à la page d''accueil
 index.title=Accueil
 index.noemployee.notif=Votre compte utilisateur BizDock n''est pas associé à un employé. Par conséquent, certaines fonctionnalités ne sont pas disponibles.\
  Pour créer un employé et l''associer à votre compte, veuillez sélectionner "Employé" dans le menu "Nouveau" (des permissions spécifiques sont nécessaires pour réaliser cette action).
-index.notifications.title=Notifications non lues
+index.notifications.title=5 dernières notifications non lues
 index.initiatives.title=Dernières initiatives créées
 index.initiatives.create=Créer une initiative
 index.profile.title=Votre profil

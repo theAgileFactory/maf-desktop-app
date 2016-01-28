@@ -1800,7 +1800,7 @@ unexpected.error.home.link=Zurück zur Startseite
 index.title=de: Home
 index.noemployee.notif=Ihr BizDock-Konto ist mit keinem Mitarbeiter verknüpft, dadurch stehen einige Funktion nicht zur verfügung.\
  Im Menu "Neu" können Sie mit "Mitarbeiter" einen Mitarbeiter generieren und mit Ihrem Konto verknüpfen (vorausgesetzt Sie haben die entsprechenden Benutzerrechte).
-index.notifications.title=Ungelesene Mitteilungen
+index.notifications.title=de: (last 5) Ungelesene Mitteilungen
 index.initiatives.title=Die neuesten Initiativen
 index.initiatives.create=Neu Initiative anlegen
 index.profile.title=Mein Profil
