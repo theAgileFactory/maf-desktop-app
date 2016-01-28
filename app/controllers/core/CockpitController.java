@@ -35,8 +35,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.finance.PortfolioEntryResourcePlanDAO;
@@ -93,7 +91,6 @@ import utils.table.TimesheetReportListView;
  * 
  * @author Johann Kohler
  */
-@Restrict({ @Group(IMafConstants.COCKPIT_DISPLAY_PERMISSION) })
 public class CockpitController extends Controller {
 
     @Inject

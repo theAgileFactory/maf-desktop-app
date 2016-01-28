@@ -44,14 +44,6 @@ VALUES
 VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
-);
-    INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='VIEWER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PERSONAL_SPACE_READ_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
@@ -109,14 +101,6 @@ VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='ROADMAP_DISPLAY_PERMISSION')
-);
-    INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='SUPER_USER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
@@ -452,14 +436,6 @@ VALUES
 VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
-);
-    INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='PMO_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
@@ -684,14 +660,6 @@ VALUES
 VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
-);
-    INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='PORTFOLIO_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_MANAGER_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
@@ -852,14 +820,6 @@ VALUES
 VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
-);
-    INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='DELIVERY_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
@@ -996,14 +956,6 @@ VALUES
 VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
-);
-    INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_ENTRY_VIEW_PUBLIC_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
@@ -1085,14 +1037,6 @@ VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='ARCHITECTURE_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_ENTRY_PERMISSION')
-);
-        INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='DEVELOPER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
@@ -1189,14 +1133,6 @@ VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='PORTFOLIO_VIEW_FINANCIAL_INFO_ALL_PERMISSION ')
-);
-    INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,
@@ -1325,14 +1261,6 @@ VALUES
 (
 (select role_type.id from system_level_role_type as role_type where role_type.name='PROJECT_MANAGER_ROLE'),
 (select system_permission.id from system_permission where system_permission.name='TIMESHEET_APPROVAL_AS_MANAGER_PERMISSION')
-);
-        INSERT INTO `system_level_role_type_has_system_permission`
-(`system_level_role_type_id`,
-`system_permission_id`)
-VALUES
-(
-(select role_type.id from system_level_role_type as role_type where role_type.name='FINANCIAL_OFFICER_ROLE'),
-(select system_permission.id from system_permission where system_permission.name='COCKPIT_DISPLAY_PERMISSION')
 );
     INSERT INTO `system_level_role_type_has_system_permission`
 (`system_level_role_type_id`,

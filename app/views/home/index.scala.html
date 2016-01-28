@@ -157,11 +157,6 @@
                                 <span class="fa fa-road"></span> @parts.Msg("index.roadmap.label") &nbsp;<small><i>@parts.Msg("index.roadmap.description")</i></small>
                             </a>
                         }
-                        @restrict(la(as(constants.IMafConstants.COCKPIT_DISPLAY_PERMISSION))){
-                            <a class="list-group-item" href="@controllers.core.routes.CockpitController.initiatives().url">
-                                <span class="fa fa-tachometer"></span> @parts.Msg("index.cockpit.label") &nbsp;<small><i>@parts.Msg("index.cockpit.description")</i></small>
-                            </a>
-                        }
                         @restrict(la(as(constants.IMafConstants.SEARCH_PERMISSION))){
                             <a class="list-group-item" href="@controllers.core.routes.SearchController.index().url">
                                 <span class="fa fa-search"></span> @parts.Msg("index.search.label") &nbsp;<small><i>@parts.Msg("index.search.description")</i></small>

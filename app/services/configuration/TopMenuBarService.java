@@ -66,7 +66,6 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
     public void resetTopMenuBar() {
         clearAllPerspectives();
         defineRoadmapMenu(null);
-        defineCockpitMenu(null);
         defineArchitectureMenu(null);
         defineNewMenu(null);
         defineGovernanceMenu(null);
@@ -296,23 +295,6 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         newBudgetBucketMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.BUDGET_BUCKET_EDIT_ALL_PERMISSION));
         newMenuItem.addSubMenuItem(newBudgetBucketMenuItem);
 
-    }
-
-    /**
-     * Define the cockpit menu (item).
-     * 
-     * @param perspectiveKey
-     *            the perspective key, let null for the main
-     */
-    private void defineCockpitMenu(String perspectiveKey) {
-        ClickableMenuItem cockpitMenuItem = new ClickableMenuItem(TopMenus.COCKPIT.name(), "topmenubar.cockpit.menu.label",
-                controllers.core.routes.CockpitController.initiatives(0, 0, false), "fa fa-tachometer", false);
-        cockpitMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.COCKPIT_DISPLAY_PERMISSION));
-        if (perspectiveKey == null) {
-            addMenuItemToMainPerspective(cockpitMenuItem);
-        } else {
-            getPerspective(perspectiveKey).addMenuItem(cockpitMenuItem);
-        }
     }
 
     /**
