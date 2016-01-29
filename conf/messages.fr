@@ -1795,22 +1795,6 @@ unexpected.error.home.link=Retour à la page d''accueil
 index.title=Accueil
 index.noemployee.notif=Votre compte utilisateur BizDock n''est pas associé à un employé. Par conséquent, certaines fonctionnalités ne sont pas disponibles.\
  Pour créer un employé et l''associer à votre compte, veuillez sélectionner "Employé" dans le menu "Nouveau" (des permissions spécifiques sont nécessaires pour réaliser cette action).
-index.notifications.title=5 dernières notifications non lues
-index.initiatives.title=Dernières initiatives créées
-index.initiatives.create=Créer une initiative
-index.profile.title=Votre profil
-index.help.title=Aide
-index.help.bizdock.label=Qu''est-ce que BizDock?
-index.help.intake.label=Créer une initiative
-index.help.roadmap.label=Feuille de route
-index.help.profile.label=Mon profil
-index.quick_links.title=Liens rapides
-index.intake.label=Nouveau
-index.intake.description=Soumettre une idée ou démarrer un nouveau projet.
-index.roadmap.label=Feuille de route
-index.roadmap.description=Découvrir toutes les initiatives et les filtrer selon vos besoins.
-index.search.label=Rechercher
-index.search.description=Trouver facilement et rapidement ce que vous désirez.
 
 #----------------
 # messaging

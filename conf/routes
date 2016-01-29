@@ -3,18 +3,18 @@
 #-------------------
 
 #Dashboard
-GET    /dash/error/:id/:message				controllers.dashboard.DashboardController.indexError(id: Long, message: String)
-GET    /dash/error/widget                   controllers.dashboard.DashboardController.getErrorWidget(id:  Long ?= 0)
-GET    /dash/open            		        controllers.dashboard.DashboardController.index(id:  Long ?= 0, editMode: Boolean ?= false)
-GET    /dash/configure/:id            		controllers.dashboard.DashboardController.configure(id: Long)
-GET    /dash/widget/catalog                 controllers.dashboard.DashboardController.getWidgetCatalog()
-POST   /dash/update/:id                     controllers.dashboard.DashboardController.updateDashboardPage(id: Long)
-POST   /dash/widget/new/:id   	            controllers.dashboard.DashboardController.createNewWidget(id: Long)
-GET    /dash/row/new/:templateIdentifier    controllers.dashboard.DashboardController.createNewRow(templateIdentifier: String)
-GET    /dash/page/remove/:id                controllers.dashboard.DashboardController.deleteDashboardPage(id: Long)
-POST   /dash/page/add						controllers.dashboard.DashboardController.addNewDashboardPage()
-GET    /dash/page/home/:id                  controllers.dashboard.DashboardController.setAsHomePage(id: Long)
-GET    /dash/page/rename/:id/:name          controllers.dashboard.DashboardController.renameDashboardPage(id: Long, name: String)
+GET    /                                       controllers.dashboard.DashboardController.index(id: Long ?= 0, editMode: Boolean ?= false)
+GET    /dashboard/error/:id/:message           controllers.dashboard.DashboardController.indexError(id: Long, message: String)
+GET    /dashboard/error/widget                 controllers.dashboard.DashboardController.getErrorWidget(id:  Long ?= 0)
+GET    /dashboard/configure/:id                controllers.dashboard.DashboardController.configure(id: Long)
+GET    /dashboard/widget/catalog               controllers.dashboard.DashboardController.getWidgetCatalog()
+POST   /dashboard/update/:id                   controllers.dashboard.DashboardController.updateDashboardPage(id: Long)
+POST   /dashboard/widget/new/:id               controllers.dashboard.DashboardController.createNewWidget(id: Long)
+GET    /dashboard/row/new/:templateIdentifier  controllers.dashboard.DashboardController.createNewRow(templateIdentifier: String)
+GET    /dashboard/page/remove/:id              controllers.dashboard.DashboardController.deleteDashboardPage(id: Long)
+POST   /dashboard/page/add                     controllers.dashboard.DashboardController.addNewDashboardPage()
+GET    /dashboard/page/home/:id                controllers.dashboard.DashboardController.setAsHomePage(id: Long)
+GET    /dashboard/page/rename/:id/:name        controllers.dashboard.DashboardController.renameDashboardPage(id: Long, name: String)
 
 #Custom router method
 GET    /ext/*path                  framework.services.router.CustomRouterController.perform(path)
@@ -32,7 +32,7 @@ POST    /filter-configuration/share             framework.utils.FilterConfigCont
 GET     /filter-configuration/principal/search  framework.utils.FilterConfigController.filterConfigurationSearchPrincipal()
 
 #Application controller
-GET    /                           controllers.Application.index()
+
 GET    /notification/redirect      controllers.Application.redirectForNotification(id: Long)
 GET    /notifications              controllers.Application.displayNotifications()
 POST   /notifications/filter       controllers.Application.filterNotifications()
