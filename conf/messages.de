@@ -359,39 +359,39 @@ notification.sending_system.email=E-Mail
 # Dashboard
 #----------------------
 dashboard.object.page.name.label=Name
-dashboard.object.page.name.help=de: Please provide a page name
-dashboard.object.page.name.default=de: Default
-dashboard.object.page.is_home.label=de: Default
+dashboard.object.page.name.help=Bitte Seitenname eingeben
+dashboard.object.page.name.default=Startseite
+dashboard.object.page.is_home.label=Startseite
 
-dashboard.page.edit.button=de: Edit mode
-dashboard.page.display.button=de: Exit
-dashboard.page.delete.button=de: Delete page
-dashboard.page.delete.confirm.message=de: Are you sure you want to delete this page?
-dashboard.page.new.button=de: New page
-dashboard.page.rename.button=de: Rename page
-dashboard.page.ishome.button=de: Set as default
+dashboard.page.edit.button=Bearbeiten
+dashboard.page.display.button=Beenden
+dashboard.page.delete.button=Seite löschen
+dashboard.page.delete.confirm.message=Seite wirklich löschen?
+dashboard.page.new.button=Neue Seite
+dashboard.page.rename.button=Seite umbenennen
+dashboard.page.ishome.button=Startseite
 
-dashboard.addpage.form.title=de: Add a new page
-dashboard.renamepage.form.title=de: Rename a page
-dashboard.widget.catalog.title=de: Widget catalog
-dashboard.addrow.title=de: Add a row
+dashboard.addpage.form.title=Seite hinzufügen
+dashboard.renamepage.form.title=Seite umbenennen
+dashboard.widget.catalog.title=Widget Katalog
+dashboard.addrow.title=Block hinzufügen
 
-dashboard.drag.widget.message=de: Drag your widgets here or
-dashboard.drag.widget.link=de: add a new widget
+dashboard.drag.widget.message=Ziehen sie Ihre Widget hier hin oder
+dashboard.drag.widget.link=fügen Sie ein neues hinzu
 
-dashboard.row.delete.button=de: Delete row
-dashboard.row.delete.confirm.message=de: Are you sure you want to delete this row? All included widgets will be also deleted.
-dashboard.row.delete.error.message=de: A page must have at least one row.
+dashboard.row.delete.button=Block löschen
+dashboard.row.delete.confirm.message=Block wirklich löschen?
+dashboard.row.delete.error.message=Eine Seite muss mindestens einen Block beinhalten
 
-dashboard.widget.delete.confirm.message=de: Are you sure you want to delete this widget?
+dashboard.widget.delete.confirm.message=Widget wirklich löschen?
 
-dashboard.widget.error.title=de: Error for widget {0}
-dashboard.widget.error.deleted=de: Unable to load the widget.<br/>This one has been deleted by the administrator, you should remove it from this page.
-dashboard.widget.error.unexpected=de: Unexpected widget error.<br/> Please refresh and contact the administrator if this problem persists.
+dashboard.widget.error.title=Fehler in Widget {0}
+dashboard.widget.error.deleted=Widget existiert nicht mehr.<br/>Bitte löschen Sie es von dieser Seite.
+dashboard.widget.error.unexpected=Fehler<br/>Bitte Seite aktualisieren, wenn das Problem besteht, Administrator kontaktieren.
 
-dashboard.warning.messagebox.title.message=de: WARNING
-dashboard.maxnumber.row.message=de: You reached the max number of rows :
-dashboard.unexpected.error.message=de: An unexpected error has occurred, the current page will be automatically refreshed.
+dashboard.warning.messagebox.title.message=Achtung
+dashboard.maxnumber.row.message=Sie haben die maximale Anzahl Blocks erreicht:
+dashboard.unexpected.error.message=Fehler. Seite wird automatisch aktualisiert.
 
 #----------------------
 # ID zone
@@ -460,7 +460,7 @@ tour.top_menu_bar.step11.content=BizDock enthält auch ein Nachrichtensystem um 
 tour.top_menu_bar.step12.title=Mitteilungen
 tour.top_menu_bar.step12.content=Mitteilungen kriegen Sie von BizDock jedes Mal wenn ein Ereignis Ihre Entscheidung bzw. Beachtung erfordert.
 tour.top_menu_bar.step13.title=Mein Profil
-tour.top_menu_bar.step13.content=Passwort ändern? Resourcen runterladen oder einfach abmelden.
+tour.top_menu_bar.step13.content=Passwort ändern? Ressourcen runterladen oder einfach abmelden.
 
 tour.breadcrumb.step0.title=Lesezeichen
 tour.breadcrumb.step0.content=Einfach auf die Stecknadel klicken um die aktuelle Seite ihren Lesezeichen hinzu zu fügen.
@@ -529,7 +529,7 @@ kpi.allocated_actor_days.main.name=Mitarbeiter
 kpi.allocated_actor_days.additional1.name=bestätigt
 kpi.allocated_actor_days.additional2.name=nicht bestätigt
 
-kpi.allocated_org_unit_days.main.name=Resourcen
+kpi.allocated_org_unit_days.main.name=Ressourcen
 kpi.allocated_org_unit_days.additional1.name=bestätigt
 kpi.allocated_org_unit_days.additional2.name=nicht bestätigt
 
@@ -685,7 +685,7 @@ preference.homepage_logo_preference.description=Logo erscheint auf der Homepage 
 preference.homepage_logo_preference.name=Homepage Logo
 preference.timesheet_must_approve_preference.description=Wenn eingeschaltet, mussen Timesheet von den Vorgesetzten genehmigt werden.
 preference.timesheet_must_approve_preference.name=Timesheet genehmigen
-preference.timesheet_reminder_limit_preference.description=de: The reminder limit is the maximal number of late timesheets (for each subordinate) that are displayed for a manager.<br/>A late timesheet is a timesheet that is not submitted and which belongs to a past period.
+preference.timesheet_reminder_limit_preference.description=Maximale Anzeige verspäteter Zeiterfassungen (pro Mitarbeiter)
 preference.timesheet_reminder_limit_preference.name=Timesheet Mahnungslimit
 preference.timesheet_hours_per_day.description=Erwartete Anzahl Stunden pro Tag.
 preference.timesheet_hours_per_day.name=Stunden pro Tag
@@ -710,8 +710,8 @@ preference.smtp_password_preference.name=Passwort
 preference.smtp_password_preference.description=Der SMTP-Server-Passwort
 preference.notification_sending_system_preference.name=System Mitteilungen
 preference.notification_sending_system_preference.description=Interne BizDock Mitteilung order via Email
-preference.budget_tracking_effort_based_preference.name=de: Effort-based budget/forecast
-preference.budget_tracking_effort_based_preference.description=de: Define if the financial part (budget and forecast) of an initiative automatically includes the effort of the resources. If true, by adding an allocation then a budget and forecast lines are also added.
+preference.budget_tracking_effort_based_preference.name=Budget/Kostenprognose nach Arbeitsaufwand
+preference.budget_tracking_effort_based_preference.description=Budget/Kostenprognose der Initiativen beinhalten automatisch den Aufwand der Ressourcen. Sobald eine Ressource zugeteilt wurde, erscheint sie im Budget.
 
 #----------------------
 # authentication
@@ -1072,8 +1072,8 @@ object.portfolio_entry.governance_id.label=ID
 object.portfolio_entry.erp_ref_id.label=ERP ID
 object.portfolio_entry.creation_date.label=Erstellungsdatum
 object.portfolio_entry.is_public.label=Öffentlich
-object.portfolio_entry.default_is_opex.label=de: OPEX by default
-object.portfolio_entry.default_is_opex.help=de: Default expenditure type. Used when no type is existing for a budget/forecast that has been generated with a resource allocation.
+object.portfolio_entry.default_is_opex.label=Voreinstellung: OPEX
+object.portfolio_entry.default_is_opex.help=Grundeinstellung wenn eine Ressource zugewiesen wird.
 object.portfolio_entry.name.label=Name
 object.portfolio_entry.description.label=Beschreibung
 object.portfolio_entry.type.label=Typ
@@ -1165,7 +1165,7 @@ object.portfolio_entry_planning_package.end_date.label=Enddatum
 object.portfolio_entry_planning_package.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.portfolio_entry_planning_package.name.label=Name
 object.portfolio_entry_planning_package.is_opex.label=OPEX
-object.portfolio_entry_planning_package.is_opex.help=de: Check this box if the package is OPEX, else it means it''s CAPEX.
+object.portfolio_entry_planning_package.is_opex.help=Nicht angekreuzt, wird als CAPEX verbucht.
 object.portfolio_entry_planning_package.expenditure_type.label=Kosten
 object.portfolio_entry_planning_package.description.label=Beschreibung
 object.portfolio_entry_planning_package.group.label=Gruppe
@@ -1323,11 +1323,11 @@ object.process_transition_request.table.milestone.empty=Es gibt keinen Antrag
 #----------------------
 
 object.actor.ref_id.label=ID
-object.actor.employee_id.label=de: Employee ID
+object.actor.employee_id.label=Mitarbeiter Nummer
 object.actor.title.label=Stellenbezeichnung
 object.actor.name.label=Name
 object.actor.is_active.label=Aktiv
-object.actor.is_active.help=Ein Mitarbeiter kann nicht auswählen sein und ist durchgestrichen.
+object.actor.is_active.help=Nur aktive Mitarbeiter können zugeteilt werden.
 object.actor.org_unit.label=Org.-Einheit
 object.actor.manager.label=Vorgesetzter
 object.actor.uid.label=Benutzername
@@ -1391,7 +1391,7 @@ object.portfolio_entry_budget_line.table.empty=Keine Einträge
 #----------------------
 
 object.allocated_resource.type.label=Typ
-object.allocated_resource.resource.label=Resourcen
+object.allocated_resource.resource.label=Ressourcen
 object.allocated_resource.actor.label=Mitarbeiter
 object.allocated_resource.org_unit.label=Interne Zulieferer
 object.allocated_resource.competency.label=Kompetenzen
@@ -1407,10 +1407,10 @@ object.allocated_resource.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.allocated_resource.package.label=Planungspaket
 object.allocated_resource.follow_package_dates.label=Folgt Packetdatum
 object.allocated_resource.is_confirmed.label=Bestätigt
-object.allocated_resource.daily_rate.label=de: Daily rate
-object.allocated_resource.daily_rate.help=de: The cost in the default currency per day for the allocated resource.
-object.allocated_resource.forecast_days.label=de: Forecast in days
-object.allocated_resource.forecast_days.help=de: Total forecast (effort done + remaining effort) in days for the allocated resource.
+object.allocated_resource.daily_rate.label=Tagessatz
+object.allocated_resource.daily_rate.help=Tagessatz in der System Währung
+object.allocated_resource.forecast_days.label=Prognosse (in Tagen)
+object.allocated_resource.forecast_days.help=Gesamtaufwand (verbucht + verbleibend)
 object.allocated_resource.actor.table.empty=Keine Einträge
 object.allocated_resource.org_unit.table.empty=Keine Einträge
 object.allocated_resource.competency.table.empty=Keine Einträge
@@ -1792,7 +1792,7 @@ unexpected.error.home.link=Zurück zur Startseite
 # home
 #----------------------
 
-index.title=de: Home
+index.title=Home
 index.noemployee.notif=Ihr BizDock-Konto ist mit keinem Mitarbeiter verknüpft, dadurch stehen einige Funktion nicht zur verfügung.\
  Im Menu "Neu" können Sie mit "Mitarbeiter" einen Mitarbeiter generieren und mit Ihrem Konto verknüpfen (vorausgesetzt Sie haben die entsprechenden Benutzerrechte).
 
@@ -1881,7 +1881,7 @@ core.roadmap.simulator.capacity_forecast.year.label=Jahr
 core.roadmap.simulator.capacity_forecast.only_confirmed.label=Nur bestätigte
 core.roadmap.simulator.capacity_forecast.org_unit.label=Organisationseinheit
 core.roadmap.simulator.capacity_forecast.competency.label=Kompetenz
-core.roadmap.simulator.capacity_forecast.resource.label=Resourcen
+core.roadmap.simulator.capacity_forecast.resource.label=Ressourcen
 core.roadmap.simulator.capacity_forecast.confirmed_initiatives.label=Bestätigte Initiativen
 core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label=Nicht bestätigte Initiativen
 core.roadmap.simulator.capacity_forecast.activities.label=Aktivitäten
@@ -2046,8 +2046,8 @@ core.milestone.approval.process.panel.decide.approve.notification.title=Meilenst
 core.milestone.approval.process.panel.decide.approve.notification.message=Die endgültige Genehmigung für den Meilenstein von "{0}" wurde gespeichert: Der Meilenstein ist genehmigt.
 core.milestone.approval.process.panel.decide.reject.notification.title=Meilenstein abgelehnt
 core.milestone.approval.process.panel.decide.reject.notification.message=Die endgültige Genehmigung für den Meilenstein von "{0}" wurde gespeichert: Der Meilenstein wurde abgelehnt.
-core.milestone.approval.process.panel.decide.delete.confirm=de: Are you sure you want to delete this milestone approval request?
-core.milestone.approval.process.panel.decide.delete.successful=de: The milestone approval request has been deleted.
+core.milestone.approval.process.panel.decide.delete.confirm=Genehmigung des Meilenstein löschen?
+core.milestone.approval.process.panel.decide.delete.successful=Genehmigung des Meilenstein gelöscht.
 
 #----------------------
 # process transition request
@@ -2173,7 +2173,7 @@ core.portfolio_entry.overview.milestones_trend.panel.title=Meilenstein Trend
 core.portfolio_entry.overview.milestones_trend.panel.empty=Trend Tabelle lehr.
 core.portfolio_entry.overview.milestones_trend.panel.milestone.label=Meilenstein
 core.portfolio_entry.overview.milestones_trend.panel.budget.label=Budget
-core.portfolio_entry.overview.milestones_trend.panel.resources.label=Resourcen
+core.portfolio_entry.overview.milestones_trend.panel.resources.label=Ressourcen
 core.portfolio_entry.overview.milestones_trend.panel.resources.value.label={0} Tag(e)
 core.portfolio_entry.overview.status.panel.title=Letzte Statusbericht
 core.portfolio_entry.overview.milestones.panel.title=Nächste Meilensteine
@@ -2227,8 +2227,8 @@ core.portfolio_entry_financial.view.forecast.title=Kostenprognose
 core.portfolio_entry_financial.view.forecast.panel.cost_to_complete.title=Geplante Aufträge
 core.portfolio_entry_financial.view.forecast.panel.engaged_work_order.title=Gestartete Aufträge
 core.portfolio_entry_financial.view.forecast.panel.engaged_purchase_order.title=Bestellungen
-core.portfolio_entry_financial.view.status.table.effort.label=de: Effort
-core.portfolio_entry_financial.view.status.table.cost.label=de: Expense
+core.portfolio_entry_financial.view.status.table.effort.label=Arbeeitsaufwand
+core.portfolio_entry_financial.view.status.table.cost.label=Kosten
 core.portfolio_entry_financial.view.status.table.budget.label=Budget
 core.portfolio_entry_financial.view.status.table.cost_to_complete.label=Kosten der Fertigstellung
 core.portfolio_entry_financial.view.status.table.engaged.label=Istkosten
@@ -2237,9 +2237,9 @@ core.portfolio_entry_financial.view.status.table.deviation.label=Abweichung
 core.portfolio_entry_financial.view.status.table.status.label=Status
 
 #budget tracking
-core.portfolio_entry_financial.budget_tracking.run.help=de: Refresh the budget and forecast of efforts. Last update: {0}
-core.portfolio_entry_financial.budget_tracking.run.successful=de: The budget and forecast of efforts are now up to date.
-core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help=de: There exist timesheets on this initiative that are not engaged because no resource allocation is corresponding.
+core.portfolio_entry_financial.budget_tracking.run.help=Budget und Prognose aktualisieren. Letzte Aktualisierung: {0}
+core.portfolio_entry_financial.budget_tracking.run.successful=Budget und Prognose aktualisiert.
+core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help=Arbeitsaufwand von Mitarbeitern die nicht dieser Initiative zugeteilt sind wurde erfasst.
 
 #view budget line
 core.portfolio_entry_financial.budget_line.view.title=Budget Eintrag
@@ -2324,7 +2324,7 @@ core.portfolio_entry_governance.milestone.view.empty=Kein Details
 core.portfolio_entry_governance.milestone.view.panel.details.title=Details
 core.portfolio_entry_governance.milestone.view.panel.approvers.title=Genehmiger
 core.portfolio_entry_governance.milestone.view.panel.budget.title=Budgetstatus am {0}
-core.portfolio_entry_governance.milestone.view.panel.resources.title=Resourcenstatus am {0}
+core.portfolio_entry_governance.milestone.view.panel.resources.title=Ressourcenstatus am {0}
 
 
 #request milestone
