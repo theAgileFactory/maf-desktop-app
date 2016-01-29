@@ -81,7 +81,7 @@
     
         <div class="pull-right small">
             @parts.Msg("core.portfolio_entry_planning.packages.gantt.lastupdate"):
-            @parts.formats.display_date(new Date(), framework.utils.Utilities.getDefaultDatePattern() + " kk:mm") &nbsp;
+            @parts.formats.display_date(new Date(), framework.utils.Utilities.getDefaultDatePattern() + " HH:mm") &nbsp;
             <a href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)"><span class="fa fa-refresh"></span></a>
         </div>&nbsp;
         <div class="gantt" id="packages-gantt" style="margin: 0px auto;"></div>

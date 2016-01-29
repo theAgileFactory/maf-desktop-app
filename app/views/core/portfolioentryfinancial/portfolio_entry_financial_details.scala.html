@@ -39,7 +39,7 @@
 
 @budgetTrackingLastRun=@{
     if(portfolioEntry.budgetTrackingLastRun != null) {
-        framework.utils.Utilities.getDateFormat(framework.utils.Utilities.getDefaultDatePattern() + " kk:mm").format(portfolioEntry.budgetTrackingLastRun)
+        framework.utils.Utilities.getDateFormat(framework.utils.Utilities.getDefaultDatePattern() + " HH:mm").format(portfolioEntry.budgetTrackingLastRun)
     } else {
         framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
     }
