@@ -103,7 +103,7 @@ public class TimesheetController extends Controller {
         // get the current actor
         Actor actor = getCurrentActor();
         if (actor == null) {
-            return redirect(controllers.routes.Application.index());
+            return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
         }
 
         // get the report

@@ -390,7 +390,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             }
 
             if (actor == null) {
-                return redirect(controllers.routes.Application.index());
+                return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
             }
 
             // create the process transition request

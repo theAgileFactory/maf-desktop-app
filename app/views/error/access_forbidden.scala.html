@@ -27,7 +27,7 @@
         <div class="jumbotron">
             <h1>4<span class="fa fa-ban text-danger"></span>3 <small>@parts.Msg("forbidden.access.title")</small></h1>
             <p>@parts.Msg("forbidden.access.explanation")</p>
-            <p><a class="btn btn-primary btn-lg" role="button" href="@routes.Application.index">@parts.Msg("forbidden.access.home.link")</a></p>
+            <p><a class="btn btn-primary btn-lg" role="button" href="@controllers.dashboard.routes.DashboardController.index()">@parts.Msg("forbidden.access.home.link")</a></p>
         </div>
     
     </div>

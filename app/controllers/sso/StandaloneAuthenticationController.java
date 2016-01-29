@@ -124,7 +124,7 @@ public class StandaloneAuthenticationController extends AbstractStandaloneAuthen
             return badRequest(reset_password.render(uuid, boundForm));
         }
         Utilities.sendSuccessFlashMessage(Msg.get("authentication.standalone.reset.success.message"));
-        return redirect(controllers.routes.Application.index());
+        return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
     }
 
     /**

@@ -25,10 +25,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -46,7 +44,6 @@ import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.OrderBy;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -54,8 +51,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import dao.datasyndication.DataSyndicationDao;
-import dao.pmo.ActorDao;
-import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -84,8 +79,6 @@ import models.framework_models.account.Principal;
 import models.framework_models.account.Shortcut;
 import models.framework_models.common.DynamicSingleItemCustomAttributeValue;
 import models.framework_models.common.HelpTarget;
-import models.pmo.Actor;
-import models.pmo.PortfolioEntry;
 import play.Configuration;
 import play.Logger;
 import play.libs.F.Promise;
@@ -93,7 +86,6 @@ import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
-import security.dynamic.PortfolioEntryDynamicHelper;
 import services.datasyndication.IDataSyndicationService;
 import services.echannel.IEchannelService;
 import services.echannel.IEchannelService.EchannelException;
@@ -116,15 +108,11 @@ public class Application extends Controller {
     @Inject
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
-    private IAccountManagerPlugin accountManagerPlugin;
-    @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
     @Inject
     private IAdPanelManagerService adPanelManagerService;
     @Inject
     private IAttachmentManagerPlugin attachmentManagerPlugin;
-    @Inject
-    private ISecurityService securityService;
     @Inject
     private ISysAdminUtils sysAdminUtils;
     @Inject
@@ -412,59 +400,6 @@ public class Application extends Controller {
         } else {
             return redirect(routes.Application.displayNotifications());
         }
-    }
-
-    /**
-     * Display the home page.
-     * 
-     * @return a list of {@link ThirdPartySystem}
-     */
-    @SubjectPresent(forceBeforeAuthCheck = true)
-    public Result index() {
-        // check if the user has an actor
-        boolean hasActor = false;
-        try {
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            if (actor != null && actor.id != null) {
-                hasActor = true;
-            }
-        } catch (Exception e) {
-            Logger.debug("the user hasn't an actor");
-        }
-
-        // get the not read notifications
-        Set<String> hideColumnsForNotifications = new HashSet<String>();
-        hideColumnsForNotifications.add("deleteActionLink");
-        hideColumnsForNotifications.add("isRead");
-        String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
-
-        List<NotificationListView> notificationListViews = new ArrayList<NotificationListView>();
-        for (Notification notification : getNotificationManagerPlugin().getNotReadNotificationsForUid(loggedUser)) {
-            notificationListViews.add(new NotificationListView(notification));
-        }
-
-        Table<NotificationListView> notificationsTable = NotificationListView.templateTable.fill(notificationListViews, hideColumnsForNotifications);
-
-        // get last created portfolio entries
-        List<PortfolioEntry> portfolioEntries;
-        OrderBy<PortfolioEntry> orderBy = new OrderBy<PortfolioEntry>();
-        orderBy.desc("creationDate");
-        orderBy.desc("id");
-        try {
-            portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(orderBy, getSecurityService()).setMaxRows(5).findList();
-        } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-        }
-
-        // get the profile info
-        IUserAccount account = null;
-        try {
-            account = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
-        } catch (AccountManagementException e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-        }
-        return ok(views.html.home.index.render(notificationsTable, portfolioEntries, account, hasActor));
     }
 
     /**
@@ -911,13 +846,6 @@ public class Application extends Controller {
     }
 
     /**
-     * Get the account manager service.
-     */
-    private IAccountManagerPlugin getAccountManagerPlugin() {
-        return accountManagerPlugin;
-    }
-
-    /**
      * Get the notification manager service.
      */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
@@ -936,13 +864,6 @@ public class Application extends Controller {
      */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
         return attachmentManagerPlugin;
-    }
-
-    /**
-     * Get the security service.
-     */
-    private ISecurityService getSecurityService() {
-        return securityService;
     }
 
     /**

@@ -119,7 +119,7 @@ public class PasswordReset extends Controller {
             getAccountManagerPlugin().updateActivationStatus(uid, true);
             Utilities.sendSuccessFlashMessage(Messages.get("my.my_profile.update_password.successful"));
             session().clear();
-            return redirect(controllers.routes.Application.index());
+            return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }

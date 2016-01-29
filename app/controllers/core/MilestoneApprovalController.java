@@ -199,7 +199,7 @@ public class MilestoneApprovalController extends Controller {
             // MILESTONE_DECIDE_PERMISSION and is not related to an actor, then
             // the list of milestone to approve doesn't make sense
             if (actor == null) {
-                return redirect(controllers.routes.Application.index());
+                return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
             }
             pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPaginationByApprover(actor.id);
         }

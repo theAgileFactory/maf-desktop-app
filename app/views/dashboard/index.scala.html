@@ -6,7 +6,8 @@
     currentDashboardPageConfiguration: List[framework.services.plugins.IDashboardService.DashboardRowConfiguration], 
     dashboardPages: List[org.apache.commons.lang3.tuple.Triple[String, Boolean, Long]],
     configureUrl: String,
-    errorUrl: String
+    errorUrl: String,
+    hasActor: Boolean
 )
 
 @import framework_views.parts
@@ -23,6 +24,11 @@
 <script src="@routes.Assets.versioned("javascripts/dashboard.js")"></script>
 <link href="@routes.Assets.versioned("stylesheets/dashboard.css")" type="text/css" rel="stylesheet">
 }{
+
+@if(!hasActor) {
+    <div class="alert alert-info">@parts.Msg("index.noemployee.notif")</div>
+}
+
 <div class="row">
     <div class="col-md-6">
         <div class="btn-group" data-toggle="buttons">

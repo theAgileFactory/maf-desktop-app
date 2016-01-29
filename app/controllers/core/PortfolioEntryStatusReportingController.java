@@ -584,7 +584,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             Actor actor = ActorDao.getActorByUid(uid);
             if (actor == null) {
-                return redirect(controllers.routes.Application.index());
+                return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
             }
 
             portfolioEntryReport.author = actor;

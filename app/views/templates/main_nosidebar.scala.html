@@ -45,7 +45,7 @@
     @header
 }{
     @if(showIdZone) {
-        @topmenubar(routes.Application.index.url){
+        @topmenubar(controllers.dashboard.routes.DashboardController.index().url){
             @if(instanceInfo != null && instanceInfo.isTrial ) {
                 <a class="btn btn-success" href="@routes.Application.echannelInstanceViewUrl().url">@parts.Msg("button.upgrade_from_trial")</a>
             } else {
@@ -118,7 +118,7 @@
             }
         }
     } else {
-        @topmenubar(routes.Application.index.url){&nbsp;}{&nbsp;}
+        @topmenubar(controllers.dashboard.routes.DashboardController.index().url){&nbsp;}{&nbsp;}
     }
     @if(fluid) {
         <div class="container-fluid">

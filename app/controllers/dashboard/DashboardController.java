@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import dao.pmo.ActorDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.plugins.DashboardException;
@@ -22,8 +23,10 @@ import framework.services.plugins.IDashboardService;
 import framework.services.plugins.IDashboardService.DashboardRowConfiguration;
 import framework.services.plugins.IDashboardService.DashboardRowConfiguration.WidgetConfiguration;
 import framework.services.plugins.IDashboardService.WidgetCatalogEntry;
+import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.Msg;
 import models.framework_models.plugin.DashboardRowTemplate;
+import models.pmo.Actor;
 import play.Logger;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
@@ -47,6 +50,8 @@ public class DashboardController extends Controller {
     private II18nMessagesPlugin i18nMessagePlugin;
     @Inject
     private IImplementationDefinedObjectService implementationDefinedObjectService;
+    @Inject
+    private IUserSessionManagerPlugin userSessionManagerPlugin;
 
     private ObjectMapper objectMapper;
 
@@ -67,6 +72,15 @@ public class DashboardController extends Controller {
      */
     public Result index(Long id, Boolean editMode) {
         try {
+
+            // check if the user has an actor
+            boolean hasActor = false;
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            Actor actor = ActorDao.getActorByUid(uid);
+            if (actor != null && actor.id != null) {
+                hasActor = true;
+            }
+
             List<Triple<String, Boolean, Long>> pages = getDashboardService().getDashboardPages(null);
             if (pages == null || pages.size() == 0) {
                 // Creates a default home page
@@ -90,7 +104,7 @@ public class DashboardController extends Controller {
 
             return ok(views.html.dashboard.index.render(id, editMode, dashboardPageConfiguration.getMiddle(), dashboardPageConfiguration.getLeft(),
                     dashboardPageConfiguration.getRight(), pages, routes.DashboardController.configure(id).url(),
-                    routes.DashboardController.indexError(id, "").url()));
+                    routes.DashboardController.indexError(id, "").url(), hasActor));
         } catch (DashboardException e) {
             throw new RuntimeException(e);
         }
@@ -393,6 +407,10 @@ public class DashboardController extends Controller {
 
     private II18nMessagesPlugin getI18nMessagePlugin() {
         return i18nMessagePlugin;
+    }
+
+    private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
+        return this.userSessionManagerPlugin;
     }
 
     private IImplementationDefinedObjectService getImplementationDefinedObjectService() {
