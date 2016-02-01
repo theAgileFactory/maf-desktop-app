@@ -2686,6 +2686,8 @@ core.org_unit.allocations.no_data=Il n''y a pas d''affectation à afficher.
 core.org_unit.allocation.details.requests.title=Requêtes d''affectation
 core.org_unit.allocation.details.actors.portfolio_entry.title=Affectations d''initiative pour les employés
 core.org_unit.allocation.details.actors.activity.title=Affectations d''activité pour les employés
+core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Confirmer
+core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=Les affectations ont été confirmées.
 
 #manage actor allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Géré une activité affectée pour un employé

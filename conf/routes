@@ -455,6 +455,8 @@ GET    /orgunit/portfolio-entry/list                       controllers.core.OrgU
 GET    /orgunit/allocation                                 controllers.core.OrgUnitController.allocation(id: Long)
 GET    /orgunit/allocation/details                         controllers.core.OrgUnitController.allocationDetails(id: Long, page: Integer ?= 0)
 POST   /orgunit/allocation/actors/portfolio-entry/filter   controllers.core.OrgUnitController.actorsPortfolioEntryAllocationsFilter(id: Long)
+POST   /orgunit/allocation/actors/portfolio-entry/all-ids  controllers.core.OrgUnitController.getAllActorsPortfolioEntryAllocationIds(id: Long)
+POST   /orgunit/allocation/actors/portfolio-entry/confirm  controllers.core.OrgUnitController.confirmActorsPortfolioEntryAllocations()
 POST   /orgunit/allocation/actors/activity/filter          controllers.core.OrgUnitController.actorsActivityAllocationsFilter(id: Long)
 GET    /orgunit/allocated-activity/actor/manage            controllers.core.OrgUnitController.manageActorAllocatedActivity(id: Long)
 POST   /orgunit/allocated-activity/actor/manage            controllers.core.OrgUnitController.processManageActorAllocatedActivity()

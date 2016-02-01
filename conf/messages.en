@@ -2669,6 +2669,8 @@ core.org_unit.allocations.no_data=There is no allocation to display.
 core.org_unit.allocation.details.requests.title=Allocation requests
 core.org_unit.allocation.details.actors.portfolio_entry.title=Initiative''s allocations for the employees
 core.org_unit.allocation.details.actors.activity.title=Activity''s allocations for the employees
+core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Confirm
+core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=The allocations have been confirmed successfully.
 
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Manage an allocated activity for an employee

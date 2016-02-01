@@ -2682,6 +2682,8 @@ core.org_unit.allocations.no_data=Keine Zuweisungen
 core.org_unit.allocation.details.requests.title=Zuweisungsanfragen
 core.org_unit.allocation.details.actors.portfolio_entry.title=Initiativen Mitarbeiterzuweisungen
 core.org_unit.allocation.details.actors.activity.title=Aktivitäten Mitarbeiterzuweisungen
+core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Bestätigen
+core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=Die Zuweisungen haben erfolgreich bestätigt.
 
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Verwalten einer zugewiesenen Tätigkeit für einen Mitarbeiter
