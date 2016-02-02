@@ -44,11 +44,36 @@
 	<logger name="play" level="ERROR" />
 	<logger name="application" level="ERROR" />
 	<logger name="logger.tools" level="ERROR" />
+	<logger name="be.objectify.deadbolt.java.ExecutionContextProvider" level="ERROR"/>
 	
-	<logger name="framework.services.audit.AuditLoggerServiceImpl" level="INFO">
+	<!-- Framework specific loggers -->
+	<!-- Global logger for framework services -->
+	<logger name="framework.services" level="ERROR" />
+	
+	<!-- Security and authentication -->
+	<logger name="framework.security" level="ERROR" />
+	<logger name="framework.services.account" level="ERROR" />
+	<logger name="framework.services.session" level="ERROR" />
+	
+	<!-- APIs -->
+	<logger name="framework.services.api" level="ERROR" />
+	
+	<!-- System and scheduler -->
+	<logger name="framework.services.system" level="ERROR" />
+	<logger name="framework.services.job" level="ERROR" />
+	<logger name="framework.services.database" level="ERROR" />
+	<logger name="framework.services.configuration" level="ERROR" />
+	
+	<!-- Plugins and extensions -->
+	<logger name="framework.services.ext" level="ERROR" />
+	<logger name="framework.services.actor" level="ERROR" />
+	<logger name="framework.services.plugins" level="ERROR" />
+	<!-- Framework specific loggers (end) -->
+	
+	<logger name="framework.services.audit.AuditLoggerServiceImpl" level="ERROR">
 		<appender-ref ref="FILE_AUDIT" />
 	</logger>
-    <logger name="framework.services.system.SysAdminUtilsImpl" level="INFO">
+    <logger name="framework.services.system.SysAdminUtilsImpl" level="DEBUG">
         <appender-ref ref="SYSTEM_AUDIT" />
     </logger>
 
@@ -56,5 +81,4 @@
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>
-
 </configuration>
