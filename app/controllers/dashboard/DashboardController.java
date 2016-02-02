@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import controllers.ControllersUtils;
 import dao.pmo.ActorDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.IImplementationDefinedObjectService;
@@ -34,6 +35,7 @@ import models.framework_models.plugin.DashboardWidget;
 import models.framework_models.plugin.DashboardWidgetColor;
 import models.framework_models.plugin.PluginConfiguration;
 import models.pmo.Actor;
+import play.Configuration;
 import play.Logger;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
@@ -61,6 +63,8 @@ public class DashboardController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IPluginManagerService pluginManagerService;
+    @Inject
+    private Configuration configuration;
 
     private ObjectMapper objectMapper;
 
@@ -79,90 +83,102 @@ public class DashboardController extends Controller {
      * @param editMode
      *            true if the edit mode should be opened
      */
-    public Result index(Long id, Boolean editMode) {
-        try {
+    public Promise<Result> index(final Long id, Boolean editMode) {
 
-            // check if the user has an actor
-            boolean hasActor = false;
-            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            Actor actor = ActorDao.getActorByUid(uid);
-            if (actor != null && actor.id != null) {
-                hasActor = true;
-            }
+        return Promise.promise(new Function0<Result>() {
+            @Override
+            public Result apply() throws Throwable {
 
-            List<Triple<String, Boolean, Long>> pages = getDashboardService().getDashboardPages(null);
-            if (pages == null || pages.size() == 0) {
-
-                Logger.info("The user has no dashboard page => try to create the default configuration");
-
-                // create an empty page
-                List<DashboardRowConfiguration> defaultConfig = new ArrayList<>();
-                getDashboardService().createDashboardPage(null, Msg.get("dashboard.object.page.name.default"), true, defaultConfig);
-                pages = getDashboardService().getDashboardPages(null);
-                Triple<String, Boolean, Long> page = pages.get(0);
-
-                Ebean.beginTransaction();
                 try {
 
-                    // Add the default widgets for the home page
+                    // check if the user has an actor
+                    boolean hasActor = false;
+                    String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+                    Actor actor = ActorDao.getActorByUid(uid);
+                    if (actor != null && actor.id != null) {
+                        hasActor = true;
+                    }
 
-                    PluginConfiguration pluginConfiguration = PluginConfiguration.find.where().eq("pluginDefinition.identifier", "widgetkit1").findUnique();
-                    DashboardPage dashboardPage = DashboardPage.find.where().eq("id", page.getRight()).findUnique();
-                    IPluginInfo info = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfiguration.id);
+                    List<Triple<String, Boolean, Long>> pages = getDashboardService().getDashboardPages(null);
+                    if (pages == null || pages.size() == 0) {
 
-                    Triple<Long, String, String> widget1Info = generateWidget("WG6", dashboardPage, pluginConfiguration, info);
-                    Triple<Long, String, String> widget2Info = generateWidget("WG3", dashboardPage, pluginConfiguration, info);
-                    Triple<Long, String, String> widget3Info = generateWidget("WG2", dashboardPage, pluginConfiguration, info);
-                    Triple<Long, String, String> widget4Info = generateWidget("WG4", dashboardPage, pluginConfiguration, info);
+                        Logger.info("The user has no dashboard page => try to create the default configuration");
 
-                    DashboardRowConfiguration row1 = new DashboardRowConfiguration();
-                    row1.setLayout(DashboardRowTemplate.TPL84COL_2);
-                    row1.setWidgets(Arrays.asList(new WidgetConfiguration(widget1Info.getLeft(), widget1Info.getMiddle(), widget1Info.getRight()),
-                            new WidgetConfiguration(widget2Info.getLeft(), widget2Info.getMiddle(), widget2Info.getRight())));
-                    defaultConfig.add(row1);
+                        // create an empty page
+                        List<DashboardRowConfiguration> defaultConfig = new ArrayList<>();
+                        getDashboardService().createDashboardPage(null, Msg.get("dashboard.object.page.name.default"), true, defaultConfig);
+                        pages = getDashboardService().getDashboardPages(null);
+                        Triple<String, Boolean, Long> page = pages.get(0);
 
-                    DashboardRowConfiguration row2 = new DashboardRowConfiguration();
-                    row2.setLayout(DashboardRowTemplate.TPL84COL_2);
-                    row2.setWidgets(Arrays.asList(new WidgetConfiguration(widget3Info.getLeft(), widget3Info.getMiddle(), widget3Info.getRight()),
-                            new WidgetConfiguration(widget4Info.getLeft(), widget4Info.getMiddle(), widget4Info.getRight())));
-                    defaultConfig.add(row2);
+                        Ebean.beginTransaction();
+                        try {
 
-                    Ebean.commitTransaction();
-                    Ebean.endTransaction();
+                            // Add the default widgets for the home page
 
-                } catch (Exception e) {
+                            PluginConfiguration pluginConfiguration = PluginConfiguration.find.where().eq("pluginDefinition.identifier", "widgetkit1")
+                                    .findUnique();
+                            DashboardPage dashboardPage = DashboardPage.find.where().eq("id", page.getRight()).findUnique();
+                            IPluginInfo info = getPluginManagerService().getRegisteredPluginDescriptors().get(pluginConfiguration.id);
 
-                    Ebean.rollbackTransaction();
-                    Ebean.endTransaction();
-                    Logger.error("Impossible to create the default configuration for the widgets => a blank page is created instead", e);
+                            Triple<Long, String, String> widget1Info = generateWidget("WG6", dashboardPage, pluginConfiguration, info);
+                            Triple<Long, String, String> widget2Info = generateWidget("WG3", dashboardPage, pluginConfiguration, info);
+                            Triple<Long, String, String> widget3Info = generateWidget("WG2", dashboardPage, pluginConfiguration, info);
+                            Triple<Long, String, String> widget4Info = generateWidget("WG4", dashboardPage, pluginConfiguration, info);
 
-                    // Add a blank row
-                    DashboardRowConfiguration row = new DashboardRowConfiguration();
-                    row.setLayout(DashboardRowTemplate.TPL12COL_1);
-                    row.setWidgets(Arrays.asList(new WidgetConfiguration(-1l, null, null)));
-                    defaultConfig.add(row);
+                            DashboardRowConfiguration row1 = new DashboardRowConfiguration();
+                            row1.setLayout(DashboardRowTemplate.TPL84COL_2);
+                            row1.setWidgets(Arrays.asList(new WidgetConfiguration(widget1Info.getLeft(), widget1Info.getMiddle(), widget1Info.getRight()),
+                                    new WidgetConfiguration(widget2Info.getLeft(), widget2Info.getMiddle(), widget2Info.getRight())));
+                            defaultConfig.add(row1);
 
+                            DashboardRowConfiguration row2 = new DashboardRowConfiguration();
+                            row2.setLayout(DashboardRowTemplate.TPL84COL_2);
+                            row2.setWidgets(Arrays.asList(new WidgetConfiguration(widget3Info.getLeft(), widget3Info.getMiddle(), widget3Info.getRight()),
+                                    new WidgetConfiguration(widget4Info.getLeft(), widget4Info.getMiddle(), widget4Info.getRight())));
+                            defaultConfig.add(row2);
+
+                            Ebean.commitTransaction();
+                            Ebean.endTransaction();
+
+                        } catch (Exception e) {
+
+                            Ebean.rollbackTransaction();
+                            Ebean.endTransaction();
+                            Logger.error("Impossible to create the default configuration for the widgets => a blank page is created instead", e);
+
+                            // Add a blank row
+                            DashboardRowConfiguration row = new DashboardRowConfiguration();
+                            row.setLayout(DashboardRowTemplate.TPL12COL_1);
+                            row.setWidgets(Arrays.asList(new WidgetConfiguration(-1l, null, null)));
+                            defaultConfig.add(row);
+
+                        }
+
+                        getDashboardService().updateDashboardPageConfiguration(page.getRight(), null, defaultConfig);
+
+                    }
+
+                    Long pageId = id;
+                    if (id == 0) {
+                        pageId = getDashboardService().getHomeDashboardPageId(null);
+                    }
+                    Triple<String, Boolean, List<DashboardRowConfiguration>> dashboardPageConfiguration = getDashboardService()
+                            .getDashboardPageConfiguration(pageId, null);
+
+                    if (dashboardPageConfiguration == null) {
+                        return notFound(views.html.error.not_found.render(""));
+                    }
+
+                    return ok(views.html.dashboard.index.render(pageId, editMode, dashboardPageConfiguration.getMiddle(),
+                            dashboardPageConfiguration.getLeft(), dashboardPageConfiguration.getRight(), pages,
+                            routes.DashboardController.configure(pageId).url(), routes.DashboardController.indexError(pageId, "").url(), hasActor));
+                } catch (DashboardException e) {
+
+                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagePlugin());
                 }
 
-                getDashboardService().updateDashboardPageConfiguration(page.getRight(), null, defaultConfig);
-
             }
-            if (id == 0) {
-                id = getDashboardService().getHomeDashboardPageId(null);
-            }
-            Triple<String, Boolean, List<DashboardRowConfiguration>> dashboardPageConfiguration = getDashboardService().getDashboardPageConfiguration(id,
-                    null);
-
-            if (dashboardPageConfiguration == null) {
-                return notFound(views.html.error.not_found.render(""));
-            }
-
-            return ok(views.html.dashboard.index.render(id, editMode, dashboardPageConfiguration.getMiddle(), dashboardPageConfiguration.getLeft(),
-                    dashboardPageConfiguration.getRight(), pages, routes.DashboardController.configure(id).url(),
-                    routes.DashboardController.indexError(id, "").url(), hasActor));
-        } catch (DashboardException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     /**
@@ -503,6 +519,13 @@ public class DashboardController extends Controller {
 
     private IImplementationDefinedObjectService getImplementationDefinedObjectService() {
         return implementationDefinedObjectService;
+    }
+
+    /**
+     * Get the Play configuration.
+     */
+    private Configuration getConfiguration() {
+        return this.configuration;
     }
 
     /**
