@@ -73,8 +73,7 @@
     </div>
     
     <h4>@parts.Msg("core.portfolio_entry_financial.view.forecast.title")</h4>
-    
-    @if(portfolioEntry.budgetTrackingHasUnallocatedTimesheet) {
+    @if(_budgetTrackingService.isActive() && portfolioEntry.budgetTrackingHasUnallocatedTimesheet) {
         <div class="alert alert-warning">
             @parts.Msg("core.portfolio_entry_financial.budget_tracking.unallocated_timesgeet.help")
         </div>
