@@ -136,7 +136,7 @@
                         @helper.form(action = controllers.core.routes.TimesheetController.processTimesheet()) {
                             <input type="hidden" name="id" value="@report.id" />
                             
-                            @helper.textarea(approvalForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.timesheet_report.comments.label"))
+                            @helper.textarea(approvalForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.timesheet_report.comments.label"), 'rows -> "5")
                             
                             @if(!report.isApproved) {
                                 <button type="submit" class="btn btn-success" name="action" value="APPROVE">@parts.Msg("button.approve")</button>
