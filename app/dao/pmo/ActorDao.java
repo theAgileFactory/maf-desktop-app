@@ -312,8 +312,8 @@ public abstract class ActorDao {
      */
     public static List<Actor> getActorAsListByKeywords(String key) {
         key = key.replace("\"", "\\\"");
-        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND (a.ref_id LIKE \"" + key
-                + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
+        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND (a.ref_id = \"" + key + "\" OR a.uid = \"" + key
+                + "\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
                 + "%\")";
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         return findActor.query().setRawSql(rawSql).findList();
@@ -328,8 +328,8 @@ public abstract class ActorDao {
      */
     public static List<Actor> getActorActiveAsListByKeywords(String key) {
         key = key.replace("\"", "\\\"");
-        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.ref_id LIKE \"" + key
-                + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
+        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.ref_id = \"" + key
+                + "\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
                 + "%\")";
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         return findActor.query().setRawSql(rawSql).findList();
@@ -344,9 +344,9 @@ public abstract class ActorDao {
      */
     public static List<Actor> getActorActiveWithoutUidAsListByKeywords(String key) {
         key = key.replace("\"", "\\\"");
-        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.uid IS NULL OR a.uid = '') AND (a.ref_id LIKE \""
-                + key + "%\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \""
-                + key + "%\")";
+        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = true AND (a.uid IS NULL OR a.uid = '') AND (a.ref_id = \"" + key
+                + "\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
+                + "%\")";
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         return findActor.query().setRawSql(rawSql).findList();
     }
