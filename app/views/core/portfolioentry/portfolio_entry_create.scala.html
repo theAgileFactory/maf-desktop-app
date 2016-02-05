@@ -71,7 +71,7 @@
                          
                         @parts.input_text(newPortfolioEntryForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
                         
-                        @helper.textarea(newPortfolioEntryForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"))
+                        @helper.textarea(newPortfolioEntryForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"), 'rows -> "5")
                         
                         @parts.singlevalue_picker(newPortfolioEntryForm("portfolio"),parts.Msg.asString("object.portfolio_entry.portfolio.label"),controllers.routes.PickerController.portfolio().url)
                         

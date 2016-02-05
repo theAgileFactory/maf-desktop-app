@@ -84,7 +84,7 @@
                         
                         @parts.input_text(portfolioEntryRiskForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.name.label"), 'autofocus -> "autofocus")
                         
-                        @helper.textarea(portfolioEntryRiskForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.description.label"))
+                        @helper.textarea(portfolioEntryRiskForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.description.label"), 'rows -> "5")
                         
                         @parts.dropdownlist(portfolioEntryRiskForm("riskType"), parts.Msg.asString("object.portfolio_entry_risk.type.label"), riskTypes)
                         
@@ -101,7 +101,7 @@
                                 parts.Msg.asString("object.portfolio_entry_risk.is_mitigated.label")
                             )
                         
-                            @helper.textarea(portfolioEntryRiskForm("mitigationComment"), 'onKeyPress -> "maf_checkIsMitigated();", '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.mitigation_comment.label"))
+                            @helper.textarea(portfolioEntryRiskForm("mitigationComment"), 'onKeyPress -> "maf_checkIsMitigated();", '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_risk.mitigation_comment.label"), 'rows -> "5")
                         
                                 
                             <script type="text/javascript">

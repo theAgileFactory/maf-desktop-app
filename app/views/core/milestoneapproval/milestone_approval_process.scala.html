@@ -165,7 +165,7 @@
     
                                     @parts.radiobuttonlist(approvalForm("hasApproved"), "", controllers.core.MilestoneApprovalController.getVoteValues)
     
-                                    @helper.textarea(approvalForm("comments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("object.life_cycle_milestone_instance_approver.comments.placeholder"))
+                                    @helper.textarea(approvalForm("comments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("object.life_cycle_milestone_instance_approver.comments.placeholder"), 'rows -> "5")
     
                                     <input class="btn btn-primary" type="submit" value="@parts.Msg("button.submit")" />
     
@@ -212,7 +212,7 @@
 
                                     @parts.dateinput(decisionForm("passedDate"), "object.life_cycle_milestone_instance.passed_date.label")
 
-                                    @helper.textarea(decisionForm("comments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("object.life_cycle_milestone_instance.gate_comments.placeholder"))
+                                    @helper.textarea(decisionForm("comments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("object.life_cycle_milestone_instance.gate_comments.placeholder"), 'rows -> "5")
     
                                     <input class="btn btn-primary" type="submit" value="@parts.Msg("button.submit")" />
     

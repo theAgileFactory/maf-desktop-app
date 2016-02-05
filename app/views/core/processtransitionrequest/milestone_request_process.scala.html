@@ -164,7 +164,7 @@
                                     controllers.routes.PickerController.actor().url
                                 )
 
-                                @helper.textarea(requestForm("gateComments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.comments.label"))
+                                @helper.textarea(requestForm("gateComments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.comments.label"), 'rows -> "5")
 
                                 <button data-dismiss="modal" class="btn btn-success" type="submit">
                                     <i class="fa fa-play"></i>&nbsp;@parts.Msg("button.accept")

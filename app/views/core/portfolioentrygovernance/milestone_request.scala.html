@@ -75,7 +75,7 @@
                 
                 @parts.file_field(requestMilestoneForm("descriptionDocument"), Messages("object.process_transition_request.description_document.label"))
 
-                @helper.textarea(requestMilestoneForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.process_transition_request.comments.label"))
+                @helper.textarea(requestMilestoneForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.process_transition_request.comments.label"), 'rows -> "5")
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id)">@parts.Msg("button.cancel")</a>

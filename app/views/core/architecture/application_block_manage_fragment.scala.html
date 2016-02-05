@@ -87,7 +87,7 @@
             
                         @parts.input_text(applicationBlockForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.name.label"))
         
-                        @helper.textarea(applicationBlockForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.description.label"))
+                        @helper.textarea(applicationBlockForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.application_block.description.label"), 'rows -> "5")
                         
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href='#' id="cancel-link">@parts.Msg("button.cancel")</a>

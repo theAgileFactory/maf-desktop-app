@@ -67,7 +67,7 @@
                 
                 @parts.input_text(packagePatternForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
 
-                @helper.textarea(packagePatternForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"))
+                @helper.textarea(packagePatternForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"), 'rows -> "5")
                 
                 @parts.radiobuttongroup(packagePatternForm("type"), parts.Msg.asString("object.portfolio_entry_planning_package.type.label"), selectablePortfolioEntryPlanningPackageTypes)
 

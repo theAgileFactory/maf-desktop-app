@@ -67,7 +67,7 @@
                         
                         @parts.dropdownlist(portfolioEntryEventForm("type"), parts.Msg.asString("object.portfolio_entry_event.type.label"), eventTypes)
                         
-                        @helper.textarea(portfolioEntryEventForm("message"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_event.message.label"))
+                        @helper.textarea(portfolioEntryEventForm("message"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_event.message.label"), 'rows -> "5")
 
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntry.id)">@parts.Msg("button.cancel")</a>

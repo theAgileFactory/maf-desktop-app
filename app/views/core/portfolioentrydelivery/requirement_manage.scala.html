@@ -115,7 +115,7 @@
                         
                             @parts.input_text(requirementForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.name.label"), 'autofocus -> "autofocus")
                             
-                            @helper.textarea(requirementForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.description.label"))
+                            @helper.textarea(requirementForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.description.label"), 'rows -> "5")
                             
                             @parts.input_text(requirementForm("category"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.category.label"))
                             

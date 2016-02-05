@@ -102,7 +102,7 @@
         
                         @parts.input_text(workOrderForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.name.label"), 'autofocus -> "autofocus")
                         
-                        @helper.textarea(workOrderForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.description.label"))
+                        @helper.textarea(workOrderForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.description.label"), 'rows -> "5")
         
                         @***if not fromResource and (the purchase orders are disable or create case or the work order is not engaged) then display the amount and currency fields***@
                         @if(!fromResource && (!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin) || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))) {

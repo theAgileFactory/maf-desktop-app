@@ -102,7 +102,7 @@
                         
                         @parts.input_text(submitAgreementLinkForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement_link.name.label"))
                         
-                        @helper.textarea(submitAgreementLinkForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement_link.description.label"))
+                        @helper.textarea(submitAgreementLinkForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.data_syndication_agreement_link.description.label"), 'rows -> "5")
 
                         @parts.checkboxlist(submitAgreementLinkForm("itemIds"), "object.data_syndication_agreement_link.items.label", "", items)
                         
