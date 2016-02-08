@@ -23,6 +23,7 @@
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
+@import commons._
 
 @templates.main_bc_nosidebar(
     parts.Msg.asString("topmenubar.tools.reporting.menu.label"),
@@ -53,7 +54,7 @@
                         
                             <input type="hidden" name="id" value="@report.id"/>
             
-                            @parts.dropdownlist(paramsForm("language"), parts.Msg.asString("object.reporting.language.label"), report.getLanguagesAsVHC, null, false)
+                            @parts.dropdownlist(paramsForm("language"), parts.Msg.asString("object.reporting.language.label"), report.getLanguagesAsVHC(_messagesPluginService), null, false)
                             
                             @parts.dropdownlist(paramsForm("format"), parts.Msg.asString("object.reporting.format.label"), report.getFormatsAsVHC, null, false)
 
