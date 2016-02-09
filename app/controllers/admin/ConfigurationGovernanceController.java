@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.governance.LifeCyclePlanningDao;
 import dao.governance.LifeCycleProcessDao;
@@ -45,6 +44,7 @@ import models.governance.PlannedLifeCycleMilestoneInstance;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.LifeCycleMilestoneFormData;
 import utils.form.LifeCycleMilestoneInstanceStatusTypeFormData;
 import utils.form.LifeCyclePhaseFormData;
@@ -70,6 +70,9 @@ public class ConfigurationGovernanceController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Display the lists of data (LifeCycleProcess,
@@ -198,7 +201,7 @@ public class ConfigurationGovernanceController extends Controller {
         lifeCycleProcessFormData.name.persist(getI18nMessagesPlugin());
         lifeCycleProcessFormData.shortName.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.list());
 
@@ -219,7 +222,7 @@ public class ConfigurationGovernanceController extends Controller {
         } else {
             lifeCycleProcess.doDelete();
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_process.delete.successful"));
-            RootApiController.flushFilters();
+            this.getTableProvider().flushFilterConfig();
         }
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.list());
@@ -289,7 +292,7 @@ public class ConfigurationGovernanceController extends Controller {
         statusTypeFormData.description.persist(getI18nMessagesPlugin());
         statusTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.list());
 
@@ -311,7 +314,7 @@ public class ConfigurationGovernanceController extends Controller {
         } else {
             statusType.doDelete();
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_milestone_instance_status_type.delete.successful"));
-            RootApiController.flushFilters();
+            this.getTableProvider().flushFilterConfig();
         }
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.list());
@@ -478,7 +481,7 @@ public class ConfigurationGovernanceController extends Controller {
         milestoneFormData.name.persist(getI18nMessagesPlugin());
         milestoneFormData.shortName.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(lifeCycleProcess.id));
 
@@ -508,7 +511,7 @@ public class ConfigurationGovernanceController extends Controller {
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_milestone.delete.successful"));
 
-            RootApiController.flushFilters();
+            this.getTableProvider().flushFilterConfig();
         }
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(milestone.lifeCycleProcess.id));
@@ -588,7 +591,7 @@ public class ConfigurationGovernanceController extends Controller {
 
         phaseFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(lifeCycleProcess.id));
 
@@ -608,7 +611,7 @@ public class ConfigurationGovernanceController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_phase.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationGovernanceController.viewLifeCycleProcess(phase.lifeCycleProcess.id));
     }
@@ -637,6 +640,13 @@ public class ConfigurationGovernanceController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

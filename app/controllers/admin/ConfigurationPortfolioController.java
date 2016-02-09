@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -38,6 +37,7 @@ import models.pmo.PortfolioType;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.PortfolioEntryDependencyTypeFormData;
 import utils.form.PortfolioEntryTypeFormData;
 import utils.form.PortfolioTypeFormData;
@@ -61,6 +61,9 @@ public class ConfigurationPortfolioController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Display the lists of data.
@@ -174,7 +177,7 @@ public class ConfigurationPortfolioController extends Controller {
         portfolioEntryTypeFormData.description.persist(getI18nMessagesPlugin());
         portfolioEntryTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPortfolioController.list());
     }
@@ -193,7 +196,7 @@ public class ConfigurationPortfolioController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.portfolioentrytype.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPortfolioController.list());
     }
@@ -343,7 +346,7 @@ public class ConfigurationPortfolioController extends Controller {
         portfolioTypeFormData.description.persist(getI18nMessagesPlugin());
         portfolioTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPortfolioController.list());
     }
@@ -362,7 +365,7 @@ public class ConfigurationPortfolioController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.portfoliotype.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPortfolioController.list());
     }
@@ -372,6 +375,13 @@ public class ConfigurationPortfolioController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

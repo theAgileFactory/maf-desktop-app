@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.StakeholderDao;
@@ -42,6 +41,7 @@ import models.pmo.StakeholderType;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.ActorTypeFormData;
 import utils.form.CompetencyFormData;
 import utils.form.OrgUnitTypeFormData;
@@ -70,6 +70,9 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Display the lists of data.
@@ -195,7 +198,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         actorTypeFormData.description.persist(getI18nMessagesPlugin());
         actorTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -213,7 +216,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.actortype.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -279,7 +282,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         orgUnitTypeFormData.description.persist(getI18nMessagesPlugin());
         orgUnitTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -297,7 +300,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.orgunittype.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -363,7 +366,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         competencyFormData.description.persist(getI18nMessagesPlugin());
         competencyFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -382,7 +385,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.competency.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -449,7 +452,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         stakeholderTypeFormData.name.persist(getI18nMessagesPlugin());
         stakeholderType.save();
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -468,7 +471,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.stakeholdertype.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationActorAndOrgUnitController.list());
     }
@@ -478,6 +481,13 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

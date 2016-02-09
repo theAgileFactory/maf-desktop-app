@@ -99,6 +99,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
 import security.dynamic.PortfolioEntryDynamicHelper;
+import services.tableprovider.ITableProvider;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
@@ -129,6 +130,8 @@ public class RoadmapController extends Controller {
     private Configuration configuration;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(RoadmapController.class);
 
@@ -157,7 +160,7 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> t = getTable(filterConfig);
@@ -181,7 +184,8 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.persistCurrentInDefault(uid,
+                    request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -214,7 +218,7 @@ public class RoadmapController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
+                    FilterConfig<PortfolioEntryListView> filterConfig = getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
                     OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
                     ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
@@ -225,7 +229,7 @@ public class RoadmapController extends Controller {
                         portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
                     }
 
-                    Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fillForFilterConfig(portfolioEntryListView,
+                    Table<PortfolioEntryListView> table = getTableProvider().get().portfolioEntry.templateTable.fillForFilterConfig(portfolioEntryListView,
                             getColumnsToHide(filterConfig));
 
                     final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
@@ -283,7 +287,7 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
             OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
             ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
@@ -418,7 +422,7 @@ public class RoadmapController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryListView> filterConfig = PortfolioEntryListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
             ObjectMapper mapper = new ObjectMapper();
             List<String> ids = new ArrayList<>();
@@ -954,7 +958,7 @@ public class RoadmapController extends Controller {
                 portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
             }
 
-            Table<PortfolioEntryListView> table = PortfolioEntryListView.templateTable.fillForFilterConfig(portfolioEntryListView,
+            Table<PortfolioEntryListView> table = this.getTableProvider().get().portfolioEntry.templateTable.fillForFilterConfig(portfolioEntryListView,
                     getColumnsToHide(filterConfig));
 
             if (getSecurityService().restrict(IMafConstants.ROADMAP_SIMULATOR_PERMISSION)) {
@@ -1554,6 +1558,13 @@ public class RoadmapController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

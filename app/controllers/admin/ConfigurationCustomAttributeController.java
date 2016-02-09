@@ -29,7 +29,6 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
-import controllers.api.core.RootApiController;
 import framework.commons.DataType;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.DefaultSelectableValueHolder;
@@ -50,6 +49,7 @@ import play.data.Form;
 import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.CustomAttributeDefinitionFormData;
 import utils.form.CustomAttributeItemFormData;
 import utils.table.CustomAttributeItemListView;
@@ -77,6 +77,8 @@ public class ConfigurationCustomAttributeController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Display the list of custom attributes for a data type. It's possible to
@@ -162,8 +164,8 @@ public class ConfigurationCustomAttributeController extends Controller {
 
         }
 
-        RootApiController.flushFilters();
-        RootApiController.flushTables();
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
 
         DataType dataType = DataType.getDataTypeFromClassName(customAttribute.objectType);
 
@@ -281,8 +283,8 @@ public class ConfigurationCustomAttributeController extends Controller {
         customAttributeDefinitionFormData.name.persist(getI18nMessagesPlugin());
         customAttributeDefinitionFormData.description.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
-        RootApiController.flushTables();
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
 
         if (customAttributeDefinitionFormData.id == null && itemizableAttributeTypes.contains(customAttributeDefinitionFormData.attributeType)) {
             return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttribute.id));
@@ -385,8 +387,8 @@ public class ConfigurationCustomAttributeController extends Controller {
 
         }
 
-        RootApiController.flushFilters();
-        RootApiController.flushTables();
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
 
         return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.items(id));
     }
@@ -507,8 +509,8 @@ public class ConfigurationCustomAttributeController extends Controller {
 
         }
 
-        RootApiController.flushFilters();
-        RootApiController.flushTables();
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
 
         return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttribute.id));
 
@@ -540,8 +542,8 @@ public class ConfigurationCustomAttributeController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.item.delete.successful"));
 
-        RootApiController.flushFilters();
-        RootApiController.flushTables();
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
 
         return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttribute.id));
 
@@ -566,8 +568,8 @@ public class ConfigurationCustomAttributeController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.delete.successful"));
 
-        RootApiController.flushFilters();
-        RootApiController.flushTables();
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
 
         DataType dataType = DataType.getDataTypeFromClassName(customAttribute.objectType);
 
@@ -639,6 +641,13 @@ public class ConfigurationCustomAttributeController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

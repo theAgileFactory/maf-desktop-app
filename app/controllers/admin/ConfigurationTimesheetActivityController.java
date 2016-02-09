@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.timesheet.TimesheetDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
@@ -36,6 +35,7 @@ import models.timesheet.TimesheetActivityType;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.TimesheetActivityFormData;
 import utils.form.TimesheetActivityTypeFormData;
 import utils.table.TimesheetActivityListView;
@@ -56,6 +56,9 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Reference data: timesheet activities.
@@ -146,7 +149,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
         timesheetActivityTypeFormData.description.persist(getI18nMessagesPlugin());
         timesheetActivityTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationTimesheetActivityController.list());
 
@@ -166,7 +169,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.timesheetactivitytype.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationTimesheetActivityController.list());
 
@@ -236,7 +239,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
         timesheetActivityFormData.description.persist(getI18nMessagesPlugin());
         timesheetActivityFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationTimesheetActivityController.list());
 
@@ -256,7 +259,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.timesheetactivity.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationTimesheetActivityController.list());
 
@@ -267,6 +270,13 @@ public class ConfigurationTimesheetActivityController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

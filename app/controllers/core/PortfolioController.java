@@ -28,7 +28,6 @@ import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.governance.LifeCyclePlanningDao;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
@@ -50,6 +49,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioExists;
+import services.tableprovider.ITableProvider;
 import utils.form.PortfolioFormData;
 import utils.table.PortfolioEntryListView;
 import utils.table.PortfolioMilestoneListView;
@@ -62,8 +62,12 @@ import utils.table.PortfolioStakeholderListView;
  * @author Johann Kohler
  */
 public class PortfolioController extends Controller {
+
     @Inject
     private ISecurityService securityService;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     public static Form<PortfolioFormData> formTemplate = Form.form(PortfolioFormData.class);
 
@@ -128,7 +132,7 @@ public class PortfolioController extends Controller {
             portfolioEntriesView.add(new PortfolioEntryListView(portfolioEntry));
         }
 
-        Table<PortfolioEntryListView> filledPortfolioEntryTable = PortfolioEntryListView.templateTable.fill(portfolioEntriesView,
+        Table<PortfolioEntryListView> filledPortfolioEntryTable = this.getTableProvider().get().portfolioEntry.templateTable.fill(portfolioEntriesView,
                 PortfolioEntryListView.getHideNonDefaultColumns(true, true));
 
         // get the stakeholders
@@ -191,7 +195,7 @@ public class PortfolioController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio.new.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Portfolio.class, portfolio.id);
@@ -249,7 +253,7 @@ public class PortfolioController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio.edit.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Portfolio.class, updPortfolio.id);
@@ -317,5 +321,12 @@ public class PortfolioController extends Controller {
      */
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

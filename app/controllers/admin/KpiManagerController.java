@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.services.kpi.Kpi;
@@ -50,6 +49,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
+import services.tableprovider.ITableProvider;
 import utils.form.CustomExternalKpiFormData;
 import utils.form.KpiColorRuleFormData;
 import utils.form.KpiDefinitionFormData;
@@ -66,12 +66,15 @@ import utils.table.KpiValueDefinitionListView;
  */
 @Restrict({ @Group(IMafConstants.ADMIN_KPI_MANAGER_PERMISSION) })
 public class KpiManagerController extends Controller {
+
     @Inject
     private IKpiService kpiService;
     @Inject
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+    @Inject
+    private ITableProvider tableProvider;
 
     public static Form<KpiDefinitionFormData> kpiDefinitionFormTemplate = Form.form(KpiDefinitionFormData.class);
     public static Form<KpiValueDefinitionFormData> standardKpiValueDefinitionFormTemplate = Form.form(KpiValueDefinitionFormData.class,
@@ -220,7 +223,7 @@ public class KpiManagerController extends Controller {
         kpiDefinitionFormData.fill(kpiDefinition);
         kpiDefinition.update();
 
-        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
+        reloadKpiDefinition(kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.edit.successful"));
 
@@ -300,7 +303,7 @@ public class KpiManagerController extends Controller {
             kpiValueDefinitionFormData.name.persist(getI18nMessagesPlugin());
         }
 
-        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
+        reloadKpiDefinition(kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.value.edit.successful"));
 
@@ -337,7 +340,7 @@ public class KpiManagerController extends Controller {
             kpiColorRule.order = newOrder;
             kpiColorRule.save();
 
-            reloadKpiDefinition(getKpiService(), kpiColorRule.kpiDefinition.uid);
+            reloadKpiDefinition(kpiColorRule.kpiDefinition.uid);
 
         }
 
@@ -422,7 +425,7 @@ public class KpiManagerController extends Controller {
 
         kpiColorRuleFormData.renderLabel.persist(getI18nMessagesPlugin());
 
-        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
+        reloadKpiDefinition(kpiDefinition.uid);
 
         return redirect(controllers.admin.routes.KpiManagerController.view(kpiDefinition.id));
     }
@@ -439,7 +442,7 @@ public class KpiManagerController extends Controller {
 
         kpiColorRule.doDelete();
 
-        reloadKpiDefinition(getKpiService(), kpiColorRule.kpiDefinition.uid);
+        reloadKpiDefinition(kpiColorRule.kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.rule.delete"));
 
@@ -461,7 +464,7 @@ public class KpiManagerController extends Controller {
         kpiDefinition.schedulerStartTime = null;
         kpiDefinition.save();
 
-        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
+        reloadKpiDefinition(kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.scheduler.delete"));
 
@@ -509,7 +512,7 @@ public class KpiManagerController extends Controller {
         kpiSchedulerFormData.fill(kpiDefinition);
         kpiDefinition.update();
 
-        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
+        reloadKpiDefinition(kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.editscheduler.successful"));
 
@@ -583,7 +586,7 @@ public class KpiManagerController extends Controller {
         customExternalKpiFormData.additional1Name.persist(getI18nMessagesPlugin());
         customExternalKpiFormData.additional2Name.persist(getI18nMessagesPlugin());
 
-        reloadKpiDefinition(getKpiService(), kpiDefinition.uid);
+        reloadKpiDefinition(kpiDefinition.uid);
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.create.successful"));
 
@@ -652,15 +655,13 @@ public class KpiManagerController extends Controller {
     /**
      * Reload the KPI definition.
      * 
-     * @param kpiService
-     *            the KPI service
      * @param uid
      *            the KPI definition uid
      */
-    private static void reloadKpiDefinition(IKpiService kpiService, String uid) {
-        kpiService.reloadKpi(uid);
-        RootApiController.flushTables();
-        RootApiController.flushFilters();
+    private void reloadKpiDefinition(String uid) {
+        this.getKpiService().reloadKpi(uid);
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
     }
 
     /**
@@ -694,6 +695,13 @@ public class KpiManagerController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

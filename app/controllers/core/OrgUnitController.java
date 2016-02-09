@@ -39,7 +39,6 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
-import controllers.api.core.RootApiController;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
@@ -75,6 +74,7 @@ import play.mvc.With;
 import security.CheckActorExists;
 import security.CheckOrgUnitExists;
 import services.budgettracking.IBudgetTrackingService;
+import services.tableprovider.ITableProvider;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.OrgUnitFormData;
@@ -106,6 +106,8 @@ public class OrgUnitController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(OrgUnitController.class);
 
@@ -238,7 +240,7 @@ public class OrgUnitController extends Controller {
         // save the custom attributes
         CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, OrgUnit.class, orgUnit.id);
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.core.routes.OrgUnitController.view(orgUnit.id, 0));
     }
@@ -262,7 +264,7 @@ public class OrgUnitController extends Controller {
         // success message
         Utilities.sendSuccessFlashMessage(Msg.get("core.org_unit.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.core.routes.SearchController.index());
     }
@@ -291,7 +293,7 @@ public class OrgUnitController extends Controller {
             portfolioEntriesView.add(new PortfolioEntryListView(portfolioEntry));
         }
 
-        Table<PortfolioEntryListView> filledTable = PortfolioEntryListView.templateTable.fill(portfolioEntriesView,
+        Table<PortfolioEntryListView> filledTable = this.getTableProvider().get().portfolioEntry.templateTable.fill(portfolioEntriesView,
                 PortfolioEntryListView.getHideNonDefaultColumns(true, true));
 
         return ok(views.html.core.orgunit.org_unit_portfolio_entry_list.render(orgUnit, filledTable, pagination));
@@ -873,6 +875,13 @@ public class OrgUnitController extends Controller {
      */
     private ISecurityService getSecurityService() {
         return this.securityService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

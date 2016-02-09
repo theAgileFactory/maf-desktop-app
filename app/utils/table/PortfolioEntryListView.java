@@ -29,6 +29,7 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
+import framework.services.kpi.IKpiService;
 import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
@@ -48,6 +49,7 @@ import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryReport;
 import models.pmo.PortfolioEntryType;
 import models.pmo.Stakeholder;
+import play.Logger;
 
 /**
  * A portfolio entry list view is used to display an portfolio entry row in a
@@ -57,230 +59,242 @@ import models.pmo.Stakeholder;
  */
 public class PortfolioEntryListView {
 
-    public static FilterConfig<PortfolioEntryListView> filterConfig = getFilterConfig();
+    public static class TableDefinition {
 
-    /**
-     * Get the filter config.
-     */
-    public static FilterConfig<PortfolioEntryListView> getFilterConfig() {
-        return new FilterConfig<PortfolioEntryListView>() {
-            {
+        public FilterConfig<PortfolioEntryListView> filterConfig;
+        public Table<PortfolioEntryListView> templateTable;
 
-                addColumnConfiguration("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", new TextFieldFilterComponent("*"), true,
-                        false, SortStatusType.ASC);
+        public TableDefinition(IKpiService kpiService) {
+            this.filterConfig = getFilterConfig(kpiService);
+            this.templateTable = getTable(kpiService);
+        }
 
-                addColumnConfiguration("creationDate", "creationDate", "object.portfolio_entry.creation_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.NONE);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<PortfolioEntryListView> getFilterConfig(IKpiService kpiService) {
+            Logger.error("PortfolioEntryListView: getFilterConfig");
+            return new FilterConfig<PortfolioEntryListView>() {
+                {
 
-                addColumnConfiguration("isPublic", "isPublic", "object.portfolio_entry.is_public.label", new CheckboxFilterComponent(true), false, false,
-                        SortStatusType.NONE);
+                    addColumnConfiguration("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", new TextFieldFilterComponent("*"),
+                            true, false, SortStatusType.ASC);
 
-                addColumnConfiguration("name", "name", "object.portfolio_entry.name.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
+                    addColumnConfiguration("creationDate", "creationDate", "object.portfolio_entry.creation_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.NONE);
 
-                ISelectableValueHolderCollection<Long> portfolioEntryTypes = PortfolioEntryDao.getPETypeActiveAsVH();
-                if (portfolioEntryTypes != null && portfolioEntryTypes.getValues().size() > 0) {
-                    addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label",
-                            new SelectFilterComponent(portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes), true, false,
+                    addColumnConfiguration("isPublic", "isPublic", "object.portfolio_entry.is_public.label", new CheckboxFilterComponent(true), false, false,
+                            SortStatusType.NONE);
+
+                    addColumnConfiguration("name", "name", "object.portfolio_entry.name.label", new TextFieldFilterComponent("*"), true, false,
                             SortStatusType.UNSORTED);
-                } else {
-                    addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label", new NoneFilterComponent(),
-                            false, false, SortStatusType.NONE);
-                }
 
-                addColumnConfiguration("manager", "manager.id", "object.portfolio_entry.manager.label",
-                        new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
+                    ISelectableValueHolderCollection<Long> portfolioEntryTypes = PortfolioEntryDao.getPETypeActiveAsVH();
+                    if (portfolioEntryTypes != null && portfolioEntryTypes.getValues().size() > 0) {
+                        addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label",
+                                new SelectFilterComponent(portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes), true, false,
+                                SortStatusType.UNSORTED);
+                    } else {
+                        addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label", new NoneFilterComponent(),
+                                false, false, SortStatusType.NONE);
+                    }
 
-                ISelectableValueHolderCollection<Long> sponsoringUnits = OrgUnitDao.getOrgUnitActiveCanSponsorAsVH();
-                if (sponsoringUnits != null && sponsoringUnits.getValues().size() > 0) {
-                    addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label",
-                            new SelectFilterComponent(sponsoringUnits.getValues().iterator().next().getValue(), sponsoringUnits), false, false,
+                    addColumnConfiguration("manager", "manager.id", "object.portfolio_entry.manager.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
+
+                    ISelectableValueHolderCollection<Long> sponsoringUnits = OrgUnitDao.getOrgUnitActiveCanSponsorAsVH();
+                    if (sponsoringUnits != null && sponsoringUnits.getValues().size() > 0) {
+                        addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label",
+                                new SelectFilterComponent(sponsoringUnits.getValues().iterator().next().getValue(), sponsoringUnits), false, false,
+                                SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label",
+                                new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                    }
+
+                    ISelectableValueHolderCollection<Long> deliveryUnits = OrgUnitDao.getOrgUnitActiveCanDeliverAsVH();
+                    if (deliveryUnits != null && deliveryUnits.getValues().size() > 0) {
+                        addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label",
+                                new SelectFilterComponent(deliveryUnits.getValues().iterator().next().getValue(), deliveryUnits), false, false,
+                                SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label", new NoneFilterComponent(),
+                                false, false, SortStatusType.NONE);
+                    }
+
+                    ISelectableValueHolderCollection<Long> portfolios = PortfolioDao.getPortfolioActiveAsVH();
+                    if (portfolios != null && portfolios.getValues().size() > 0) {
+                        addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label",
+                                new SelectFilterComponent(portfolios.getValues().iterator().next().getValue(), portfolios), false, false,
+                                SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label", new NoneFilterComponent(), false,
+                                false, SortStatusType.NONE);
+                    }
+
+                    addColumnConfiguration("stakeholders", "stakeholders.actor.id", "object.portfolio_entry.stakeholders.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
+
+                    addColumnConfiguration("dependencies", "dependencies.id", "object.portfolio_entry.dependencies.label", new NoneFilterComponent(), false,
+                            false, SortStatusType.NONE);
+
+                    ISelectableValueHolderCollection<Long> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessActiveAsVH();
+                    if (lifeCycleProcesses != null && lifeCycleProcesses.getValues().size() > 0) {
+                        addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
+                                "object.portfolio_entry.life_cycle_process.label",
+                                new SelectFilterComponent(lifeCycleProcesses.getValues().iterator().next().getValue(), lifeCycleProcesses), false, false,
+                                SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
+                                "object.portfolio_entry.life_cycle_process.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                    }
+
+                    ISelectableValueHolderCollection<Long> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeActiveAsVH();
+                    if (portfolioEntryReportStatusTypes != null && portfolioEntryReportStatusTypes.getValues().size() > 0) {
+                        addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
+                                "object.portfolio_entry.status.label",
+                                new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next().getValue(),
+                                        portfolioEntryReportStatusTypes),
+                                true, false, SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
+                                "object.portfolio_entry.status.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                    }
+
+                    ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
+                    if (lifeCycleMilestones != null && lifeCycleMilestones.getValues().size() > 0) {
+                        addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
+                                "object.portfolio_entry.last_milestone.label",
+                                new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false,
+                                SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
+                                "object.portfolio_entry.last_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                    }
+
+                    addColumnConfiguration("archived", "archived", "object.portfolio_entry.archived.label", new CheckboxFilterComponent(false), false, true,
                             SortStatusType.NONE);
-                } else {
-                    addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label", new NoneFilterComponent(),
-                            false, false, SortStatusType.NONE);
+
+                    addColumnConfiguration("isConcept", "activeLifeCycleInstance.isConcept", "object.portfolio_entry.is_concept.label",
+                            new CheckboxFilterComponent(false), false, false, SortStatusType.NONE);
+
+                    addKpis("id", PortfolioEntry.class);
+
+                    addCustomAttributesColumns("id", PortfolioEntry.class);
                 }
+            };
+        }
 
-                ISelectableValueHolderCollection<Long> deliveryUnits = OrgUnitDao.getOrgUnitActiveCanDeliverAsVH();
-                if (deliveryUnits != null && deliveryUnits.getValues().size() > 0) {
-                    addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label",
-                            new SelectFilterComponent(deliveryUnits.getValues().iterator().next().getValue(), deliveryUnits), false, false,
-                            SortStatusType.NONE);
-                } else {
-                    addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label", new NoneFilterComponent(),
-                            false, false, SortStatusType.NONE);
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryListView> getTable(IKpiService kpiService) {
+            Logger.error("PortfolioEntryListView: getTable");
+            return new Table<PortfolioEntryListView>() {
+                {
+
+                    setIdFieldName("id");
+
+                    addColumn("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("governanceId", new ObjectFormatter<PortfolioEntryListView>());
+
+                    addColumn("creationDate", "creationDate", "object.portfolio_entry.creation_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("creationDate", new DateFormatter<PortfolioEntryListView>());
+
+                    addColumn("name", "name", "object.portfolio_entry.name.label", Table.ColumnDef.SorterType.NONE);
+
+                    addColumn("portfolioEntryType", "portfolioEntryType", "object.portfolio_entry.type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryType", new IColumnFormatter<PortfolioEntryListView>() {
+                        @Override
+                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryListView.portfolioEntryType, true)
+                                    .body();
+                        }
+                    });
+
+                    addColumn("manager", "manager", "object.portfolio_entry.manager.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("manager", new IColumnFormatter<PortfolioEntryListView>() {
+                        @Override
+                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(portfolioEntryListView.manager).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("manager", "rowlink-skip");
+
+                    addColumn("sponsoringUnit", "sponsoringUnit", "object.portfolio_entry.sponsoring_unit.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("sponsoringUnit", new IColumnFormatter<PortfolioEntryListView>() {
+                        @Override
+                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
+                            return views.html.modelsparts.display_org_unit.render(portfolioEntryListView.sponsoringUnit).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("sponsoringUnit", "rowlink-skip");
+
+                    addColumn("deliveryUnits", "deliveryUnits", "object.portfolio_entry.delivery_units.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deliveryUnits", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    this.setColumnValueCssClass("deliveryUnits", "rowlink-skip");
+
+                    addColumn("portfolios", "portfolios", "object.portfolio_entry.portfolios.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolios", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    this.setColumnValueCssClass("portfolios", "rowlink-skip");
+
+                    addColumn("stakeholders", "stakeholders", "object.portfolio_entry.stakeholders.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("stakeholders", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    this.setColumnValueCssClass("stakeholders", "rowlink-skip");
+
+                    addColumn("dependencies", "dependencies", "object.portfolio_entry.dependencies.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("dependencies", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    this.setColumnValueCssClass("dependencies", "rowlink-skip");
+
+                    addColumn("lifeCycleProcess", "lifeCycleProcess", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lifeCycleProcess", new ObjectFormatter<PortfolioEntryListView>());
+
+                    addColumn("portfolioEntryStatus", "portfolioEntryStatus", "object.portfolio_entry.status.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryStatus", new IColumnFormatter<PortfolioEntryListView>() {
+                        @Override
+                        public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry_report.render(portfolioEntryView.portfolioEntryStatus).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("portfolioEntryStatus", "rowlink-skip");
+
+                    addColumn("archived", "archived", "object.portfolio_entry.archived.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("archived", new BooleanFormatter<PortfolioEntryListView>());
+
+                    addColumn("isConcept", "isConcept", "object.portfolio_entry.is_concept.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isConcept", new BooleanFormatter<PortfolioEntryListView>());
+
+                    addColumn("lastMilestone", "lastMilestone", "object.portfolio_entry.last_milestone.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastMilestone", new IColumnFormatter<PortfolioEntryListView>() {
+                        @Override
+                        public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
+                            return views.html.modelsparts.display_milestone_instance.render(portfolioEntryView.lastMilestone).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("lastMilestone", "rowlink-skip");
+
+                    addColumn("stakeholderTypes", "stakeholderTypes", "object.portfolio_entry.stakeholder_types.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("stakeholderTypes", new ListOfValuesFormatter<PortfolioEntryListView>());
+
+                    addColumn("isPublic", "isPublic", "object.portfolio_entry.is_public.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isPublic", new BooleanFormatter<PortfolioEntryListView>());
+
+                    addKpis(PortfolioEntry.class);
+
+                    addCustomAttributeColumns(PortfolioEntry.class);
+
+                    this.setLineAction(new IColumnFormatter<PortfolioEntryListView>() {
+                        @Override
+                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryController.overview(portfolioEntryListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.portfolio_entry.table.empty");
                 }
+            };
+        }
 
-                ISelectableValueHolderCollection<Long> portfolios = PortfolioDao.getPortfolioActiveAsVH();
-                if (portfolios != null && portfolios.getValues().size() > 0) {
-                    addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label",
-                            new SelectFilterComponent(portfolios.getValues().iterator().next().getValue(), portfolios), false, false, SortStatusType.NONE);
-                } else {
-                    addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label", new NoneFilterComponent(), false, false,
-                            SortStatusType.NONE);
-                }
-
-                addColumnConfiguration("stakeholders", "stakeholders.actor.id", "object.portfolio_entry.stakeholders.label",
-                        new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
-
-                addColumnConfiguration("dependencies", "dependencies.id", "object.portfolio_entry.dependencies.label", new NoneFilterComponent(), false,
-                        false, SortStatusType.NONE);
-
-                ISelectableValueHolderCollection<Long> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessActiveAsVH();
-                if (lifeCycleProcesses != null && lifeCycleProcesses.getValues().size() > 0) {
-                    addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
-                            "object.portfolio_entry.life_cycle_process.label",
-                            new SelectFilterComponent(lifeCycleProcesses.getValues().iterator().next().getValue(), lifeCycleProcesses), false, false,
-                            SortStatusType.NONE);
-                } else {
-                    addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
-                            "object.portfolio_entry.life_cycle_process.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
-                }
-
-                ISelectableValueHolderCollection<Long> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeActiveAsVH();
-                if (portfolioEntryReportStatusTypes != null && portfolioEntryReportStatusTypes.getValues().size() > 0) {
-                    addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
-                            "object.portfolio_entry.status.label",
-                            new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next().getValue(),
-                                    portfolioEntryReportStatusTypes),
-                            true, false, SortStatusType.NONE);
-                } else {
-                    addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
-                            "object.portfolio_entry.status.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
-                }
-
-                ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
-                if (lifeCycleMilestones != null && lifeCycleMilestones.getValues().size() > 0) {
-                    addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
-                            "object.portfolio_entry.last_milestone.label",
-                            new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false,
-                            SortStatusType.NONE);
-                } else {
-                    addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
-                            "object.portfolio_entry.last_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
-                }
-
-                addColumnConfiguration("archived", "archived", "object.portfolio_entry.archived.label", new CheckboxFilterComponent(false), false, true,
-                        SortStatusType.NONE);
-
-                addColumnConfiguration("isConcept", "activeLifeCycleInstance.isConcept", "object.portfolio_entry.is_concept.label",
-                        new CheckboxFilterComponent(false), false, false, SortStatusType.NONE);
-
-                addKpis("id", PortfolioEntry.class);
-
-                addCustomAttributesColumns("id", PortfolioEntry.class);
-            }
-        };
-    }
-
-    public static Table<PortfolioEntryListView> templateTable = getTable();
-
-    /**
-     * Get the table.
-     */
-    public static Table<PortfolioEntryListView> getTable() {
-        return new Table<PortfolioEntryListView>() {
-            {
-
-                setIdFieldName("id");
-
-                addColumn("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("governanceId", new ObjectFormatter<PortfolioEntryListView>());
-
-                addColumn("creationDate", "creationDate", "object.portfolio_entry.creation_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("creationDate", new DateFormatter<PortfolioEntryListView>());
-
-                addColumn("name", "name", "object.portfolio_entry.name.label", Table.ColumnDef.SorterType.NONE);
-
-                addColumn("portfolioEntryType", "portfolioEntryType", "object.portfolio_entry.type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("portfolioEntryType", new IColumnFormatter<PortfolioEntryListView>() {
-                    @Override
-                    public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                        return views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryListView.portfolioEntryType, true).body();
-                    }
-                });
-
-                addColumn("manager", "manager", "object.portfolio_entry.manager.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("manager", new IColumnFormatter<PortfolioEntryListView>() {
-                    @Override
-                    public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(portfolioEntryListView.manager).body();
-                    }
-                });
-                this.setColumnValueCssClass("manager", "rowlink-skip");
-
-                addColumn("sponsoringUnit", "sponsoringUnit", "object.portfolio_entry.sponsoring_unit.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("sponsoringUnit", new IColumnFormatter<PortfolioEntryListView>() {
-                    @Override
-                    public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                        return views.html.modelsparts.display_org_unit.render(portfolioEntryListView.sponsoringUnit).body();
-                    }
-                });
-                this.setColumnValueCssClass("sponsoringUnit", "rowlink-skip");
-
-                addColumn("deliveryUnits", "deliveryUnits", "object.portfolio_entry.delivery_units.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("deliveryUnits", new ListOfValuesFormatter<PortfolioEntryListView>());
-                this.setColumnValueCssClass("deliveryUnits", "rowlink-skip");
-
-                addColumn("portfolios", "portfolios", "object.portfolio_entry.portfolios.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("portfolios", new ListOfValuesFormatter<PortfolioEntryListView>());
-                this.setColumnValueCssClass("portfolios", "rowlink-skip");
-
-                addColumn("stakeholders", "stakeholders", "object.portfolio_entry.stakeholders.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("stakeholders", new ListOfValuesFormatter<PortfolioEntryListView>());
-                this.setColumnValueCssClass("stakeholders", "rowlink-skip");
-
-                addColumn("dependencies", "dependencies", "object.portfolio_entry.dependencies.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("dependencies", new ListOfValuesFormatter<PortfolioEntryListView>());
-                this.setColumnValueCssClass("dependencies", "rowlink-skip");
-
-                addColumn("lifeCycleProcess", "lifeCycleProcess", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("lifeCycleProcess", new ObjectFormatter<PortfolioEntryListView>());
-
-                addColumn("portfolioEntryStatus", "portfolioEntryStatus", "object.portfolio_entry.status.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("portfolioEntryStatus", new IColumnFormatter<PortfolioEntryListView>() {
-                    @Override
-                    public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry_report.render(portfolioEntryView.portfolioEntryStatus).body();
-                    }
-                });
-                this.setColumnValueCssClass("portfolioEntryStatus", "rowlink-skip");
-
-                addColumn("archived", "archived", "object.portfolio_entry.archived.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("archived", new BooleanFormatter<PortfolioEntryListView>());
-
-                addColumn("isConcept", "isConcept", "object.portfolio_entry.is_concept.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isConcept", new BooleanFormatter<PortfolioEntryListView>());
-
-                addColumn("lastMilestone", "lastMilestone", "object.portfolio_entry.last_milestone.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("lastMilestone", new IColumnFormatter<PortfolioEntryListView>() {
-                    @Override
-                    public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
-                        return views.html.modelsparts.display_milestone_instance.render(portfolioEntryView.lastMilestone).body();
-                    }
-                });
-                this.setColumnValueCssClass("lastMilestone", "rowlink-skip");
-
-                addColumn("stakeholderTypes", "stakeholderTypes", "object.portfolio_entry.stakeholder_types.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("stakeholderTypes", new ListOfValuesFormatter<PortfolioEntryListView>());
-
-                addColumn("isPublic", "isPublic", "object.portfolio_entry.is_public.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isPublic", new BooleanFormatter<PortfolioEntryListView>());
-
-                addKpis(PortfolioEntry.class);
-
-                addCustomAttributeColumns(PortfolioEntry.class);
-
-                this.setLineAction(new IColumnFormatter<PortfolioEntryListView>() {
-                    @Override
-                    public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryController.overview(portfolioEntryListView.id).url();
-                    }
-                });
-
-                setEmptyMessageKey("object.portfolio_entry.table.empty");
-            }
-        };
     }
 
     /**

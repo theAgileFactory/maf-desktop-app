@@ -29,7 +29,6 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.ControllersUtils;
-import controllers.api.core.RootApiController;
 import framework.commons.IFrameworkConstants;
 import framework.commons.message.EventMessage;
 import framework.commons.message.SystemLevelRoleTypeEventMessage;
@@ -57,6 +56,7 @@ import play.data.Form;
 import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.RoleFormData;
 import utils.table.RoleListView;
 
@@ -79,6 +79,8 @@ public class ConfigurationController extends Controller {
     private ISecurityService securityService;
     @Inject
     private Configuration configuration;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(ConfigurationController.class);
 
@@ -529,7 +531,7 @@ public class ConfigurationController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.translations.edit.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationController.searchResultsTranslations(translationFormData.keywords));
 
@@ -586,6 +588,13 @@ public class ConfigurationController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
     /**

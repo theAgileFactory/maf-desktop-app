@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
@@ -43,6 +42,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.budgettracking.IBudgetTrackingService;
+import services.tableprovider.ITableProvider;
 import utils.form.PortfolioEntryPlanningPackageGroupFormData;
 import utils.form.PortfolioEntryPlanningPackagePatternFormData;
 import utils.form.PortfolioEntryPlanningPackageTypeFormData;
@@ -69,6 +69,9 @@ public class ConfigurationPlanningPackageController extends Controller {
 
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Display the list of package groups.
@@ -192,7 +195,7 @@ public class ConfigurationPlanningPackageController extends Controller {
         packageGroupFormData.description.persist(getI18nMessagesPlugin());
         packageGroupFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPlanningPackageController.list());
 
@@ -210,7 +213,7 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         packageGroup.doDelete();
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_group.delete.successful"));
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPlanningPackageController.list());
     }
@@ -277,7 +280,7 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         planningPackageTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPlanningPackageController.list());
     }
@@ -296,7 +299,7 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_type.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPlanningPackageController.list());
     }
@@ -417,7 +420,7 @@ public class ConfigurationPlanningPackageController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_pattern.edit.successful"));
         }
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packageGroup.id));
     }
@@ -436,7 +439,7 @@ public class ConfigurationPlanningPackageController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.package_pattern.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(
                 controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packagePattern.portfolioEntryPlanningPackageGroup.id));
@@ -454,6 +457,13 @@ public class ConfigurationPlanningPackageController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

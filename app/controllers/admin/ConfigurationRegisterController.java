@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
@@ -41,6 +40,7 @@ import models.pmo.PortfolioEntryRiskType;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.PortfolioEntryEventTypeFormData;
 import utils.form.PortfolioEntryReportStatusTypeFormData;
 import utils.form.PortfolioEntryRiskTypeFormData;
@@ -63,6 +63,9 @@ public class ConfigurationRegisterController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Display the lists of data.
@@ -168,7 +171,7 @@ public class ConfigurationRegisterController extends Controller {
         riskTypeFormData.description.persist(getI18nMessagesPlugin());
         riskTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
     }
@@ -187,7 +190,7 @@ public class ConfigurationRegisterController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.risktype.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
 
@@ -256,7 +259,7 @@ public class ConfigurationRegisterController extends Controller {
         reportStatusTypeFormData.description.persist(getI18nMessagesPlugin());
         reportStatusTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
     }
@@ -275,7 +278,7 @@ public class ConfigurationRegisterController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.report_status_type.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
     }
@@ -339,7 +342,7 @@ public class ConfigurationRegisterController extends Controller {
 
         eventTypeFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
     }
@@ -358,7 +361,7 @@ public class ConfigurationRegisterController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.event_type.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
     }
@@ -368,6 +371,13 @@ public class ConfigurationRegisterController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

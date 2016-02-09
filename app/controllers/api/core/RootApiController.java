@@ -39,26 +39,8 @@ import framework.services.remote.IAdPanelManagerService;
 import play.Configuration;
 import play.libs.Json;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.reporting.IReportingUtils;
-import utils.table.ActorListView;
-import utils.table.ApplicationBlockListView;
-import utils.table.BudgetBucketListView;
-import utils.table.DeliverableListView;
-import utils.table.IterationListView;
-import utils.table.OrgUnitListView;
-import utils.table.PortfolioEntryBudgetLineListView;
-import utils.table.PortfolioEntryEventListView;
-import utils.table.PortfolioEntryListView;
-import utils.table.PortfolioEntryPlanningPackageListView;
-import utils.table.PortfolioEntryReportListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
-import utils.table.PortfolioEntryRiskListView;
-import utils.table.PortfolioListView;
-import utils.table.RequirementListView;
-import utils.table.TimesheetActivityAllocatedActorListView;
-import utils.table.WorkOrderListView;
 
 /**
  * The API controller for root actions.
@@ -79,6 +61,8 @@ public class RootApiController extends ApiController {
     private IReportingUtils reportingUtils;
     @Inject
     private Configuration configuration;
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Get the status of the instance.
@@ -214,7 +198,7 @@ public class RootApiController extends ApiController {
 
         try {
 
-            flushTables();
+            this.getTableProvider().flushTables();
 
             RootResponse response = new RootResponse();
 
@@ -225,34 +209,6 @@ public class RootApiController extends ApiController {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
 
         }
-    }
-
-    /**
-     * Flush the tables cache (must be called after having updated the tables:
-     * custom attributes...).
-     */
-    public static void flushTables() {
-
-        PortfolioEntryResourcePlanAllocatedResourceListView.templateTable = PortfolioEntryResourcePlanAllocatedResourceListView.getTable();
-        PortfolioEntryResourcePlanAllocatedOrgUnitListView.templateTable = PortfolioEntryResourcePlanAllocatedOrgUnitListView.getTable();
-        PortfolioEntryResourcePlanAllocatedActorListView.templateTable = PortfolioEntryResourcePlanAllocatedActorListView.getTable();
-        TimesheetActivityAllocatedActorListView.templateTable = TimesheetActivityAllocatedActorListView.getTable();
-        ApplicationBlockListView.templateTable = ApplicationBlockListView.getTable();
-        BudgetBucketListView.templateTable = BudgetBucketListView.getTable();
-        ActorListView.templateTable = ActorListView.getTable();
-        PortfolioEntryEventListView.templateTable = PortfolioEntryEventListView.getTable();
-        DeliverableListView.templateTable = DeliverableListView.getTable();
-        PortfolioEntryListView.templateTable = PortfolioEntryListView.getTable();
-        PortfolioEntryBudgetLineListView.templateTable = PortfolioEntryBudgetLineListView.getTable();
-        PortfolioEntryReportListView.templateTable = PortfolioEntryReportListView.getTable();
-        IterationListView.templateTable = IterationListView.getTable();
-        OrgUnitListView.templateTable = OrgUnitListView.getTable();
-        PortfolioEntryPlanningPackageListView.templateTable = PortfolioEntryPlanningPackageListView.getTable();
-        PortfolioListView.templateTable = PortfolioListView.getTable();
-        RequirementListView.templateTable = RequirementListView.getTable();
-        PortfolioEntryRiskListView.templateTable = PortfolioEntryRiskListView.getTable();
-        WorkOrderListView.templateTable = WorkOrderListView.getTable();
-
     }
 
     /**
@@ -263,7 +219,7 @@ public class RootApiController extends ApiController {
 
         try {
 
-            flushFilters();
+            this.getTableProvider().flushFilterConfig();
 
             RootResponse response = new RootResponse();
 
@@ -274,24 +230,6 @@ public class RootApiController extends ApiController {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
 
         }
-    }
-
-    /**
-     * Flush the filters cache (must be called after having updated the filters:
-     * custom attributes, select values...).
-     */
-    public static void flushFilters() {
-
-        ApplicationBlockListView.filterConfig = ApplicationBlockListView.getFilterConfig();
-        DeliverableListView.filterConfig = DeliverableListView.getFilterConfig();
-        IterationListView.filterConfig = IterationListView.getFilterConfig();
-        PortfolioEntryEventListView.filterConfig = PortfolioEntryEventListView.getFilterConfig();
-        PortfolioEntryListView.filterConfig = PortfolioEntryListView.getFilterConfig();
-        PortfolioEntryPlanningPackageListView.filterConfig = PortfolioEntryPlanningPackageListView.getFilterConfig();
-        PortfolioEntryResourcePlanAllocatedActorListView.filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.getFilterConfig();
-        RequirementListView.filterConfig = RequirementListView.getFilterConfig();
-        TimesheetActivityAllocatedActorListView.filterConfig = TimesheetActivityAllocatedActorListView.getFilterConfig();
-
     }
 
     /**
@@ -407,6 +345,13 @@ public class RootApiController extends ApiController {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

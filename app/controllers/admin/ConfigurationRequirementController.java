@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
-import controllers.api.core.RootApiController;
 import dao.delivery.RequirementDAO;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.DefaultSelectableValueHolder;
@@ -41,6 +40,7 @@ import models.delivery.RequirementStatus.Type;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.RequirementPriorityFormData;
 import utils.form.RequirementSeverityFormData;
 import utils.form.RequirementStatusFormData;
@@ -63,6 +63,9 @@ public class ConfigurationRequirementController extends Controller {
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     /**
      * Display the lists of data.
@@ -164,7 +167,7 @@ public class ConfigurationRequirementController extends Controller {
         statusFormData.description.persist(getI18nMessagesPlugin());
         statusFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRequirementController.list());
     }
@@ -182,7 +185,7 @@ public class ConfigurationRequirementController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.requirementstatus.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRequirementController.list());
     }
@@ -246,7 +249,7 @@ public class ConfigurationRequirementController extends Controller {
         priorityFormData.description.persist(getI18nMessagesPlugin());
         priorityFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRequirementController.list());
     }
@@ -264,7 +267,7 @@ public class ConfigurationRequirementController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.requirementpriority.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRequirementController.list());
     }
@@ -328,7 +331,7 @@ public class ConfigurationRequirementController extends Controller {
         severityFormData.description.persist(getI18nMessagesPlugin());
         severityFormData.name.persist(getI18nMessagesPlugin());
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRequirementController.list());
     }
@@ -346,7 +349,7 @@ public class ConfigurationRequirementController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.requirementseverity.delete.successful"));
 
-        RootApiController.flushFilters();
+        this.getTableProvider().flushFilterConfig();
 
         return redirect(controllers.admin.routes.ConfigurationRequirementController.list());
     }
@@ -367,6 +370,13 @@ public class ConfigurationRequirementController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

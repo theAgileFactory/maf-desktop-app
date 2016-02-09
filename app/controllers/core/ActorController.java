@@ -71,6 +71,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckActorExists;
 import services.budgettracking.IBudgetTrackingService;
+import services.tableprovider.ITableProvider;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.ActorCapacityFormData;
@@ -101,6 +102,9 @@ public class ActorController extends Controller {
 
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+
+    @Inject
+    private ITableProvider tableProvider;
 
     public static Form<ActorFormData> formTemplate = Form.form(ActorFormData.class);
 
@@ -407,7 +411,7 @@ public class ActorController extends Controller {
             portfolioEntriesView.add(new PortfolioEntryListView(portfolioEntry, StakeholderDao.getStakeholderAsListByActorAndPE(id, portfolioEntry.id)));
         }
 
-        Table<PortfolioEntryListView> filledTable = PortfolioEntryListView.templateTable.fill(portfolioEntriesView,
+        Table<PortfolioEntryListView> filledTable = this.getTableProvider().get().portfolioEntry.templateTable.fill(portfolioEntriesView,
                 PortfolioEntryListView.getHideNonDefaultColumns(false, false));
 
         return ok(views.html.core.actor.actor_portfolio_entry_list.render(actor, filledTable, pagination));
@@ -945,6 +949,13 @@ public class ActorController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

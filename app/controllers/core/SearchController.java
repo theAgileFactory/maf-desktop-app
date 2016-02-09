@@ -58,6 +58,7 @@ import play.mvc.Result;
 import security.dynamic.BudgetBucketDynamicHelper;
 import security.dynamic.PortfolioDynamicHelper;
 import security.dynamic.PortfolioEntryDynamicHelper;
+import services.tableprovider.ITableProvider;
 import utils.table.ActorListView;
 import utils.table.BudgetBucketListView;
 import utils.table.OrgUnitListView;
@@ -85,6 +86,8 @@ public class SearchController extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Form<SearchFormData> formTemplate = Form.form(SearchFormData.class);
     private static Logger.ALogger log = Logger.of(SearchController.class);
@@ -187,7 +190,7 @@ public class SearchController extends Controller {
                     return redirect(controllers.core.routes.PortfolioEntryController.overview(portfolioEntryListView.get(0).id));
                 }
 
-                Table<PortfolioEntryListView> filledTable = PortfolioEntryListView.templateTable.fill(portfolioEntryListView,
+                Table<PortfolioEntryListView> filledTable = this.getTableProvider().get().portfolioEntry.templateTable.fill(portfolioEntryListView,
                         PortfolioEntryListView.getHideNonDefaultColumns(true, true));
                 return ok(views.html.core.search.portfolio_entry_table.render(filledTable));
             }
@@ -383,5 +386,12 @@ public class SearchController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

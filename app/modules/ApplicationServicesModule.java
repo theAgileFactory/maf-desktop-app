@@ -109,6 +109,8 @@ import services.licensesmanagement.ILicensesManagementService;
 import services.licensesmanagement.LicensesManagementServiceImpl;
 import services.picker.IPickerService;
 import services.picker.PickerServiceImpl;
+import services.tableprovider.ITableProvider;
+import services.tableprovider.TableProviderImpl;
 import utils.reporting.IReportingUtils;
 import utils.reporting.ReportingUtilsImpl;
 
@@ -195,7 +197,8 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(IEmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(IBudgetTrackingService.class).to(BudgetTrackingServiceImpl.class).asEagerSingleton();
         bind(IPickerService.class).to(PickerServiceImpl.class).asEagerSingleton();
-        
+        bind(ITableProvider.class).to(TableProviderImpl.class).asEagerSingleton();
+
         bind(IDashboardService.class).to(DashboardServiceImpl.class).asEagerSingleton();
 
         // Initialize with a defined list of jobs
