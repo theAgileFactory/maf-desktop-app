@@ -19,8 +19,6 @@ package utils.table;
 
 import java.util.Date;
 
-import models.framework_models.account.Notification;
-import models.framework_models.account.NotificationCategory;
 import constants.IMafConstants;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -31,6 +29,8 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.framework_models.account.Notification;
+import models.framework_models.account.NotificationCategory;
 
 /**
  * A notification list view is used to display a notification row in a table.
@@ -39,88 +39,102 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class NotificationListView {
 
-    public static FilterConfig<NotificationListView> filterConfig = getFilterConfig();
+    public static class TableDefinition {
 
-    /**
-     * Get the filter config.
-     */
-    public static FilterConfig<NotificationListView> getFilterConfig() {
-        return new FilterConfig<NotificationListView>() {
-            {
+        public FilterConfig<NotificationListView> filterConfig;
+        public Table<NotificationListView> templateTable;
 
-                addColumnConfiguration("isRead", "isRead", "object.notification.is_read.label", new CheckboxFilterComponent(false), false, false,
-                        SortStatusType.UNSORTED);
+        public TableDefinition() {
+            this.filterConfig = getFilterConfig();
+            this.templateTable = getTable();
+        }
 
-                addColumnConfiguration("creationDate", "creationDate", "object.notification.date.label", new DateRangeFilterComponent(new Date(), new Date(),
-                        Utilities.getDefaultDatePattern()), true, false, SortStatusType.DESC);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<NotificationListView> getFilterConfig() {
+            return new FilterConfig<NotificationListView>() {
+                {
 
-                addColumnConfiguration("title", "title", "object.notification.title.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
+                    addColumnConfiguration("isRead", "isRead", "object.notification.is_read.label", new CheckboxFilterComponent(false), false, false,
+                            SortStatusType.UNSORTED);
 
-                addColumnConfiguration("message", "message", "object.notification.message.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
-            }
-        };
-    }
+                    addColumnConfiguration("creationDate", "creationDate", "object.notification.date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.DESC);
 
-    public static Table<NotificationListView> templateTable = new Table<NotificationListView>() {
-        {
+                    addColumnConfiguration("title", "title", "object.notification.title.label", new TextFieldFilterComponent("*"), true, false,
+                            SortStatusType.UNSORTED);
 
-            this.setIdFieldName("id");
-
-            this.addColumn("isRead", "isRead", "object.notification.is_read.label", SorterType.NONE);
-            setJavaColumnFormatter("isRead", new BooleanFormatter<NotificationListView>());
-            setColumnCssClass("isRead", IMafConstants.BOOTSTRAP_COLUMN_1);
-
-            this.addColumn("creationDate", "creationDate", "object.notification.date.label", SorterType.NONE);
-            setJavaColumnFormatter("creationDate", new IColumnFormatter<NotificationListView>() {
-                @Override
-                public String apply(NotificationListView notification, Object value) {
-                    DateFormatter<NotificationListView> df = new DateFormatter<NotificationListView>();
-                    return strongify(notification, df.apply(notification, value));
+                    addColumnConfiguration("message", "message", "object.notification.message.label", new NoneFilterComponent(), true, false,
+                            SortStatusType.NONE);
                 }
-            });
-            setColumnCssClass("creationDate", IMafConstants.BOOTSTRAP_COLUMN_1);
+            };
+        }
 
-            this.addColumn("title", "title", "object.notification.title.label", SorterType.NONE);
-            setJavaColumnFormatter("title", new IColumnFormatter<NotificationListView>() {
-                @Override
-                public String apply(NotificationListView notification, Object value) {
-                    String r = "";
-                    if (notification.notificationCategory != null) {
-                        r += "<span class='" + notification.notificationCategory.bootstrapGlyphicon + "'></span> ";
-                    }
-                    r += notification.title;
-                    return strongify(notification, r);
-                }
-            });
-            setColumnCssClass("title", IMafConstants.BOOTSTRAP_COLUMN_3);
+        public Table<NotificationListView> getTable() {
+            return new Table<NotificationListView>() {
+                {
 
-            this.addColumn("message", "message", "object.notification.message.label", SorterType.NONE);
-            setJavaColumnFormatter("message", new ObjectFormatter<NotificationListView>());
-            setColumnCssClass("message", IMafConstants.BOOTSTRAP_COLUMN_6);
+                    this.setIdFieldName("id");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new StringFormatFormatter<NotificationListView>(IMafConstants.DELETE_URL_FORMAT,
-                    new StringFormatFormatter.Hook<NotificationListView>() {
+                    this.addColumn("isRead", "isRead", "object.notification.is_read.label", SorterType.NONE);
+                    setJavaColumnFormatter("isRead", new BooleanFormatter<NotificationListView>());
+                    setColumnCssClass("isRead", IMafConstants.BOOTSTRAP_COLUMN_1);
+
+                    this.addColumn("creationDate", "creationDate", "object.notification.date.label", SorterType.NONE);
+                    setJavaColumnFormatter("creationDate", new IColumnFormatter<NotificationListView>() {
+                        @Override
+                        public String apply(NotificationListView notification, Object value) {
+                            DateFormatter<NotificationListView> df = new DateFormatter<NotificationListView>();
+                            return strongify(notification, df.apply(notification, value));
+                        }
+                    });
+                    setColumnCssClass("creationDate", IMafConstants.BOOTSTRAP_COLUMN_1);
+
+                    this.addColumn("title", "title", "object.notification.title.label", SorterType.NONE);
+                    setJavaColumnFormatter("title", new IColumnFormatter<NotificationListView>() {
+                        @Override
+                        public String apply(NotificationListView notification, Object value) {
+                            String r = "";
+                            if (notification.notificationCategory != null) {
+                                r += "<span class='" + notification.notificationCategory.bootstrapGlyphicon + "'></span> ";
+                            }
+                            r += notification.title;
+                            return strongify(notification, r);
+                        }
+                    });
+                    setColumnCssClass("title", IMafConstants.BOOTSTRAP_COLUMN_3);
+
+                    this.addColumn("message", "message", "object.notification.message.label", SorterType.NONE);
+                    setJavaColumnFormatter("message", new ObjectFormatter<NotificationListView>());
+                    setColumnCssClass("message", IMafConstants.BOOTSTRAP_COLUMN_6);
+
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new StringFormatFormatter<NotificationListView>(IMafConstants.DELETE_URL_FORMAT,
+                            new StringFormatFormatter.Hook<NotificationListView>() {
                         @Override
                         public String convert(NotificationListView notification) {
                             return controllers.routes.Application.deleteNotification(notification.id).url();
                         }
                     }));
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            this.setLineAction(new IColumnFormatter<NotificationListView>() {
-                @Override
-                public String apply(NotificationListView notification, Object value) {
-                    return controllers.routes.Application.redirectForNotification(notification.id).url();
+                    this.setLineAction(new IColumnFormatter<NotificationListView>() {
+                        @Override
+                        public String apply(NotificationListView notification, Object value) {
+                            return controllers.routes.Application.redirectForNotification(notification.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.notification.table.empty");
+
                 }
-            });
-
-            setEmptyMessageKey("object.notification.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Strongify a string if needed.

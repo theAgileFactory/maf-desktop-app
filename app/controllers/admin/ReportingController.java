@@ -20,20 +20,23 @@ package controllers.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.reporting.Reporting;
-import models.reporting.ReportingCategory;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-import utils.form.ReportingFormData;
-import utils.table.ReportingListView;
+import javax.inject.Inject;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.reporting.ReportingDao;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
+import models.reporting.Reporting;
+import models.reporting.ReportingCategory;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import services.tableprovider.ITableProvider;
+import utils.form.ReportingFormData;
+import utils.table.ReportingListView;
 
 /**
  * The controller which allows to manage the reports.
@@ -43,8 +46,11 @@ import be.objectify.deadbolt.java.actions.Restrict;
 @Restrict({ @Group(IMafConstants.REPORTING_ADMINISTRATION_PERMISSION) })
 public class ReportingController extends Controller {
 
+    @Inject
+    private ITableProvider tableProvider;
+
     public static Form<ReportingFormData> formTemplate = Form.form(ReportingFormData.class);
-    
+
     /**
      * The reporting administration page.
      */
@@ -87,7 +93,7 @@ public class ReportingController extends Controller {
                 reportingListView.add(new ReportingListView(report));
             }
 
-            Table<ReportingListView> table = ReportingListView.templateTable.fill(reportingListView);
+            Table<ReportingListView> table = this.getTableProvider().get().reporting.templateTable.fill(reportingListView);
             table.setLineAction(null);
 
             return ok(views.html.admin.reporting.fragment_list.render(category, table));
@@ -138,5 +144,12 @@ public class ReportingController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("admin.reporting.edit.successful"));
 
         return redirect(controllers.admin.routes.ReportingController.indexForCategory(report.reportingCategory.id));
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

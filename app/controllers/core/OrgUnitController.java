@@ -140,7 +140,7 @@ public class OrgUnitController extends Controller {
         }
         Set<String> columnsToHideForChildren = new HashSet<>();
         columnsToHideForChildren.add("isActive");
-        Table<OrgUnitListView> childrenTable = OrgUnitListView.templateTable.fill(orgUnitListView, columnsToHideForChildren);
+        Table<OrgUnitListView> childrenTable = this.getTableProvider().get().orgUnit.templateTable.fill(orgUnitListView, columnsToHideForChildren);
 
         // construct the actors table
         List<ActorListView> actorListView = new ArrayList<ActorListView>();
@@ -150,7 +150,7 @@ public class OrgUnitController extends Controller {
         Set<String> columnsToHideForActors = new HashSet<>();
         columnsToHideForActors.add("orgUnit");
         columnsToHideForActors.add("isActive");
-        Table<ActorListView> actorsTable = ActorListView.templateTable.fill(actorListView, columnsToHideForActors);
+        Table<ActorListView> actorsTable = this.getTableProvider().get().actor.templateTable.fill(actorListView, columnsToHideForActors);
 
         return ok(views.html.core.orgunit.org_unit_view.render(orgUnit, orgUnitFormData, childrenTable, actorsTable));
     }
@@ -471,8 +471,8 @@ public class OrgUnitController extends Controller {
             columnsToHide.add("dailyRate");
         }
 
-        Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> portfolioEntryTable = PortfolioEntryResourcePlanAllocatedOrgUnitListView.templateTable
-                .fill(allocationListView, columnsToHide);
+        Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> portfolioEntryTable = this.getTableProvider()
+                .get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable.fill(allocationListView, columnsToHide);
 
         portfolioEntryTable.setLineAction(new IColumnFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
             @Override
@@ -486,15 +486,15 @@ public class OrgUnitController extends Controller {
 
         String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
         FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> actorsPortfolioEntryFilter;
-        actorsPortfolioEntryFilter = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig.getCurrent(uid, request());
+        actorsPortfolioEntryFilter = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.filterConfig.getCurrent(uid, request());
 
         Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> actorsPortfolioEntryTable;
         actorsPortfolioEntryTable = getActorsPEAllocTable(id, actorsPortfolioEntryFilter, this.getSecurityService());
 
         // construct the actors activity table
 
-        FilterConfig<TimesheetActivityAllocatedActorListView> actorsActivityFilter = TimesheetActivityAllocatedActorListView.filterConfig.getCurrent(uid,
-                request());
+        FilterConfig<TimesheetActivityAllocatedActorListView> actorsActivityFilter = this.getTableProvider()
+                .get().timesheetActivityAllocatedActor.filterConfig.getCurrent(uid, request());
 
         Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> actorsActivityTable;
         actorsActivityTable = getActorsActivityAllocTable(id, actorsActivityFilter);
@@ -518,8 +518,8 @@ public class OrgUnitController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
-                    .persistCurrentInDefault(uid, request());
+            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = this.getTableProvider()
+                    .get().portfolioEntryResourcePlanAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -552,8 +552,8 @@ public class OrgUnitController extends Controller {
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
             // fill the filter config
-            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.filterConfig
-                    .persistCurrentInDefault(uid, request());
+            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = this.getTableProvider()
+                    .get().portfolioEntryResourcePlanAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
 
             ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig
                     .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByOrgUnitAndActive(id, true));
@@ -615,7 +615,7 @@ public class OrgUnitController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig = TimesheetActivityAllocatedActorListView.filterConfig
+            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig = this.getTableProvider().get().timesheetActivityAllocatedActor.filterConfig
                     .persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
@@ -738,7 +738,7 @@ public class OrgUnitController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getActorsPEAllocTable(
+    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getActorsPEAllocTable(
             Long orgUnitId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig, ISecurityService securityService) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig
@@ -759,7 +759,7 @@ public class OrgUnitController extends Controller {
         columnsToHide.add("forecastDays");
         columnsToHide.add("dailyRate");
 
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> table = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
+        Table<PortfolioEntryResourcePlanAllocatedActorListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
         try {
@@ -797,8 +797,8 @@ public class OrgUnitController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> getActorsActivityAllocTable(
-            Long orgUnitId, FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig) {
+    private Pair<Table<TimesheetActivityAllocatedActorListView>, Pagination<TimesheetActivityAllocatedActor>> getActorsActivityAllocTable(Long orgUnitId,
+            FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig) {
 
         ExpressionList<TimesheetActivityAllocatedActor> expressionList = filterConfig
                 .updateWithSearchExpression(TimesheetDao.getTimesheetActivityAllocatedActorAsExprByOrgUnit(orgUnitId, true));
@@ -816,8 +816,8 @@ public class OrgUnitController extends Controller {
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
 
-        Table<TimesheetActivityAllocatedActorListView> table = TimesheetActivityAllocatedActorListView.templateTable.fillForFilterConfig(listView,
-                columnsToHide);
+        Table<TimesheetActivityAllocatedActorListView> table = this.getTableProvider().get().timesheetActivityAllocatedActor.templateTable
+                .fillForFilterConfig(listView, columnsToHide);
 
         table.setLineAction(new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
             @Override

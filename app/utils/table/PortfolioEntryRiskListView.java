@@ -19,15 +19,15 @@ package utils.table;
 
 import java.util.Date;
 
-import models.pmo.Actor;
-import models.pmo.PortfolioEntryRisk;
-import models.pmo.PortfolioEntryRiskType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.Actor;
+import models.pmo.PortfolioEntryRisk;
+import models.pmo.PortfolioEntryRiskType;
 
 /**
  * A portfolio entry risk list view is used to display an portfolioEntry risk
@@ -37,91 +37,107 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PortfolioEntryRiskListView {
 
-    public static Table<PortfolioEntryRiskListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PortfolioEntryRiskListView> getTable() {
-        return new Table<PortfolioEntryRiskListView>() {
-            {
-                setIdFieldName("id");
+    public static class TableDefinition {
 
-                addColumn("name", "name", "object.portfolio_entry_risk.name.label", Table.ColumnDef.SorterType.NONE);
+        public Table<PortfolioEntryRiskListView> templateTable;
 
-                addColumn("targetDate", "targetDate", "object.portfolio_entry_risk.target_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("targetDate", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                    @Override
-                    public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                        DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<PortfolioEntryRiskListView>();
-                        if (portfolioEntryRiskListView.targetDate != null) {
-                            df.setAlert(portfolioEntryRiskListView.targetDate.before(new Date()));
-                        }
-                        return df.apply(portfolioEntryRiskListView, value);
-                    }
-                });
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("dueDate", "dueDate", "object.portfolio_entry_risk.due_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("dueDate", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                    @Override
-                    public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                        DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<PortfolioEntryRiskListView>();
-                        if (portfolioEntryRiskListView.dueDate != null) {
-                            df.setAlert(portfolioEntryRiskListView.dueDate.before(new Date()));
-                        }
-                        return df.apply(portfolioEntryRiskListView, value);
-                    }
-                });
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryRiskListView> getTable() {
+            return new Table<PortfolioEntryRiskListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("type", "type", "object.portfolio_entry_risk.type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                    @Override
-                    public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                        return views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryRiskListView.type, true).body();
-                    }
-                });
+                    addColumn("name", "name", "object.portfolio_entry_risk.name.label", Table.ColumnDef.SorterType.NONE);
 
-                addColumn("isMitigated", "isMitigated", "object.portfolio_entry_risk.is_mitigated.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isMitigated", new BooleanFormatter<PortfolioEntryRiskListView>());
-
-                addColumn("owner", "owner", "object.portfolio_entry_risk.owner.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("owner", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                    @Override
-                    public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(portfolioEntryRiskListView.owner).body();
-                    }
-                });
-                this.setColumnValueCssClass("owner", "rowlink-skip");
-
-                addColumn("isActive", "isActive", "object.portfolio_entry_risk.is_active.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioEntryRiskListView>());
-
-                addCustomAttributeColumns(PortfolioEntryRisk.class);
-
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryRiskListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<PortfolioEntryRiskListView>() {
-                            @Override
-                            public String convert(PortfolioEntryRiskListView portfolioEntryRiskListView) {
-                                return controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(
-                                        portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id, true).url();
+                    addColumn("targetDate", "targetDate", "object.portfolio_entry_risk.target_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("targetDate", new IColumnFormatter<PortfolioEntryRiskListView>() {
+                        @Override
+                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
+                            DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<PortfolioEntryRiskListView>();
+                            if (portfolioEntryRiskListView.targetDate != null) {
+                                df.setAlert(portfolioEntryRiskListView.targetDate.before(new Date()));
                             }
-                        }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                            return df.apply(portfolioEntryRiskListView, value);
+                        }
+                    });
 
-                this.setLineAction(new IColumnFormatter<PortfolioEntryRiskListView>() {
-                    @Override
-                    public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryStatusReportingController.viewRisk(portfolioEntryRiskListView.portfolioEntryId,
-                                portfolioEntryRiskListView.id).url();
-                    }
-                });
+                    addColumn("dueDate", "dueDate", "object.portfolio_entry_risk.due_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("dueDate", new IColumnFormatter<PortfolioEntryRiskListView>() {
+                        @Override
+                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
+                            DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<PortfolioEntryRiskListView>();
+                            if (portfolioEntryRiskListView.dueDate != null) {
+                                df.setAlert(portfolioEntryRiskListView.dueDate.before(new Date()));
+                            }
+                            return df.apply(portfolioEntryRiskListView, value);
+                        }
+                    });
 
-                setEmptyMessageKey("object.portfolio_entry_risk.table.empty");
+                    addColumn("type", "type", "object.portfolio_entry_risk.type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryRiskListView>() {
+                        @Override
+                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryRiskListView.type, true).body();
+                        }
+                    });
 
-            }
-        };
+                    addColumn("isMitigated", "isMitigated", "object.portfolio_entry_risk.is_mitigated.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isMitigated", new BooleanFormatter<PortfolioEntryRiskListView>());
+
+                    addColumn("owner", "owner", "object.portfolio_entry_risk.owner.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("owner", new IColumnFormatter<PortfolioEntryRiskListView>() {
+                        @Override
+                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(portfolioEntryRiskListView.owner).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("owner", "rowlink-skip");
+
+                    addColumn("isActive", "isActive", "object.portfolio_entry_risk.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioEntryRiskListView>());
+
+                    addCustomAttributeColumns(PortfolioEntryRisk.class);
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryRiskListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PortfolioEntryRiskListView>() {
+                        @Override
+                        public String convert(PortfolioEntryRiskListView portfolioEntryRiskListView) {
+                            return controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .manageRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id, true).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction(new IColumnFormatter<PortfolioEntryRiskListView>() {
+                        @Override
+                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .viewRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.portfolio_entry_risk.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

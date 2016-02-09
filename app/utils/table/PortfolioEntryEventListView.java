@@ -20,12 +20,10 @@ package utils.table;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import models.pmo.Actor;
-import models.pmo.PortfolioEntryEvent;
-import models.pmo.PortfolioEntryEventType;
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryEventDao;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -34,6 +32,9 @@ import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.Actor;
+import models.pmo.PortfolioEntryEvent;
+import models.pmo.PortfolioEntryEventType;
 
 /**
  * A portfolio entry event list view is used to display an portfolio entry event
@@ -43,100 +44,118 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PortfolioEntryEventListView {
 
-    public static FilterConfig<PortfolioEntryEventListView> filterConfig = getFilterConfig();
-
     /**
-     * Get the filter config.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static FilterConfig<PortfolioEntryEventListView> getFilterConfig() {
-        return new FilterConfig<PortfolioEntryEventListView>() {
-            {
+    public static class TableDefinition {
 
-                ISelectableValueHolderCollection<Long> eventTypes = PortfolioEntryEventDao.getPEEventTypeActiveAsVH();
-                addColumnConfiguration("portfolioEntryEventType", "portfolioEntryEventType.id", "object.portfolio_entry_event.type.label",
-                        new SelectFilterComponent(eventTypes.getValues().iterator().next().getValue(), eventTypes), true, false, SortStatusType.UNSORTED);
+        public FilterConfig<PortfolioEntryEventListView> filterConfig;
 
-                addColumnConfiguration("message", "message", "object.portfolio_entry_event.message.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.filterConfig = getFilterConfig();
+            this.templateTable = getTable();
+        }
 
-                addColumnConfiguration("actor", "actor.id", "object.portfolio_entry_event.actor.label", new AutocompleteFilterComponent(
-                        controllers.routes.JsonController.manager().url()), true, false, SortStatusType.UNSORTED);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<PortfolioEntryEventListView> getFilterConfig() {
+            return new FilterConfig<PortfolioEntryEventListView>() {
+                {
 
-                addColumnConfiguration("creationDate", "creationDate", "object.portfolio_entry_event.creation_date.label", new DateRangeFilterComponent(
-                        new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.DESC);
+                    ISelectableValueHolderCollection<Long> eventTypes = PortfolioEntryEventDao.getPEEventTypeActiveAsVH();
+                    addColumnConfiguration("portfolioEntryEventType", "portfolioEntryEventType.id", "object.portfolio_entry_event.type.label",
+                            new SelectFilterComponent(eventTypes.getValues().iterator().next().getValue(), eventTypes), true, false, SortStatusType.UNSORTED);
 
-                addCustomAttributesColumns("id", PortfolioEntryEvent.class);
+                    addColumnConfiguration("message", "message", "object.portfolio_entry_event.message.label", new TextFieldFilterComponent("*"), true, false,
+                            SortStatusType.UNSORTED);
 
-            }
-        };
-    }
+                    addColumnConfiguration("actor", "actor.id", "object.portfolio_entry_event.actor.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.UNSORTED);
 
-    public static Table<PortfolioEntryEventListView> templateTable = getTable();
+                    addColumnConfiguration("creationDate", "creationDate", "object.portfolio_entry_event.creation_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.DESC);
 
-    /**
-     * Get the table.
-     */
-    public static Table<PortfolioEntryEventListView> getTable() {
-        return new Table<PortfolioEntryEventListView>() {
-            {
-                setIdFieldName("id");
+                    addCustomAttributesColumns("id", PortfolioEntryEvent.class);
 
-                addColumn("portfolioEntryEventType", "portfolioEntryEventType", "object.portfolio_entry_event.type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("portfolioEntryEventType", new IColumnFormatter<PortfolioEntryEventListView>() {
-                    @Override
-                    public String apply(PortfolioEntryEventListView portfolioEntryEventListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry_event_type.render(portfolioEntryEventListView.portfolioEntryEventType).body();
-                    }
-                });
+                }
+            };
+        }
 
-                addColumn("creationDate", "creationDate", "object.portfolio_entry_event.creation_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("creationDate", new DateFormatter<PortfolioEntryEventListView>());
+        public Table<PortfolioEntryEventListView> templateTable;
 
-                addColumn("actor", "actor", "object.portfolio_entry_event.actor.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("actor", new IColumnFormatter<PortfolioEntryEventListView>() {
-                    @Override
-                    public String apply(PortfolioEntryEventListView portfolioEntryEventListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(portfolioEntryEventListView.actor).body();
-                    }
-                });
-                this.setColumnValueCssClass("actor", "rowlink-skip");
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryEventListView> getTable() {
+            return new Table<PortfolioEntryEventListView>() {
+                {
+                    setIdFieldName("id");
 
-                addCustomAttributeColumns(PortfolioEntryEvent.class);
+                    addColumn("portfolioEntryEventType", "portfolioEntryEventType", "object.portfolio_entry_event.type.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryEventType", new IColumnFormatter<PortfolioEntryEventListView>() {
+                        @Override
+                        public String apply(PortfolioEntryEventListView portfolioEntryEventListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry_event_type.render(portfolioEntryEventListView.portfolioEntryEventType)
+                                    .body();
+                        }
+                    });
 
-                addColumn("message", "message", "object.portfolio_entry_event.message.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("message", new ObjectFormatter<PortfolioEntryEventListView>());
+                    addColumn("creationDate", "creationDate", "object.portfolio_entry_event.creation_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("creationDate", new DateFormatter<PortfolioEntryEventListView>());
 
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryEventListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<PortfolioEntryEventListView>() {
-                            @Override
-                            public String convert(PortfolioEntryEventListView portfolioEntryEventListView) {
-                                return controllers.core.routes.PortfolioEntryStatusReportingController.manageEvent(
-                                        portfolioEntryEventListView.portfolioEntryId, portfolioEntryEventListView.id).url();
-                            }
-                        }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addColumn("actor", "actor", "object.portfolio_entry_event.actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("actor", new IColumnFormatter<PortfolioEntryEventListView>() {
+                        @Override
+                        public String apply(PortfolioEntryEventListView portfolioEntryEventListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(portfolioEntryEventListView.actor).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("actor", "rowlink-skip");
 
-                addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryEventListView>() {
-                    @Override
-                    public String apply(PortfolioEntryEventListView portfolioEntryEventListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.core.routes.PortfolioEntryStatusReportingController.deleteEvent(portfolioEntryEventListView.portfolioEntryId,
-                                        portfolioEntryEventListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                    }
-                });
-                setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    addCustomAttributeColumns(PortfolioEntryEvent.class);
 
-                setEmptyMessageKey("object.portfolio_entry_event.table.empty");
+                    addColumn("message", "message", "object.portfolio_entry_event.message.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("message", new ObjectFormatter<PortfolioEntryEventListView>());
 
-            }
-        };
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryEventListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PortfolioEntryEventListView>() {
+                        @Override
+                        public String convert(PortfolioEntryEventListView portfolioEntryEventListView) {
+                            return controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .manageEvent(portfolioEntryEventListView.portfolioEntryId, portfolioEntryEventListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryEventListView>() {
+                        @Override
+                        public String apply(PortfolioEntryEventListView portfolioEntryEventListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .deleteEvent(portfolioEntryEventListView.portfolioEntryId, portfolioEntryEventListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.portfolio_entry_event.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

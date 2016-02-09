@@ -35,66 +35,74 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class CustomAttributeItemListView {
 
-    public static Table<CustomAttributeItemListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<CustomAttributeItemListView> getTable() {
-        return new Table<CustomAttributeItemListView>() {
-            {
-                setIdFieldName("id");
+        public Table<CustomAttributeItemListView> templateTable;
 
-                addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("changeOrder", new IColumnFormatter<CustomAttributeItemListView>() {
-                    @Override
-                    public String apply(CustomAttributeItemListView customAttributeItemListView, Object value) {
-                        return "<a href=\""
-                                + controllers.admin.routes.ConfigurationCustomAttributeController
-                                        .changeItemOrder(customAttributeItemListView.customAttributeId, customAttributeItemListView.id, false).url()
-                                + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
-                                + controllers.admin.routes.ConfigurationCustomAttributeController
-                                        .changeItemOrder(customAttributeItemListView.customAttributeId, customAttributeItemListView.id, true).url()
-                                + "\"><span class=\"fa fa-arrow-up\"></span></a>";
-                    }
-                });
-                setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("id", "id", "object.custom_attribute_item.id.label", Table.ColumnDef.SorterType.NONE);
+        /**
+         * Get the table.
+         */
+        public Table<CustomAttributeItemListView> getTable() {
+            return new Table<CustomAttributeItemListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("name", "name", "object.custom_attribute_item.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<CustomAttributeItemListView>());
+                    addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("changeOrder", new IColumnFormatter<CustomAttributeItemListView>() {
+                        @Override
+                        public String apply(CustomAttributeItemListView customAttributeItemListView, Object value) {
+                            return "<a href=\""
+                                    + controllers.admin.routes.ConfigurationCustomAttributeController
+                                            .changeItemOrder(customAttributeItemListView.customAttributeId, customAttributeItemListView.id, false).url()
+                                    + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
+                                    + controllers.admin.routes.ConfigurationCustomAttributeController
+                                            .changeItemOrder(customAttributeItemListView.customAttributeId, customAttributeItemListView.id, true).url()
+                                    + "\"><span class=\"fa fa-arrow-up\"></span></a>";
+                        }
+                    });
+                    setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
 
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<CustomAttributeItemListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<CustomAttributeItemListView>() {
-                    @Override
-                    public String convert(CustomAttributeItemListView customAttributeItemListView) {
-                        return controllers.admin.routes.ConfigurationCustomAttributeController
-                                .manageItem(customAttributeItemListView.customAttributeId, customAttributeItemListView.id).url();
-                    }
-                }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    addColumn("id", "id", "object.custom_attribute_item.id.label", Table.ColumnDef.SorterType.NONE);
 
-                addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<CustomAttributeItemListView>() {
-                    @Override
-                    public String apply(CustomAttributeItemListView customAttributeItemListView, Object value) {
-                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                Msg.get("default.delete.confirmation.message"));
-                        String url = controllers.admin.routes.ConfigurationCustomAttributeController
-                                .deleteItem(customAttributeItemListView.customAttributeId, customAttributeItemListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                    }
-                });
-                setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    addColumn("name", "name", "object.custom_attribute_item.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<CustomAttributeItemListView>());
 
-                setEmptyMessageKey("object.custom_attribute_definition.table.empty");
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<CustomAttributeItemListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<CustomAttributeItemListView>() {
+                        @Override
+                        public String convert(CustomAttributeItemListView customAttributeItemListView) {
+                            return controllers.admin.routes.ConfigurationCustomAttributeController
+                                    .manageItem(customAttributeItemListView.customAttributeId, customAttributeItemListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
-            }
-        };
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<CustomAttributeItemListView>() {
+                        @Override
+                        public String apply(CustomAttributeItemListView customAttributeItemListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationCustomAttributeController
+                                    .deleteItem(customAttributeItemListView.customAttributeId, customAttributeItemListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.custom_attribute_definition.table.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

@@ -39,58 +39,74 @@ import models.pmo.Stakeholder;
  */
 public class PortfolioListView {
 
-    public static Table<PortfolioListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PortfolioListView> getTable() {
-        return new Table<PortfolioListView>() {
-            {
+    public static class TableDefinition {
 
-                setIdFieldName("id");
+        public Table<PortfolioListView> templateTable;
 
-                addColumn("refId", "refId", "object.portfolio.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<PortfolioListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("name", "name", "object.portfolio.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<PortfolioListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioListView> getTable() {
+            return new Table<PortfolioListView>() {
+                {
 
-                addColumn("type", "type", "object.portfolio.type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("type", new IColumnFormatter<PortfolioListView>() {
-                    @Override
-                    public String apply(PortfolioListView portfolioListView, Object value) {
-                        return views.html.framework_views.parts.formats.display_value_holder.render(portfolioListView.type, true).body();
-                    }
-                });
+                    setIdFieldName("id");
 
-                addColumn("isActive", "isActive", "object.portfolio.is_active.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioListView>());
+                    addColumn("refId", "refId", "object.portfolio.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<PortfolioListView>());
 
-                addColumn("manager", "manager", "object.portfolio.manager.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("manager", new IColumnFormatter<PortfolioListView>() {
-                    @Override
-                    public String apply(PortfolioListView portfolioListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(portfolioListView.manager).body();
-                    }
-                });
-                this.setColumnValueCssClass("manager", "rowlink-skip");
+                    addColumn("name", "name", "object.portfolio.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<PortfolioListView>());
 
-                addColumn("stakeholderTypes", "stakeholderTypes", "object.portfolio.stakeholder_types.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("stakeholderTypes", new ListOfValuesFormatter<PortfolioListView>());
+                    addColumn("type", "type", "object.portfolio.type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("type", new IColumnFormatter<PortfolioListView>() {
+                        @Override
+                        public String apply(PortfolioListView portfolioListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_value_holder.render(portfolioListView.type, true).body();
+                        }
+                    });
 
-                addCustomAttributeColumns(Portfolio.class);
+                    addColumn("isActive", "isActive", "object.portfolio.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioListView>());
 
-                this.setLineAction(new IColumnFormatter<PortfolioListView>() {
-                    @Override
-                    public String apply(PortfolioListView portfolioListView, Object value) {
-                        return controllers.core.routes.PortfolioController.overview(portfolioListView.id).url();
-                    }
-                });
+                    addColumn("manager", "manager", "object.portfolio.manager.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("manager", new IColumnFormatter<PortfolioListView>() {
+                        @Override
+                        public String apply(PortfolioListView portfolioListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(portfolioListView.manager).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("manager", "rowlink-skip");
 
-                setEmptyMessageKey("object.portfolio.table.empty");
-            }
-        };
+                    addColumn("stakeholderTypes", "stakeholderTypes", "object.portfolio.stakeholder_types.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("stakeholderTypes", new ListOfValuesFormatter<PortfolioListView>());
+
+                    addCustomAttributeColumns(Portfolio.class);
+
+                    this.setLineAction(new IColumnFormatter<PortfolioListView>() {
+                        @Override
+                        public String apply(PortfolioListView portfolioListView, Object value) {
+                            return controllers.core.routes.PortfolioController.overview(portfolioListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.portfolio.table.empty");
+                }
+            };
+
+        }
 
     }
 

@@ -49,7 +49,6 @@ import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryReport;
 import models.pmo.PortfolioEntryType;
 import models.pmo.Stakeholder;
-import play.Logger;
 
 /**
  * A portfolio entry list view is used to display an portfolio entry row in a
@@ -59,11 +58,22 @@ import play.Logger;
  */
 public class PortfolioEntryListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public FilterConfig<PortfolioEntryListView> filterConfig;
         public Table<PortfolioEntryListView> templateTable;
 
+        /**
+         * Default constructor.
+         * 
+         * @param kpiService
+         *            the KPI service.
+         */
         public TableDefinition(IKpiService kpiService) {
             this.filterConfig = getFilterConfig(kpiService);
             this.templateTable = getTable(kpiService);
@@ -73,7 +83,6 @@ public class PortfolioEntryListView {
          * Get the filter config.
          */
         public FilterConfig<PortfolioEntryListView> getFilterConfig(IKpiService kpiService) {
-            Logger.error("PortfolioEntryListView: getFilterConfig");
             return new FilterConfig<PortfolioEntryListView>() {
                 {
 
@@ -189,7 +198,6 @@ public class PortfolioEntryListView {
          * Get the table.
          */
         public Table<PortfolioEntryListView> getTable(IKpiService kpiService) {
-            Logger.error("PortfolioEntryListView: getTable");
             return new Table<PortfolioEntryListView>() {
                 {
 

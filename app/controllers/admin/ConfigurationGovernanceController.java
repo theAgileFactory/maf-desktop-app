@@ -88,7 +88,7 @@ public class ConfigurationGovernanceController extends Controller {
             lifeCycleProcessListView.add(new LifeCycleProcessListView(lifeCycleProcess));
         }
 
-        Table<LifeCycleProcessListView> lifeCycleProcessesTable = LifeCycleProcessListView.templateTable.fill(lifeCycleProcessListView);
+        Table<LifeCycleProcessListView> lifeCycleProcessesTable = this.getTableProvider().get().lifeCycleProcess.templateTable.fill(lifeCycleProcessListView);
 
         // status types
         List<LifeCycleMilestoneInstanceStatusType> statusTypes = LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeAsList();
@@ -98,8 +98,8 @@ public class ConfigurationGovernanceController extends Controller {
             statusTypeListView.add(new LifeCycleMilestoneInstanceStatusTypeListView(statusType));
         }
 
-        Table<LifeCycleMilestoneInstanceStatusTypeListView> statusTypesTable = LifeCycleMilestoneInstanceStatusTypeListView.templateTable
-                .fill(statusTypeListView);
+        Table<LifeCycleMilestoneInstanceStatusTypeListView> statusTypesTable = this.getTableProvider()
+                .get().lifeCycleMilestoneInstanceStatusType.templateTable.fill(statusTypeListView);
 
         return ok(views.html.admin.config.datareference.governance.list.render(lifeCycleProcessesTable, statusTypesTable));
     }
@@ -122,7 +122,8 @@ public class ConfigurationGovernanceController extends Controller {
             lifeCycleMilestoneListView.add(new LifeCycleMilestoneListView(lifeCycleMilestone));
         }
 
-        Table<LifeCycleMilestoneListView> lifeCycleMilestonesTable = LifeCycleMilestoneListView.templateTable.fill(lifeCycleMilestoneListView);
+        Table<LifeCycleMilestoneListView> lifeCycleMilestonesTable = this.getTableProvider().get().lifeCycleMilestone.templateTable
+                .fill(lifeCycleMilestoneListView);
 
         // life cycle phases
         List<LifeCyclePhase> lifeCyclePhases = LifeCycleMilestoneDao.getLCPhaseAsListByLCProcess(lifeCycleProcessId);
@@ -132,7 +133,7 @@ public class ConfigurationGovernanceController extends Controller {
             lifeCyclePhaseListView.add(new LifeCyclePhaseListView(lifeCyclePhase));
         }
 
-        Table<LifeCyclePhaseListView> lifeCyclePhasesTable = LifeCyclePhaseListView.templateTable.fill(lifeCyclePhaseListView);
+        Table<LifeCyclePhaseListView> lifeCyclePhasesTable = this.getTableProvider().get().lifeCyclePhase.templateTable.fill(lifeCyclePhaseListView);
 
         return ok(views.html.admin.config.datareference.governance.life_cycle_process_view.render(lifeCycleProcess, lifeCycleMilestonesTable,
                 lifeCyclePhasesTable));

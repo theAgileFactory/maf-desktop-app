@@ -89,7 +89,7 @@ public class PortfolioController extends Controller {
         for (PortfolioEntry portfolioEntry : PortfolioEntryDao.getPERedAsListByPortfolio(id)) {
             portfolioReportsListView.add(new PortfolioReportListView(portfolioEntry.lastPortfolioEntryReport));
         }
-        Table<PortfolioReportListView> filledReportTable = PortfolioReportListView.templateTable.fill(portfolioReportsListView);
+        Table<PortfolioReportListView> filledReportTable = this.getTableProvider().get().portfolioReport.templateTable.fill(portfolioReportsListView);
 
         // get the late milestones
         List<PortfolioMilestoneListView> portfolioMilestoneListView = new ArrayList<PortfolioMilestoneListView>();
@@ -97,7 +97,8 @@ public class PortfolioController extends Controller {
                 .getPlannedLCMilestoneInstanceNotApprovedAsListOfPortfolio(id)) {
             portfolioMilestoneListView.add(new PortfolioMilestoneListView(plannedMilestoneInstance));
         }
-        Table<PortfolioMilestoneListView> filledMilestoneTable = PortfolioMilestoneListView.templateTable.fill(portfolioMilestoneListView);
+        Table<PortfolioMilestoneListView> filledMilestoneTable = this.getTableProvider().get().portfolioMilestone.templateTable
+                .fill(portfolioMilestoneListView);
 
         return ok(views.html.core.portfolio.portfolio_overview.render(portfolio, filledReportTable, filledMilestoneTable));
     }
@@ -152,8 +153,8 @@ public class PortfolioController extends Controller {
             hideColumnsForStakeholder.add("removeActionLink");
         }
 
-        Table<PortfolioStakeholderListView> filledStakeholderTable = PortfolioStakeholderListView.templateTable.fill(stakeholdersListView,
-                hideColumnsForStakeholder);
+        Table<PortfolioStakeholderListView> filledStakeholderTable = this.getTableProvider().get().portfolioStakeholder.templateTable
+                .fill(stakeholdersListView, hideColumnsForStakeholder);
 
         return ok(views.html.core.portfolio.portfolio_view.render(portfolio, portfolioFormData, filledPortfolioEntryTable, portfolioEntryPagination,
                 filledStakeholderTable, stakeholderPagination));

@@ -148,7 +148,7 @@ public class ActorController extends Controller {
             hideColumnsForEntry.add("orgUnit");
             hideColumnsForEntry.add("manager");
 
-            actorFilledTable = ActorListView.templateTable.fill(actorsListView, hideColumnsForEntry);
+            actorFilledTable = this.getTableProvider().get().actor.templateTable.fill(actorsListView, hideColumnsForEntry);
         }
 
         // competencies
@@ -164,7 +164,8 @@ public class ActorController extends Controller {
         hideColumnsForCompetency.add("editActionLink");
         hideColumnsForCompetency.add("deleteActionLink");
 
-        Table<CompetencyListView> competenciesFilledTable = CompetencyListView.templateTable.fill(competenciesListView, hideColumnsForCompetency);
+        Table<CompetencyListView> competenciesFilledTable = this.getTableProvider().get().competency.templateTable.fill(competenciesListView,
+                hideColumnsForCompetency);
 
         // check if there are active competencies
         boolean existCompetencies = ActorDao.getCompetencyActiveAsList().size() > 0 ? true : false;
@@ -441,7 +442,7 @@ public class ActorController extends Controller {
             portfoliosView.add(new PortfolioListView(portfolio, StakeholderDao.getStakeholderAsListByActorAndPortfolio(id, portfolio.id)));
         }
 
-        Table<PortfolioListView> filledTable = PortfolioListView.templateTable.fill(portfoliosView);
+        Table<PortfolioListView> filledTable = this.getTableProvider().get().portfolio.templateTable.fill(portfoliosView);
 
         return ok(views.html.core.actor.actor_portfolio_list.render(actor, filledTable, pagination));
     }
@@ -620,8 +621,8 @@ public class ActorController extends Controller {
             columnsToHide.add("dailyRate");
         }
 
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryTable = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
-                .fill(allocationListView, columnsToHide);
+        Table<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryTable = this.getTableProvider()
+                .get().portfolioEntryResourcePlanAllocatedActor.templateTable.fill(allocationListView, columnsToHide);
 
         portfolioEntryTable.setLineAction(new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
             @Override
@@ -646,8 +647,8 @@ public class ActorController extends Controller {
         Set<String> columnsToHideForActivity = new HashSet<String>();
         columnsToHideForActivity.add("actor");
 
-        Table<TimesheetActivityAllocatedActorListView> activityTable = TimesheetActivityAllocatedActorListView.templateTable.fill(activityAllocationListView,
-                columnsToHideForActivity);
+        Table<TimesheetActivityAllocatedActorListView> activityTable = this.getTableProvider().get().timesheetActivityAllocatedActor.templateTable
+                .fill(activityAllocationListView, columnsToHideForActivity);
 
         return ok(views.html.core.actor.actor_allocation_details.render(actor, portfolioEntryTable, portfolioEntryPagination, activityTable,
                 activityPagination, viewAllActivities));

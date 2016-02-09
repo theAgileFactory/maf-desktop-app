@@ -39,103 +39,111 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
  */
 public class DataSyndicationAgreementLinkListView {
 
-    public static Table<DataSyndicationAgreementLinkListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<DataSyndicationAgreementLinkListView> getTable() {
-        return new Table<DataSyndicationAgreementLinkListView>() {
-            {
-                setIdFieldName("id");
+        public Table<DataSyndicationAgreementLinkListView> templateTable;
 
-                addColumn("name", "name", "object.data_syndication_agreement_link.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("dataType", "dataType", "object.data_syndication_agreement_link.data_type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("dataType", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
-                    @Override
-                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
-                        return Msg.get("object.data_syndication_agreement_item." + dataSyndicationAgreementLinkListView.dataType + ".label");
-                    }
-                });
+        /**
+         * Get the table.
+         */
+        public Table<DataSyndicationAgreementLinkListView> getTable() {
+            return new Table<DataSyndicationAgreementLinkListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("objectId", "objectId", "object.data_syndication_agreement_link.object.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("objectId", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
-                    @Override
-                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+                    addColumn("name", "name", "object.data_syndication_agreement_link.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<>());
 
-                        // manage here specifically each data type
-
-                        if (dataSyndicationAgreementLinkListView.dataType.equals(PortfolioEntry.class.getName())) {
-                            return views.html.modelsparts.display_portfolio_entry
-                                    .render(PortfolioEntryDao.getPEById(dataSyndicationAgreementLinkListView.objectId), true).body();
+                    addColumn("dataType", "dataType", "object.data_syndication_agreement_link.data_type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("dataType", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
+                        @Override
+                        public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+                            return Msg.get("object.data_syndication_agreement_item." + dataSyndicationAgreementLinkListView.dataType + ".label");
                         }
+                    });
 
-                        return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
-
-                    }
-                });
-                this.setColumnValueCssClass("objectId", "rowlink-skip");
-
-                addColumn("items", "items", "object.data_syndication_agreement_link.items.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("items", new ListOfValuesFormatter<>());
-
-                addColumn("status", "status", "object.data_syndication_agreement_link.status.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("status", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
-                    @Override
-                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
-                        return views.html.modelsparts.display_agreement_status.render(dataSyndicationAgreementLinkListView.status).body();
-                    }
-                });
-
-                // only for slave
-                addColumn("processActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("processActionLink", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
-                    @Override
-                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
-
-                        if (dataSyndicationAgreementLinkListView.status.equals(DataSyndicationAgreement.Status.PENDING)) {
-
-                            String content = "<a title=\"" + Msg.get("object.data_syndication_agreement_link.process.label")
-                                    + "\" href=\"%s\"><span class=\"fa fa-thumbs-up\"></span></a>";
-
-                            String url = controllers.admin.routes.DataSyndicationController.processAgreementLink(dataSyndicationAgreementLinkListView.id)
-                                    .url();
-
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
-
-                        } else {
-                            return "";
-                        }
-                    }
-                });
-                setColumnCssClass("processActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("processActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                this.setLineAction(new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
-                    @Override
-                    public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
-
-                        if (dataSyndicationAgreementLinkListView.objectId != null) {
+                    addColumn("objectId", "objectId", "object.data_syndication_agreement_link.object.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("objectId", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
+                        @Override
+                        public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
 
                             // manage here specifically each data type
 
                             if (dataSyndicationAgreementLinkListView.dataType.equals(PortfolioEntry.class.getName())) {
-                                return controllers.core.routes.PortfolioEntryDataSyndicationController
-                                        .viewAgreementLink(dataSyndicationAgreementLinkListView.objectId, dataSyndicationAgreementLinkListView.id).url();
+                                return views.html.modelsparts.display_portfolio_entry
+                                        .render(PortfolioEntryDao.getPEById(dataSyndicationAgreementLinkListView.objectId), true).body();
                             }
 
+                            return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
+
                         }
+                    });
+                    this.setColumnValueCssClass("objectId", "rowlink-skip");
 
-                        return null;
-                    }
-                });
+                    addColumn("items", "items", "object.data_syndication_agreement_link.items.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("items", new ListOfValuesFormatter<>());
 
-                setEmptyMessageKey("object.data_syndication_agreement_link.table.empty");
+                    addColumn("status", "status", "object.data_syndication_agreement_link.status.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("status", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
+                        @Override
+                        public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+                            return views.html.modelsparts.display_agreement_status.render(dataSyndicationAgreementLinkListView.status).body();
+                        }
+                    });
 
-            }
-        };
+                    // only for slave
+                    addColumn("processActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("processActionLink", new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
+                        @Override
+                        public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+
+                            if (dataSyndicationAgreementLinkListView.status.equals(DataSyndicationAgreement.Status.PENDING)) {
+
+                                String content = "<a title=\"" + Msg.get("object.data_syndication_agreement_link.process.label")
+                                        + "\" href=\"%s\"><span class=\"fa fa-thumbs-up\"></span></a>";
+
+                                String url = controllers.admin.routes.DataSyndicationController.processAgreementLink(dataSyndicationAgreementLinkListView.id)
+                                        .url();
+
+                                return views.html.framework_views.parts.formats.display_with_format.render(url, content).body();
+
+                            } else {
+                                return "";
+                            }
+                        }
+                    });
+                    setColumnCssClass("processActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("processActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction(new IColumnFormatter<DataSyndicationAgreementLinkListView>() {
+                        @Override
+                        public String apply(DataSyndicationAgreementLinkListView dataSyndicationAgreementLinkListView, Object value) {
+
+                            if (dataSyndicationAgreementLinkListView.objectId != null) {
+
+                                // manage here specifically each data type
+
+                                if (dataSyndicationAgreementLinkListView.dataType.equals(PortfolioEntry.class.getName())) {
+                                    return controllers.core.routes.PortfolioEntryDataSyndicationController
+                                            .viewAgreementLink(dataSyndicationAgreementLinkListView.objectId, dataSyndicationAgreementLinkListView.id).url();
+                                }
+
+                            }
+
+                            return null;
+                        }
+                    });
+
+                    setEmptyMessageKey("object.data_syndication_agreement_link.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

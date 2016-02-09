@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.ActorType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.ActorType;
 
 /**
  * An actor type list view is used to display an actor type row in a table.
@@ -35,51 +35,63 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class ActorTypeListView {
 
-    public static Table<ActorTypeListView> templateTable = new Table<ActorTypeListView>() {
-        {
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<ActorTypeListView> templateTable;
 
-            addColumn("refId", "refId", "object.actor_type.ref_id.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("refId", new ObjectFormatter<ActorTypeListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("name", "name", "object.actor_type.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<ActorTypeListView>());
+        public Table<ActorTypeListView> getTable() {
+            return new Table<ActorTypeListView>() {
+                {
 
-            addColumn("description", "description", "object.actor_type.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<ActorTypeListView>());
+                    setIdFieldName("id");
 
-            addColumn("selectable", "selectable", "object.actor_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("selectable", new BooleanFormatter<ActorTypeListView>());
+                    addColumn("refId", "refId", "object.actor_type.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<ActorTypeListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<ActorTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<ActorTypeListView>() {
+                    addColumn("name", "name", "object.actor_type.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<ActorTypeListView>());
+
+                    addColumn("description", "description", "object.actor_type.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<ActorTypeListView>());
+
+                    addColumn("selectable", "selectable", "object.actor_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<ActorTypeListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink",
+                            new StringFormatFormatter<ActorTypeListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<ActorTypeListView>() {
                         @Override
                         public String convert(ActorTypeListView actorTypeListView) {
                             return controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageActorType(actorTypeListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<ActorTypeListView>() {
-                @Override
-                public String apply(ActorTypeListView actorTypeListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteActorType(actorTypeListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<ActorTypeListView>() {
+                        @Override
+                        public String apply(ActorTypeListView actorTypeListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteActorType(actorTypeListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.actor_type.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.actor_type.table.empty");
-
+            };
         }
-    };
+
+    }
 
     /**
      * Default constructor.

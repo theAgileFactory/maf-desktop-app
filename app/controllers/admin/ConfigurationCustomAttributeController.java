@@ -110,7 +110,7 @@ public class ConfigurationCustomAttributeController extends Controller {
             customAttributeListView.add(new CustomAttributeListView(customAttributeDefinition));
         }
 
-        Table<CustomAttributeListView> customAttributesTable = CustomAttributeListView.templateTable.fill(customAttributeListView);
+        Table<CustomAttributeListView> customAttributesTable = this.getTableProvider().get().customAttribute.templateTable.fill(customAttributeListView);
 
         return ok(views.html.admin.config.customattribute.list.render(dataType, dataTypeForm, customAttributesTable));
     }
@@ -317,7 +317,8 @@ public class ConfigurationCustomAttributeController extends Controller {
         for (ISelectableValueHolder<Long> valueHolder : items.getSortedValues()) {
             customAttributeItemListView.add(new CustomAttributeItemListView(id, valueHolder));
         }
-        Table<CustomAttributeItemListView> customAttributeItemsTable = CustomAttributeItemListView.templateTable.fill(customAttributeItemListView);
+        Table<CustomAttributeItemListView> customAttributeItemsTable = this.getTableProvider().get().customAttributeItem.templateTable
+                .fill(customAttributeItemListView);
 
         DataType dataType = DataType.getDataTypeFromClassName(customAttribute.objectType);
 

@@ -80,7 +80,8 @@ public class ConfigurationRequirementController extends Controller {
             requirementStatusListView.add(new RequirementStatusListView(status));
         }
 
-        Table<RequirementStatusListView> requirementStatusFilledTable = RequirementStatusListView.templateTable.fill(requirementStatusListView);
+        Table<RequirementStatusListView> requirementStatusFilledTable = this.getTableProvider().get().requirementStatus.templateTable
+                .fill(requirementStatusListView);
 
         // priorities
         List<RequirementPriority> requirementPriorities = RequirementDAO.getRequirementPriorityAsList();
@@ -90,7 +91,8 @@ public class ConfigurationRequirementController extends Controller {
             requirementPriorityListView.add(new RequirementPriorityListView(requirementPriority));
         }
 
-        Table<RequirementPriorityListView> requirementPrioritiesFilledTable = RequirementPriorityListView.templateTable.fill(requirementPriorityListView);
+        Table<RequirementPriorityListView> requirementPrioritiesFilledTable = this.getTableProvider().get().requirementPriority.templateTable
+                .fill(requirementPriorityListView);
 
         // severities
         List<RequirementSeverity> requirementSeverities = RequirementDAO.getRequirementSeverityAsList();
@@ -100,7 +102,8 @@ public class ConfigurationRequirementController extends Controller {
             requirementSeverityListView.add(new RequirementSeverityListView(requirementSeverity));
         }
 
-        Table<RequirementSeverityListView> requirementSeveritiesFilledTable = RequirementSeverityListView.templateTable.fill(requirementSeverityListView);
+        Table<RequirementSeverityListView> requirementSeveritiesFilledTable = this.getTableProvider().get().requirementSeverity.templateTable
+                .fill(requirementSeverityListView);
 
         return ok(views.html.admin.config.datareference.requirement.list.render(requirementStatusFilledTable, requirementPrioritiesFilledTable,
                 requirementSeveritiesFilledTable));

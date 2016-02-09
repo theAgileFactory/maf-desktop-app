@@ -20,7 +20,6 @@ package utils.table;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import models.framework_models.common.Attachment;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -29,6 +28,7 @@ import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.framework_models.common.Attachment;
 
 /**
  * An attachment list view is used to display an attachment row in a table.
@@ -37,52 +37,60 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class AttachmentListView {
 
-    public static Table<AttachmentListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<AttachmentListView> getTable() {
-        return new Table<AttachmentListView>() {
-            {
-                setIdFieldName("id");
+        public Table<AttachmentListView> templateTable;
 
-                addColumn("name", "name", "object.attachment.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<AttachmentListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("lastUpdate", "lastUpdate", "object.attachment.last_update.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("lastUpdate", new DateFormatter<AttachmentListView>());
+        /**
+         * Get the table.
+         */
+        public Table<AttachmentListView> getTable() {
+            return new Table<AttachmentListView>() {
+                {
+                    setIdFieldName("id");
 
-                addCustomAttributeColumns(Attachment.class);
+                    addColumn("name", "name", "object.attachment.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<AttachmentListView>());
 
-                addColumn("downloadActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<AttachmentListView>(IMafConstants.DOWNLOAD_URL_FORMAT,
-                        new StringFormatFormatter.Hook<AttachmentListView>() {
-                            @Override
-                            public String convert(AttachmentListView attachmentListView) {
-                                return Utilities.getAttachmentDownloadUrl(attachmentListView.id);
-                            }
-                        }));
-                setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    addColumn("lastUpdate", "lastUpdate", "object.attachment.last_update.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastUpdate", new DateFormatter<AttachmentListView>());
 
-                addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("removeActionLink", new IColumnFormatter<AttachmentListView>() {
-                    @Override
-                    public String apply(AttachmentListView attachmentListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        return views.html.framework_views.parts.formats.display_with_format.render(attachmentListView.deleteUrl, deleteConfirmationMessage)
-                                .body();
-                    }
-                });
-                setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    addCustomAttributeColumns(Attachment.class);
 
-                setEmptyMessageKey("object.attachment.empty");
+                    addColumn("downloadActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<AttachmentListView>(IMafConstants.DOWNLOAD_URL_FORMAT,
+                            new StringFormatFormatter.Hook<AttachmentListView>() {
+                        @Override
+                        public String convert(AttachmentListView attachmentListView) {
+                            return Utilities.getAttachmentDownloadUrl(attachmentListView.id);
+                        }
+                    }));
+                    setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
-            }
-        };
+                    addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("removeActionLink", new IColumnFormatter<AttachmentListView>() {
+                        @Override
+                        public String apply(AttachmentListView attachmentListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            return views.html.framework_views.parts.formats.display_with_format
+                                    .render(attachmentListView.deleteUrl, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.attachment.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

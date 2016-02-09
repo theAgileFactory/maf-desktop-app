@@ -20,9 +20,6 @@ package utils.table;
 import java.text.MessageFormat;
 import java.util.List;
 
-import models.pmo.PortfolioEntryType;
-import models.pmo.PortfolioType;
-import models.pmo.StakeholderType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -31,6 +28,9 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.PortfolioEntryType;
+import models.pmo.PortfolioType;
+import models.pmo.StakeholderType;
 
 /**
  * A stakeholder type list view is used to display a stakeholder type row in a
@@ -40,54 +40,80 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class StakeholderTypeListView {
 
-    public static Table<StakeholderTypeListView> templateTable = new Table<StakeholderTypeListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<StakeholderTypeListView> templateTable;
 
-            addColumn("name", "name", "object.stakeholder_type.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<StakeholderTypeListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("description", "description", "object.stakeholder_type.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<StakeholderTypeListView>());
+        /**
+         * Get the table.
+         */
+        public Table<StakeholderTypeListView> getTable() {
+            return new Table<StakeholderTypeListView>() {
+                {
 
-            addColumn("selectable", "selectable", "object.stakeholder_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("selectable", new BooleanFormatter<StakeholderTypeListView>());
+                    setIdFieldName("id");
 
-            addColumn("portfolioTypes", "portfolioTypes", "object.stakeholder_type.portolio_types.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("portfolioTypes", new ListOfValuesFormatter<StakeholderTypeListView>());
+                    addColumn("name", "name", "object.stakeholder_type.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<StakeholderTypeListView>());
 
-            addColumn("portfolioEntryTypes", "portfolioEntryTypes", "object.stakeholder_type.portolio_entry_types.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("portfolioEntryTypes", new ListOfValuesFormatter<StakeholderTypeListView>());
+                    addColumn("description", "description", "object.stakeholder_type.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<StakeholderTypeListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<StakeholderTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<StakeholderTypeListView>() {
+                    addColumn("selectable", "selectable", "object.stakeholder_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<StakeholderTypeListView>());
+
+                    addColumn("portfolioTypes", "portfolioTypes", "object.stakeholder_type.portolio_types.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioTypes", new ListOfValuesFormatter<StakeholderTypeListView>());
+
+                    addColumn("portfolioEntryTypes", "portfolioEntryTypes", "object.stakeholder_type.portolio_entry_types.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryTypes", new ListOfValuesFormatter<StakeholderTypeListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<StakeholderTypeListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<StakeholderTypeListView>() {
                         @Override
                         public String convert(StakeholderTypeListView stakeholderTypeListView) {
                             return controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageStakeholderType(stakeholderTypeListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<StakeholderTypeListView>() {
-                @Override
-                public String apply(StakeholderTypeListView stakeholderTypeListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteStakeholderType(stakeholderTypeListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<StakeholderTypeListView>() {
+                        @Override
+                        public String apply(StakeholderTypeListView stakeholderTypeListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteStakeholderType(stakeholderTypeListView.id)
+                                    .url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.stakeholder_type.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.stakeholder_type.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

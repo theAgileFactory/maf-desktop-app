@@ -80,7 +80,7 @@ public class ConfigurationRegisterController extends Controller {
             portfolioEntryRiskTypesListView.add(new PortfolioEntryRiskTypeListView(portfolioEntryRiskType));
         }
 
-        Table<PortfolioEntryRiskTypeListView> portfolioEntryRiskTypesTable = PortfolioEntryRiskTypeListView.templateTable
+        Table<PortfolioEntryRiskTypeListView> portfolioEntryRiskTypesTable = this.getTableProvider().get().portfolioEntryRiskType.templateTable
                 .fill(portfolioEntryRiskTypesListView);
 
         // report status types
@@ -91,8 +91,8 @@ public class ConfigurationRegisterController extends Controller {
             portfolioEntryReportStatusTypeListView.add(new PortfolioEntryReportStatusTypeListView(portfolioEntryReportStatusType, getI18nMessagesPlugin()));
         }
 
-        Table<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypesTable = PortfolioEntryReportStatusTypeListView.templateTable
-                .fill(portfolioEntryReportStatusTypeListView);
+        Table<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypesTable = this.getTableProvider()
+                .get().portfolioEntryReportStatusType.templateTable.fill(portfolioEntryReportStatusTypeListView);
 
         // event types
         List<PortfolioEntryEventType> portfolioEntryEventTypes = PortfolioEntryEventDao.getPEEventTypeAsList();
@@ -102,7 +102,7 @@ public class ConfigurationRegisterController extends Controller {
             portfolioEntryEventTypeListView.add(new PortfolioEntryEventTypeListView(portfolioEntryEventType));
         }
 
-        Table<PortfolioEntryEventTypeListView> portfolioEntryEventTypesTable = PortfolioEntryEventTypeListView.templateTable
+        Table<PortfolioEntryEventTypeListView> portfolioEntryEventTypesTable = this.getTableProvider().get().portfolioEntryEventType.templateTable
                 .fill(portfolioEntryEventTypeListView);
 
         return ok(views.html.admin.config.datareference.register.list.render(portfolioEntryRiskTypesTable, portfolioEntryReportStatusTypesTable,

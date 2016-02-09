@@ -50,6 +50,7 @@ import services.datasyndication.models.DataSyndicationAgreement;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.datasyndication.models.DataSyndicationPartner;
+import services.tableprovider.ITableProvider;
 import utils.form.DataSyndicationAgreementLinkAcceptExistingPEFormData;
 import utils.form.DataSyndicationAgreementLinkAcceptNewPEFormData;
 import utils.form.DataSyndicationAgreementNoSlaveSubmitFormData;
@@ -84,6 +85,9 @@ public class DataSyndicationController extends Controller {
     @Inject
     private II18nMessagesPlugin i18nMessagesService;
 
+    @Inject
+    private ITableProvider tableProvider;
+
     /**
      * Display the list of master agreements.
      */
@@ -109,7 +113,7 @@ public class DataSyndicationController extends Controller {
             for (DataSyndicationAgreement masterAgreement : masterAgreements) {
                 dataSyndicationAgreementRows.add(new DataSyndicationAgreementListView(masterAgreement));
             }
-            Table<DataSyndicationAgreementListView> dataSyndicationAgreementTable = DataSyndicationAgreementListView.templateTable
+            Table<DataSyndicationAgreementListView> dataSyndicationAgreementTable = this.getTableProvider().get().dataSyndicationAgreement.templateTable
                     .fill(dataSyndicationAgreementRows, columnsToHide);
 
             return ok(views.html.admin.datasyndication.master_agreements.render(dataSyndicationAgreementTable));
@@ -144,7 +148,7 @@ public class DataSyndicationController extends Controller {
             for (DataSyndicationAgreement slaveAgreement : slaveAgreements) {
                 dataSyndicationAgreementRows.add(new DataSyndicationAgreementListView(slaveAgreement));
             }
-            Table<DataSyndicationAgreementListView> dataSyndicationAgreementTable = DataSyndicationAgreementListView.templateTable
+            Table<DataSyndicationAgreementListView> dataSyndicationAgreementTable = this.getTableProvider().get().dataSyndicationAgreement.templateTable
                     .fill(dataSyndicationAgreementRows, columnsToHide);
 
             return ok(views.html.admin.datasyndication.consumer_agreements.render(dataSyndicationAgreementTable));
@@ -223,7 +227,7 @@ public class DataSyndicationController extends Controller {
                 for (DataSyndicationPartner partner : partners) {
                     dataSyndicationPartnerRows.add(new DataSyndicationPartnerListView(partner));
                 }
-                Table<DataSyndicationPartnerListView> dataSyndicationPartnerTable = DataSyndicationPartnerListView.templateTable
+                Table<DataSyndicationPartnerListView> dataSyndicationPartnerTable = this.getTableProvider().get().dataSyndicationPartner.templateTable
                         .fill(dataSyndicationPartnerRows);
 
                 return ok(views.html.admin.datasyndication.search_partner_result.render(dataSyndicationPartnerTable));
@@ -428,7 +432,8 @@ public class DataSyndicationController extends Controller {
                     linkRows.add(new DataSyndicationAgreementLinkListView(link, dataSyndicationService.getCurrentDomain()));
                 }
             }
-            Table<DataSyndicationAgreementLinkListView> linksTable = DataSyndicationAgreementLinkListView.templateTable.fill(linkRows, columnsToHide);
+            Table<DataSyndicationAgreementLinkListView> linksTable = this.getTableProvider().get().dataSyndicationAgreementLink.templateTable.fill(linkRows,
+                    columnsToHide);
 
             return ok(views.html.admin.datasyndication.view_agreement.render(isMasterAgreement, agreement, linksTable, viewAllLinks));
 
@@ -953,5 +958,12 @@ public class DataSyndicationController extends Controller {
      */
     private II18nMessagesPlugin getI18nMessagesService() {
         return this.i18nMessagesService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

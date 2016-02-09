@@ -45,60 +45,72 @@ import utils.form.RequestMilestoneFormData;
  */
 public class MilestoneRequestListView {
 
-    public static Table<MilestoneRequestListView> templateTable = new Table<MilestoneRequestListView>() {
-        {
-            setIdFieldName("id");
+    public static class TableDefinition {
 
-            addColumn("portfolioEntryGovernanceId", "portfolioEntryGovernanceId", "object.portfolio_entry.governance_id.label",
-                    Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("portfolioEntryGovernanceId", new ObjectFormatter<MilestoneRequestListView>());
+        public Table<MilestoneRequestListView> templateTable;
 
-            addColumn("portfolioEntry", "portfolioEntry", "object.process_transition_request.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("portfolioEntry", new IColumnFormatter<MilestoneRequestListView>() {
-                @Override
-                public String apply(MilestoneRequestListView requestListView, Object value) {
-                    return views.html.modelsparts.display_portfolio_entry.render(requestListView.portfolioEntry, true).body();
-                }
-            });
-            this.setColumnValueCssClass("portfolioEntry", "rowlink-skip");
-
-            addColumn("lifeCycleName", "lifeCycleName", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("lifeCycleName", new ObjectFormatter<MilestoneRequestListView>());
-
-            addColumn("milestone", "milestone", "object.process_transition_request.life_cycle_milestone.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("milestone", new IColumnFormatter<MilestoneRequestListView>() {
-                @Override
-                public String apply(MilestoneRequestListView requestListView, Object value) {
-                    return views.html.modelsparts.display_milestone.render(requestListView.milestone).body();
-                }
-            });
-
-            addColumn("requester", "requester", "object.process_transition_request.requester.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("requester", new IColumnFormatter<MilestoneRequestListView>() {
-                @Override
-                public String apply(MilestoneRequestListView requestListView, Object value) {
-                    return views.html.modelsparts.display_actor.render(requestListView.requester).body();
-                }
-            });
-            this.setColumnValueCssClass("requester", "rowlink-skip");
-
-            addColumn("passedDate", "passedDate", "object.process_transition_request.passed_date.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("passedDate", new DateFormatter<MilestoneRequestListView>());
-
-            addColumn("creationDate", "creationDate", "object.process_transition_request.creation_date.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("creationDate", new DateFormatter<MilestoneRequestListView>());
-
-            this.setLineAction(new IColumnFormatter<MilestoneRequestListView>() {
-                @Override
-                public String apply(MilestoneRequestListView requestListView, Object value) {
-                    return controllers.core.routes.ProcessTransitionRequestController
-                            .processMilestoneRequest(requestListView.portfolioEntry.id, requestListView.id).url();
-                }
-            });
-
-            setEmptyMessageKey("object.process_transition_request.table.milestone.empty");
+        public TableDefinition() {
+            this.templateTable = getTable();
         }
-    };
+
+        public Table<MilestoneRequestListView> getTable() {
+            return new Table<MilestoneRequestListView>() {
+                {
+                    setIdFieldName("id");
+
+                    addColumn("portfolioEntryGovernanceId", "portfolioEntryGovernanceId", "object.portfolio_entry.governance_id.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryGovernanceId", new ObjectFormatter<MilestoneRequestListView>());
+
+                    addColumn("portfolioEntry", "portfolioEntry", "object.process_transition_request.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntry", new IColumnFormatter<MilestoneRequestListView>() {
+                        @Override
+                        public String apply(MilestoneRequestListView requestListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry.render(requestListView.portfolioEntry, true).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("portfolioEntry", "rowlink-skip");
+
+                    addColumn("lifeCycleName", "lifeCycleName", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lifeCycleName", new ObjectFormatter<MilestoneRequestListView>());
+
+                    addColumn("milestone", "milestone", "object.process_transition_request.life_cycle_milestone.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("milestone", new IColumnFormatter<MilestoneRequestListView>() {
+                        @Override
+                        public String apply(MilestoneRequestListView requestListView, Object value) {
+                            return views.html.modelsparts.display_milestone.render(requestListView.milestone).body();
+                        }
+                    });
+
+                    addColumn("requester", "requester", "object.process_transition_request.requester.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("requester", new IColumnFormatter<MilestoneRequestListView>() {
+                        @Override
+                        public String apply(MilestoneRequestListView requestListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(requestListView.requester).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("requester", "rowlink-skip");
+
+                    addColumn("passedDate", "passedDate", "object.process_transition_request.passed_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("passedDate", new DateFormatter<MilestoneRequestListView>());
+
+                    addColumn("creationDate", "creationDate", "object.process_transition_request.creation_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("creationDate", new DateFormatter<MilestoneRequestListView>());
+
+                    this.setLineAction(new IColumnFormatter<MilestoneRequestListView>() {
+                        @Override
+                        public String apply(MilestoneRequestListView requestListView, Object value) {
+                            return controllers.core.routes.ProcessTransitionRequestController
+                                    .processMilestoneRequest(requestListView.portfolioEntry.id, requestListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.process_transition_request.table.milestone.empty");
+                }
+            };
+
+        }
+    }
 
     public Long id;
 

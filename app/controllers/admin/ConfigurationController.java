@@ -267,7 +267,7 @@ public class ConfigurationController extends Controller {
             rolesListView.add(new RoleListView(roleType));
         }
 
-        Table<RoleListView> filledTable = RoleListView.templateTable.fill(rolesListView);
+        Table<RoleListView> filledTable = this.getTableProvider().get().role.templateTable.fill(rolesListView);
 
         return ok(views.html.admin.config.roles.index.render(filledTable));
     }

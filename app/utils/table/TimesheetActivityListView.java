@@ -19,14 +19,14 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.timesheet.TimesheetActivity;
-import models.timesheet.TimesheetActivityType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.timesheet.TimesheetActivity;
+import models.timesheet.TimesheetActivityType;
 
 /**
  * A timesheet activity list view is used to display a timesheet activity row in
@@ -36,54 +36,78 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class TimesheetActivityListView {
 
-    public static Table<TimesheetActivityListView> templateTable = new Table<TimesheetActivityListView>() {
-        {
-            setIdFieldName("id");
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            addColumn("name", "name", "object.timesheet_activity.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<TimesheetActivityListView>());
+        public Table<TimesheetActivityListView> templateTable;
 
-            addColumn("description", "description", "object.timesheet_activity.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<TimesheetActivityListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("type", "type", "object.timesheet_activity.type.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("type", new IColumnFormatter<TimesheetActivityListView>() {
-                @Override
-                public String apply(TimesheetActivityListView timesheetActivityListView, Object value) {
-                    return views.html.framework_views.parts.formats.display_value_holder.render(timesheetActivityListView.type, true).body();
-                }
-            });
+        /**
+         * Get the table.
+         */
+        public Table<TimesheetActivityListView> getTable() {
+            return new Table<TimesheetActivityListView>() {
+                {
+                    setIdFieldName("id");
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<TimesheetActivityListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<TimesheetActivityListView>() {
+                    addColumn("name", "name", "object.timesheet_activity.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<TimesheetActivityListView>());
+
+                    addColumn("description", "description", "object.timesheet_activity.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<TimesheetActivityListView>());
+
+                    addColumn("type", "type", "object.timesheet_activity.type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("type", new IColumnFormatter<TimesheetActivityListView>() {
+                        @Override
+                        public String apply(TimesheetActivityListView timesheetActivityListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_value_holder.render(timesheetActivityListView.type, true).body();
+                        }
+                    });
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<TimesheetActivityListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<TimesheetActivityListView>() {
                         @Override
                         public String convert(TimesheetActivityListView timesheetActivityListView) {
                             return controllers.admin.routes.ConfigurationTimesheetActivityController.manageTimesheetActivity(timesheetActivityListView.id)
                                     .url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<TimesheetActivityListView>() {
-                @Override
-                public String apply(TimesheetActivityListView timesheetActivityListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url =
-                            controllers.admin.routes.ConfigurationTimesheetActivityController.deleteTimesheetActivity(timesheetActivityListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<TimesheetActivityListView>() {
+                        @Override
+                        public String apply(TimesheetActivityListView timesheetActivityListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationTimesheetActivityController
+                                    .deleteTimesheetActivity(timesheetActivityListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.timesheet_activity.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.timesheet_activity.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

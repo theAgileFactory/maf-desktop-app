@@ -39,6 +39,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
+import services.tableprovider.ITableProvider;
 import utils.form.StakeholderFormData;
 import utils.table.PortfolioEntryStakeholderListView;
 import utils.table.PortfolioStakeholderListView;
@@ -51,6 +52,8 @@ import utils.table.PortfolioStakeholderListView;
 public class PortfolioEntryStakeholderController extends Controller {
     @Inject
     private ISecurityService securityService;
+    @Inject
+    private ITableProvider tableProvider;
 
     public static Form<StakeholderFormData> formTemplate = Form.form(StakeholderFormData.class);
 
@@ -80,8 +83,8 @@ public class PortfolioEntryStakeholderController extends Controller {
         hideColumnsForPortfolioStakeholders.add("editActionLink");
         hideColumnsForPortfolioStakeholders.add("removeActionLink");
 
-        Table<PortfolioStakeholderListView> filledPortfolioTable = PortfolioStakeholderListView.templateTable.fill(stakeholdersForPortfolioListView,
-                hideColumnsForPortfolioStakeholders);
+        Table<PortfolioStakeholderListView> filledPortfolioTable = this.getTableProvider().get().portfolioStakeholder.templateTable
+                .fill(stakeholdersForPortfolioListView, hideColumnsForPortfolioStakeholders);
 
         // get the stakeholders
         List<Stakeholder> stakeholders = StakeholderDao.getStakeholderAsListByPE(id);
@@ -97,8 +100,8 @@ public class PortfolioEntryStakeholderController extends Controller {
             hideColumnsForStakeholder.add("removeActionLink");
         }
 
-        Table<PortfolioEntryStakeholderListView> filledTable = PortfolioEntryStakeholderListView.templateTable.fill(stakeholdersListView,
-                hideColumnsForStakeholder);
+        Table<PortfolioEntryStakeholderListView> filledTable = this.getTableProvider().get().portfolioEntryStakeholder.templateTable
+                .fill(stakeholdersListView, hideColumnsForStakeholder);
 
         return ok(views.html.core.portfolioentrystakeholder.stakeholder_index.render(portfolioEntry, filledTable, filledPortfolioTable));
     }
@@ -225,6 +228,13 @@ public class PortfolioEntryStakeholderController extends Controller {
      */
     private ISecurityService getSecurityService() {
         return securityService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

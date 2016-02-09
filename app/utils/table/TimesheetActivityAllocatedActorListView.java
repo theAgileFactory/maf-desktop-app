@@ -42,103 +42,120 @@ import models.timesheet.TimesheetActivityAllocatedActor;
  */
 public class TimesheetActivityAllocatedActorListView {
 
-    public static FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig = getFilterConfig();
-
     /**
-     * Get the filter config.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static FilterConfig<TimesheetActivityAllocatedActorListView> getFilterConfig() {
-        return new FilterConfig<TimesheetActivityAllocatedActorListView>() {
-            {
-                String[] actorFieldsSort = { "actor.lastName", "actor.firstName" };
-                addColumnConfiguration("actor", "actor.id", "object.allocated_resource.actor.label",
-                        new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), actorFieldsSort), true, false,
-                        SortStatusType.UNSORTED);
+    public static class TableDefinition {
 
-                addColumnConfiguration("timesheetActivity", "timesheetActivity", "object.allocated_resource.timesheet_activity.label",
-                        new NoneFilterComponent(), true, false, SortStatusType.NONE);
+        public FilterConfig<TimesheetActivityAllocatedActorListView> filterConfig;
+        public Table<TimesheetActivityAllocatedActorListView> templateTable;
 
-                addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
-                        SortStatusType.UNSORTED);
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.filterConfig = getFilterConfig();
+            this.templateTable = getTable();
+        }
 
-                addColumnConfiguration("startDate", "startDate", "object.allocated_resource.start_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<TimesheetActivityAllocatedActorListView> getFilterConfig() {
+            return new FilterConfig<TimesheetActivityAllocatedActorListView>() {
+                {
+                    String[] actorFieldsSort = { "actor.lastName", "actor.firstName" };
+                    addColumnConfiguration("actor", "actor.id", "object.allocated_resource.actor.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), actorFieldsSort), true, false,
+                            SortStatusType.UNSORTED);
 
-                addColumnConfiguration("endDate", "endDate", "object.allocated_resource.end_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
+                    addColumnConfiguration("timesheetActivity", "timesheetActivity", "object.allocated_resource.timesheet_activity.label",
+                            new NoneFilterComponent(), true, false, SortStatusType.NONE);
 
-                addCustomAttributesColumns("id", TimesheetActivityAllocatedActor.class);
-            }
-        };
-    }
+                    addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
+                            SortStatusType.UNSORTED);
 
-    public static Table<TimesheetActivityAllocatedActorListView> templateTable = getTable();
+                    addColumnConfiguration("startDate", "startDate", "object.allocated_resource.start_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
 
-    /**
-     * Get the table.
-     */
-    public static Table<TimesheetActivityAllocatedActorListView> getTable() {
-        return new Table<TimesheetActivityAllocatedActorListView>() {
-            {
-                setIdFieldName("id");
+                    addColumnConfiguration("endDate", "endDate", "object.allocated_resource.end_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
 
-                addColumn("actor", "actor", "object.allocated_resource.actor.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("actor", new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
-                    @Override
-                    public String apply(TimesheetActivityAllocatedActorListView allocatedActorListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(allocatedActorListView.actor).body();
-                    }
-                });
-                setColumnValueCssClass("actor", "rowlink-skip");
+                    addCustomAttributesColumns("id", TimesheetActivityAllocatedActor.class);
+                }
+            };
+        }
 
-                addColumn("timesheetActivity", "timesheetActivity", "object.allocated_resource.timesheet_activity.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("timesheetActivity", new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
-                    @Override
-                    public String apply(TimesheetActivityAllocatedActorListView allocatedActorListView, Object value) {
-                        return views.html.framework_views.parts.formats.display_object.render(allocatedActorListView.timesheetActivity.getName(), false)
-                                .body();
-                    }
-                });
+        /**
+         * Get the table.
+         */
+        public Table<TimesheetActivityAllocatedActorListView> getTable() {
+            return new Table<TimesheetActivityAllocatedActorListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("days", new NumberFormatter<TimesheetActivityAllocatedActorListView>());
+                    addColumn("actor", "actor", "object.allocated_resource.actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("actor", new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
+                        @Override
+                        public String apply(TimesheetActivityAllocatedActorListView allocatedActorListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(allocatedActorListView.actor).body();
+                        }
+                    });
+                    setColumnValueCssClass("actor", "rowlink-skip");
 
-                addColumn("startDate", "startDate", "object.allocated_resource.start_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("startDate", new DateFormatter<TimesheetActivityAllocatedActorListView>());
+                    addColumn("timesheetActivity", "timesheetActivity", "object.allocated_resource.timesheet_activity.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("timesheetActivity", new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
+                        @Override
+                        public String apply(TimesheetActivityAllocatedActorListView allocatedActorListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_object.render(allocatedActorListView.timesheetActivity.getName(), false)
+                                    .body();
+                        }
+                    });
 
-                addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("endDate", new DateFormatter<TimesheetActivityAllocatedActorListView>());
+                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("days", new NumberFormatter<TimesheetActivityAllocatedActorListView>());
 
-                addCustomAttributeColumns(TimesheetActivityAllocatedActor.class);
+                    addColumn("startDate", "startDate", "object.allocated_resource.start_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("startDate", new DateFormatter<TimesheetActivityAllocatedActorListView>());
 
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<TimesheetActivityAllocatedActorListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<TimesheetActivityAllocatedActorListView>() {
-                    @Override
-                    public String convert(TimesheetActivityAllocatedActorListView allocatedActorListView) {
-                        return controllers.core.routes.ActorController.manageAllocatedActivity(allocatedActorListView.actor.id, allocatedActorListView.id)
-                                .url();
-                    }
-                }));
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("endDate", new DateFormatter<TimesheetActivityAllocatedActorListView>());
 
-                addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("removeActionLink", new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
-                    @Override
-                    public String apply(TimesheetActivityAllocatedActorListView allocatedActorListView, Object value) {
-                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                Msg.get("default.delete.confirmation.message"));
-                        String url = controllers.core.routes.ActorController
-                                .deleteAllocatedActivity(allocatedActorListView.actor.id, allocatedActorListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                    }
-                });
-                setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addCustomAttributeColumns(TimesheetActivityAllocatedActor.class);
 
-                setEmptyMessageKey("object.allocated_resource.actor.table.empty");
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<TimesheetActivityAllocatedActorListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<TimesheetActivityAllocatedActorListView>() {
+                        @Override
+                        public String convert(TimesheetActivityAllocatedActorListView allocatedActorListView) {
+                            return controllers.core.routes.ActorController.manageAllocatedActivity(allocatedActorListView.actor.id, allocatedActorListView.id)
+                                    .url();
+                        }
+                    }));
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            }
-        };
+                    addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("removeActionLink", new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
+                        @Override
+                        public String apply(TimesheetActivityAllocatedActorListView allocatedActorListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.ActorController
+                                    .deleteAllocatedActivity(allocatedActorListView.actor.id, allocatedActorListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    setEmptyMessageKey("object.allocated_resource.actor.table.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

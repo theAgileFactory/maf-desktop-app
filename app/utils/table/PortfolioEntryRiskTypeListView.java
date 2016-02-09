@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.PortfolioEntryRiskType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.PortfolioEntryRiskType;
 
 /**
  * A portfolio entry risk type list view is used to display a portfolio entry
@@ -36,48 +36,72 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PortfolioEntryRiskTypeListView {
 
-    public static Table<PortfolioEntryRiskTypeListView> templateTable = new Table<PortfolioEntryRiskTypeListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<PortfolioEntryRiskTypeListView> templateTable;
 
-            addColumn("name", "name", "object.portfolio_entry_risk_type.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryRiskTypeListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("description", "description", "object.portfolio_entry_risk_type.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryRiskTypeListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryRiskTypeListView> getTable() {
+            return new Table<PortfolioEntryRiskTypeListView>() {
+                {
 
-            addColumn("selectable", "selectable", "object.portfolio_entry_risk_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("selectable", new BooleanFormatter<PortfolioEntryRiskTypeListView>());
+                    setIdFieldName("id");
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryRiskTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<PortfolioEntryRiskTypeListView>() {
+                    addColumn("name", "name", "object.portfolio_entry_risk_type.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryRiskTypeListView>());
+
+                    addColumn("description", "description", "object.portfolio_entry_risk_type.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryRiskTypeListView>());
+
+                    addColumn("selectable", "selectable", "object.portfolio_entry_risk_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<PortfolioEntryRiskTypeListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryRiskTypeListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PortfolioEntryRiskTypeListView>() {
                         @Override
                         public String convert(PortfolioEntryRiskTypeListView portfolioEntryRiskTypeListView) {
                             return controllers.admin.routes.ConfigurationRegisterController.manageRiskType(portfolioEntryRiskTypeListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryRiskTypeListView>() {
-                @Override
-                public String apply(PortfolioEntryRiskTypeListView portfolioEntryRiskTypeListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationRegisterController.deleteRiskType(portfolioEntryRiskTypeListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryRiskTypeListView>() {
+                        @Override
+                        public String apply(PortfolioEntryRiskTypeListView portfolioEntryRiskTypeListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationRegisterController.deleteRiskType(portfolioEntryRiskTypeListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.portfolio_entry_risk_type.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.portfolio_entry_risk_type.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

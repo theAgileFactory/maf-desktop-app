@@ -36,77 +36,104 @@ import models.pmo.PortfolioEntryPlanningPackageType;
  * @author Johann Kohler
  */
 public class PortfolioEntryPlanningPackagePatternListView {
-    public static Table<PortfolioEntryPlanningPackagePatternListView> templateTable = new Table<PortfolioEntryPlanningPackagePatternListView>() {
-        {
 
-            setIdFieldName("id");
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("changeOrder", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
-                @Override
-                public String apply(PortfolioEntryPlanningPackagePatternListView packagePatternListView, Object value) {
-                    return "<a href=\""
-                            + controllers.admin.routes.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternListView.id, false)
-                                    .url()
-                            + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
-                            + controllers.admin.routes.ConfigurationPlanningPackageController.changePackagePatternOrder(packagePatternListView.id, true).url()
-                            + "\"><span class=\"fa fa-arrow-up\"></span></a>";
+        public Table<PortfolioEntryPlanningPackagePatternListView> templateTable;
+
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
+
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryPlanningPackagePatternListView> getTable() {
+            return new Table<PortfolioEntryPlanningPackagePatternListView>() {
+                {
+
+                    setIdFieldName("id");
+
+                    addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("changeOrder", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
+                        @Override
+                        public String apply(PortfolioEntryPlanningPackagePatternListView packagePatternListView, Object value) {
+                            return "<a href=\""
+                                    + controllers.admin.routes.ConfigurationPlanningPackageController
+                                            .changePackagePatternOrder(packagePatternListView.id, false).url()
+                                    + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
+                                    + controllers.admin.routes.ConfigurationPlanningPackageController
+                                            .changePackagePatternOrder(packagePatternListView.id, true).url()
+                                    + "\"><span class=\"fa fa-arrow-up\"></span></a>";
+                        }
+                    });
+                    setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
+
+                    addColumn("name", "name", "object.portfolio_entry_planning_package.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
+
+                    addColumn("description", "description", "object.portfolio_entry_planning_package.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
+
+                    addColumn("isOpex", "isOpex", "object.portfolio_entry_planning_package.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isOpex", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
+                        @Override
+                        public String apply(PortfolioEntryPlanningPackagePatternListView portfolioEntryPlanningPackagePatternListView, Object value) {
+                            return views.html.modelsparts.display_is_opex.render(portfolioEntryPlanningPackagePatternListView.isOpex).body();
+                        }
+                    });
+
+                    addColumn("type", "type", "object.portfolio_entry_planning_package.type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
+                        @Override
+                        public String apply(PortfolioEntryPlanningPackagePatternListView portfolioEntryPlanningPackagePatternListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry_planning_package_type
+                                    .render(portfolioEntryPlanningPackagePatternListView.type).body();
+                        }
+                    });
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackagePatternListView>(
+                            IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<PortfolioEntryPlanningPackagePatternListView>() {
+                        @Override
+                        public String convert(PortfolioEntryPlanningPackagePatternListView packagePatternListView) {
+                            return controllers.admin.routes.ConfigurationPlanningPackageController
+                                    .managePackagePattern(packagePatternListView.packageGroupId, packagePatternListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
+                        @Override
+                        public String apply(PortfolioEntryPlanningPackagePatternListView packagePatternListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationPlanningPackageController.deletePackagePattern(packagePatternListView.id)
+                                    .url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.portfolio_entry_planning_package.pattern.table.empty");
+
                 }
-            });
-            setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
-
-            addColumn("name", "name", "object.portfolio_entry_planning_package.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
-
-            addColumn("description", "description", "object.portfolio_entry_planning_package.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryPlanningPackagePatternListView>());
-
-            addColumn("isOpex", "isOpex", "object.portfolio_entry_planning_package.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isOpex", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
-                @Override
-                public String apply(PortfolioEntryPlanningPackagePatternListView portfolioEntryPlanningPackagePatternListView, Object value) {
-                    return views.html.modelsparts.display_is_opex.render(portfolioEntryPlanningPackagePatternListView.isOpex).body();
-                }
-            });
-
-            addColumn("type", "type", "object.portfolio_entry_planning_package.type.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
-                @Override
-                public String apply(PortfolioEntryPlanningPackagePatternListView portfolioEntryPlanningPackagePatternListView, Object value) {
-                    return views.html.modelsparts.display_portfolio_entry_planning_package_type.render(portfolioEntryPlanningPackagePatternListView.type)
-                            .body();
-                }
-            });
-
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackagePatternListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<PortfolioEntryPlanningPackagePatternListView>() {
-                @Override
-                public String convert(PortfolioEntryPlanningPackagePatternListView packagePatternListView) {
-                    return controllers.admin.routes.ConfigurationPlanningPackageController
-                            .managePackagePattern(packagePatternListView.packageGroupId, packagePatternListView.id).url();
-                }
-            }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryPlanningPackagePatternListView>() {
-                @Override
-                public String apply(PortfolioEntryPlanningPackagePatternListView packagePatternListView, Object value) {
-                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                            Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationPlanningPackageController.deletePackagePattern(packagePatternListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.portfolio_entry_planning_package.pattern.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

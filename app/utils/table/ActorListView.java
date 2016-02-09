@@ -17,12 +17,12 @@
  */
 package utils.table;
 
-import models.pmo.Actor;
-import models.pmo.OrgUnit;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.pmo.Actor;
+import models.pmo.OrgUnit;
 
 /**
  * An actor list view is used to display an actor row in a table.
@@ -31,58 +31,66 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class ActorListView {
 
-    public static Table<ActorListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<ActorListView> getTable() {
-        return new Table<ActorListView>() {
-            {
-                setIdFieldName("id");
+        public Table<ActorListView> templateTable;
 
-                addColumn("employeeId", "employeeId", "object.actor.employee_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("employeeId", new ObjectFormatter<ActorListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("name", "name", "object.actor.name.label", Table.ColumnDef.SorterType.NONE);
+        /**
+         * Get the table.
+         */
+        public Table<ActorListView> getTable() {
+            return new Table<ActorListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("title", "title", "object.actor.title.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("title", new ObjectFormatter<ActorListView>());
+                    addColumn("employeeId", "employeeId", "object.actor.employee_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("employeeId", new ObjectFormatter<ActorListView>());
 
-                addColumn("isActive", "isActive", "object.actor.is_active.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isActive", new BooleanFormatter<ActorListView>());
+                    addColumn("name", "name", "object.actor.name.label", Table.ColumnDef.SorterType.NONE);
 
-                addColumn("orgUnit", "orgUnit", "object.actor.org_unit.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("orgUnit", new IColumnFormatter<ActorListView>() {
-                    @Override
-                    public String apply(ActorListView actorListView, Object value) {
-                        return views.html.modelsparts.display_org_unit.render(actorListView.orgUnit).body();
-                    }
-                });
-                this.setColumnValueCssClass("orgUnit", "rowlink-skip");
+                    addColumn("title", "title", "object.actor.title.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("title", new ObjectFormatter<ActorListView>());
 
-                addColumn("manager", "manager", "object.actor.manager.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("manager", new IColumnFormatter<ActorListView>() {
-                    @Override
-                    public String apply(ActorListView actorListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(actorListView.manager).body();
-                    }
-                });
-                this.setColumnValueCssClass("manager", "rowlink-skip");
+                    addColumn("isActive", "isActive", "object.actor.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<ActorListView>());
 
-                addCustomAttributeColumns(Actor.class);
+                    addColumn("orgUnit", "orgUnit", "object.actor.org_unit.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("orgUnit", new IColumnFormatter<ActorListView>() {
+                        @Override
+                        public String apply(ActorListView actorListView, Object value) {
+                            return views.html.modelsparts.display_org_unit.render(actorListView.orgUnit).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("orgUnit", "rowlink-skip");
 
-                this.setLineAction(new IColumnFormatter<ActorListView>() {
-                    @Override
-                    public String apply(ActorListView actorListView, Object value) {
-                        return controllers.core.routes.ActorController.view(actorListView.id).url();
-                    }
-                });
+                    addColumn("manager", "manager", "object.actor.manager.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("manager", new IColumnFormatter<ActorListView>() {
+                        @Override
+                        public String apply(ActorListView actorListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(actorListView.manager).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("manager", "rowlink-skip");
 
-                setEmptyMessageKey("object.actor.table.empty");
+                    addCustomAttributeColumns(Actor.class);
 
-            }
-        };
+                    this.setLineAction(new IColumnFormatter<ActorListView>() {
+                        @Override
+                        public String apply(ActorListView actorListView, Object value) {
+                            return controllers.core.routes.ActorController.view(actorListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.actor.table.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

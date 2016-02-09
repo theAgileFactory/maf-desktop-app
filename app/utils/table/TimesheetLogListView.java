@@ -25,6 +25,7 @@ import dao.pmo.OrgUnitDao;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -45,109 +46,125 @@ import models.timesheet.TimesheetReport;
  */
 public class TimesheetLogListView {
 
-    public static FilterConfig<TimesheetLogListView> filterConfig = getFilterConfig();
-
     /**
-     * Get the filter config.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static FilterConfig<TimesheetLogListView> getFilterConfig() {
-        return new FilterConfig<TimesheetLogListView>() {
-            {
+    public static class TableDefinition {
 
-                addColumnConfiguration("actor", "timesheetEntry.timesheetReport.actor.id", "object.timesheet_report.actor.label",
-                        new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.NONE);
+        public FilterConfig<TimesheetLogListView> filterConfig;
+        public Table<TimesheetLogListView> templateTable;
 
-                ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
-                addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
-                        new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), true, false, SortStatusType.NONE);
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.filterConfig = getFilterConfig();
+            this.templateTable = getTable();
+        }
 
-                addColumnConfiguration("logDate", "logDate", "object.timesheet_log.log_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<TimesheetLogListView> getFilterConfig() {
+            return new FilterConfig<TimesheetLogListView>() {
+                {
 
-                addColumnConfiguration("hours", "hours", "object.timesheet_log.hours.label", new NumericFieldFilterComponent("0", "="), true, false,
-                        SortStatusType.UNSORTED);
+                    addColumnConfiguration("actor", "timesheetEntry.timesheetReport.actor.id", "object.timesheet_report.actor.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.NONE);
 
-                ISelectableValueHolderCollection<String> statusVH = new DefaultSelectableValueHolderCollection<String>();
-                for (TimesheetReport.Status status : TimesheetReport.Status.values()) {
-                    statusVH.add(
-                            new DefaultSelectableValueHolder<String>(status.name(), Msg.get("object.timesheet_report.status." + status.name() + ".label")));
+                    ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
+                    addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
+                            new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), true, false, SortStatusType.NONE);
+
+                    addColumnConfiguration("logDate", "logDate", "object.timesheet_log.log_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
+
+                    addColumnConfiguration("hours", "hours", "object.timesheet_log.hours.label", new NumericFieldFilterComponent("0", "="), true, false,
+                            SortStatusType.UNSORTED);
+
+                    ISelectableValueHolderCollection<String> statusVH = new DefaultSelectableValueHolderCollection<String>();
+                    for (TimesheetReport.Status status : TimesheetReport.Status.values()) {
+                        statusVH.add(new DefaultSelectableValueHolder<String>(status.name(),
+                                Msg.get("object.timesheet_report.status." + status.name() + ".label")));
+                    }
+                    addColumnConfiguration("status", "timesheetEntry.timesheetReport.status", "object.timesheet_report.status.label",
+                            new SelectFilterComponent(TimesheetReport.Status.APPROVED.name(), statusVH), true, false, SortStatusType.NONE);
+
+                    addColumnConfiguration("planningPackage", "timesheetEntry.portfolioEntryPlanningPackage.name",
+                            "object.timesheet_entry.planning_package.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+
                 }
-                addColumnConfiguration("status", "timesheetEntry.timesheetReport.status", "object.timesheet_report.status.label",
-                        new SelectFilterComponent(TimesheetReport.Status.APPROVED.name(), statusVH), true, false, SortStatusType.NONE);
+            };
+        }
 
-                addColumnConfiguration("planningPackage", "timesheetEntry.portfolioEntryPlanningPackage.name",
-                        "object.timesheet_entry.planning_package.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+        /**
+         * Get the table.
+         */
+        public Table<TimesheetLogListView> getTable() {
+            return new Table<TimesheetLogListView>() {
+                {
 
-            }
-        };
-    }
+                    setIdFieldName("id");
 
-    public static Table<TimesheetLogListView> templateTable = getTable();
+                    addColumn("actor", "actor", "object.timesheet_report.actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("actor", new IColumnFormatter<TimesheetLogListView>() {
+                        @Override
+                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(timesheetLogListView.actor).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("actor", "rowlink-skip");
 
-    /**
-     * Get the table.
-     */
-    public static Table<TimesheetLogListView> getTable() {
-        return new Table<TimesheetLogListView>() {
-            {
+                    addColumn("orgUnit", "orgUnit", "object.timesheet_report.org_unit.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("orgUnit", new IColumnFormatter<TimesheetLogListView>() {
+                        @Override
+                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
+                            return views.html.modelsparts.display_org_unit.render(timesheetLogListView.orgUnit).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("orgUnit", "rowlink-skip");
 
-                setIdFieldName("id");
+                    addColumn("logDate", "logDate", "object.timesheet_log.log_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("logDate", new DateFormatter<TimesheetLogListView>());
 
-                addColumn("actor", "actor", "object.timesheet_report.actor.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("actor", new IColumnFormatter<TimesheetLogListView>() {
-                    @Override
-                    public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(timesheetLogListView.actor).body();
-                    }
-                });
-                this.setColumnValueCssClass("actor", "rowlink-skip");
+                    addColumn("hours", "hours", "object.timesheet_log.hours.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("hours", new NumberFormatter<TimesheetLogListView>());
 
-                addColumn("orgUnit", "orgUnit", "object.timesheet_report.org_unit.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("orgUnit", new IColumnFormatter<TimesheetLogListView>() {
-                    @Override
-                    public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                        return views.html.modelsparts.display_org_unit.render(timesheetLogListView.orgUnit).body();
-                    }
-                });
-                this.setColumnValueCssClass("orgUnit", "rowlink-skip");
+                    addColumn("status", "status", "object.timesheet_report.status.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("status", new IColumnFormatter<TimesheetLogListView>() {
+                        @Override
+                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
+                            return "<span class=\"label label-" + timesheetLogListView.statusClass + "\">"
+                                    + Msg.get("object.timesheet_report.status." + timesheetLogListView.status.name() + ".label") + "</span>";
+                        }
+                    });
 
-                addColumn("logDate", "logDate", "object.timesheet_log.log_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("logDate", new DateFormatter<TimesheetLogListView>());
+                    addColumn("planningPackage", "planningPackage", "object.timesheet_entry.planning_package.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("planningPackage", new IColumnFormatter<TimesheetLogListView>() {
+                        @Override
+                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry_planning_package.render(timesheetLogListView.planningPackage).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("planningPackage", "rowlink-skip");
 
-                addColumn("hours", "hours", "object.timesheet_log.hours.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("hours", new NumberFormatter<TimesheetLogListView>());
+                    this.setLineAction(new IColumnFormatter<TimesheetLogListView>() {
+                        @Override
+                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
+                            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                            String stringDate = df.format(timesheetLogListView.startDate);
+                            return controllers.core.routes.ActorController.viewWeeklyTimesheet(timesheetLogListView.actor.id, stringDate).url();
+                        }
+                    });
 
-                addColumn("status", "status", "object.timesheet_report.status.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("status", new IColumnFormatter<TimesheetLogListView>() {
-                    @Override
-                    public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                        return "<span class=\"label label-" + timesheetLogListView.statusClass + "\">"
-                                + Msg.get("object.timesheet_report.status." + timesheetLogListView.status.name() + ".label") + "</span>";
-                    }
-                });
+                    setEmptyMessageKey("object.timesheet_log.table.empty");
 
-                addColumn("planningPackage", "planningPackage", "object.timesheet_entry.planning_package.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("planningPackage", new IColumnFormatter<TimesheetLogListView>() {
-                    @Override
-                    public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry_planning_package.render(timesheetLogListView.planningPackage).body();
-                    }
-                });
-                this.setColumnValueCssClass("planningPackage", "rowlink-skip");
+                }
+            };
 
-                this.setLineAction(new IColumnFormatter<TimesheetLogListView>() {
-                    @Override
-                    public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                        String stringDate = df.format(timesheetLogListView.startDate);
-                        return controllers.core.routes.ActorController.viewWeeklyTimesheet(timesheetLogListView.actor.id, stringDate).url();
-                    }
-                });
-
-                setEmptyMessageKey("object.timesheet_log.table.empty");
-
-            }
-        };
+        }
 
     }
 

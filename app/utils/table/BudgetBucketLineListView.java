@@ -20,8 +20,6 @@ package utils.table;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 
-import models.finance.BudgetBucketLine;
-import models.finance.Currency;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -29,6 +27,8 @@ import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.BudgetBucketLine;
+import models.finance.Currency;
 
 /**
  * A budget bucket line list view is used to display a line of a budget bucket
@@ -38,68 +38,75 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class BudgetBucketLineListView {
 
-    public static Table<BudgetBucketLineListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<BudgetBucketLineListView> getTable() {
-        return new Table<BudgetBucketLineListView>() {
-            {
-                setIdFieldName("id");
+        public Table<BudgetBucketLineListView> templateTable;
 
-                addColumn("refId", "refId", "object.budget_bucket_line.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<BudgetBucketLineListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("name", "name", "object.budget_bucket_line.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<BudgetBucketLineListView>());
+        /**
+         * Get the table.
+         */
+        public Table<BudgetBucketLineListView> getTable() {
+            return new Table<BudgetBucketLineListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("isOpex", "isOpex", "object.budget_bucket_line.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isOpex", new IColumnFormatter<BudgetBucketLineListView>() {
-                    @Override
-                    public String apply(BudgetBucketLineListView budgetBucketLineListView, Object value) {
-                        return views.html.modelsparts.display_is_opex.render(budgetBucketLineListView.isOpex).body();
-                    }
-                });
+                    addColumn("refId", "refId", "object.budget_bucket_line.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<BudgetBucketLineListView>());
 
-                addColumn("currency", "currency", "object.budget_bucket_line.currency.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("currency", new ObjectFormatter<BudgetBucketLineListView>());
+                    addColumn("name", "name", "object.budget_bucket_line.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<BudgetBucketLineListView>());
 
-                addColumn("amount", "amount", "object.budget_bucket_line.amount.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amount", new NumberFormatter<BudgetBucketLineListView>());
+                    addColumn("isOpex", "isOpex", "object.budget_bucket_line.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isOpex", new IColumnFormatter<BudgetBucketLineListView>() {
+                        @Override
+                        public String apply(BudgetBucketLineListView budgetBucketLineListView, Object value) {
+                            return views.html.modelsparts.display_is_opex.render(budgetBucketLineListView.isOpex).body();
+                        }
+                    });
 
-                addCustomAttributeColumns(BudgetBucketLine.class);
+                    addColumn("currency", "currency", "object.budget_bucket_line.currency.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("currency", new ObjectFormatter<BudgetBucketLineListView>());
 
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<BudgetBucketLineListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<BudgetBucketLineListView>() {
-                            @Override
-                            public String convert(BudgetBucketLineListView budgetBucketLineListView) {
-                                return controllers.core.routes.BudgetBucketController.manageLine(budgetBucketLineListView.budgetBucketId,
-                                        budgetBucketLineListView.id).url();
-                            }
-                        }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addColumn("amount", "amount", "object.budget_bucket_line.amount.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amount", new NumberFormatter<BudgetBucketLineListView>());
 
-                addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("removeActionLink", new IColumnFormatter<BudgetBucketLineListView>() {
-                    @Override
-                    public String apply(BudgetBucketLineListView budgetBucketLineListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.core.routes.BudgetBucketController.deleteLine(budgetBucketLineListView.budgetBucketId,
-                                        budgetBucketLineListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                    }
-                });
-                setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addCustomAttributeColumns(BudgetBucketLine.class);
 
-                setEmptyMessageKey("object.budget_bucket_line.table.empty");
-            }
-        };
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<BudgetBucketLineListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<BudgetBucketLineListView>() {
+                        @Override
+                        public String convert(BudgetBucketLineListView budgetBucketLineListView) {
+                            return controllers.core.routes.BudgetBucketController
+                                    .manageLine(budgetBucketLineListView.budgetBucketId, budgetBucketLineListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("removeActionLink", new IColumnFormatter<BudgetBucketLineListView>() {
+                        @Override
+                        public String apply(BudgetBucketLineListView budgetBucketLineListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.BudgetBucketController
+                                    .deleteLine(budgetBucketLineListView.budgetBucketId, budgetBucketLineListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    setEmptyMessageKey("object.budget_bucket_line.table.empty");
+                }
+            };
+        }
+
     }
 
     /**

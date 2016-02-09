@@ -39,6 +39,7 @@ import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.table.MessageListView;
 
 /**
@@ -58,6 +59,8 @@ public class MessagingController extends Controller {
     private Configuration configuration;
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(MessagingController.class);
     private static Form<NotificationMessage> notificationMessageForm = Form.form(NotificationMessage.class);
@@ -75,7 +78,7 @@ public class MessagingController extends Controller {
         for (Notification notification : notifications) {
             messageListViewRows.add(new MessageListView(this.getAccountManagerPlugin(), notification));
         }
-        Table<MessageListView> messagesTables = MessageListView.templateTable.fill(messageListViewRows);
+        Table<MessageListView> messagesTables = this.getTableProvider().get().message.templateTable.fill(messageListViewRows);
 
         NotificationMessage notificationMessage = createEmptyNotificationMessage();
 
@@ -98,7 +101,7 @@ public class MessagingController extends Controller {
                 for (Notification notification : notifications) {
                     messageListViewRows.add(new MessageListView(this.getAccountManagerPlugin(), notification));
                 }
-                Table<MessageListView> messagesTables = MessageListView.templateTable.fill(messageListViewRows);
+                Table<MessageListView> messagesTables = this.getTableProvider().get().message.templateTable.fill(messageListViewRows);
 
                 return ok(views.html.messaging.index.render(messagesTables, boundForm));
             }
@@ -181,5 +184,12 @@ public class MessagingController extends Controller {
      */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return this.accountManagerPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

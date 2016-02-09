@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstance;
-import models.governance.PlannedLifeCycleMilestoneInstance;
 import constants.IMafConstants;
 import dao.governance.LifeCycleMilestoneDao;
 import framework.utils.IColumnFormatter;
@@ -33,6 +30,9 @@ import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.governance.LifeCycleMilestone;
+import models.governance.LifeCycleMilestoneInstance;
+import models.governance.PlannedLifeCycleMilestoneInstance;
 
 /**
  * A governance list view is used to display a governance row in a table.
@@ -44,62 +44,77 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class GovernanceListView {
 
-    public static Table<GovernanceListView> templateTable = new Table<GovernanceListView>() {
-        {
-            setIdFieldName("id");
+    public static class TableDefinition {
 
-            addColumn("milestone", "milestone", "object.life_cycle_milestone_instance.milestone.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("milestone", new IColumnFormatter<GovernanceListView>() {
-                @Override
-                public String apply(GovernanceListView governanceListView, Object value) {
-                    return views.html.modelsparts.display_milestone.render(governanceListView.milestone).body();
-                }
-            });
-            setColumnCssClass("milestone", IMafConstants.BOOTSTRAP_COLUMN_4);
+        public Table<GovernanceListView> templateTable;
 
-            addColumn("lastPlannedDate", "lastPlannedDate", "object.planned_life_cycle_milestone_instance.planned_date.label",
-                    Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("lastPlannedDate", new IColumnFormatter<GovernanceListView>() {
-                @Override
-                public String apply(GovernanceListView governanceListView, Object value) {
-                    DateFormatter<GovernanceListView> df = new DateFormatter<GovernanceListView>();
-                    if (governanceListView.lastPlannedDate != null) {
-                        df.setAlert(!governanceListView.hasMilestoneInstances && governanceListView.lastPlannedDate.before(new Date()));
-                    }
-                    return df.apply(governanceListView, value);
-                }
-            });
-            setColumnCssClass("lastPlannedDate", IMafConstants.BOOTSTRAP_COLUMN_4);
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("status", "status", "object.life_cycle_milestone_instance.status.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("status", new ListOfValuesFormatter<GovernanceListView>());
-            setColumnCssClass("status", IMafConstants.BOOTSTRAP_COLUMN_3);
+        /**
+         * Get the table.
+         */
+        public Table<GovernanceListView> getTable() {
+            return new Table<GovernanceListView>() {
+                {
+                    setIdFieldName("id");
 
-            addColumn("requestActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("requestActionLink", new StringFormatFormatter<GovernanceListView>(IMafConstants.REQUEST_URL_FORMAT,
-                    new StringFormatFormatter.Hook<GovernanceListView>() {
+                    addColumn("milestone", "milestone", "object.life_cycle_milestone_instance.milestone.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("milestone", new IColumnFormatter<GovernanceListView>() {
+                        @Override
+                        public String apply(GovernanceListView governanceListView, Object value) {
+                            return views.html.modelsparts.display_milestone.render(governanceListView.milestone).body();
+                        }
+                    });
+                    setColumnCssClass("milestone", IMafConstants.BOOTSTRAP_COLUMN_4);
+
+                    addColumn("lastPlannedDate", "lastPlannedDate", "object.planned_life_cycle_milestone_instance.planned_date.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastPlannedDate", new IColumnFormatter<GovernanceListView>() {
+                        @Override
+                        public String apply(GovernanceListView governanceListView, Object value) {
+                            DateFormatter<GovernanceListView> df = new DateFormatter<GovernanceListView>();
+                            if (governanceListView.lastPlannedDate != null) {
+                                df.setAlert(!governanceListView.hasMilestoneInstances && governanceListView.lastPlannedDate.before(new Date()));
+                            }
+                            return df.apply(governanceListView, value);
+                        }
+                    });
+                    setColumnCssClass("lastPlannedDate", IMafConstants.BOOTSTRAP_COLUMN_4);
+
+                    addColumn("status", "status", "object.life_cycle_milestone_instance.status.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("status", new ListOfValuesFormatter<GovernanceListView>());
+                    setColumnCssClass("status", IMafConstants.BOOTSTRAP_COLUMN_3);
+
+                    addColumn("requestActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("requestActionLink", new StringFormatFormatter<GovernanceListView>(IMafConstants.REQUEST_URL_FORMAT,
+                            new StringFormatFormatter.Hook<GovernanceListView>() {
                         @Override
                         public String convert(GovernanceListView governanceListView) {
                             if (!governanceListView.isPending) {
-                                return controllers.core.routes.PortfolioEntryGovernanceController.requestMilestone(governanceListView.portfolioEntryId,
-                                        governanceListView.id).url();
+                                return controllers.core.routes.PortfolioEntryGovernanceController
+                                        .requestMilestone(governanceListView.portfolioEntryId, governanceListView.id).url();
                             }
                             return null;
                         }
                     }));
-            setColumnCssClass("requestActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("requestActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("requestActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("requestActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            this.setLineAction(new IColumnFormatter<GovernanceListView>() {
-                @Override
-                public String apply(GovernanceListView governanceListView, Object value) {
-                    return controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(governanceListView.portfolioEntryId,
-                            governanceListView.id).url();
+                    this.setLineAction(new IColumnFormatter<GovernanceListView>() {
+                        @Override
+                        public String apply(GovernanceListView governanceListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryGovernanceController
+                                    .viewMilestone(governanceListView.portfolioEntryId, governanceListView.id).url();
+                        }
+                    });
+
                 }
-            });
+            };
 
         }
-    };
+    }
 
     /**
      * Default constructor.
@@ -136,8 +151,8 @@ public class GovernanceListView {
         this.planningId = plannedMilestone.lifeCycleInstancePlanning.id;
 
         // get the milestone instances
-        List<LifeCycleMilestoneInstance> milestoneInstances =
-                LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(this.portfolioEntryId, plannedMilestone.lifeCycleMilestone.id);
+        List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(this.portfolioEntryId,
+                plannedMilestone.lifeCycleMilestone.id);
 
         // compute hasMilestoneInstances
         this.hasMilestoneInstances = milestoneInstances != null && !milestoneInstances.isEmpty() ? true : false;

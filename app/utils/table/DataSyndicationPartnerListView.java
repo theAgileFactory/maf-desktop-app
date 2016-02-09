@@ -31,55 +31,65 @@ import services.datasyndication.models.DataSyndicationPartner;
  */
 public class DataSyndicationPartnerListView {
 
-    public static Table<DataSyndicationPartnerListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<DataSyndicationPartnerListView> getTable() {
-        return new Table<DataSyndicationPartnerListView>() {
-            {
-                setIdFieldName("domain");
+        public Table<DataSyndicationPartnerListView> templateTable;
 
-                addColumn("customerLogo", "customerLogo", "object.data_syndication_partner.customer_logo.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("customerLogo", new IColumnFormatter<DataSyndicationPartnerListView>() {
-                    @Override
-                    public String apply(DataSyndicationPartnerListView dataSyndicationPartnerListView, Object value) {
-                        if (dataSyndicationPartnerListView.customerLogo != null) {
-                            return "<img style=\"max-height: 60px;\" src='" + dataSyndicationPartnerListView.customerLogo + "' />";
-                        } else {
-                            return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
+
+        /**
+         * Get the table.
+         */
+        public Table<DataSyndicationPartnerListView> getTable() {
+            return new Table<DataSyndicationPartnerListView>() {
+                {
+                    setIdFieldName("domain");
+
+                    addColumn("customerLogo", "customerLogo", "object.data_syndication_partner.customer_logo.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("customerLogo", new IColumnFormatter<DataSyndicationPartnerListView>() {
+                        @Override
+                        public String apply(DataSyndicationPartnerListView dataSyndicationPartnerListView, Object value) {
+                            if (dataSyndicationPartnerListView.customerLogo != null) {
+                                return "<img style=\"max-height: 60px;\" src='" + dataSyndicationPartnerListView.customerLogo + "' />";
+                            } else {
+                                return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
+                            }
                         }
-                    }
-                });
+                    });
 
-                addColumn("customerName", "customerName", "object.data_syndication_partner.customer_name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("customerName", new ObjectFormatter<DataSyndicationPartnerListView>());
+                    addColumn("customerName", "customerName", "object.data_syndication_partner.customer_name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("customerName", new ObjectFormatter<DataSyndicationPartnerListView>());
 
-                addColumn("customerDescription", "customerDescription", "object.data_syndication_partner.customer_description.label",
-                        Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("customerDescription", new ObjectFormatter<DataSyndicationPartnerListView>());
+                    addColumn("customerDescription", "customerDescription", "object.data_syndication_partner.customer_description.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("customerDescription", new ObjectFormatter<DataSyndicationPartnerListView>());
 
-                addColumn("customerWebsite", "customerWebsite", "object.data_syndication_partner.customer_website.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("customerWebsite", new IColumnFormatter<DataSyndicationPartnerListView>() {
-                    @Override
-                    public String apply(DataSyndicationPartnerListView dataSyndicationPartnerListView, Object value) {
-                        return views.html.framework_views.parts.formats.display_url.render(dataSyndicationPartnerListView.customerWebsite, null, true).body();
-                    }
-                });
-                setColumnValueCssClass("customerWebsite", "rowlink-skip");
+                    addColumn("customerWebsite", "customerWebsite", "object.data_syndication_partner.customer_website.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("customerWebsite", new IColumnFormatter<DataSyndicationPartnerListView>() {
+                        @Override
+                        public String apply(DataSyndicationPartnerListView dataSyndicationPartnerListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_url.render(dataSyndicationPartnerListView.customerWebsite, null, true)
+                                    .body();
+                        }
+                    });
+                    setColumnValueCssClass("customerWebsite", "rowlink-skip");
 
-                this.setLineAction(new IColumnFormatter<DataSyndicationPartnerListView>() {
-                    @Override
-                    public String apply(DataSyndicationPartnerListView dataSyndicationPartnerListView, Object value) {
-                        return controllers.admin.routes.DataSyndicationController.submitAgreement(dataSyndicationPartnerListView.domain).url();
-                    }
-                });
+                    this.setLineAction(new IColumnFormatter<DataSyndicationPartnerListView>() {
+                        @Override
+                        public String apply(DataSyndicationPartnerListView dataSyndicationPartnerListView, Object value) {
+                            return controllers.admin.routes.DataSyndicationController.submitAgreement(dataSyndicationPartnerListView.domain).url();
+                        }
+                    });
 
-                setEmptyMessageKey("table.empty");
+                    setEmptyMessageKey("table.empty");
 
-            }
-        };
+                }
+            };
+
+        }
 
     }
 

@@ -19,11 +19,11 @@ package utils.table;
 
 import java.util.Date;
 
-import models.governance.LifeCycleMilestone;
-import models.governance.PlannedLifeCycleMilestoneInstance;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.DateFormatter;
+import models.governance.LifeCycleMilestone;
+import models.governance.PlannedLifeCycleMilestoneInstance;
 
 /**
  * A portfolio milestone list view is used to display a milestone row in a
@@ -33,36 +33,60 @@ import framework.utils.formats.DateFormatter;
  */
 public class PortfolioMilestoneListView {
 
-    public static Table<PortfolioMilestoneListView> templateTable = new Table<PortfolioMilestoneListView>() {
-        {
-            setIdFieldName("id");
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            addColumn("portfolioEntryName", "portfolioEntryName", "object.life_cycle_milestone_instance.portfolio_entry.label",
-                    Table.ColumnDef.SorterType.NONE);
+        public Table<PortfolioMilestoneListView> templateTable;
 
-            addColumn("milestone", "milestone", "object.life_cycle_milestone_instance.milestone.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("milestone", new IColumnFormatter<PortfolioMilestoneListView>() {
-                @Override
-                public String apply(PortfolioMilestoneListView portfolioMilestoneListView, Object value) {
-                    return views.html.modelsparts.display_milestone.render(portfolioMilestoneListView.milestone).body();
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
+
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioMilestoneListView> getTable() {
+            return new Table<PortfolioMilestoneListView>() {
+                {
+                    setIdFieldName("id");
+
+                    addColumn("portfolioEntryName", "portfolioEntryName", "object.life_cycle_milestone_instance.portfolio_entry.label",
+                            Table.ColumnDef.SorterType.NONE);
+
+                    addColumn("milestone", "milestone", "object.life_cycle_milestone_instance.milestone.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("milestone", new IColumnFormatter<PortfolioMilestoneListView>() {
+                        @Override
+                        public String apply(PortfolioMilestoneListView portfolioMilestoneListView, Object value) {
+                            return views.html.modelsparts.display_milestone.render(portfolioMilestoneListView.milestone).body();
+                        }
+                    });
+
+                    addColumn("lastPlannedDate", "lastPlannedDate", "object.planned_life_cycle_milestone_instance.planned_date.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastPlannedDate", new DateFormatter<PortfolioMilestoneListView>());
+
+                    this.setLineAction(new IColumnFormatter<PortfolioMilestoneListView>() {
+                        @Override
+                        public String apply(PortfolioMilestoneListView governanceListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryGovernanceController.index(governanceListView.portfolioEntryId).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.life_cycle_milestone.table.empty");
+
                 }
-            });
-
-            addColumn("lastPlannedDate", "lastPlannedDate", "object.planned_life_cycle_milestone_instance.planned_date.label",
-                    Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("lastPlannedDate", new DateFormatter<PortfolioMilestoneListView>());
-
-            this.setLineAction(new IColumnFormatter<PortfolioMilestoneListView>() {
-                @Override
-                public String apply(PortfolioMilestoneListView governanceListView, Object value) {
-                    return controllers.core.routes.PortfolioEntryGovernanceController.index(governanceListView.portfolioEntryId).url();
-                }
-            });
-
-            setEmptyMessageKey("object.life_cycle_milestone.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

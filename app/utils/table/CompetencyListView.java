@@ -19,8 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.Actor;
-import models.pmo.Competency;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -28,6 +26,8 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.Actor;
+import models.pmo.Competency;
 
 /**
  * A competency list view is used to display a competency row in a table.
@@ -36,51 +36,65 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class CompetencyListView {
 
-    public static Table<CompetencyListView> templateTable = new Table<CompetencyListView>() {
-        {
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<CompetencyListView> templateTable;
 
-            addColumn("isDefault", "isDefault", "object.competency.is_default.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isDefault", new BooleanFormatter<CompetencyListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("name", "name", "object.competency.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<CompetencyListView>());
+        public Table<CompetencyListView> getTable() {
 
-            addColumn("description", "description", "object.competency.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<CompetencyListView>());
+            return new Table<CompetencyListView>() {
+                {
 
-            addColumn("isActive", "isActive", "object.competency.is_active.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isActive", new BooleanFormatter<CompetencyListView>());
+                    setIdFieldName("id");
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<CompetencyListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<CompetencyListView>() {
+                    addColumn("isDefault", "isDefault", "object.competency.is_default.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isDefault", new BooleanFormatter<CompetencyListView>());
+
+                    addColumn("name", "name", "object.competency.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<CompetencyListView>());
+
+                    addColumn("description", "description", "object.competency.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<CompetencyListView>());
+
+                    addColumn("isActive", "isActive", "object.competency.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<CompetencyListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<CompetencyListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<CompetencyListView>() {
                         @Override
                         public String convert(CompetencyListView competencyListView) {
                             return controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageCompetency(competencyListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<CompetencyListView>() {
-                @Override
-                public String apply(CompetencyListView competencyListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteCompetency(competencyListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<CompetencyListView>() {
+                        @Override
+                        public String apply(CompetencyListView competencyListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteCompetency(competencyListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.competency.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.competency.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

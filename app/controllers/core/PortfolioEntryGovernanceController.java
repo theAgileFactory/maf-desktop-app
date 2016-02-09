@@ -72,6 +72,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import services.budgettracking.IBudgetTrackingService;
+import services.tableprovider.ITableProvider;
 import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.PlannedDateFormData;
@@ -102,6 +103,8 @@ public class PortfolioEntryGovernanceController extends Controller {
     private IBudgetTrackingService budgetTrackingService;
     @Inject
     private INotificationManagerPlugin notificationManagerService;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryGovernanceController.class);
 
@@ -138,7 +141,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             hideColumnsForGovernance.add("requestActionLink");
         }
 
-        Table<GovernanceListView> filledTable = GovernanceListView.templateTable.fill(governanceListView, hideColumnsForGovernance);
+        Table<GovernanceListView> filledTable = this.getTableProvider().get().governance.templateTable.fill(governanceListView, hideColumnsForGovernance);
 
         // define if the initiative has a governance planning
         boolean hasPlanning = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(id).size() > 0;
@@ -216,7 +219,7 @@ public class PortfolioEntryGovernanceController extends Controller {
             }
 
             // add the table
-            approversTables.add(MilestoneApproverListView.templateTable.fill(milestoneApproverListView));
+            approversTables.add(this.getTableProvider().get().milestoneApprover.templateTable.fill(milestoneApproverListView));
 
             /** construct the budget lines table */
 
@@ -231,7 +234,8 @@ public class PortfolioEntryGovernanceController extends Controller {
                 }
 
                 // add the table
-                budgetLinesTables.add(PortfolioEntryBudgetLineListView.templateTable.fill(portfolioEntryBudgetLineListView, columnsToHideForBudgetLine));
+                budgetLinesTables.add(this.getTableProvider().get().portfolioEntryBudgetLine.templateTable.fill(portfolioEntryBudgetLineListView,
+                        columnsToHideForBudgetLine));
 
             } else {
                 budgetLinesTables.add(null);
@@ -278,8 +282,8 @@ public class PortfolioEntryGovernanceController extends Controller {
                 }
 
                 // add the table
-                resourcesTables
-                        .add(PortfolioEntryResourcePlanAllocatedResourceListView.templateTable.fill(allocatedResourceListView, columnsToHideForResource));
+                resourcesTables.add(this.getTableProvider().get().portfolioEntryResourcePlanAllocatedResource.templateTable.fill(allocatedResourceListView,
+                        columnsToHideForResource));
 
             } else {
                 resourcesTables.add(null);
@@ -769,6 +773,13 @@ public class PortfolioEntryGovernanceController extends Controller {
      */
     private INotificationManagerPlugin getNotificationManagerService() {
         return this.notificationManagerService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

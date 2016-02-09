@@ -70,6 +70,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import security.dynamic.PortfolioEntryDynamicHelper;
+import services.tableprovider.ITableProvider;
 import utils.form.DeliverableFormData;
 import utils.form.DeliverableRequirementsFormData;
 import utils.form.FollowDeliverableFormData;
@@ -98,6 +99,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private IAccountManagerPlugin accountManagerPlugin;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -126,7 +129,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<DeliverableListView> filterConfig = DeliverableListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<DeliverableListView> filterConfig = this.getTableProvider().get().deliverable.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<DeliverableListView>, Pagination<Deliverable>> t = getDeliverablesTable(id, filterConfig);
@@ -155,7 +158,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<DeliverableListView> filterConfig = DeliverableListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<DeliverableListView> filterConfig = this.getTableProvider().get().deliverable.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -202,7 +205,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             columnsToHide.add("deleteActionLink");
         }
 
-        Table<DeliverableListView> table = DeliverableListView.templateTable.fillForFilterConfig(deliverableListView, columnsToHide);
+        Table<DeliverableListView> table = this.getTableProvider().get().deliverable.templateTable.fillForFilterConfig(deliverableListView, columnsToHide);
 
         return Pair.of(table, pagination);
 
@@ -246,7 +249,8 @@ public class PortfolioEntryDeliveryController extends Controller {
             columnsToHide.add("editActionLink");
         }
 
-        Table<RequirementListView> filledRequirementsTable = RequirementListView.templateTable.fill(requirementsListView, columnsToHide);
+        Table<RequirementListView> filledRequirementsTable = this.getTableProvider().get().requirement.templateTable.fill(requirementsListView,
+                columnsToHide);
 
         // construct the corresponding form data (for the custom attributes)
         DeliverableFormData deliverableFormData = new DeliverableFormData(deliverable, portfolioEntryDeliverable);
@@ -577,7 +581,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<RequirementListView> filterConfig = RequirementListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<RequirementListView> filterConfig = this.getTableProvider().get().requirement.filterConfig.getCurrent(uid, request());
 
             ExpressionList<Requirement> expressionList = filterConfig.updateWithSearchExpression(RequirementDAO.getRequirementAsExprByPE(id));
             filterConfig.updateWithSortExpression(expressionList);
@@ -595,7 +599,8 @@ public class PortfolioEntryDeliveryController extends Controller {
                 hideColumns.add("editActionLink");
             }
 
-            Table<RequirementListView> filledTable = RequirementListView.templateTable.fillForFilterConfig(requirementListView, hideColumns);
+            Table<RequirementListView> filledTable = this.getTableProvider().get().requirement.templateTable.fillForFilterConfig(requirementListView,
+                    hideColumns);
 
             return ok(views.html.core.portfolioentrydelivery.requirements.render(portfolioEntry, filledTable, pagination, filterConfig));
 
@@ -621,7 +626,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<RequirementListView> filterConfig = RequirementListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<RequirementListView> filterConfig = this.getTableProvider().get().requirement.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -643,7 +648,8 @@ public class PortfolioEntryDeliveryController extends Controller {
                     hideColumns.add("editActionLink");
                 }
 
-                Table<RequirementListView> filledTable = RequirementListView.templateTable.fillForFilterConfig(requirementListView, hideColumns);
+                Table<RequirementListView> filledTable = this.getTableProvider().get().requirement.templateTable.fillForFilterConfig(requirementListView,
+                        hideColumns);
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(filledTable, pagination));
 
@@ -946,7 +952,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<IterationListView> filterConfig = IterationListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<IterationListView> filterConfig = this.getTableProvider().get().iteration.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<IterationListView>, Pagination<Iteration>> t = getIterationsTable(id, filterConfig);
@@ -1033,7 +1039,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<IterationListView> filterConfig = IterationListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<IterationListView> filterConfig = this.getTableProvider().get().iteration.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -1078,7 +1084,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             hideColumns.add("editActionLink");
         }
 
-        Table<IterationListView> table = IterationListView.templateTable.fillForFilterConfig(iterationListView, hideColumns);
+        Table<IterationListView> table = this.getTableProvider().get().iteration.templateTable.fillForFilterConfig(iterationListView, hideColumns);
 
         return Pair.of(table, pagination);
 
@@ -1224,6 +1230,13 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return this.accountManagerPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

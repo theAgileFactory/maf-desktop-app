@@ -100,6 +100,7 @@ import services.budgettracking.IBudgetTrackingService;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
+import services.tableprovider.ITableProvider;
 import utils.SortableCollection;
 import utils.SortableCollection.ComplexSortableObject;
 import utils.SortableCollection.DateSortableObject;
@@ -146,6 +147,8 @@ public class PortfolioEntryPlanningController extends Controller {
     private IBudgetTrackingService budgetTrackingService;
     @Inject
     private INotificationManagerPlugin notificationManagerService;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -458,7 +461,8 @@ public class PortfolioEntryPlanningController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = PortfolioEntryPlanningPackageListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = this.getTableProvider().get().portfolioEntryPlanningPackage.filterConfig
+                    .getCurrent(uid, request());
 
             // get the table
             Pair<Table<PortfolioEntryPlanningPackageListView>, Pagination<PortfolioEntryPlanningPackage>> t = getPackagesTable(id, filterConfig,
@@ -563,8 +567,8 @@ public class PortfolioEntryPlanningController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = PortfolioEntryPlanningPackageListView.filterConfig.persistCurrentInDefault(uid,
-                    request());
+            FilterConfig<PortfolioEntryPlanningPackageListView> filterConfig = this.getTableProvider().get().portfolioEntryPlanningPackage.filterConfig
+                    .persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -616,7 +620,7 @@ public class PortfolioEntryPlanningController extends Controller {
             hideColumnsForPackage.add("deleteActionLink");
         }
 
-        Table<PortfolioEntryPlanningPackageListView> table = PortfolioEntryPlanningPackageListView.templateTable
+        Table<PortfolioEntryPlanningPackageListView> table = this.getTableProvider().get().portfolioEntryPlanningPackage.templateTable
                 .fillForFilterConfig(portfolioEntryPlanningPackageListView, hideColumnsForPackage);
 
         return Pair.of(table, pagination);
@@ -680,7 +684,7 @@ public class PortfolioEntryPlanningController extends Controller {
             hideColumns.add("removeActionLink");
         }
 
-        Table<AttachmentListView> attachmentsTable = AttachmentListView.templateTable.fill(attachmentsListView, hideColumns);
+        Table<AttachmentListView> attachmentsTable = this.getTableProvider().get().attachment.templateTable.fill(attachmentsListView, hideColumns);
 
         return ok(views.html.core.portfolioentryplanning.package_view.render(portfolioEntry, planningPackage, portfolioEntryPlanningPackageFormData,
                 allocatedResourcesDays, timesheetsDays, attachmentsTable));
@@ -1259,8 +1263,9 @@ public class PortfolioEntryPlanningController extends Controller {
         for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
             portfolioEntryResourcePlanAllocatedActorListView.add(new PortfolioEntryResourcePlanAllocatedActorListView(allocatedActor));
         }
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> allocatedActorsTable = PortfolioEntryResourcePlanAllocatedActorListView.templateTable
-                .fill(portfolioEntryResourcePlanAllocatedActorListView, hideColumnsForResourcePlanTable);
+        Table<PortfolioEntryResourcePlanAllocatedActorListView> allocatedActorsTable = this.getTableProvider()
+                .get().portfolioEntryResourcePlanAllocatedActor.templateTable.fill(portfolioEntryResourcePlanAllocatedActorListView,
+                        hideColumnsForResourcePlanTable);
 
         // construct the general allocation table
         List<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourceListView = new ArrayList<>();
@@ -1284,8 +1289,8 @@ public class PortfolioEntryPlanningController extends Controller {
             }
         }
 
-        Table<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourcesTable = PortfolioEntryResourcePlanAllocatedResourceListView.templateTable
-                .fill(allocatedResourceListView, hideColumnsForResourcePlanTable);
+        Table<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourcesTable = this.getTableProvider()
+                .get().portfolioEntryResourcePlanAllocatedResource.templateTable.fill(allocatedResourceListView, hideColumnsForResourcePlanTable);
 
         // check if there are active competencies
         boolean existCompetencies = ActorDao.getCompetencyActiveAsList().size() > 0 ? true : false;
@@ -2224,6 +2229,13 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     private INotificationManagerPlugin getNotificationManagerService() {
         return this.notificationManagerService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

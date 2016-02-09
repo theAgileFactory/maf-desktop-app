@@ -62,6 +62,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import services.budgettracking.IBudgetTrackingService;
+import services.tableprovider.ITableProvider;
 import utils.form.ProcessMilestoneRequestFormData;
 import utils.form.RequestMilestoneFormData;
 import utils.table.MilestoneRequestListView;
@@ -93,6 +94,8 @@ public class ProcessTransitionRequestController extends Controller {
     private IBudgetTrackingService budgetTrackingService;
     @Inject
     private INotificationManagerPlugin notificationManagerService;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
@@ -121,7 +124,7 @@ public class ProcessTransitionRequestController extends Controller {
             }
         }
 
-        Table<MilestoneRequestListView> filledTable = MilestoneRequestListView.templateTable.fill(requestsListView);
+        Table<MilestoneRequestListView> filledTable = this.getTableProvider().get().milestoneRequest.templateTable.fill(requestsListView);
         return ok(views.html.core.processtransitionrequest.review_milestone_request_list.render(filledTable, pagination));
     }
 
@@ -406,5 +409,12 @@ public class ProcessTransitionRequestController extends Controller {
      */
     private INotificationManagerPlugin getNotificationManagerService() {
         return this.notificationManagerService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

@@ -38,54 +38,70 @@ import models.pmo.PortfolioEntry;
  */
 public class PurchaseOrderLineItemWorkOrderListView {
 
-    public static Table<PurchaseOrderLineItemWorkOrderListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PurchaseOrderLineItemWorkOrderListView> getTable() {
-        return new Table<PurchaseOrderLineItemWorkOrderListView>() {
-            {
-                setIdFieldName("id");
+    public static class TableDefinition {
 
-                addColumn("name", "name", "object.work_order.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<PurchaseOrderLineItemWorkOrderListView>());
+        public Table<PurchaseOrderLineItemWorkOrderListView> templateTable;
 
-                addColumn("portfolioEntry", "portfolioEntry", "object.work_order.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("portfolioEntry", new IColumnFormatter<PurchaseOrderLineItemWorkOrderListView>() {
-                    @Override
-                    public String apply(PurchaseOrderLineItemWorkOrderListView purchaseOrderLineItemWorkOrderListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry.render(purchaseOrderLineItemWorkOrderListView.portfolioEntry, true).body();
-                    }
-                });
-                this.setColumnValueCssClass("portfolioEntry", "rowlink-skip");
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("amount", "amount", "object.work_order.amount.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amount", new NumberFormatter<PurchaseOrderLineItemWorkOrderListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PurchaseOrderLineItemWorkOrderListView> getTable() {
+            return new Table<PurchaseOrderLineItemWorkOrderListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("amountReceived", "amountReceived", "object.work_order.amount_received.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amountReceived", new NumberFormatter<PurchaseOrderLineItemWorkOrderListView>());
+                    addColumn("name", "name", "object.work_order.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<PurchaseOrderLineItemWorkOrderListView>());
 
-                addColumn("amountOpen", "amountOpen", "object.work_order.amount_open.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amountOpen", new NumberFormatter<PurchaseOrderLineItemWorkOrderListView>());
+                    addColumn("portfolioEntry", "portfolioEntry", "object.work_order.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntry", new IColumnFormatter<PurchaseOrderLineItemWorkOrderListView>() {
+                        @Override
+                        public String apply(PurchaseOrderLineItemWorkOrderListView purchaseOrderLineItemWorkOrderListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry.render(purchaseOrderLineItemWorkOrderListView.portfolioEntry, true).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("portfolioEntry", "rowlink-skip");
 
-                addCustomAttributeColumns(WorkOrder.class);
+                    addColumn("amount", "amount", "object.work_order.amount.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amount", new NumberFormatter<PurchaseOrderLineItemWorkOrderListView>());
 
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PurchaseOrderLineItemWorkOrderListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<PurchaseOrderLineItemWorkOrderListView>() {
-                    @Override
-                    public String convert(PurchaseOrderLineItemWorkOrderListView workOrderListView) {
-                        return controllers.core.routes.PurchaseOrderController.editWorkOrder(workOrderListView.lineItemId, workOrderListView.id).url();
-                    }
-                }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    addColumn("amountReceived", "amountReceived", "object.work_order.amount_received.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amountReceived", new NumberFormatter<PurchaseOrderLineItemWorkOrderListView>());
 
-                setEmptyMessageKey("object.work_order.table.empty");
+                    addColumn("amountOpen", "amountOpen", "object.work_order.amount_open.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amountOpen", new NumberFormatter<PurchaseOrderLineItemWorkOrderListView>());
 
-            }
-        };
+                    addCustomAttributeColumns(WorkOrder.class);
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PurchaseOrderLineItemWorkOrderListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PurchaseOrderLineItemWorkOrderListView>() {
+                        @Override
+                        public String convert(PurchaseOrderLineItemWorkOrderListView workOrderListView) {
+                            return controllers.core.routes.PurchaseOrderController.editWorkOrder(workOrderListView.lineItemId, workOrderListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.work_order.table.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

@@ -34,35 +34,50 @@ import models.framework_models.kpi.KpiValueDefinition;
  */
 public class KpiValueDefinitionListView {
 
-    public static Table<KpiValueDefinitionListView> templateTable = new Table<KpiValueDefinitionListView>() {
-        {
-            setIdFieldName("id");
+    public static class TableDefinition {
 
-            addColumn("name", "name", "object.kpi_value_definition.name.label", Table.ColumnDef.SorterType.NONE);
+        public Table<KpiValueDefinitionListView> templateTable;
 
-            addColumn("type", "type", "object.kpi_value_definition.type.label", Table.ColumnDef.SorterType.NONE);
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("isTrendDisplayed", "isTrendDisplayed", "object.kpi_value_definition.is_trend_displayed.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isTrendDisplayed", new BooleanFormatter<KpiValueDefinitionListView>());
+        public Table<KpiValueDefinitionListView> getTable() {
+            return new Table<KpiValueDefinitionListView>() {
+                {
+                    setIdFieldName("id");
 
-            addColumn("renderType", "renderType", "object.kpi_value_definition.render_type.label", Table.ColumnDef.SorterType.NONE);
+                    addColumn("name", "name", "object.kpi_value_definition.name.label", Table.ColumnDef.SorterType.NONE);
 
-            addColumn("renderPattern", "renderPattern", "object.kpi_value_definition.render_pattern.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("renderPattern", new ObjectFormatter<KpiValueDefinitionListView>());
+                    addColumn("type", "type", "object.kpi_value_definition.type.label", Table.ColumnDef.SorterType.NONE);
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<KpiValueDefinitionListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<KpiValueDefinitionListView>() {
-                @Override
-                public String convert(KpiValueDefinitionListView kpiValueDefinitionListView) {
-                    return controllers.admin.routes.KpiManagerController.editValue(kpiValueDefinitionListView.id, kpiValueDefinitionListView.type).url();
+                    addColumn("isTrendDisplayed", "isTrendDisplayed", "object.kpi_value_definition.is_trend_displayed.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isTrendDisplayed", new BooleanFormatter<KpiValueDefinitionListView>());
+
+                    addColumn("renderType", "renderType", "object.kpi_value_definition.render_type.label", Table.ColumnDef.SorterType.NONE);
+
+                    addColumn("renderPattern", "renderPattern", "object.kpi_value_definition.render_pattern.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("renderPattern", new ObjectFormatter<KpiValueDefinitionListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<KpiValueDefinitionListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<KpiValueDefinitionListView>() {
+                        @Override
+                        public String convert(KpiValueDefinitionListView kpiValueDefinitionListView) {
+                            return controllers.admin.routes.KpiManagerController.editValue(kpiValueDefinitionListView.id, kpiValueDefinitionListView.type)
+                                    .url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
                 }
-            }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

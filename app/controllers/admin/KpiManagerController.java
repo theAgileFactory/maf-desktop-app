@@ -108,7 +108,7 @@ public class KpiManagerController extends Controller {
             }
 
             for (Map.Entry<String, List<KpiDefinitionListView>> entry : kpiDefinitionListViews.entrySet()) {
-                tables.put(entry.getKey(), KpiDefinitionListView.templateTable.fill(entry.getValue()));
+                tables.put(entry.getKey(), this.getTableProvider().get().kpiDefinition.templateTable.fill(entry.getValue()));
             }
 
         }
@@ -135,14 +135,14 @@ public class KpiManagerController extends Controller {
             kpiValueDefinitionListView.add(new KpiValueDefinitionListView(kpiDefinition.additional1KpiValueDefinition, DataType.ADDITIONAL1));
             kpiValueDefinitionListView.add(new KpiValueDefinitionListView(kpiDefinition.additional2KpiValueDefinition, DataType.ADDITIONAL2));
         }
-        Table<KpiValueDefinitionListView> valuesTable = KpiValueDefinitionListView.templateTable.fill(kpiValueDefinitionListView);
+        Table<KpiValueDefinitionListView> valuesTable = this.getTableProvider().get().kpiValueDefinition.templateTable.fill(kpiValueDefinitionListView);
 
         // create the color rules table
         List<KpiColorRuleListView> kpiColorRuleListView = new ArrayList<KpiColorRuleListView>();
         for (KpiColorRule kpiColorRule : kpiDefinition.kpiColorRules) {
             kpiColorRuleListView.add(new KpiColorRuleListView(kpiColorRule, getI18nMessagesPlugin()));
         }
-        Table<KpiColorRuleListView> rulesTable = KpiColorRuleListView.templateTable.fill(kpiColorRuleListView);
+        Table<KpiColorRuleListView> rulesTable = this.getTableProvider().get().kpiColorRule.templateTable.fill(kpiColorRuleListView);
 
         return ok(views.html.admin.kpi.view.render(kpiDefinition, kpi, valuesTable, rulesTable));
     }

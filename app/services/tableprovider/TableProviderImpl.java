@@ -8,24 +8,6 @@ import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
-import utils.table.ActorListView;
-import utils.table.ApplicationBlockListView;
-import utils.table.BudgetBucketListView;
-import utils.table.DeliverableListView;
-import utils.table.IterationListView;
-import utils.table.OrgUnitListView;
-import utils.table.PortfolioEntryBudgetLineListView;
-import utils.table.PortfolioEntryEventListView;
-import utils.table.PortfolioEntryPlanningPackageListView;
-import utils.table.PortfolioEntryReportListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
-import utils.table.PortfolioEntryRiskListView;
-import utils.table.PortfolioListView;
-import utils.table.RequirementListView;
-import utils.table.TimesheetActivityAllocatedActorListView;
-import utils.table.WorkOrderListView;
 
 /**
  * The service that provides the tables.
@@ -78,46 +60,40 @@ public class TableProviderImpl implements ITableProvider {
     public void flushTables() {
 
         // table
-        PortfolioEntryResourcePlanAllocatedResourceListView.templateTable = PortfolioEntryResourcePlanAllocatedResourceListView.getTable();
-        PortfolioEntryResourcePlanAllocatedOrgUnitListView.templateTable = PortfolioEntryResourcePlanAllocatedOrgUnitListView.getTable();
-        PortfolioEntryResourcePlanAllocatedActorListView.templateTable = PortfolioEntryResourcePlanAllocatedActorListView.getTable();
-        TimesheetActivityAllocatedActorListView.templateTable = TimesheetActivityAllocatedActorListView.getTable();
-        ApplicationBlockListView.templateTable = ApplicationBlockListView.getTable();
-        BudgetBucketListView.templateTable = BudgetBucketListView.getTable();
-        ActorListView.templateTable = ActorListView.getTable();
-        PortfolioEntryEventListView.templateTable = PortfolioEntryEventListView.getTable();
-        DeliverableListView.templateTable = DeliverableListView.getTable();
-
+        this.get().portfolioEntryResourcePlanAllocatedResource.templateTable = this.get().portfolioEntryResourcePlanAllocatedResource.getTable();
+        this.get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable = this.get().portfolioEntryResourcePlanAllocatedOrgUnit.getTable();
+        this.get().portfolioEntryResourcePlanAllocatedActor.templateTable = this.get().portfolioEntryResourcePlanAllocatedActor.getTable();
+        this.get().timesheetActivityAllocatedActor.templateTable = this.get().timesheetActivityAllocatedActor.getTable();
+        this.get().applicationBlock.templateTable = this.get().applicationBlock.getTable();
+        this.get().budgetBucket.templateTable = this.get().budgetBucket.getTable();
+        this.get().actor.templateTable = this.get().actor.getTable();
+        this.get().portfolioEntryEvent.templateTable = this.get().portfolioEntryEvent.getTable();
+        this.get().deliverable.templateTable = this.get().deliverable.getTable();
         this.get().portfolioEntry.templateTable = this.get().portfolioEntry.getTable(this.getKpiService());
-
-        PortfolioEntryBudgetLineListView.templateTable = PortfolioEntryBudgetLineListView.getTable();
-        PortfolioEntryReportListView.templateTable = PortfolioEntryReportListView.getTable();
-        IterationListView.templateTable = IterationListView.getTable();
-        OrgUnitListView.templateTable = OrgUnitListView.getTable();
-        PortfolioEntryPlanningPackageListView.templateTable = PortfolioEntryPlanningPackageListView.getTable();
-        PortfolioListView.templateTable = PortfolioListView.getTable();
-        RequirementListView.templateTable = RequirementListView.getTable();
-        PortfolioEntryRiskListView.templateTable = PortfolioEntryRiskListView.getTable();
-        WorkOrderListView.templateTable = WorkOrderListView.getTable();
-
-        // filterConfig
+        this.get().portfolioEntryBudgetLine.templateTable = this.get().portfolioEntryBudgetLine.getTable();
+        this.get().portfolioEntryReport.templateTable = this.get().portfolioEntryReport.getTable();
+        this.get().iteration.templateTable = this.get().iteration.getTable();
+        this.get().orgUnit.templateTable = this.get().orgUnit.getTable();
+        this.get().portfolioEntryPlanningPackage.templateTable = this.get().portfolioEntryPlanningPackage.getTable();
+        this.get().portfolio.templateTable = this.get().portfolio.getTable();
+        this.get().requirement.templateTable = this.get().requirement.getTable();
+        this.get().portfolioEntryRisk.templateTable = this.get().portfolioEntryRisk.getTable();
+        this.get().workOrder.templateTable = this.get().workOrder.getTable();
 
     }
 
     @Override
     public void flushFilterConfig() {
 
-        ApplicationBlockListView.filterConfig = ApplicationBlockListView.getFilterConfig();
-        DeliverableListView.filterConfig = DeliverableListView.getFilterConfig();
-        IterationListView.filterConfig = IterationListView.getFilterConfig();
-        PortfolioEntryEventListView.filterConfig = PortfolioEntryEventListView.getFilterConfig();
-
+        this.get().applicationBlock.filterConfig = this.get().applicationBlock.getFilterConfig();
+        this.get().deliverable.filterConfig = this.get().deliverable.getFilterConfig();
+        this.get().iteration.filterConfig = this.get().iteration.getFilterConfig();
+        this.get().portfolioEntryEvent.filterConfig = this.get().portfolioEntryEvent.getFilterConfig();
         this.get().portfolioEntry.filterConfig = this.get().portfolioEntry.getFilterConfig(this.getKpiService());
-
-        PortfolioEntryPlanningPackageListView.filterConfig = PortfolioEntryPlanningPackageListView.getFilterConfig();
-        PortfolioEntryResourcePlanAllocatedActorListView.filterConfig = PortfolioEntryResourcePlanAllocatedActorListView.getFilterConfig();
-        RequirementListView.filterConfig = RequirementListView.getFilterConfig();
-        TimesheetActivityAllocatedActorListView.filterConfig = TimesheetActivityAllocatedActorListView.getFilterConfig();
+        this.get().portfolioEntryPlanningPackage.filterConfig = this.get().portfolioEntryPlanningPackage.getFilterConfig();
+        this.get().portfolioEntryResourcePlanAllocatedActor.filterConfig = this.get().portfolioEntryResourcePlanAllocatedActor.getFilterConfig();
+        this.get().requirement.filterConfig = this.get().requirement.getFilterConfig();
+        this.get().timesheetActivityAllocatedActor.filterConfig = this.get().timesheetActivityAllocatedActor.getFilterConfig();
 
     }
 

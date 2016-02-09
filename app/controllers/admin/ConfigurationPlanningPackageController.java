@@ -87,7 +87,7 @@ public class ConfigurationPlanningPackageController extends Controller {
             packageGroupListView.add(new PortfolioEntryPlanningPackageGroupListView(packageGroup));
         }
 
-        Table<PortfolioEntryPlanningPackageGroupListView> packageGroupsTable = PortfolioEntryPlanningPackageGroupListView.templateTable
+        Table<PortfolioEntryPlanningPackageGroupListView> packageGroupsTable = this.getTableProvider().get().portfolioEntryPlanningPackageGroup.templateTable
                 .fill(packageGroupListView);
 
         // types
@@ -98,7 +98,7 @@ public class ConfigurationPlanningPackageController extends Controller {
             packagesTypesListView.add(new PortfolioEntryPlanningPackageTypeListView(packagesType, getI18nMessagesPlugin()));
         }
 
-        Table<PortfolioEntryPlanningPackageTypeListView> packagesTypesTable = PortfolioEntryPlanningPackageTypeListView.templateTable
+        Table<PortfolioEntryPlanningPackageTypeListView> packagesTypesTable = this.getTableProvider().get().portfolioEntryPlanningPackageType.templateTable
                 .fill(packagesTypesListView);
 
         return ok(views.html.admin.config.datareference.planning_package.list.render(packageGroupsTable, packagesTypesTable));
@@ -127,8 +127,8 @@ public class ConfigurationPlanningPackageController extends Controller {
             columnsToHide.add("isOpex");
         }
 
-        Table<PortfolioEntryPlanningPackagePatternListView> packagePatternsTable = PortfolioEntryPlanningPackagePatternListView.templateTable
-                .fill(packagePatternListView, columnsToHide);
+        Table<PortfolioEntryPlanningPackagePatternListView> packagePatternsTable = this.getTableProvider()
+                .get().portfolioEntryPlanningPackagePattern.templateTable.fill(packagePatternListView, columnsToHide);
 
         return ok(views.html.admin.config.datareference.planning_package.package_group_view.render(packageGroup, packagePatternsTable));
 

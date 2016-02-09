@@ -17,13 +17,13 @@
  */
 package utils.table;
 
-import models.reporting.Reporting;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.reporting.Reporting;
 
 /**
  * A reporting list view is used to display a reporting row in a table.
@@ -32,42 +32,66 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class ReportingListView {
 
-    public static Table<ReportingListView> templateTable = new Table<ReportingListView>() {
-        {
-            setIdFieldName("id");
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            addColumn("name", "name", "object.reporting.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<ReportingListView>());
+        public Table<ReportingListView> templateTable;
 
-            addColumn("description", "description", "object.reporting.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<ReportingListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("isPublic", "isPublic", "object.reporting.is_public.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isPublic", new BooleanFormatter<ReportingListView>());
-            setColumnCssClass("isPublic", IMafConstants.BOOTSTRAP_COLUMN_1);
+        /**
+         * Get the table.
+         */
+        public Table<ReportingListView> getTable() {
+            return new Table<ReportingListView>() {
+                {
+                    setIdFieldName("id");
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<ReportingListView>(IMafConstants.CONFIG_URL_FORMAT,
-                    new StringFormatFormatter.Hook<ReportingListView>() {
+                    addColumn("name", "name", "object.reporting.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<ReportingListView>());
+
+                    addColumn("description", "description", "object.reporting.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<ReportingListView>());
+
+                    addColumn("isPublic", "isPublic", "object.reporting.is_public.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isPublic", new BooleanFormatter<ReportingListView>());
+                    setColumnCssClass("isPublic", IMafConstants.BOOTSTRAP_COLUMN_1);
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<ReportingListView>(IMafConstants.CONFIG_URL_FORMAT,
+                            new StringFormatFormatter.Hook<ReportingListView>() {
                         @Override
                         public String convert(ReportingListView reportingListView) {
                             return controllers.admin.routes.ReportingController.edit(reportingListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
-            this.setLineAction(new IColumnFormatter<ReportingListView>() {
-                @Override
-                public String apply(ReportingListView reportingListView, Object value) {
-                    return controllers.core.routes.ReportingController.parametrize(reportingListView.id).url();
+                    this.setLineAction(new IColumnFormatter<ReportingListView>() {
+                        @Override
+                        public String apply(ReportingListView reportingListView, Object value) {
+                            return controllers.core.routes.ReportingController.parametrize(reportingListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.reporting.table.empty");
+
                 }
-            });
-
-            setEmptyMessageKey("object.reporting.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

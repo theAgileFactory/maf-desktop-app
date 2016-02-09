@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.governance.LifeCycleMilestoneInstanceStatusType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.governance.LifeCycleMilestoneInstanceStatusType;
 
 /**
  * An life cycle milestone instance status type list view is used to display a
@@ -36,51 +36,66 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class LifeCycleMilestoneInstanceStatusTypeListView {
 
-    public static Table<LifeCycleMilestoneInstanceStatusTypeListView> templateTable = new Table<LifeCycleMilestoneInstanceStatusTypeListView>() {
-        {
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<LifeCycleMilestoneInstanceStatusTypeListView> templateTable;
 
-            addColumn("name", "name", "object.life_cycle_milestone_instance_status_type.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("description", "description", "object.life_cycle_milestone_instance_status_type.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
+        public Table<LifeCycleMilestoneInstanceStatusTypeListView> getTable() {
+            return new Table<LifeCycleMilestoneInstanceStatusTypeListView>() {
+                {
 
-            addColumn("selectable", "selectable", "object.life_cycle_milestone_instance_status_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("selectable", new BooleanFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
+                    setIdFieldName("id");
 
-            addColumn("isApproved", "isApproved", "object.life_cycle_milestone_instance_status_type.is_approved.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isApproved", new BooleanFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
+                    addColumn("name", "name", "object.life_cycle_milestone_instance_status_type.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<LifeCycleMilestoneInstanceStatusTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<LifeCycleMilestoneInstanceStatusTypeListView>() {
+                    addColumn("description", "description", "object.life_cycle_milestone_instance_status_type.description.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
+
+                    addColumn("selectable", "selectable", "object.life_cycle_milestone_instance_status_type.selectable.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
+
+                    addColumn("isApproved", "isApproved", "object.life_cycle_milestone_instance_status_type.is_approved.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isApproved", new BooleanFormatter<LifeCycleMilestoneInstanceStatusTypeListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<LifeCycleMilestoneInstanceStatusTypeListView>(
+                            IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<LifeCycleMilestoneInstanceStatusTypeListView>() {
                         @Override
                         public String convert(LifeCycleMilestoneInstanceStatusTypeListView statusTypeListView) {
                             return controllers.admin.routes.ConfigurationGovernanceController.manageStatusType(statusTypeListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<LifeCycleMilestoneInstanceStatusTypeListView>() {
-                @Override
-                public String apply(LifeCycleMilestoneInstanceStatusTypeListView statusTypeListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationGovernanceController.deleteStatusType(statusTypeListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<LifeCycleMilestoneInstanceStatusTypeListView>() {
+                        @Override
+                        public String apply(LifeCycleMilestoneInstanceStatusTypeListView statusTypeListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationGovernanceController.deleteStatusType(statusTypeListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.life_cycle_milestone_instance_status_type.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.life_cycle_milestone_instance_status_type.table.empty");
+            };
 
         }
-    };
+    }
 
     /**
      * Default constructor.

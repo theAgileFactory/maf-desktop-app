@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.PortfolioEntryReportStatusType;
 import constants.IMafConstants;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
@@ -29,6 +28,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.PortfolioEntryReportStatusType;
 
 /**
  * A portfolio entry report status type list view is used to display a portfolio
@@ -38,53 +38,77 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PortfolioEntryReportStatusTypeListView {
 
-    public static Table<PortfolioEntryReportStatusTypeListView> templateTable = new Table<PortfolioEntryReportStatusTypeListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<PortfolioEntryReportStatusTypeListView> templateTable;
 
-            addColumn("name", "name", "object.portfolio_entry_report_status_type.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryReportStatusTypeListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("description", "description", "object.portfolio_entry_report_status_type.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryReportStatusTypeListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryReportStatusTypeListView> getTable() {
+            return new Table<PortfolioEntryReportStatusTypeListView>() {
+                {
 
-            addColumn("selectable", "selectable", "object.portfolio_entry_report_status_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("selectable", new BooleanFormatter<PortfolioEntryReportStatusTypeListView>());
+                    setIdFieldName("id");
 
-            addColumn("color", "color", "object.portfolio_entry_report_status_type.css_class.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("color", new ObjectFormatter<PortfolioEntryReportStatusTypeListView>());
+                    addColumn("name", "name", "object.portfolio_entry_report_status_type.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryReportStatusTypeListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryReportStatusTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<PortfolioEntryReportStatusTypeListView>() {
+                    addColumn("description", "description", "object.portfolio_entry_report_status_type.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryReportStatusTypeListView>());
+
+                    addColumn("selectable", "selectable", "object.portfolio_entry_report_status_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<PortfolioEntryReportStatusTypeListView>());
+
+                    addColumn("color", "color", "object.portfolio_entry_report_status_type.css_class.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("color", new ObjectFormatter<PortfolioEntryReportStatusTypeListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryReportStatusTypeListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PortfolioEntryReportStatusTypeListView>() {
                         @Override
                         public String convert(PortfolioEntryReportStatusTypeListView portfolioEntryReportStatusTypeListView) {
                             return controllers.admin.routes.ConfigurationRegisterController.manageReportStatusType(portfolioEntryReportStatusTypeListView.id)
                                     .url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryReportStatusTypeListView>() {
-                @Override
-                public String apply(PortfolioEntryReportStatusTypeListView portfolioEntryReportStatusTypeListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url =
-                            controllers.admin.routes.ConfigurationRegisterController.deleteReportStatusType(portfolioEntryReportStatusTypeListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryReportStatusTypeListView>() {
+                        @Override
+                        public String apply(PortfolioEntryReportStatusTypeListView portfolioEntryReportStatusTypeListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationRegisterController
+                                    .deleteReportStatusType(portfolioEntryReportStatusTypeListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.portfolio_entry_report_status_type.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.portfolio_entry_report_status_type.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.
@@ -110,9 +134,7 @@ public class PortfolioEntryReportStatusTypeListView {
      * @param messagesPlugin
      *            the i18n service
      */
-    public PortfolioEntryReportStatusTypeListView(
-            PortfolioEntryReportStatusType reportStatusType,
-            II18nMessagesPlugin messagesPlugin) {
+    public PortfolioEntryReportStatusTypeListView(PortfolioEntryReportStatusType reportStatusType, II18nMessagesPlugin messagesPlugin) {
 
         this.id = reportStatusType.id;
         this.name = reportStatusType.name;

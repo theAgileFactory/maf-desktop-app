@@ -21,6 +21,7 @@ import java.util.Date;
 
 import constants.IMafConstants;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -38,92 +39,101 @@ import models.delivery.Iteration;
  */
 public class IterationListView {
 
-    public static FilterConfig<IterationListView> filterConfig = getFilterConfig();
+    public static class TableDefinition {
 
-    /**
-     * Get the filter config.
-     */
-    public static FilterConfig<IterationListView> getFilterConfig() {
-        return new FilterConfig<IterationListView>() {
-            {
+        public FilterConfig<IterationListView> filterConfig;
 
-                addColumnConfiguration("name", "name", "object.iteration.name.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
+        public TableDefinition() {
+            this.filterConfig = getFilterConfig();
+            this.templateTable = getTable();
+        }
 
-                addColumnConfiguration("storyPoints", "storyPoints", "object.iteration.story_points.label", new NumericFieldFilterComponent("0", "="), true,
-                        false, SortStatusType.UNSORTED);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<IterationListView> getFilterConfig() {
+            return new FilterConfig<IterationListView>() {
+                {
 
-                addColumnConfiguration("isClosed", "isClosed", "object.iteration.is_closed.label", new CheckboxFilterComponent(false), true, false,
-                        SortStatusType.NONE);
+                    addColumnConfiguration("name", "name", "object.iteration.name.label", new TextFieldFilterComponent("*"), true, false,
+                            SortStatusType.UNSORTED);
 
-                addColumnConfiguration("startDate", "startDate", "object.iteration.start_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("storyPoints", "storyPoints", "object.iteration.story_points.label", new NumericFieldFilterComponent("0", "="),
+                            true, false, SortStatusType.UNSORTED);
 
-                addColumnConfiguration("endDate", "endDate", "object.iteration.end_date.label",
-                        new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
+                    addColumnConfiguration("isClosed", "isClosed", "object.iteration.is_closed.label", new CheckboxFilterComponent(false), true, false,
+                            SortStatusType.NONE);
 
-                addColumnConfiguration("source", "source", "object.iteration.source.label", new TextFieldFilterComponent("*"), false, false,
-                        SortStatusType.UNSORTED);
+                    addColumnConfiguration("startDate", "startDate", "object.iteration.start_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
 
-                addCustomAttributesColumns("id", Iteration.class);
-            }
-        };
-    }
+                    addColumnConfiguration("endDate", "endDate", "object.iteration.end_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
 
-    public static Table<IterationListView> templateTable = getTable();
+                    addColumnConfiguration("source", "source", "object.iteration.source.label", new TextFieldFilterComponent("*"), false, false,
+                            SortStatusType.UNSORTED);
 
-    /**
-     * Get the table.
-     */
-    public static Table<IterationListView> getTable() {
-        return new Table<IterationListView>() {
-            {
+                    addCustomAttributesColumns("id", Iteration.class);
+                }
+            };
+        }
 
-                setIdFieldName("id");
+        public Table<IterationListView> templateTable;
 
-                addColumn("name", "name", "object.iteration.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<IterationListView>());
+        /**
+         * Get the table.
+         */
+        public Table<IterationListView> getTable() {
+            return new Table<IterationListView>() {
+                {
 
-                addColumn("storyPoints", "storyPoints", "object.iteration.story_points.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("storyPoints", new NumberFormatter<IterationListView>());
+                    setIdFieldName("id");
 
-                addColumn("isClosed", "isClosed", "object.iteration.is_closed.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isClosed", new BooleanFormatter<IterationListView>());
+                    addColumn("name", "name", "object.iteration.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<IterationListView>());
 
-                addColumn("startDate", "startDate", "object.iteration.start_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("startDate", new DateFormatter<IterationListView>());
+                    addColumn("storyPoints", "storyPoints", "object.iteration.story_points.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("storyPoints", new NumberFormatter<IterationListView>());
 
-                addColumn("endDate", "endDate", "object.iteration.end_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("endDate", new DateFormatter<IterationListView>());
+                    addColumn("isClosed", "isClosed", "object.iteration.is_closed.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isClosed", new BooleanFormatter<IterationListView>());
 
-                addColumn("source", "source", "object.iteration.source.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("source", new ObjectFormatter<IterationListView>());
+                    addColumn("startDate", "startDate", "object.iteration.start_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("startDate", new DateFormatter<IterationListView>());
 
-                addCustomAttributeColumns(Iteration.class);
+                    addColumn("endDate", "endDate", "object.iteration.end_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("endDate", new DateFormatter<IterationListView>());
 
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink",
-                        new StringFormatFormatter<IterationListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<IterationListView>() {
-                    @Override
-                    public String convert(IterationListView iterationListView) {
-                        return controllers.core.routes.PortfolioEntryDeliveryController
-                                .editIteration(iterationListView.portfolioEntryId, iterationListView.id).url();
-                    }
-                }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addColumn("source", "source", "object.iteration.source.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("source", new ObjectFormatter<IterationListView>());
 
-                this.setLineAction(new IColumnFormatter<IterationListView>() {
-                    @Override
-                    public String apply(IterationListView iterationListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryDeliveryController
-                                .viewIteration(iterationListView.portfolioEntryId, iterationListView.id).url();
-                    }
-                });
+                    addCustomAttributeColumns(Iteration.class);
 
-                setEmptyMessageKey("object.iteration.table.empty");
-            }
-        };
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink",
+                            new StringFormatFormatter<IterationListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<IterationListView>() {
+                        @Override
+                        public String convert(IterationListView iterationListView) {
+                            return controllers.core.routes.PortfolioEntryDeliveryController
+                                    .editIteration(iterationListView.portfolioEntryId, iterationListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction(new IColumnFormatter<IterationListView>() {
+                        @Override
+                        public String apply(IterationListView iterationListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryDeliveryController
+                                    .viewIteration(iterationListView.portfolioEntryId, iterationListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.iteration.table.empty");
+                }
+            };
+        }
+
     }
 
     /**

@@ -90,6 +90,7 @@ import services.datasyndication.IDataSyndicationService;
 import services.echannel.IEchannelService;
 import services.echannel.IEchannelService.EchannelException;
 import services.echannel.models.InstanceInfo;
+import services.tableprovider.ITableProvider;
 import utils.table.NotificationListView;
 import utils.tour.TourUtils;
 
@@ -127,6 +128,8 @@ public class Application extends Controller {
     private IEchannelService echannelService;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(Application.class);
 
@@ -235,7 +238,7 @@ public class Application extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<NotificationListView> filterConfig = this.getTableProvider().get().notification.filterConfig.getCurrent(uid, request());
 
             Pair<Table<NotificationListView>, Pagination<Notification>> t = getNotificationsTable(filterConfig);
 
@@ -256,7 +259,7 @@ public class Application extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<NotificationListView> filterConfig = this.getTableProvider().get().notification.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -297,7 +300,8 @@ public class Application extends Controller {
             notificationListViews.add(new NotificationListView(notification));
         }
 
-        Table<NotificationListView> table = NotificationListView.templateTable.fillForFilterConfig(notificationListViews, filterConfig.getColumnsToHide());
+        Table<NotificationListView> table = this.getTableProvider().get().notification.templateTable.fillForFilterConfig(notificationListViews,
+                filterConfig.getColumnsToHide());
 
         table.addLinkRowAction(Msg.get("notifications.action.delete"), controllers.routes.Application.deleteNotifications().url(),
                 Msg.get("notifications.action.delete.confirmation.message"));
@@ -338,7 +342,7 @@ public class Application extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<NotificationListView> filterConfig = NotificationListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<NotificationListView> filterConfig = this.getTableProvider().get().notification.filterConfig.getCurrent(uid, request());
 
             String loggedUser = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
@@ -906,5 +910,12 @@ public class Application extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

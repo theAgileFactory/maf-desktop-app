@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.PortfolioEntryPlanningPackageGroup;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.PortfolioEntryPlanningPackageGroup;
 
 /**
  * A portfolio entry planning package group list view is used to display a
@@ -36,55 +36,80 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PortfolioEntryPlanningPackageGroupListView {
 
-    public static Table<PortfolioEntryPlanningPackageGroupListView> templateTable = new Table<PortfolioEntryPlanningPackageGroupListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<PortfolioEntryPlanningPackageGroupListView> templateTable;
 
-            addColumn("name", "name", "object.portfolio_entry_planning_package_group.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackageGroupListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("description", "description", "object.portfolio_entry_planning_package_group.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryPlanningPackageGroupListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryPlanningPackageGroupListView> getTable() {
+            return new Table<PortfolioEntryPlanningPackageGroupListView>() {
+                {
 
-            addColumn("isActive", "isActive", "object.portfolio_entry_planning_package_group.is_active.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioEntryPlanningPackageGroupListView>());
+                    setIdFieldName("id");
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackageGroupListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<PortfolioEntryPlanningPackageGroupListView>() {
+                    addColumn("name", "name", "object.portfolio_entry_planning_package_group.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackageGroupListView>());
+
+                    addColumn("description", "description", "object.portfolio_entry_planning_package_group.description.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryPlanningPackageGroupListView>());
+
+                    addColumn("isActive", "isActive", "object.portfolio_entry_planning_package_group.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioEntryPlanningPackageGroupListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackageGroupListView>(
+                            IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<PortfolioEntryPlanningPackageGroupListView>() {
                         @Override
                         public String convert(PortfolioEntryPlanningPackageGroupListView packageGroupListView) {
                             return controllers.admin.routes.ConfigurationPlanningPackageController.managePackageGroup(packageGroupListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryPlanningPackageGroupListView>() {
-                @Override
-                public String apply(PortfolioEntryPlanningPackageGroupListView packageGroupListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationPlanningPackageController.deletePackageGroup(packageGroupListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryPlanningPackageGroupListView>() {
+                        @Override
+                        public String apply(PortfolioEntryPlanningPackageGroupListView packageGroupListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationPlanningPackageController.deletePackageGroup(packageGroupListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction(new IColumnFormatter<PortfolioEntryPlanningPackageGroupListView>() {
+                        @Override
+                        public String apply(PortfolioEntryPlanningPackageGroupListView packageGroupListView, Object value) {
+                            return controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packageGroupListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.portfolio_entry_planning_package_group.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-            this.setLineAction(new IColumnFormatter<PortfolioEntryPlanningPackageGroupListView>() {
-                @Override
-                public String apply(PortfolioEntryPlanningPackageGroupListView packageGroupListView, Object value) {
-                    return controllers.admin.routes.ConfigurationPlanningPackageController.viewPackageGroup(packageGroupListView.id).url();
-                }
-            });
-
-            setEmptyMessageKey("object.portfolio_entry_planning_package_group.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

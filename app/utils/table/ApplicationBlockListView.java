@@ -17,13 +17,13 @@
  */
 package utils.table;
 
-import models.architecture.ApplicationBlock;
 import framework.commons.IFrameworkConstants;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.architecture.ApplicationBlock;
 
 /**
  * An application block list view is used to display an application block row in
@@ -33,84 +33,94 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class ApplicationBlockListView {
 
-    public static FilterConfig<ApplicationBlockListView> filterConfig = getFilterConfig();
+    public static class TableDefinition {
 
-    /**
-     * Get the filter config.
-     */
-    public static FilterConfig<ApplicationBlockListView> getFilterConfig() {
-        return new FilterConfig<ApplicationBlockListView>() {
-            {
+        public TableDefinition() {
+            this.filterConfig = getFilterConfig();
+            this.templateTable = getTable();
+        }
 
-                addColumnConfiguration("refId", "refId", "object.application_block.ref_id.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
+        public FilterConfig<ApplicationBlockListView> filterConfig;
 
-                addColumnConfiguration("name", "name", "object.application_block.name.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.ASC);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<ApplicationBlockListView> getFilterConfig() {
+            return new FilterConfig<ApplicationBlockListView>() {
+                {
 
-                addColumnConfiguration("description", "description", "object.application_block.description.label", new TextFieldFilterComponent("*"), true,
-                        false, SortStatusType.NONE);
+                    addColumnConfiguration("refId", "refId", "object.application_block.ref_id.label", new TextFieldFilterComponent("*"), true, false,
+                            SortStatusType.UNSORTED);
 
-                addColumnConfiguration("parent", "parent.id", "object.application_block.parent.label", new AutocompleteFilterComponent(
-                        controllers.routes.JsonController.applicationBlock().url()), true, false, SortStatusType.NONE);
+                    addColumnConfiguration("name", "name", "object.application_block.name.label", new TextFieldFilterComponent("*"), true, false,
+                            SortStatusType.ASC);
 
-                addColumnConfiguration("archived", "archived", "object.application_block.archived.label", new CheckboxFilterComponent(false), true, true,
-                        SortStatusType.NONE);
+                    addColumnConfiguration("description", "description", "object.application_block.description.label", new TextFieldFilterComponent("*"),
+                            true, false, SortStatusType.NONE);
 
-                addCustomAttributesColumns("id", ApplicationBlockListView.class);
+                    addColumnConfiguration("parent", "parent.id", "object.application_block.parent.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.applicationBlock().url()), true, false, SortStatusType.NONE);
 
-            }
-        };
-    }
+                    addColumnConfiguration("archived", "archived", "object.application_block.archived.label", new CheckboxFilterComponent(false), true, true,
+                            SortStatusType.NONE);
 
-    public static Table<ApplicationBlockListView> templateTable = getTable();
+                    addCustomAttributesColumns("id", ApplicationBlockListView.class);
 
-    /**
-     * Get the table.
-     */
-    public static Table<ApplicationBlockListView> getTable() {
-        return new Table<ApplicationBlockListView>() {
-            {
-                setIdFieldName("id");
+                }
+            };
+        }
 
-                addColumn("refId", "refId", "object.application_block.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<ApplicationBlockListView>());
+        public Table<ApplicationBlockListView> templateTable;
 
-                addColumn("name", "name", "object.application_block.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<ApplicationBlockListView>());
+        /**
+         * Get the table.
+         */
+        public Table<ApplicationBlockListView> getTable() {
+            return new Table<ApplicationBlockListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("description", "description", "object.application_block.description.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("description", new ObjectFormatter<ApplicationBlockListView>());
+                    addColumn("refId", "refId", "object.application_block.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<ApplicationBlockListView>());
 
-                addColumn("parent", "parent", "object.application_block.parent.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("parent", new IColumnFormatter<ApplicationBlockListView>() {
-                    @Override
-                    public String apply(ApplicationBlockListView applicationBlockListView, Object value) {
-                        if (applicationBlockListView.parent == null) {
-                            return IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA;
-                        } else {
-                            return views.html.framework_views.parts.formats.display_object.render(applicationBlockListView.parent.getName(), false).body();
+                    addColumn("name", "name", "object.application_block.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<ApplicationBlockListView>());
+
+                    addColumn("description", "description", "object.application_block.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<ApplicationBlockListView>());
+
+                    addColumn("parent", "parent", "object.application_block.parent.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("parent", new IColumnFormatter<ApplicationBlockListView>() {
+                        @Override
+                        public String apply(ApplicationBlockListView applicationBlockListView, Object value) {
+                            if (applicationBlockListView.parent == null) {
+                                return IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA;
+                            } else {
+                                return views.html.framework_views.parts.formats.display_object.render(applicationBlockListView.parent.getName(), false)
+                                        .body();
+                            }
+
                         }
+                    });
 
-                    }
-                });
+                    addColumn("archived", "archived", "object.application_block.archived.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("archived", new BooleanFormatter<ApplicationBlockListView>());
 
-                addColumn("archived", "archived", "object.application_block.archived.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("archived", new BooleanFormatter<ApplicationBlockListView>());
+                    addCustomAttributeColumns(ApplicationBlockListView.class);
 
-                addCustomAttributeColumns(ApplicationBlockListView.class);
+                    this.setLineAction(new IColumnFormatter<ApplicationBlockListView>() {
+                        @Override
+                        public String apply(ApplicationBlockListView applicationBlockListView, Object value) {
+                            return controllers.core.routes.ArchitectureController.index(applicationBlockListView.id).url();
+                        }
+                    });
 
-                this.setLineAction(new IColumnFormatter<ApplicationBlockListView>() {
-                    @Override
-                    public String apply(ApplicationBlockListView applicationBlockListView, Object value) {
-                        return controllers.core.routes.ArchitectureController.index(applicationBlockListView.id).url();
-                    }
-                });
+                    setEmptyMessageKey("object.application_block.table.empty");
 
-                setEmptyMessageKey("object.application_block.table.empty");
+                }
+            };
 
-            }
-        };
+        }
 
     }
 

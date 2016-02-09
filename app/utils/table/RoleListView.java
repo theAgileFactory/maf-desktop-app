@@ -19,13 +19,13 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.framework_models.account.SystemLevelRoleType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.framework_models.account.SystemLevelRoleType;
 
 /**
  * An role list view is used to display an role row in a table.
@@ -34,42 +34,66 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class RoleListView {
 
-    public static Table<RoleListView> templateTable = new Table<RoleListView>() {
-        {
-            setIdFieldName("id");
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            addColumn("name", "name", "object.role.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<RoleListView>());
+        public Table<RoleListView> templateTable;
 
-            addColumn("description", "description", "object.role.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<RoleListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RoleListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<RoleListView>() {
+        /**
+         * Get the table.
+         */
+        public Table<RoleListView> getTable() {
+            return new Table<RoleListView>() {
+                {
+                    setIdFieldName("id");
+
+                    addColumn("name", "name", "object.role.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<RoleListView>());
+
+                    addColumn("description", "description", "object.role.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<RoleListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink",
+                            new StringFormatFormatter<RoleListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<RoleListView>() {
                         @Override
                         public String convert(RoleListView roleListView) {
                             return controllers.admin.routes.ConfigurationController.manageRole(roleListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RoleListView>() {
-                @Override
-                public String apply(RoleListView roleListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationController.deleteRole(roleListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RoleListView>() {
+                        @Override
+                        public String apply(RoleListView roleListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationController.deleteRole(roleListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

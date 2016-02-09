@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -43,6 +45,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckBudgetBucketExists;
+import services.tableprovider.ITableProvider;
 import utils.form.BudgetBucketFormData;
 import utils.form.BudgetBucketLineFormData;
 import utils.table.BudgetBucketLineListView;
@@ -55,6 +58,9 @@ import utils.table.PortfolioEntryBudgetLineListView;
  * @author Johann Kohler
  */
 public class BudgetBucketController extends Controller {
+
+    @Inject
+    private ITableProvider tableProvider;
 
     public static Form<BudgetBucketFormData> formTemplate = Form.form(BudgetBucketFormData.class);
     public static Form<BudgetBucketLineFormData> lineFormTemplate = Form.form(BudgetBucketLineFormData.class);
@@ -94,7 +100,7 @@ public class BudgetBucketController extends Controller {
         for (BudgetBucketLine budgetLine : budgetBucketLinesPagination.getListOfObjects()) {
             budgetBucketLineListView.add(new BudgetBucketLineListView(budgetLine));
         }
-        Table<BudgetBucketLineListView> budgetBucketLinesTable = BudgetBucketLineListView.templateTable.fill(budgetBucketLineListView);
+        Table<BudgetBucketLineListView> budgetBucketLinesTable = this.getTableProvider().get().budgetBucketLine.templateTable.fill(budgetBucketLineListView);
 
         // create the portfolio entry budget table (call initiative budget)
         Set<String> hideColumnsForInitiativeBudgetTable = new HashSet<String>();
@@ -111,8 +117,8 @@ public class BudgetBucketController extends Controller {
         for (PortfolioEntryBudgetLine budgetLine : initiativeBudgetLinesPagination.getListOfObjects()) {
             initiativeBudgetLineListView.add(new PortfolioEntryBudgetLineListView(budgetLine));
         }
-        Table<PortfolioEntryBudgetLineListView> initiativeBudgetLinesTable = PortfolioEntryBudgetLineListView.templateTable.fill(initiativeBudgetLineListView,
-                hideColumnsForInitiativeBudgetTable);
+        Table<PortfolioEntryBudgetLineListView> initiativeBudgetLinesTable = this.getTableProvider().get().portfolioEntryBudgetLine.templateTable
+                .fill(initiativeBudgetLineListView, hideColumnsForInitiativeBudgetTable);
 
         // compute the total budgets
         opexTotalBudget = BudgetBucketDAO.getBudgetAsAmountByBucketAndOpex(id, true);
@@ -364,6 +370,13 @@ public class BudgetBucketController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.budget_bucket.line.delete.successful"));
 
         return redirect(controllers.core.routes.BudgetBucketController.view(id, 0, 0));
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

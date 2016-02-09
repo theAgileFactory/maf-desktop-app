@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.framework_models.kpi.KpiColorRule;
 import constants.IMafConstants;
 import framework.commons.IFrameworkConstants.Syntax;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -29,6 +28,7 @@ import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.framework_models.kpi.KpiColorRule;
 
 /**
  * A kpi color rule list view is used to display a kpi color rule row in a
@@ -38,64 +38,88 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class KpiColorRuleListView {
 
-    public static Table<KpiColorRuleListView> templateTable = new Table<KpiColorRuleListView>() {
-        {
-            setIdFieldName("id");
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("changeOrder", new IColumnFormatter<KpiColorRuleListView>() {
-                @Override
-                public String apply(KpiColorRuleListView kpiColorRuleListView, Object value) {
-                    return "<a href=\"" + controllers.admin.routes.KpiManagerController.changeRuleOrder(kpiColorRuleListView.id, false).url()
-                            + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
-                            + controllers.admin.routes.KpiManagerController.changeRuleOrder(kpiColorRuleListView.id, true).url()
-                            + "\"><span class=\"fa fa-arrow-up\"></span></a>";
-                }
-            });
-            setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
+        public Table<KpiColorRuleListView> templateTable;
 
-            addColumn("rule", "rule", "object.kpi_color_rule.rule.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("rule", new IColumnFormatter<KpiColorRuleListView>() {
-                @Override
-                public String apply(KpiColorRuleListView kpiColorRuleListView, Object value) {
-                    return views.html.framework_views.parts.code_display.render(kpiColorRuleListView.rule, Syntax.JAVASCRIPT).body();
-                }
-            });
-            this.setColumnValueCssClass("rule", "rowlink-skip");
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("color", "color", "object.kpi_color_rule.color.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("color", new ObjectFormatter<KpiColorRuleListView>());
+        /**
+         * Get the table.
+         */
+        public Table<KpiColorRuleListView> getTable() {
+            return new Table<KpiColorRuleListView>() {
+                {
+                    setIdFieldName("id");
 
-            addColumn("renderLabel", "renderLabel", "object.kpi_color_rule.render_label.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("renderLabel", new ObjectFormatter<KpiColorRuleListView>());
+                    addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("changeOrder", new IColumnFormatter<KpiColorRuleListView>() {
+                        @Override
+                        public String apply(KpiColorRuleListView kpiColorRuleListView, Object value) {
+                            return "<a href=\"" + controllers.admin.routes.KpiManagerController.changeRuleOrder(kpiColorRuleListView.id, false).url()
+                                    + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
+                                    + controllers.admin.routes.KpiManagerController.changeRuleOrder(kpiColorRuleListView.id, true).url()
+                                    + "\"><span class=\"fa fa-arrow-up\"></span></a>";
+                        }
+                    });
+                    setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<KpiColorRuleListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<KpiColorRuleListView>() {
+                    addColumn("rule", "rule", "object.kpi_color_rule.rule.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("rule", new IColumnFormatter<KpiColorRuleListView>() {
+                        @Override
+                        public String apply(KpiColorRuleListView kpiColorRuleListView, Object value) {
+                            return views.html.framework_views.parts.code_display.render(kpiColorRuleListView.rule, Syntax.JAVASCRIPT).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("rule", "rowlink-skip");
+
+                    addColumn("color", "color", "object.kpi_color_rule.color.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("color", new ObjectFormatter<KpiColorRuleListView>());
+
+                    addColumn("renderLabel", "renderLabel", "object.kpi_color_rule.render_label.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("renderLabel", new ObjectFormatter<KpiColorRuleListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<KpiColorRuleListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<KpiColorRuleListView>() {
                         @Override
                         public String convert(KpiColorRuleListView kpiColorRuleListView) {
                             return controllers.admin.routes.KpiManagerController.manageRule(kpiColorRuleListView.kpiDefinitionId, kpiColorRuleListView.id)
                                     .url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<KpiColorRuleListView>() {
-                @Override
-                public String apply(KpiColorRuleListView kpiColorRuleListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.KpiManagerController.deleteRule(kpiColorRuleListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<KpiColorRuleListView>() {
+                        @Override
+                        public String apply(KpiColorRuleListView kpiColorRuleListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.KpiManagerController.deleteRule(kpiColorRuleListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

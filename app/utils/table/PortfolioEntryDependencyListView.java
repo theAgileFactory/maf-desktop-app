@@ -35,55 +35,73 @@ import models.pmo.PortfolioEntryDependency;
  */
 public class PortfolioEntryDependencyListView {
 
-    public static Table<PortfolioEntryDependencyListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PortfolioEntryDependencyListView> getTable() {
-        return new Table<PortfolioEntryDependencyListView>() {
-            {
-                setIdFieldName("portfolioEntryId");
+    public static class TableDefinition {
 
-                addColumn("dependencyType", "dependencyType", "object.portfolio_entry.dependency_type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("dependencyType", new ObjectFormatter<PortfolioEntryDependencyListView>());
+        public Table<PortfolioEntryDependencyListView> templateTable;
 
-                addColumn("name", "dependingPortfolioEntry", "object.portfolio_entry.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new IColumnFormatter<PortfolioEntryDependencyListView>() {
-                    @Override
-                    public String apply(PortfolioEntryDependencyListView portfolioEntryDependencyListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry.render(portfolioEntryDependencyListView.dependingPortfolioEntry, false).body();
-                    }
-                });
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("deleteActionLink", "portfolioEntryId", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryDependencyListView>() {
-                    @Override
-                    public String apply(PortfolioEntryDependencyListView portfolioEntryDependencyListView, Object value) {
-                        String unassignConfirmationMessage = MessageFormat.format(
-                                "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">" + "<span class=\"fa fa-times\"></span></a>",
-                                Msg.get("object.portfolio_entry.dependency.delete.confirmation"));
-                        String url = controllers.core.routes.PortfolioEntryController.deleteDependency(portfolioEntryDependencyListView.portfolioEntryId,
-                                portfolioEntryDependencyListView.portfolioEntryDependency.id.sourcePortfolioEntryId,
-                                portfolioEntryDependencyListView.portfolioEntryDependency.id.destinationPortfolioEntryId,
-                                portfolioEntryDependencyListView.portfolioEntryDependency.id.portfolioEntryDependencyTypeId).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, unassignConfirmationMessage).body();
-                    }
-                });
-                setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryDependencyListView> getTable() {
+            return new Table<PortfolioEntryDependencyListView>() {
+                {
+                    setIdFieldName("portfolioEntryId");
 
-                this.setLineAction(new IColumnFormatter<PortfolioEntryDependencyListView>() {
-                    @Override
-                    public String apply(PortfolioEntryDependencyListView portfolioEntryDependencyListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryController.overview(portfolioEntryDependencyListView.dependingPortfolioEntry.id).url();
-                    }
-                });
+                    addColumn("dependencyType", "dependencyType", "object.portfolio_entry.dependency_type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("dependencyType", new ObjectFormatter<PortfolioEntryDependencyListView>());
 
-                setEmptyMessageKey("object.portfolio_entry.table.empty");
+                    addColumn("name", "dependingPortfolioEntry", "object.portfolio_entry.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new IColumnFormatter<PortfolioEntryDependencyListView>() {
+                        @Override
+                        public String apply(PortfolioEntryDependencyListView portfolioEntryDependencyListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry.render(portfolioEntryDependencyListView.dependingPortfolioEntry, false)
+                                    .body();
+                        }
+                    });
 
-            }
-        };
+                    addColumn("deleteActionLink", "portfolioEntryId", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryDependencyListView>() {
+                        @Override
+                        public String apply(PortfolioEntryDependencyListView portfolioEntryDependencyListView, Object value) {
+                            String unassignConfirmationMessage = MessageFormat.format(
+                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">" + "<span class=\"fa fa-times\"></span></a>",
+                                    Msg.get("object.portfolio_entry.dependency.delete.confirmation"));
+                            String url = controllers.core.routes.PortfolioEntryController.deleteDependency(portfolioEntryDependencyListView.portfolioEntryId,
+                                    portfolioEntryDependencyListView.portfolioEntryDependency.id.sourcePortfolioEntryId,
+                                    portfolioEntryDependencyListView.portfolioEntryDependency.id.destinationPortfolioEntryId,
+                                    portfolioEntryDependencyListView.portfolioEntryDependency.id.portfolioEntryDependencyTypeId).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, unassignConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction(new IColumnFormatter<PortfolioEntryDependencyListView>() {
+                        @Override
+                        public String apply(PortfolioEntryDependencyListView portfolioEntryDependencyListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryController.overview(portfolioEntryDependencyListView.dependingPortfolioEntry.id)
+                                    .url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.portfolio_entry.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

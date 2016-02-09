@@ -17,12 +17,12 @@
  */
 package utils.table;
 
-import models.finance.BudgetBucket;
-import models.pmo.Actor;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.finance.BudgetBucket;
+import models.pmo.Actor;
 
 /**
  * A budget bucket list view is used to display a budget bucket row in a table.
@@ -31,50 +31,58 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class BudgetBucketListView {
 
-    public static Table<BudgetBucketListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<BudgetBucketListView> getTable() {
-        return new Table<BudgetBucketListView>() {
-            {
-                setIdFieldName("id");
+        public Table<BudgetBucketListView> templateTable;
 
-                addColumn("refId", "refId", "object.budget_bucket.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<BudgetBucketListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("name", "name", "object.budget_bucket.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<BudgetBucketListView>());
+        /**
+         * Get the table.
+         */
+        public Table<BudgetBucketListView> getTable() {
+            return new Table<BudgetBucketListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("owner", "owner", "object.budget_bucket.owner.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("owner", new IColumnFormatter<BudgetBucketListView>() {
-                    @Override
-                    public String apply(BudgetBucketListView budgetBucketListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(budgetBucketListView.owner).body();
-                    }
-                });
-                this.setColumnValueCssClass("owner", "rowlink-skip");
+                    addColumn("refId", "refId", "object.budget_bucket.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<BudgetBucketListView>());
 
-                addColumn("isApproved", "isApproved", "object.budget_bucket.is_approved.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isApproved", new BooleanFormatter<BudgetBucketListView>());
+                    addColumn("name", "name", "object.budget_bucket.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<BudgetBucketListView>());
 
-                addColumn("isActive", "isActive", "object.budget_bucket.is_active.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isActive", new BooleanFormatter<BudgetBucketListView>());
+                    addColumn("owner", "owner", "object.budget_bucket.owner.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("owner", new IColumnFormatter<BudgetBucketListView>() {
+                        @Override
+                        public String apply(BudgetBucketListView budgetBucketListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(budgetBucketListView.owner).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("owner", "rowlink-skip");
 
-                addCustomAttributeColumns(BudgetBucket.class);
+                    addColumn("isApproved", "isApproved", "object.budget_bucket.is_approved.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isApproved", new BooleanFormatter<BudgetBucketListView>());
 
-                this.setLineAction(new IColumnFormatter<BudgetBucketListView>() {
-                    @Override
-                    public String apply(BudgetBucketListView budgetBucketListView, Object value) {
-                        return controllers.core.routes.BudgetBucketController.view(budgetBucketListView.id, 0, 0).url();
-                    }
-                });
+                    addColumn("isActive", "isActive", "object.budget_bucket.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<BudgetBucketListView>());
 
-                setEmptyMessageKey("object.budget_bucket.table.empty");
+                    addCustomAttributeColumns(BudgetBucket.class);
 
-            }
-        };
+                    this.setLineAction(new IColumnFormatter<BudgetBucketListView>() {
+                        @Override
+                        public String apply(BudgetBucketListView budgetBucketListView, Object value) {
+                            return controllers.core.routes.BudgetBucketController.view(budgetBucketListView.id, 0, 0).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.budget_bucket.table.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

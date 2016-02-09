@@ -19,13 +19,13 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.delivery.RequirementStatus;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.delivery.RequirementStatus;
 
 /**
  * A requirement status list view is used to display a requirement status row in
@@ -35,51 +35,76 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class RequirementStatusListView {
 
-    public static Table<RequirementStatusListView> templateTable = new Table<RequirementStatusListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<RequirementStatusListView> templateTable;
 
-            addColumn("id", "id", "object.requirement_status.id.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("id", new ObjectFormatter<RequirementStatusListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("name", "name", "object.requirement_status.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<RequirementStatusListView>());
+        /**
+         * Get the table.
+         */
+        public Table<RequirementStatusListView> getTable() {
+            return new Table<RequirementStatusListView>() {
+                {
 
-            addColumn("description", "description", "object.requirement_status.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<RequirementStatusListView>());
+                    setIdFieldName("id");
 
-            addColumn("type", "type", "object.requirement_status.type.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("type", new ObjectFormatter<RequirementStatusListView>());
+                    addColumn("id", "id", "object.requirement_status.id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("id", new ObjectFormatter<RequirementStatusListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementStatusListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<RequirementStatusListView>() {
+                    addColumn("name", "name", "object.requirement_status.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<RequirementStatusListView>());
+
+                    addColumn("description", "description", "object.requirement_status.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<RequirementStatusListView>());
+
+                    addColumn("type", "type", "object.requirement_status.type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("type", new ObjectFormatter<RequirementStatusListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementStatusListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<RequirementStatusListView>() {
                         @Override
                         public String convert(RequirementStatusListView requirementStatusListView) {
                             return controllers.admin.routes.ConfigurationRequirementController.manageRequirementStatus(requirementStatusListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RequirementStatusListView>() {
-                @Override
-                public String apply(RequirementStatusListView requirementStatusListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationRequirementController.deleteRequirementStatus(requirementStatusListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RequirementStatusListView>() {
+                        @Override
+                        public String apply(RequirementStatusListView requirementStatusListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationRequirementController.deleteRequirementStatus(requirementStatusListView.id)
+                                    .url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.requirement_status.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.requirement_status.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

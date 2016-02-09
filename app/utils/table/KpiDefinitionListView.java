@@ -35,51 +35,62 @@ import models.framework_models.kpi.KpiDefinition;
  */
 public class KpiDefinitionListView {
 
-    public static Table<KpiDefinitionListView> templateTable = new Table<KpiDefinitionListView>() {
-        {
-            setIdFieldName("id");
+    public static class TableDefinition {
 
-            addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("changeOrder", new IColumnFormatter<KpiDefinitionListView>() {
-                @Override
-                public String apply(KpiDefinitionListView kpiDefinitionListView, Object value) {
-                    if (kpiDefinitionListView.isDisplayed) {
-                        return "<a href=\"" + controllers.admin.routes.KpiManagerController.changeOrder(kpiDefinitionListView.id, false).url()
-                                + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
-                                + controllers.admin.routes.KpiManagerController.changeOrder(kpiDefinitionListView.id, true).url()
-                                + "\"><span class=\"fa fa-arrow-up\"></span></a>";
-                    } else {
-                        return "";
-                    }
-                }
-            });
-            setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("changeOrder", "rowlink-skip");
+        public Table<KpiDefinitionListView> templateTable;
 
-            addColumn("mainValueName", "mainValueName", "object.kpi_definition.name.label", Table.ColumnDef.SorterType.NONE);
-            setColumnCssClass("mainValueName", IMafConstants.BOOTSTRAP_COLUMN_5);
-
-            addColumn("isActive", "isActive", "object.kpi_definition.is_active.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isActive", new BooleanFormatter<KpiDefinitionListView>());
-            setColumnCssClass("isActive", IMafConstants.BOOTSTRAP_COLUMN_2);
-
-            addColumn("hasTrend", "hasTrend", "object.kpi_definition.has_trend.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("hasTrend", new BooleanFormatter<KpiDefinitionListView>());
-            setColumnCssClass("hasTrend", IMafConstants.BOOTSTRAP_COLUMN_2);
-
-            addColumn("hasBoxDisplay", "hasBoxDisplay", "object.kpi_definition.has_box_display.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("hasBoxDisplay", new BooleanFormatter<KpiDefinitionListView>());
-            setColumnCssClass("hasBoxDisplay", IMafConstants.BOOTSTRAP_COLUMN_2);
-
-            this.setLineAction(new IColumnFormatter<KpiDefinitionListView>() {
-                @Override
-                public String apply(KpiDefinitionListView kpiDefinitionListView, Object value) {
-                    return controllers.admin.routes.KpiManagerController.view(kpiDefinitionListView.id).url();
-                }
-            });
-
+        public TableDefinition() {
+            this.templateTable = getTable();
         }
-    };
+
+        public Table<KpiDefinitionListView> getTable() {
+            return new Table<KpiDefinitionListView>() {
+                {
+                    setIdFieldName("id");
+
+                    addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("changeOrder", new IColumnFormatter<KpiDefinitionListView>() {
+                        @Override
+                        public String apply(KpiDefinitionListView kpiDefinitionListView, Object value) {
+                            if (kpiDefinitionListView.isDisplayed) {
+                                return "<a href=\"" + controllers.admin.routes.KpiManagerController.changeOrder(kpiDefinitionListView.id, false).url()
+                                        + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
+                                        + controllers.admin.routes.KpiManagerController.changeOrder(kpiDefinitionListView.id, true).url()
+                                        + "\"><span class=\"fa fa-arrow-up\"></span></a>";
+                            } else {
+                                return "";
+                            }
+                        }
+                    });
+                    setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("changeOrder", "rowlink-skip");
+
+                    addColumn("mainValueName", "mainValueName", "object.kpi_definition.name.label", Table.ColumnDef.SorterType.NONE);
+                    setColumnCssClass("mainValueName", IMafConstants.BOOTSTRAP_COLUMN_5);
+
+                    addColumn("isActive", "isActive", "object.kpi_definition.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<KpiDefinitionListView>());
+                    setColumnCssClass("isActive", IMafConstants.BOOTSTRAP_COLUMN_2);
+
+                    addColumn("hasTrend", "hasTrend", "object.kpi_definition.has_trend.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("hasTrend", new BooleanFormatter<KpiDefinitionListView>());
+                    setColumnCssClass("hasTrend", IMafConstants.BOOTSTRAP_COLUMN_2);
+
+                    addColumn("hasBoxDisplay", "hasBoxDisplay", "object.kpi_definition.has_box_display.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("hasBoxDisplay", new BooleanFormatter<KpiDefinitionListView>());
+                    setColumnCssClass("hasBoxDisplay", IMafConstants.BOOTSTRAP_COLUMN_2);
+
+                    this.setLineAction(new IColumnFormatter<KpiDefinitionListView>() {
+                        @Override
+                        public String apply(KpiDefinitionListView kpiDefinitionListView, Object value) {
+                            return controllers.admin.routes.KpiManagerController.view(kpiDefinitionListView.id).url();
+                        }
+                    });
+
+                }
+            };
+        }
+    }
 
     /**
      * Default constructor.

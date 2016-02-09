@@ -19,15 +19,15 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.pmo.Actor;
-import models.pmo.Stakeholder;
-import models.pmo.StakeholderType;
 import constants.IMafConstants;
 import dao.pmo.PortfolioDao;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.Actor;
+import models.pmo.Stakeholder;
+import models.pmo.StakeholderType;
 
 /**
  * A stakeholder list view is used to display a stakeholder row for a portfolio
@@ -37,68 +37,91 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PortfolioStakeholderListView {
 
-    public static Table<PortfolioStakeholderListView> templateTable = new Table<PortfolioStakeholderListView>() {
-        {
-            setIdFieldName("id");
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            addColumn("name", "actor", "object.stakeholder.actor.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new IColumnFormatter<PortfolioStakeholderListView>() {
-                @Override
-                public String apply(PortfolioStakeholderListView stakeholderListView, Object value) {
-                    return views.html.modelsparts.display_actor.render(stakeholderListView.actor).body();
-                }
-            });
+        public Table<PortfolioStakeholderListView> templateTable;
 
-            addColumn("role", "type", "object.stakeholder.role.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("role", new IColumnFormatter<PortfolioStakeholderListView>() {
-                @Override
-                public String apply(PortfolioStakeholderListView stakeholderListView, Object value) {
-                    return views.html.framework_views.parts.formats.display_value_holder.render(stakeholderListView.type, true).body();
-                }
-            });
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("portfolio", "portfolioId", "object.stakeholder.portfolio.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("portfolio", new IColumnFormatter<PortfolioStakeholderListView>() {
-                @Override
-                public String apply(PortfolioStakeholderListView stakeholderListView, Object value) {
-                    if (stakeholderListView.portfolioId != null) {
-                        return views.html.modelsparts.display_portfolio.render(PortfolioDao.getPortfolioById(stakeholderListView.portfolioId)).body();
-                    }
-                    return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
-                }
-            });
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioStakeholderListView> getTable() {
+            return new Table<PortfolioStakeholderListView>() {
+                {
+                    setIdFieldName("id");
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioStakeholderListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<PortfolioStakeholderListView>() {
+                    addColumn("name", "actor", "object.stakeholder.actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new IColumnFormatter<PortfolioStakeholderListView>() {
+                        @Override
+                        public String apply(PortfolioStakeholderListView stakeholderListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(stakeholderListView.actor).body();
+                        }
+                    });
+
+                    addColumn("role", "type", "object.stakeholder.role.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("role", new IColumnFormatter<PortfolioStakeholderListView>() {
+                        @Override
+                        public String apply(PortfolioStakeholderListView stakeholderListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_value_holder.render(stakeholderListView.type, true).body();
+                        }
+                    });
+
+                    addColumn("portfolio", "portfolioId", "object.stakeholder.portfolio.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolio", new IColumnFormatter<PortfolioStakeholderListView>() {
+                        @Override
+                        public String apply(PortfolioStakeholderListView stakeholderListView, Object value) {
+                            if (stakeholderListView.portfolioId != null) {
+                                return views.html.modelsparts.display_portfolio.render(PortfolioDao.getPortfolioById(stakeholderListView.portfolioId)).body();
+                            }
+                            return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
+                        }
+                    });
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioStakeholderListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PortfolioStakeholderListView>() {
                         @Override
                         public String convert(PortfolioStakeholderListView stakeholderListView) {
                             return controllers.core.routes.PortfolioStakeholderController.manage(stakeholderListView.portfolioId, stakeholderListView.id)
                                     .url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
-            addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("removeActionLink", new IColumnFormatter<PortfolioStakeholderListView>() {
-                @Override
-                public String apply(PortfolioStakeholderListView portfolioStakeholderListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url =
-                            controllers.core.routes.PortfolioStakeholderController.delete(portfolioStakeholderListView.portfolioId,
-                                    portfolioStakeholderListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("removeActionLink", new IColumnFormatter<PortfolioStakeholderListView>() {
+                        @Override
+                        public String apply(PortfolioStakeholderListView portfolioStakeholderListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.PortfolioStakeholderController
+                                    .delete(portfolioStakeholderListView.portfolioId, portfolioStakeholderListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.stakeholder.table.empty");
+
                 }
-            });
-            setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.stakeholder.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

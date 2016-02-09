@@ -62,6 +62,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import services.budgettracking.IBudgetTrackingService;
+import services.tableprovider.ITableProvider;
 import utils.finance.Totals;
 import utils.form.EngageWorkOrderAmountSelectorFormData;
 import utils.form.PortfolioEntryBudgetLineFormData;
@@ -93,6 +94,8 @@ public class PortfolioEntryFinancialController extends Controller {
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private IBudgetTrackingService budgetTrackingService;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
@@ -147,8 +150,8 @@ public class PortfolioEntryFinancialController extends Controller {
         for (PortfolioEntryBudgetLine budgetLine : budgetLines) {
             portfolioEntryBudgetLineListView.add(new PortfolioEntryBudgetLineListView(budgetLine));
         }
-        Table<PortfolioEntryBudgetLineListView> budgetLinesTable = PortfolioEntryBudgetLineListView.templateTable.fill(portfolioEntryBudgetLineListView,
-                hideColumnsForBudgetTable);
+        Table<PortfolioEntryBudgetLineListView> budgetLinesTable = this.getTableProvider().get().portfolioEntryBudgetLine.templateTable
+                .fill(portfolioEntryBudgetLineListView, hideColumnsForBudgetTable);
 
         /*
          * create the work orders tables
@@ -197,9 +200,10 @@ public class PortfolioEntryFinancialController extends Controller {
                 engagedWorkOrderListView.add(new WorkOrderListView(this.getPreferenceManagerPlugin(), workOrder));
             }
         }
-        Table<WorkOrderListView> costToCompleteWorkOrderTable = WorkOrderListView.templateTable.fill(costToCompleteWorkOrderListView,
+        Table<WorkOrderListView> costToCompleteWorkOrderTable = this.getTableProvider().get().workOrder.templateTable.fill(costToCompleteWorkOrderListView,
                 hideColumnsForCostToCompleteTable);
-        Table<WorkOrderListView> engagedWorkOrderTable = WorkOrderListView.templateTable.fill(engagedWorkOrderListView, hideColumnsForEngagedTable);
+        Table<WorkOrderListView> engagedWorkOrderTable = this.getTableProvider().get().workOrder.templateTable.fill(engagedWorkOrderListView,
+                hideColumnsForEngagedTable);
 
         /*
          * create the purchase order line items of portfolio entry table
@@ -222,7 +226,7 @@ public class PortfolioEntryFinancialController extends Controller {
                     }
                 }
             }
-            lineItemsTable = PurchaseOrderLineItemListView.templateTable.fill(lineItemListView, hideColumnsForLineItemTable);
+            lineItemsTable = this.getTableProvider().get().purchaseOrderLineItem.templateTable.fill(lineItemListView, hideColumnsForLineItemTable);
 
             // get the current user
             IUserAccount userAccount;
@@ -915,8 +919,8 @@ public class PortfolioEntryFinancialController extends Controller {
         hidePOColumns.add("amountOpen");
 
         // construct the table
-        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable = PurchaseOrderLineItemListView.templateTable.fill(purchaseOrderLineItemListView,
-                hidePOColumns);
+        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable = this.getTableProvider().get().purchaseOrderLineItem.templateTable
+                .fill(purchaseOrderLineItemListView, hidePOColumns);
 
         // set no line action
         purchaseOrderLineItemsTable.setLineAction(null);
@@ -1158,5 +1162,12 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     private IBudgetTrackingService getBudgetTrackingService() {
         return this.budgetTrackingService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

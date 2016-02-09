@@ -62,6 +62,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
+import services.tableprovider.ITableProvider;
 import utils.form.ApplicationBlockFormData;
 import utils.table.ApplicationBlockListView;
 
@@ -84,6 +85,8 @@ public class ArchitectureController extends Controller {
     private ISysAdminUtils sysAdminUtils;
     @Inject
     private Configuration configuration;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(ArchitectureController.class);
 
@@ -134,7 +137,7 @@ public class ArchitectureController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<ApplicationBlockListView> filterConfig = this.getTableProvider().get().applicationBlock.filterConfig.getCurrent(uid, request());
 
             Pair<Table<ApplicationBlockListView>, Pagination<ApplicationBlock>> table = getApplicationBlocksTable(filterConfig);
 
@@ -156,7 +159,8 @@ public class ArchitectureController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<ApplicationBlockListView> filterConfig = this.getTableProvider().get().applicationBlock.filterConfig.persistCurrentInDefault(uid,
+                    request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -193,7 +197,8 @@ public class ArchitectureController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    FilterConfig<ApplicationBlockListView> filterConfig = ApplicationBlockListView.filterConfig.persistCurrentInDefault(uid, request());
+                    FilterConfig<ApplicationBlockListView> filterConfig = getTableProvider().get().applicationBlock.filterConfig.persistCurrentInDefault(uid,
+                            request());
 
                     ExpressionList<ApplicationBlock> expressionList = filterConfig.updateWithSearchExpression(ArchitectureDao.getApplicationBlockAsExpr());
                     filterConfig.updateWithSortExpression(expressionList);
@@ -203,8 +208,8 @@ public class ArchitectureController extends Controller {
                         applicationBlockListView.add(new ApplicationBlockListView(applicationBlock));
                     }
 
-                    Table<ApplicationBlockListView> table = ApplicationBlockListView.templateTable.fillForFilterConfig(applicationBlockListView,
-                            filterConfig.getColumnsToHide());
+                    Table<ApplicationBlockListView> table = getTableProvider().get().applicationBlock.templateTable
+                            .fillForFilterConfig(applicationBlockListView, filterConfig.getColumnsToHide());
 
                     final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
 
@@ -247,7 +252,7 @@ public class ArchitectureController extends Controller {
      * @param filterConfig
      *            the filter config.
      */
-    private static Pair<Table<ApplicationBlockListView>, Pagination<ApplicationBlock>> getApplicationBlocksTable(
+    private Pair<Table<ApplicationBlockListView>, Pagination<ApplicationBlock>> getApplicationBlocksTable(
             FilterConfig<ApplicationBlockListView> filterConfig) {
 
         ExpressionList<ApplicationBlock> expressionList = filterConfig.updateWithSearchExpression(ArchitectureDao.getApplicationBlockAsExpr());
@@ -261,7 +266,8 @@ public class ArchitectureController extends Controller {
             listView.add(new ApplicationBlockListView(applicationBlock));
         }
 
-        Table<ApplicationBlockListView> table = ApplicationBlockListView.templateTable.fillForFilterConfig(listView, filterConfig.getColumnsToHide());
+        Table<ApplicationBlockListView> table = this.getTableProvider().get().applicationBlock.templateTable.fillForFilterConfig(listView,
+                filterConfig.getColumnsToHide());
 
         return Pair.of(table, pagination);
 
@@ -483,5 +489,9 @@ public class ArchitectureController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

@@ -57,6 +57,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import security.CheckReportingExists;
 import security.dynamic.ReportingDynamicHelper;
+import services.tableprovider.ITableProvider;
 import utils.form.ReportingParamsFormData;
 import utils.reporting.IReportingUtils;
 import utils.table.ReportingListView;
@@ -75,6 +76,8 @@ public class ReportingController extends Controller {
     private ISecurityService securityService;
     @Inject
     private Configuration configuration;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(ReportingController.class);
 
@@ -158,7 +161,7 @@ public class ReportingController extends Controller {
             columnsToHide.add("isPublic");
             columnsToHide.add("editActionLink");
 
-            Table<ReportingListView> table = ReportingListView.templateTable.fill(reportingListView, columnsToHide);
+            Table<ReportingListView> table = this.getTableProvider().get().reporting.templateTable.fill(reportingListView, columnsToHide);
 
             return ok(views.html.core.reporting.fragment_list.render(category, table));
 
@@ -280,5 +283,12 @@ public class ReportingController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

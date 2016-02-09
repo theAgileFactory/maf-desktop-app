@@ -19,14 +19,14 @@ package utils.table;
 
 import java.util.Date;
 
-import models.governance.LifeCycleMilestoneInstanceApprover;
-import models.governance.LifeCycleMilestoneInstanceApprover.Status;
-import models.pmo.Actor;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.governance.LifeCycleMilestoneInstanceApprover;
+import models.governance.LifeCycleMilestoneInstanceApprover.Status;
+import models.pmo.Actor;
 
 /**
  * A milestone approver list view is used to display a milestone approver row in
@@ -36,51 +36,65 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class MilestoneApproverListView {
 
-    public static Table<MilestoneApproverListView> templateTable = new Table<MilestoneApproverListView>() {
-        {
-            setIdFieldName("id");
+    public static class TableDefinition {
 
-            addColumn("actor", "actor", "object.life_cycle_milestone_instance_approver.actor.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("actor", new IColumnFormatter<MilestoneApproverListView>() {
-                @Override
-                public String apply(MilestoneApproverListView milestoneApproverListView, Object value) {
-                    return views.html.modelsparts.display_actor.render(milestoneApproverListView.actor).body();
+        public Table<MilestoneApproverListView> templateTable;
+
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
+
+        public Table<MilestoneApproverListView> getTable() {
+            return new Table<MilestoneApproverListView>() {
+                {
+                    setIdFieldName("id");
+
+                    addColumn("actor", "actor", "object.life_cycle_milestone_instance_approver.actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("actor", new IColumnFormatter<MilestoneApproverListView>() {
+                        @Override
+                        public String apply(MilestoneApproverListView milestoneApproverListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(milestoneApproverListView.actor).body();
+                        }
+                    });
+
+                    addColumn("status", "status", "object.life_cycle_milestone_instance_approver.status.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("status", new IColumnFormatter<MilestoneApproverListView>() {
+                        @Override
+                        public String apply(MilestoneApproverListView milestoneApproverListView, Object value) {
+                            Status status = (Status) value;
+                            switch (status) {
+                            case APPROVED:
+                                return "<span class=\"label label-success\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.APPROVED.label")
+                                        + "</span>";
+                            case PENDING:
+                                return "<span class=\"label label-warning\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.PENDING.label")
+                                        + "</span>";
+                            case REJECTED:
+                                return "<span class=\"label label-danger\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.REJECTED.label")
+                                        + "</span>";
+                            case NOT_VOTED:
+                                return "<span class=\"label label-primary\">"
+                                        + Msg.get("object.life_cycle_milestone_instance_approver.status.NOT_VOTED.label") + "</span>";
+                            }
+                            return "";
+                        }
+                    });
+
+                    addColumn("approvalDate", "approvalDate", "object.life_cycle_milestone_instance_approver.approval_date.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("approvalDate", new DateFormatter<MilestoneApproverListView>());
+
+                    addColumn("comments", "comments", "object.life_cycle_milestone_instance_approver.comments.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("comments", new ObjectFormatter<MilestoneApproverListView>());
+
+                    setEmptyMessageKey("object.life_cycle_milestone_instance_approver.table.empty");
+
                 }
-            });
-
-            addColumn("status", "status", "object.life_cycle_milestone_instance_approver.status.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("status", new IColumnFormatter<MilestoneApproverListView>() {
-                @Override
-                public String apply(MilestoneApproverListView milestoneApproverListView, Object value) {
-                    Status status = (Status) value;
-                    switch (status) {
-                    case APPROVED:
-                        return "<span class=\"label label-success\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.APPROVED.label")
-                                + "</span>";
-                    case PENDING:
-                        return "<span class=\"label label-warning\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.PENDING.label")
-                                + "</span>";
-                    case REJECTED:
-                        return "<span class=\"label label-danger\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.REJECTED.label")
-                                + "</span>";
-                    case NOT_VOTED:
-                        return "<span class=\"label label-primary\">" + Msg.get("object.life_cycle_milestone_instance_approver.status.NOT_VOTED.label")
-                                + "</span>";
-                    }
-                    return "";
-                }
-            });
-
-            addColumn("approvalDate", "approvalDate", "object.life_cycle_milestone_instance_approver.approval_date.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("approvalDate", new DateFormatter<MilestoneApproverListView>());
-
-            addColumn("comments", "comments", "object.life_cycle_milestone_instance_approver.comments.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("comments", new ObjectFormatter<MilestoneApproverListView>());
-
-            setEmptyMessageKey("object.life_cycle_milestone_instance_approver.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

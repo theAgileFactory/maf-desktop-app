@@ -94,6 +94,7 @@ import play.mvc.With;
 import security.CheckPortfolioEntryExists;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import services.licensesmanagement.ILicensesManagementService;
+import services.tableprovider.ITableProvider;
 import utils.MilestonesTrend;
 import utils.form.AttachmentFormData;
 import utils.form.PortfolioEntryCreateFormData;
@@ -133,6 +134,8 @@ public class PortfolioEntryController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private INotificationManagerPlugin notificationManagerService;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -367,7 +370,7 @@ public class PortfolioEntryController extends Controller {
         }
         Set<String> hideColumnsForGovernance = new HashSet<String>();
         hideColumnsForGovernance.add("requestActionLink");
-        Table<GovernanceListView> milestonesTable = GovernanceListView.templateTable.fill(governanceListView, hideColumnsForGovernance);
+        Table<GovernanceListView> milestonesTable = this.getTableProvider().get().governance.templateTable.fill(governanceListView, hideColumnsForGovernance);
 
         // Milestones trend
         LifeCycleInstance activeLifeCycleProcessInstance = portfolioEntry.activeLifeCycleInstance;
@@ -408,7 +411,8 @@ public class PortfolioEntryController extends Controller {
             portfoliosView.add(new PortfolioListView(portfolio));
         }
 
-        Table<PortfolioListView> portfolioFilledTable = PortfolioListView.templateTable.fill(portfoliosView, PortfolioListView.hideStakeholderTypeColumn);
+        Table<PortfolioListView> portfolioFilledTable = this.getTableProvider().get().portfolio.templateTable.fill(portfoliosView,
+                PortfolioListView.hideStakeholderTypeColumn);
 
         // get the dependencies
         List<PortfolioEntryDependency> dependencies = PortfolioEntryDao.getPEDependencyAsList(id);
@@ -423,7 +427,7 @@ public class PortfolioEntryController extends Controller {
             columnsToHideForDependencies.add("deleteActionLink");
         }
 
-        Table<PortfolioEntryDependencyListView> dependenciesFilledTable = PortfolioEntryDependencyListView.templateTable
+        Table<PortfolioEntryDependencyListView> dependenciesFilledTable = this.getTableProvider().get().portfolioEntryDependency.templateTable
                 .fill(portfolioEntryDependenciesListView, columnsToHideForDependencies);
 
         /*
@@ -451,7 +455,7 @@ public class PortfolioEntryController extends Controller {
             hideColumns.add("removeActionLink");
         }
 
-        Table<AttachmentListView> attachmentFilledTable = AttachmentListView.templateTable.fill(attachmentsListView, hideColumns);
+        Table<AttachmentListView> attachmentFilledTable = this.getTableProvider().get().attachment.templateTable.fill(attachmentsListView, hideColumns);
 
         return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, portfolioEntryEditFormData, lastMilestone, portfolioFilledTable,
                 dependenciesFilledTable, attachmentFilledTable, attachmentPagination));
@@ -1039,5 +1043,12 @@ public class PortfolioEntryController extends Controller {
      */
     private INotificationManagerPlugin getNotificationManagerService() {
         return this.notificationManagerService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 }

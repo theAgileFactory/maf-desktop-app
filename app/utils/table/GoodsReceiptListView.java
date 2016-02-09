@@ -19,10 +19,10 @@ package utils.table;
 
 import java.math.BigDecimal;
 
-import models.finance.GoodsReceipt;
 import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.finance.GoodsReceipt;
 
 /**
  * A goods receipt list view is used to display a goods receipt in a table.
@@ -31,29 +31,37 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class GoodsReceiptListView {
 
-    public static Table<GoodsReceiptListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<GoodsReceiptListView> getTable() {
-        return new Table<GoodsReceiptListView>() {
-            {
-                setIdFieldName("id");
+        public Table<GoodsReceiptListView> templateTable;
 
-                addColumn("refId", "refId", "object.goods_receipt.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<GoodsReceiptListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("quantityReceived", "quantityReceived", "object.goods_receipt.quantity_received.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("quantityReceived", new NumberFormatter<GoodsReceiptListView>());
+        /**
+         * Get the table.
+         */
+        public Table<GoodsReceiptListView> getTable() {
+            return new Table<GoodsReceiptListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("amountReceived", "amountReceived", "object.goods_receipt.amount_received.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amountReceived", new NumberFormatter<GoodsReceiptListView>());
+                    addColumn("refId", "refId", "object.goods_receipt.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<GoodsReceiptListView>());
 
-                setEmptyMessageKey("object.goods_receipt.table.empty");
+                    addColumn("quantityReceived", "quantityReceived", "object.goods_receipt.quantity_received.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("quantityReceived", new NumberFormatter<GoodsReceiptListView>());
 
-            }
-        };
+                    addColumn("amountReceived", "amountReceived", "object.goods_receipt.amount_received.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amountReceived", new NumberFormatter<GoodsReceiptListView>());
+
+                    setEmptyMessageKey("object.goods_receipt.table.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

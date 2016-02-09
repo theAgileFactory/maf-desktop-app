@@ -19,8 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCyclePhase;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -29,6 +27,8 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.governance.LifeCycleMilestone;
+import models.governance.LifeCyclePhase;
 
 /**
  * An life cycle phase list view is used to display a life cycle phase row in a
@@ -38,80 +38,94 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class LifeCyclePhaseListView {
 
-    public static Table<LifeCyclePhaseListView> templateTable = new Table<LifeCyclePhaseListView>() {
-        {
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<LifeCyclePhaseListView> templateTable;
 
-            addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("changeOrder", new IColumnFormatter<LifeCyclePhaseListView>() {
-                @Override
-                public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
-                    return "<a href=\"" + controllers.admin.routes.ConfigurationGovernanceController.changePhaseOrder(lifeCyclePhaseListView.id, false).url()
-                            + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
-                            + controllers.admin.routes.ConfigurationGovernanceController.changePhaseOrder(lifeCyclePhaseListView.id, true).url()
-                            + "\"><span class=\"fa fa-arrow-up\"></span></a>";
-                }
-            });
-            setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("name", "name", "object.life_cycle_phase.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<LifeCyclePhaseListView>());
+        public Table<LifeCyclePhaseListView> getTable() {
+            return new Table<LifeCyclePhaseListView>() {
+                {
 
-            addColumn("startMilestone", "startMilestone", "object.life_cycle_phase.start_milestone.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("startMilestone", new IColumnFormatter<LifeCyclePhaseListView>() {
-                @Override
-                public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
-                    return views.html.modelsparts.display_milestone.render(lifeCyclePhaseListView.startMilestone).body();
-                }
-            });
+                    setIdFieldName("id");
 
-            addColumn("endMilestone", "endMilestone", "object.life_cycle_phase.end_milestone.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("endMilestone", new IColumnFormatter<LifeCyclePhaseListView>() {
-                @Override
-                public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
-                    return views.html.modelsparts.display_milestone.render(lifeCyclePhaseListView.endMilestone).body();
-                }
-            });
+                    addColumn("changeOrder", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("changeOrder", new IColumnFormatter<LifeCyclePhaseListView>() {
+                        @Override
+                        public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
+                            return "<a href=\""
+                                    + controllers.admin.routes.ConfigurationGovernanceController.changePhaseOrder(lifeCyclePhaseListView.id, false).url()
+                                    + "\"><span class=\"fa fa-arrow-down\"></span></a>&nbsp;" + "<a href=\""
+                                    + controllers.admin.routes.ConfigurationGovernanceController.changePhaseOrder(lifeCyclePhaseListView.id, true).url()
+                                    + "\"><span class=\"fa fa-arrow-up\"></span></a>";
+                        }
+                    });
+                    setColumnCssClass("changeOrder", IMafConstants.BOOTSTRAP_COLUMN_1);
 
-            addColumn("gapDaysStart", "gapDaysStart", "object.life_cycle_phase.gap_days_start.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("gapDaysStart", new NumberFormatter<LifeCyclePhaseListView>());
+                    addColumn("name", "name", "object.life_cycle_phase.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<LifeCyclePhaseListView>());
 
-            addColumn("gapDaysEnd", "gapDaysEnd", "object.life_cycle_phase.gap_days_end.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("gapDaysEnd", new NumberFormatter<LifeCyclePhaseListView>());
+                    addColumn("startMilestone", "startMilestone", "object.life_cycle_phase.start_milestone.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("startMilestone", new IColumnFormatter<LifeCyclePhaseListView>() {
+                        @Override
+                        public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
+                            return views.html.modelsparts.display_milestone.render(lifeCyclePhaseListView.startMilestone).body();
+                        }
+                    });
 
-            addColumn("isRoadmapPhase", "isRoadmapPhase", "object.life_cycle_phase.is_roadmap_phase.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isRoadmapPhase", new BooleanFormatter<LifeCyclePhaseListView>());
+                    addColumn("endMilestone", "endMilestone", "object.life_cycle_phase.end_milestone.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("endMilestone", new IColumnFormatter<LifeCyclePhaseListView>() {
+                        @Override
+                        public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
+                            return views.html.modelsparts.display_milestone.render(lifeCyclePhaseListView.endMilestone).body();
+                        }
+                    });
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<LifeCyclePhaseListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<LifeCyclePhaseListView>() {
+                    addColumn("gapDaysStart", "gapDaysStart", "object.life_cycle_phase.gap_days_start.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("gapDaysStart", new NumberFormatter<LifeCyclePhaseListView>());
+
+                    addColumn("gapDaysEnd", "gapDaysEnd", "object.life_cycle_phase.gap_days_end.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("gapDaysEnd", new NumberFormatter<LifeCyclePhaseListView>());
+
+                    addColumn("isRoadmapPhase", "isRoadmapPhase", "object.life_cycle_phase.is_roadmap_phase.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isRoadmapPhase", new BooleanFormatter<LifeCyclePhaseListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<LifeCyclePhaseListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<LifeCyclePhaseListView>() {
                         @Override
                         public String convert(LifeCyclePhaseListView lifeCyclePhaseListView) {
-                            return controllers.admin.routes.ConfigurationGovernanceController.managePhase(lifeCyclePhaseListView.lifeCycleProcessId,
-                                    lifeCyclePhaseListView.id).url();
+                            return controllers.admin.routes.ConfigurationGovernanceController
+                                    .managePhase(lifeCyclePhaseListView.lifeCycleProcessId, lifeCyclePhaseListView.id).url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<LifeCyclePhaseListView>() {
-                @Override
-                public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationGovernanceController.deletePhase(lifeCyclePhaseListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<LifeCyclePhaseListView>() {
+                        @Override
+                        public String apply(LifeCyclePhaseListView lifeCyclePhaseListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationGovernanceController.deletePhase(lifeCyclePhaseListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.life_cycle_phase.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.life_cycle_phase.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

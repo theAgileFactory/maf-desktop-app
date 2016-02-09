@@ -19,10 +19,6 @@ package utils.table;
 
 import java.math.BigDecimal;
 
-import models.finance.CostCenter;
-import models.finance.Currency;
-import models.finance.PurchaseOrderLineItem;
-import models.finance.WorkOrder;
 import constants.IMafConstants;
 import dao.finance.WorkOrderDAO;
 import framework.utils.IColumnFormatter;
@@ -31,6 +27,10 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.CostCenter;
+import models.finance.Currency;
+import models.finance.PurchaseOrderLineItem;
+import models.finance.WorkOrder;
 
 /**
  * A purchase order line item list view is used to display a purchase order line
@@ -40,88 +40,106 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PurchaseOrderLineItemListView {
 
-    public static Table<PurchaseOrderLineItemListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PurchaseOrderLineItemListView> getTable() {
-        return new Table<PurchaseOrderLineItemListView>() {
-            {
-                setIdFieldName("id");
+    public static class TableDefinition {
 
-                addColumn("refId", "refId", "object.purchase_order_line_item.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<PurchaseOrderLineItemListView>());
+        public Table<PurchaseOrderLineItemListView> templateTable;
 
-                addColumn("purchaseOrderRefId", "purchaseOrderRefId", "object.purchase_order_line_item.purchase_order.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("purchaseOrderRefId", new ObjectFormatter<PurchaseOrderLineItemListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("isAssociated", "isAssociated", "object.purchase_order_line_item.is_associated.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isAssociated", new BooleanFormatter<PurchaseOrderLineItemListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PurchaseOrderLineItemListView> getTable() {
+            return new Table<PurchaseOrderLineItemListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("shared", "shared", "object.purchase_order_line_item.shared.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("shared", new BooleanFormatter<PurchaseOrderLineItemListView>());
+                    addColumn("refId", "refId", "object.purchase_order_line_item.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("isOpex", "isOpex", "object.purchase_order_line_item.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isOpex", new IColumnFormatter<PurchaseOrderLineItemListView>() {
-                    @Override
-                    public String apply(PurchaseOrderLineItemListView purchaseOrderLineItemListView, Object value) {
-                        return views.html.modelsparts.display_is_opex.render(purchaseOrderLineItemListView.isOpex).body();
-                    }
-                });
+                    addColumn("purchaseOrderRefId", "purchaseOrderRefId", "object.purchase_order_line_item.purchase_order.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("purchaseOrderRefId", new ObjectFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("currency", "currency", "object.purchase_order_line_item.currency.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("currency", new ObjectFormatter<PurchaseOrderLineItemListView>());
+                    addColumn("isAssociated", "isAssociated", "object.purchase_order_line_item.is_associated.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isAssociated", new BooleanFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("amount", "amount", "object.purchase_order_line_item.amount.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amount", new NumberFormatter<PurchaseOrderLineItemListView>());
+                    addColumn("shared", "shared", "object.purchase_order_line_item.shared.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("shared", new BooleanFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("remainingAmount", "remainingAmount", "object.purchase_order_line_item.remaining_amount.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("remainingAmount", new NumberFormatter<PurchaseOrderLineItemListView>());
+                    addColumn("isOpex", "isOpex", "object.purchase_order_line_item.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isOpex", new IColumnFormatter<PurchaseOrderLineItemListView>() {
+                        @Override
+                        public String apply(PurchaseOrderLineItemListView purchaseOrderLineItemListView, Object value) {
+                            return views.html.modelsparts.display_is_opex.render(purchaseOrderLineItemListView.isOpex).body();
+                        }
+                    });
 
-                addColumn("amountReceived", "amountReceived", "object.purchase_order_line_item.amount_received.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amountReceived", new NumberFormatter<PurchaseOrderLineItemListView>());
+                    addColumn("currency", "currency", "object.purchase_order_line_item.currency.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("currency", new ObjectFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("amountOpen", "amountOpen", "object.purchase_order_line_item.amount_open.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amountOpen", new NumberFormatter<PurchaseOrderLineItemListView>());
+                    addColumn("amount", "amount", "object.purchase_order_line_item.amount.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amount", new NumberFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("costCenter", "costCenter", "object.purchase_order_line_item.cost_center.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("costCenter", new IColumnFormatter<PurchaseOrderLineItemListView>() {
-                    @Override
-                    public String apply(PurchaseOrderLineItemListView purchaseOrderLineItemListView, Object value) {
-                        return views.html.modelsparts.display_cost_center.render(purchaseOrderLineItemListView.costCenter).body();
-                    }
-                });
-                setColumnValueCssClass("costCenter", "rowlink-skip");
+                    addColumn("remainingAmount", "remainingAmount", "object.purchase_order_line_item.remaining_amount.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("remainingAmount", new NumberFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("isCancelled", "isCancelled", "object.purchase_order_line_item.is_cancelled.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isCancelled", new BooleanFormatter<PurchaseOrderLineItemListView>());
+                    addColumn("amountReceived", "amountReceived", "object.purchase_order_line_item.amount_received.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amountReceived", new NumberFormatter<PurchaseOrderLineItemListView>());
 
-                addColumn("selectActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("selectActionLink", new StringFormatFormatter<PurchaseOrderLineItemListView>(
-                        "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>",
-                        new StringFormatFormatter.Hook<PurchaseOrderLineItemListView>() {
-                            @Override
-                            public String convert(PurchaseOrderLineItemListView purchaseOrderLineItemListView) {
-                                return controllers.core.routes.PortfolioEntryFinancialController.selectWorkOrderLineItemStep3(
-                                        purchaseOrderLineItemListView.portfolioEntryId, purchaseOrderLineItemListView.workOrderId,
-                                        purchaseOrderLineItemListView.id).url();
-                            }
-                        }));
-                setColumnCssClass("selectActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("selectActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addColumn("amountOpen", "amountOpen", "object.purchase_order_line_item.amount_open.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amountOpen", new NumberFormatter<PurchaseOrderLineItemListView>());
 
-                this.setLineAction(new IColumnFormatter<PurchaseOrderLineItemListView>() {
-                    @Override
-                    public String apply(PurchaseOrderLineItemListView purchaseOrderLineItemListView, Object value) {
-                        return controllers.core.routes.PurchaseOrderController.viewLineItem(purchaseOrderLineItemListView.id).url();
-                    }
-                });
+                    addColumn("costCenter", "costCenter", "object.purchase_order_line_item.cost_center.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("costCenter", new IColumnFormatter<PurchaseOrderLineItemListView>() {
+                        @Override
+                        public String apply(PurchaseOrderLineItemListView purchaseOrderLineItemListView, Object value) {
+                            return views.html.modelsparts.display_cost_center.render(purchaseOrderLineItemListView.costCenter).body();
+                        }
+                    });
+                    setColumnValueCssClass("costCenter", "rowlink-skip");
 
-                setEmptyMessageKey("object.purchase_order_line_item.table.empty");
+                    addColumn("isCancelled", "isCancelled", "object.purchase_order_line_item.is_cancelled.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isCancelled", new BooleanFormatter<PurchaseOrderLineItemListView>());
 
-            }
-        };
+                    addColumn("selectActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectActionLink", new StringFormatFormatter<PurchaseOrderLineItemListView>(
+                            "<a href=\"%s\"><span class=\"fa fa-lock\"></span></a>", new StringFormatFormatter.Hook<PurchaseOrderLineItemListView>() {
+                        @Override
+                        public String convert(PurchaseOrderLineItemListView purchaseOrderLineItemListView) {
+                            return controllers.core.routes.PortfolioEntryFinancialController
+                                    .selectWorkOrderLineItemStep3(purchaseOrderLineItemListView.portfolioEntryId, purchaseOrderLineItemListView.workOrderId,
+                                            purchaseOrderLineItemListView.id)
+                                    .url();
+                        }
+                    }));
+                    setColumnCssClass("selectActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("selectActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction(new IColumnFormatter<PurchaseOrderLineItemListView>() {
+                        @Override
+                        public String apply(PurchaseOrderLineItemListView purchaseOrderLineItemListView, Object value) {
+                            return controllers.core.routes.PurchaseOrderController.viewLineItem(purchaseOrderLineItemListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.purchase_order_line_item.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

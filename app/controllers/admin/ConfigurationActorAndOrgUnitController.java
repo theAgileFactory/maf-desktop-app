@@ -87,7 +87,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
             actorTypesListView.add(new ActorTypeListView(actorType));
         }
 
-        Table<ActorTypeListView> actorTypesFilledTable = ActorTypeListView.templateTable.fill(actorTypesListView);
+        Table<ActorTypeListView> actorTypesFilledTable = this.getTableProvider().get().actorType.templateTable.fill(actorTypesListView);
 
         // org unit type
         List<OrgUnitType> orgUnitTypes = OrgUnitDao.getOrgUnitTypeAsList();
@@ -97,7 +97,7 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
             orgUnitTypesListView.add(new OrgUnitTypeListView(orgUnit));
         }
 
-        Table<OrgUnitTypeListView> orgUnitTypesFilledTable = OrgUnitTypeListView.templateTable.fill(orgUnitTypesListView);
+        Table<OrgUnitTypeListView> orgUnitTypesFilledTable = this.getTableProvider().get().orgUnitType.templateTable.fill(orgUnitTypesListView);
 
         // competency
         List<CompetencyListView> competenciesListView = new ArrayList<CompetencyListView>();
@@ -106,7 +106,8 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
         }
         Set<String> columnsForCompetencyToHide = new HashSet<>();
         columnsForCompetencyToHide.add("isDefault");
-        Table<CompetencyListView> competenciesFilledTable = CompetencyListView.templateTable.fill(competenciesListView, columnsForCompetencyToHide);
+        Table<CompetencyListView> competenciesFilledTable = this.getTableProvider().get().competency.templateTable.fill(competenciesListView,
+                columnsForCompetencyToHide);
 
         // stakeholder type
         List<StakeholderType> stakeholderTypes = StakeholderDao.getStakeholderTypeAsList();
@@ -116,7 +117,8 @@ public class ConfigurationActorAndOrgUnitController extends Controller {
             stakeholderTypesListView.add(new StakeholderTypeListView(stakeholderType));
         }
 
-        Table<StakeholderTypeListView> stakeholderTypesFilledTable = StakeholderTypeListView.templateTable.fill(stakeholderTypesListView);
+        Table<StakeholderTypeListView> stakeholderTypesFilledTable = this.getTableProvider().get().stakeholderType.templateTable
+                .fill(stakeholderTypesListView);
 
         return ok(views.html.admin.config.datareference.actorandorgunit.list.render(actorTypesFilledTable, orgUnitTypesFilledTable, competenciesFilledTable,
                 stakeholderTypesFilledTable));

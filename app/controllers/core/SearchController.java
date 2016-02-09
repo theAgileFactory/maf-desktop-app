@@ -219,7 +219,8 @@ public class SearchController extends Controller {
                 for (Portfolio portfolio : portfolios) {
                     portfolioListView.add(new PortfolioListView(portfolio));
                 }
-                Table<PortfolioListView> filledTable = PortfolioListView.templateTable.fill(portfolioListView, PortfolioListView.hideStakeholderTypeColumn);
+                Table<PortfolioListView> filledTable = this.getTableProvider().get().portfolio.templateTable.fill(portfolioListView,
+                        PortfolioListView.hideStakeholderTypeColumn);
                 return ok(views.html.core.search.portfolio_table.render(filledTable));
             }
 
@@ -238,7 +239,7 @@ public class SearchController extends Controller {
                 for (Actor actor : actors) {
                     actorListView.add(new ActorListView(actor));
                 }
-                Table<ActorListView> filledTable = ActorListView.templateTable.fill(actorListView);
+                Table<ActorListView> filledTable = this.getTableProvider().get().actor.templateTable.fill(actorListView);
                 return ok(views.html.core.search.actor_table.render(filledTable));
             }
 
@@ -257,7 +258,7 @@ public class SearchController extends Controller {
                 for (OrgUnit orgUnit : orgUnits) {
                     orgUnitListView.add(new OrgUnitListView(orgUnit));
                 }
-                Table<OrgUnitListView> filledTable = OrgUnitListView.templateTable.fill(orgUnitListView);
+                Table<OrgUnitListView> filledTable = this.getTableProvider().get().orgUnit.templateTable.fill(orgUnitListView);
                 return ok(views.html.core.search.org_unit_table.render(filledTable));
             }
 
@@ -276,7 +277,7 @@ public class SearchController extends Controller {
                 for (PurchaseOrder purchaseOrder : purchaseOrders) {
                     purchaseOrderListView.add(new PurchaseOrderListView(purchaseOrder));
                 }
-                Table<PurchaseOrderListView> filledTable = PurchaseOrderListView.templateTable.fill(purchaseOrderListView);
+                Table<PurchaseOrderListView> filledTable = this.getTableProvider().get().purchaseOrder.templateTable.fill(purchaseOrderListView);
                 return ok(views.html.core.search.purchase_order_table.render(filledTable));
             }
 
@@ -306,7 +307,7 @@ public class SearchController extends Controller {
                     return redirect(controllers.core.routes.BudgetBucketController.view(budgetBucketsListView.get(0).id, 0, 0));
                 }
 
-                Table<BudgetBucketListView> filledTable = BudgetBucketListView.templateTable.fill(budgetBucketsListView);
+                Table<BudgetBucketListView> filledTable = this.getTableProvider().get().budgetBucket.templateTable.fill(budgetBucketsListView);
                 return ok(views.html.core.search.budget_bucket_table.render(filledTable));
             }
 

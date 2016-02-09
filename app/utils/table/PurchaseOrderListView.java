@@ -20,8 +20,6 @@ package utils.table;
 import java.math.BigDecimal;
 import java.util.List;
 
-import models.finance.PurchaseOrder;
-import models.finance.PurchaseOrderLineItem;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
@@ -29,6 +27,8 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.finance.PurchaseOrder;
+import models.finance.PurchaseOrderLineItem;
 
 /**
  * A purchase order list view is used to display a purchase order row in a
@@ -38,40 +38,56 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class PurchaseOrderListView {
 
-    public static Table<PurchaseOrderListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PurchaseOrderListView> getTable() {
-        return new Table<PurchaseOrderListView>() {
-            {
-                setIdFieldName("id");
+    public static class TableDefinition {
 
-                addColumn("refId", "refId", "object.purchase_order.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<PurchaseOrderListView>());
+        public Table<PurchaseOrderListView> templateTable;
 
-                addColumn("amount", "amount", "object.purchase_order.amount.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("amount", new NumberFormatter<PurchaseOrderListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("lineItems", "lineItems", "object.purchase_order.line_items.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("lineItems", new ListOfValuesFormatter<PurchaseOrderListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PurchaseOrderListView> getTable() {
+            return new Table<PurchaseOrderListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("isCancelled", "isCancelled", "object.purchase_order.is_cancelled.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isCancelled", new BooleanFormatter<PurchaseOrderListView>());
-                setColumnCssClass("isCancelled", IMafConstants.BOOTSTRAP_COLUMN_2);
+                    addColumn("refId", "refId", "object.purchase_order.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<PurchaseOrderListView>());
 
-                this.setLineAction(new IColumnFormatter<PurchaseOrderListView>() {
-                    @Override
-                    public String apply(PurchaseOrderListView purchaseOrderListView, Object value) {
-                        return controllers.core.routes.PurchaseOrderController.view(purchaseOrderListView.id).url();
-                    }
-                });
+                    addColumn("amount", "amount", "object.purchase_order.amount.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amount", new NumberFormatter<PurchaseOrderListView>());
 
-                setEmptyMessageKey("object.purchase_order.table.empty");
+                    addColumn("lineItems", "lineItems", "object.purchase_order.line_items.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lineItems", new ListOfValuesFormatter<PurchaseOrderListView>());
 
-            }
-        };
+                    addColumn("isCancelled", "isCancelled", "object.purchase_order.is_cancelled.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isCancelled", new BooleanFormatter<PurchaseOrderListView>());
+                    setColumnCssClass("isCancelled", IMafConstants.BOOTSTRAP_COLUMN_2);
+
+                    this.setLineAction(new IColumnFormatter<PurchaseOrderListView>() {
+                        @Override
+                        public String apply(PurchaseOrderListView purchaseOrderListView, Object value) {
+                            return controllers.core.routes.PurchaseOrderController.view(purchaseOrderListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.purchase_order.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

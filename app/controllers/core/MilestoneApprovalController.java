@@ -66,6 +66,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.budgettracking.IBudgetTrackingService;
+import services.tableprovider.ITableProvider;
 import utils.form.ProcessMilestoneApprovalFormData;
 import utils.form.ProcessMilestoneDecisionFormData;
 import utils.table.MilestoneApprovalListView;
@@ -106,6 +107,8 @@ public class MilestoneApprovalController extends Controller {
     private IBudgetTrackingService budgetTrackingService;
     @Inject
     private INotificationManagerPlugin notificationManagerService;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -164,7 +167,7 @@ public class MilestoneApprovalController extends Controller {
         for (LifeCycleMilestoneInstanceApprover lifeCycleMilestoneInstanceApprover : milestoneInstance.lifeCycleMilestoneInstanceApprovers) {
             milestoneApproverListView.add(new MilestoneApproverListView(lifeCycleMilestoneInstanceApprover));
         }
-        Table<MilestoneApproverListView> filledTable = MilestoneApproverListView.templateTable.fill(milestoneApproverListView);
+        Table<MilestoneApproverListView> filledTable = this.getTableProvider().get().milestoneApprover.templateTable.fill(milestoneApproverListView);
 
         return ok(views.html.core.milestoneapproval.overview_modal.render(milestoneInstance, filledTable));
     }
@@ -211,7 +214,7 @@ public class MilestoneApprovalController extends Controller {
             milestoneApprovalListView.add(new MilestoneApprovalListView(lifeCycleMilestoneInstance));
         }
 
-        Table<MilestoneApprovalListView> filledTable = MilestoneApprovalListView.templateTable.fill(milestoneApprovalListView);
+        Table<MilestoneApprovalListView> filledTable = this.getTableProvider().get().milestoneApproval.templateTable.fill(milestoneApprovalListView);
 
         return ok(views.html.core.milestoneapproval.milestone_approval_list.render(filledTable, pagination));
     }
@@ -285,7 +288,8 @@ public class MilestoneApprovalController extends Controller {
         hideColumnsForApprover.add("approvalDate");
 
         // fill the table
-        Table<MilestoneApproverListView> filledTable = MilestoneApproverListView.templateTable.fill(milestoneApproverListView, hideColumnsForApprover);
+        Table<MilestoneApproverListView> filledTable = this.getTableProvider().get().milestoneApprover.templateTable.fill(milestoneApproverListView,
+                hideColumnsForApprover);
 
         /*
          * end of table construction
@@ -615,6 +619,13 @@ public class MilestoneApprovalController extends Controller {
      */
     private INotificationManagerPlugin getNotificationManagerService() {
         return this.notificationManagerService;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

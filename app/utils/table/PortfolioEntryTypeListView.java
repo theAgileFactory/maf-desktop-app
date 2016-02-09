@@ -36,49 +36,74 @@ import models.pmo.PortfolioEntryType;
  */
 public class PortfolioEntryTypeListView {
 
-    public static Table<PortfolioEntryTypeListView> templateTable = new Table<PortfolioEntryTypeListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<PortfolioEntryTypeListView> templateTable;
 
-            addColumn("name", "name", "object.portfolio_entry_type.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryTypeListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("description", "description", "object.portfolio_entry_type.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryTypeListView>());
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryTypeListView> getTable() {
+            return new Table<PortfolioEntryTypeListView>() {
+                {
 
-            addColumn("selectable", "selectable", "object.portfolio_entry_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("selectable", new BooleanFormatter<PortfolioEntryTypeListView>());
+                    setIdFieldName("id");
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<PortfolioEntryTypeListView>() {
-                @Override
-                public String convert(PortfolioEntryTypeListView portfolioEntryTypeListView) {
-                    return controllers.admin.routes.ConfigurationPortfolioController
-                            .managePortfolioEntryType(portfolioEntryTypeListView.isRelease, portfolioEntryTypeListView.id).url();
+                    addColumn("name", "name", "object.portfolio_entry_type.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryTypeListView>());
+
+                    addColumn("description", "description", "object.portfolio_entry_type.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryTypeListView>());
+
+                    addColumn("selectable", "selectable", "object.portfolio_entry_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<PortfolioEntryTypeListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryTypeListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PortfolioEntryTypeListView>() {
+                        @Override
+                        public String convert(PortfolioEntryTypeListView portfolioEntryTypeListView) {
+                            return controllers.admin.routes.ConfigurationPortfolioController
+                                    .managePortfolioEntryType(portfolioEntryTypeListView.isRelease, portfolioEntryTypeListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryTypeListView>() {
+                        @Override
+                        public String apply(PortfolioEntryTypeListView portfolioEntryTypeListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationPortfolioController.deletePortfolioEntryType(portfolioEntryTypeListView.id)
+                                    .url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.portfolio_entry_type.table.empty");
+
                 }
-            }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryTypeListView>() {
-                @Override
-                public String apply(PortfolioEntryTypeListView portfolioEntryTypeListView, Object value) {
-                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                            Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationPortfolioController.deletePortfolioEntryType(portfolioEntryTypeListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.portfolio_entry_type.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

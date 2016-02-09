@@ -17,13 +17,13 @@
  */
 package utils.table;
 
-import models.pmo.Actor;
-import models.pmo.OrgUnit;
-import models.pmo.OrgUnitType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.pmo.Actor;
+import models.pmo.OrgUnit;
+import models.pmo.OrgUnitType;
 
 /**
  * A org unit list view is used to display an org unit row in a table.
@@ -32,55 +32,63 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class OrgUnitListView {
 
-    public static Table<OrgUnitListView> templateTable = getTable();
+    public static class TableDefinition {
 
-    /**
-     * Get the table.
-     */
-    public static Table<OrgUnitListView> getTable() {
-        return new Table<OrgUnitListView>() {
-            {
-                setIdFieldName("id");
+        public Table<OrgUnitListView> templateTable;
 
-                addColumn("refId", "refId", "object.org_unit.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("refId", new ObjectFormatter<OrgUnitListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("name", "name", "object.org_unit.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<OrgUnitListView>());
+        /**
+         * Get the table.
+         */
+        public Table<OrgUnitListView> getTable() {
+            return new Table<OrgUnitListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("type", "type", "object.org_unit.type.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("type", new IColumnFormatter<OrgUnitListView>() {
-                    @Override
-                    public String apply(OrgUnitListView orgUnitListView, Object value) {
-                        return views.html.framework_views.parts.formats.display_value_holder.render(orgUnitListView.type, true).body();
-                    }
-                });
+                    addColumn("refId", "refId", "object.org_unit.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<OrgUnitListView>());
 
-                addColumn("isActive", "isActive", "object.org_unit.is_active.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isActive", new BooleanFormatter<OrgUnitListView>());
+                    addColumn("name", "name", "object.org_unit.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<OrgUnitListView>());
 
-                addColumn("manager", "manager", "object.org_unit.manager.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("manager", new IColumnFormatter<OrgUnitListView>() {
-                    @Override
-                    public String apply(OrgUnitListView orgUnitListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(orgUnitListView.manager).body();
-                    }
-                });
-                this.setColumnValueCssClass("manager", "rowlink-skip");
+                    addColumn("type", "type", "object.org_unit.type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("type", new IColumnFormatter<OrgUnitListView>() {
+                        @Override
+                        public String apply(OrgUnitListView orgUnitListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_value_holder.render(orgUnitListView.type, true).body();
+                        }
+                    });
 
-                addCustomAttributeColumns(OrgUnit.class);
+                    addColumn("isActive", "isActive", "object.org_unit.is_active.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<OrgUnitListView>());
 
-                this.setLineAction(new IColumnFormatter<OrgUnitListView>() {
-                    @Override
-                    public String apply(OrgUnitListView orgUnitListView, Object value) {
-                        return controllers.core.routes.OrgUnitController.view(orgUnitListView.id, 0).url();
-                    }
-                });
+                    addColumn("manager", "manager", "object.org_unit.manager.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("manager", new IColumnFormatter<OrgUnitListView>() {
+                        @Override
+                        public String apply(OrgUnitListView orgUnitListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(orgUnitListView.manager).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("manager", "rowlink-skip");
 
-                setEmptyMessageKey("object.org_unit.table.empty");
+                    addCustomAttributeColumns(OrgUnit.class);
 
-            }
-        };
+                    this.setLineAction(new IColumnFormatter<OrgUnitListView>() {
+                        @Override
+                        public String apply(OrgUnitListView orgUnitListView, Object value) {
+                            return controllers.core.routes.OrgUnitController.view(orgUnitListView.id, 0).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.org_unit.table.empty");
+
+                }
+            };
+        }
+
     }
 
     /**

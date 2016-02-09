@@ -36,51 +36,64 @@ import models.pmo.OrgUnitType;
  */
 public class OrgUnitTypeListView {
 
-    public static Table<OrgUnitTypeListView> templateTable = new Table<OrgUnitTypeListView>() {
-        {
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<OrgUnitTypeListView> templateTable;
 
-            addColumn("refId", "refId", "object.org_unit_type.ref_id.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("refId", new ObjectFormatter<OrgUnitTypeListView>());
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("name", "name", "object.org_unit_type.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<OrgUnitTypeListView>());
+        public Table<OrgUnitTypeListView> getTable() {
+            return new Table<OrgUnitTypeListView>() {
+                {
 
-            addColumn("description", "description", "object.org_unit_type.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<OrgUnitTypeListView>());
+                    setIdFieldName("id");
 
-            addColumn("selectable", "selectable", "object.org_unit_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("selectable", new BooleanFormatter<OrgUnitTypeListView>());
+                    addColumn("refId", "refId", "object.org_unit_type.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<OrgUnitTypeListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink",
-                    new StringFormatFormatter<OrgUnitTypeListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<OrgUnitTypeListView>() {
-                @Override
-                public String convert(OrgUnitTypeListView orgUnitTypeListView) {
-                    return controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageOrgUnitType(orgUnitTypeListView.id).url();
+                    addColumn("name", "name", "object.org_unit_type.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<OrgUnitTypeListView>());
+
+                    addColumn("description", "description", "object.org_unit_type.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<OrgUnitTypeListView>());
+
+                    addColumn("selectable", "selectable", "object.org_unit_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<OrgUnitTypeListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<OrgUnitTypeListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<OrgUnitTypeListView>() {
+                        @Override
+                        public String convert(OrgUnitTypeListView orgUnitTypeListView) {
+                            return controllers.admin.routes.ConfigurationActorAndOrgUnitController.manageOrgUnitType(orgUnitTypeListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<OrgUnitTypeListView>() {
+                        @Override
+                        public String apply(OrgUnitTypeListView orgUnitTypeListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteOrgUnitType(orgUnitTypeListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.org_unit_type.table.empty");
+
                 }
-            }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<OrgUnitTypeListView>() {
-                @Override
-                public String apply(OrgUnitTypeListView orgUnitTypeListView, Object value) {
-                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                            Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationActorAndOrgUnitController.deleteOrgUnitType(orgUnitTypeListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.org_unit_type.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

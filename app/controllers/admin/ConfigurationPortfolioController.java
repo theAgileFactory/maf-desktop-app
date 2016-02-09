@@ -76,7 +76,8 @@ public class ConfigurationPortfolioController extends Controller {
             initiativeTypesListView.add(new PortfolioEntryTypeListView(portfolioEntryType));
         }
 
-        Table<PortfolioEntryTypeListView> initiativeTypesFilledTable = PortfolioEntryTypeListView.templateTable.fill(initiativeTypesListView);
+        Table<PortfolioEntryTypeListView> initiativeTypesFilledTable = this.getTableProvider().get().portfolioEntryType.templateTable
+                .fill(initiativeTypesListView);
 
         // portfolio entry types of releases
         List<PortfolioEntryTypeListView> releaseTypesListView = new ArrayList<PortfolioEntryTypeListView>();
@@ -84,7 +85,7 @@ public class ConfigurationPortfolioController extends Controller {
             releaseTypesListView.add(new PortfolioEntryTypeListView(portfolioEntryType));
         }
 
-        Table<PortfolioEntryTypeListView> releaseTypesFilledTable = PortfolioEntryTypeListView.templateTable.fill(releaseTypesListView);
+        Table<PortfolioEntryTypeListView> releaseTypesFilledTable = this.getTableProvider().get().portfolioEntryType.templateTable.fill(releaseTypesListView);
 
         // portfolio entry dependency types
         List<PortfolioEntryDependencyType> portfolioEntryDependencyTypes = PortfolioEntryDao.getPEDependencyTypeAsList();
@@ -94,8 +95,8 @@ public class ConfigurationPortfolioController extends Controller {
             portfolioEntryDependencyTypesListView.add(new PortfolioEntryDependencyTypeListView(portfolioEntryDependencyType));
         }
 
-        Table<PortfolioEntryDependencyTypeListView> portfolioEntryDependencyTypesFilledTable = PortfolioEntryDependencyTypeListView.templateTable
-                .fill(portfolioEntryDependencyTypesListView);
+        Table<PortfolioEntryDependencyTypeListView> portfolioEntryDependencyTypesFilledTable = this.getTableProvider()
+                .get().portfolioEntryDependencyType.templateTable.fill(portfolioEntryDependencyTypesListView);
 
         // portfolio types
         List<PortfolioType> portfolioTypes = PortfolioDao.getPortfolioTypeAsList();
@@ -105,7 +106,7 @@ public class ConfigurationPortfolioController extends Controller {
             portfolioTypesListView.add(new PortfolioTypeListView(portfolioType));
         }
 
-        Table<PortfolioTypeListView> portfolioTypesFilledTable = PortfolioTypeListView.templateTable.fill(portfolioTypesListView);
+        Table<PortfolioTypeListView> portfolioTypesFilledTable = this.getTableProvider().get().portfolioType.templateTable.fill(portfolioTypesListView);
 
         return ok(views.html.admin.config.datareference.portfolio.list.render(initiativeTypesFilledTable, releaseTypesFilledTable,
                 portfolioEntryDependencyTypesFilledTable, portfolioTypesFilledTable));

@@ -72,7 +72,8 @@ public class ConfigurationTimesheetActivityController extends Controller {
             activityTypesListView.add(new TimesheetActivityTypeListView(activityType));
         }
 
-        Table<TimesheetActivityTypeListView> activityTypesFilledTable = TimesheetActivityTypeListView.templateTable.fill(activityTypesListView);
+        Table<TimesheetActivityTypeListView> activityTypesFilledTable = this.getTableProvider().get().timesheetActivityType.templateTable
+                .fill(activityTypesListView);
 
         List<TimesheetActivity> activities = TimesheetDao.getTimesheetActivityAsList();
 
@@ -81,7 +82,7 @@ public class ConfigurationTimesheetActivityController extends Controller {
             activitiesListView.add(new TimesheetActivityListView(activity));
         }
 
-        Table<TimesheetActivityListView> activitiesFilledTable = TimesheetActivityListView.templateTable.fill(activitiesListView);
+        Table<TimesheetActivityListView> activitiesFilledTable = this.getTableProvider().get().timesheetActivity.templateTable.fill(activitiesListView);
 
         return ok(views.html.admin.config.datareference.timesheetactivity.timesheet_activities.render(activityTypesFilledTable, activitiesFilledTable));
     }

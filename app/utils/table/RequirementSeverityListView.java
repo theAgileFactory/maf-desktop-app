@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.delivery.RequirementSeverity;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.delivery.RequirementSeverity;
 
 /**
  * A requirement severity list view is used to display a requirement severity
@@ -36,52 +36,77 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class RequirementSeverityListView {
 
-    public static Table<RequirementSeverityListView> templateTable = new Table<RequirementSeverityListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<RequirementSeverityListView> templateTable;
 
-            addColumn("id", "id", "object.requirement_severity.id.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("id", new ObjectFormatter<RequirementSeverityListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("name", "name", "object.requirement_severity.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<RequirementSeverityListView>());
+        /**
+         * Get the table.
+         */
+        public Table<RequirementSeverityListView> getTable() {
+            return new Table<RequirementSeverityListView>() {
+                {
 
-            addColumn("description", "description", "object.requirement_severity.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<RequirementSeverityListView>());
+                    setIdFieldName("id");
 
-            addColumn("isBlocker", "isBlocker", "object.requirement_severity.is_blocker.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isBlocker", new BooleanFormatter<RequirementSeverityListView>());
+                    addColumn("id", "id", "object.requirement_severity.id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("id", new ObjectFormatter<RequirementSeverityListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementSeverityListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<RequirementSeverityListView>() {
+                    addColumn("name", "name", "object.requirement_severity.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<RequirementSeverityListView>());
+
+                    addColumn("description", "description", "object.requirement_severity.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<RequirementSeverityListView>());
+
+                    addColumn("isBlocker", "isBlocker", "object.requirement_severity.is_blocker.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isBlocker", new BooleanFormatter<RequirementSeverityListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementSeverityListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<RequirementSeverityListView>() {
                         @Override
                         public String convert(RequirementSeverityListView requirementSeverityListView) {
                             return controllers.admin.routes.ConfigurationRequirementController.manageRequirementSeverity(requirementSeverityListView.id)
                                     .url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RequirementSeverityListView>() {
-                @Override
-                public String apply(RequirementSeverityListView requirementSeverityListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationRequirementController.deleteRequirementSeverity(requirementSeverityListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RequirementSeverityListView>() {
+                        @Override
+                        public String apply(RequirementSeverityListView requirementSeverityListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationRequirementController.deleteRequirementSeverity(requirementSeverityListView.id)
+                                    .url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.requirement_severity.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.requirement_severity.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.

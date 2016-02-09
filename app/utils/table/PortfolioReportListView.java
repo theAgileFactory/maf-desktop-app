@@ -17,10 +17,10 @@
  */
 package utils.table;
 
-import models.pmo.PortfolioEntryReport;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.ObjectFormatter;
+import models.pmo.PortfolioEntryReport;
 
 /**
  * A portfolio report list view is used to display a portfolio entry report row
@@ -30,34 +30,52 @@ import framework.utils.formats.ObjectFormatter;
  */
 public class PortfolioReportListView {
 
-    public static Table<PortfolioReportListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PortfolioReportListView> getTable() {
-        return new Table<PortfolioReportListView>() {
-            {
-                setIdFieldName("id");
+    public static class TableDefinition {
 
-                addColumn("portfolioEntryName", "portfolioEntryName", "object.portfolio_entry_report.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioReportListView>());
+        public Table<PortfolioReportListView> templateTable;
 
-                addColumn("comments", "comments", "object.portfolio_entry_report.comments.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("comments", new ObjectFormatter<PortfolioReportListView>());
+        /**
+         * Default constructor.
+         * 
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                this.setLineAction(new IColumnFormatter<PortfolioReportListView>() {
-                    @Override
-                    public String apply(PortfolioReportListView portfolioReportListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioReportListView.portfolioEntryId, 0, 0, 0,
-                                false, false).url();
-                    }
-                });
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioReportListView> getTable() {
+            return new Table<PortfolioReportListView>() {
+                {
+                    setIdFieldName("id");
 
-                setEmptyMessageKey("object.portfolio_entry_report.table.empty");
+                    addColumn("portfolioEntryName", "portfolioEntryName", "object.portfolio_entry_report.portfolio_entry.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioReportListView>());
 
-            }
-        };
+                    addColumn("comments", "comments", "object.portfolio_entry_report.comments.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("comments", new ObjectFormatter<PortfolioReportListView>());
+
+                    this.setLineAction(new IColumnFormatter<PortfolioReportListView>() {
+                        @Override
+                        public String apply(PortfolioReportListView portfolioReportListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .registers(portfolioReportListView.portfolioEntryId, 0, 0, 0, false, false).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.portfolio_entry_report.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -40,120 +41,130 @@ import models.pmo.PortfolioEntryPlanningPackage;
  */
 public class DeliverableListView {
 
-    public static FilterConfig<DeliverableListView> filterConfig = getFilterConfig();
+    public static class TableDefinition {
 
-    /**
-     * Get the filter config.
-     */
-    public static FilterConfig<DeliverableListView> getFilterConfig() {
-        return new FilterConfig<DeliverableListView>() {
-            {
+        public FilterConfig<DeliverableListView> filterConfig;
 
-                addColumnConfiguration("name", "name", "object.deliverable.name.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.ASC);
+        public TableDefinition() {
+            this.filterConfig = getFilterConfig();
+            this.templateTable = getTable();
+        }
 
-                addColumnConfiguration("description", "description", "object.deliverable.description.label", new TextFieldFilterComponent("*"), true, false,
-                        SortStatusType.UNSORTED);
+        /**
+         * Get the filter config.
+         */
+        public FilterConfig<DeliverableListView> getFilterConfig() {
+            return new FilterConfig<DeliverableListView>() {
+                {
 
-                addColumnConfiguration("isDelegated", "(portfolioEntryDeliverables.type<>'" + PortfolioEntryDeliverable.Type.OWNER + "')",
-                        "object.deliverable.is_delegated.label", new CheckboxFilterComponent(false), true, false, SortStatusType.NONE);
+                    addColumnConfiguration("name", "name", "object.deliverable.name.label", new TextFieldFilterComponent("*"), true, false,
+                            SortStatusType.ASC);
 
-                addColumnConfiguration("owner", "owner", "object.deliverable.owner.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
+                    addColumnConfiguration("description", "description", "object.deliverable.description.label", new TextFieldFilterComponent("*"), true,
+                            false, SortStatusType.UNSORTED);
 
-                addColumnConfiguration("planningPackage", "portfolioEntryDeliverables.portfolioEntryPlanningPackage.name",
-                        "object.deliverable.planning_package.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.NONE);
+                    addColumnConfiguration("isDelegated", "(portfolioEntryDeliverables.type<>'" + PortfolioEntryDeliverable.Type.OWNER + "')",
+                            "object.deliverable.is_delegated.label", new CheckboxFilterComponent(false), true, false, SortStatusType.NONE);
 
-                addCustomAttributesColumns("id", Deliverable.class);
+                    addColumnConfiguration("owner", "owner", "object.deliverable.owner.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
 
-            }
-        };
-    }
+                    addColumnConfiguration("planningPackage", "portfolioEntryDeliverables.portfolioEntryPlanningPackage.name",
+                            "object.deliverable.planning_package.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.NONE);
 
-    public static Table<DeliverableListView> templateTable = getTable();
+                    addCustomAttributesColumns("id", Deliverable.class);
 
-    /**
-     * Get the table.
-     */
-    public static Table<DeliverableListView> getTable() {
-        return new Table<DeliverableListView>() {
-            {
-                setIdFieldName("id");
+                }
+            };
+        }
 
-                addColumn("name", "name", "object.deliverable.name.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("name", new ObjectFormatter<DeliverableListView>());
+        public Table<DeliverableListView> templateTable;
 
-                addColumn("description", "description", "object.deliverable.description.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("description", new ObjectFormatter<DeliverableListView>());
+        /**
+         * Get the table.
+         */
+        public Table<DeliverableListView> getTable() {
+            return new Table<DeliverableListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("isDelegated", "isDelegated", "object.deliverable.is_delegated.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("isDelegated", new BooleanFormatter<DeliverableListView>());
+                    addColumn("name", "name", "object.deliverable.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<DeliverableListView>());
 
-                addColumn("owner", "owner", "object.deliverable.owner.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("owner", new IColumnFormatter<DeliverableListView>() {
-                    @Override
-                    public String apply(DeliverableListView deliverableListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry.render(deliverableListView.owner, true).body();
-                    }
-                });
-                this.setColumnValueCssClass("owner", "rowlink-skip");
+                    addColumn("description", "description", "object.deliverable.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<DeliverableListView>());
 
-                addColumn("planningPackage", "planningPackage", "object.deliverable.planning_package.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("planningPackage", new IColumnFormatter<DeliverableListView>() {
-                    @Override
-                    public String apply(DeliverableListView deliverableListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry_planning_package.render(deliverableListView.planningPackage).body();
-                    }
-                });
-                this.setColumnValueCssClass("planningPackage", "rowlink-skip");
+                    addColumn("isDelegated", "isDelegated", "object.deliverable.is_delegated.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isDelegated", new BooleanFormatter<DeliverableListView>());
 
-                addCustomAttributeColumns(Deliverable.class);
-
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink",
-                        new StringFormatFormatter<DeliverableListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<DeliverableListView>() {
-                    @Override
-                    public String convert(DeliverableListView deliverableListView) {
-                        return controllers.core.routes.PortfolioEntryDeliveryController
-                                .manageDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
-                    }
-                }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<DeliverableListView>() {
-                    @Override
-                    public String apply(DeliverableListView deliverableListView, Object value) {
-                        if (deliverableListView.isDelegated) {
-                            String unassignConfirmationMessage = MessageFormat.format(
-                                    "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">" + "<span class=\"fa fa-times\"></span></a>",
-                                    Msg.get("core.portfolio_entry_delivery.deliverable.unfollow.confirmation"));
-                            String url = controllers.core.routes.PortfolioEntryDeliveryController
-                                    .unfollowDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, unassignConfirmationMessage).body();
-                        } else {
-                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                    Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.core.routes.PortfolioEntryDeliveryController
-                                    .deleteDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("owner", "owner", "object.deliverable.owner.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("owner", new IColumnFormatter<DeliverableListView>() {
+                        @Override
+                        public String apply(DeliverableListView deliverableListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry.render(deliverableListView.owner, true).body();
                         }
-                    }
-                });
-                setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    });
+                    this.setColumnValueCssClass("owner", "rowlink-skip");
 
-                this.setLineAction(new IColumnFormatter<DeliverableListView>() {
-                    @Override
-                    public String apply(DeliverableListView deliverableListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryDeliveryController
-                                .viewDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
-                    }
-                });
+                    addColumn("planningPackage", "planningPackage", "object.deliverable.planning_package.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("planningPackage", new IColumnFormatter<DeliverableListView>() {
+                        @Override
+                        public String apply(DeliverableListView deliverableListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry_planning_package.render(deliverableListView.planningPackage).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("planningPackage", "rowlink-skip");
 
-                setEmptyMessageKey("object.deliverable.table.empty");
+                    addCustomAttributeColumns(Deliverable.class);
 
-            }
-        };
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<DeliverableListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<DeliverableListView>() {
+                        @Override
+                        public String convert(DeliverableListView deliverableListView) {
+                            return controllers.core.routes.PortfolioEntryDeliveryController
+                                    .manageDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<DeliverableListView>() {
+                        @Override
+                        public String apply(DeliverableListView deliverableListView, Object value) {
+                            if (deliverableListView.isDelegated) {
+                                String unassignConfirmationMessage = MessageFormat.format(
+                                        "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\">" + "<span class=\"fa fa-times\"></span></a>",
+                                        Msg.get("core.portfolio_entry_delivery.deliverable.unfollow.confirmation"));
+                                String url = controllers.core.routes.PortfolioEntryDeliveryController
+                                        .unfollowDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
+                                return views.html.framework_views.parts.formats.display_with_format.render(url, unassignConfirmationMessage).body();
+                            } else {
+                                String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                        Msg.get("default.delete.confirmation.message"));
+                                String url = controllers.core.routes.PortfolioEntryDeliveryController
+                                        .deleteDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
+                                return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                            }
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction(new IColumnFormatter<DeliverableListView>() {
+                        @Override
+                        public String apply(DeliverableListView deliverableListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryDeliveryController
+                                    .viewDeliverable(deliverableListView.portfolioEntryId, deliverableListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.deliverable.table.empty");
+
+                }
+            };
+
+        }
 
     }
 

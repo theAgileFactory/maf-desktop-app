@@ -20,9 +20,6 @@ package utils.table;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import models.pmo.Actor;
-import models.pmo.PortfolioEntryReport;
-import models.pmo.PortfolioEntryReportStatusType;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -30,6 +27,9 @@ import framework.utils.Table;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.pmo.Actor;
+import models.pmo.PortfolioEntryReport;
+import models.pmo.PortfolioEntryReportStatusType;
 
 /**
  * A portfolio entry report list view is used to display an portfolio entry
@@ -39,81 +39,95 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class PortfolioEntryReportListView {
 
-    public static Table<PortfolioEntryReportListView> templateTable = getTable();
-
     /**
-     * Get the table.
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
      */
-    public static Table<PortfolioEntryReportListView> getTable() {
-        return new Table<PortfolioEntryReportListView>() {
-            {
-                setIdFieldName("id");
+    public static class TableDefinition {
 
-                addColumn("reportDate", "reportDate", "object.portfolio_entry_report.report_date.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("reportDate", new DateFormatter<PortfolioEntryReportListView>());
+        public Table<PortfolioEntryReportListView> templateTable;
 
-                addColumn("author", "author", "object.portfolio_entry_report.author.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("author", new IColumnFormatter<PortfolioEntryReportListView>() {
-                    @Override
-                    public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
-                        return views.html.modelsparts.display_actor.render(portfolioEntryReportListView.author).body();
-                    }
-                });
-                this.setColumnValueCssClass("author", "rowlink-skip");
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-                addColumn("status", "status", "object.portfolio_entry_report.status.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("status", new IColumnFormatter<PortfolioEntryReportListView>() {
-                    @Override
-                    public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
-                        return views.html.modelsparts.display_portfolio_entry_report_status_type.render(portfolioEntryReportListView.status).body();
-                    }
-                });
+        /**
+         * Get the table.
+         */
+        public Table<PortfolioEntryReportListView> getTable() {
+            return new Table<PortfolioEntryReportListView>() {
+                {
+                    setIdFieldName("id");
 
-                addColumn("comments", "comments", "object.portfolio_entry_report.comments.label", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("comments", new ObjectFormatter<PortfolioEntryReportListView>());
+                    addColumn("reportDate", "reportDate", "object.portfolio_entry_report.report_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("reportDate", new DateFormatter<PortfolioEntryReportListView>());
 
-                addCustomAttributeColumns(PortfolioEntryReport.class);
+                    addColumn("author", "author", "object.portfolio_entry_report.author.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("author", new IColumnFormatter<PortfolioEntryReportListView>() {
+                        @Override
+                        public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
+                            return views.html.modelsparts.display_actor.render(portfolioEntryReportListView.author).body();
+                        }
+                    });
+                    this.setColumnValueCssClass("author", "rowlink-skip");
 
-                addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryReportListView>(IMafConstants.EDIT_URL_FORMAT,
-                        new StringFormatFormatter.Hook<PortfolioEntryReportListView>() {
-                            @Override
-                            public String convert(PortfolioEntryReportListView portfolioEntryReportListView) {
-                                return controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(
-                                        portfolioEntryReportListView.portfolioEntryId, portfolioEntryReportListView.id).url();
-                            }
-                        }));
-                setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addColumn("status", "status", "object.portfolio_entry_report.status.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("status", new IColumnFormatter<PortfolioEntryReportListView>() {
+                        @Override
+                        public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry_report_status_type.render(portfolioEntryReportListView.status).body();
+                        }
+                    });
 
-                addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryReportListView>() {
-                    @Override
-                    public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
-                        String deleteConfirmationMessage =
-                                MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                        String url =
-                                controllers.core.routes.PortfolioEntryStatusReportingController.deleteReport(portfolioEntryReportListView.portfolioEntryId,
-                                        portfolioEntryReportListView.id).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                    }
-                });
-                setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    addColumn("comments", "comments", "object.portfolio_entry_report.comments.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("comments", new ObjectFormatter<PortfolioEntryReportListView>());
 
-                this.setLineAction(new IColumnFormatter<PortfolioEntryReportListView>() {
-                    @Override
-                    public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
-                        return controllers.core.routes.PortfolioEntryStatusReportingController.viewReport(portfolioEntryReportListView.portfolioEntryId,
-                                portfolioEntryReportListView.id).url();
-                    }
-                });
+                    addCustomAttributeColumns(PortfolioEntryReport.class);
 
-                setEmptyMessageKey("object.portfolio_entry_report.table.empty");
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryReportListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<PortfolioEntryReportListView>() {
+                        @Override
+                        public String convert(PortfolioEntryReportListView portfolioEntryReportListView) {
+                            return controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .manageReport(portfolioEntryReportListView.portfolioEntryId, portfolioEntryReportListView.id).url();
+                        }
+                    }));
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            }
-        };
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryReportListView>() {
+                        @Override
+                        public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .deleteReport(portfolioEntryReportListView.portfolioEntryId, portfolioEntryReportListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
+                    this.setLineAction(new IColumnFormatter<PortfolioEntryReportListView>() {
+                        @Override
+                        public String apply(PortfolioEntryReportListView portfolioEntryReportListView, Object value) {
+                            return controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .viewReport(portfolioEntryReportListView.portfolioEntryId, portfolioEntryReportListView.id).url();
+                        }
+                    });
+
+                    setEmptyMessageKey("object.portfolio_entry_report.table.empty");
+
+                }
+            };
+
+        }
     }
 
     /**

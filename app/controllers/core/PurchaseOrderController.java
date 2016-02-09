@@ -40,6 +40,7 @@ import models.finance.WorkOrder;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.tableprovider.ITableProvider;
 import utils.form.PurchaseOrderLineItemWorkOrderFormData;
 import utils.table.GoodsReceiptListView;
 import utils.table.PurchaseOrderLineItemListView;
@@ -54,6 +55,8 @@ public class PurchaseOrderController extends Controller {
 
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ITableProvider tableProvider;
 
     public static Form<PurchaseOrderLineItemWorkOrderFormData> workOrderFormTemplate = Form.form(PurchaseOrderLineItemWorkOrderFormData.class);
 
@@ -79,8 +82,8 @@ public class PurchaseOrderController extends Controller {
         for (PurchaseOrderLineItem lineItem : purchaseOrder.purchaseOrderLineItems) {
             purchaseOrderLineItemListView.add(new PurchaseOrderLineItemListView(lineItem));
         }
-        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable = PurchaseOrderLineItemListView.templateTable.fill(purchaseOrderLineItemListView,
-                hideColumnsForLineItemTable);
+        Table<PurchaseOrderLineItemListView> purchaseOrderLineItemsTable = this.getTableProvider().get().purchaseOrderLineItem.templateTable
+                .fill(purchaseOrderLineItemListView, hideColumnsForLineItemTable);
 
         return ok(views.html.core.purchaseorder.purchase_order_view.render(purchaseOrder, purchaseOrderLineItemsTable));
     }
@@ -103,7 +106,7 @@ public class PurchaseOrderController extends Controller {
         for (GoodsReceipt goodsReceipt : lineItem.goodsReceipts) {
             goodsReceiptListView.add(new GoodsReceiptListView(goodsReceipt));
         }
-        Table<GoodsReceiptListView> goodsReceiptTable = GoodsReceiptListView.templateTable.fill(goodsReceiptListView);
+        Table<GoodsReceiptListView> goodsReceiptTable = this.getTableProvider().get().goodsReceipt.templateTable.fill(goodsReceiptListView);
 
         // construct the work orders table
         List<PurchaseOrderLineItemWorkOrderListView> workOrderListView = new ArrayList<PurchaseOrderLineItemWorkOrderListView>();
@@ -114,8 +117,8 @@ public class PurchaseOrderController extends Controller {
         if (!lineItem.isAssociated() || lineItem.isShared() == false) {
             hideColumnsForWorkOrderTable.add("editActionLink");
         }
-        Table<PurchaseOrderLineItemWorkOrderListView> workOrderTable = PurchaseOrderLineItemWorkOrderListView.templateTable.fill(workOrderListView,
-                hideColumnsForWorkOrderTable);
+        Table<PurchaseOrderLineItemWorkOrderListView> workOrderTable = this.getTableProvider().get().purchaseOrderLineItemWorkOrder.templateTable
+                .fill(workOrderListView, hideColumnsForWorkOrderTable);
 
         return ok(views.html.core.purchaseorder.purchase_order_line_item_view.render(lineItem, workOrderTable, goodsReceiptTable));
     }
@@ -191,6 +194,13 @@ public class PurchaseOrderController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

@@ -89,6 +89,7 @@ import security.CheckPortfolioEntryExists;
 import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
+import services.tableprovider.ITableProvider;
 import utils.form.AttachmentFormData;
 import utils.form.PortfolioEntryEventFormData;
 import utils.form.PortfolioEntryReportFormData;
@@ -129,6 +130,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private IDataSyndicationService dataSyndicationService;
     @Inject
     private Configuration configuration;
+    @Inject
+    private ITableProvider tableProvider;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryStatusReportingController.class);
 
@@ -209,8 +212,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
             hideColumnsForReport.add("deleteActionLink");
         }
 
-        Table<PortfolioEntryReportListView> filledReportsTable = PortfolioEntryReportListView.templateTable.fill(portfolioEntryReportsListView,
-                hideColumnsForReport);
+        Table<PortfolioEntryReportListView> filledReportsTable = this.getTableProvider().get().portfolioEntryReport.templateTable
+                .fill(portfolioEntryReportsListView, hideColumnsForReport);
 
         // get the syndicated reports
         List<DataSyndicationAgreementLink> agreementLinks = new ArrayList<>();
@@ -244,7 +247,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
             hideColumnsForRisk.add("editActionLink");
         }
 
-        Table<PortfolioEntryRiskListView> filledRisksTable = PortfolioEntryRiskListView.templateTable.fill(portfolioEntryRisksListView, hideColumnsForRisk);
+        Table<PortfolioEntryRiskListView> filledRisksTable = this.getTableProvider().get().portfolioEntryRisk.templateTable.fill(portfolioEntryRisksListView,
+                hideColumnsForRisk);
 
         // get the portfolioEntry issues
 
@@ -264,8 +268,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
             hideColumnsForIssue.add("editActionLink");
         }
 
-        Table<PortfolioEntryRiskListView> filledIssuesTable = PortfolioEntryRiskListView.templateTable.fill(portfolioEntryIssuesListView,
-                hideColumnsForIssue);
+        Table<PortfolioEntryRiskListView> filledIssuesTable = this.getTableProvider().get().portfolioEntryRisk.templateTable
+                .fill(portfolioEntryIssuesListView, hideColumnsForIssue);
 
         // get the report in order to know if it is active
         Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateNameAndFormat().getLeft());
@@ -291,7 +295,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<PortfolioEntryEventListView> filterConfig = this.getTableProvider().get().portfolioEntryEvent.filterConfig.getCurrent(uid,
+                    request());
 
             // get the table
             Pair<Table<PortfolioEntryEventListView>, Pagination<PortfolioEntryEvent>> t = getEventsTable(id, filterConfig);
@@ -319,7 +324,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<PortfolioEntryEventListView> filterConfig = this.getTableProvider().get().portfolioEntryEvent.filterConfig
+                    .persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -357,7 +363,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    FilterConfig<PortfolioEntryEventListView> filterConfig = PortfolioEntryEventListView.filterConfig.getCurrent(uid, request());
+                    FilterConfig<PortfolioEntryEventListView> filterConfig = getTableProvider().get().portfolioEntryEvent.filterConfig.getCurrent(uid,
+                            request());
 
                     ExpressionList<PortfolioEntryEvent> expressionList = filterConfig
                             .updateWithSearchExpression(PortfolioEntryEventDao.getPEEventAsExprByPE(id));
@@ -368,8 +375,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
                         portfolioEntryEventListView.add(new PortfolioEntryEventListView(portfolioEntryEvent));
                     }
 
-                    Table<PortfolioEntryEventListView> table = PortfolioEntryEventListView.templateTable.fillForFilterConfig(portfolioEntryEventListView,
-                            filterConfig.getColumnsToHide());
+                    Table<PortfolioEntryEventListView> table = getTableProvider().get().portfolioEntryEvent.templateTable
+                            .fillForFilterConfig(portfolioEntryEventListView, filterConfig.getColumnsToHide());
 
                     final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
 
@@ -436,8 +443,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
             hideColumnsForEvent.add("deleteActionLink");
         }
 
-        Table<PortfolioEntryEventListView> table = PortfolioEntryEventListView.templateTable.fillForFilterConfig(portfolioEntryEventListView,
-                hideColumnsForEvent);
+        Table<PortfolioEntryEventListView> table = this.getTableProvider().get().portfolioEntryEvent.templateTable
+                .fillForFilterConfig(portfolioEntryEventListView, hideColumnsForEvent);
 
         return Pair.of(table, pagination);
 
@@ -490,7 +497,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
             hideColumns.add("removeActionLink");
         }
 
-        Table<AttachmentListView> attachmentsTable = AttachmentListView.templateTable.fill(attachmentsListView, hideColumns);
+        Table<AttachmentListView> attachmentsTable = this.getTableProvider().get().attachment.templateTable.fill(attachmentsListView, hideColumns);
 
         return ok(views.html.core.portfolioentrystatusreporting.report_view.render(portfolioEntry, portfolioEntryReport, portfolioEntryReportFormData,
                 attachmentsTable));
@@ -1076,7 +1083,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.getCurrent(uid, request());
+            FilterConfig<TimesheetLogListView> filterConfig = this.getTableProvider().get().timesheetLog.filterConfig.getCurrent(uid, request());
 
             // get the table
             Pair<Table<TimesheetLogListView>, Pagination<TimesheetLog>> t = getTimesheetsTable(id, filterConfig);
@@ -1119,7 +1126,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<TimesheetLogListView> filterConfig = this.getTableProvider().get().timesheetLog.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
@@ -1157,7 +1164,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
                     // construct the table
-                    FilterConfig<TimesheetLogListView> filterConfig = TimesheetLogListView.filterConfig.getCurrent(uid, request());
+                    FilterConfig<TimesheetLogListView> filterConfig = getTableProvider().get().timesheetLog.filterConfig.getCurrent(uid, request());
 
                     ExpressionList<TimesheetLog> expressionList = filterConfig
                             .updateWithSearchExpression(TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(id));
@@ -1168,7 +1175,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                         timesheetLogListView.add(new TimesheetLogListView(timesheetLog));
                     }
 
-                    Table<TimesheetLogListView> table = TimesheetLogListView.templateTable.fillForFilterConfig(timesheetLogListView,
+                    Table<TimesheetLogListView> table = getTableProvider().get().timesheetLog.templateTable.fillForFilterConfig(timesheetLogListView,
                             filterConfig.getColumnsToHide());
 
                     final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
@@ -1235,7 +1242,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         columnsToHide.add("portfolioEntry");
         columnsToHide.add("timesheetActivity");
 
-        Table<TimesheetLogListView> table = TimesheetLogListView.templateTable.fillForFilterConfig(timesheetLogListView, columnsToHide);
+        Table<TimesheetLogListView> table = this.getTableProvider().get().timesheetLog.templateTable.fillForFilterConfig(timesheetLogListView, columnsToHide);
 
         return Pair.of(table, pagination);
 
@@ -1326,6 +1333,13 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the table provider.
+     */
+    private ITableProvider getTableProvider() {
+        return this.tableProvider;
     }
 
 }

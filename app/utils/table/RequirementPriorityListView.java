@@ -19,7 +19,6 @@ package utils.table;
 
 import java.text.MessageFormat;
 
-import models.delivery.RequirementPriority;
 import constants.IMafConstants;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -27,6 +26,7 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.delivery.RequirementPriority;
 
 /**
  * A requirement priority list view is used to display a requirement priority
@@ -36,52 +36,77 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class RequirementPriorityListView {
 
-    public static Table<RequirementPriorityListView> templateTable = new Table<RequirementPriorityListView>() {
-        {
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
+    public static class TableDefinition {
 
-            setIdFieldName("id");
+        public Table<RequirementPriorityListView> templateTable;
 
-            addColumn("id", "id", "object.requirement_priority.id.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("id", new ObjectFormatter<RequirementPriorityListView>());
+        /**
+         * Default constructor.
+         */
+        public TableDefinition() {
+            this.templateTable = getTable();
+        }
 
-            addColumn("name", "name", "object.requirement_priority.name.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("name", new ObjectFormatter<RequirementPriorityListView>());
+        /**
+         * Get the table.
+         */
+        public Table<RequirementPriorityListView> getTable() {
+            return new Table<RequirementPriorityListView>() {
+                {
 
-            addColumn("description", "description", "object.requirement_priority.description.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("description", new ObjectFormatter<RequirementPriorityListView>());
+                    setIdFieldName("id");
 
-            addColumn("isMust", "isMust", "object.requirement_priority.is_must.label", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("isMust", new BooleanFormatter<RequirementPriorityListView>());
+                    addColumn("id", "id", "object.requirement_priority.id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("id", new ObjectFormatter<RequirementPriorityListView>());
 
-            addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementPriorityListView>(IMafConstants.EDIT_URL_FORMAT,
-                    new StringFormatFormatter.Hook<RequirementPriorityListView>() {
+                    addColumn("name", "name", "object.requirement_priority.name.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("name", new ObjectFormatter<RequirementPriorityListView>());
+
+                    addColumn("description", "description", "object.requirement_priority.description.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("description", new ObjectFormatter<RequirementPriorityListView>());
+
+                    addColumn("isMust", "isMust", "object.requirement_priority.is_must.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("isMust", new BooleanFormatter<RequirementPriorityListView>());
+
+                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementPriorityListView>(IMafConstants.EDIT_URL_FORMAT,
+                            new StringFormatFormatter.Hook<RequirementPriorityListView>() {
                         @Override
                         public String convert(RequirementPriorityListView requirementPriorityListView) {
                             return controllers.admin.routes.ConfigurationRequirementController.manageRequirementPriority(requirementPriorityListView.id)
                                     .url();
                         }
                     }));
-            setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-            addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-            setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RequirementPriorityListView>() {
-                @Override
-                public String apply(RequirementPriorityListView requirementPriorityListView, Object value) {
-                    String deleteConfirmationMessage =
-                            MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                    String url = controllers.admin.routes.ConfigurationRequirementController.deleteRequirementPriority(requirementPriorityListView.id).url();
-                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<RequirementPriorityListView>() {
+                        @Override
+                        public String apply(RequirementPriorityListView requirementPriorityListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                    Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.admin.routes.ConfigurationRequirementController.deleteRequirementPriority(requirementPriorityListView.id)
+                                    .url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
+
+                    setEmptyMessageKey("object.requirement_priority.table.empty");
+
                 }
-            });
-            setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-            setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-
-            setEmptyMessageKey("object.requirement_priority.table.empty");
+            };
 
         }
-    };
+
+    }
 
     /**
      * Default constructor.
