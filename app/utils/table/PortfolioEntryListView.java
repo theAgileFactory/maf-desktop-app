@@ -31,7 +31,6 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.services.kpi.IKpiService;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
@@ -187,7 +186,7 @@ public class PortfolioEntryListView {
                     addColumnConfiguration("isConcept", "activeLifeCycleInstance.isConcept", "object.portfolio_entry.is_concept.label",
                             new CheckboxFilterComponent(false), false, false, SortStatusType.NONE);
 
-                    addKpis("id", PortfolioEntry.class);
+                    addKpis(kpiService, "id", PortfolioEntry.class);
 
                     addCustomAttributesColumns("id", PortfolioEntry.class);
                 }
@@ -287,7 +286,7 @@ public class PortfolioEntryListView {
                     addColumn("isPublic", "isPublic", "object.portfolio_entry.is_public.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("isPublic", new BooleanFormatter<PortfolioEntryListView>());
 
-                    addKpis(PortfolioEntry.class);
+                    addKpis(kpiService, PortfolioEntry.class);
 
                     addCustomAttributeColumns(PortfolioEntry.class);
 
