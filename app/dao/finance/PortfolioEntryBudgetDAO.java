@@ -26,6 +26,7 @@ import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Pagination;
 import models.finance.PortfolioEntryBudget;
 import models.finance.PortfolioEntryBudgetLine;
@@ -141,11 +142,14 @@ public abstract class PortfolioEntryBudgetDAO {
     /**
      * Get the active budget lines of a budget bucket as pagination.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param budgetBucketId
      *            the budget bucket id
      */
-    public static Pagination<PortfolioEntryBudgetLine> getPEBudgetLineActiveAsPaginationByBucket(Long budgetBucketId) {
-        return new Pagination<>(getPEBudgetLineActiveAsExprByBucket(budgetBucketId));
+    public static Pagination<PortfolioEntryBudgetLine> getPEBudgetLineActiveAsPaginationByBucket(IPreferenceManagerPlugin preferenceManagerPlugin,
+            Long budgetBucketId) {
+        return new Pagination<>(preferenceManagerPlugin, getPEBudgetLineActiveAsExprByBucket(budgetBucketId));
     }
 
     /**

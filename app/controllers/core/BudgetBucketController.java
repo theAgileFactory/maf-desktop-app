@@ -32,6 +32,7 @@ import dao.finance.BudgetBucketDAO;
 import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import framework.highcharts.pattern.BasicBar;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
 import framework.utils.Pagination;
@@ -61,6 +62,8 @@ public class BudgetBucketController extends Controller {
 
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     public static Form<BudgetBucketFormData> formTemplate = Form.form(BudgetBucketFormData.class);
     public static Form<BudgetBucketLineFormData> lineFormTemplate = Form.form(BudgetBucketLineFormData.class);
@@ -92,7 +95,8 @@ public class BudgetBucketController extends Controller {
         Double capexTotalInitiativeBudget = 0.0;
 
         // create the budget table (form budget_bucket_line)
-        Pagination<BudgetBucketLine> budgetBucketLinesPagination = BudgetBucketDAO.getBudgetBucketLineAsPaginationByBucket(id);
+        Pagination<BudgetBucketLine> budgetBucketLinesPagination = BudgetBucketDAO.getBudgetBucketLineAsPaginationByBucket(this.getPreferenceManagerPlugin(),
+                id);
         budgetBucketLinesPagination.setCurrentPage(budgetTablePage);
         budgetBucketLinesPagination.setPageQueryName("budgetTablePage");
 
@@ -109,7 +113,8 @@ public class BudgetBucketController extends Controller {
         hideColumnsForInitiativeBudgetTable.add("removeActionLink");
         hideColumnsForInitiativeBudgetTable.add("budgetBucket");
 
-        Pagination<PortfolioEntryBudgetLine> initiativeBudgetLinesPagination = PortfolioEntryBudgetDAO.getPEBudgetLineActiveAsPaginationByBucket(id);
+        Pagination<PortfolioEntryBudgetLine> initiativeBudgetLinesPagination = PortfolioEntryBudgetDAO
+                .getPEBudgetLineActiveAsPaginationByBucket(this.getPreferenceManagerPlugin(), id);
         initiativeBudgetLinesPagination.setCurrentPage(initiativeBudgetTablePage);
         initiativeBudgetLinesPagination.setPageQueryName("initiativeBudgetTablePage");
 
@@ -377,6 +382,13 @@ public class BudgetBucketController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }

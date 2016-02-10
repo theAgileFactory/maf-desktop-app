@@ -46,6 +46,7 @@ import framework.commons.message.EventMessage;
 import framework.commons.message.EventMessage.MessageType;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.ext.api.IExtensionDescriptor.IPluginConfigurationBlockDescriptor;
 import framework.services.ext.api.IExtensionDescriptor.IPluginConfigurationBlockDescriptor.ConfigurationBlockEditionType;
@@ -58,6 +59,7 @@ import framework.services.plugins.api.IPluginActionDescriptor;
 import framework.services.plugins.api.PluginException;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
@@ -111,6 +113,8 @@ public class PluginManagerController extends Controller {
     private II18nMessagesPlugin i18nMessagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IPreferenceManagerPlugin preferencManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PluginManagerController.class);
     public static final int MAX_CONFIG_FILE_SIZE = 1 * 1024 * 1024;
@@ -421,7 +425,7 @@ public class PluginManagerController extends Controller {
             Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.not_exists", pluginConfigurationId));
             return redirect(routes.PluginManagerController.index());
         }
-        if(!pluginInfo.getDescriptor().autoRegister()){
+        if (!pluginInfo.getDescriptor().autoRegister()) {
             String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
             try {
                 getPluginManagerService().unregisterPlugin(pluginConfigurationId);
@@ -488,7 +492,7 @@ public class PluginManagerController extends Controller {
                 .updateWithSearchExpression(PluginLog.getAllPluginLogsForPluginConfigurationId(pluginConfigurationId));
         filterConfig.updateWithSortExpression(pluginLogExpressionList);
 
-        Pagination<PluginLog> pluginLogsPagination = new Pagination<PluginLog>(pluginLogExpressionList);
+        Pagination<PluginLog> pluginLogsPagination = new Pagination<PluginLog>(this.getPreferencManagerPlugin(), pluginLogExpressionList);
         pluginLogsPagination.setCurrentPage(filterConfig.getCurrentPage());
 
         Table<PluginLog> pluginLogsTable = pluginLogsTableTemplate.fill(pluginLogsPagination.getListOfObjects(), filterConfig.getColumnsToHide());
@@ -521,7 +525,7 @@ public class PluginManagerController extends Controller {
 
                 filledFilterConfig.updateWithSortExpression(pluginLogExpressionList);
 
-                Pagination<PluginLog> pagination = new Pagination<PluginLog>(pluginLogExpressionList);
+                Pagination<PluginLog> pagination = new Pagination<PluginLog>(this.getPreferencManagerPlugin(), pluginLogExpressionList);
                 pagination.setCurrentPage(filledFilterConfig.getCurrentPage());
 
                 Table<PluginLog> table = pluginLogsTableTemplate.fill(pagination.getListOfObjects(), filledFilterConfig.getColumnsToHide());
@@ -548,11 +552,12 @@ public class PluginManagerController extends Controller {
         if (pluginInfo == null) {
             return badRequest();
         }
-        if(!pluginInfo.getDescriptor().autoRegister()){
+        if (!pluginInfo.getDescriptor().autoRegister()) {
             String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
             try {
                 getPluginManagerService().startPlugin(pluginConfigurationId);
-                Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", Msg.get(pluginConfigurationName)));
+                Utilities.sendSuccessFlashMessage(
+                        Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.success", Msg.get(pluginConfigurationName)));
             } catch (PluginException e) {
                 log.error("Exception while attempting to start the plugin " + pluginConfigurationId, e);
                 Utilities.sendErrorFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.start.error", Msg.get(pluginConfigurationName)));
@@ -574,10 +579,11 @@ public class PluginManagerController extends Controller {
         if (pluginInfo == null) {
             return badRequest();
         } else {
-            if(!pluginInfo.getDescriptor().autoRegister()){
+            if (!pluginInfo.getDescriptor().autoRegister()) {
                 String pluginConfigurationName = pluginInfo.getPluginConfigurationName();
                 getPluginManagerService().stopPlugin(pluginConfigurationId);
-                Utilities.sendSuccessFlashMessage(Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", Msg.get(pluginConfigurationName)));
+                Utilities.sendSuccessFlashMessage(
+                        Msg.get("admin.plugin_manager.configuration.view.panel.admin.stop.success", Msg.get(pluginConfigurationName)));
             }
         }
         return redirect(routes.PluginManagerController.pluginConfigurationDetails(pluginConfigurationId));
@@ -1069,5 +1075,12 @@ public class PluginManagerController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferencManagerPlugin() {
+        return this.preferencManagerPlugin;
     }
 }

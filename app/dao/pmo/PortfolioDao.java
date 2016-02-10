@@ -238,28 +238,32 @@ public abstract class PortfolioDao {
      * Get all active portfolios as pagination object for which an actor is a
      * stakeholder.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param actorId
      *            the actor id
      */
-    public static Pagination<Portfolio> getPortfolioActiveAsPaginationByStakeholder(Long actorId) {
-        return new Pagination<>(
+    public static Pagination<Portfolio> getPortfolioActiveAsPaginationByStakeholder(IPreferenceManagerPlugin preferenceManagerPlugin, Long actorId) {
+        return new Pagination<>(preferenceManagerPlugin,
                 findPortfolio.where().eq("isActive", true).eq("stakeholders.actor.id", actorId).eq("deleted", false).eq("stakeholders.deleted", false));
     }
 
     /**
      * Get all active portfolios for which an actor is the manager.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param actorId
      *            the actor id
      * @param viewAll
      *            set to true if the inactive portfolios must be also returned
      */
-    public static Pagination<Portfolio> getPortfolioAsPaginationByManager(Long actorId, Boolean viewAll) {
+    public static Pagination<Portfolio> getPortfolioAsPaginationByManager(IPreferenceManagerPlugin preferenceManagerPlugin, Long actorId, Boolean viewAll) {
         ExpressionList<Portfolio> e = findPortfolio.where().eq("deleted", false).eq("manager.id", actorId);
         if (!viewAll) {
             e = e.eq("isActive", true);
         }
-        return new Pagination<>(e);
+        return new Pagination<>(preferenceManagerPlugin, e);
     }
 
     /**
@@ -288,16 +292,18 @@ public abstract class PortfolioDao {
      * Get all active portfolios as pagination object for which an actor is
      * manager or stakeholder.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param actorId
      *            the actor id
      */
-    public static Pagination<Portfolio> getPortfolioActiveAsPaginationByStakeholderOrManager(Long actorId) {
+    public static Pagination<Portfolio> getPortfolioActiveAsPaginationByStakeholderOrManager(IPreferenceManagerPlugin preferenceManagerPlugin, Long actorId) {
         String raw = "deleted=false AND is_active=true AND (";
         raw += "manager.id=" + actorId + " OR ";
         raw += "(stakeholders.deleted=false AND stakeholders.actor.id=" + actorId + ")";
         raw += ")";
         ExpressionList<Portfolio> expression = findPortfolio.where().raw(raw);
-        return new Pagination<>(expression.findList().size(), expression);
+        return new Pagination<>(preferenceManagerPlugin, expression.findList().size(), expression);
     }
 
     /**

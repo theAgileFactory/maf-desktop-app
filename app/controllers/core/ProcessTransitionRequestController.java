@@ -36,6 +36,7 @@ import dao.governance.ProcessTransitionRequestDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -96,6 +97,8 @@ public class ProcessTransitionRequestController extends Controller {
     private INotificationManagerPlugin notificationManagerService;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(ProcessTransitionRequestController.class);
 
@@ -112,7 +115,8 @@ public class ProcessTransitionRequestController extends Controller {
             @Group(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_AS_PORTFOLIO_MANAGER_PERMISSION) })
     public Result reviewMilestoneRequestList(Integer page) {
 
-        Pagination<ProcessTransitionRequest> pagination = ProcessTransitionRequestDao.getProcessTransitionRequestMilestoneApprovalToReviewAsPagination();
+        Pagination<ProcessTransitionRequest> pagination = ProcessTransitionRequestDao
+                .getProcessTransitionRequestMilestoneApprovalToReviewAsPagination(this.getPreferenceManagerPlugin());
         pagination.setCurrentPage(page);
 
         List<MilestoneRequestListView> requestsListView = new ArrayList<MilestoneRequestListView>();
@@ -416,5 +420,12 @@ public class ProcessTransitionRequestController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }

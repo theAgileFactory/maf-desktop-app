@@ -292,7 +292,7 @@ public class Application extends Controller {
                 .updateWithSearchExpression(getNotificationManagerPlugin().getNotificationsForUidAsExpr(loggedUser));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<Notification> pagination = new Pagination<Notification>(expressionList);
+        Pagination<Notification> pagination = new Pagination<Notification>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<NotificationListView> notificationListViews = new ArrayList<NotificationListView>();

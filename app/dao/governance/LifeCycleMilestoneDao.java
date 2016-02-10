@@ -28,6 +28,7 @@ import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 
 import dao.pmo.PortfolioEntryDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -417,20 +418,26 @@ public abstract class LifeCycleMilestoneDao {
      * Get all milestone instances as pagination object for which a user (here
      * called an approver) should vote.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param approverId
      *            the approver id
      */
-    public static Pagination<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsPaginationByApprover(Long approverId) {
-        return new Pagination<>(getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
+    public static Pagination<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsPaginationByApprover(IPreferenceManagerPlugin preferenceManagerPlugin,
+            Long approverId) {
+        return new Pagination<>(preferenceManagerPlugin, getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
                 .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
     }
 
     /**
      * Get all milestone instances as pagination object for which a
      * vote/decision is required.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static Pagination<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsPagination() {
-        return new Pagination<>(getLCMilestoneInstanceAsExpr());
+    public static Pagination<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsPagination(IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return new Pagination<>(preferenceManagerPlugin, getLCMilestoneInstanceAsExpr());
     }
 
     /**

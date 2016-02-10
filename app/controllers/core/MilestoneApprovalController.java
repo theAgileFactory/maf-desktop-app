@@ -38,6 +38,7 @@ import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
 import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
@@ -109,6 +110,8 @@ public class MilestoneApprovalController extends Controller {
     private INotificationManagerPlugin notificationManagerService;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(MilestoneApprovalController.class);
 
@@ -196,7 +199,7 @@ public class MilestoneApprovalController extends Controller {
         // get the milestone instances required for a vote/decision
         Pagination<LifeCycleMilestoneInstance> pagination;
         if (getSecurityService().restrict(IMafConstants.MILESTONE_DECIDE_PERMISSION, userAccount)) {
-            pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPagination();
+            pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPagination(this.getPreferenceManagerPlugin());
         } else {
             // if the sign in user hasn't the permission
             // MILESTONE_DECIDE_PERMISSION and is not related to an actor, then
@@ -204,7 +207,7 @@ public class MilestoneApprovalController extends Controller {
             if (actor == null) {
                 return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
             }
-            pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPaginationByApprover(actor.id);
+            pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPaginationByApprover(this.getPreferenceManagerPlugin(), actor.id);
         }
 
         pagination.setCurrentPage(page);
@@ -626,6 +629,13 @@ public class MilestoneApprovalController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }

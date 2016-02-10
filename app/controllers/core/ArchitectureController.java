@@ -37,6 +37,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.architecture.ArchitectureDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
@@ -87,6 +88,8 @@ public class ArchitectureController extends Controller {
     private Configuration configuration;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(ArchitectureController.class);
 
@@ -258,7 +261,7 @@ public class ArchitectureController extends Controller {
         ExpressionList<ApplicationBlock> expressionList = filterConfig.updateWithSearchExpression(ArchitectureDao.getApplicationBlockAsExpr());
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<ApplicationBlock> pagination = new Pagination<ApplicationBlock>(expressionList);
+        Pagination<ApplicationBlock> pagination = new Pagination<ApplicationBlock>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<ApplicationBlockListView> listView = new ArrayList<ApplicationBlockListView>();
@@ -491,7 +494,17 @@ public class ArchitectureController extends Controller {
         return configuration;
     }
 
+    /**
+     * Get the table provider.
+     */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager plugin.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 }

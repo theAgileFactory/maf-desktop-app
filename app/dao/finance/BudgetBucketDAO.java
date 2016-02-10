@@ -19,21 +19,21 @@ package dao.finance;
 
 import java.util.List;
 
-import models.finance.BudgetBucket;
-import models.finance.BudgetBucketLine;
-import models.sql.TotalAmount;
-import com.avaje.ebean.Model.Finder;
-
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
+import models.finance.BudgetBucket;
+import models.finance.BudgetBucketLine;
+import models.sql.TotalAmount;
 
 /**
  * DAO for the {@link BudgetBucket} and {@link BudgetBucketLine} object.
@@ -132,9 +132,8 @@ public abstract class BudgetBucketDAO {
      */
     public static Double getBudgetAsAmountByBucketAndOpex(Long budgetBucketId, boolean isOpex) {
 
-        String sql =
-                "SELECT SUM(bbl.amount) as totalAmount FROM budget_bucket_line bbl WHERE bbl.deleted = 0 AND bbl.currency_code = '"
-                        + CurrencyDAO.getCurrencyDefault().code + "' AND bbl.is_opex = " + isOpex + " AND bbl.budget_bucket_id = " + budgetBucketId;
+        String sql = "SELECT SUM(bbl.amount) as totalAmount FROM budget_bucket_line bbl WHERE bbl.deleted = 0 AND bbl.currency_code = '"
+                + CurrencyDAO.getCurrencyDefault().code + "' AND bbl.is_opex = " + isOpex + " AND bbl.budget_bucket_id = " + budgetBucketId;
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -162,11 +161,14 @@ public abstract class BudgetBucketDAO {
     /**
      * get the lines of a budget bucket as pagination.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param budgetBucketId
      *            the budget bucket id
      */
-    public static Pagination<BudgetBucketLine> getBudgetBucketLineAsPaginationByBucket(Long budgetBucketId) {
-        return new Pagination<>(getBudgetBucketLineAsExprByBucket(budgetBucketId));
+    public static Pagination<BudgetBucketLine> getBudgetBucketLineAsPaginationByBucket(IPreferenceManagerPlugin preferenceManagerPlugin,
+            Long budgetBucketId) {
+        return new Pagination<>(preferenceManagerPlugin, getBudgetBucketLineAsExprByBucket(budgetBucketId));
     }
 
     /**

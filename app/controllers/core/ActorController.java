@@ -44,6 +44,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.IColumnFormatter;
@@ -105,6 +106,9 @@ public class ActorController extends Controller {
 
     @Inject
     private ITableProvider tableProvider;
+
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     public static Form<ActorFormData> formTemplate = Form.form(ActorFormData.class);
 
@@ -404,7 +408,7 @@ public class ActorController extends Controller {
         // get the actor
         Actor actor = ActorDao.getActorById(id);
 
-        Pagination<PortfolioEntry> pagination = PortfolioEntryDao.getPEActiveAsPaginationByManagerOrDirectStakeholder(id);
+        Pagination<PortfolioEntry> pagination = PortfolioEntryDao.getPEActiveAsPaginationByManagerOrDirectStakeholder(this.getPreferenceManagerPlugin(), id);
         pagination.setCurrentPage(page);
 
         List<PortfolioEntryListView> portfolioEntriesView = new ArrayList<PortfolioEntryListView>();
@@ -434,7 +438,7 @@ public class ActorController extends Controller {
         // get the actor
         Actor actor = ActorDao.getActorById(id);
 
-        Pagination<Portfolio> pagination = PortfolioDao.getPortfolioActiveAsPaginationByStakeholderOrManager(id);
+        Pagination<Portfolio> pagination = PortfolioDao.getPortfolioActiveAsPaginationByStakeholderOrManager(this.getPreferenceManagerPlugin(), id);
         pagination.setCurrentPage(page);
 
         List<PortfolioListView> portfoliosView = new ArrayList<PortfolioListView>();
@@ -957,6 +961,13 @@ public class ActorController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.getPreferenceManagerPlugin();
     }
 
 }

@@ -45,6 +45,7 @@ import framework.highcharts.pattern.DistributedDonut;
 import framework.highcharts.pattern.RangeLine;
 import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
@@ -101,6 +102,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -190,7 +193,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         ExpressionList<Deliverable> expressionList = filterConfig.updateWithSearchExpression(DeliverableDAO.getDeliverableAsExprByPE(portfolioEntryId));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<Deliverable> pagination = new Pagination<Deliverable>(expressionList);
+        Pagination<Deliverable> pagination = new Pagination<Deliverable>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<DeliverableListView> deliverableListView = new ArrayList<DeliverableListView>();
@@ -586,7 +589,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             ExpressionList<Requirement> expressionList = filterConfig.updateWithSearchExpression(RequirementDAO.getRequirementAsExprByPE(id));
             filterConfig.updateWithSortExpression(expressionList);
 
-            Pagination<Requirement> pagination = new Pagination<Requirement>(expressionList);
+            Pagination<Requirement> pagination = new Pagination<Requirement>(this.getPreferenceManagerPlugin(), expressionList);
             pagination.setCurrentPage(filterConfig.getCurrentPage());
 
             List<RequirementListView> requirementListView = new ArrayList<RequirementListView>();
@@ -635,7 +638,7 @@ public class PortfolioEntryDeliveryController extends Controller {
                 ExpressionList<Requirement> expressionList = filterConfig.updateWithSearchExpression(RequirementDAO.getRequirementAsExprByPE(id));
                 filterConfig.updateWithSortExpression(expressionList);
 
-                Pagination<Requirement> pagination = new Pagination<Requirement>(expressionList);
+                Pagination<Requirement> pagination = new Pagination<Requirement>(this.getPreferenceManagerPlugin(), expressionList);
                 pagination.setCurrentPage(filterConfig.getCurrentPage());
 
                 List<RequirementListView> requirementListView = new ArrayList<RequirementListView>();
@@ -1071,7 +1074,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         ExpressionList<Iteration> expressionList = filterConfig.updateWithSearchExpression(IterationDAO.getIterationAllAsExprByPE(portfolioEntryId));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<Iteration> pagination = new Pagination<Iteration>(expressionList);
+        Pagination<Iteration> pagination = new Pagination<Iteration>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<IterationListView> iterationListView = new ArrayList<IterationListView>();
@@ -1237,6 +1240,13 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }

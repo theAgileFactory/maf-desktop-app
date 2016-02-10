@@ -19,15 +19,15 @@ package dao.pmo;
 
 import java.util.List;
 
-import models.pmo.Stakeholder;
-import models.pmo.StakeholderType;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 
-import com.avaje.ebean.ExpressionList;
-
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
+import models.pmo.Stakeholder;
+import models.pmo.StakeholderType;
 
 /**
  * DAO for the {@link Stakeholder} and {@link StakeholderType} objects.
@@ -85,12 +85,14 @@ public abstract class StakeholderDao {
     /**
      * Get all stakeholders of a portfolio.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param portfolioId
      *            the portfolio id
      */
-    public static Pagination<Stakeholder> getStakeholderAsPaginationByPortfolio(Long portfolioId) {
-        return new Pagination<>(findStakeholder.orderBy("actor.lastName, actor.firstName").where().eq("deleted", false).eq("portfolio_id", portfolioId)
-                .eq("actor.deleted", false));
+    public static Pagination<Stakeholder> getStakeholderAsPaginationByPortfolio(IPreferenceManagerPlugin preferenceManagerPlugin, Long portfolioId) {
+        return new Pagination<>(preferenceManagerPlugin, findStakeholder.orderBy("actor.lastName, actor.firstName").where().eq("deleted", false)
+                .eq("portfolio_id", portfolioId).eq("actor.deleted", false));
     }
 
     /**

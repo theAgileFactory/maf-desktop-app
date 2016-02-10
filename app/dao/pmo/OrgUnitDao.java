@@ -21,23 +21,22 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import models.pmo.OrgUnit;
-import models.pmo.OrgUnitType;
-
 import org.apache.commons.lang3.StringUtils;
-
-import com.avaje.ebean.Model.Finder;
-import play.mvc.Http;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.SqlUpdate;
 
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
+import models.pmo.OrgUnit;
+import models.pmo.OrgUnitType;
+import play.mvc.Http;
 
 /**
  * DAO for the {@link OrgUnit} and {@link OrgUnitType} objects.
@@ -102,13 +101,15 @@ public abstract class OrgUnitDao {
      * Get the org units for which the given actor is the manager, as a
      * pagination object.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param actorId
      *            the actor id of a manager
      * @param viewAll
      *            set to true if the non-active org units must be also returned
      * 
      */
-    public static Pagination<OrgUnit> getOrgUnitAsPaginationByActor(Long actorId, boolean viewAll) {
+    public static Pagination<OrgUnit> getOrgUnitAsPaginationByActor(IPreferenceManagerPlugin preferenceManagerPlugin, Long actorId, boolean viewAll) {
 
         ExpressionList<OrgUnit> e = findOrgUnit.where().eq("deleted", false).eq("manager.id", actorId);
 
@@ -116,7 +117,7 @@ public abstract class OrgUnitDao {
             e = e.eq("isActive", true);
         }
 
-        return new Pagination<>(e);
+        return new Pagination<>(preferenceManagerPlugin, e);
     }
 
     /**
@@ -217,10 +218,9 @@ public abstract class OrgUnitDao {
 
         key = key.replace("\"", "\\\"");
 
-        String sql =
-                "SELECT ou.id FROM `org_unit` ou " + "JOIN portfolio_entry_has_delivery_unit pehdu ON ou.id = pehdu.org_unit_id "
-                        + "LEFT OUTER JOIN `i18n_messages` im ON im.key = ou.name WHERE ou.deleted = 0 AND ou.is_active = 1 AND ou.can_deliver = 1 "
-                        + "AND pehdu.portfolio_entry_id = '" + portfolioEntryId + "'";
+        String sql = "SELECT ou.id FROM `org_unit` ou " + "JOIN portfolio_entry_has_delivery_unit pehdu ON ou.id = pehdu.org_unit_id "
+                + "LEFT OUTER JOIN `i18n_messages` im ON im.key = ou.name WHERE ou.deleted = 0 AND ou.is_active = 1 AND ou.can_deliver = 1 "
+                + "AND pehdu.portfolio_entry_id = '" + portfolioEntryId + "'";
 
         sql += " AND (im.language = '" + Http.Context.current().lang().code() + "' OR im.language IS NULL)";
 

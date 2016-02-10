@@ -46,6 +46,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.utils.CustomAttributeFormAndDisplayHandler;
@@ -108,6 +109,8 @@ public class OrgUnitController extends Controller {
     private ISecurityService securityService;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(OrgUnitController.class);
 
@@ -285,7 +288,7 @@ public class OrgUnitController extends Controller {
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
 
         // get the portfolio entries
-        Pagination<PortfolioEntry> pagination = PortfolioEntryDao.getPEActiveAsPaginationByOrgUnit(id);
+        Pagination<PortfolioEntry> pagination = PortfolioEntryDao.getPEActiveAsPaginationByOrgUnit(this.getPreferenceManagerPlugin(), id);
         pagination.setCurrentPage(page);
 
         List<PortfolioEntryListView> portfolioEntriesView = new ArrayList<PortfolioEntryListView>();
@@ -745,7 +748,8 @@ public class OrgUnitController extends Controller {
                 .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByOrgUnitAndActive(orgUnitId, true));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<PortfolioEntryResourcePlanAllocatedActor> pagination = new Pagination<PortfolioEntryResourcePlanAllocatedActor>(expressionList);
+        Pagination<PortfolioEntryResourcePlanAllocatedActor> pagination = new Pagination<PortfolioEntryResourcePlanAllocatedActor>(
+                this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<PortfolioEntryResourcePlanAllocatedActorListView> listView = new ArrayList<PortfolioEntryResourcePlanAllocatedActorListView>();
@@ -804,7 +808,8 @@ public class OrgUnitController extends Controller {
                 .updateWithSearchExpression(TimesheetDao.getTimesheetActivityAllocatedActorAsExprByOrgUnit(orgUnitId, true));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<TimesheetActivityAllocatedActor> pagination = new Pagination<TimesheetActivityAllocatedActor>(expressionList);
+        Pagination<TimesheetActivityAllocatedActor> pagination = new Pagination<TimesheetActivityAllocatedActor>(this.getPreferenceManagerPlugin(),
+                expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<TimesheetActivityAllocatedActorListView> listView = new ArrayList<TimesheetActivityAllocatedActorListView>();
@@ -882,6 +887,13 @@ public class OrgUnitController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
 }

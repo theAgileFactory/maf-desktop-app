@@ -375,36 +375,44 @@ public abstract class PortfolioEntryDao {
      * Get all portfolio entries as pagination object for which an actor is the
      * manager.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param actorId
      *            the actor id
      * @param viewArchived
      *            set to true if the archived entries must be also returned
      */
-    public static Pagination<PortfolioEntry> getPEAsPaginationByManager(Long actorId, Boolean viewArchived) {
-        return new Pagination<>(getPEAsExpr(viewArchived).eq("manager.id", actorId));
+    public static Pagination<PortfolioEntry> getPEAsPaginationByManager(IPreferenceManagerPlugin preferenceManagerPlugin, Long actorId,
+            Boolean viewArchived) {
+        return new Pagination<>(preferenceManagerPlugin, getPEAsExpr(viewArchived).eq("manager.id", actorId));
     }
 
     /**
      * Get the portfolio entries of a portfolio as pagination object.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param portfolioId
      *            the portfolio id
      * @param viewArchived
      *            set to true if the archived entries must be also returned
      */
-    public static Pagination<PortfolioEntry> getPEAsPaginationByPortfolio(Long portfolioId, Boolean viewArchived) {
-        return new Pagination<>(getPEAsExpr(viewArchived).eq("portfolios.id", portfolioId));
+    public static Pagination<PortfolioEntry> getPEAsPaginationByPortfolio(IPreferenceManagerPlugin preferenceManagerPlugin, Long portfolioId,
+            Boolean viewArchived) {
+        return new Pagination<>(preferenceManagerPlugin, getPEAsExpr(viewArchived).eq("portfolios.id", portfolioId));
     }
 
     /**
      * Get all active portfolio entries as pagination object for which an actor
      * is a direct stakeholder.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param actorId
      *            the actor id
      */
-    public static Pagination<PortfolioEntry> getPEActiveAsPaginationByDirectStakeholder(Long actorId) {
-        return new Pagination<>(
+    public static Pagination<PortfolioEntry> getPEActiveAsPaginationByDirectStakeholder(IPreferenceManagerPlugin preferenceManagerPlugin, Long actorId) {
+        return new Pagination<>(preferenceManagerPlugin,
                 findPortfolioEntry.where().eq("deleted", false).eq("archived", false).eq("stakeholders.actor.id", actorId).eq("stakeholders.deleted", false));
     }
 
@@ -432,31 +440,36 @@ public abstract class PortfolioEntryDao {
      * Get all active portfolio entries as pagination object for which an actor
      * is manager or direct stakeholder.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param actorId
      *            the actor id
      */
-    public static Pagination<PortfolioEntry> getPEActiveAsPaginationByManagerOrDirectStakeholder(Long actorId) {
+    public static Pagination<PortfolioEntry> getPEActiveAsPaginationByManagerOrDirectStakeholder(IPreferenceManagerPlugin preferenceManagerPlugin,
+            Long actorId) {
         String raw = "deleted=false AND archived=false AND (";
         raw += "manager.id=" + actorId + " OR ";
         raw += "(stakeholders.deleted=false AND stakeholders.actor.id=" + actorId + ")";
         raw += ")";
         ExpressionList<PortfolioEntry> expression = findPortfolioEntry.where().raw(raw);
-        return new Pagination<>(expression.findList().size(), expression);
+        return new Pagination<>(preferenceManagerPlugin, expression.findList().size(), expression);
     }
 
     /**
      * Get the active portfolio entries of an org unit (sponsoring or delivery).
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param orgUnitId
      *            the org unit id
      */
-    public static Pagination<PortfolioEntry> getPEActiveAsPaginationByOrgUnit(Long orgUnitId) {
+    public static Pagination<PortfolioEntry> getPEActiveAsPaginationByOrgUnit(IPreferenceManagerPlugin preferenceManagerPlugin, Long orgUnitId) {
         String raw = "deleted=false AND archived=false AND (";
         raw += "sponsoringUnit.id=" + orgUnitId + " OR ";
         raw += "(deliveryUnits.deleted=false AND deliveryUnits.id=" + orgUnitId + ")";
         raw += ")";
         ExpressionList<PortfolioEntry> expression = findPortfolioEntry.where().raw(raw);
-        return new Pagination<>(expression.findList().size(), expression);
+        return new Pagination<>(preferenceManagerPlugin, expression.findList().size(), expression);
     }
 
     /**

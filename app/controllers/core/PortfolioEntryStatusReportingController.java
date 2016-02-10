@@ -429,7 +429,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                 .updateWithSearchExpression(PortfolioEntryEventDao.getPEEventAsExprByPE(portfolioEntryId));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<PortfolioEntryEvent> pagination = new Pagination<PortfolioEntryEvent>(expressionList);
+        Pagination<PortfolioEntryEvent> pagination = new Pagination<PortfolioEntryEvent>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<PortfolioEntryEventListView> portfolioEntryEventListView = new ArrayList<PortfolioEntryEventListView>();
@@ -1230,7 +1230,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                 .updateWithSearchExpression(TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(portfolioEntryId));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<TimesheetLog> pagination = new Pagination<TimesheetLog>(expressionList);
+        Pagination<TimesheetLog> pagination = new Pagination<TimesheetLog>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<TimesheetLogListView> timesheetLogListView = new ArrayList<TimesheetLogListView>();

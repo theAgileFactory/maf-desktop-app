@@ -19,10 +19,12 @@ package dao.governance;
 
 import java.util.List;
 
+import com.avaje.ebean.Model.Finder;
+
+import framework.services.account.IPreferenceManagerPlugin;
+import framework.utils.Pagination;
 import models.governance.ProcessTransitionRequest;
 import models.governance.ProcessTransitionRequest.RequestType;
-import com.avaje.ebean.Model.Finder;
-import framework.utils.Pagination;
 
 /**
  * DAO for the {@link ProcessTransitionRequest} object.
@@ -58,9 +60,13 @@ public abstract class ProcessTransitionRequestDao {
 
     /**
      * Get all pending milestone requests as pagination.
+     * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      */
-    public static Pagination<ProcessTransitionRequest> getProcessTransitionRequestMilestoneApprovalToReviewAsPagination() {
-        return new Pagination<>(findProcessTransitionRequest.orderBy("creationDate DESC").where().eq("deleted", false)
+    public static Pagination<ProcessTransitionRequest> getProcessTransitionRequestMilestoneApprovalToReviewAsPagination(
+            IPreferenceManagerPlugin preferenceManagerPlugin) {
+        return new Pagination<>(preferenceManagerPlugin, findProcessTransitionRequest.orderBy("creationDate DESC").where().eq("deleted", false)
                 .eq("requestType", RequestType.MILESTONE_APPROVAL.name()).isNull("reviewDate"));
     }
 

@@ -34,6 +34,7 @@ import com.avaje.ebean.SqlUpdate;
 
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
@@ -274,11 +275,13 @@ public abstract class ActorDao {
     /**
      * Get the active actors of a manager as a pagination object.
      * 
+     * @param preferenceManagerPlugin
+     *            the preference manager service
      * @param manageId
      *            the actor id of the manager
      */
-    public static Pagination<Actor> getActorActiveAsPaginationByManager(Long manageId) {
-        return new Pagination<>(findActor.where().eq("deleted", false).eq("isActive", true).eq("manager.id", manageId));
+    public static Pagination<Actor> getActorActiveAsPaginationByManager(IPreferenceManagerPlugin preferenceManagerPlugin, Long manageId) {
+        return new Pagination<>(preferenceManagerPlugin, findActor.where().eq("deleted", false).eq("isActive", true).eq("manager.id", manageId));
     }
 
     /**

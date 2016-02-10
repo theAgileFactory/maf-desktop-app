@@ -949,7 +949,8 @@ public class RoadmapController extends Controller {
             ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
                     .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
 
-            Pagination<PortfolioEntry> pagination = new Pagination<PortfolioEntry>(expressionList.findList().size(), expressionList);
+            Pagination<PortfolioEntry> pagination = new Pagination<PortfolioEntry>(this.getPreferenceManagerPlugin(), expressionList.findList().size(),
+                    expressionList);
 
             pagination.setCurrentPage(filterConfig.getCurrentPage());
 

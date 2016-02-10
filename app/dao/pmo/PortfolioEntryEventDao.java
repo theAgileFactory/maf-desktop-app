@@ -19,15 +19,13 @@ package dao.pmo;
 
 import java.util.List;
 
-import models.pmo.PortfolioEntryEvent;
-import models.pmo.PortfolioEntryEventType;
-import com.avaje.ebean.Model.Finder;
-
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Pagination;
+import models.pmo.PortfolioEntryEvent;
+import models.pmo.PortfolioEntryEventType;
 
 /**
  * DAO for the {@link PortfolioEntryEvent} and {@link PortfolioEntryEventType}
@@ -65,16 +63,6 @@ public abstract class PortfolioEntryEventDao {
      */
     public static ExpressionList<PortfolioEntryEvent> getPEEventAsExprByPE(Long portfolioEntryId) {
         return findPortfolioEntryEvent.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId);
-    }
-
-    /**
-     * Get all events of a portfolio entry as pagination.
-     * 
-     * @param portfolioEntryId
-     *            the portfolio entry id
-     */
-    public static Pagination<PortfolioEntryEvent> getPEEventAsPaginationByPE(Long portfolioEntryId) {
-        return new Pagination<>(getPEEventAsExprByPE(portfolioEntryId));
     }
 
     /**

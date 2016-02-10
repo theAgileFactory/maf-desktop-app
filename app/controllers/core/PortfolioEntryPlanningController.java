@@ -605,7 +605,8 @@ public class PortfolioEntryPlanningController extends Controller {
                 .updateWithSearchExpression(PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsExprByPE(portfolioEntryId));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<PortfolioEntryPlanningPackage> pagination = new Pagination<PortfolioEntryPlanningPackage>(expressionList);
+        Pagination<PortfolioEntryPlanningPackage> pagination = new Pagination<PortfolioEntryPlanningPackage>(this.getPreferenceManagerPlugin(),
+                expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
         List<PortfolioEntryPlanningPackageListView> portfolioEntryPlanningPackageListView = new ArrayList<PortfolioEntryPlanningPackageListView>();
