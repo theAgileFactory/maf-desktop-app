@@ -35,6 +35,7 @@ import framework.commons.message.SystemLevelRoleTypeEventMessage;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
 import framework.services.plugins.IEventBroadcastingService;
@@ -42,7 +43,6 @@ import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
 import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.Msg;
 import framework.utils.MultiLanguagesString;
-import framework.utils.PreferenceFormAndDisplayHandler;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import framework.utils.formats.ObjectFormatter;
@@ -81,6 +81,8 @@ public class ConfigurationController extends Controller {
     private Configuration configuration;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(ConfigurationController.class);
 
@@ -161,7 +163,7 @@ public class ConfigurationController extends Controller {
     public Result editSystemPreferences() {
         Form<PrefsData> requestData = systemPreferencesFormTemplate.fill(new PrefsData());
         for (String field : editableFieldsValues) {
-            PreferenceFormAndDisplayHandler.fillWithPreference(requestData, field);
+            this.getPreferenceManagerPlugin().fillWithPreference(requestData, field);
         }
         return ok(views.html.admin.config.systempreferences.edit.render(requestData));
     }
@@ -176,14 +178,14 @@ public class ConfigurationController extends Controller {
 
         boolean hasErrors = false;
         for (String field : editableFieldsValues) {
-            hasErrors = PreferenceFormAndDisplayHandler.validatePreference(requestData, field) || hasErrors;
+            hasErrors = this.getPreferenceManagerPlugin().validatePreference(requestData, field) || hasErrors;
         }
 
         if (!hasErrors) {
             Ebean.beginTransaction();
             try {
                 for (String field : editableFieldsValues) {
-                    PreferenceFormAndDisplayHandler.validateAndSavePreference(requestData, field);
+                    this.getPreferenceManagerPlugin().validateAndSavePreference(requestData, field);
                 }
                 Ebean.commitTransaction();
 
@@ -215,7 +217,7 @@ public class ConfigurationController extends Controller {
     public Result editSmtp() {
         Form<PrefsData> requestData = systemPreferencesFormTemplate.fill(new PrefsData());
         for (String field : smtpFieldsValues) {
-            PreferenceFormAndDisplayHandler.fillWithPreference(requestData, field);
+            this.getPreferenceManagerPlugin().fillWithPreference(requestData, field);
         }
         return ok(views.html.admin.config.smtp.edit.render(requestData));
     }
@@ -230,14 +232,14 @@ public class ConfigurationController extends Controller {
 
         boolean hasErrors = false;
         for (String field : smtpFieldsValues) {
-            hasErrors = PreferenceFormAndDisplayHandler.validatePreference(requestData, field) || hasErrors;
+            hasErrors = this.getPreferenceManagerPlugin().validatePreference(requestData, field) || hasErrors;
         }
 
         if (!hasErrors) {
             Ebean.beginTransaction();
             try {
                 for (String field : smtpFieldsValues) {
-                    PreferenceFormAndDisplayHandler.validateAndSavePreference(requestData, field);
+                    this.getPreferenceManagerPlugin().validateAndSavePreference(requestData, field);
                 }
                 Ebean.commitTransaction();
             } catch (Exception e) {
@@ -595,6 +597,13 @@ public class ConfigurationController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the preference manager service.
+     */
+    private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return this.preferenceManagerPlugin;
     }
 
     /**
