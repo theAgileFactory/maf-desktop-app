@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import constants.IMafConstants;
 import dao.finance.PurchaseOrderDAO;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
@@ -50,14 +51,14 @@ public class PurchaseOrderLineItemWorkOrderListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<PurchaseOrderLineItemWorkOrderListView> getTable() {
+        public Table<PurchaseOrderLineItemWorkOrderListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PurchaseOrderLineItemWorkOrderListView>() {
                 {
                     setIdFieldName("id");
@@ -83,7 +84,7 @@ public class PurchaseOrderLineItemWorkOrderListView {
                     addColumn("amountOpen", "amountOpen", "object.work_order.amount_open.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("amountOpen", new NumberFormatter<PurchaseOrderLineItemWorkOrderListView>());
 
-                    addCustomAttributeColumns(WorkOrder.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, WorkOrder.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PurchaseOrderLineItemWorkOrderListView>(IMafConstants.EDIT_URL_FORMAT,

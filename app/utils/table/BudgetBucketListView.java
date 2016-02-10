@@ -17,6 +17,7 @@
  */
 package utils.table;
 
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
@@ -35,14 +36,14 @@ public class BudgetBucketListView {
 
         public Table<BudgetBucketListView> templateTable;
 
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<BudgetBucketListView> getTable() {
+        public Table<BudgetBucketListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<BudgetBucketListView>() {
                 {
                     setIdFieldName("id");
@@ -68,7 +69,7 @@ public class BudgetBucketListView {
                     addColumn("isActive", "isActive", "object.budget_bucket.is_active.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("isActive", new BooleanFormatter<BudgetBucketListView>());
 
-                    addCustomAttributeColumns(BudgetBucket.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, BudgetBucket.class);
 
                     this.setLineAction(new IColumnFormatter<BudgetBucketListView>() {
                         @Override

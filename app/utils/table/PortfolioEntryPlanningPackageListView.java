@@ -64,9 +64,9 @@ public class PortfolioEntryPlanningPackageListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
@@ -128,7 +128,7 @@ public class PortfolioEntryPlanningPackageListView {
         /**
          * Get the table.
          */
-        public Table<PortfolioEntryPlanningPackageListView> getTable() {
+        public Table<PortfolioEntryPlanningPackageListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryPlanningPackageListView>() {
                 {
                     setIdFieldName("id");
@@ -171,7 +171,7 @@ public class PortfolioEntryPlanningPackageListView {
                             Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("timesheetsDays", new NumberFormatter<PortfolioEntryPlanningPackageListView>());
 
-                    addCustomAttributeColumns(PortfolioEntryPlanningPackage.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryPlanningPackage.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackageListView>(IMafConstants.EDIT_URL_FORMAT,

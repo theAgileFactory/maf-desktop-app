@@ -20,6 +20,7 @@ package utils.table;
 import java.util.Date;
 
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
@@ -43,9 +44,9 @@ public class IterationListView {
 
         public FilterConfig<IterationListView> filterConfig;
 
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
@@ -83,7 +84,7 @@ public class IterationListView {
         /**
          * Get the table.
          */
-        public Table<IterationListView> getTable() {
+        public Table<IterationListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<IterationListView>() {
                 {
 
@@ -107,7 +108,7 @@ public class IterationListView {
                     addColumn("source", "source", "object.iteration.source.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("source", new ObjectFormatter<IterationListView>());
 
-                    addCustomAttributeColumns(Iteration.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, Iteration.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink",

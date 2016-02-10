@@ -53,11 +53,11 @@ import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.CssValueForValueHolder;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FileAttachmentHelper;
@@ -149,6 +149,8 @@ public class PortfolioEntryPlanningController extends Controller {
     private INotificationManagerPlugin notificationManagerService;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryPlanningController.class);
 
@@ -722,12 +724,12 @@ public class PortfolioEntryPlanningController extends Controller {
             planningPackageForm = planningPackageFormTemplate.fill(new PortfolioEntryPlanningPackageFormData(planningPackage));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(planningPackageForm, PortfolioEntryPlanningPackage.class, planningPackageId);
+            this.getCustomAttributeManagerService().fillWithValues(planningPackageForm, PortfolioEntryPlanningPackage.class, planningPackageId);
         } else {
             planningPackageForm = planningPackageFormTemplate.fill(new PortfolioEntryPlanningPackageFormData());
 
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(planningPackageForm, PortfolioEntryPlanningPackage.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(planningPackageForm, PortfolioEntryPlanningPackage.class, null);
         }
 
         DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryPlanningPackageTypes = PortfolioEntryPlanningPackageDao
@@ -754,7 +756,7 @@ public class PortfolioEntryPlanningController extends Controller {
         DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryPlanningPackageTypes = PortfolioEntryPlanningPackageDao
                 .getPEPlanningPackageTypeActiveAsCssVH();
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryPlanningPackage.class)) {
             return ok(views.html.core.portfolioentryplanning.package_manage.render(portfolioEntry, selectablePortfolioEntryPlanningPackageTypes, boundForm,
                     PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH(), getPackageStatusAsValueHolderCollection()));
         }
@@ -809,7 +811,7 @@ public class PortfolioEntryPlanningController extends Controller {
         propagatePackageDates(planningPackage);
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, planningPackage.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, planningPackage.id);
 
         return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(id));
 
@@ -971,7 +973,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryPlanningPackage.class, null, "planningPackagesFormData", true);
+        this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryPlanningPackage.class, null, "planningPackagesFormData", true);
         if (boundForm.hasErrors()) {
             return badRequest(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, boundForm,
                     PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
@@ -1020,7 +1022,7 @@ public class PortfolioEntryPlanningController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, null, "planningPackagesFormData",
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, null, "planningPackagesFormData",
                 objectIds, true);
 
         return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, getPortfolioEntryPlanningPackagesForm(id),
@@ -1112,7 +1114,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Form<PortfolioEntryPlanningPackagesFormData> portfolioEntryPlanningPackagesForm = planningPackagesFormDataTemplate
                 .fill(new PortfolioEntryPlanningPackagesFormData(portfolioEntryPlanningPackages, portfolioEntryId));
 
-        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryPlanningPackagesForm, PortfolioEntryPlanningPackage.class, null,
+        this.getCustomAttributeManagerService().fillWithValues(portfolioEntryPlanningPackagesForm, PortfolioEntryPlanningPackage.class, null,
                 "planningPackagesFormData", objectIds);
 
         return portfolioEntryPlanningPackagesForm;
@@ -1334,10 +1336,10 @@ public class PortfolioEntryPlanningController extends Controller {
             allocatedActorForm = allocatedActorFormTemplate.fill(new PortfolioEntryResourcePlanAllocatedActorFormData(allocatedActor));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedActorForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActorId);
+            this.getCustomAttributeManagerService().fillWithValues(allocatedActorForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActorId);
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedActorForm, PortfolioEntryResourcePlanAllocatedActor.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(allocatedActorForm, PortfolioEntryResourcePlanAllocatedActor.class, null);
         }
 
         return ok(views.html.core.portfolioentryplanning.allocated_actor_manage.render(portfolioEntry, allocatedActorForm));
@@ -1358,7 +1360,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class)) {
             return ok(views.html.core.portfolioentryplanning.allocated_actor_manage.render(portfolioEntry, boundForm));
         }
 
@@ -1424,7 +1426,7 @@ public class PortfolioEntryPlanningController extends Controller {
             }
 
             // save the custom attributes
-            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
+            this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
 
             Ebean.commitTransaction();
             Ebean.endTransaction();
@@ -1505,10 +1507,11 @@ public class PortfolioEntryPlanningController extends Controller {
             allocatedOrgUnitForm = allocatedOrgUnitFormTemplate.fill(new PortfolioEntryResourcePlanAllocatedOrgUnitFormData(allocatedOrgUnit));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedOrgUnitForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class, allocatedOrgUnitId);
+            this.getCustomAttributeManagerService().fillWithValues(allocatedOrgUnitForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class,
+                    allocatedOrgUnitId);
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedOrgUnitForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(allocatedOrgUnitForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class, null);
         }
 
         return ok(views.html.core.portfolioentryplanning.allocated_org_unit_manage.render(portfolioEntry, allocatedOrgUnitForm));
@@ -1529,7 +1532,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class)) {
             return ok(views.html.core.portfolioentryplanning.allocated_org_unit_manage.render(portfolioEntry, boundForm));
         }
 
@@ -1583,7 +1586,7 @@ public class PortfolioEntryPlanningController extends Controller {
             }
 
             // save the custom attributes
-            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class, allocatedOrgUnit.id);
+            this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedOrgUnit.class, allocatedOrgUnit.id);
 
             Ebean.commitTransaction();
             Ebean.endTransaction();
@@ -1659,11 +1662,11 @@ public class PortfolioEntryPlanningController extends Controller {
             allocatedCompetencyForm = allocatedCompetencyFormTemplate.fill(new PortfolioEntryResourcePlanAllocatedCompetencyFormData(allocatedCompetency));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedCompetencyForm, PortfolioEntryResourcePlanAllocatedCompetency.class,
+            this.getCustomAttributeManagerService().fillWithValues(allocatedCompetencyForm, PortfolioEntryResourcePlanAllocatedCompetency.class,
                     allocatedCompetencyId);
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedCompetencyForm, PortfolioEntryResourcePlanAllocatedCompetency.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(allocatedCompetencyForm, PortfolioEntryResourcePlanAllocatedCompetency.class, null);
         }
 
         return ok(views.html.core.portfolioentryplanning.allocated_competency_manage.render(portfolioEntry, allocatedCompetencyForm));
@@ -1683,7 +1686,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryResourcePlanAllocatedCompetency.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryResourcePlanAllocatedCompetency.class)) {
             return ok(views.html.core.portfolioentryplanning.allocated_competency_manage.render(portfolioEntry, boundForm));
         }
 
@@ -1728,7 +1731,7 @@ public class PortfolioEntryPlanningController extends Controller {
             }
 
             // save the custom attributes
-            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedCompetency.class,
+            this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedCompetency.class,
                     allocatedCompetency.id);
 
             Ebean.commitTransaction();
@@ -1827,7 +1830,7 @@ public class PortfolioEntryPlanningController extends Controller {
         Long allocatedOrgUnitId = Long.valueOf(boundForm.data().get("allocatedOrgUnitId"));
         PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitById(allocatedOrgUnitId);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class)) {
             return ok(views.html.core.portfolioentryplanning.allocated_org_unit_reallocate.render(portfolioEntry, allocatedOrgUnit.orgUnit, boundForm));
         }
 
@@ -1846,7 +1849,7 @@ public class PortfolioEntryPlanningController extends Controller {
         allocatedActor.save();
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
 
         // remove the allocated org unit
         allocatedOrgUnit.doDelete();
@@ -1976,7 +1979,7 @@ public class PortfolioEntryPlanningController extends Controller {
         PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency = PortfolioEntryResourcePlanDAO
                 .getPEResourcePlanAllocatedCompetencyById(allocatedCompetencyId);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class)) {
             return ok(
                     views.html.core.portfolioentryplanning.allocated_competency_reallocate.render(portfolioEntry, allocatedCompetency.competency, boundForm));
         }
@@ -1996,7 +1999,7 @@ public class PortfolioEntryPlanningController extends Controller {
         allocatedActor.save();
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryResourcePlanAllocatedActor.class, allocatedActor.id);
 
         // remove the allocated competency
         allocatedCompetency.doDelete();
@@ -2237,6 +2240,13 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 
 }

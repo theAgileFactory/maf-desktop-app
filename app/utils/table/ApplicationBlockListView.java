@@ -18,6 +18,7 @@
 package utils.table;
 
 import framework.commons.IFrameworkConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
@@ -35,9 +36,9 @@ public class ApplicationBlockListView {
 
     public static class TableDefinition {
 
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         public FilterConfig<ApplicationBlockListView> filterConfig;
@@ -75,7 +76,7 @@ public class ApplicationBlockListView {
         /**
          * Get the table.
          */
-        public Table<ApplicationBlockListView> getTable() {
+        public Table<ApplicationBlockListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<ApplicationBlockListView>() {
                 {
                     setIdFieldName("id");
@@ -106,7 +107,7 @@ public class ApplicationBlockListView {
                     addColumn("archived", "archived", "object.application_block.archived.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("archived", new BooleanFormatter<ApplicationBlockListView>());
 
-                    addCustomAttributeColumns(ApplicationBlockListView.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, ApplicationBlockListView.class);
 
                     this.setLineAction(new IColumnFormatter<ApplicationBlockListView>() {
                         @Override

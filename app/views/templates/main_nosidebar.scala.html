@@ -49,7 +49,7 @@
             @if(instanceInfo != null && instanceInfo.isTrial ) {
                 <a class="btn btn-success" href="@routes.Application.echannelInstanceViewUrl().url">@parts.Msg("button.upgrade_from_trial")</a>
             } else {
-                @applicationLogo.renderDisplay()
+                @applicationLogo.renderDisplay(_messagesPluginService)
             }
         }{
             @if(idZoneData!=null) {

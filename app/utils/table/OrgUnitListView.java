@@ -17,6 +17,7 @@
  */
 package utils.table;
 
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
@@ -36,14 +37,14 @@ public class OrgUnitListView {
 
         public Table<OrgUnitListView> templateTable;
 
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<OrgUnitListView> getTable() {
+        public Table<OrgUnitListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<OrgUnitListView>() {
                 {
                     setIdFieldName("id");
@@ -74,7 +75,7 @@ public class OrgUnitListView {
                     });
                     this.setColumnValueCssClass("manager", "rowlink-skip");
 
-                    addCustomAttributeColumns(OrgUnit.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, OrgUnit.class);
 
                     this.setLineAction(new IColumnFormatter<OrgUnitListView>() {
                         @Override

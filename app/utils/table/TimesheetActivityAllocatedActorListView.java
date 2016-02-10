@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
@@ -55,9 +56,9 @@ public class TimesheetActivityAllocatedActorListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
@@ -91,7 +92,7 @@ public class TimesheetActivityAllocatedActorListView {
         /**
          * Get the table.
          */
-        public Table<TimesheetActivityAllocatedActorListView> getTable() {
+        public Table<TimesheetActivityAllocatedActorListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<TimesheetActivityAllocatedActorListView>() {
                 {
                     setIdFieldName("id");
@@ -124,7 +125,7 @@ public class TimesheetActivityAllocatedActorListView {
                     addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("endDate", new DateFormatter<TimesheetActivityAllocatedActorListView>());
 
-                    addCustomAttributeColumns(TimesheetActivityAllocatedActor.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, TimesheetActivityAllocatedActor.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<TimesheetActivityAllocatedActorListView>(IMafConstants.EDIT_URL_FORMAT,

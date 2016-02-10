@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -42,14 +43,14 @@ public class BudgetBucketLineListView {
 
         public Table<BudgetBucketLineListView> templateTable;
 
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<BudgetBucketLineListView> getTable() {
+        public Table<BudgetBucketLineListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<BudgetBucketLineListView>() {
                 {
                     setIdFieldName("id");
@@ -74,7 +75,7 @@ public class BudgetBucketLineListView {
                     addColumn("amount", "amount", "object.budget_bucket_line.amount.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("amount", new NumberFormatter<BudgetBucketLineListView>());
 
-                    addCustomAttributeColumns(BudgetBucketLine.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, BudgetBucketLine.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<BudgetBucketLineListView>(IMafConstants.EDIT_URL_FORMAT,

@@ -20,6 +20,7 @@ package utils.table;
 import java.util.Date;
 
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
@@ -49,14 +50,14 @@ public class PortfolioEntryRiskListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<PortfolioEntryRiskListView> getTable() {
+        public Table<PortfolioEntryRiskListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryRiskListView>() {
                 {
                     setIdFieldName("id");
@@ -110,7 +111,7 @@ public class PortfolioEntryRiskListView {
                     addColumn("isActive", "isActive", "object.portfolio_entry_risk.is_active.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioEntryRiskListView>());
 
-                    addCustomAttributeColumns(PortfolioEntryRisk.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryRisk.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryRiskListView>(IMafConstants.EDIT_URL_FORMAT,

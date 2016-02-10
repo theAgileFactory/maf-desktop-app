@@ -45,7 +45,7 @@ import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.IColumnFormatter;
 import framework.utils.JqueryGantt;
@@ -109,6 +109,9 @@ public class ActorController extends Controller {
 
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     public static Form<ActorFormData> formTemplate = Form.form(ActorFormData.class);
 
@@ -187,7 +190,7 @@ public class ActorController extends Controller {
         Form<ActorFormData> actorForm = formTemplate;
 
         // add the custom attributes default values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(actorForm, Actor.class, null);
+        this.getCustomAttributeManagerService().fillWithValues(actorForm, Actor.class, null);
 
         return ok(views.html.core.actor.actor_new.render(actorForm, ActorDao.getActorTypeActiveAsVH()));
     }
@@ -209,7 +212,7 @@ public class ActorController extends Controller {
         Form<ActorFormData> actorForm = formTemplate.fill(new ActorFormData(actor));
 
         // add the custom attributes values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(actorForm, Actor.class, id);
+        this.getCustomAttributeManagerService().fillWithValues(actorForm, Actor.class, id);
 
         return ok(views.html.core.actor.actor_edit.render(actor, actorForm, ActorDao.getActorTypeActiveAsVH()));
     }
@@ -223,7 +226,7 @@ public class ActorController extends Controller {
         // bind the form
         Form<ActorFormData> boundForm = formTemplate.bindFromRequest();
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Actor.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, Actor.class)) {
 
             if (boundForm.data().get("id") != null) { // edit case
                 // get the actor
@@ -276,7 +279,7 @@ public class ActorController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Actor.class, actor.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, Actor.class, actor.id);
 
         return redirect(controllers.core.routes.ActorController.view(actor.id));
     }
@@ -689,10 +692,10 @@ public class ActorController extends Controller {
             allocatedActivityForm = allocatedActivityFormTemplate.fill(new TimesheetActivityAllocatedActorFormData(id, allocatedActivity));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedActivityForm, TimesheetActivityAllocatedActor.class, allocatedActivityId);
+            this.getCustomAttributeManagerService().fillWithValues(allocatedActivityForm, TimesheetActivityAllocatedActor.class, allocatedActivityId);
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedActivityForm, TimesheetActivityAllocatedActor.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(allocatedActivityForm, TimesheetActivityAllocatedActor.class, null);
         }
 
         return ok(views.html.core.actor.allocated_activity_manage.render(actor, allocatedActivityForm));
@@ -734,7 +737,7 @@ public class ActorController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         Actor actor = ActorDao.getActorById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, TimesheetActivityAllocatedActor.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, TimesheetActivityAllocatedActor.class)) {
             return ok(views.html.core.actor.allocated_activity_manage.render(actor, boundForm));
         }
 
@@ -768,7 +771,7 @@ public class ActorController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, TimesheetActivityAllocatedActor.class, allocatedActivity.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, TimesheetActivityAllocatedActor.class, allocatedActivity.id);
 
         return redirect(controllers.core.routes.ActorController.allocationDetails(id, 0, 0, false));
 
@@ -967,7 +970,14 @@ public class ActorController extends Controller {
      * Get the preference manager service.
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
-        return this.getPreferenceManagerPlugin();
+        return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 
 }

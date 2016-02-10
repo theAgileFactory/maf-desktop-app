@@ -1,5 +1,6 @@
 package services.tableprovider;
 
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import utils.table.ActorListView;
 import utils.table.ActorTypeListView;
@@ -151,23 +152,23 @@ public class TableDefinitions {
     public TimesheetReportListView.TableDefinition timesheetReport;
     public WorkOrderListView.TableDefinition workOrder;
 
-    public TableDefinitions(IKpiService kpiService) {
-        this.actor = new ActorListView.TableDefinition();
+    public TableDefinitions(IKpiService kpiService, II18nMessagesPlugin i18nMessagesService) {
+        this.actor = new ActorListView.TableDefinition(i18nMessagesService);
         this.actorType = new ActorTypeListView.TableDefinition();
-        this.applicationBlock = new ApplicationBlockListView.TableDefinition();
-        this.attachment = new AttachmentListView.TableDefinition();
-        this.budgetBucketLine = new BudgetBucketLineListView.TableDefinition();
-        this.budgetBucket = new BudgetBucketListView.TableDefinition();
+        this.applicationBlock = new ApplicationBlockListView.TableDefinition(i18nMessagesService);
+        this.attachment = new AttachmentListView.TableDefinition(i18nMessagesService);
+        this.budgetBucketLine = new BudgetBucketLineListView.TableDefinition(i18nMessagesService);
+        this.budgetBucket = new BudgetBucketListView.TableDefinition(i18nMessagesService);
         this.competency = new CompetencyListView.TableDefinition();
         this.customAttributeItem = new CustomAttributeItemListView.TableDefinition();
         this.customAttribute = new CustomAttributeListView.TableDefinition();
         this.dataSyndicationAgreementLink = new DataSyndicationAgreementLinkListView.TableDefinition();
         this.dataSyndicationAgreement = new DataSyndicationAgreementListView.TableDefinition();
         this.dataSyndicationPartner = new DataSyndicationPartnerListView.TableDefinition();
-        this.deliverable = new DeliverableListView.TableDefinition();
+        this.deliverable = new DeliverableListView.TableDefinition(i18nMessagesService);
         this.goodsReceipt = new GoodsReceiptListView.TableDefinition();
         this.governance = new GovernanceListView.TableDefinition();
-        this.iteration = new IterationListView.TableDefinition();
+        this.iteration = new IterationListView.TableDefinition(i18nMessagesService);
         this.kpiColorRule = new KpiColorRuleListView.TableDefinition();
         this.kpiDefinition = new KpiDefinitionListView.TableDefinition();
         this.kpiValueDefinition = new KpiValueDefinitionListView.TableDefinition();
@@ -180,48 +181,48 @@ public class TableDefinitions {
         this.milestoneApprover = new MilestoneApproverListView.TableDefinition();
         this.milestoneRequest = new MilestoneRequestListView.TableDefinition();
         this.notification = new NotificationListView.TableDefinition();
-        this.orgUnit = new OrgUnitListView.TableDefinition();
+        this.orgUnit = new OrgUnitListView.TableDefinition(i18nMessagesService);
         this.orgUnitType = new OrgUnitTypeListView.TableDefinition();
-        this.portfolioEntryBudgetLine = new PortfolioEntryBudgetLineListView.TableDefinition();
+        this.portfolioEntryBudgetLine = new PortfolioEntryBudgetLineListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryDependency = new PortfolioEntryDependencyListView.TableDefinition();
         this.portfolioEntryDependencyType = new PortfolioEntryDependencyTypeListView.TableDefinition();
-        this.portfolioEntryEvent = new PortfolioEntryEventListView.TableDefinition();
+        this.portfolioEntryEvent = new PortfolioEntryEventListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryEventType = new PortfolioEntryEventTypeListView.TableDefinition();
-        this.portfolioEntry = new PortfolioEntryListView.TableDefinition(kpiService);
+        this.portfolioEntry = new PortfolioEntryListView.TableDefinition(kpiService, i18nMessagesService);
         this.portfolioEntryPlanningPackageGroup = new PortfolioEntryPlanningPackageGroupListView.TableDefinition();
-        this.portfolioEntryPlanningPackage = new PortfolioEntryPlanningPackageListView.TableDefinition();
+        this.portfolioEntryPlanningPackage = new PortfolioEntryPlanningPackageListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryPlanningPackagePattern = new PortfolioEntryPlanningPackagePatternListView.TableDefinition();
         this.portfolioEntryPlanningPackageType = new PortfolioEntryPlanningPackageTypeListView.TableDefinition();
-        this.portfolioEntryReport = new PortfolioEntryReportListView.TableDefinition();
+        this.portfolioEntryReport = new PortfolioEntryReportListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryReportStatusType = new PortfolioEntryReportStatusTypeListView.TableDefinition();
-        this.portfolioEntryResourcePlanAllocatedActor = new PortfolioEntryResourcePlanAllocatedActorListView.TableDefinition();
-        this.portfolioEntryResourcePlanAllocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnitListView.TableDefinition();
+        this.portfolioEntryResourcePlanAllocatedActor = new PortfolioEntryResourcePlanAllocatedActorListView.TableDefinition(i18nMessagesService);
+        this.portfolioEntryResourcePlanAllocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnitListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryResourcePlanAllocatedResource = new PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition();
-        this.portfolioEntryRisk = new PortfolioEntryRiskListView.TableDefinition();
+        this.portfolioEntryRisk = new PortfolioEntryRiskListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryRiskType = new PortfolioEntryRiskTypeListView.TableDefinition();
         this.portfolioEntryStakeholder = new PortfolioEntryStakeholderListView.TableDefinition();
         this.portfolioEntryType = new PortfolioEntryTypeListView.TableDefinition();
-        this.portfolio = new PortfolioListView.TableDefinition();
+        this.portfolio = new PortfolioListView.TableDefinition(i18nMessagesService);
         this.portfolioMilestone = new PortfolioMilestoneListView.TableDefinition();
         this.portfolioReport = new PortfolioReportListView.TableDefinition();
         this.portfolioStakeholder = new PortfolioStakeholderListView.TableDefinition();
         this.portfolioType = new PortfolioTypeListView.TableDefinition();
         this.purchaseOrderLineItem = new PurchaseOrderLineItemListView.TableDefinition();
-        this.purchaseOrderLineItemWorkOrder = new PurchaseOrderLineItemWorkOrderListView.TableDefinition();
+        this.purchaseOrderLineItemWorkOrder = new PurchaseOrderLineItemWorkOrderListView.TableDefinition(i18nMessagesService);
         this.purchaseOrder = new PurchaseOrderListView.TableDefinition();
         this.reporting = new ReportingListView.TableDefinition();
-        this.requirement = new RequirementListView.TableDefinition();
+        this.requirement = new RequirementListView.TableDefinition(i18nMessagesService);
         this.requirementPriority = new RequirementPriorityListView.TableDefinition();
         this.requirementSeverity = new RequirementSeverityListView.TableDefinition();
         this.requirementStatus = new RequirementStatusListView.TableDefinition();
         this.role = new RoleListView.TableDefinition();
         this.stakeholderType = new StakeholderTypeListView.TableDefinition();
-        this.timesheetActivityAllocatedActor = new TimesheetActivityAllocatedActorListView.TableDefinition();
+        this.timesheetActivityAllocatedActor = new TimesheetActivityAllocatedActorListView.TableDefinition(i18nMessagesService);
         this.timesheetActivity = new TimesheetActivityListView.TableDefinition();
         this.timesheetActivityType = new TimesheetActivityTypeListView.TableDefinition();
         this.timesheetLog = new TimesheetLogListView.TableDefinition();
         this.timesheetReport = new TimesheetReportListView.TableDefinition();
-        this.workOrder = new WorkOrderListView.TableDefinition();
+        this.workOrder = new WorkOrderListView.TableDefinition(i18nMessagesService);
     }
 
 }

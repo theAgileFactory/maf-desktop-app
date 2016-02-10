@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -51,14 +52,14 @@ public class PortfolioEntryReportListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<PortfolioEntryReportListView> getTable() {
+        public Table<PortfolioEntryReportListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryReportListView>() {
                 {
                     setIdFieldName("id");
@@ -86,7 +87,7 @@ public class PortfolioEntryReportListView {
                     addColumn("comments", "comments", "object.portfolio_entry_report.comments.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("comments", new ObjectFormatter<PortfolioEntryReportListView>());
 
-                    addCustomAttributeColumns(PortfolioEntryReport.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryReport.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryReportListView>(IMafConstants.EDIT_URL_FORMAT,

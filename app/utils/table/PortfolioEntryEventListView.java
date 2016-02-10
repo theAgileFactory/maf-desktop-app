@@ -22,6 +22,7 @@ import java.util.Date;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryEventDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
@@ -56,9 +57,9 @@ public class PortfolioEntryEventListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
@@ -92,7 +93,7 @@ public class PortfolioEntryEventListView {
         /**
          * Get the table.
          */
-        public Table<PortfolioEntryEventListView> getTable() {
+        public Table<PortfolioEntryEventListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryEventListView>() {
                 {
                     setIdFieldName("id");
@@ -119,7 +120,7 @@ public class PortfolioEntryEventListView {
                     });
                     this.setColumnValueCssClass("actor", "rowlink-skip");
 
-                    addCustomAttributeColumns(PortfolioEntryEvent.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryEvent.class);
 
                     addColumn("message", "message", "object.portfolio_entry_event.message.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("message", new ObjectFormatter<PortfolioEntryEventListView>());

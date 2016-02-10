@@ -39,9 +39,9 @@ import dao.reporting.ReportingDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.taftree.EntityTafTreeNodeWrapper;
 import framework.taftree.TafTreeHelper;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -78,6 +78,8 @@ public class ReportingController extends Controller {
     private Configuration configuration;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(ReportingController.class);
 
@@ -213,7 +215,7 @@ public class ReportingController extends Controller {
 
         if (report.isActive) {
 
-            if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, ReportingParamsFormData.class, report.template)) {
+            if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, ReportingParamsFormData.class, report.template)) {
                 return ok(views.html.core.reporting.parametrize.render(report, boundForm));
             }
 
@@ -227,7 +229,7 @@ public class ReportingController extends Controller {
                 customAttributeValues = CustomAttributeDefinition.getOrderedCustomAttributeValues(ReportingParamsFormData.class, report.template, null);
                 if (customAttributeValues != null) {
                     for (ICustomAttributeValue customAttributeValue : customAttributeValues) {
-                        String fieldName = CustomAttributeFormAndDisplayHandler.getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid);
+                        String fieldName = this.getCustomAttributeManagerService().getFieldNameFromDefinitionUuid(customAttributeValue.getDefinition().uuid);
                         if (customAttributeValue.getAttributeType().isMultiValued()) {
                             List<String> stringValues = new ArrayList<String>();
                             for (String key : data.keySet()) {
@@ -236,9 +238,10 @@ public class ReportingController extends Controller {
                                     stringValues.add(stringValue);
                                 }
                             }
-                            customAttributeValue.parse(StringUtils.join(stringValues, ICustomAttributeValue.MULTI_VALUE_SEPARATOR));
+                            customAttributeValue.parse(this.getI18nMessagesPlugin(),
+                                    StringUtils.join(stringValues, ICustomAttributeValue.MULTI_VALUE_SEPARATOR));
                         } else {
-                            customAttributeValue.parse(data.get(fieldName));
+                            customAttributeValue.parse(this.getI18nMessagesPlugin(), data.get(fieldName));
                         }
                         reportParameters.put(customAttributeValue.getDefinition().uuid, customAttributeValue.getValueAsObject());
                     }
@@ -290,5 +293,12 @@ public class ReportingController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 }

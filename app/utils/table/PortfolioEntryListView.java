@@ -29,6 +29,7 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -73,9 +74,9 @@ public class PortfolioEntryListView {
          * @param kpiService
          *            the KPI service.
          */
-        public TableDefinition(IKpiService kpiService) {
+        public TableDefinition(IKpiService kpiService, II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig(kpiService);
-            this.templateTable = getTable(kpiService);
+            this.templateTable = getTable(kpiService, i18nMessagesPlugin);
         }
 
         /**
@@ -196,7 +197,7 @@ public class PortfolioEntryListView {
         /**
          * Get the table.
          */
-        public Table<PortfolioEntryListView> getTable(IKpiService kpiService) {
+        public Table<PortfolioEntryListView> getTable(IKpiService kpiService, II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryListView>() {
                 {
 
@@ -288,7 +289,7 @@ public class PortfolioEntryListView {
 
                     addKpis(kpiService, PortfolioEntry.class);
 
-                    addCustomAttributeColumns(PortfolioEntry.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntry.class);
 
                     this.setLineAction(new IColumnFormatter<PortfolioEntryListView>() {
                         @Override

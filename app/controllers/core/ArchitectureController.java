@@ -39,13 +39,13 @@ import controllers.ControllersUtils;
 import dao.architecture.ArchitectureDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
 import framework.taftree.EntityTafTreeNodeWrapper;
 import framework.taftree.TafTreeHelper;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.FilterConfig;
 import framework.utils.Msg;
 import framework.utils.Pagination;
@@ -90,6 +90,8 @@ public class ArchitectureController extends Controller {
     private ITableProvider tableProvider;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(ArchitectureController.class);
 
@@ -305,7 +307,7 @@ public class ArchitectureController extends Controller {
             hasChildren = applicationBlock.hasNodeChildren();
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(applicationBlockForm, ApplicationBlock.class, id);
+            this.getCustomAttributeManagerService().fillWithValues(applicationBlockForm, ApplicationBlock.class, id);
 
         } else { // create case
 
@@ -316,7 +318,7 @@ public class ArchitectureController extends Controller {
             }
 
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(applicationBlockForm, ApplicationBlock.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(applicationBlockForm, ApplicationBlock.class, null);
         }
 
         return ok(views.html.core.architecture.application_block_manage_fragment.render(parent, applicationBlockForm, hasChildren));
@@ -338,7 +340,7 @@ public class ArchitectureController extends Controller {
             parent = ArchitectureDao.getApplicationBlockById(Long.valueOf(parentIdString));
         }
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, ApplicationBlock.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, ApplicationBlock.class)) {
             // WARNING: don't know if this works
             String id = boundForm.field("id") != null ? boundForm.field("id").value() : null;
             boolean hasChildren = false;
@@ -379,7 +381,7 @@ public class ArchitectureController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, ApplicationBlock.class, applicationBlock.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, ApplicationBlock.class, applicationBlock.id);
 
         return ok(views.html.framework_views.parts.taftree.taf_tree_manual_manage_node.render("applicationBlockTree", action,
                 new EntityTafTreeNodeWrapper<ApplicationBlock>(applicationBlock)));
@@ -506,5 +508,12 @@ public class ArchitectureController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 }

@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
@@ -45,9 +46,9 @@ public class DeliverableListView {
 
         public FilterConfig<DeliverableListView> filterConfig;
 
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
@@ -82,7 +83,7 @@ public class DeliverableListView {
         /**
          * Get the table.
          */
-        public Table<DeliverableListView> getTable() {
+        public Table<DeliverableListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<DeliverableListView>() {
                 {
                     setIdFieldName("id");
@@ -114,7 +115,7 @@ public class DeliverableListView {
                     });
                     this.setColumnValueCssClass("planningPackage", "rowlink-skip");
 
-                    addCustomAttributeColumns(Deliverable.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, Deliverable.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<DeliverableListView>(IMafConstants.EDIT_URL_FORMAT,

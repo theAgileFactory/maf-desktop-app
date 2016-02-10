@@ -22,6 +22,7 @@ import java.util.List;
 import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import dao.delivery.RequirementDAO;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
@@ -61,9 +62,9 @@ public class RequirementListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
@@ -147,7 +148,7 @@ public class RequirementListView {
         /**
          * Get the table.
          */
-        public Table<RequirementListView> getTable() {
+        public Table<RequirementListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<RequirementListView>() {
                 {
 
@@ -226,7 +227,7 @@ public class RequirementListView {
                     addColumn("remainingEffort", "remainingEffort", "object.requirement.remaining_effort.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("remainingEffort", new HoursFormatter<RequirementListView>());
 
-                    addCustomAttributeColumns(Requirement.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, Requirement.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<RequirementListView>(IMafConstants.EDIT_URL_FORMAT,

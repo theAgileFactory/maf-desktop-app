@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 import constants.IMafConstants;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -41,14 +42,14 @@ public class AttachmentListView {
 
         public Table<AttachmentListView> templateTable;
 
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<AttachmentListView> getTable() {
+        public Table<AttachmentListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<AttachmentListView>() {
                 {
                     setIdFieldName("id");
@@ -59,7 +60,7 @@ public class AttachmentListView {
                     addColumn("lastUpdate", "lastUpdate", "object.attachment.last_update.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastUpdate", new DateFormatter<AttachmentListView>());
 
-                    addCustomAttributeColumns(Attachment.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, Attachment.class);
 
                     addColumn("downloadActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<AttachmentListView>(IMafConstants.DOWNLOAD_URL_FORMAT,

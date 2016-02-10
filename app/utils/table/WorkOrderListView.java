@@ -24,6 +24,7 @@ import java.util.Date;
 import constants.IMafConstants;
 import dao.finance.PurchaseOrderDAO;
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -55,14 +56,14 @@ public class WorkOrderListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<WorkOrderListView> getTable() {
+        public Table<WorkOrderListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<WorkOrderListView>() {
                 {
                     setIdFieldName("id");
@@ -106,7 +107,7 @@ public class WorkOrderListView {
                     addColumn("dueDate", "dueDate", "object.work_order.due_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("dueDate", new DateFormatter<WorkOrderListView>());
 
-                    addCustomAttributeColumns(WorkOrder.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, WorkOrder.class);
 
                     addColumn("selectLineItemActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("selectLineItemActionLink", new IColumnFormatter<WorkOrderListView>() {

@@ -48,8 +48,8 @@ import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.JqueryGantt;
@@ -111,6 +111,8 @@ public class OrgUnitController extends Controller {
     private ITableProvider tableProvider;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(OrgUnitController.class);
 
@@ -168,7 +170,7 @@ public class OrgUnitController extends Controller {
         Form<OrgUnitFormData> orgUnitForm = formTemplate;
 
         // add the custom attributes default values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(orgUnitForm, OrgUnit.class, null);
+        this.getCustomAttributeManagerService().fillWithValues(orgUnitForm, OrgUnit.class, null);
 
         return ok(views.html.core.orgunit.org_unit_new.render(orgUnitForm, OrgUnitDao.getOrgUnitTypeActiveAsVH()));
     }
@@ -190,7 +192,7 @@ public class OrgUnitController extends Controller {
         Form<OrgUnitFormData> orgUnitForm = formTemplate.fill(new OrgUnitFormData(orgUnit));
 
         // add the custom attributes values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(orgUnitForm, OrgUnit.class, id);
+        this.getCustomAttributeManagerService().fillWithValues(orgUnitForm, OrgUnit.class, id);
 
         return ok(views.html.core.orgunit.org_unit_edit.render(orgUnit, orgUnitForm, OrgUnitDao.getOrgUnitTypeActiveAsVH()));
     }
@@ -204,7 +206,7 @@ public class OrgUnitController extends Controller {
         // bind the form
         Form<OrgUnitFormData> boundForm = formTemplate.bindFromRequest();
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, OrgUnit.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, OrgUnit.class)) {
 
             // edit case
             if (boundForm.data().get("id") != null) {
@@ -241,7 +243,7 @@ public class OrgUnitController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, OrgUnit.class, orgUnit.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, OrgUnit.class, orgUnit.id);
 
         this.getTableProvider().flushFilterConfig();
 
@@ -655,7 +657,7 @@ public class OrgUnitController extends Controller {
         Form<TimesheetActivityAllocatedActorFormData> allocatedActivityForm = allocatedActivityFormTemplate;
 
         // add the custom attributes default values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(allocatedActivityForm, TimesheetActivityAllocatedActor.class, null);
+        this.getCustomAttributeManagerService().fillWithValues(allocatedActivityForm, TimesheetActivityAllocatedActor.class, null);
 
         return ok(views.html.core.orgunit.actor_allocated_activity_manage.render(orgUnit, allocatedActivityForm));
 
@@ -675,7 +677,7 @@ public class OrgUnitController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         OrgUnit orgUnit = OrgUnitDao.getOrgUnitById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, TimesheetActivityAllocatedActor.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, TimesheetActivityAllocatedActor.class)) {
             return ok(views.html.core.orgunit.actor_allocated_activity_manage.render(orgUnit, boundForm));
         }
 
@@ -688,7 +690,7 @@ public class OrgUnitController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.org_unit.actor_allocated_activity.add.successful"));
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, TimesheetActivityAllocatedActor.class, allocatedActivity.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, TimesheetActivityAllocatedActor.class, allocatedActivity.id);
 
         return redirect(controllers.core.routes.OrgUnitController.allocationDetails(id, 0));
 
@@ -894,6 +896,13 @@ public class OrgUnitController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 
 }

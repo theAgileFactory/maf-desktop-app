@@ -3,6 +3,7 @@ package services.tableprovider;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import play.Configuration;
 import play.Logger;
@@ -19,6 +20,8 @@ public class TableProviderImpl implements ITableProvider {
 
     private IKpiService kpiService;
 
+    private II18nMessagesPlugin i18nMessagesPlugin;
+
     private TableDefinitions tableDefinitions;
 
     /**
@@ -32,11 +35,12 @@ public class TableProviderImpl implements ITableProvider {
      *            the KPI service
      */
     @Inject
-    public TableProviderImpl(ApplicationLifecycle lifecycle, Configuration configuration, IKpiService kpiService) {
+    public TableProviderImpl(ApplicationLifecycle lifecycle, Configuration configuration, IKpiService kpiService, II18nMessagesPlugin i18nMessagesPlugin) {
 
         Logger.info("SERVICE>>> TableProviderImpl starting...");
 
         this.kpiService = kpiService;
+        this.i18nMessagesPlugin = i18nMessagesPlugin;
         this.tableDefinitions = null;
 
         lifecycle.addStopHook(() -> {
@@ -51,7 +55,7 @@ public class TableProviderImpl implements ITableProvider {
     @Override
     public TableDefinitions get() {
         if (this.tableDefinitions == null) {
-            this.tableDefinitions = new TableDefinitions(kpiService);
+            this.tableDefinitions = new TableDefinitions(kpiService, i18nMessagesPlugin);
         }
         return this.tableDefinitions;
     }
@@ -61,24 +65,26 @@ public class TableProviderImpl implements ITableProvider {
 
         // table
         this.get().portfolioEntryResourcePlanAllocatedResource.templateTable = this.get().portfolioEntryResourcePlanAllocatedResource.getTable();
-        this.get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable = this.get().portfolioEntryResourcePlanAllocatedOrgUnit.getTable();
-        this.get().portfolioEntryResourcePlanAllocatedActor.templateTable = this.get().portfolioEntryResourcePlanAllocatedActor.getTable();
-        this.get().timesheetActivityAllocatedActor.templateTable = this.get().timesheetActivityAllocatedActor.getTable();
-        this.get().applicationBlock.templateTable = this.get().applicationBlock.getTable();
-        this.get().budgetBucket.templateTable = this.get().budgetBucket.getTable();
-        this.get().actor.templateTable = this.get().actor.getTable();
-        this.get().portfolioEntryEvent.templateTable = this.get().portfolioEntryEvent.getTable();
-        this.get().deliverable.templateTable = this.get().deliverable.getTable();
-        this.get().portfolioEntry.templateTable = this.get().portfolioEntry.getTable(this.getKpiService());
-        this.get().portfolioEntryBudgetLine.templateTable = this.get().portfolioEntryBudgetLine.getTable();
-        this.get().portfolioEntryReport.templateTable = this.get().portfolioEntryReport.getTable();
-        this.get().iteration.templateTable = this.get().iteration.getTable();
-        this.get().orgUnit.templateTable = this.get().orgUnit.getTable();
-        this.get().portfolioEntryPlanningPackage.templateTable = this.get().portfolioEntryPlanningPackage.getTable();
-        this.get().portfolio.templateTable = this.get().portfolio.getTable();
-        this.get().requirement.templateTable = this.get().requirement.getTable();
-        this.get().portfolioEntryRisk.templateTable = this.get().portfolioEntryRisk.getTable();
-        this.get().workOrder.templateTable = this.get().workOrder.getTable();
+        this.get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable = this.get().portfolioEntryResourcePlanAllocatedOrgUnit
+                .getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntryResourcePlanAllocatedActor.templateTable = this.get().portfolioEntryResourcePlanAllocatedActor
+                .getTable(this.getI18nMessagesPlugin());
+        this.get().timesheetActivityAllocatedActor.templateTable = this.get().timesheetActivityAllocatedActor.getTable(this.getI18nMessagesPlugin());
+        this.get().applicationBlock.templateTable = this.get().applicationBlock.getTable(this.getI18nMessagesPlugin());
+        this.get().budgetBucket.templateTable = this.get().budgetBucket.getTable(this.getI18nMessagesPlugin());
+        this.get().actor.templateTable = this.get().actor.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntryEvent.templateTable = this.get().portfolioEntryEvent.getTable(this.getI18nMessagesPlugin());
+        this.get().deliverable.templateTable = this.get().deliverable.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntry.templateTable = this.get().portfolioEntry.getTable(this.getKpiService(), this.getI18nMessagesPlugin());
+        this.get().portfolioEntryBudgetLine.templateTable = this.get().portfolioEntryBudgetLine.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntryReport.templateTable = this.get().portfolioEntryReport.getTable(this.getI18nMessagesPlugin());
+        this.get().iteration.templateTable = this.get().iteration.getTable(this.getI18nMessagesPlugin());
+        this.get().orgUnit.templateTable = this.get().orgUnit.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntryPlanningPackage.templateTable = this.get().portfolioEntryPlanningPackage.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolio.templateTable = this.get().portfolio.getTable(this.getI18nMessagesPlugin());
+        this.get().requirement.templateTable = this.get().requirement.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntryRisk.templateTable = this.get().portfolioEntryRisk.getTable(this.getI18nMessagesPlugin());
+        this.get().workOrder.templateTable = this.get().workOrder.getTable(this.getI18nMessagesPlugin());
 
     }
 
@@ -102,6 +108,13 @@ public class TableProviderImpl implements ITableProvider {
      */
     private IKpiService getKpiService() {
         return this.kpiService;
+    }
+
+    /**
+     * Get the i18n messages service.
+     */
+    private II18nMessagesPlugin getI18nMessagesPlugin() {
+        return this.i18nMessagesPlugin;
     }
 
 }

@@ -27,8 +27,6 @@
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
-@import framework.utils.CustomAttributeFormAndDisplayHandler
-
 
 @repeat(packagesForm("planningPackagesFormData")) { planningPackageForm =>
     @if(planningPackageForm("planningPackageId").value != null) {

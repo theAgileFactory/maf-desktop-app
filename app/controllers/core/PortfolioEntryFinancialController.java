@@ -42,8 +42,8 @@ import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -96,6 +96,8 @@ public class PortfolioEntryFinancialController extends Controller {
     private IBudgetTrackingService budgetTrackingService;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryFinancialController.class);
 
@@ -451,10 +453,10 @@ public class PortfolioEntryFinancialController extends Controller {
             budgetLineForm = budgetLineFormTemplate.fill(new PortfolioEntryBudgetLineFormData(portfolioEntryBudgetLine));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(budgetLineForm, PortfolioEntryBudgetLine.class, budgetLineId);
+            this.getCustomAttributeManagerService().fillWithValues(budgetLineForm, PortfolioEntryBudgetLine.class, budgetLineId);
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(budgetLineForm, PortfolioEntryBudgetLine.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(budgetLineForm, PortfolioEntryBudgetLine.class, null);
         }
 
         return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, budgetLineForm,
@@ -478,7 +480,7 @@ public class PortfolioEntryFinancialController extends Controller {
         // get the fromResource flag
         boolean fromResource = Boolean.valueOf(boundForm.data().get("fromResource"));
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryBudgetLine.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryBudgetLine.class)) {
             return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
@@ -520,7 +522,7 @@ public class PortfolioEntryFinancialController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryBudgetLine.class, budgetLine.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryBudgetLine.class, budgetLine.id);
 
         return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(id));
     }
@@ -619,10 +621,10 @@ public class PortfolioEntryFinancialController extends Controller {
             workOrderForm = workOrderFormTemplate.fill(new WorkOrderFormData(workOrder));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(workOrderForm, WorkOrder.class, workOrderId);
+            this.getCustomAttributeManagerService().fillWithValues(workOrderForm, WorkOrder.class, workOrderId);
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(workOrderForm, WorkOrder.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(workOrderForm, WorkOrder.class, null);
         }
 
         return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, workOrderForm,
@@ -652,7 +654,7 @@ public class PortfolioEntryFinancialController extends Controller {
             workOrder = WorkOrderDAO.getWorkOrderById(workOrderId);
         }
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, WorkOrder.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, WorkOrder.class)) {
             return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm,
                     CurrencyDAO.getCurrencySelectableAsVH()));
         }
@@ -691,7 +693,7 @@ public class PortfolioEntryFinancialController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, WorkOrder.class, workOrder.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, WorkOrder.class, workOrder.id);
 
         return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(id));
     }
@@ -1169,5 +1171,12 @@ public class PortfolioEntryFinancialController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 }

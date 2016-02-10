@@ -49,12 +49,12 @@ import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FileAttachmentHelper;
@@ -136,6 +136,8 @@ public class PortfolioEntryController extends Controller {
     private INotificationManagerPlugin notificationManagerService;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -200,7 +202,7 @@ public class PortfolioEntryController extends Controller {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
-        CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class);
+        this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntry.class);
         if (boundForm.hasErrors()) {
             return badRequest(views.html.core.portfolioentry.portfolio_entry_create.render(boundForm, isRelease));
         }
@@ -269,7 +271,7 @@ public class PortfolioEntryController extends Controller {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getMessagesPlugin());
         }
 
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, portfolioEntry.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntry.class, portfolioEntry.id);
 
         getLicensesManagementService().updateConsumedPortfolioEntries();
 
@@ -479,7 +481,7 @@ public class PortfolioEntryController extends Controller {
         Form<PortfolioEntryEditFormData> portfolioEntryForm = portfolioEntryEditFormData.fill(new PortfolioEntryEditFormData(portfolioEntry));
 
         // add the custom attributes
-        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioEntryForm, PortfolioEntry.class, id);
+        this.getCustomAttributeManagerService().fillWithValues(portfolioEntryForm, PortfolioEntry.class, id);
 
         return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm,
                 PortfolioEntryDao.getPETypeActiveAsVH(portfolioEntry.portfolioEntryType.isRelease)));
@@ -499,7 +501,7 @@ public class PortfolioEntryController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntry.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntry.class)) {
             return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, boundForm, PortfolioEntryDao.getPETypeActiveAsVH()));
         }
 
@@ -518,7 +520,7 @@ public class PortfolioEntryController extends Controller {
             getLicensesManagementService().updateConsumedPortfolioEntries();
 
             // save the custom attributes
-            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntry.class, id);
+            this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntry.class, id);
 
             Ebean.commitTransaction();
             Ebean.endTransaction();
@@ -1050,5 +1052,12 @@ public class PortfolioEntryController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 }

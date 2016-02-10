@@ -47,8 +47,8 @@ import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.FilterConfig;
 import framework.utils.Msg;
 import framework.utils.Pagination;
@@ -104,6 +104,8 @@ public class PortfolioEntryDeliveryController extends Controller {
     private ITableProvider tableProvider;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryDeliveryController.class);
 
@@ -292,12 +294,12 @@ public class PortfolioEntryDeliveryController extends Controller {
             isOwner = portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER);
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(deliverableForm, Deliverable.class, deliverableId);
+            this.getCustomAttributeManagerService().fillWithValues(deliverableForm, Deliverable.class, deliverableId);
 
         } else { // create
 
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(deliverableForm, Deliverable.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(deliverableForm, Deliverable.class, null);
 
             isOwner = true;
         }
@@ -323,7 +325,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         // get the is owner attribute
         boolean isOwner = Boolean.valueOf(boundForm.data().get("isOwner"));
 
-        if (boundForm.hasErrors() || (isOwner && CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Deliverable.class))) {
+        if (boundForm.hasErrors() || (isOwner && this.getCustomAttributeManagerService().validateValues(boundForm, Deliverable.class))) {
             return ok(views.html.core.portfolioentrydelivery.deliverable_manage.render(portfolioEntry, boundForm, isOwner));
         }
 
@@ -364,7 +366,7 @@ public class PortfolioEntryDeliveryController extends Controller {
 
         // save the custom attributes
         if (portfolioEntryDeliverable.type.equals(PortfolioEntryDeliverable.Type.OWNER)) {
-            CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Deliverable.class, deliverable.id);
+            this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, Deliverable.class, deliverable.id);
         }
 
         return redirect(controllers.core.routes.PortfolioEntryDeliveryController.deliverables(portfolioEntry.id));
@@ -865,7 +867,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             requirementForm = formTemplate.fill(new RequirementFormData(requirement));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, requirementId);
+            this.getCustomAttributeManagerService().fillWithValues(requirementForm, Requirement.class, requirementId);
 
         } else { // create
 
@@ -874,7 +876,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             requirementForm = formTemplate.fill(new RequirementFormData(actor));
 
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(requirementForm, Requirement.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(requirementForm, Requirement.class, null);
 
         }
 
@@ -903,7 +905,7 @@ public class PortfolioEntryDeliveryController extends Controller {
             requirement = RequirementDAO.getRequirementById(Long.valueOf(requirementIdString));
         }
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Requirement.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, Requirement.class)) {
             return ok(views.html.core.portfolioentrydelivery.requirement_manage.render(portfolioEntry, requirement, boundForm));
         }
 
@@ -933,7 +935,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Requirement.class, requirement.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, Requirement.class, requirement.id);
 
         return redirect(controllers.core.routes.PortfolioEntryDeliveryController.requirements(portfolioEntry.id));
     }
@@ -1147,7 +1149,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         Form<IterationFormData> iterationForm = iterationFormTemplate.fill(new IterationFormData(iteration));
 
         // add the custom attributes values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(iterationForm, Iteration.class, iterationId);
+        this.getCustomAttributeManagerService().fillWithValues(iterationForm, Iteration.class, iterationId);
 
         return ok(views.html.core.portfolioentrydelivery.iteration_edit.render(portfolioEntry, iterationForm));
 
@@ -1167,7 +1169,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Iteration.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, Iteration.class)) {
             return ok(views.html.core.portfolioentrydelivery.iteration_edit.render(portfolioEntry, boundForm));
         }
 
@@ -1185,7 +1187,7 @@ public class PortfolioEntryDeliveryController extends Controller {
         iteration.update();
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Iteration.class, iteration.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, Iteration.class, iteration.id);
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_delivery.iteration.edit.successful"));
 
@@ -1247,6 +1249,13 @@ public class PortfolioEntryDeliveryController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 
 }

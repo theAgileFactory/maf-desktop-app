@@ -33,7 +33,7 @@ import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import framework.highcharts.pattern.BasicBar;
 import framework.services.account.IPreferenceManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
@@ -64,6 +64,8 @@ public class BudgetBucketController extends Controller {
     private ITableProvider tableProvider;
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     public static Form<BudgetBucketFormData> formTemplate = Form.form(BudgetBucketFormData.class);
     public static Form<BudgetBucketLineFormData> lineFormTemplate = Form.form(BudgetBucketLineFormData.class);
@@ -161,7 +163,7 @@ public class BudgetBucketController extends Controller {
         Form<BudgetBucketFormData> form = formTemplate;
 
         // add the custom attributes default values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(form, BudgetBucket.class, null);
+        this.getCustomAttributeManagerService().fillWithValues(form, BudgetBucket.class, null);
 
         return ok(views.html.core.budgetbucket.budget_bucket_new.render(form));
     }
@@ -175,7 +177,7 @@ public class BudgetBucketController extends Controller {
         // bind the form
         Form<BudgetBucketFormData> boundForm = formTemplate.bindFromRequest();
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, BudgetBucket.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, BudgetBucket.class)) {
             return ok(views.html.core.budgetbucket.budget_bucket_new.render(boundForm));
         }
 
@@ -188,7 +190,7 @@ public class BudgetBucketController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.budget_bucket.new.successful"));
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, BudgetBucket.class, budgetBucket.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, BudgetBucket.class, budgetBucket.id);
 
         return redirect(controllers.core.routes.BudgetBucketController.view(budgetBucket.id, 0, 0));
     }
@@ -210,7 +212,7 @@ public class BudgetBucketController extends Controller {
         Form<BudgetBucketFormData> form = formTemplate.fill(new BudgetBucketFormData(budgetBucket));
 
         // add the custom attributes values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(form, BudgetBucket.class, id);
+        this.getCustomAttributeManagerService().fillWithValues(form, BudgetBucket.class, id);
 
         return ok(views.html.core.budgetbucket.budget_bucket_edit.render(budgetBucket, form));
     }
@@ -250,7 +252,7 @@ public class BudgetBucketController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, BudgetBucket.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, BudgetBucket.class)) {
             return ok(views.html.core.budgetbucket.budget_bucket_edit.render(budgetBucket, boundForm));
         }
 
@@ -262,7 +264,7 @@ public class BudgetBucketController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.budget_bucket.edit.successful"));
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, BudgetBucket.class, budgetBucket.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, BudgetBucket.class, budgetBucket.id);
 
         return redirect(controllers.core.routes.BudgetBucketController.view(id, 0, 0));
     }
@@ -389,6 +391,13 @@ public class BudgetBucketController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 
 }

@@ -34,7 +34,7 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.StakeholderDao;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Msg;
 import framework.utils.Pagination;
@@ -72,6 +72,9 @@ public class PortfolioController extends Controller {
 
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
+
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     public static Form<PortfolioFormData> formTemplate = Form.form(PortfolioFormData.class);
 
@@ -174,7 +177,7 @@ public class PortfolioController extends Controller {
         Form<PortfolioFormData> portfolioForm = formTemplate;
 
         // add the custom attributes default values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioForm, Portfolio.class, null);
+        this.getCustomAttributeManagerService().fillWithValues(portfolioForm, Portfolio.class, null);
 
         return ok(views.html.core.portfolio.portfolio_new.render(portfolioForm, PortfolioDao.getPortfolioTypeActiveAsVH()));
     }
@@ -188,7 +191,7 @@ public class PortfolioController extends Controller {
         // bind the form
         Form<PortfolioFormData> boundForm = formTemplate.bindFromRequest();
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Portfolio.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, Portfolio.class)) {
             return ok(views.html.core.portfolio.portfolio_new.render(boundForm, PortfolioDao.getPortfolioTypeActiveAsVH()));
         }
 
@@ -203,7 +206,7 @@ public class PortfolioController extends Controller {
         this.getTableProvider().flushFilterConfig();
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Portfolio.class, portfolio.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, Portfolio.class, portfolio.id);
 
         return redirect(controllers.core.routes.PortfolioController.overview(portfolio.id));
 
@@ -226,7 +229,7 @@ public class PortfolioController extends Controller {
         Form<PortfolioFormData> portfolioForm = formTemplate.fill(new PortfolioFormData(portfolio));
 
         // add the custom attributes values
-        CustomAttributeFormAndDisplayHandler.fillWithValues(portfolioForm, Portfolio.class, id);
+        this.getCustomAttributeManagerService().fillWithValues(portfolioForm, Portfolio.class, id);
 
         return ok(views.html.core.portfolio.portfolio_edit.render(portfolio, portfolioForm, PortfolioDao.getPortfolioTypeActiveAsVH()));
     }
@@ -241,7 +244,7 @@ public class PortfolioController extends Controller {
         // bind the form
         Form<PortfolioFormData> boundForm = formTemplate.bindFromRequest();
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, Portfolio.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, Portfolio.class)) {
 
             // get the portfolio
             Long id = Long.valueOf(boundForm.data().get("id"));
@@ -261,7 +264,7 @@ public class PortfolioController extends Controller {
         this.getTableProvider().flushFilterConfig();
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, Portfolio.class, updPortfolio.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, Portfolio.class, updPortfolio.id);
 
         return redirect(controllers.core.routes.PortfolioController.view(portfolioFormData.id, 0, 0));
 
@@ -340,5 +343,12 @@ public class PortfolioController extends Controller {
      */
     private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
         return this.preferenceManagerPlugin;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 }

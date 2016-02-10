@@ -49,13 +49,13 @@ import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
 import framework.utils.CssValueForValueHolder;
-import framework.utils.CustomAttributeFormAndDisplayHandler;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FileAttachmentHelper;
 import framework.utils.FilterConfig;
@@ -132,6 +132,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private Configuration configuration;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private ICustomAttributeManagerService customAttributeManagerService;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryStatusReportingController.class);
 
@@ -533,14 +535,14 @@ public class PortfolioEntryStatusReportingController extends Controller {
             reportForm = reportFormTemplate.fill(new PortfolioEntryReportFormData(portfolioEntryReport));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(reportForm, PortfolioEntryReport.class, reportId);
+            this.getCustomAttributeManagerService().fillWithValues(reportForm, PortfolioEntryReport.class, reportId);
 
         } else {
 
             reportForm = reportFormTemplate.fill(new PortfolioEntryReportFormData());
 
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(reportForm, PortfolioEntryReport.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(reportForm, PortfolioEntryReport.class, null);
         }
 
         // get the selectable portfolioEntry report status types
@@ -564,7 +566,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Long id = Long.valueOf(boundForm.data().get("id"));
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryReport.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryReport.class)) {
 
             // get the selectable portfolioEntry report status types
             DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryReportStatusTypes = PortfolioEntryReportDao
@@ -631,7 +633,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryReport.class, portfolioEntryReport.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryReport.class, portfolioEntryReport.id);
 
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntryReportFormData.id, 0, 0, 0, false, false));
     }
@@ -844,10 +846,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         if (!riskId.equals(Long.valueOf(0))) {
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(riskForm, PortfolioEntryRisk.class, riskId);
+            this.getCustomAttributeManagerService().fillWithValues(riskForm, PortfolioEntryRisk.class, riskId);
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(riskForm, PortfolioEntryRisk.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(riskForm, PortfolioEntryRisk.class, null);
         }
 
         return ok(views.html.core.portfolioentrystatusreporting.risk_manage.render(portfolioEntry, riskForm, PortfolioEntryRiskDao.getPERiskTypeActiveAsVH(),
@@ -868,7 +870,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Long id = Long.valueOf(request().body().asFormUrlEncoded().get("id")[0]);
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryRisk.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryRisk.class)) {
             Boolean isRisk = Boolean.valueOf(request().body().asFormUrlEncoded().get("isRisk")[0]);
             return ok(views.html.core.portfolioentrystatusreporting.risk_manage.render(portfolioEntry, boundForm,
                     PortfolioEntryRiskDao.getPERiskTypeActiveAsVH(), isRisk));
@@ -924,7 +926,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryRisk.class, portfolioEntryRisk.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryRisk.class, portfolioEntryRisk.id);
 
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntryRiskFormData.id, 0, 0, 0, false, false));
     }
@@ -960,11 +962,11 @@ public class PortfolioEntryStatusReportingController extends Controller {
             eventForm = eventFormTemplate.fill(new PortfolioEntryEventFormData(portfolioEntryEvent));
 
             // add the custom attributes values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(eventForm, PortfolioEntryEvent.class, eventId);
+            this.getCustomAttributeManagerService().fillWithValues(eventForm, PortfolioEntryEvent.class, eventId);
 
         } else {
             // add the custom attributes default values
-            CustomAttributeFormAndDisplayHandler.fillWithValues(eventForm, PortfolioEntryEvent.class, null);
+            this.getCustomAttributeManagerService().fillWithValues(eventForm, PortfolioEntryEvent.class, null);
         }
 
         return ok(views.html.core.portfolioentrystatusreporting.event_manage.render(portfolioEntry, eventForm,
@@ -985,7 +987,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Long id = Long.valueOf(request().body().asFormUrlEncoded().get("id")[0]);
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-        if (boundForm.hasErrors() || CustomAttributeFormAndDisplayHandler.validateValues(boundForm, PortfolioEntryEvent.class)) {
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryEvent.class)) {
             return ok(views.html.core.portfolioentrystatusreporting.event_manage.render(portfolioEntry, boundForm,
                     PortfolioEntryEventDao.getPEEventTypeActiveAsVH()));
         }
@@ -1032,7 +1034,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         // save the custom attributes
-        CustomAttributeFormAndDisplayHandler.validateAndSaveValues(boundForm, PortfolioEntryEvent.class, portfolioEntryEvent.id);
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryEvent.class, portfolioEntryEvent.id);
 
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.events(portfolioEntryEventFormData.id));
     }
@@ -1340,6 +1342,13 @@ public class PortfolioEntryStatusReportingController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the custom attribute manager service.
+     */
+    private ICustomAttributeManagerService getCustomAttributeManagerService() {
+        return this.customAttributeManagerService;
     }
 
 }

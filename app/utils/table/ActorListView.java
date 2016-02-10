@@ -17,6 +17,7 @@
  */
 package utils.table;
 
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
@@ -35,14 +36,14 @@ public class ActorListView {
 
         public Table<ActorListView> templateTable;
 
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<ActorListView> getTable() {
+        public Table<ActorListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<ActorListView>() {
                 {
                     setIdFieldName("id");
@@ -76,7 +77,7 @@ public class ActorListView {
                     });
                     this.setColumnValueCssClass("manager", "rowlink-skip");
 
-                    addCustomAttributeColumns(Actor.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, Actor.class);
 
                     this.setLineAction(new IColumnFormatter<ActorListView>() {
                         @Override

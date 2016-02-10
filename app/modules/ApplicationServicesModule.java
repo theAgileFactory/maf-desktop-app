@@ -49,6 +49,8 @@ import framework.services.configuration.I18nMessagesPluginImpl;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.configuration.ITopMenuBarService;
+import framework.services.custom_attribute.CustomAttributeManagerServiceImpl;
+import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.database.IDatabaseDependencyService;
 import framework.services.email.EmailServiceImpl;
 import framework.services.email.IEmailService;
@@ -178,6 +180,7 @@ public class ApplicationServicesModule extends FrameworkModule {
 
         bind(IUserSessionManagerPlugin.class).to(CookieUserSessionManagerPlugin.class).asEagerSingleton();
         bind(IPreferenceManagerPlugin.class).to(DefaultPreferenceManagementPlugin.class).asEagerSingleton();
+        bind(ICustomAttributeManagerService.class).to(CustomAttributeManagerServiceImpl.class).asEagerSingleton();
         bind(IPersonalStoragePlugin.class).to(PersonalStoragePluginImpl.class).asEagerSingleton();
         bind(ISharedStorageService.class).to(SharedStorageServiceImpl.class).asEagerSingleton();
         bind(IAdPanelManagerService.class).to(AdPanelServiceImpl.class).asEagerSingleton();

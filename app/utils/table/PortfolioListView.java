@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
@@ -51,14 +52,14 @@ public class PortfolioListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<PortfolioListView> getTable() {
+        public Table<PortfolioListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioListView>() {
                 {
 
@@ -93,7 +94,7 @@ public class PortfolioListView {
                     addColumn("stakeholderTypes", "stakeholderTypes", "object.portfolio.stakeholder_types.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("stakeholderTypes", new ListOfValuesFormatter<PortfolioListView>());
 
-                    addCustomAttributeColumns(Portfolio.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, Portfolio.class);
 
                     this.setLineAction(new IColumnFormatter<PortfolioListView>() {
                         @Override

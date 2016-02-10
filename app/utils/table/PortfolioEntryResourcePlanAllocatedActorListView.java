@@ -23,6 +23,7 @@ import java.util.Date;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
+import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
@@ -59,9 +60,9 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
         /**
          * Default constructor.
          */
-        public TableDefinition() {
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
-            this.templateTable = getTable();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
@@ -107,7 +108,7 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
         /**
          * Get the table.
          */
-        public Table<PortfolioEntryResourcePlanAllocatedActorListView> getTable() {
+        public Table<PortfolioEntryResourcePlanAllocatedActorListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryResourcePlanAllocatedActorListView>() {
                 {
                     setIdFieldName("id");
@@ -156,7 +157,7 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                     addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("isConfirmed", new BooleanFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
 
-                    addCustomAttributeColumns(PortfolioEntryResourcePlanAllocatedActor.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedActor.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedActorListView>(
