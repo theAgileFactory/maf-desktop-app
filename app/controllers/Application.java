@@ -434,7 +434,7 @@ public class Application extends Controller {
      * (see corresponding documentation).
      */
     public Result dynamicSingleCustomAttributeApi() {
-        return DynamicSingleItemCustomAttributeValue.jsonQueryApi(this.getI18nMessagesPlugin());
+        return DynamicSingleItemCustomAttributeValue.jsonQueryApi(this.getI18nMessagesPlugin(), this.getUserSessionManagerPlugin());
     }
 
     /**
