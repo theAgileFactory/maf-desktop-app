@@ -43,6 +43,7 @@ import framework.services.audit.IAuditLoggerService;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
 import framework.utils.DefaultSelectableValueHolder;
@@ -91,6 +92,8 @@ public class AuditableController extends Controller {
     private II18nMessagesPlugin messagesPlugin;
     @Inject
     private Configuration configuration;
+    @Inject
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
 
     // Set to true for activating the search box
     public static final boolean PICKER_OBJECTCLASS_SEARCH = false;
@@ -359,7 +362,7 @@ public class AuditableController extends Controller {
      * Return a JSON representation of the picker values.
      */
     public Result singleValuePickerObjectClassValues() {
-        PickerHandler<String> singleValuePickerObjectClass = new PickerHandler<String>(String.class, new Handle<String>() {
+        PickerHandler<String> singleValuePickerObjectClass = new PickerHandler<String>(this.getAttachmentManagerPlugin(), String.class, new Handle<String>() {
             @Override
             public ISelectableValueHolderCollection<String> getInitialValueHolders(List<String> values, Map<String, String> context) {
                 return AuditableController.getSelectableValuesListForObjectClass(context.get("currentObjectClass"), getAuditLoggerService());
@@ -455,5 +458,12 @@ public class AuditableController extends Controller {
      */
     private Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Get the attachment manager plugin.
+     */
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return this.attachmentManagerPlugin;
     }
 }

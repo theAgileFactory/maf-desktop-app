@@ -19,6 +19,7 @@ import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
@@ -55,6 +56,7 @@ public class PickerServiceImpl implements IPickerService {
     private PickerHandler<Long> portfolioType;
 
     private IAccountManagerPlugin accountManagerPlugin;
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
 
     /**
      * Initialize the service.
@@ -67,11 +69,13 @@ public class PickerServiceImpl implements IPickerService {
      *            the account manager service
      */
     @Inject
-    public PickerServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IAccountManagerPlugin accountManagerPlugin) {
+    public PickerServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IAccountManagerPlugin accountManagerPlugin,
+            IAttachmentManagerPlugin attachmentManagerPlugin) {
 
         Logger.info("SERVICE>>> PickerServiceImpl starting...");
 
         this.accountManagerPlugin = accountManagerPlugin;
+        this.attachmentManagerPlugin = attachmentManagerPlugin;
 
         this.init();
 
@@ -87,7 +91,7 @@ public class PickerServiceImpl implements IPickerService {
     @Override
     public void init() {
 
-        this.principal = new PickerHandler<String>(String.class, new Handle<String>() {
+        this.principal = new PickerHandler<String>(this.getAttachmentManagerPlugin(), String.class, new Handle<String>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -140,7 +144,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.actor = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.actor = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -161,7 +165,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.actorWithoutUid = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.actorWithoutUid = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -182,7 +186,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.actorByOrgUnit = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.actorByOrgUnit = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -198,7 +202,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.actorByCompetency = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.actorByCompetency = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -214,7 +218,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.budgetBucket = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.budgetBucket = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -235,7 +239,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.costCenter = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.costCenter = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -256,7 +260,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.deliverableByPortfolioEntry = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.deliverableByPortfolioEntry = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -272,7 +276,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.orgUnit = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.orgUnit = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -293,7 +297,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.deliveryUnit = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.deliveryUnit = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -314,7 +318,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.sponsoringUnit = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.sponsoringUnit = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -335,7 +339,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.planningPackage = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.planningPackage = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -374,7 +378,7 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.portfolioEntryType = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.portfolioEntryType = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -389,14 +393,14 @@ public class PickerServiceImpl implements IPickerService {
 
         });
 
-        this.portfolio = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.portfolio = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
             @Override
             public ISelectableValueHolderCollection<Long> getInitialValueHolders(List<Long> values, Map<String, String> context) {
                 return PortfolioDao.getPortfolioActiveAsVH();
             }
         });
 
-        this.portfolioType = new PickerHandler<Long>(Long.class, new PickerHandler.Handle<Long>() {
+        this.portfolioType = new PickerHandler<Long>(this.getAttachmentManagerPlugin(), Long.class, new Handle<Long>() {
 
             @Override
             public Map<Parameters, String> config(Map<Parameters, String> defaultParameters) {
@@ -493,6 +497,13 @@ public class PickerServiceImpl implements IPickerService {
      */
     private IAccountManagerPlugin getAccountManagerPlugin() {
         return this.accountManagerPlugin;
+    }
+
+    /**
+     * Get the attachment manager plugin.
+     */
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return this.attachmentManagerPlugin;
     }
 
 }
