@@ -38,6 +38,11 @@ import models.framework_models.common.Attachment;
  */
 public class AttachmentListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<AttachmentListView> templateTable;

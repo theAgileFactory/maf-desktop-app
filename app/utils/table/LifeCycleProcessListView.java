@@ -36,6 +36,11 @@ import models.governance.LifeCycleProcess;
  */
 public class LifeCycleProcessListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<LifeCycleProcessListView> templateTable;

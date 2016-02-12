@@ -35,6 +35,11 @@ import framework.utils.formats.StringFormatFormatter;
  */
 public class CustomAttributeItemListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<CustomAttributeItemListView> templateTable;

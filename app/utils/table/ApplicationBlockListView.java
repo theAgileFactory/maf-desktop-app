@@ -20,6 +20,7 @@ package utils.table;
 import framework.commons.IFrameworkConstants;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
@@ -34,6 +35,11 @@ import models.architecture.ApplicationBlock;
  */
 public class ApplicationBlockListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {

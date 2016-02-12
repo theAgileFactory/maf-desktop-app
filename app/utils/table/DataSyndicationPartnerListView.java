@@ -31,6 +31,11 @@ import services.datasyndication.models.DataSyndicationPartner;
  */
 public class DataSyndicationPartnerListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<DataSyndicationPartnerListView> templateTable;

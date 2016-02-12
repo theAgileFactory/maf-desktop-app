@@ -40,6 +40,11 @@ import models.framework_models.account.Principal;
  */
 public class MessageListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<MessageListView> templateTable;

@@ -36,6 +36,11 @@ import models.governance.LifeCycleMilestoneInstanceStatusType;
  */
 public class LifeCycleMilestoneInstanceStatusTypeListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<LifeCycleMilestoneInstanceStatusTypeListView> templateTable;

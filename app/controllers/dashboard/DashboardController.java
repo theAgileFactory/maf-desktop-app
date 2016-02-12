@@ -76,7 +76,7 @@ public class DashboardController extends Controller {
     }
 
     /**
-     * Display the specified dashboard page
+     * Display the specified dashboard page.
      * 
      * @param id
      *            a unique dashboard page id
@@ -149,7 +149,7 @@ public class DashboardController extends Controller {
                             // Add a blank row
                             DashboardRowConfiguration row = new DashboardRowConfiguration();
                             row.setLayout(DashboardRowTemplate.TPL12COL_1);
-                            row.setWidgets(Arrays.asList(new WidgetConfiguration(-1l, null, null)));
+                            row.setWidgets(Arrays.asList(new WidgetConfiguration(-1L, null, null)));
                             defaultConfig.add(row);
 
                         }
@@ -211,7 +211,7 @@ public class DashboardController extends Controller {
     }
 
     /**
-     * Display an unexpected error in case the dashboard cannot be displayed
+     * Display an unexpected error in case the dashboard cannot be displayed.
      * 
      * @param dashboardPageId
      *            a unique dashboard page id
@@ -224,7 +224,7 @@ public class DashboardController extends Controller {
     }
 
     /**
-     * Delete the specified dashboard page
+     * Delete the specified dashboard page.
      * 
      * @param dashboardPageId
      *            a unique dashboard page id
@@ -267,7 +267,7 @@ public class DashboardController extends Controller {
                     List<DashboardRowConfiguration> defaultConfig = new ArrayList<>();
                     DashboardRowConfiguration row = new DashboardRowConfiguration();
                     row.setLayout(DashboardRowTemplate.TPL12COL_1);
-                    row.setWidgets(Arrays.asList(new WidgetConfiguration(-1l, null, null)));
+                    row.setWidgets(Arrays.asList(new WidgetConfiguration(-1L, null, null)));
                     defaultConfig.add(row);
                     Long newDashboardPageId = getDashboardService().createDashboardPage(null, json.get("name").asText(), json.get("isHome").asBoolean(),
                             defaultConfig);
@@ -284,7 +284,7 @@ public class DashboardController extends Controller {
 
     /**
      * Ajax method returning the dashboard configuration for the specified
-     * dashboard page
+     * dashboard page.
      * 
      * @param dashboardPageId
      *            the unique id of a dashboard page
@@ -362,9 +362,7 @@ public class DashboardController extends Controller {
     }
 
     /**
-     * Return the widget catalog as JSON
-     * 
-     * @return
+     * Return the widget catalog as JSON.
      */
     public Promise<Result> getWidgetCatalog() {
         return Promise.promise(new Function0<Result>() {
@@ -412,7 +410,7 @@ public class DashboardController extends Controller {
     }
 
     /**
-     * Rename the current page
+     * Rename the current page.
      * 
      * @param dashboardPageId
      *            the unique id of a dashboard page
@@ -467,7 +465,7 @@ public class DashboardController extends Controller {
     }
 
     /**
-     * Return an error widget to be displayed when loading a widget failed
+     * Return an error widget to be displayed when loading a widget failed.
      * 
      * @param widgetId
      *            the widget id
@@ -497,26 +495,46 @@ public class DashboardController extends Controller {
         });
     }
 
+    /**
+     * Get the object mapper.
+     */
     private ObjectMapper getObjectMapper() {
         return objectMapper;
     }
 
+    /**
+     * Get the dashboard service.
+     */
     private IDashboardService getDashboardService() {
         return dashboardService;
     }
 
+    /**
+     * Get the i18n messages service.
+     * 
+     * @return
+     */
     private II18nMessagesPlugin getI18nMessagePlugin() {
         return i18nMessagePlugin;
     }
 
+    /**
+     * Get the user sesion manager service.
+     */
     private IUserSessionManagerPlugin getUserSessionManagerPlugin() {
         return this.userSessionManagerPlugin;
     }
 
+    /**
+     * Get the plugin manager service.
+     */
     private IPluginManagerService getPluginManagerService() {
         return this.pluginManagerService;
     }
 
+    /**
+     * Get the implementation defined object service.
+     */
     private IImplementationDefinedObjectService getImplementationDefinedObjectService() {
         return implementationDefinedObjectService;
     }
@@ -530,7 +548,7 @@ public class DashboardController extends Controller {
 
     /**
      * The data structure (to be serialized to JSON) provided to the dashboard
-     * javascript client
+     * javascript client.
      * 
      * @author Pierre-Yves Cloux
      */
@@ -560,50 +578,104 @@ public class DashboardController extends Controller {
         private List<DashboardRowConfiguration> dashboardData;
         private List<WidgetCatalogEntry> widgetCatalog;
 
+        /**
+         * Get the max number of rows.
+         */
         public Integer getMaxNumberOfRows() {
             return maxNumberOfRows;
         }
 
+        /**
+         * Set the max number of rows.
+         * 
+         * @param maxNumberOfRows
+         *            the max number of rows
+         */
         public void setMaxNumberOfRows(Integer maxNumberOfRows) {
             this.maxNumberOfRows = maxNumberOfRows;
         }
 
+        /**
+         * Get the URL of the "create new row" service.
+         */
         public String getCreateNewRowAjaxServiceUrl() {
             return createNewRowAjaxServiceUrl;
         }
 
+        /**
+         * Set the URL of the "create new row" service.
+         * 
+         * @param createNewRowAjaxServiceUrl
+         *            the url
+         */
         public void setCreateNewRowAjaxServiceUrl(String createNewRowAjaxServiceUrl) {
             this.createNewRowAjaxServiceUrl = createNewRowAjaxServiceUrl;
         }
 
+        /**
+         * Get the URL of the "create new widget" service.
+         */
         public String getCreateNewWidgetAjaxServiceUrl() {
             return createNewWidgetAjaxServiceUrl;
         }
 
+        /**
+         * Set the URL of the "create new widget" service.
+         * 
+         * @param createNewWidgetAjaxServiceUrl
+         *            the url
+         */
         public void setCreateNewWidgetAjaxServiceUrl(String createNewWidgetAjaxServiceUrl) {
             this.createNewWidgetAjaxServiceUrl = createNewWidgetAjaxServiceUrl;
         }
 
+        /**
+         * Get the URL of the "update dashboard" service.
+         */
         public String getUpdateDashboardPageAjaxServiceUrl() {
             return updateDashboardPageAjaxServiceUrl;
         }
 
+        /**
+         * Set the URL of the "update dashboard page" service.
+         * 
+         * @param updateDashboardPageAjaxServiceUrl
+         *            the url
+         */
         public void setUpdateDashboardPageAjaxServiceUrl(String updateDashboardPageAjaxServiceUrl) {
             this.updateDashboardPageAjaxServiceUrl = updateDashboardPageAjaxServiceUrl;
         }
 
+        /**
+         * Get the URL of the "widget catalog" service.
+         */
         public String getWidgetCatalogServiceUrl() {
             return widgetCatalogServiceUrl;
         }
 
+        /**
+         * Set the URL of the "widget catalog" service.
+         * 
+         * @param widgetCatalogServiceUrl
+         *            the url
+         */
         public void setWidgetCatalogServiceUrl(String widgetCatalogServiceUrl) {
             this.widgetCatalogServiceUrl = widgetCatalogServiceUrl;
         }
 
+        /**
+         * Get the url of ajax wait image.
+         */
         public String getAjaxWaitImage() {
             return ajaxWaitImage;
         }
 
+        /**
+         * Set the url of ajax wait image.
+         * 
+         * @param ajaxWaitImage
+         *            the url
+         */
         public void setAjaxWaitImage(String ajaxWaitImage) {
             this.ajaxWaitImage = ajaxWaitImage;
         }

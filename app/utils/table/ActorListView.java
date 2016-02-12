@@ -32,6 +32,11 @@ import models.pmo.OrgUnit;
  */
 public class ActorListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<ActorListView> templateTable;

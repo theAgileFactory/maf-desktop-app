@@ -35,6 +35,11 @@ import models.pmo.ActorType;
  */
 public class ActorTypeListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<ActorTypeListView> templateTable;

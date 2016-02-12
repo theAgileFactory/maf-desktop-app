@@ -153,6 +153,16 @@ public class TableDefinitions {
     public TimesheetReportListView.TableDefinition timesheetReport;
     public WorkOrderListView.TableDefinition workOrder;
 
+    /**
+     * Default constructor.
+     * 
+     * @param kpiService
+     *            the KPI service
+     * @param i18nMessagesService
+     *            the i18n messages service
+     * @param attachmentManagerPlugin
+     *            the attachment manager service
+     */
     public TableDefinitions(IKpiService kpiService, II18nMessagesPlugin i18nMessagesService, IAttachmentManagerPlugin attachmentManagerPlugin) {
         this.actor = new ActorListView.TableDefinition(i18nMessagesService);
         this.actorType = new ActorTypeListView.TableDefinition();

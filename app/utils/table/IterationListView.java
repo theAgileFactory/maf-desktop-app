@@ -22,7 +22,6 @@ import java.util.Date;
 import constants.IMafConstants;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.Utilities;
@@ -40,6 +39,11 @@ import models.delivery.Iteration;
  */
 public class IterationListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public FilterConfig<IterationListView> filterConfig;

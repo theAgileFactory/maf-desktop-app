@@ -44,6 +44,11 @@ import models.governance.PlannedLifeCycleMilestoneInstance;
  */
 public class GovernanceListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<GovernanceListView> templateTable;

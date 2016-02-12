@@ -40,6 +40,11 @@ import models.pmo.Actor;
  */
 public class LifeCycleMilestoneListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<LifeCycleMilestoneListView> templateTable;

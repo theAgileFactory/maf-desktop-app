@@ -36,6 +36,11 @@ import models.pmo.OrgUnitType;
  */
 public class OrgUnitTypeListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<OrgUnitTypeListView> templateTable;

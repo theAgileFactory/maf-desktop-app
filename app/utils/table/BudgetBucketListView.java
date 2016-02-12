@@ -32,6 +32,11 @@ import models.pmo.Actor;
  */
 public class BudgetBucketListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<BudgetBucketListView> templateTable;

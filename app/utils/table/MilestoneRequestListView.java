@@ -45,6 +45,11 @@ import utils.form.RequestMilestoneFormData;
  */
 public class MilestoneRequestListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<MilestoneRequestListView> templateTable;

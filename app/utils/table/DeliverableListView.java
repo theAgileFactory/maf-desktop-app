@@ -23,7 +23,6 @@ import constants.IMafConstants;
 import dao.delivery.DeliverableDAO;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -42,6 +41,11 @@ import models.pmo.PortfolioEntryPlanningPackage;
  */
 public class DeliverableListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public FilterConfig<DeliverableListView> filterConfig;

@@ -36,6 +36,11 @@ import models.pmo.Competency;
  */
 public class CompetencyListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<CompetencyListView> templateTable;

@@ -39,6 +39,11 @@ import services.datasyndication.models.DataSyndicationAgreementLink;
  */
 public class DataSyndicationAgreementLinkListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<DataSyndicationAgreementLinkListView> templateTable;

@@ -38,6 +38,11 @@ import models.governance.LifeCyclePhase;
  */
 public class LifeCyclePhaseListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<LifeCyclePhaseListView> templateTable;

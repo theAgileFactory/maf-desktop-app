@@ -41,6 +41,11 @@ import models.pmo.PortfolioEntry;
  */
 public class PortfolioEntryBudgetLineListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<PortfolioEntryBudgetLineListView> templateTable;

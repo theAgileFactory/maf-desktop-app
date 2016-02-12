@@ -31,6 +31,11 @@ import models.finance.GoodsReceipt;
  */
 public class GoodsReceiptListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<GoodsReceiptListView> templateTable;

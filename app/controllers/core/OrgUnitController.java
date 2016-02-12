@@ -547,6 +547,9 @@ public class OrgUnitController extends Controller {
     /**
      * Get all actors portfolio entry allocation ids according to the current
      * filter configuration.
+     * 
+     * @param id
+     *            the org unit id
      */
     @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
     public Result getAllActorsPortfolioEntryAllocationIds(Long id) {
@@ -742,6 +745,8 @@ public class OrgUnitController extends Controller {
      *            the org unit id
      * @param filterConfig
      *            the filter config.
+     * @param securityService
+     *            the security service
      */
     private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getActorsPEAllocTable(
             Long orgUnitId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig, ISecurityService securityService) {

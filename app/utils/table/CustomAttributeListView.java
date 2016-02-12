@@ -38,6 +38,11 @@ import models.framework_models.common.ICustomAttributeValue.AttributeType;
  */
 public class CustomAttributeListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<CustomAttributeListView> templateTable;

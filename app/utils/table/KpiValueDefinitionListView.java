@@ -34,6 +34,11 @@ import models.framework_models.kpi.KpiValueDefinition;
  */
 public class KpiValueDefinitionListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<KpiValueDefinitionListView> templateTable;

@@ -36,6 +36,11 @@ import models.pmo.Actor;
  */
 public class MilestoneApproverListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<MilestoneApproverListView> templateTable;

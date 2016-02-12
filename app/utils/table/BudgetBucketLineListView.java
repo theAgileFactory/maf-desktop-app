@@ -39,6 +39,11 @@ import models.finance.Currency;
  */
 public class BudgetBucketLineListView {
 
+    /**
+     * The definition of the table.
+     * 
+     * @author Johann Kohler
+     */
     public static class TableDefinition {
 
         public Table<BudgetBucketLineListView> templateTable;

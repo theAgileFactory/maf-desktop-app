@@ -36,7 +36,8 @@ public class TableProviderImpl implements ITableProvider {
      *            the Play configuration service
      * @param kpiService
      *            the KPI service
-     * @parma i18nMessagesPlugin the i18n messages service
+     * @param i18nMessagesPlugin
+     *            the i18n messages service
      * @param attachmentManagerPlugin
      *            the attachment manager service
      */

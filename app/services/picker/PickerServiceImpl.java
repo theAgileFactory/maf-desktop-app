@@ -67,6 +67,8 @@ public class PickerServiceImpl implements IPickerService {
      *            the Play configuration service
      * @param accountManagerPlugin
      *            the account manager service
+     * @param attachmentManagerPlugin
+     *            the attachment manager service
      */
     @Inject
     public PickerServiceImpl(ApplicationLifecycle lifecycle, Configuration configuration, IAccountManagerPlugin accountManagerPlugin,
