@@ -13,7 +13,6 @@ import com.google.inject.name.Names;
 import be.objectify.deadbolt.java.cache.HandlerCache;
 import constants.IMafConstants;
 import constants.MafDataType;
-import controllers.api.ApiAuthenticationBizdockCheck;
 import controllers.sso.Authenticator;
 import framework.commons.IFrameworkConstants;
 import framework.commons.IFrameworkConstants.AuthenticationMode;
@@ -150,10 +149,6 @@ public class ApplicationServicesModule extends FrameworkModule {
     protected void configure() {
         beforeInjection();
         super.configure();
-
-        log.info(">>> Desktop static dependency injected start...");
-        requestStaticInjection(ApiAuthenticationBizdockCheck.class);
-        log.info("...Desktop static dependency injected end");
 
         log.info(">>> Standard dependency injection start...");
         bind(EbeanConfig.class).toProvider(DefaultEbeanConfig.EbeanConfigParser.class).asEagerSingleton();

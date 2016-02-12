@@ -17,11 +17,10 @@
  */
 package controllers.api;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import framework.services.api.server.IApiAuthenticationAdditionalCheck;
+import play.Play;
 import services.licensesmanagement.ILicensesManagementService;
 
 /**
@@ -32,12 +31,11 @@ import services.licensesmanagement.ILicensesManagementService;
  */
 public class ApiAuthenticationBizdockCheck implements IApiAuthenticationAdditionalCheck {
 
-    @Inject
-    private static ILicensesManagementService licensesManagementService;
-
     @Override
     public Pair<Boolean, String> before() {
-        if (!getLicensesManagementService().isInstanceAccessible()) {
+        ILicensesManagementService licensesManagementService = Play.application().injector().instanceOf(ILicensesManagementService.class);
+
+        if (licensesManagementService != null && !licensesManagementService.isInstanceAccessible()) {
             return Pair.of(false, "the instance is not accessible");
         }
         return Pair.of(true, null);
@@ -46,13 +44,6 @@ public class ApiAuthenticationBizdockCheck implements IApiAuthenticationAddition
     @Override
     public Pair<Boolean, String> after() {
         return Pair.of(true, null);
-    }
-
-    /**
-     * Get the licenses management service.
-     */
-    private static ILicensesManagementService getLicensesManagementService() {
-        return licensesManagementService;
     }
 
 }
