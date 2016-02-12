@@ -198,7 +198,7 @@ public class MyAccount extends Controller {
             emailService.sendEmail(Msg.get("my.my_profile.update_email.message.subject"),
                     play.Configuration.root()
                             .getString("maf.email.from"),
-                    Utilities
+                    this.getI18nMessagesPlugin()
                             .renderViewI18n("views.html.mail.account_email_update_html", play.Configuration.root().getString("maf.platformName"),
                                     account.getFirstName() + " " + account.getLastName(),
                                     getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,

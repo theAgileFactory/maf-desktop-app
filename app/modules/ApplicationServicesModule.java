@@ -22,7 +22,6 @@ import framework.security.IAuthenticator;
 import framework.security.IInstanceAccessSupervisor;
 import framework.security.ISecurityService;
 import framework.security.ISecurityServiceConfiguration;
-import framework.services.ServiceStaticAccessor;
 import framework.services.account.AccountManagerPluginImpl;
 import framework.services.account.DefaultAuthenticationAccountReaderPlugin;
 import framework.services.account.DefaultAuthenticationAccountWriterPlugin;
@@ -151,9 +150,9 @@ public class ApplicationServicesModule extends FrameworkModule {
     protected void configure() {
         beforeInjection();
         super.configure();
+
         log.info(">>> Desktop static dependency injected start...");
         requestStaticInjection(ApiAuthenticationBizdockCheck.class);
-        requestStaticInjection(ServiceStaticAccessor.class);
         log.info("...Desktop static dependency injected end");
 
         log.info(">>> Standard dependency injection start...");
