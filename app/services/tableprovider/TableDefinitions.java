@@ -2,6 +2,7 @@ package services.tableprovider;
 
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
+import framework.services.storage.IAttachmentManagerPlugin;
 import utils.table.ActorListView;
 import utils.table.ActorTypeListView;
 import utils.table.ApplicationBlockListView;
@@ -152,11 +153,11 @@ public class TableDefinitions {
     public TimesheetReportListView.TableDefinition timesheetReport;
     public WorkOrderListView.TableDefinition workOrder;
 
-    public TableDefinitions(IKpiService kpiService, II18nMessagesPlugin i18nMessagesService) {
+    public TableDefinitions(IKpiService kpiService, II18nMessagesPlugin i18nMessagesService, IAttachmentManagerPlugin attachmentManagerPlugin) {
         this.actor = new ActorListView.TableDefinition(i18nMessagesService);
         this.actorType = new ActorTypeListView.TableDefinition();
         this.applicationBlock = new ApplicationBlockListView.TableDefinition(i18nMessagesService);
-        this.attachment = new AttachmentListView.TableDefinition(i18nMessagesService);
+        this.attachment = new AttachmentListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
         this.budgetBucketLine = new BudgetBucketLineListView.TableDefinition(i18nMessagesService);
         this.budgetBucket = new BudgetBucketListView.TableDefinition(i18nMessagesService);
         this.competency = new CompetencyListView.TableDefinition();

@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
+import framework.services.storage.IAttachmentManagerPlugin;
 import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
@@ -24,6 +25,8 @@ public class TableProviderImpl implements ITableProvider {
 
     private TableDefinitions tableDefinitions;
 
+    private IAttachmentManagerPlugin attachmentManagerPlugin;
+
     /**
      * Initialize the service.
      * 
@@ -33,14 +36,19 @@ public class TableProviderImpl implements ITableProvider {
      *            the Play configuration service
      * @param kpiService
      *            the KPI service
+     * @parma i18nMessagesPlugin the i18n messages service
+     * @param attachmentManagerPlugin
+     *            the attachment manager service
      */
     @Inject
-    public TableProviderImpl(ApplicationLifecycle lifecycle, Configuration configuration, IKpiService kpiService, II18nMessagesPlugin i18nMessagesPlugin) {
+    public TableProviderImpl(ApplicationLifecycle lifecycle, Configuration configuration, IKpiService kpiService, II18nMessagesPlugin i18nMessagesPlugin,
+            IAttachmentManagerPlugin attachmentManagerPlugin) {
 
         Logger.info("SERVICE>>> TableProviderImpl starting...");
 
         this.kpiService = kpiService;
         this.i18nMessagesPlugin = i18nMessagesPlugin;
+        this.attachmentManagerPlugin = attachmentManagerPlugin;
         this.tableDefinitions = null;
 
         lifecycle.addStopHook(() -> {
@@ -55,7 +63,7 @@ public class TableProviderImpl implements ITableProvider {
     @Override
     public TableDefinitions get() {
         if (this.tableDefinitions == null) {
-            this.tableDefinitions = new TableDefinitions(kpiService, i18nMessagesPlugin);
+            this.tableDefinitions = new TableDefinitions(this.getKpiService(), this.getI18nMessagesPlugin(), this.getAttachmentManagerPlugin());
         }
         return this.tableDefinitions;
     }
@@ -115,6 +123,13 @@ public class TableProviderImpl implements ITableProvider {
      */
     private II18nMessagesPlugin getI18nMessagesPlugin() {
         return this.i18nMessagesPlugin;
+    }
+
+    /**
+     * Get the attachment manager service.
+     */
+    private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
+        return this.attachmentManagerPlugin;
     }
 
 }

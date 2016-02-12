@@ -24,6 +24,7 @@
     requestForm: Form[utils.form.ProcessMilestoneRequestFormData]
 )
 
+@import commons._
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
@@ -83,7 +84,7 @@
                     @if(descriptionDocument != null) {
                         <br>
                         <p class="text-center">
-                            <a href="@framework.utils.Utilities.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary">
+                            <a href="@_fattach.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary">
                                 <i class="fa fa-arrow-circle-o-down"></i> @parts.Msg("core.process_transition_request.process_milestone_request.panel.request.download")
                             </a>
                         </p>

@@ -25,6 +25,7 @@
     descriptionDocuments: List[models.framework_models.common.Attachment]
 )
 
+@import commons._
 @import framework_views.parts
 @import framework_views.parts.formats._
 @import be.objectify.deadbolt.java.views.html._
@@ -124,7 +125,7 @@
                                     @if(descriptionDocuments(index) != null) {
                                         <br>
                                         <p class="text-center">
-                                            <a href="@framework.utils.Utilities.getAttachmentDownloadUrl(descriptionDocuments(index).id)" class="btn btn-primary">
+                                            <a href="@_fattach.getAttachmentDownloadUrl(descriptionDocuments(index).id)" class="btn btn-primary">
                                                 <i class="fa fa-arrow-circle-o-down"></i> @parts.Msg("object.life_cycle_milestone_instance.document.label")
                                             </a>
                                         </p>

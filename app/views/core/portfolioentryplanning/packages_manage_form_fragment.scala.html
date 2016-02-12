@@ -22,6 +22,7 @@
     status: framework.utils.ISelectableValueHolderCollection[_]
 )
 
+@import commons._
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
@@ -80,7 +81,7 @@
 <script>
     $( "#planning-packages-form").submit(function( event ) {
         
-        $("#planning-packages-process").html('<img src="@framework.utils.Utilities.getAjaxWaitImageUrl()"/>');
+        $("#planning-packages-process").html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
 
         event.preventDefault();
         event.stopPropagation();

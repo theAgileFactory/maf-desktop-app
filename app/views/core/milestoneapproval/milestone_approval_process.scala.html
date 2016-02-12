@@ -27,6 +27,7 @@
     statusTypes: framework.utils.ISelectableValueHolderCollection[_]
 )
 
+@import commons._
 @import framework_views.parts
 @import helper._
 @import bootstrap3._
@@ -83,7 +84,7 @@
                     @if(descriptionDocument != null) {
                         <br>
                         <p class="text-center">
-                            <a href="@framework.utils.Utilities.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary">
+                            <a href="@_fattach.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary">
                                 <i class="fa fa-arrow-circle-o-down"></i> @parts.Msg("core.milestone.approval.process.panel.milestone.download.label")
                             </a>
                         </p>

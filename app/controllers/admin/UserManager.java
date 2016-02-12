@@ -490,8 +490,10 @@ public class UserManager extends Controller {
         String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
                 "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(userAccount.getUid(), validationKey).url();
         emailService.sendEmail(Msg.get("admin.user_manager.reset_password.mail.subject"), play.Configuration.root().getString("maf.email.from"),
-                Utilities.renderViewI18n("views.html.mail.account_password_reset_html", play.Configuration.root().getString("maf.platformName"),
-                        userAccount.getFirstName() + " " + userAccount.getLastName(), resetPasswordUrl).body(),
+                this.getI18nMessagesPlugin()
+                        .renderViewI18n("views.html.mail.account_password_reset_html", play.Configuration.root().getString("maf.platformName"),
+                                userAccount.getFirstName() + " " + userAccount.getLastName(), resetPasswordUrl)
+                        .body(),
                 userAccount.getMail());
     }
 
@@ -568,12 +570,12 @@ public class UserManager extends Controller {
 
         // Notify the user with the lock/unlock action
         try {
-            emailService
-                    .sendEmail(Msg.get("admin.user_manager.change_status.mail.subject"), play.Configuration.root().getString("maf.email.from"),
-                            Utilities.renderViewI18n("views.html.mail.account_activation_status_changed_html",
-                                    play.Configuration.root().getString("maf.platformName"), userAccount.getFirstName() + " " + userAccount.getLastName(),
-                                    userAccount.isActive()).body(),
-                            userAccount.getMail());
+            emailService.sendEmail(Msg.get("admin.user_manager.change_status.mail.subject"), play.Configuration.root().getString("maf.email.from"),
+                    this.getI18nMessagesPlugin()
+                            .renderViewI18n("views.html.mail.account_activation_status_changed_html", play.Configuration.root().getString("maf.platformName"),
+                                    userAccount.getFirstName() + " " + userAccount.getLastName(), userAccount.isActive())
+                            .body(),
+                    userAccount.getMail());
         } catch (Exception e) {
             log.error("Unexpected error while sending an e-mail notification", e);
         }
@@ -674,9 +676,11 @@ public class UserManager extends Controller {
                     String resetPasswordUrl = getPreferenceManagerPlugin().getPreferenceElseConfigurationValue(IFrameworkConstants.PUBLIC_URL_PREFERENCE,
                             "maf.public.url") + controllers.admin.routes.PasswordReset.displayPasswordResetForm(accountDataForm.uid, validationKey).url();
                     emailService.sendEmail(Msg.get("admin.user_manager.create.mail.subject"), play.Configuration.root().getString("maf.email.from"),
-                            Utilities.renderViewI18n("views.html.mail.account_creation_html",
-                                    getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(), play.Configuration.root().getString("maf.platformName"),
-                                    accountDataForm.firstName + " " + accountDataForm.lastName, resetPasswordUrl, accountDataForm.uid).body(),
+                            this.getI18nMessagesPlugin()
+                                    .renderViewI18n("views.html.mail.account_creation_html", getAccountManagerPlugin().isAuthenticationRepositoryMasterMode(),
+                                            play.Configuration.root().getString("maf.platformName"),
+                                            accountDataForm.firstName + " " + accountDataForm.lastName, resetPasswordUrl, accountDataForm.uid)
+                                    .body(),
                             accountDataForm.mail);
                 } else {
                     // User password is defined by the administrator

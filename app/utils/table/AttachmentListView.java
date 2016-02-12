@@ -22,10 +22,10 @@ import java.util.Date;
 
 import constants.IMafConstants;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
-import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
@@ -42,14 +42,14 @@ public class AttachmentListView {
 
         public Table<AttachmentListView> templateTable;
 
-        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
-            this.templateTable = getTable(i18nMessagesPlugin);
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin, IAttachmentManagerPlugin attachmentManagerPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin, attachmentManagerPlugin);
         }
 
         /**
          * Get the table.
          */
-        public Table<AttachmentListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
+        public Table<AttachmentListView> getTable(II18nMessagesPlugin i18nMessagesPlugin, IAttachmentManagerPlugin attachmentManagerPlugin) {
             return new Table<AttachmentListView>() {
                 {
                     setIdFieldName("id");
@@ -67,7 +67,7 @@ public class AttachmentListView {
                             new StringFormatFormatter.Hook<AttachmentListView>() {
                         @Override
                         public String convert(AttachmentListView attachmentListView) {
-                            return Utilities.getAttachmentDownloadUrl(attachmentListView.id);
+                            return attachmentManagerPlugin.getAttachmentDownloadUrl(attachmentListView.id);
                         }
                     }));
                     setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);

@@ -21,6 +21,7 @@
     competencyCapacities: List[controllers.core.RoadmapController.CompetencyCapacity]
 )
 
+@import commons._
 @import framework_views.parts.formats._
 @import framework_views.parts
 @import views.html.modelsparts._
@@ -227,7 +228,7 @@
         $(e).parent().css('font-weight','bold');
         $(e).parent().css('border','1px solid #aaa');
 
-        $('#capacity-forecast-cell-details').html('<img src="@framework.utils.Utilities.getAjaxWaitImageUrl()"/>');
+        $('#capacity-forecast-cell-details').html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
         
         $.ajax({
             url: url,
