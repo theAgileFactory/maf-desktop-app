@@ -47,6 +47,15 @@
     }
 }
 
+@waitImage=@{
+    if(pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STOPPING)
+        || pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTING)){
+        Html("&nbsp;<img src=\""+routes.Assets.versioned("images/ajax-loader.gif")+"\"/>")
+    }else{
+        ""
+    }
+}
+
 @unregisterDisabled=@{
         if(pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTED)){
             "disabled"
@@ -76,7 +85,8 @@
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.plugin_configuration.status.label")</th>
-                                <td>@Html(controllers.admin.PluginManagerController.getHtmlFromPluginStatus(pluginInfo.getPluginStatus()))</td>
+                                <td>@Html(controllers.admin.PluginManagerController.getHtmlFromPluginStatus(pluginInfo.getPluginStatus()))
+                                @waitImage</td>
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.plugin_definition.name.label")</th>
@@ -223,6 +233,12 @@
                         alert("@parts.Msg("admin.plugin_manager.configuration.view.panel.admin.action.error")");
                     });
             });
+            @if(pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STOPPING)
+        					|| pluginInfo.getPluginStatus().equals(framework.services.plugins.IPluginManagerService.PluginStatus.STARTING)){
+        		setTimeout(function(){
+   						window.location.reload(1);
+				}, 5000);
+        	}
         });
     </script>
 }
