@@ -832,6 +832,7 @@ public class PluginManagerController extends Controller {
             EventMessage eventMessage = new EventMessage();
             eventMessage.setPluginConfigurationId(pluginConfigurationId);
             eventMessage.setMessageType(MessageType.CUSTOM);
+            eventMessage.setDataType(pluginActionDescriptor.getDataType());
             eventMessage.setPayload(pluginActionDescriptor.getPayLoad(null));
             getEventBroadcastingService().postOutMessage(eventMessage);
 
