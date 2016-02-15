@@ -875,6 +875,17 @@ object.custom_attribute_item.description.label=Beschreibung
 object.custom_attribute_item.table.empty=Kein Eintrag
 
 #----------------------
+# currency
+#----------------------
+
+object.currency.is_active.label=Aktiviert
+object.currency.code.label=Code
+object.currency.is_default.label=Main
+object.currency.conversion_rate.label=Wechselkurs
+object.currency.conversion_rate.help=de: The conversion rate is the number of unities of the currency for 1 unity of the default currency.
+object.currency.symbol.label=Symbol
+
+#----------------------
 # portfolioEntryType
 #----------------------
 
@@ -2874,6 +2885,7 @@ admin.configuration.reference_data.register.title=Berichterstattung
 admin.configuration.reference_data.register.risktypes.title=Risiko Typen
 admin.configuration.reference_data.register.report_status_types.title=Status Typen
 admin.configuration.reference_data.register.event_types.title=Ereigniss Typen
+admin.configuration.reference_data.currencies.title=de: Currencies
 admin.configuration.reference_data.timesheetactivities.title=Adminsitrative Aktivitäten (Zeiterfassung)
 admin.configuration.reference_data.timesheetactivities.types.title=Typen
 admin.configuration.reference_data.timesheetactivities.activities.title=Aktivitäten
@@ -3001,6 +3013,15 @@ admin.configuration.reference_data.event_type.manage.title=Ereigniss Typ bearbei
 admin.configuration.reference_data.event_type.add.successful=Typ hinzugefügt.
 admin.configuration.reference_data.event_type.edit.successful=yp aktualisiert.
 admin.configuration.reference_data.event_type.delete.successful=Typ entfernt.
+
+#manage currency
+admin.configuration.reference_data.currency.manage.title=de: Manage a currency
+admin.configuration.reference_data.currency.add.successful=de: The currency has been added successfully.
+admin.configuration.reference_data.currency.edit.successful=de: The currency has been updated.
+admin.configuration.reference_data.currency.delete.successful=de: The currency has been deleted.
+admin.configuration.reference_data.currency.delete.error.used=de: This is not possible to delete a currency used for at least one amount.
+admin.configuration.reference_data.currency.set_as_default.confirm=de: By changing the default currency, all conversion rates for all currencies and data associated to a currency should be manually corrected later. Are you sure to continue?
+admin.configuration.reference_data.currency.set_as_default.successful=de: The currency is now the default one.
 
 #manage timesheet activity type
 admin.configuration.reference_data.timesheetactivitytype.manage.title=Zeiterfassung Typen bearbeiten

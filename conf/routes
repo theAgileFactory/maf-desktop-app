@@ -614,6 +614,12 @@ GET    /admin/config/ref-data/event-type/manage                    controllers.a
 POST   /admin/config/ref-data/event-type/manage                    controllers.admin.ConfigurationRegisterController.processManageEventType()
 GET    /admin/config/ref-data/event-type/delete                    controllers.admin.ConfigurationRegisterController.deleteEventType(eventTypeId: Long ?= 0)
 
+GET    /admin/config/ref-data/currencies                           controllers.admin.ConfigurationCurrencyController.list()
+GET    /admin/config/ref-data/currency/manage                      controllers.admin.ConfigurationCurrencyController.manageCurrency(currencyId: Long ?= 0)
+POST   /admin/config/ref-data/currency/save                        controllers.admin.ConfigurationCurrencyController.processManageCurrency()
+GET    /admin/config/ref-data/currency/delete                      controllers.admin.ConfigurationCurrencyController.deleteCurrency(currencyId: Long)
+GET    /admin/config/ref-data/currency/set-as-default              controllers.admin.ConfigurationCurrencyController.setCurrencyAsDefault(currencyId: Long)
+
 GET    /admin/config/ref-data/timesheet-activities                  controllers.admin.ConfigurationTimesheetActivityController.list()
 GET    /admin/config/ref-data/timesheet-activity-type/manage        controllers.admin.ConfigurationTimesheetActivityController.manageTimesheetActivityType(timesheetActivityTypeId: Long ?= 0)
 POST   /admin/config/ref-data/timesheet-activity-type/save          controllers.admin.ConfigurationTimesheetActivityController.saveTimesheetActivityType()
