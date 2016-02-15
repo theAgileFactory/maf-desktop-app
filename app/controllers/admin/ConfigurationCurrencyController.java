@@ -17,6 +17,7 @@
  */
 package controllers.admin;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,7 +207,11 @@ public class ConfigurationCurrencyController extends Controller {
             Currency currency = CurrencyDAO.getCurrencyById(currencyId);
             currency.isDefault = true;
             currency.isActive = true;
+            currency.conversionRate = BigDecimal.ONE;
             currency.update();
+
+            // TODO maybe inverse (1/rate) all conversion rate of all currencies
+            // and data...??? and remove the alert message
 
             Ebean.commitTransaction();
 
