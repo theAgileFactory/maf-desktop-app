@@ -880,6 +880,9 @@ object.custom_attribute_item.table.empty=Kein Eintrag
 
 object.currency.is_active.label=Aktiviert
 object.currency.code.label=Code
+object.currency.code.help=de: 3-letters ISO code of the currency. This attribute is definitive (could not be modified later).
+object.currency.code.error.bad_format=de: The code should contain exactly 3 letters.
+object.currency.code.error.already_used=de: This code is already used by another currency.
 object.currency.is_default.label=Main
 object.currency.conversion_rate.label=Wechselkurs
 object.currency.conversion_rate.help=de: The conversion rate is the number of unities of the currency for 1 unity of the default currency.

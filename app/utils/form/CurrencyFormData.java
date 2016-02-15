@@ -18,8 +18,14 @@
 package utils.form;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import dao.finance.CurrencyDAO;
+import framework.utils.Msg;
 import models.finance.Currency;
+import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 
 /**
  * A currency form data is used to manage the fields when adding/editing a
@@ -31,18 +37,44 @@ public class CurrencyFormData {
 
     public Long id;
 
-    public boolean isActive = true;
+    public boolean isActive;
 
+    @Required
+    @play.data.validation.Constraints.Pattern(value = "[a-zA-Z]{3}", message = "object.currency.code.error.bad_format")
     public String code;
 
+    @Required
     public BigDecimal conversionRate;
 
+    @Required
     public String symbol;
 
     /**
      * Default constructor.
      */
     public CurrencyFormData() {
+    }
+
+    /**
+     * Form validation.
+     */
+    public List<ValidationError> validate() {
+
+        List<ValidationError> errors = new ArrayList<>();
+
+        // check the code is not already used
+        Currency currency = CurrencyDAO.getCurrencyByCode(this.code);
+        if (currency != null) {
+            if (this.id != null) { // edit case
+                if (!currency.id.equals(this.id)) {
+                    errors.add(new ValidationError("code", Msg.get("object.currency.code.error.already_used")));
+                }
+            } else { // new case
+                errors.add(new ValidationError("code", Msg.get("object.currency.code.error.already_used")));
+            }
+        }
+
+        return errors.isEmpty() ? null : errors;
     }
 
     /**
@@ -66,9 +98,14 @@ public class CurrencyFormData {
      *            the currency in the DB
      */
     public void fill(Currency currency) {
-        currency.isActive = this.isActive;
-        currency.code = this.code;
-        currency.conversionRate = this.conversionRate;
+        if (currency.isDefault) {
+            currency.isActive = true;
+            currency.conversionRate = BigDecimal.ONE;
+        } else {
+            currency.isActive = this.isActive;
+            currency.conversionRate = this.conversionRate;
+        }
+        currency.code = this.code.toUpperCase();
         currency.symbol = this.symbol;
     }
 }

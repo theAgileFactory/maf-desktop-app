@@ -46,25 +46,30 @@
         @helper.form(action = controllers.admin.routes.ConfigurationCurrencyController.processManageCurrency()) {
             <fieldset>
 
+                <input type="hidden" name="isDefault" value="@isDefault"/>
+                
                 @if(currencyForm("id").value!=null) {
                     <input type="hidden" name="id" value="@currencyForm("id").value"/>
+                    
+                    <div class="form-group ">
+                        <label class="control-label">@parts.Msg("object.currency.code.label")</label>
+                        <div class="">@currencyForm("code").value</div>
+                    </div>
+                    
+                    <input type="hidden" name="@currencyForm("code").name" value="@currencyForm("code").value"/>
+                } else {
+                    @parts.input_text(currencyForm("code"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.currency.code.label"), '_help -> parts.Msg.asString("object.currency.code.help"))
                 }
                 
                 @if(isDefault) {
                     <input type="hidden" name="isActive" value="true"/>
+                    <input type="hidden" name="conversionRate" value="1"/>
                 } else {
                     @parts.checkbox(
                         currencyForm("isActive"), 
                         parts.Msg.asString("object.currency.is_active.label"),
                         ""
                     )
-                }
-                
-                @parts.input_text(currencyForm("code"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.currency.code.label"))
-
-                @if(isDefault) {
-                    <input type="hidden" name="conversionRate" value="1"/>
-                } else {
                     @parts.input_text(currencyForm("conversionRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.currency.conversion_rate.label"), '_help -> parts.Msg.asString("object.currency.conversion_rate.help"))
                 }
                 

@@ -880,6 +880,9 @@ object.custom_attribute_item.table.empty=Il n''existe aucune option.
 
 object.currency.is_active.label=Active
 object.currency.code.label=Code
+object.currency.code.help=Code ISO à 3 lettres de la devise. Cet attribut est définitif (non-modifiable par la suite).
+object.currency.code.error.bad_format=Le code doit contenir exactement 3 lettres.
+object.currency.code.error.already_used=Ce code est déjà utilisé par une autre devise.
 object.currency.is_default.label=Principale
 object.currency.conversion_rate.label=Taux de conversion
 object.currency.conversion_rate.help=Le taux de conversion représente le nombre d''unités de la devise pour 1 unité de la devise principale.

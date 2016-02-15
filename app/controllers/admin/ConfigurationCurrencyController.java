@@ -27,7 +27,9 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.finance.CurrencyDAO;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.Msg;
 import framework.utils.Table;
+import framework.utils.Utilities;
 import models.finance.Currency;
 import play.data.Form;
 import play.mvc.Controller;
@@ -100,7 +102,42 @@ public class ConfigurationCurrencyController extends Controller {
      * Process the edit/create form of a currency.
      */
     public Result processManageCurrency() {
-        return TODO;
+
+        // bind the form
+        Form<CurrencyFormData> boundForm = currencyFormTemplate.bindFromRequest();
+
+        // get the isDefault flag
+        Boolean isDefault = Boolean.parseBoolean(boundForm.data().get("isDefault"));
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.admin.config.datareference.currency.currency_manage.render(boundForm, isDefault));
+        }
+
+        CurrencyFormData currencyFormData = boundForm.get();
+
+        Currency currency = null;
+
+        if (currencyFormData.id == null) { // create case
+
+            currency = new Currency();
+            currency.isDefault = false;
+            currencyFormData.fill(currency);
+            currency.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.add.successful"));
+
+        } else { // edit case
+
+            currency = CurrencyDAO.getCurrencyById(currencyFormData.id);
+            currencyFormData.fill(currency);
+            currency.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.edit.successful"));
+        }
+
+        this.getTableProvider().flushFilterConfig();
+
+        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
     }
 
     /**
