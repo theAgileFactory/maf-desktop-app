@@ -22,9 +22,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.avaje.ebean.Ebean;
+
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
+import controllers.ControllersUtils;
 import dao.finance.CurrencyDAO;
 import dao.finance.PurchaseOrderDAO;
 import dao.finance.WorkOrderDAO;
@@ -33,6 +36,8 @@ import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.finance.Currency;
+import play.Configuration;
+import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -49,6 +54,8 @@ import utils.table.CurrencyListView;
 @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
 public class ConfigurationCurrencyController extends Controller {
 
+    private static Logger.ALogger log = Logger.of(ConfigurationCurrencyController.class);
+
     private static Form<CurrencyFormData> currencyFormTemplate = Form.form(CurrencyFormData.class);
 
     @Inject
@@ -56,6 +63,9 @@ public class ConfigurationCurrencyController extends Controller {
 
     @Inject
     private ITableProvider tableProvider;
+
+    @Inject
+    private Configuration configuration;
 
     /**
      * Display the lists of data.
@@ -185,9 +195,29 @@ public class ConfigurationCurrencyController extends Controller {
      *            the currency id
      */
     public Result setCurrencyAsDefault(Long currencyId) {
-        // TODO also as active
 
-        return TODO;
+        Ebean.beginTransaction();
+        try {
+
+            Currency defaultCurrency = CurrencyDAO.getCurrencyDefault();
+            defaultCurrency.isDefault = false;
+            defaultCurrency.update();
+
+            Currency currency = CurrencyDAO.getCurrencyById(currencyId);
+            currency.isDefault = true;
+            currency.isActive = true;
+            currency.update();
+
+            Ebean.commitTransaction();
+
+        } catch (Exception e) {
+            Ebean.rollbackTransaction();
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+        }
+
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.set_as_default.successful"));
+
+        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
     }
 
     /**
@@ -202,6 +232,13 @@ public class ConfigurationCurrencyController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the Play configuration service.
+     */
+    private Configuration getConfiguration() {
+        return this.configuration;
     }
 
 }
