@@ -26,6 +26,8 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.finance.CurrencyDAO;
+import dao.finance.PurchaseOrderDAO;
+import dao.finance.WorkOrderDAO;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -147,9 +149,33 @@ public class ConfigurationCurrencyController extends Controller {
      *            the currency id
      */
     public Result deleteCurrency(Long currencyId) {
-        // TODO not possible when default
-        // TODO not possible when a non-deleted data is associated to it
-        return TODO;
+
+        Currency currency = CurrencyDAO.getCurrencyById(currencyId);
+
+        // not possible to delete the default currency
+        if (currency.isDefault) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        // not possible when a non-deleted data is associated to it
+        if (PurchaseOrderDAO.hasPurchaseOrderLineItemByCurrency(currency.code) || WorkOrderDAO.hasWorkOrderByCurrency(currency.code)) {
+
+            // TODO add: good_receipts,
+            // portfolio_entry_resource_plan_allocated_X
+            // TODO ev. budget_bucket_line, portfolio_entry_budget_line
+
+            Utilities.sendErrorFlashMessage(Msg.get("admin.configuration.reference_data.currency.delete.error.used"));
+            return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+
+        }
+
+        currency.doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.delete.successful"));
+
+        this.getTableProvider().flushFilterConfig();
+
+        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
     }
 
     /**

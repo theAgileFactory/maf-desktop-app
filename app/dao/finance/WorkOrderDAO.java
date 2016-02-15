@@ -100,4 +100,14 @@ public abstract class WorkOrderDAO {
         return WorkOrderDAO.findWorkOrder.where().eq("deleted", false).eq("portfolioEntry.id", portfolioEntryId).isNotNull("resourceObjectType").findList();
     }
 
+    /**
+     * Return true if there is at least one work order for the currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasWorkOrderByCurrency(String currency) {
+        return WorkOrderDAO.findWorkOrder.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
+    }
+
 }

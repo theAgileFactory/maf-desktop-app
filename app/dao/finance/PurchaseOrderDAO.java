@@ -232,6 +232,17 @@ public abstract class PurchaseOrderDAO {
     }
 
     /**
+     * Return true if there is at least one purchase order line item for the
+     * currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasPurchaseOrderLineItemByCurrency(String currency) {
+        return PurchaseOrderDAO.findPurchaseOrderLineItem.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
+    }
+
+    /**
      * Get the line item of a purchase order with filters.
      * 
      * @param purchaseOrderId

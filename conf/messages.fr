@@ -3023,7 +3023,7 @@ admin.configuration.reference_data.currency.manage.title=Gérer une devise
 admin.configuration.reference_data.currency.add.successful=La devise a été ajoutée.
 admin.configuration.reference_data.currency.edit.successful=La devise a été mise à jour.
 admin.configuration.reference_data.currency.delete.successful=La devise a été supprimée.
-admin.configuration.reference_data.currency.delete.error.used=Impossible de supprimer un devis utilisée pour au moins un montant.
+admin.configuration.reference_data.currency.delete.error.used=Impossible de supprimer une devise utilisée pour au moins un montant.
 admin.configuration.reference_data.currency.set_as_default.confirm=En changeant la devise principale, tous les taux de conversion et toutes les données associées à une devises devront être manuellement corrigés? Etes-vous sûr(e) de vouloir continuer?
 admin.configuration.reference_data.currency.set_as_default.successful=La devise est maintenant le devise principale.
 
