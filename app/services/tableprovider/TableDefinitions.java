@@ -10,6 +10,7 @@ import utils.table.AttachmentListView;
 import utils.table.BudgetBucketLineListView;
 import utils.table.BudgetBucketListView;
 import utils.table.CompetencyListView;
+import utils.table.CurrencyListView;
 import utils.table.CustomAttributeItemListView;
 import utils.table.CustomAttributeListView;
 import utils.table.DataSyndicationAgreementLinkListView;
@@ -89,6 +90,7 @@ public class TableDefinitions {
     public BudgetBucketLineListView.TableDefinition budgetBucketLine;
     public BudgetBucketListView.TableDefinition budgetBucket;
     public CompetencyListView.TableDefinition competency;
+    public CurrencyListView.TableDefinition currency;
     public CustomAttributeItemListView.TableDefinition customAttributeItem;
     public CustomAttributeListView.TableDefinition customAttribute;
     public DataSyndicationAgreementLinkListView.TableDefinition dataSyndicationAgreementLink;
@@ -171,6 +173,7 @@ public class TableDefinitions {
         this.budgetBucketLine = new BudgetBucketLineListView.TableDefinition(i18nMessagesService);
         this.budgetBucket = new BudgetBucketListView.TableDefinition(i18nMessagesService);
         this.competency = new CompetencyListView.TableDefinition();
+        this.currency = new CurrencyListView.TableDefinition();
         this.customAttributeItem = new CustomAttributeItemListView.TableDefinition();
         this.customAttribute = new CustomAttributeListView.TableDefinition();
         this.dataSyndicationAgreementLink = new DataSyndicationAgreementLinkListView.TableDefinition();

@@ -85,6 +85,12 @@
         false)
     );
     referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
+        "admin.configuration.reference_data.currencies.title",
+        controllers.admin.routes.ConfigurationCurrencyController.list().url,
+        "fa fa-money",
+        false)
+    );
+    referenceDataSidebar.addSubMenuItem(new ClickableMenuItem(
         "admin.configuration.reference_data.timesheetactivities.title",
         controllers.admin.routes.ConfigurationTimesheetActivityController.list().url,
         "fa fa-clock-o",

@@ -44,10 +44,16 @@ public class ActorTypeListView {
 
         public Table<ActorTypeListView> templateTable;
 
+        /**
+         * Default constructor.
+         */
         public TableDefinition() {
             this.templateTable = getTable();
         }
 
+        /**
+         * Get the table.
+         */
         public Table<ActorTypeListView> getTable() {
             return new Table<ActorTypeListView>() {
                 {
