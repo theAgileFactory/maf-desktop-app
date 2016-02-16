@@ -885,8 +885,10 @@ object.currency.code.error.bad_format=Le code doit contenir exactement 3 lettres
 object.currency.code.error.already_used=Ce code est déjà utilisé par une autre devise.
 object.currency.is_default.label=Principale
 object.currency.conversion_rate.label=Taux de conversion
-object.currency.conversion_rate.help=Le taux de conversion représente le nombre d''unités de la devise pour 1 unité de la devise principale.
+object.currency.conversion_rate.help=Le taux de conversion est le nombre d''unités pour 1 unité dans la devise principale.
 object.currency.symbol.label=Symbole
+object.currency.rate.label=Taux
+object.currency.reload.help=Utiliser le taux de conversion par défaut de la devise.
 
 #----------------------
 # portfolioEntryType

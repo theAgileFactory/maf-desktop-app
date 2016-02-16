@@ -873,8 +873,10 @@ object.currency.code.error.bad_format=The code should contain exactly 3 letters.
 object.currency.code.error.already_used=This code is already used by another currency.
 object.currency.is_default.label=Default
 object.currency.conversion_rate.label=Conversion rate
-object.currency.conversion_rate.help=The conversion rate is the number of unities of the currency for 1 unity of the default currency.
+object.currency.conversion_rate.help=The conversion rate is the  number of unities which represent 1 unity of the default currency.
 object.currency.symbol.label=Symbol
+object.currency.rate.label=Rate
+object.currency.reload.help=Reload the default conversion rate for this currency.
 
 #----------------------
 # portfolioEntryType
