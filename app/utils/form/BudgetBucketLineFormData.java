@@ -49,7 +49,10 @@ public class BudgetBucketLineFormData {
     public boolean isOpex;
 
     @Required
-    public String currency;
+    public String currencyCode;
+
+    @Required
+    public BigDecimal currencyRate;
 
     @Required
     public BigDecimal amount;
@@ -74,7 +77,8 @@ public class BudgetBucketLineFormData {
         this.refId = line.refId;
         this.name = line.name;
         this.isOpex = line.isOpex != null ? line.isOpex : false;
-        this.currency = line.currency != null ? line.currency.code : null;
+        this.currencyCode = line.currency != null ? line.currency.code : null;
+        this.currencyRate = line.currencyRate;
         this.amount = line.amount;
 
     }
@@ -89,7 +93,8 @@ public class BudgetBucketLineFormData {
         line.refId = this.refId;
         line.name = this.name;
         line.isOpex = this.isOpex;
-        line.currency = CurrencyDAO.getCurrencyByCode(this.currency);
+        line.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
+        line.currencyRate = this.currencyRate;
         line.amount = this.amount;
     }
 

@@ -17,8 +17,7 @@
  *@
 @(
     budgetBucket: models.finance.BudgetBucket,
-    lineForm: Form[utils.form.BudgetBucketLineFormData],
-    currencies: framework.utils.ISelectableValueHolderCollection[_]
+    lineForm: Form[utils.form.BudgetBucketLineFormData]
 )
 
 @import helper._
@@ -26,6 +25,7 @@
 @import framework_views.parts
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import views.html.modelsparts._
 
 @templates.main_bc_nosidebar(
     parts.Msg.asString("core.budget_bucket.title"),
@@ -61,10 +61,10 @@
                 @parts.input_text(lineForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.ref_id.label"), 'autofocus -> "autofocus")
                 
                 @parts.input_text(lineForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.name.label"))
+                
+                @currency_field(lineForm("currencyCode"), lineForm("currencyRate"), "object.budget_bucket_line.currency.label", null)
 
                 @parts.input_text(lineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket_line.amount.label"))
-                
-                @parts.dropdownlist(lineForm("currency"), parts.Msg.asString("object.budget_bucket_line.currency.label"), currencies, null, false)
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.core.routes.BudgetBucketController.view(budgetBucket.id)'>@parts.Msg("button.cancel")</a>

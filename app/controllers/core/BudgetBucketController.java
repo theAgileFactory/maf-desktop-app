@@ -29,7 +29,6 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.finance.BudgetBucketDAO;
-import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import framework.highcharts.pattern.BasicBar;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -300,7 +299,7 @@ public class BudgetBucketController extends Controller {
             lineForm = lineFormTemplate.fill(new BudgetBucketLineFormData(budgetBucketLine));
         }
 
-        return ok(views.html.core.budgetbucket.budget_bucket_line_manage.render(budgetBucket, lineForm, CurrencyDAO.getCurrencySelectableAsVH()));
+        return ok(views.html.core.budgetbucket.budget_bucket_line_manage.render(budgetBucket, lineForm));
     }
 
     /**
@@ -318,7 +317,7 @@ public class BudgetBucketController extends Controller {
         BudgetBucket budgetBucket = BudgetBucketDAO.getBudgetBucketById(id);
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.core.budgetbucket.budget_bucket_line_manage.render(budgetBucket, boundForm, CurrencyDAO.getCurrencySelectableAsVH()));
+            return ok(views.html.core.budgetbucket.budget_bucket_line_manage.render(budgetBucket, boundForm));
         }
 
         BudgetBucketLineFormData lineFormData = boundForm.get();
