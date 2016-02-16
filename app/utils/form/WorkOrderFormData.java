@@ -62,7 +62,10 @@ public class WorkOrderFormData {
     public String dueDate;
 
     @Required
-    public String currency;
+    public String currencyCode;
+
+    @Required
+    public BigDecimal currencyRate;
 
     @Required
     public BigDecimal amount;
@@ -121,7 +124,8 @@ public class WorkOrderFormData {
         this.description = workOrder.description;
         this.startDate = workOrder.startDate != null ? Utilities.getDateFormat(null).format(workOrder.startDate) : null;
         this.dueDate = workOrder.dueDate != null ? Utilities.getDateFormat(null).format(workOrder.dueDate) : null;
-        this.currency = workOrder.currency != null ? workOrder.currency.code : null;
+        this.currencyCode = workOrder.currency != null ? workOrder.currency.code : null;
+        this.currencyRate = workOrder.currencyRate;
         this.amount = workOrder.amount;
         this.isOpex = workOrder.isOpex != null ? workOrder.isOpex : false;
         this.shared = workOrder.shared != null ? workOrder.shared : false;
@@ -162,7 +166,8 @@ public class WorkOrderFormData {
             workOrder.dueDate = workOrder.portfolioEntryPlanningPackage.endDate;
         }
 
-        workOrder.currency = CurrencyDAO.getCurrencyByCode(this.currency);
+        workOrder.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
+        workOrder.currencyRate = this.currencyRate;
         workOrder.amount = this.amount;
         workOrder.isOpex = this.isOpex;
         workOrder.shared = this.shared;

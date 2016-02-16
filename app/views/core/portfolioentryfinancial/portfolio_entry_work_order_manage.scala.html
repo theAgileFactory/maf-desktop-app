@@ -19,8 +19,7 @@
     portfolioEntry: models.pmo.PortfolioEntry,
     fromResource: Boolean,
     workOrder: models.finance.WorkOrder,
-    workOrderForm: Form[utils.form.WorkOrderFormData],
-    currencies: framework.utils.ISelectableValueHolderCollection[_]
+    workOrderForm: Form[utils.form.WorkOrderFormData]
 )
 
 @import helper._
@@ -107,13 +106,14 @@
                         @***if not fromResource and (the purchase orders are disable or create case or the work order is not engaged) then display the amount and currency fields***@
                         @if(!fromResource && (!dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin) || workOrder == null || !workOrder.getComputedIsEngaged(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))) {
                         
-                            @parts.input_text(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
-        
-                            @parts.dropdownlist(workOrderForm("currency"), parts.Msg.asString("object.work_order.currency.label"), currencies, null, false)
+                            @currency_field(workOrderForm("currencyCode"), workOrderForm("currencyRate"), "object.work_order.currency.label", null)
                             
+                            @parts.input_text(workOrderForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.work_order.amount.label"))
+
                         } else {
                         
-                            <input type="hidden" id="@workOrderForm("currency").id" data-primitive="true" name="@workOrderForm("currency").name" value="@workOrderForm("currency").value"/>
+                            <input type="hidden" id="@workOrderForm("currencyCode").id" data-primitive="true" name="@workOrderForm("currencyCode").name" value="@workOrderForm("currencyCode").value"/>
+                            <input type="hidden" id="@workOrderForm("currencyRate").id" data-primitive="true" name="@workOrderForm("currencyRate").name" value="@workOrderForm("currencyRate").value"/>
                             <input type="hidden" id="@workOrderForm("amount").id" data-primitive="true" name="@workOrderForm("amount").name" value="@workOrderForm("amount").value"/>
                             
                         }

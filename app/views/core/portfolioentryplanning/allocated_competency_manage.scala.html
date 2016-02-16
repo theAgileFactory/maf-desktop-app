@@ -82,8 +82,6 @@
                         
                         @parts.input_text(allocatedCompetencyForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
-                        <input type="hidden" name="forecastDays" value="0" />
-                        
                         @if(_budgetTrackingService.isActive()) {
                             @parts.input_text(allocatedCompetencyForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
                         } else {

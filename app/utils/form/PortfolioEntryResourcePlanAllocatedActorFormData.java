@@ -183,7 +183,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
                 : null;
         this.isConfirmed = true;
         this.dailyRate = allocatedCompetency.dailyRate;
-        this.forecastDays = allocatedCompetency.forecastDays;
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
 

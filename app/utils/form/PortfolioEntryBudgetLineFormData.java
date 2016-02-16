@@ -52,7 +52,10 @@ public class PortfolioEntryBudgetLineFormData {
     public boolean isOpex;
 
     @Required
-    public String currency;
+    public String currencyCode;
+
+    @Required
+    public BigDecimal currencyRate;
 
     @Required
     public BigDecimal amount;
@@ -79,7 +82,8 @@ public class PortfolioEntryBudgetLineFormData {
         this.refId = budgetLine.refId;
         this.name = budgetLine.name;
         this.isOpex = budgetLine.isOpex != null ? budgetLine.isOpex : false;
-        this.currency = budgetLine.currency != null ? budgetLine.currency.code : null;
+        this.currencyCode = budgetLine.currency != null ? budgetLine.currency.code : null;
+        this.currencyRate = budgetLine.currencyRate;
         this.amount = budgetLine.amount;
         this.budgetBucket = budgetLine.budgetBucket != null ? budgetLine.budgetBucket.id : null;
 
@@ -95,7 +99,8 @@ public class PortfolioEntryBudgetLineFormData {
         budgetLine.refId = this.refId;
         budgetLine.name = this.name;
         budgetLine.isOpex = this.isOpex;
-        budgetLine.currency = CurrencyDAO.getCurrencyByCode(this.currency);
+        budgetLine.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
+        budgetLine.currencyRate = this.currencyRate;
         budgetLine.amount = this.amount;
         budgetLine.budgetBucket = this.budgetBucket != null ? BudgetBucketDAO.getBudgetBucketById(this.budgetBucket) : null;
     }

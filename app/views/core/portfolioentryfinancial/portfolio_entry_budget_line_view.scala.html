@@ -74,6 +74,12 @@
                         <th>@parts.Msg("object.portfolio_entry_budget_line.currency.label")</th>
                         <td>@display_object(budgetLine.currency)</td>
                     </tr>
+                    @if(!budgetLine.currency.isDefault) {
+                        <tr>
+                            <th>@parts.Msg("object.currency.conversion_rate.label")</th>
+                            <td>@display_currency_rate(budgetLine.currencyRate)</td>
+                        </tr>
+                    }
                     <tr>
                         <th>@parts.Msg("object.portfolio_entry_budget_line.amount.label")</th>
                         <td>@display_number(budgetLine.amount)</td>

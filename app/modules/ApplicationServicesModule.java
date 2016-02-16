@@ -292,8 +292,8 @@ public class ApplicationServicesModule extends FrameworkModule {
         MafDataType.add(IMafConstants.PortfolioEntryBudgetLine, "models.finance.PortfolioEntryBudgetLine", true, true,
                 ImmutableMap.<String, String> builder().put("refId", "object.portfolio_entry_budget_line.ref_id.label")
                         .put("name", "object.portfolio_entry_budget_line.name.label").put("isOpex", "object.portfolio_entry_budget_line.is_opex.label")
-                        .put("currency", "object.portfolio_entry_budget_line.currency.label").put("amount", "object.portfolio_entry_budget_line.amount.label")
-                        .build());
+                        .put("currencyCode", "object.portfolio_entry_budget_line.currency.label")
+                        .put("amount", "object.portfolio_entry_budget_line.amount.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryEvent, "models.pmo.PortfolioEntryEvent", false, true,
                 ImmutableMap.<String, String> builder().put("type", "object.portfolio_entry_event.type.label").build());
         MafDataType.add(IMafConstants.PortfolioEntry, "models.pmo.PortfolioEntry", true, true,
@@ -330,7 +330,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         MafDataType.add(IMafConstants.TimesheetActivityAllocatedActor, "models.timesheet.TimesheetActivityAllocatedActor", false, true,
                 ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label").build());
         MafDataType.add(IMafConstants.WorkOrder, "models.finance.WorkOrder", false, true,
-                ImmutableMap.<String, String> builder().put("name", "object.work_order.name.label").put("currency", "object.work_order.currency.label")
+                ImmutableMap.<String, String> builder().put("name", "object.work_order.name.label").put("currencyCode", "object.work_order.currency.label")
                         .put("amount", "object.work_order.amount.label").put("isOpex", "object.work_order.is_opex.label")
                         .put("shared", "object.work_order.shared.label").put("amountReceived", "object.work_order.amount_received.label").build());
         MafDataType.add(IMafConstants.Deliverable, "models.delivery.Deliverable", false, true,

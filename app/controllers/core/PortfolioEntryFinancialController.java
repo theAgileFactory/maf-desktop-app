@@ -31,7 +31,6 @@ import com.avaje.ebean.Ebean;
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
-import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PurchaseOrderDAO;
 import dao.finance.WorkOrderDAO;
@@ -459,8 +458,7 @@ public class PortfolioEntryFinancialController extends Controller {
             this.getCustomAttributeManagerService().fillWithValues(budgetLineForm, PortfolioEntryBudgetLine.class, null);
         }
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, budgetLineForm,
-                CurrencyDAO.getCurrencySelectableAsVH()));
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, budgetLineForm));
     }
 
     /**
@@ -481,8 +479,7 @@ public class PortfolioEntryFinancialController extends Controller {
         boolean fromResource = Boolean.valueOf(boundForm.data().get("fromResource"));
 
         if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryBudgetLine.class)) {
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, boundForm,
-                    CurrencyDAO.getCurrencySelectableAsVH()));
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_manage.render(portfolioEntry, fromResource, boundForm));
         }
 
         PortfolioEntryBudgetLineFormData portfolioEntryBudgetLineFormData = boundForm.get();
@@ -627,8 +624,7 @@ public class PortfolioEntryFinancialController extends Controller {
             this.getCustomAttributeManagerService().fillWithValues(workOrderForm, WorkOrder.class, null);
         }
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, workOrderForm,
-                CurrencyDAO.getCurrencySelectableAsVH()));
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, workOrderForm));
     }
 
     /**
@@ -655,8 +651,7 @@ public class PortfolioEntryFinancialController extends Controller {
         }
 
         if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, WorkOrder.class)) {
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm,
-                    CurrencyDAO.getCurrencySelectableAsVH()));
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm));
         }
 
         WorkOrderFormData workOrderFormData = boundForm.get();
@@ -664,8 +659,7 @@ public class PortfolioEntryFinancialController extends Controller {
         // if given, check the amount received (must be smaller than the amount)
         if (workOrderFormData.amountReceived != null && workOrderFormData.amountReceived.doubleValue() > workOrderFormData.amount.doubleValue() + 0.01) {
             boundForm.reject("amountReceived", Msg.get("object.work_order.amount_received.invalid"));
-            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm,
-                    CurrencyDAO.getCurrencySelectableAsVH()));
+            return ok(views.html.core.portfolioentryfinancial.portfolio_entry_work_order_manage.render(portfolioEntry, fromResource, workOrder, boundForm));
         }
 
         if (workOrderFormData.workOrderId == null) { // create case

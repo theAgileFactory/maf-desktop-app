@@ -90,6 +90,16 @@
                         <td>@display_object(workOrder.description)</td>
                     </tr>
                     <tr>
+                        <th>@parts.Msg("object.work_order.currency.label")</th>
+                        <td>@display_object(workOrder.currency)</td>
+                    </tr>
+                    @if(!workOrder.currency.isDefault) {
+                        <tr>
+                            <th>@parts.Msg("object.currency.conversion_rate.label")</th>
+                            <td>@display_currency_rate(workOrder.currencyRate)</td>
+                        </tr>
+                    }
+                    <tr>
                         <th>@parts.Msg("object.work_order.amount.label")</th>
                         <td>@display_number(workOrder.getComputedAmount(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))</td>
                     </tr>
@@ -99,10 +109,6 @@
                             <td>@display_number(workOrder.getComputedAmountReceived(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)))</td>
                         </tr>
                     }
-                    <tr>
-                        <th>@parts.Msg("object.work_order.currency.label")</th>
-                        <td>@display_object(workOrder.currency)</td>
-                    </tr>
                     <tr>
                         <th>@parts.Msg("object.work_order.portfolio_entry_planning_package.label")</th>
                         <td>@display_portfolio_entry_planning_package(workOrder.portfolioEntryPlanningPackage)</td>

@@ -18,8 +18,7 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     fromResource: Boolean,
-    budgetLineForm: Form[utils.form.PortfolioEntryBudgetLineFormData],
-    currencies: framework.utils.ISelectableValueHolderCollection[_]
+    budgetLineForm: Form[utils.form.PortfolioEntryBudgetLineFormData]
 )
 
 @import helper._
@@ -85,15 +84,18 @@
                         @parts.input_text(budgetLineForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.name.label"))
         
                         @if(!fromResource) {
-                            @parts.input_text(budgetLineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.amount.label"))
-                        } else {
-                            <input type="hidden" name="@budgetLineForm("amount").name" value="@budgetLineForm("amount").value"/>
-                        }
                         
-                        @if(!fromResource) {
-                            @parts.dropdownlist(budgetLineForm("currency"), parts.Msg.asString("object.portfolio_entry_budget_line.currency.label"), currencies, null, false)
+                            @currency_field(budgetLineForm("currencyCode"), budgetLineForm("currencyRate"), "object.portfolio_entry_budget_line.currency.label", null)
+
+                            @parts.input_text(budgetLineForm("amount"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line.amount.label"))
+                       
                         } else {
-                            <input type="hidden" name="@budgetLineForm("currency").name" value="@budgetLineForm("currency").value"/>
+                        
+                            <input type="hidden" name="@budgetLineForm("currencyCode").name" value="@budgetLineForm("currencyCode").value"/>
+                            
+                            <input type="hidden" name="@budgetLineForm("currencyRate").name" value="@budgetLineForm("currencyRate").value"/>
+                        
+                            <input type="hidden" name="@budgetLineForm("amount").name" value="@budgetLineForm("amount").value"/>
                         }
                         
                         @parts.singlevalue_picker(
