@@ -106,6 +106,12 @@
                                 <th>@parts.Msg("object.purchase_order_line_item.currency.label")</th>
                                 <td>@display_object(purchaseOrderLineItem.currency)</td>
                             </tr>
+                            @if(!purchaseOrderLineItem.currency.isDefault) {
+                                <tr>
+                                    <th>@parts.Msg("object.currency.conversion_rate.label")</th>
+                                    <td>@display_currency_rate(purchaseOrderLineItem.currencyRate)</td>
+                                </tr>
+                            }
                             <tr>
                                 <th>@parts.Msg("object.purchase_order_line_item.unit_price.label")</th>
                                 <td>@display_number(purchaseOrderLineItem.unitPrice)</td>

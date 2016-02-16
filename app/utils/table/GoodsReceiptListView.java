@@ -19,9 +19,12 @@ package utils.table;
 
 import java.math.BigDecimal;
 
+import constants.IMafConstants;
+import framework.utils.IColumnFormatter;
 import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
+import models.finance.Currency;
 import models.finance.GoodsReceipt;
 
 /**
@@ -40,6 +43,9 @@ public class GoodsReceiptListView {
 
         public Table<GoodsReceiptListView> templateTable;
 
+        /**
+         * Default constructor.
+         */
         public TableDefinition() {
             this.templateTable = getTable();
         }
@@ -54,6 +60,20 @@ public class GoodsReceiptListView {
 
                     addColumn("refId", "refId", "object.goods_receipt.ref_id.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("refId", new ObjectFormatter<GoodsReceiptListView>());
+
+                    addColumn("currency", "currency", "object.goods_receipt.currency.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("currency", new ObjectFormatter<GoodsReceiptListView>());
+
+                    addColumn("currencyRate", "currencyRate", "object.currency.conversion_rate.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("currencyRate", new IColumnFormatter<GoodsReceiptListView>() {
+                        @Override
+                        public String apply(GoodsReceiptListView goodsReceiptListView, Object value) {
+                            if (!goodsReceiptListView.currency.isDefault) {
+                                return views.html.modelsparts.display_currency_rate.render(goodsReceiptListView.currencyRate).body();
+                            }
+                            return IMafConstants.DEFAULT_VALUE_EMPTY_DATA;
+                        }
+                    });
 
                     addColumn("quantityReceived", "quantityReceived", "object.goods_receipt.quantity_received.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("quantityReceived", new NumberFormatter<GoodsReceiptListView>());
@@ -83,6 +103,10 @@ public class GoodsReceiptListView {
 
     public BigDecimal amountReceived;
 
+    public Currency currency;
+
+    public BigDecimal currencyRate;
+
     /**
      * Construct a list view with a DB entry.
      * 
@@ -96,5 +120,7 @@ public class GoodsReceiptListView {
         this.refId = goodsReceipt.refId;
         this.quantityReceived = goodsReceipt.quantityReceived;
         this.amountReceived = goodsReceipt.amountReceived;
+        this.currency = goodsReceipt.currency;
+        this.currencyRate = goodsReceipt.currencyRate;
     }
 }

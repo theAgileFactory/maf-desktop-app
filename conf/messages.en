@@ -1547,6 +1547,7 @@ object.purchase_order_line_item.table.empty=There is no purchase order line item
 object.goods_receipt.ref_id.label=Ref ID
 object.goods_receipt.quantity_received.label=Quantity received
 object.goods_receipt.amount_received.label=Amount received
+object.goods_receipt.currency.label=Currency
 object.goods_receipt.table.empty=There is no good receipt.
 
 #----------------------

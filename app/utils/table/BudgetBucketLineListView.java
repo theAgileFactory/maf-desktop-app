@@ -48,13 +48,23 @@ public class BudgetBucketLineListView {
 
         public Table<BudgetBucketLineListView> templateTable;
 
+        /**
+         * Default constructor.
+         * 
+         * @param i18nMessagesPlugin
+         *            the i18n messages service
+         */
         public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.templateTable = getTable(i18nMessagesPlugin);
         }
 
         /**
          * Get the table.
+         * 
+         * @param i18nMessagesPlugin
+         *            the i18n messages service
          */
+
         public Table<BudgetBucketLineListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<BudgetBucketLineListView>() {
                 {

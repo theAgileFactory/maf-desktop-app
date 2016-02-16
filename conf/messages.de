@@ -1560,6 +1560,7 @@ object.purchase_order_line_item.table.empty=Keine Einträge
 object.goods_receipt.ref_id.label=ID
 object.goods_receipt.quantity_received.label=Wendet Anteil
 object.goods_receipt.amount_received.label=Wendet Betrag
+object.goods_receipt.currency.label=Währung
 object.goods_receipt.table.empty=Es gibt keine Wareneingang
 
 #----------------------

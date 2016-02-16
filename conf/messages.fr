@@ -1559,6 +1559,7 @@ object.purchase_order_line_item.table.empty=Il n''existe aucun article.
 object.goods_receipt.ref_id.label=Référence
 object.goods_receipt.quantity_received.label=Quantité reçue
 object.goods_receipt.amount_received.label=Montant reçu
+object.goods_receipt.currency.label=Devise
 object.goods_receipt.table.empty=Il n''existe aucune entrée de marchandises.
 
 #----------------------
