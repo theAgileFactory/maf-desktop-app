@@ -41,94 +41,98 @@
     currencyField.id + "_" + rateField.id
 }
 
-<div class="form-group @if(currencyField.hasErrors || rateField.hasErrors) {has-error}">
+@if(currencies.size == 1) {
 
-    <label class="control-label" for="@currencyField.id">@Msg(fieldLabel)@if(isRequired(currencyField) || isRequired(rateField)){&nbsp;<i style="color: red;" class="fa fa-asterisk"></i>}</label>
-    
-    <div class="input-group">
-    
-        <span class="input-group-addon"><span class="fa fa-money"></span></span>
+    <input type="hidden" id="@rateField.id" name="@rateField.name" value="1.0" />
+    <input type="hidden" id="@currencyField.id" name="@currencyField.name" value="@defaultCurrencyCode" />
 
-        <select class="form-control" id="@currencyField.id" name="@currencyField.name">
-            @if(!isRequired(currencyField)){ <option value=""></option> }
-                @for(currency <- currencies) {
-                <option value="@currency.code" @if(currentCurrencyCode.equals(currency.code)){selected="selected"}>
-                  @currency.code
-                  @if(currency.isDefault) {
-                   (@Msg("object.currency.is_default.label"))
-                  }
-                </option>
-              }
-        </select>
+} else {
+
+    <div class="form-group @if(currencyField.hasErrors || rateField.hasErrors) {has-error}">
+    
+        <label class="control-label" for="@currencyField.id">@Msg(fieldLabel)@if(isRequired(currencyField) || isRequired(rateField)){&nbsp;<i style="color: red;" class="fa fa-asterisk"></i>}</label>
         
-        <!-- TODO
-        -display only if more than one active
-         -->
+        <div class="input-group">
+        
+            <span class="input-group-addon"><span class="fa fa-money"></span></span>
+    
+            <select class="form-control" id="@currencyField.id" name="@currencyField.name">
+                @if(!isRequired(currencyField)){ <option value=""></option> }
+                    @for(currency <- currencies) {
+                    <option value="@currency.code" @if(currentCurrencyCode.equals(currency.code)){selected="selected"}>
+                      @currency.code
+                      @if(currency.isDefault) {
+                       (@Msg("object.currency.is_default.label"))
+                      }
+                    </option>
+                  }
+            </select>
 
-        <input class="_@(id)_rate_field_default" style="display: hidden" type="hidden" id="@rateField.id" name="@rateField.name" value="1.0" disabled/>
-
-        <span class="_@(id)_rate_field_not_default _@(id)_tooltip input-group-addon" style="display: hidden" data-toggle="tooltip" title="@Msg("object.currency.conversion_rate.help")">@Msg("object.currency.rate.label")</span>
-        <input class="_@(id)_rate_field_not_default form-control" style="display: hidden" type="text" id="@rateField.id" name="@rateField.name" value="@rateField.value"/>
-        <span class="_@(id)_rate_field_not_default _@(id)_tooltip input-group-addon" style="display: hidden" data-toggle="tooltip" title="@Msg("object.currency.reload.help")"><a id="_@(id)_reloadRate" href="#"><span class="fa fa-refresh"></span></a></span>
-
+            <input class="_@(id)_rate_field_default" style="display: hidden" type="hidden" id="@rateField.id" name="@rateField.name" value="1.0" disabled/>
+    
+            <span class="_@(id)_rate_field_not_default _@(id)_tooltip input-group-addon" style="display: hidden" data-toggle="tooltip" title="@Msg("object.currency.conversion_rate.help")">@Msg("object.currency.rate.label")</span>
+            <input class="_@(id)_rate_field_not_default form-control" style="display: hidden" type="text" id="@rateField.id" name="@rateField.name" value="@rateField.value"/>
+            <span class="_@(id)_rate_field_not_default _@(id)_tooltip input-group-addon" style="display: hidden" data-toggle="tooltip" title="@Msg("object.currency.reload.help")"><a id="_@(id)_reloadRate" href="#"><span class="fa fa-refresh"></span></a></span>
+    
+        </div>
+        
+        <span class="help-block">
+            @if(fieldDescription != null && !fieldDescription.equals("")){
+                @Msg(fieldDescription) <br/>
+            }
+            <strong>@{currencyField.error.map { error => Msg(error.message) }} @{rateField.error.map { error => Msg(error.message) }}</strong>
+        </span>
     </div>
     
-    <span class="help-block">
-        @if(fieldDescription != null && !fieldDescription.equals("")){
-            @Msg(fieldDescription) <br/>
-        }
-        <strong>@{currencyField.error.map { error => Msg(error.message) }} @{rateField.error.map { error => Msg(error.message) }}</strong>
-    </span>
-</div>
-
-<script>
-
-    @if(currentCurrencyCode.equals(defaultCurrencyCode)) {
-        _@(id)_showDefault();
-    } else {
-        _@(id)_showNotDefault();
-    }
-
-    var _@(id)_referenceRates = new Array();
-    @for(currency <- currencies) {
-        _@(id)_referenceRates["@(currency.code)"] = @currency.conversionRate;
-    }
+    <script>
     
-    $("#_@(id)_reloadRate").click(function( event ) {
-        event.preventDefault();
-        _@(id)_reloadRate($("#@(currencyField.id)").val());
-    });
-    
-    $("#@(currencyField.id)").change(function() {
-        var newCurrency = $(this).val();
-        if(newCurrency == "@defaultCurrencyCode") {
+        @if(currentCurrencyCode.equals(defaultCurrencyCode)) {
             _@(id)_showDefault();
         } else {
             _@(id)_showNotDefault();
-            _@(id)_reloadRate(newCurrency);
         }
-    });
-
-    function _@(id)_reloadRate(code) {
-        $('input._@(id)_rate_field_not_default').val(_@(id)_referenceRates[code]);
-    }
     
-    function _@(id)_showDefault() {
-        $("._@(id)_rate_field_not_default").hide();
-        $('input._@(id)_rate_field_not_default').prop('disabled', true);
-
-        $("._@(id)_rate_field_default").show();
-        $('input._@(id)_rate_field_default').removeProp('disabled');
-    }
-    
-    function _@(id)_showNotDefault() {
-        $("._@(id)_rate_field_default").hide();
-        $('input._@(id)_rate_field_default').prop('disabled', true);
-
-        $("._@(id)_rate_field_not_default").show();
-        $('input._@(id)_rate_field_not_default').removeProp('disabled');
+        var _@(id)_referenceRates = new Array();
+        @for(currency <- currencies) {
+            _@(id)_referenceRates["@(currency.code)"] = @currency.conversionRate;
+        }
         
-        $('._@(id)_tooltip').tooltip();
-    }
-</script>
+        $("#_@(id)_reloadRate").click(function( event ) {
+            event.preventDefault();
+            _@(id)_reloadRate($("#@(currencyField.id)").val());
+        });
+        
+        $("#@(currencyField.id)").change(function() {
+            var newCurrency = $(this).val();
+            if(newCurrency == "@defaultCurrencyCode") {
+                _@(id)_showDefault();
+            } else {
+                _@(id)_showNotDefault();
+                _@(id)_reloadRate(newCurrency);
+            }
+        });
+    
+        function _@(id)_reloadRate(code) {
+            $('input._@(id)_rate_field_not_default').val(_@(id)_referenceRates[code]);
+        }
+        
+        function _@(id)_showDefault() {
+            $("._@(id)_rate_field_not_default").hide();
+            $('input._@(id)_rate_field_not_default').prop('disabled', true);
+    
+            $("._@(id)_rate_field_default").show();
+            $('input._@(id)_rate_field_default').removeProp('disabled');
+        }
+        
+        function _@(id)_showNotDefault() {
+            $("._@(id)_rate_field_default").hide();
+            $('input._@(id)_rate_field_default').prop('disabled', true);
+    
+            $("._@(id)_rate_field_not_default").show();
+            $('input._@(id)_rate_field_not_default').removeProp('disabled');
+            
+            $('._@(id)_tooltip').tooltip();
+        }
+    </script>
 
+}
