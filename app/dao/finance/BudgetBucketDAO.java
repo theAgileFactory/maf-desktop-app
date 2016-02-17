@@ -191,4 +191,14 @@ public abstract class BudgetBucketDAO {
         return BudgetBucketDAO.findBudgetBucketLine.where().eq("deleted", false).eq("budgetBucket.id", budgetBucketId).findList();
     }
 
+    /**
+     * Return true if there is at least one budget bucket line for the currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasBudgetBucketLineByCurrency(String currency) {
+        return findBudgetBucketLine.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
+    }
+
 }

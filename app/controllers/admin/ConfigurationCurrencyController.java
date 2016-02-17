@@ -29,7 +29,10 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
+import dao.finance.BudgetBucketDAO;
 import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryBudgetDAO;
+import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.finance.PurchaseOrderDAO;
 import dao.finance.WorkOrderDAO;
 import framework.services.configuration.II18nMessagesPlugin;
@@ -169,11 +172,11 @@ public class ConfigurationCurrencyController extends Controller {
         }
 
         // not possible when a non-deleted data is associated to it
-        if (PurchaseOrderDAO.hasPurchaseOrderLineItemByCurrency(currency.code) || WorkOrderDAO.hasWorkOrderByCurrency(currency.code)) {
-
-            // TODO add: good_receipts,
-            // portfolio_entry_resource_plan_allocated_X
-            // TODO ev. budget_bucket_line, portfolio_entry_budget_line
+        if (PurchaseOrderDAO.hasPurchaseOrderLineItemByCurrency(currency.code) || WorkOrderDAO.hasWorkOrderByCurrency(currency.code)
+                || PurchaseOrderDAO.hasGoodsReceiptByCurrency(currency.code) || PortfolioEntryResourcePlanDAO.hasAllocatedActorByCurrency(currency.code)
+                || PortfolioEntryResourcePlanDAO.hasAllocatedCompetencyByCurrency(currency.code)
+                || PortfolioEntryResourcePlanDAO.hasAllocatedOrgUnitByCurrency(currency.code) || BudgetBucketDAO.hasBudgetBucketLineByCurrency(currency.code)
+                || PortfolioEntryBudgetDAO.hasPEBudgetLineByCurrency(currency.code)) {
 
             Utilities.sendErrorFlashMessage(Msg.get("admin.configuration.reference_data.currency.delete.error.used"));
             return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());

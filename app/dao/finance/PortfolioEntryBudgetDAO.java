@@ -214,4 +214,15 @@ public abstract class PortfolioEntryBudgetDAO {
                 .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
                 .eq("portfolioEntryBudget.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false).findList();
     }
+
+    /**
+     * Return true if there is at least one portfolio entry budget line for the
+     * currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasPEBudgetLineByCurrency(String currency) {
+        return findPortfolioEntryBudgetLine.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
+    }
 }

@@ -21,6 +21,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
+
+import framework.utils.Pagination;
 import models.finance.PortfolioEntryResourcePlan;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
@@ -30,16 +39,6 @@ import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.sql.TotalDays;
 import play.Play;
-import com.avaje.ebean.Model.Finder;
-
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Query;
-import com.avaje.ebean.RawSql;
-import com.avaje.ebean.RawSqlBuilder;
-
-import framework.utils.Pagination;
 
 /**
  * DAO for the {@link PortfolioEntryResourcePlan},
@@ -76,25 +75,22 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
         BigDecimal totalDays = BigDecimal.ZERO;
 
-        String sql1 =
-                "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
-                        + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlanId + "'";
+        String sql1 = "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
+                + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlanId + "'";
         BigDecimal totalDaysActor = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql1).create()).findUnique().totalDays;
         if (totalDaysActor != null) {
             totalDays = totalDays.add(totalDaysActor);
         }
 
-        String sql2 =
-                "SELECT SUM(perpaou.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaou WHERE perpaou.deleted = 0 "
-                        + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlanId + "'";
+        String sql2 = "SELECT SUM(perpaou.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaou WHERE perpaou.deleted = 0 "
+                + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlanId + "'";
         BigDecimal totalDaysOrgUnit = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql2).create()).findUnique().totalDays;
         if (totalDaysOrgUnit != null) {
             totalDays = totalDays.add(totalDaysOrgUnit);
         }
 
-        String sql3 =
-                "SELECT SUM(perpac.days) as totalDays FROM portfolio_entry_resource_plan_allocated_competency perpac WHERE perpac.deleted = 0 "
-                        + "AND perpac.portfolio_entry_resource_plan_id = '" + resourcePlanId + "'";
+        String sql3 = "SELECT SUM(perpac.days) as totalDays FROM portfolio_entry_resource_plan_allocated_competency perpac WHERE perpac.deleted = 0 "
+                + "AND perpac.portfolio_entry_resource_plan_id = '" + resourcePlanId + "'";
         BigDecimal totalDaysCompetency = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql3).create()).findUnique().totalDays;
         if (totalDaysCompetency != null) {
             totalDays = totalDays.add(totalDaysCompetency);
@@ -124,8 +120,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            is in the future
      */
     public static Pagination<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsPaginationByActorAndActive(Long actorId, boolean activeOnly) {
-        return new Pagination<>(getPEPlanAllocatedActorAsExprByActorAndActive(actorId, activeOnly), 5, Play.application().configuration()
-                .getInt("maf.number_page_links"));
+        return new Pagination<>(getPEPlanAllocatedActorAsExprByActorAndActive(actorId, activeOnly), 5,
+                Play.application().configuration().getInt("maf.number_page_links"));
     }
 
     /**
@@ -153,14 +149,14 @@ public abstract class PortfolioEntryResourcePlanDAO {
      */
     public static ExpressionList<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsExprByActorAndActive(Long actorId, boolean activeOnly) {
 
-        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.orderBy("endDate").where().eq("deleted", false).eq("actor.id", actorId)
-                        .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.orderBy("endDate")
+                .where().eq("deleted", false).eq("actor.id", actorId).eq("portfolioEntryResourcePlan.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
@@ -193,18 +189,17 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            if true, it returns only the allocation for which the end date
      *            is in the future
      */
-    public static ExpressionList<PortfolioEntryResourcePlanAllocatedActor>
-            getPEPlanAllocatedActorAsExprByOrgUnitAndActive(Long orgUnitId, boolean activeOnly) {
+    public static ExpressionList<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsExprByOrgUnitAndActive(Long orgUnitId,
+            boolean activeOnly) {
 
-        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where().eq("deleted", false).eq("actor.isActive", true)
-                        .eq("actor.deleted", false).eq("actor.orgUnit.id", orgUnitId).eq("portfolioEntryResourcePlan.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where()
+                .eq("deleted", false).eq("actor.isActive", true).eq("actor.deleted", false).eq("actor.orgUnit.id", orgUnitId)
+                .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
@@ -239,15 +234,14 @@ public abstract class PortfolioEntryResourcePlanDAO {
      */
     public static ExpressionList<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsExprByManager(Long actorId, boolean activeOnly) {
 
-        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where().eq("deleted", false).eq("actor.isActive", true)
-                        .eq("actor.deleted", false).eq("actor.manager.id", actorId).eq("portfolioEntryResourcePlan.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where()
+                .eq("deleted", false).eq("actor.isActive", true).eq("actor.deleted", false).eq("actor.manager.id", actorId)
+                .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
@@ -275,14 +269,13 @@ public abstract class PortfolioEntryResourcePlanDAO {
      */
     public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByPE(Long portfolioEntryId, Date start, Date end,
             boolean onlyConfirmed, Long orgUnitId, Long competencyId) {
-        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> exprAllocatedActors =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate")
-                        .le("startDate", end).ge("endDate", start).eq("portfolioEntryResourcePlan.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> exprAllocatedActors = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where()
+                .eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end).ge("endDate", start)
+                .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
             exprAllocatedActors = exprAllocatedActors.eq("isConfirmed", true);
         }
@@ -310,10 +303,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
         // get the resource plan
         PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-        String sql =
-                "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
-                        + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaa.portfolio_entry_planning_package_id = '"
-                        + planningPackage.id + "'";
+        String sql = "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
+                + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaa.portfolio_entry_planning_package_id = '"
+                + planningPackage.id + "'";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -346,9 +338,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
         // get the resource plan
         PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-        String sql =
-                "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
-                        + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "'";
+        String sql = "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
+                + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "'";
 
         if (isConfirmed != null) {
             if (isConfirmed) {
@@ -379,14 +370,24 @@ public abstract class PortfolioEntryResourcePlanDAO {
      **/
     public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByPE(Long portfolioEntryId) {
 
-        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> exprAllocatedActors =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where().eq("deleted", false).eq("portfolioEntryResourcePlan.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> exprAllocatedActors = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where()
+                .eq("deleted", false).eq("portfolioEntryResourcePlan.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         return exprAllocatedActors.findList();
+    }
+
+    /**
+     * Return true if there is at least one allocated actor for the currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasAllocatedActorByCurrency(String currency) {
+        return findPEResourcePlanAllocatedActor.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
     }
 
     /**
@@ -426,14 +427,13 @@ public abstract class PortfolioEntryResourcePlanDAO {
      */
     public static List<PortfolioEntryResourcePlanAllocatedCompetency> getPEPlanAllocatedCompetencyAsListByPE(Long portfolioEntryId, Date start, Date end,
             boolean onlyConfirmed, Long competencyId) {
-        ExpressionList<PortfolioEntryResourcePlanAllocatedCompetency> exprAllocatedCompetencies =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedCompetency.where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate")
-                        .le("startDate", end).ge("endDate", start).eq("portfolioEntryResourcePlan.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedCompetency> exprAllocatedCompetencies = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedCompetency
+                .where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end).ge("endDate", start)
+                .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
             exprAllocatedCompetencies = exprAllocatedCompetencies.eq("isConfirmed", true);
         }
@@ -458,10 +458,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
         // get the resource plan
         PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-        String sql =
-                "SELECT SUM(perpac.days) as totalDays FROM portfolio_entry_resource_plan_allocated_competency perpac WHERE perpac.deleted = 0 "
-                        + "AND perpac.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpac.portfolio_entry_planning_package_id = '"
-                        + planningPackage.id + "'";
+        String sql = "SELECT SUM(perpac.days) as totalDays FROM portfolio_entry_resource_plan_allocated_competency perpac WHERE perpac.deleted = 0 "
+                + "AND perpac.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpac.portfolio_entry_planning_package_id = '"
+                + planningPackage.id + "'";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -494,9 +493,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
         // get the resource plan
         PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-        String sql =
-                "SELECT SUM(perpac.days) as totalDays FROM portfolio_entry_resource_plan_allocated_competency perpac WHERE perpac.deleted = 0 "
-                        + "AND perpac.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "'";
+        String sql = "SELECT SUM(perpac.days) as totalDays FROM portfolio_entry_resource_plan_allocated_competency perpac WHERE perpac.deleted = 0 "
+                + "AND perpac.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "'";
 
         if (isConfirmed != null) {
             if (isConfirmed) {
@@ -526,15 +524,26 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            the portfolio entry id
      **/
     public static List<PortfolioEntryResourcePlanAllocatedCompetency> getPEResourcePlanAllocatedCompetencyAsListByPE(Long portfolioEntryId) {
-        ExpressionList<PortfolioEntryResourcePlanAllocatedCompetency> exprAllocatedCompetencies =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedCompetency.where().eq("deleted", false)
-                        .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedCompetency> exprAllocatedCompetencies = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedCompetency
+                .where().eq("deleted", false).eq("portfolioEntryResourcePlan.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
 
         return exprAllocatedCompetencies.findList();
+    }
+
+    /**
+     * Return true if there is at least one allocated competency for the
+     * currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasAllocatedCompetencyByCurrency(String currency) {
+        return findPEResourcePlanAllocatedCompetency.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
     }
 
     /**
@@ -569,8 +578,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
      */
     public static Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsPaginationByOrgUnit(Long orgUnitId,
             boolean activeOnly) {
-        return new Pagination<>(getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly), 5, Play.application().configuration()
-                .getInt("maf.number_page_links"));
+        return new Pagination<>(getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly), 5,
+                Play.application().configuration().getInt("maf.number_page_links"));
     }
 
     /**
@@ -599,14 +608,14 @@ public abstract class PortfolioEntryResourcePlanDAO {
     public static ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(Long orgUnitId,
             boolean activeOnly) {
 
-        ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expr =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit.orderBy("endDate").where().eq("deleted", false).eq("orgUnit.id", orgUnitId)
-                        .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expr = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit.orderBy("endDate")
+                .where().eq("deleted", false).eq("orgUnit.id", orgUnitId).eq("portfolioEntryResourcePlan.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
 
         if (activeOnly) {
             expr = expr.disjunction().isNull("endDate").gt("endDate", new Date());
@@ -632,14 +641,13 @@ public abstract class PortfolioEntryResourcePlanDAO {
      */
     public static List<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsListByPE(Long portfolioEntryId, Date start, Date end,
             boolean onlyConfirmed, Long orgUnitId) {
-        ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> exprAllocatedOrgUnits =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit.where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate")
-                        .le("startDate", end).ge("endDate", start).eq("portfolioEntryResourcePlan.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> exprAllocatedOrgUnits = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit
+                .where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end).ge("endDate", start)
+                .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
             exprAllocatedOrgUnits = exprAllocatedOrgUnits.eq("isConfirmed", true);
         }
@@ -664,10 +672,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
         // get the resource plan
         PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-        String sql =
-                "SELECT SUM(perpaoo.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaoo WHERE perpaoo.deleted = 0 "
-                        + "AND perpaoo.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaoo.portfolio_entry_planning_package_id = '"
-                        + planningPackage.id + "'";
+        String sql = "SELECT SUM(perpaoo.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaoo WHERE perpaoo.deleted = 0 "
+                + "AND perpaoo.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaoo.portfolio_entry_planning_package_id = '"
+                + planningPackage.id + "'";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 
@@ -700,9 +707,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
         // get the resource plan
         PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
 
-        String sql =
-                "SELECT SUM(perpaou.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaou WHERE perpaou.deleted = 0 "
-                        + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "'";
+        String sql = "SELECT SUM(perpaou.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaou WHERE perpaou.deleted = 0 "
+                + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "'";
 
         if (isConfirmed != null) {
             if (isConfirmed) {
@@ -733,15 +739,25 @@ public abstract class PortfolioEntryResourcePlanDAO {
      **/
     public static List<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsListByPE(Long portfolioEntryId) {
 
-        ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> exprAllocatedOrgUnits =
-                PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit.where().eq("deleted", false).eq("portfolioEntryResourcePlan.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                        .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
+        ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> exprAllocatedOrgUnits = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit
+                .where().eq("deleted", false).eq("portfolioEntryResourcePlan.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
 
         return exprAllocatedOrgUnits.findList();
+    }
+
+    /**
+     * Return true if there is at least one allocated org unit for the currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasAllocatedOrgUnitByCurrency(String currency) {
+        return findPEResourcePlanAllocatedOrgUnit.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
     }
 
 }

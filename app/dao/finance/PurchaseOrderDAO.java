@@ -27,6 +27,7 @@ import com.avaje.ebean.Model.Finder;
 import constants.IMafConstants;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolderCollection;
+import models.finance.GoodsReceipt;
 import models.finance.PurchaseOrder;
 import models.finance.PurchaseOrderLineItem;
 import models.finance.PurchaseOrderLineShipmentStatusType;
@@ -39,14 +40,9 @@ import models.finance.PurchaseOrderLineShipmentStatusType;
  */
 public abstract class PurchaseOrderDAO {
 
-    /**
-     * Default finder for the entity class.
-     */
     public static Finder<Long, PurchaseOrder> findPurchaseOrder = new Finder<>(PurchaseOrder.class);
-    /**
-     * Default finder for the entity class.
-     */
     public static Finder<Long, PurchaseOrderLineItem> findPurchaseOrderLineItem = new Finder<>(PurchaseOrderLineItem.class);
+    public static Finder<Long, GoodsReceipt> findGoodsReceipt = new Finder<>(GoodsReceipt.class);
 
     /**
      * Default constructor.
@@ -260,6 +256,16 @@ public abstract class PurchaseOrderDAO {
         }
 
         return e.findList();
+    }
+
+    /**
+     * Return true if there is at least one goods receipt for the currency.
+     * 
+     * @param currency
+     *            the currency code
+     */
+    public static boolean hasGoodsReceiptByCurrency(String currency) {
+        return findGoodsReceipt.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
     }
 
 }
