@@ -624,8 +624,10 @@ public class ActorController extends Controller {
         columnsToHide.add("followPackageDates");
         columnsToHide.add("actor");
         if (!getBudgetTrackingService().isActive()) {
-            columnsToHide.add("forecastDays");
+            columnsToHide.add("currency");
             columnsToHide.add("dailyRate");
+            columnsToHide.add("forecastDays");
+            columnsToHide.add("forecastDailyRate");
         }
 
         Table<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryTable = this.getTableProvider()

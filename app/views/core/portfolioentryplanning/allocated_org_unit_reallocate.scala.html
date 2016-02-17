@@ -83,13 +83,20 @@
                             dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id)
                         )
                         
+                        @if(_budgetTrackingService.isActive()) {
+                            @currency_field(allocatedActorForm("currencyCode"), allocatedActorForm("currencyRate"), "object.allocated_resource.currency.label", null)
+                        } else {
+                            <input type="hidden" name="@allocatedActorForm("currencyCode").name" value="@dao.finance.CurrencyDAO.getCurrencyDefaultAsCode()"/>
+                            <input type="hidden" name="@allocatedActorForm("currencyRate").name" value="1"/>
+                        }
+                        
                         @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
                         @if(_budgetTrackingService.isActive()) {
-                            @parts.input_text(allocatedActorForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
                             @parts.input_text(allocatedActorForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
+                            @parts.input_text(allocatedActorForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
+                            @parts.input_text(allocatedActorForm("forecastDailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.help"))
                         } else {
-                            <input type="hidden" name="forecastDays" value="0" />
                             <input type="hidden" name="dailyRate" value="0" />
                         }
                         

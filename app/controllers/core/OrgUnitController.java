@@ -472,8 +472,10 @@ public class OrgUnitController extends Controller {
         columnsToHide.add("followPackageDates");
         columnsToHide.add("orgUnit");
         if (!getBudgetTrackingService().isActive()) {
-            columnsToHide.add("forecastDays");
+            columnsToHide.add("currency");
             columnsToHide.add("dailyRate");
+            columnsToHide.add("forecastDays");
+            columnsToHide.add("forecastDailyRate");
         }
 
         Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> portfolioEntryTable = this.getTableProvider()
@@ -767,8 +769,10 @@ public class OrgUnitController extends Controller {
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
-        columnsToHide.add("forecastDays");
+        columnsToHide.add("currency");
         columnsToHide.add("dailyRate");
+        columnsToHide.add("forecastDays");
+        columnsToHide.add("forecastDailyRate");
 
         Table<PortfolioEntryResourcePlanAllocatedActorListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.templateTable
                 .fillForFilterConfig(listView, columnsToHide);

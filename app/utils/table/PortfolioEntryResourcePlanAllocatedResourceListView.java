@@ -29,6 +29,7 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
@@ -108,14 +109,21 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
                     addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
 
+                    addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("currency", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
+
                     addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
+
+                    addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
 
                     addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("forecastDays", new NumberFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
 
-                    addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
+                    addColumn("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
 
                     addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
                     setColumnCssClass("planningPackage", IMafConstants.BOOTSTRAP_COLUMN_2);
@@ -235,11 +243,15 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
     public OrgUnit orgUnit;
     public Competency competency;
 
+    public Currency currency;
+
     public BigDecimal days;
+
+    public BigDecimal dailyRate;
 
     public BigDecimal forecastDays;
 
-    public BigDecimal dailyRate;
+    public BigDecimal forecastDailyRate;
 
     public String date;
 
@@ -261,13 +273,16 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
         this.portfolioEntryId = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.portfolioEntryName = PortfolioEntryDao.getPEById(this.portfolioEntryId).getName();
         this.actor = allocatedActor.actor;
-        this.days = allocatedActor.days;
         this.date = allocatedActor.getDisplayDate();
         this.planningPackage = allocatedActor.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedActor.isConfirmed;
         this.followPackageDates = allocatedActor.followPackageDates;
-        this.forecastDays = allocatedActor.forecastDays;
+
+        this.currency = allocatedActor.currency;
+        this.days = allocatedActor.days;
         this.dailyRate = allocatedActor.dailyRate;
+        this.forecastDays = allocatedActor.forecastDays != null ? allocatedActor.forecastDays : allocatedActor.days;
+        this.forecastDailyRate = allocatedActor.forecastDailyRate != null ? allocatedActor.forecastDailyRate : allocatedActor.dailyRate;
     }
 
     /**
@@ -282,13 +297,16 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
         this.portfolioEntryId = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.portfolioEntryName = PortfolioEntryDao.getPEById(this.portfolioEntryId).getName();
         this.orgUnit = allocatedOrgUnit.orgUnit;
-        this.days = allocatedOrgUnit.days;
         this.date = allocatedOrgUnit.getDisplayDate();
         this.planningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedOrgUnit.isConfirmed;
         this.followPackageDates = allocatedOrgUnit.followPackageDates;
-        this.forecastDays = allocatedOrgUnit.forecastDays;
+
+        this.currency = allocatedOrgUnit.currency;
+        this.days = allocatedOrgUnit.days;
         this.dailyRate = allocatedOrgUnit.dailyRate;
+        this.forecastDays = allocatedOrgUnit.forecastDays != null ? allocatedOrgUnit.forecastDays : allocatedOrgUnit.days;
+        this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate != null ? allocatedOrgUnit.forecastDailyRate : allocatedOrgUnit.dailyRate;
     }
 
     /**
@@ -303,13 +321,16 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
         this.portfolioEntryId = allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.portfolioEntryName = PortfolioEntryDao.getPEById(this.portfolioEntryId).getName();
         this.competency = allocatedCompetency.competency;
-        this.days = allocatedCompetency.days;
         this.date = allocatedCompetency.getDisplayDate();
         this.planningPackage = allocatedCompetency.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedCompetency.isConfirmed;
         this.followPackageDates = allocatedCompetency.followPackageDates;
-        this.forecastDays = null;
+
+        this.currency = allocatedCompetency.currency;
+        this.days = allocatedCompetency.days;
         this.dailyRate = allocatedCompetency.dailyRate;
+        this.forecastDays = null;
+        this.forecastDailyRate = null;
     }
 
     /**

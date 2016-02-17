@@ -190,8 +190,10 @@ public class PortfolioEntryGovernanceController extends Controller {
         Set<String> columnsToHideForResource = new HashSet<>();
         columnsToHideForResource.add("portfolioEntryName");
         columnsToHideForResource.add("planningPackage");
-        columnsToHideForResource.add("forecastDays");
+        columnsToHideForResource.add("currency");
         columnsToHideForResource.add("dailyRate");
+        columnsToHideForResource.add("forecastDays");
+        columnsToHideForResource.add("forecastDailyRate");
         columnsToHideForResource.add("reallocate");
         columnsToHideForResource.add("editActionLink");
         columnsToHideForResource.add("removeActionLink");

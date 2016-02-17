@@ -35,6 +35,7 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntryPlanningPackage;
@@ -59,6 +60,9 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
         /**
          * Default constructor.
+         * 
+         * @param i18nMessagesPlugin
+         *            the i18n messages service
          */
         public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.filterConfig = getFilterConfig();
@@ -107,6 +111,9 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
         /**
          * Get the table.
+         * 
+         * @param i18nMessagesPlugin
+         *            the i18n messages service
          */
         public Table<PortfolioEntryResourcePlanAllocatedActorListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryResourcePlanAllocatedActorListView>() {
@@ -125,14 +132,21 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                     addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
 
+                    addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("currency", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+
                     addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+
+                    addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
 
                     addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("forecastDays", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
 
-                    addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    addColumn("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
 
                     addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("planningPackage", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
@@ -211,11 +225,15 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
     public Actor actor;
 
+    public Currency currency;
+
     public BigDecimal days;
+
+    public BigDecimal dailyRate;
 
     public BigDecimal forecastDays;
 
-    public BigDecimal dailyRate;
+    public BigDecimal forecastDailyRate;
 
     public Date startDate;
 
@@ -238,14 +256,18 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
         this.portfolioEntryId = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.portfolioEntryName = PortfolioEntryDao.getPEById(this.portfolioEntryId).getName();
         this.actor = allocatedActor.actor;
-        this.days = allocatedActor.days;
         this.startDate = allocatedActor.startDate;
         this.endDate = allocatedActor.endDate;
         this.planningPackage = allocatedActor.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedActor.isConfirmed;
         this.followPackageDates = allocatedActor.followPackageDates;
-        this.forecastDays = allocatedActor.forecastDays;
+
+        this.currency = allocatedActor.currency;
+        this.days = allocatedActor.days;
         this.dailyRate = allocatedActor.dailyRate;
+        this.forecastDays = allocatedActor.forecastDays != null ? allocatedActor.forecastDays : allocatedActor.days;
+        this.forecastDailyRate = allocatedActor.forecastDailyRate != null ? allocatedActor.forecastDailyRate : allocatedActor.dailyRate;
+
     }
 
 }

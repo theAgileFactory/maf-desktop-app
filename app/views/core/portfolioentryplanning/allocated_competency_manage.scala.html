@@ -80,6 +80,13 @@
                             false
                         )
                         
+                        @if(_budgetTrackingService.isActive()) {
+                            @currency_field(allocatedCompetencyForm("currencyCode"), allocatedCompetencyForm("currencyRate"), "object.allocated_resource.currency.label", null)
+                        } else {
+                            <input type="hidden" name="@allocatedCompetencyForm("currencyCode").name" value="@dao.finance.CurrencyDAO.getCurrencyDefaultAsCode()"/>
+                            <input type="hidden" name="@allocatedCompetencyForm("currencyRate").name" value="1"/>
+                        }
+                        
                         @parts.input_text(allocatedCompetencyForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
                         @if(_budgetTrackingService.isActive()) {

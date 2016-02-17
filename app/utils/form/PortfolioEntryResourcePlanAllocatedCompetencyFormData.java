@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.finance.CurrencyDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
@@ -48,9 +49,6 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
     @Required
     public Long competency;
 
-    @Required
-    public BigDecimal days;
-
     public String startDate;
 
     public String endDate;
@@ -60,6 +58,15 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
     public boolean isConfirmed;
 
     public boolean followPackageDates;
+
+    @Required
+    public String currencyCode;
+
+    @Required
+    public BigDecimal currencyRate;
+
+    @Required
+    public BigDecimal days;
 
     @Required
     public BigDecimal dailyRate;
@@ -112,13 +119,17 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
         this.allocatedCompetencyId = allocatedCompetency.id;
 
         this.competency = allocatedCompetency.competency.id;
-        this.days = allocatedCompetency.days;
         this.startDate = allocatedCompetency.startDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.startDate) : null;
         this.endDate = allocatedCompetency.endDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id
                 : null;
 
         this.isConfirmed = allocatedCompetency.isConfirmed;
+
+        this.currencyCode = allocatedCompetency.currency != null ? allocatedCompetency.currency.code : null;
+        this.currencyRate = allocatedCompetency.currencyRate;
+
+        this.days = allocatedCompetency.days;
         this.dailyRate = allocatedCompetency.dailyRate;
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
@@ -134,7 +145,6 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
     public void fill(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency) {
 
         allocatedCompetency.competency = ActorDao.getCompetencyById(this.competency);
-        allocatedCompetency.days = this.days;
 
         allocatedCompetency.portfolioEntryPlanningPackage = this.portfolioEntryPlanningPackage != null
                 ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(this.portfolioEntryPlanningPackage) : null;
@@ -159,6 +169,11 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
         }
 
         allocatedCompetency.isConfirmed = this.isConfirmed;
+
+        allocatedCompetency.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
+        allocatedCompetency.currencyRate = this.currencyRate;
+
+        allocatedCompetency.days = this.days;
         allocatedCompetency.dailyRate = this.dailyRate;
 
     }

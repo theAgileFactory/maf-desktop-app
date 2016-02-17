@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.finance.CurrencyDAO;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
@@ -48,9 +49,6 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
     @Required
     public Long orgUnit;
 
-    @Required
-    public BigDecimal days;
-
     public String startDate;
 
     public String endDate;
@@ -62,10 +60,20 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
     public boolean followPackageDates;
 
     @Required
-    public BigDecimal dailyRate;
+    public String currencyCode;
 
     @Required
+    public BigDecimal currencyRate;
+
+    @Required
+    public BigDecimal days;
+
+    @Required
+    public BigDecimal dailyRate;
+
     public BigDecimal forecastDays;
+
+    public BigDecimal forecastDailyRate;
 
     /**
      * Validate the dates.
@@ -115,15 +123,20 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
         this.allocatedOrgUnitId = allocatedOrgUnit.id;
 
         this.orgUnit = allocatedOrgUnit.orgUnit.id;
-        this.days = allocatedOrgUnit.days;
         this.startDate = allocatedOrgUnit.startDate != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.startDate) : null;
         this.endDate = allocatedOrgUnit.endDate != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id
                 : null;
 
         this.isConfirmed = allocatedOrgUnit.isConfirmed;
+
+        this.currencyCode = allocatedOrgUnit.currency != null ? allocatedOrgUnit.currency.code : null;
+        this.currencyRate = allocatedOrgUnit.currencyRate;
+
+        this.days = allocatedOrgUnit.days;
         this.dailyRate = allocatedOrgUnit.dailyRate;
         this.forecastDays = allocatedOrgUnit.forecastDays;
+        this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate;
 
         this.followPackageDates = allocatedOrgUnit.followPackageDates != null ? allocatedOrgUnit.followPackageDates : false;
 
@@ -138,7 +151,6 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
     public void fill(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
 
         allocatedOrgUnit.orgUnit = OrgUnitDao.getOrgUnitById(this.orgUnit);
-        allocatedOrgUnit.days = this.days;
 
         allocatedOrgUnit.portfolioEntryPlanningPackage = this.portfolioEntryPlanningPackage != null
                 ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(this.portfolioEntryPlanningPackage) : null;
@@ -163,8 +175,14 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
         }
 
         allocatedOrgUnit.isConfirmed = this.isConfirmed;
+
+        allocatedOrgUnit.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
+        allocatedOrgUnit.currencyRate = this.currencyRate;
+
+        allocatedOrgUnit.days = this.days;
         allocatedOrgUnit.dailyRate = this.dailyRate;
         allocatedOrgUnit.forecastDays = this.forecastDays;
+        allocatedOrgUnit.forecastDailyRate = this.forecastDailyRate;
 
     }
 }

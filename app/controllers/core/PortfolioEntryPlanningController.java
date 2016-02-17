@@ -1246,8 +1246,10 @@ public class PortfolioEntryPlanningController extends Controller {
             hideColumnsForResourcePlanTable.add("reallocate");
         }
         if (!getBudgetTrackingService().isActive()) {
-            hideColumnsForResourcePlanTable.add("forecastDays");
+            hideColumnsForResourcePlanTable.add("currency");
             hideColumnsForResourcePlanTable.add("dailyRate");
+            hideColumnsForResourcePlanTable.add("forecastDays");
+            hideColumnsForResourcePlanTable.add("forecastDailyRate");
         }
 
         // get or create the resource plan
@@ -1919,6 +1921,7 @@ public class PortfolioEntryPlanningController extends Controller {
         // restore the initial allocated org unit with the days
         allocatedOrgUnit.deleted = false;
         allocatedOrgUnit.days = new BigDecimal(days);
+        allocatedOrgUnit.forecastDays = null;
         allocatedOrgUnit.save();
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.reallocate.report_balance.successful"));

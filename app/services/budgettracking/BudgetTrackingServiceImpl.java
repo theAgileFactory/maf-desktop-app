@@ -15,12 +15,12 @@ import org.apache.commons.collections.keyvalue.MultiKey;
 import org.apache.commons.lang3.tuple.Pair;
 
 import constants.IMafConstants;
-import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import dao.finance.PurchaseOrderDAO;
 import dao.finance.WorkOrderDAO;
 import dao.timesheet.TimesheetDao;
 import framework.services.account.IPreferenceManagerPlugin;
+import models.finance.Currency;
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
@@ -105,9 +105,10 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             BigDecimal budgetAmount = allocatedActor.dailyRate.multiply(allocatedActor.days);
             Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedActor(allocatedActor, timesheetMap);
 
-            genetateBudgetAndForecastFromResource(planning, allocatedActor.id, PortfolioEntryResourcePlanAllocatedActor.class.getName(),
+            generateBudgetAndForecastFromResource(planning, allocatedActor.id, PortfolioEntryResourcePlanAllocatedActor.class.getName(),
                     allocatedActor.actor.getName(), allocatedActor.followPackageDates, allocatedActor.portfolioEntryPlanningPackage, allocatedActor.startDate,
-                    allocatedActor.endDate, budgetAmount, forecast.getLeft(), forecast.getRight(), budgetsAsMap, workOrdersAsMap);
+                    allocatedActor.endDate, allocatedActor.currency, allocatedActor.currencyRate, budgetAmount, forecast.getLeft(), forecast.getRight(),
+                    budgetsAsMap, workOrdersAsMap);
 
         }
 
@@ -118,10 +119,10 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             BigDecimal budgetAmount = allocatedOrgUnit.dailyRate.multiply(allocatedOrgUnit.days);
             Pair<BigDecimal, BigDecimal> forecast = getForecastFromAllocatedOrgUnit(allocatedOrgUnit, timesheetMap);
 
-            genetateBudgetAndForecastFromResource(planning, allocatedOrgUnit.id, PortfolioEntryResourcePlanAllocatedOrgUnit.class.getName(),
+            generateBudgetAndForecastFromResource(planning, allocatedOrgUnit.id, PortfolioEntryResourcePlanAllocatedOrgUnit.class.getName(),
                     allocatedOrgUnit.orgUnit.getName(), allocatedOrgUnit.followPackageDates, allocatedOrgUnit.portfolioEntryPlanningPackage,
-                    allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, budgetAmount, forecast.getLeft(), forecast.getRight(), budgetsAsMap,
-                    workOrdersAsMap);
+                    allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, allocatedOrgUnit.currency, allocatedOrgUnit.currencyRate, budgetAmount,
+                    forecast.getLeft(), forecast.getRight(), budgetsAsMap, workOrdersAsMap);
 
         }
 
@@ -132,9 +133,10 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             // compute the budget
             BigDecimal budgetAmount = allocatedCompetency.dailyRate.multiply(allocatedCompetency.days);
 
-            genetateBudgetAndForecastFromResource(planning, allocatedCompetency.id, PortfolioEntryResourcePlanAllocatedCompetency.class.getName(),
+            generateBudgetAndForecastFromResource(planning, allocatedCompetency.id, PortfolioEntryResourcePlanAllocatedCompetency.class.getName(),
                     allocatedCompetency.competency.getName(), allocatedCompetency.followPackageDates, allocatedCompetency.portfolioEntryPlanningPackage,
-                    allocatedCompetency.startDate, allocatedCompetency.endDate, budgetAmount, null, null, budgetsAsMap, workOrdersAsMap);
+                    allocatedCompetency.startDate, allocatedCompetency.endDate, allocatedCompetency.currency, allocatedCompetency.currencyRate, budgetAmount,
+                    null, null, budgetsAsMap, workOrdersAsMap);
 
         }
 
@@ -171,13 +173,16 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByActor(allocatedActor.actor.id, packageId)).setScale(5);
         BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(this.getPreferenceManagerPlugin()), BigDecimal.ROUND_HALF_UP);
 
-        BigDecimal costToCompleteDays = allocatedActor.forecastDays.subtract(engagedDays);
+        BigDecimal forecastDays = allocatedActor.forecastDays != null ? allocatedActor.forecastDays : allocatedActor.days;
+        BigDecimal forecastDailyRate = allocatedActor.forecastDailyRate != null ? allocatedActor.forecastDailyRate : allocatedActor.dailyRate;
+
+        BigDecimal costToCompleteDays = forecastDays.subtract(engagedDays);
         if (costToCompleteDays.compareTo(BigDecimal.ZERO) < 0) {
             costToCompleteDays = BigDecimal.ZERO;
         }
 
-        BigDecimal engagedAmount = allocatedActor.dailyRate.multiply(engagedDays);
-        BigDecimal costToCompleteAmount = allocatedActor.dailyRate.multiply(costToCompleteDays);
+        BigDecimal engagedAmount = forecastDailyRate.multiply(engagedDays);
+        BigDecimal costToCompleteAmount = forecastDailyRate.multiply(costToCompleteDays);
 
         return Pair.of(costToCompleteAmount, engagedAmount);
     }
@@ -199,13 +204,16 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByOrgUnit(allocatedOrgUnit.orgUnit.id, packageId)).setScale(5);
         BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(this.getPreferenceManagerPlugin()), BigDecimal.ROUND_HALF_UP);
 
-        BigDecimal costToCompleteDays = allocatedOrgUnit.forecastDays.subtract(engagedDays);
+        BigDecimal forecastDays = allocatedOrgUnit.forecastDays != null ? allocatedOrgUnit.forecastDays : allocatedOrgUnit.days;
+        BigDecimal forecastDailyRate = allocatedOrgUnit.forecastDailyRate != null ? allocatedOrgUnit.forecastDailyRate : allocatedOrgUnit.dailyRate;
+
+        BigDecimal costToCompleteDays = forecastDays.subtract(engagedDays);
         if (costToCompleteDays.compareTo(BigDecimal.ZERO) < 0) {
             costToCompleteDays = BigDecimal.ZERO;
         }
 
-        BigDecimal engagedAmount = allocatedOrgUnit.dailyRate.multiply(engagedDays);
-        BigDecimal costToCompleteAmount = allocatedOrgUnit.dailyRate.multiply(costToCompleteDays);
+        BigDecimal engagedAmount = forecastDailyRate.multiply(engagedDays);
+        BigDecimal costToCompleteAmount = forecastDailyRate.multiply(costToCompleteDays);
 
         return Pair.of(costToCompleteAmount, engagedAmount);
     }
@@ -229,6 +237,10 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
      *            the start date
      * @param endDate
      *            the end date
+     * @param currency
+     *            the currency
+     * @param currencyRate
+     *            the conversion rate for the currency
      * @param budgetAmount
      *            the budget
      * @param costToCompleteAmount
@@ -240,21 +252,22 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
      * @param workOrdersAsMap
      *            the resource work orders
      */
-    private void genetateBudgetAndForecastFromResource(LifeCycleInstancePlanning planning, Long resourceObjectId, String resourceObjectType, String name,
-            Boolean followPackageDates, PortfolioEntryPlanningPackage planningPackage, Date startDate, Date endDate, BigDecimal budgetAmount,
-            BigDecimal costToCompleteAmount, BigDecimal engagedAmount, Map<Long, PortfolioEntryBudgetLine> budgetsAsMap,
-            Map<Long, WorkOrder> workOrdersAsMap) {
+    private void generateBudgetAndForecastFromResource(LifeCycleInstancePlanning planning, Long resourceObjectId, String resourceObjectType, String name,
+            Boolean followPackageDates, PortfolioEntryPlanningPackage planningPackage, Date startDate, Date endDate, Currency currency,
+            BigDecimal currencyRate, BigDecimal budgetAmount, BigDecimal costToCompleteAmount, BigDecimal engagedAmount,
+            Map<Long, PortfolioEntryBudgetLine> budgetsAsMap, Map<Long, WorkOrder> workOrdersAsMap) {
 
         PortfolioEntry portfolioEntry = planning.lifeCycleInstance.portfolioEntry;
 
         boolean usePurchaseOrder = PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(getPreferenceManagerPlugin());
 
         // budget
-        if (budgetAmount != null) {
+        if (budgetAmount != null && budgetAmount.compareTo(BigDecimal.ZERO) > 0) {
             PortfolioEntryBudgetLine budget = PortfolioEntryBudgetDAO.getPEBudgetLineByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId);
             if (budget == null) {
                 budget = new PortfolioEntryBudgetLine();
-                budget.currency = CurrencyDAO.getCurrencyDefault();
+                budget.currency = currency;
+                budget.currencyRate = currencyRate;
                 budget.name = name;
                 budget.portfolioEntryBudget = planning.portfolioEntryBudget;
                 budget.resourceObjectId = resourceObjectId;
@@ -267,13 +280,14 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         }
 
         // cost to complete
-        if (costToCompleteAmount != null) {
+        if (costToCompleteAmount != null && costToCompleteAmount.compareTo(BigDecimal.ZERO) > 0) {
             WorkOrder costToComplete = WorkOrderDAO.getWorkOrderByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId, false,
                     usePurchaseOrder);
             if (costToComplete == null) {
                 costToComplete = new WorkOrder();
                 costToComplete.creationDate = new Date();
-                costToComplete.currency = CurrencyDAO.getCurrencyDefault();
+                costToComplete.currency = currency;
+                costToComplete.currencyRate = currencyRate;
                 costToComplete.isEngaged = false;
                 costToComplete.name = name;
                 costToComplete.portfolioEntry = portfolioEntry;
@@ -292,12 +306,13 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
         }
 
         // engaged
-        if (engagedAmount != null) {
+        if (engagedAmount != null && engagedAmount.compareTo(BigDecimal.ZERO) > 0) {
             WorkOrder engaged = WorkOrderDAO.getWorkOrderByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId, true, usePurchaseOrder);
             if (engaged == null) {
                 engaged = new WorkOrder();
                 engaged.creationDate = new Date();
-                engaged.currency = CurrencyDAO.getCurrencyDefault();
+                engaged.currency = currency;
+                engaged.currencyRate = currencyRate;
                 engaged.isEngaged = true;
                 engaged.name = name;
                 engaged.portfolioEntry = portfolioEntry;
@@ -317,7 +332,8 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
                 if (engaged.purchaseOrderLineItem == null) {
                     engaged.purchaseOrderLineItem = new PurchaseOrderLineItem();
                     engaged.purchaseOrderLineItem.creationDate = new Date();
-                    engaged.purchaseOrderLineItem.currency = CurrencyDAO.getCurrencyDefault();
+                    engaged.purchaseOrderLineItem.currency = currency;
+                    engaged.purchaseOrderLineItem.currencyRate = currencyRate;
                     engaged.purchaseOrderLineItem.isCancelled = false;
                     engaged.purchaseOrderLineItem.isOpex = engaged.isOpex;
                     engaged.purchaseOrderLineItem.purchaseOrder = PurchaseOrderDAO

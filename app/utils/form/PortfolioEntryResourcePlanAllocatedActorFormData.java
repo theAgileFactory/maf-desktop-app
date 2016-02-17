@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.finance.CurrencyDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
@@ -58,9 +59,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
     @Required
     public Long stakeholderType;
 
-    @Required
-    public BigDecimal days;
-
     public String startDate;
 
     public String endDate;
@@ -72,10 +70,20 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
     public boolean followPackageDates;
 
     @Required
-    public BigDecimal dailyRate;
+    public String currencyCode;
 
     @Required
+    public BigDecimal currencyRate;
+
+    @Required
+    public BigDecimal days;
+
+    @Required
+    public BigDecimal dailyRate;
+
     public BigDecimal forecastDays;
+
+    public BigDecimal forecastDailyRate;
 
     /**
      * Validate the dates.
@@ -125,13 +133,18 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.allocatedActorId = allocatedActor.id;
 
         this.actor = allocatedActor.actor.id;
-        this.days = allocatedActor.days;
         this.startDate = allocatedActor.startDate != null ? Utilities.getDateFormat(null).format(allocatedActor.startDate) : null;
         this.endDate = allocatedActor.endDate != null ? Utilities.getDateFormat(null).format(allocatedActor.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
         this.isConfirmed = allocatedActor.isConfirmed;
+
+        this.currencyCode = allocatedActor.currency != null ? allocatedActor.currency.code : null;
+        this.currencyRate = allocatedActor.currencyRate;
+
+        this.days = allocatedActor.days;
         this.dailyRate = allocatedActor.dailyRate;
         this.forecastDays = allocatedActor.forecastDays;
+        this.forecastDailyRate = allocatedActor.forecastDailyRate;
 
         this.followPackageDates = allocatedActor.followPackageDates != null ? allocatedActor.followPackageDates : false;
 
@@ -150,14 +163,19 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.id = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedOrgUnitId = allocatedOrgUnit.id;
 
-        this.days = allocatedOrgUnit.days;
         this.startDate = allocatedOrgUnit.startDate != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.startDate) : null;
         this.endDate = allocatedOrgUnit.endDate != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id
                 : null;
         this.isConfirmed = true;
+
+        this.currencyCode = allocatedOrgUnit.currency != null ? allocatedOrgUnit.currency.code : null;
+        this.currencyRate = allocatedOrgUnit.currencyRate;
+
+        this.days = allocatedOrgUnit.days;
         this.dailyRate = allocatedOrgUnit.dailyRate;
         this.forecastDays = allocatedOrgUnit.forecastDays;
+        this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate;
 
         this.followPackageDates = allocatedOrgUnit.followPackageDates != null ? allocatedOrgUnit.followPackageDates : false;
 
@@ -176,13 +194,19 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.id = allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedCompetencyId = allocatedCompetency.id;
 
-        this.days = allocatedCompetency.days;
         this.startDate = allocatedCompetency.startDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.startDate) : null;
         this.endDate = allocatedCompetency.endDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id
                 : null;
         this.isConfirmed = true;
+
+        this.currencyCode = allocatedCompetency.currency != null ? allocatedCompetency.currency.code : null;
+        this.currencyRate = allocatedCompetency.currencyRate;
+
+        this.days = allocatedCompetency.days;
         this.dailyRate = allocatedCompetency.dailyRate;
+        this.forecastDays = null;
+        this.forecastDailyRate = null;
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
 
@@ -197,7 +221,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
     public void fill(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
 
         allocatedActor.actor = ActorDao.getActorById(this.actor);
-        allocatedActor.days = this.days;
 
         allocatedActor.portfolioEntryPlanningPackage = this.portfolioEntryPlanningPackage != null
                 ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(this.portfolioEntryPlanningPackage) : null;
@@ -223,8 +246,13 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
         allocatedActor.isConfirmed = this.isConfirmed;
 
+        allocatedActor.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
+        allocatedActor.currencyRate = this.currencyRate;
+
+        allocatedActor.days = this.days;
         allocatedActor.dailyRate = this.dailyRate;
         allocatedActor.forecastDays = this.forecastDays;
+        allocatedActor.forecastDailyRate = this.forecastDailyRate;
 
     }
 }

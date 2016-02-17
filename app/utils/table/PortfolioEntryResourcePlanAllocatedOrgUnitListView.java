@@ -30,6 +30,7 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntryPlanningPackage;
@@ -53,6 +54,9 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
         /**
          * Default constructor.
+         * 
+         * @param i18nMessagesPlugin
+         *            the i18n messages service
          */
         public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
             this.templateTable = getTable(i18nMessagesPlugin);
@@ -60,6 +64,9 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
         /**
          * Get the table.
+         * 
+         * @param i18nMessagesPlugin
+         *            the i18n messages service
          */
         public Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
@@ -79,14 +86,21 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
+                    addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("currency", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
+
                     addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
+
+                    addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("forecastDays", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
-                    addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
+                    addColumn("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("planningPackage", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
@@ -161,11 +175,15 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
     public OrgUnit orgUnit;
 
+    public Currency currency;
+
     public BigDecimal days;
+
+    public BigDecimal dailyRate;
 
     public BigDecimal forecastDays;
 
-    public BigDecimal dailyRate;
+    public BigDecimal forecastDailyRate;
 
     public String date;
 
@@ -186,13 +204,16 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
         this.portfolioEntryId = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.portfolioEntryName = PortfolioEntryDao.getPEById(this.portfolioEntryId).getName();
         this.orgUnit = allocatedOrgUnit.orgUnit;
-        this.days = allocatedOrgUnit.days;
         this.date = allocatedOrgUnit.getDisplayDate();
         this.planningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage;
         this.isConfirmed = allocatedOrgUnit.isConfirmed;
         this.followPackageDates = allocatedOrgUnit.followPackageDates;
-        this.forecastDays = allocatedOrgUnit.forecastDays;
+
+        this.currency = allocatedOrgUnit.currency;
+        this.days = allocatedOrgUnit.days;
         this.dailyRate = allocatedOrgUnit.dailyRate;
+        this.forecastDays = allocatedOrgUnit.forecastDays != null ? allocatedOrgUnit.forecastDays : allocatedOrgUnit.days;
+        this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate != null ? allocatedOrgUnit.forecastDailyRate : allocatedOrgUnit.dailyRate;
 
     }
 
