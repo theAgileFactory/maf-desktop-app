@@ -17,9 +17,6 @@
  */
 package utils.finance;
 
-import dao.finance.CurrencyDAO;
-import models.finance.Currency;
-
 /**
  * A totals instance allows to manager the budget, cost to complete and engaged
  * totals.
@@ -28,8 +25,6 @@ import models.finance.Currency;
  * 
  */
 public class Totals {
-
-    private Currency currency;
 
     private Double opexBudget = 0.0;
     private Double capexBudget = 0.0;
@@ -55,32 +50,12 @@ public class Totals {
      *            the capex engaged amount
      */
     public Totals(Double opexBudget, Double capexBudget, Double opexCostToComplete, Double capexCostToComplete, Double opexEngaged, Double capexEngaged) {
-
-        this.setCurrency(CurrencyDAO.getCurrencyDefault());
-
         this.setOpexBudget(opexBudget);
         this.setCapexBudget(capexBudget);
         this.setOpexCostToComplete(opexCostToComplete);
         this.setCapexCostToComplete(capexCostToComplete);
         this.setOpexEngaged(opexEngaged);
         this.setCapexEngaged(capexEngaged);
-    }
-
-    /**
-     * Get the currency.
-     */
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    /**
-     * Set the currency.
-     * 
-     * @param currency
-     *            the currency
-     */
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
     }
 
     /**
