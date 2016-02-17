@@ -123,7 +123,7 @@ public abstract class BudgetBucketDAO {
     }
 
     /**
-     * Get the total budget in the default currency of a budget bucket.
+     * Get the total budget of a budget bucket.
      * 
      * @param budgetBucketId
      *            the budget bucket id
@@ -132,8 +132,8 @@ public abstract class BudgetBucketDAO {
      */
     public static Double getBudgetAsAmountByBucketAndOpex(Long budgetBucketId, boolean isOpex) {
 
-        String sql = "SELECT SUM(bbl.amount) as totalAmount FROM budget_bucket_line bbl WHERE bbl.deleted = 0 AND bbl.currency_code = '"
-                + CurrencyDAO.getCurrencyDefault().code + "' AND bbl.is_opex = " + isOpex + " AND bbl.budget_bucket_id = " + budgetBucketId;
+        String sql = "SELECT SUM(bbl.amount * bbl.currency_rate) as totalAmount FROM budget_bucket_line bbl WHERE bbl.deleted = 0 AND bbl.is_opex = " + isOpex
+                + " AND bbl.budget_bucket_id = " + budgetBucketId;
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
 

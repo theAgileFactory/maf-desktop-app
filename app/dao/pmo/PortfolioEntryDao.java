@@ -29,7 +29,6 @@ import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
-import dao.finance.CurrencyDAO;
 import dao.finance.PurchaseOrderDAO;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
@@ -123,12 +122,11 @@ public abstract class PortfolioEntryDao {
      */
     public static Double getPEAsBudgetAmountByOpex(Long id, boolean isOpex, Boolean onlyEffort) {
 
-        String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl "
+        String sql = "SELECT SUM(pebl.amount * pebl.currency_rate) as totalAmount FROM portfolio_entry_budget_line pebl "
                 + "JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id=peb.id "
                 + "JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id "
                 + "JOIN portfolio_entry pe ON lcip.life_cycle_instance_id = pe.active_life_cycle_instance_id " + "WHERE pebl.deleted=0 AND pebl.is_opex="
-                + isOpex + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' "
-                + "AND peb.deleted=0 AND lcip.deleted=0 AND lcip.is_frozen=0 " + "AND pe.id=" + id;
+                + isOpex + " AND peb.deleted=0 AND lcip.deleted=0 AND lcip.is_frozen=0 " + "AND pe.id=" + id;
 
         if (onlyEffort != null) {
             if (onlyEffort) {
@@ -180,10 +178,10 @@ public abstract class PortfolioEntryDao {
      */
     public static Double getPEAsCostToCompleteAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex, Boolean onlyEffort) {
 
-        String baseSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
+        String baseSqlSelect = "SELECT SUM(wo.amount * wo.currency_rate) AS totalAmount FROM work_order wo "
+                + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
-        String baseSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pe.id="
-                + id;
+        String baseSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND pe.id=" + id;
 
         if (onlyEffort != null) {
             if (onlyEffort) {
@@ -253,10 +251,10 @@ public abstract class PortfolioEntryDao {
      */
     public static Double getPEAsEngagedAmountByOpex(IPreferenceManagerPlugin preferenceManagerPlugin, Long id, boolean isOpex, Boolean onlyEffort) {
 
-        String baseWOSqlSelect = "SELECT SUM(wo.amount) AS totalAmount FROM work_order wo " + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
+        String baseWOSqlSelect = "SELECT SUM(wo.amount * wo.currency_rate) AS totalAmount FROM work_order wo "
+                + "JOIN portfolio_entry pe ON wo.portfolio_entry_id = pe.id ";
 
-        String baseWOSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND wo.currency_code='" + CurrencyDAO.getCurrencyDefault().code
-                + "' AND pe.id=" + id;
+        String baseWOSqlCond = " AND wo.deleted=0 AND wo.is_opex=" + isOpex + " AND pe.id=" + id;
 
         if (onlyEffort != null) {
             if (onlyEffort) {
@@ -279,12 +277,11 @@ public abstract class PortfolioEntryDao {
             // or the purchase order lines assigned to an entry of the portfolio
             // but never engaged by a work order
             if (onlyEffort == null || !onlyEffort) {
-                sqls.add("SELECT SUM(poli.amount) AS totalAmount FROM purchase_order_line_item poli "
+                sqls.add("SELECT SUM(poli.amount * poli.currency_rate) AS totalAmount FROM purchase_order_line_item poli "
                         + "JOIN purchase_order po ON poli.purchase_order_id=po.id " + "JOIN portfolio_entry pe ON po.portfolio_entry_id = pe.id "
                         + "LEFT OUTER JOIN work_order wo ON poli.id=wo.purchase_order_line_item_id "
-                        + "WHERE poli.deleted=0 AND poli.is_cancelled=0 AND poli.currency_code='" + CurrencyDAO.getCurrencyDefault().code
-                        + "' AND poli.is_opex=" + isOpex + " AND po.deleted=0 AND po.is_cancelled=0 AND pe.id=" + id
-                        + " AND wo.purchase_order_line_item_id IS NULL");
+                        + "WHERE poli.deleted=0 AND poli.is_cancelled=0 AND poli.is_opex=" + isOpex + " AND po.deleted=0 AND po.is_cancelled=0 AND pe.id="
+                        + id + " AND wo.purchase_order_line_item_id IS NULL");
             }
 
         } else { // if purchase orders are not enable

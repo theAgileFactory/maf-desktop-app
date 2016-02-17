@@ -266,13 +266,13 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             PortfolioEntryBudgetLine budget = PortfolioEntryBudgetDAO.getPEBudgetLineByPEAndResource(portfolioEntry.id, resourceObjectType, resourceObjectId);
             if (budget == null) {
                 budget = new PortfolioEntryBudgetLine();
-                budget.currency = currency;
-                budget.currencyRate = currencyRate;
                 budget.name = name;
                 budget.portfolioEntryBudget = planning.portfolioEntryBudget;
                 budget.resourceObjectId = resourceObjectId;
                 budget.resourceObjectType = resourceObjectType;
             }
+            budget.currency = currency;
+            budget.currencyRate = currencyRate;
             budget.amount = budgetAmount;
             budget.isOpex = planningPackage != null ? planningPackage.isOpex : portfolioEntry.defaultIsOpex;
             budget.save();
@@ -286,8 +286,6 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             if (costToComplete == null) {
                 costToComplete = new WorkOrder();
                 costToComplete.creationDate = new Date();
-                costToComplete.currency = currency;
-                costToComplete.currencyRate = currencyRate;
                 costToComplete.isEngaged = false;
                 costToComplete.name = name;
                 costToComplete.portfolioEntry = portfolioEntry;
@@ -295,6 +293,8 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
                 costToComplete.resourceObjectType = resourceObjectType;
                 costToComplete.shared = false;
             }
+            costToComplete.currency = currency;
+            costToComplete.currencyRate = currencyRate;
             costToComplete.amount = costToCompleteAmount;
             costToComplete.followPackageDates = followPackageDates;
             costToComplete.portfolioEntryPlanningPackage = planningPackage;
@@ -311,8 +311,6 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             if (engaged == null) {
                 engaged = new WorkOrder();
                 engaged.creationDate = new Date();
-                engaged.currency = currency;
-                engaged.currencyRate = currencyRate;
                 engaged.isEngaged = true;
                 engaged.name = name;
                 engaged.portfolioEntry = portfolioEntry;
@@ -320,6 +318,8 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
                 engaged.resourceObjectType = resourceObjectType;
                 engaged.shared = false;
             }
+            engaged.currency = currency;
+            engaged.currencyRate = currencyRate;
             engaged.amount = engagedAmount;
             engaged.followPackageDates = followPackageDates;
             engaged.portfolioEntryPlanningPackage = planningPackage;
@@ -332,14 +332,14 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
                 if (engaged.purchaseOrderLineItem == null) {
                     engaged.purchaseOrderLineItem = new PurchaseOrderLineItem();
                     engaged.purchaseOrderLineItem.creationDate = new Date();
-                    engaged.purchaseOrderLineItem.currency = currency;
-                    engaged.purchaseOrderLineItem.currencyRate = currencyRate;
                     engaged.purchaseOrderLineItem.isCancelled = false;
                     engaged.purchaseOrderLineItem.isOpex = engaged.isOpex;
                     engaged.purchaseOrderLineItem.purchaseOrder = PurchaseOrderDAO
                             .getPurchaseOrderByRefId(IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING);
                     engaged.purchaseOrderLineItem.refId = IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING + "_" + engaged.id;
                 }
+                engaged.purchaseOrderLineItem.currency = currency;
+                engaged.purchaseOrderLineItem.currencyRate = currencyRate;
                 engaged.purchaseOrderLineItem.amount = engagedAmount;
                 engaged.purchaseOrderLineItem.amountReceived = engagedAmount;
                 engaged.purchaseOrderLineItem.save();

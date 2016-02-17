@@ -61,8 +61,7 @@ public abstract class PortfolioEntryBudgetDAO {
     }
 
     /**
-     * Get the total amount of a portfolio entry budget (for the default
-     * currency).
+     * Get the total amount of a portfolio entry budget.
      * 
      * @param portfolioEntryBudgetId
      *            the portfolio entry budget id
@@ -71,9 +70,8 @@ public abstract class PortfolioEntryBudgetDAO {
      */
     public static Double getPEBudgetAsAmountById(Long portfolioEntryBudgetId, boolean isOpex) {
 
-        String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl WHERE pebl.deleted = 0 AND pebl.is_opex =" + isOpex
-                + " AND pebl.currency_code='" + CurrencyDAO.getCurrencyDefault().code + "' AND pebl.portfolio_entry_budget_id = '" + portfolioEntryBudgetId
-                + "'";
+        String sql = "SELECT SUM(pebl.amount * pebl.currency_rate) as totalAmount FROM portfolio_entry_budget_line pebl WHERE pebl.deleted = 0"
+                + " AND pebl.is_opex =" + isOpex + " AND pebl.portfolio_entry_budget_id = '" + portfolioEntryBudgetId + "'";
         Double totalAmountBudget = Ebean.find(TotalAmount.class).setRawSql(RawSqlBuilder.parse(sql).create()).findUnique().totalAmount;
         if (totalAmountBudget != null) {
             return totalAmountBudget;
@@ -93,8 +91,7 @@ public abstract class PortfolioEntryBudgetDAO {
     }
 
     /**
-     * Get the total budget of initiatives in the default currency for a budget
-     * bucket.
+     * Get the total budget of initiatives for a budget bucket.
      * 
      * @param budgetBucketId
      *            the budget bucket id
@@ -103,12 +100,11 @@ public abstract class PortfolioEntryBudgetDAO {
      */
     public static Double getBudgetAsAmountByBucketAndOpex(Long budgetBucketId, boolean isOpex) {
 
-        String sql = "SELECT SUM(pebl.amount) as totalAmount FROM portfolio_entry_budget_line pebl"
+        String sql = "SELECT SUM(pebl.amount * pebl.currency_rate) as totalAmount FROM portfolio_entry_budget_line pebl"
                 + " JOIN portfolio_entry_budget peb ON pebl.portfolio_entry_budget_id = peb.id"
                 + " JOIN life_cycle_instance_planning lcip ON peb.id = lcip.portfolio_entry_budget_id"
                 + " JOIN life_cycle_instance lci ON lcip.life_cycle_instance_id = lci.id" + " JOIN portfolio_entry pe ON lci.portfolio_entry_id = pe.id"
-                + " WHERE pebl.deleted = 0 AND pebl.is_opex = " + isOpex + " AND pebl.currency_code = '" + CurrencyDAO.getCurrencyDefault().code
-                + "' AND pebl.budget_bucket_id = " + budgetBucketId
+                + " WHERE pebl.deleted = 0 AND pebl.is_opex = " + isOpex + " AND pebl.budget_bucket_id = " + budgetBucketId
                 + " AND peb.deleted = 0 AND pe.deleted = 0 AND lci.deleted = 0 AND lci.is_active=1 AND lcip.deleted = 0 AND lcip.is_frozen = 0";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).create();
