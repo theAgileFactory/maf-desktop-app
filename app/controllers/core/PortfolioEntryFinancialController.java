@@ -1031,6 +1031,7 @@ public class PortfolioEntryFinancialController extends Controller {
 
         workOrder.amount = engagedAmount;
         workOrder.amountReceived = BigDecimal.valueOf(0);
+        workOrder.currencyRate = lineItem.currencyRate;
         workOrder.save();
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.line_item_select.successful"));
@@ -1096,6 +1097,7 @@ public class PortfolioEntryFinancialController extends Controller {
         newWorkOrder.description = workOrder.description;
         newWorkOrder.dueDate = workOrder.dueDate;
         newWorkOrder.currency = workOrder.currency;
+        newWorkOrder.currencyRate = workOrder.currencyRate;
         newWorkOrder.amount = new BigDecimal(amount);
         newWorkOrder.amountReceived = BigDecimal.ZERO;
         newWorkOrder.isOpex = workOrder.isOpex;
