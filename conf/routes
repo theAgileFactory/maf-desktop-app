@@ -386,6 +386,7 @@ POST   /timesheet/weekly/save                       controllers.core.TimesheetCo
 GET    /timesheet/weekly/submit                     controllers.core.TimesheetController.weeklySubmit(reportId: Long)
 GET    /timesheet/weekly/copy                       controllers.core.TimesheetController.weeklyCopy(reportId: Long)
 POST   /timesheet/process                           controllers.core.TimesheetController.processTimesheet()
+GET    /timesheet/approve                           controllers.core.TimesheetController.approveTimesheet(id: Long)
 GET    /timesheet/send-reminder                     controllers.core.TimesheetController.sendReminderTimesheet(id: Long)
 POST   /timesheet/portfolio-entry/packages          controllers.core.TimesheetController.getPackages()
 POST   /timesheet/activity-types/activities         controllers.core.TimesheetController.getActivities()

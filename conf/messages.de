@@ -1059,6 +1059,7 @@ object.timesheet_report.status.REJECTED.label=Abgelehnt
 object.timesheet_report.status.LOCKED.label=Schreibgeschützt
 object.timesheet_report.status.UNLOCKED.label=Freischalten
 object.timesheet_report.reminder.help=Mitteilung an Mitarbeiter: Timesheet ausfüllen
+object.timesheet_report.approve.help=de: Approve the timesheet.
 object.timesheet_report.comments.label=Anmerkungen
 object.timesheet_report.table.empty=Keine Zeiterfassung eingetragen
 

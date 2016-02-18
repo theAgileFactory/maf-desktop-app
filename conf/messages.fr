@@ -1058,6 +1058,7 @@ object.timesheet_report.status.REJECTED.label=Rejetée
 object.timesheet_report.status.LOCKED.label=Vérouillée
 object.timesheet_report.status.UNLOCKED.label=Dévérouillée
 object.timesheet_report.reminder.help=Envoyer un rappel à l''employé(e) qu''il/elle doit remplir sa feuille de temps.
+object.timesheet_report.approve.help=Approuver la feuille de temps.
 object.timesheet_report.comments.label=Commentaire
 object.timesheet_report.table.empty=Il n''existe aucune feuille de temps.
 

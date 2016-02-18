@@ -470,8 +470,35 @@ public class TimesheetController extends Controller {
         Form<TimesheetReportApprovalFormData> boundForm = timesheetReportApprovalFormTemplate.bindFromRequest();
         TimesheetReportApprovalFormData formData = boundForm.get();
 
+        return processTimesheet(formData.id, formData.action, formData.comments);
+    }
+
+    /**
+     * Approve a timesheet.
+     * 
+     * @param id
+     *            the timesheet report id
+     */
+    @With(CheckTimesheetReportExists.class)
+    @Dynamic(IMafConstants.TIMESHEET_APPROVAL_DYNAMIC_PERMISSION)
+    public Result approveTimesheet(Long id) {
+        return processTimesheet(id, "APPROVE", null);
+    }
+
+    /**
+     * Process (accept or reject) a timesheet.
+     * 
+     * @param reportId
+     *            the timesheet report id
+     * @param action
+     *            the action (APPROVE, REJECT)
+     * @param comments
+     *            the possible comments
+     */
+    private Result processTimesheet(Long reportId, String action, String comments) {
+
         // get the report
-        TimesheetReport report = TimesheetDao.getTimesheetReportById(formData.id);
+        TimesheetReport report = TimesheetDao.getTimesheetReportById(reportId);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = Utilities.getDateFormat(null).format(report.startDate);
         String endDate = Utilities.getDateFormat(null).format(report.getEndDate());
@@ -481,18 +508,18 @@ public class TimesheetController extends Controller {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
-        if (formData.action.equals("APPROVE")) {
+        if (action.equals("APPROVE")) {
 
             report.status = TimesheetReport.Status.APPROVED;
             report.save();
 
-            if (formData.comments != null && !formData.comments.equals("")) {
+            if (comments != null && !comments.equals("")) {
                 // with comments
                 ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
                         NotificationCategory.getByCode(Code.TIMESHEET),
                         controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
                         "core.timesheet.approve.notification.title", "core.timesheet.approve.notification.message.with_comments", startDate, endDate,
-                        formData.comments);
+                        comments);
             } else {
                 // without comments
                 ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
@@ -504,18 +531,17 @@ public class TimesheetController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("core.timesheet.approve.successful"));
         }
 
-        if (formData.action.equals("REJECT")) {
+        if (action.equals("REJECT")) {
 
             report.status = TimesheetReport.Status.REJECTED;
             report.save();
 
-            if (formData.comments != null && !formData.comments.equals("")) {
+            if (comments != null && !comments.equals("")) {
                 // with comments
                 ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,
                         NotificationCategory.getByCode(Code.TIMESHEET),
                         controllers.core.routes.TimesheetController.weeklyFill(sdf.format(report.startDate)).url(),
-                        "core.timesheet.reject.notification.title", "core.timesheet.reject.notification.message.with_comments", startDate, endDate,
-                        formData.comments);
+                        "core.timesheet.reject.notification.title", "core.timesheet.reject.notification.message.with_comments", startDate, endDate, comments);
             } else {
                 // without comments
                 ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), report.actor,

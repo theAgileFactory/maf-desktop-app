@@ -1046,6 +1046,7 @@ object.timesheet_report.status.REJECTED.label=Rejected
 object.timesheet_report.status.LOCKED.label=Locked
 object.timesheet_report.status.UNLOCKED.label=Unlocked
 object.timesheet_report.reminder.help=Send a reminder to the employee that he/she should fill his/her timesheet
+object.timesheet_report.approve.help=Approve the timesheet.
 object.timesheet_report.comments.label=Comments
 object.timesheet_report.table.empty=There is currently no timesheet.
 

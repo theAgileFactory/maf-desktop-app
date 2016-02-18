@@ -85,16 +85,15 @@ public class TimesheetReportListView {
                     setColumnCssClass("status", IMafConstants.BOOTSTRAP_COLUMN_2);
 
                     addColumn("approveActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("approveActionLink", new IColumnFormatter<TimesheetReportListView>() {
+                    setJavaColumnFormatter("approveActionLink", new StringFormatFormatter<TimesheetReportListView>(
+                            "<a href=\"%s\" data-toggle='tooltip' class='timesheet-approve' title=\"" + Msg.get("object.timesheet_report.approve.help")
+                                    + "\">" + "<span class=\"fa fa-thumbs-up\"></span></a><script>$('.timesheet-approve').tooltip();</script>",
+                            new StringFormatFormatter.Hook<TimesheetReportListView>() {
                         @Override
-                        public String apply(TimesheetReportListView timesheetReportListView, Object value) {
-                            return "<form action='" + controllers.core.routes.TimesheetController.processTimesheet().url() + "' method='POST'>"
-                                    + "<input type='hidden' name='comments' value='' />" + "<input type='hidden' name='id' value='"
-                                    + timesheetReportListView.id + "' />"
-                                    + "<button type='submit' class='btn btn-default btn-xs' name='action' value='APPROVE'>"
-                                    + "<span class='fa fa-thumbs-up'></span> " + Msg.get("button.approve") + "</button>" + "</form>";
+                        public String convert(TimesheetReportListView timesheetReportListView) {
+                            return controllers.core.routes.TimesheetController.approveTimesheet(timesheetReportListView.id).url();
                         }
-                    });
+                    }));
                     setColumnCssClass("approveActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("approveActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
