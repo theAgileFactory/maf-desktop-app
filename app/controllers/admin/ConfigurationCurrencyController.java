@@ -18,6 +18,7 @@
 package controllers.admin;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,17 +205,32 @@ public class ConfigurationCurrencyController extends Controller {
         try {
 
             Currency defaultCurrency = CurrencyDAO.getCurrencyDefault();
+            Currency newDefaultCurrency = CurrencyDAO.getCurrencyById(currencyId);
+
+            for (Currency currency : CurrencyDAO.getCurrencyAsListByActive(null)) {
+                if (!currency.id.equals(newDefaultCurrency.id)) {
+                    currency.conversionRate = currency.conversionRate.divide(newDefaultCurrency.conversionRate, 8, RoundingMode.HALF_UP);
+                    currency.update();
+                }
+            }
+
+            // TODO change all existing rate ????
+            // PurchaseOrderLineItem
+            // WorkOrder
+            // GoodsReceipt
+            // AllocatedActor
+            // AllocatedCompetency
+            // AllocatedOrgUnit
+            // BudgetBucketLine
+            // PEBudgetLine
+
             defaultCurrency.isDefault = false;
             defaultCurrency.update();
 
-            Currency currency = CurrencyDAO.getCurrencyById(currencyId);
-            currency.isDefault = true;
-            currency.isActive = true;
-            currency.conversionRate = BigDecimal.ONE;
-            currency.update();
-
-            // TODO maybe inverse (1/rate) all conversion rate of all currencies
-            // and data...??? and remove the alert message
+            newDefaultCurrency.isDefault = true;
+            newDefaultCurrency.isActive = true;
+            newDefaultCurrency.conversionRate = BigDecimal.ONE;
+            newDefaultCurrency.update();
 
             Ebean.commitTransaction();
 

@@ -3030,7 +3030,7 @@ admin.configuration.reference_data.currency.add.successful=de: The currency has 
 admin.configuration.reference_data.currency.edit.successful=de: The currency has been updated.
 admin.configuration.reference_data.currency.delete.successful=de: The currency has been deleted.
 admin.configuration.reference_data.currency.delete.error.used=de: This is not possible to delete a currency used for at least one amount.
-admin.configuration.reference_data.currency.set_as_default.confirm=de: By changing the default currency, all conversion rates for all currencies and data associated to a currency should be manually corrected later. Are you sure to continue?
+admin.configuration.reference_data.currency.set_as_default.confirm=By changing the default currency, all rates of existing data (budget buckets, work orders...)  should be manually corrected. Are you sure to continue?
 admin.configuration.reference_data.currency.set_as_default.successful=de: The currency is now the default one.
 
 #manage timesheet activity type
