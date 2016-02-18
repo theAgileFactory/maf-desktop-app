@@ -93,8 +93,8 @@ public class PortfolioStakeholderController extends Controller {
         StakeholderFormData stakeholderFormData = boundForm.get();
 
         // check the unicity
-        Stakeholder stakeholderForUnicity =
-                StakeholderDao.getStakeholderByActorAndTypeAndPortfolio(stakeholderFormData.actor, stakeholderFormData.stakeholderType, id);
+        Stakeholder stakeholderForUnicity = StakeholderDao.getStakeholderByActorAndTypeAndPortfolio(stakeholderFormData.actor,
+                stakeholderFormData.stakeholderType, id);
         if (stakeholderForUnicity != null && stakeholderForUnicity.id != stakeholderFormData.stakeholderId) {
             boundForm.reject("stakeholderType", Msg.get("object.stakeholder.role.invalid"));
             return ok(views.html.core.portfoliostakeholder.portfolio_stakeholder_manage.render(portfolio, boundForm));
@@ -125,7 +125,7 @@ public class PortfolioStakeholderController extends Controller {
             Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_stakeholder.edit.successful"));
         }
 
-        return redirect(controllers.core.routes.PortfolioController.view(stakeholderFormData.id, 0, 0));
+        return redirect(controllers.core.routes.PortfolioController.view(stakeholderFormData.id, 0, 0, false));
     }
 
     /**
@@ -152,6 +152,6 @@ public class PortfolioStakeholderController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_stakeholder.delete"));
 
-        return redirect(controllers.core.routes.PortfolioController.view(id, 0, 0));
+        return redirect(controllers.core.routes.PortfolioController.view(id, 0, 0, false));
     }
 }

@@ -20,6 +20,7 @@
     portfolioFormData: utils.form.PortfolioFormData,
     portfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryListView],
     portfolioEntryPagination: framework.utils.Pagination[models.pmo.PortfolioEntry],
+    viewAllPortfolioEntries: Boolean,
     stakeholderTable: framework.utils.Table[utils.table.PortfolioStakeholderListView],
     stakeholderPagination: framework.utils.Pagination[models.pmo.Stakeholder]
 )
@@ -116,7 +117,7 @@
                 </div>
         
                 <div class="panel-body">
-                    @parts.table.tableview_with_pagination_and_queryparams(stakeholderTable, stakeholderPagination, null, null, "id=" + portfolio.id)
+                    @parts.table.tableview_with_pagination_and_queryparams(stakeholderTable, stakeholderPagination, null, null, "id=" + portfolio.id + "&viewAllPortfolioEntries=" + viewAllPortfolioEntries)
                 </div>
             </div>
 
@@ -127,9 +128,16 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             @parts.Msg("core.portfolio.view.entries.title")
+            <div class="pull-right">
+                @if(!viewAllPortfolioEntries) {
+                    <a href="@controllers.core.routes.PortfolioController.view(portfolio.id, 0, 0, true)"><span class="fa fa-expand fa-lg"></span></a>
+                } else {
+                    <a href="@controllers.core.routes.PortfolioController.view(portfolio.id, 0, 0, false)"><span class="fa fa-compress fa-lg"></span></a>
+                }
+            </div>
         </div>
         <div class="panel-body">
-            @parts.table.tableview_with_pagination_and_queryparams(portfolioEntryTable, portfolioEntryPagination, null, null, "id=" + portfolio.id)
+            @parts.table.tableview_with_pagination_and_queryparams(portfolioEntryTable, portfolioEntryPagination, null, null, "id=" + portfolio.id + "&viewAllPortfolioEntries=" + viewAllPortfolioEntries)
         </div>
     </div>
 }

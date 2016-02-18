@@ -119,10 +119,13 @@ public class PortfolioController extends Controller {
      *            the current page for the portfolio entries table
      * @param stakeholderPage
      *            the current page for the stakeholders table
+     * @param viewAllPortfolioEntries
+     *            set to true if all portfolio entries (including the inactive)
+     *            should be displayed
      */
     @With(CheckPortfolioExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_VIEW_DYNAMIC_PERMISSION)
-    public Result view(Long id, Integer portfolioEntryPage, Integer stakeholderPage) {
+    public Result view(Long id, Integer portfolioEntryPage, Integer stakeholderPage, Boolean viewAllPortfolioEntries) {
 
         // get the portfolio
         Portfolio portfolio = PortfolioDao.getPortfolioById(id);
@@ -131,7 +134,8 @@ public class PortfolioController extends Controller {
         PortfolioFormData portfolioFormData = new PortfolioFormData(portfolio);
 
         // get the portfolio entries
-        Pagination<PortfolioEntry> portfolioEntryPagination = PortfolioEntryDao.getPEAsPaginationByPortfolio(this.getPreferenceManagerPlugin(), id, false);
+        Pagination<PortfolioEntry> portfolioEntryPagination = PortfolioEntryDao.getPEAsPaginationByPortfolio(this.getPreferenceManagerPlugin(), id,
+                viewAllPortfolioEntries);
         portfolioEntryPagination.setCurrentPage(portfolioEntryPage);
         portfolioEntryPagination.setPageQueryName("portfolioEntryPage");
 
@@ -164,7 +168,7 @@ public class PortfolioController extends Controller {
                 .fill(stakeholdersListView, hideColumnsForStakeholder);
 
         return ok(views.html.core.portfolio.portfolio_view.render(portfolio, portfolioFormData, filledPortfolioEntryTable, portfolioEntryPagination,
-                filledStakeholderTable, stakeholderPagination));
+                viewAllPortfolioEntries, filledStakeholderTable, stakeholderPagination));
     }
 
     /**
@@ -266,7 +270,7 @@ public class PortfolioController extends Controller {
         // save the custom attributes
         this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, Portfolio.class, updPortfolio.id);
 
-        return redirect(controllers.core.routes.PortfolioController.view(portfolioFormData.id, 0, 0));
+        return redirect(controllers.core.routes.PortfolioController.view(portfolioFormData.id, 0, 0, false));
 
     }
 
@@ -307,8 +311,8 @@ public class PortfolioController extends Controller {
         sideBar.addMenuItem(new ClickableMenuItem("core.portfolio.sidebar.overview.label", controllers.core.routes.PortfolioController.overview(portfolioId),
                 "fa fa-tachometer", currentType.equals(MenuItemType.OVERVIEW)));
 
-        sideBar.addMenuItem(new ClickableMenuItem("core.portfolio.sidebar.view.label", controllers.core.routes.PortfolioController.view(portfolioId, 0, 0),
-                "fa fa-search-plus", currentType.equals(MenuItemType.VIEW)));
+        sideBar.addMenuItem(new ClickableMenuItem("core.portfolio.sidebar.view.label",
+                controllers.core.routes.PortfolioController.view(portfolioId, 0, 0, false), "fa fa-search-plus", currentType.equals(MenuItemType.VIEW)));
 
         return sideBar;
 

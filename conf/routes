@@ -163,7 +163,7 @@ GET    /request/milestone/reject                 controllers.core.ProcessTransit
 #-------------------
 
 GET    /portfolio/overview                         controllers.core.PortfolioController.overview(id: Long)
-GET    /portfolio/view                             controllers.core.PortfolioController.view(id: Long, portfolioEntryPage: Integer ?= 0, stakeholderPage: Integer ?= 0)
+GET    /portfolio/view                             controllers.core.PortfolioController.view(id: Long, portfolioEntryPage: Integer ?= 0, stakeholderPage: Integer ?= 0, viewAllPortfolioEntries: Boolean ?= false)
 GET    /portfolio/new                              controllers.core.PortfolioController.create()
 POST   /portfolio/create                           controllers.core.PortfolioController.createSubmit()
 GET    /portfolio/edit                             controllers.core.PortfolioController.edit(id: Long)
