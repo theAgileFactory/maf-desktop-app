@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-02-27T15:58:55 -->
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2016-02-19T11:33:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="financial_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="4253fdea-d2e7-4afa-99ac-a2382a2be9b1">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\ST.xml"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<subDataset name="TypeGroup" uuid="5fd139a4-d8ea-4dfc-beb3-c1b8e388accc">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
@@ -53,18 +54,19 @@ GROUP BY pet.name]]>
 	pe.governance_id AS  governance_id, 
 	pe.name AS name,
 	IFNULL(m_type.value, '') AS type,	
-	vpef.capex_budget AS capex_budget,
-	vpef.opex_budget AS opex_budget,
-	vpef.capex_cost_to_complete AS capex_cost_to_complete,
-	vpef.opex_cost_to_complete AS opex_cost_to_complete,
-	vpef.capex_engaged AS capex_engaged,
-	vpef.opex_engaged AS opex_engaged
+	sum(vpef.capex_budget) AS capex_budget,
+	sum(vpef.opex_budget) AS opex_budget,
+	sum(vpef.capex_cost_to_complete) AS capex_cost_to_complete,
+	sum(vpef.opex_cost_to_complete) AS opex_cost_to_complete,
+	sum(vpef.capex_engaged) AS capex_engaged,
+	sum(vpef.opex_engaged) AS opex_engaged
 FROM portfolio_entry pe
 	JOIN life_cycle_instance lci ON pe.active_life_cycle_instance_id = lci.id
 	JOIN v_pe_financial vpef ON pe.id = vpef.id
 	JOIN portfolio_entry_type pet ON pe.portfolio_entry_type_id = pet.id
 	LEFT OUTER JOIN i18n_messages m_type ON pet.name = m_type.`key` AND m_type.language=$P{lang}
-WHERE pe.deleted = 0 AND pe.archived = 0 AND pe.is_public = 1 AND lci.is_concept = 0 AND vpef.currency_code = $P{default_currency_code} AND vpef.use_purchase_order = $P{use_purchase_order}
+WHERE pe.deleted = 0 AND pe.archived = 0 AND pe.is_public = 1 AND lci.is_concept = 0 AND vpef.use_purchase_order = $P{use_purchase_order}
+GROUP BY pe.id
 ORDER BY type, governance_id]]>
 	</queryString>
 	<field name="governance_id" class="java.lang.String">
@@ -73,13 +75,13 @@ ORDER BY type, governance_id]]>
 	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="type" class="java.lang.String"/>
 	<field name="capex_budget" class="java.math.BigDecimal"/>
 	<field name="opex_budget" class="java.math.BigDecimal"/>
 	<field name="capex_cost_to_complete" class="java.math.BigDecimal"/>
 	<field name="opex_cost_to_complete" class="java.math.BigDecimal"/>
 	<field name="capex_engaged" class="java.math.BigDecimal"/>
 	<field name="opex_engaged" class="java.math.BigDecimal"/>
-	<field name="type" class="java.lang.String"/>
 	<title>
 		<band height="79" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $P{format}.equals("EXCEL")]]></printWhenExpression>
