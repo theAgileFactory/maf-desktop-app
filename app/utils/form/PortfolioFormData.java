@@ -17,15 +17,19 @@
  */
 package utils.form;
 
+import javax.persistence.Column;
+
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioDao;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.Portfolio;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioDao;
 
 /**
- * An portfolio form data is used to manage the fields when editing a portfolio.
+ * A portfolio form data is used to manage the fields when editing a portfolio.
  * 
  * @author Johann Kohler
  */
@@ -36,6 +40,10 @@ public class PortfolioFormData {
     @Required
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String name;
+
+    @Column(length = IModelConstants.MEDIUM_STRING)
+    @ApiModelProperty(position = 2)
+    public String refId;
 
     public boolean isActive;
 
