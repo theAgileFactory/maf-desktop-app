@@ -6,3 +6,4 @@ logs/
 sysadmin.*
 target/
 lib/
+.checkstyle
