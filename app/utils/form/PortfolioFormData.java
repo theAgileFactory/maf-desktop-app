@@ -17,12 +17,14 @@
  */
 package utils.form;
 
+import javax.persistence.Column;
+
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioDao;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.Portfolio;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioDao;
 
 /**
  * An portfolio form data is used to manage the fields when editing a portfolio.
@@ -36,6 +38,9 @@ public class PortfolioFormData {
     @Required
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String name;
+
+    @Column(length = IModelConstants.MEDIUM_STRING)
+    public String refId;
 
     public boolean isActive;
 
@@ -64,6 +69,7 @@ public class PortfolioFormData {
         isActive = portfolio.isActive;
         portfolioType = portfolio.portfolioType != null ? portfolio.portfolioType.id : null;
         manager = portfolio.manager != null ? portfolio.manager.id : null;
+        refId = portfolio.refId;
 
     }
 
@@ -79,6 +85,7 @@ public class PortfolioFormData {
         portfolio.isActive = isActive;
         portfolio.portfolioType = portfolioType != null ? PortfolioDao.getPortfolioTypeById(portfolioType) : null;
         portfolio.manager = manager != null ? ActorDao.getActorById(manager) : null;
+        portfolio.refId = refId;
 
     }
 

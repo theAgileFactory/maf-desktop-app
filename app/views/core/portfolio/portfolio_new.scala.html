@@ -57,7 +57,9 @@
                     
                         <input type="hidden" id="isActive" data-primitive="true" name="isActive" value="true"/>
                         
-                        @parts.input_text(portfolioForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(portfolioForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.ref_id.label"), 'autofocus -> "autofocus")
+                        
+                        @parts.input_text(portfolioForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.name.label"))
                         
                         @parts.dropdownlist(portfolioForm("portfolioType"), parts.Msg.asString("object.portfolio.type.label"), portfolioTypes)
                         

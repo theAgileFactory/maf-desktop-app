@@ -66,7 +66,9 @@
                             parts.Msg.asString("object.portfolio.is_active.help")
                         )
                         
-                        @parts.input_text(portfolioForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.name.label"), 'autofocus -> "autofocus")
+                        @parts.input_text(portfolioForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.ref_id.label"), 'autofocus -> "autofocus")
+                        
+                        @parts.input_text(portfolioForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio.name.label"))
                         
                         @parts.dropdownlist(portfolioForm("portfolioType"), parts.Msg.asString("object.portfolio.type.label"), portfolioTypes)
                         
