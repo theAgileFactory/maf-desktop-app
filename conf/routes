@@ -866,6 +866,8 @@ GET     /api/core/budget-bucket/:id/portfolio-entry-budget-line/find      contro
 #PurchaseOrder
 GET     /api/core/purchase-order/find                                     controllers.api.core.PurchaseOrderApiController.getPurchaseOrdersList(isCancelled: java.lang.Boolean ?= null)
 GET     /api/core/purchase-order/:id                                      controllers.api.core.PurchaseOrderApiController.getPurchaseOrderById(id: Long)
+POST    /api/core/purchase-order/                                         controllers.api.core.PurchaseOrderApiController.createPurchaseOrder
+PUT     /api/core/purchase-order/:id                                      controllers.api.core.PurchaseOrderApiController.updatePurchaseOrder(id: Long)
 
 #PurchaseOrderLineItem
 GET     /api/core/purchase-order/:id/line/find                            controllers.api.core.PurchaseOrderApiController.getPurchaseOrderLinesList(id: Long, isCancelled: java.lang.Boolean ?= null)
