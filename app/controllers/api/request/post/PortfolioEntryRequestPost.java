@@ -20,8 +20,6 @@ package controllers.api.request.post;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -44,8 +42,7 @@ import play.data.validation.ValidationError;
  * 
  * @author Johann Kohler
  */
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE,
-        isGetterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PortfolioEntryRequestPost {
 
@@ -79,7 +76,7 @@ public class PortfolioEntryRequestPost {
     @ApiModelProperty(required = true)
     public Long managerId;
 
-    @Column(length = IModelConstants.MEDIUM_STRING)
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
     @JsonProperty
     public String refId;
 

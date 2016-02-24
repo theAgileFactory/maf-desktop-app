@@ -201,7 +201,7 @@ public class PortfolioApiController extends ApiController {
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     @BodyParser.Of(BodyParser.Raw.class)
-    public Result updatePortfolio(@ApiParam(value = "A portfolio entry", required = true) @PathParam("id") Long id) {
+    public Result updatePortfolio(@ApiParam(value = "A portfolio id", required = true) @PathParam("id") Long id) {
         try {
 
             Portfolio portfolio = PortfolioDao.getPortfolioById(id);

@@ -20,8 +20,6 @@ package controllers.api.request.post;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
@@ -70,7 +68,7 @@ public class PortfolioEntryRequestPut {
     @ApiModelProperty(required = true)
     public Long managerId;
 
-    @Column(length = IModelConstants.MEDIUM_STRING)
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
     @JsonProperty
     public String refId;
 
