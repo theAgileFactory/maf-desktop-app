@@ -19,8 +19,6 @@ package utils.form;
 
 import javax.persistence.Column;
 
-import com.wordnik.swagger.annotations.ApiModelProperty;
-
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioDao;
 import models.framework_models.parent.IModelConstants;
@@ -42,7 +40,6 @@ public class PortfolioFormData {
     public String name;
 
     @Column(length = IModelConstants.MEDIUM_STRING)
-    @ApiModelProperty(position = 2)
     public String refId;
 
     public boolean isActive;
@@ -72,6 +69,7 @@ public class PortfolioFormData {
         isActive = portfolio.isActive;
         portfolioType = portfolio.portfolioType != null ? portfolio.portfolioType.id : null;
         manager = portfolio.manager != null ? portfolio.manager.id : null;
+        refId = portfolio.refId;
 
     }
 
@@ -87,6 +85,7 @@ public class PortfolioFormData {
         portfolio.isActive = isActive;
         portfolio.portfolioType = portfolioType != null ? PortfolioDao.getPortfolioTypeById(portfolioType) : null;
         portfolio.manager = manager != null ? ActorDao.getActorById(manager) : null;
+        portfolio.refId = refId;
 
     }
 
