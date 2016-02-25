@@ -874,6 +874,12 @@ GET     /api/core/purchase-order/:po_id/line/find                         contro
 POST    /api/core/purchase-order/:po_id/line/                             controllers.api.core.PurchaseOrderLineItemApiController.createPurchaseOrderLineItem(po_id: Long)
 PUT     /api/core/purchase-order/:po_id/line/:line_id                     controllers.api.core.PurchaseOrderLineItemApiController.updatePurchaseOrderLineItem(po_id: Long, line_id: Long)
 
+#PurchaseOrderLineShipmentStatusType
+GET     /api/core/purchase-order-shipment-status-type/find                controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.getPurchaseOrdersLineShipmentStatusTypeList
+GET     /api/core/purchase-order-shipment-status-type/:id                 controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.getPurchaseOrderLineShipmentStatusTypeById(id: Long)
+POST    /api/core/purchase-order-shipment-status-type/                    controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.createPurchaseOrderLineShipmentStatusType
+PUT     /api/core/purchase-order-shipment-status-type/:id                 controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.updatePurchaseOrderLineShipmentStatusType(id: Long)
+
 #CostCenter
 GET     /api/core/cost-center/find                                        controllers.api.core.CostCenterApiController.getCostCentersList()
 GET     /api/core/cost-center/:id                                         controllers.api.core.CostCenterApiController.getCostCenterById(id: Long)
@@ -942,6 +948,7 @@ GET     /api-docs/api/core/requirement-status                             framew
 GET     /api-docs/api/core/budget-bucket                                  framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/budget-bucket")
 
 GET     /api-docs/api/core/purchase-order                                 framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/purchase-order")
+GET     /api-docs/api/core/purchase-order-shipment-status-type            framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/purchase-order-shipment-status-type")
 
 GET     /api-docs/api/core/cost-center                                    framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/cost-center")
 

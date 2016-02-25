@@ -263,7 +263,7 @@ public abstract class PurchaseOrderDAO {
     /**
      * Get the whole list of PurchaseOrderLineShipmentStatusType object.
      * 
-     * @return
+     * @return a list of all purchase order list shipment status type
      */
     public static List<PurchaseOrderLineShipmentStatusType> getPurchaseOrderLineShipmentStatusTypeAsList() {
 
