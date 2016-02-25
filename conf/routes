@@ -870,7 +870,9 @@ POST    /api/core/purchase-order/                                         contro
 PUT     /api/core/purchase-order/:id                                      controllers.api.core.PurchaseOrderApiController.updatePurchaseOrder(id: Long)
 
 #PurchaseOrderLineItem
-GET     /api/core/purchase-order/:id/line/find                            controllers.api.core.PurchaseOrderApiController.getPurchaseOrderLinesList(id: Long, isCancelled: java.lang.Boolean ?= null)
+GET     /api/core/purchase-order/:po_id/line/find                         controllers.api.core.PurchaseOrderLineItemApiController.getPurchaseOrderLinesList(po_id: Long, isCancelled: java.lang.Boolean ?= null)
+POST    /api/core/purchase-order/:po_id/line/                             controllers.api.core.PurchaseOrderLineItemApiController.createPurchaseOrderLineItem(po_id: Long)
+PUT     /api/core/purchase-order/:po_id/line/:line_id                     controllers.api.core.PurchaseOrderLineItemApiController.updatePurchaseOrderLineItem(po_id: Long, line_id: Long)
 
 #CostCenter
 GET     /api/core/cost-center/find                                        controllers.api.core.CostCenterApiController.getCostCentersList()
