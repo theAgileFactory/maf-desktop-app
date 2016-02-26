@@ -883,6 +883,10 @@ PUT     /api/core/purchase-order-shipment-status-type/:id                 contro
 #CostCenter
 GET     /api/core/cost-center/find                                        controllers.api.core.CostCenterApiController.getCostCentersList()
 GET     /api/core/cost-center/:id                                         controllers.api.core.CostCenterApiController.getCostCenterById(id: Long)
+POST    /api/core/cost-center/                                            controllers.api.core.CostCenterApiController.createCostCenter
+PUT     /api/core/cost-center/:id                                         controllers.api.core.CostCenterApiController.updateCostCenter(id: Long)
+GET     /api/core/cost-center/:cc_id/line/find                            controllers.api.core.CostCenterApiController.getPurchaseOrderLinesListForCostCenter(cc_id: Long)
+GET     /api/core/cost-center/:cc_id/line/:line_id                        controllers.api.core.CostCenterApiController.getPurchaseOrderLineItemForCostCenter(cc_id: Long, line_id: Long)
 
 #Currency
 GET     /api/core/currency/find                                           controllers.api.core.CurrencyApiController.getCurrenciesList(isActive: java.lang.Boolean ?= null)

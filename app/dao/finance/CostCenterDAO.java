@@ -21,20 +21,21 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import models.finance.CostCenter;
 import com.avaje.ebean.Model.Finder;
-import play.mvc.Http;
-
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
+import models.finance.CostCenter;
+import models.finance.PurchaseOrderLineItem;
+import play.mvc.Http;
 
 /**
  * DAO for the {@link CostCenter} object.
  * 
  * @author Pierre-Yves Cloux
+ * @author Marc Schaer
  */
 public abstract class CostCenterDAO {
 
@@ -42,6 +43,7 @@ public abstract class CostCenterDAO {
      * Default finder for the entity class.
      */
     public static Finder<Long, CostCenter> find = new Finder<>(CostCenter.class);
+    public static Finder<Long, PurchaseOrderLineItem> findPurchaseOrderLineItem = new Finder<>(PurchaseOrderLineItem.class);
 
     /**
      * Default constructor.
@@ -119,6 +121,33 @@ public abstract class CostCenterDAO {
      */
     public static CostCenter getCostCenterById(Long id) {
         return CostCenterDAO.find.where().eq("deleted", false).eq("id", id).findUnique();
+    }
+
+    /**
+     * Get the line item list of a cost center with filters.
+     * 
+     * @param costCenterId
+     *            the cost center id
+     **/
+    public static List<PurchaseOrderLineItem> getPurchaseOrderLineItemActiveAsListByCC(Long costCenterId) {
+        return CostCenterDAO.getCostCenterById(costCenterId).purchaseOrderLineItems;
+    }
+
+    /**
+     * Get a line item of a cost center with filters.
+     * 
+     * @param costCenterId
+     *            the cost center id
+     **/
+    public static PurchaseOrderLineItem getPurchaseOrderLineItemByCC(Long costCenterId, Long lineItemId) {
+
+        List<PurchaseOrderLineItem> items = CostCenterDAO.getPurchaseOrderLineItemActiveAsListByCC(costCenterId);
+        for (PurchaseOrderLineItem item : items) {
+            if (item.id.equals(lineItemId)) {
+                return item;
+            }
+        }
+        return null;
     }
 
 }
