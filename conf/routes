@@ -918,6 +918,14 @@ GET     /api/core/root/ad-panel/flush-cache                             controll
 GET     /api/core/root/report/reload                                    controllers.api.core.RootApiController.reportReload()
 GET     /api/core/root/kpi/reload                                       controllers.api.core.RootApiController.kpiReload()
 
+#User
+GET     /api/core/user/find                                             controllers.api.core.UserApiController.getUsersList
+GET     /api/core/user/find/name/:name                                  controllers.api.core.UserApiController.getUsersFromName(name: String)
+GET     /api/core/user/find/mail/:mail                                  controllers.api.core.UserApiController.getUsersFromMail(mail: String)
+GET     /api/core/user/find/mafid/:maf_id                               controllers.api.core.UserApiController.getUsersFromMafId(maf_id: Long)
+GET     /api/core/user/find/uid/:uid                                    controllers.api.core.UserApiController.getUsersFromUid(uid: String)
+
+
 # Doc
 GET     /api-docs                                                         framework.services.api.doc.ApiHelpController.getResources
 
@@ -965,3 +973,5 @@ GET     /api-docs/api/core/life-cycle-process                             framew
 GET     /api-docs/api/core/kpi                                            framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/kpi")
 
 GET     /api-docs/api/core/data-syndication                               framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/data-syndication")
+
+GET     /api-docs/api/core/user                                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/user")
