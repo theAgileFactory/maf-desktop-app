@@ -21,11 +21,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import be.objectify.deadbolt.core.models.Permission;
-import be.objectify.deadbolt.core.models.Role;
 import framework.services.account.AccountManagementException;
+import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IUserAccount;
 import framework.services.account.IUserAccount.AccountType;
 import models.framework_models.parent.IModelConstants;
@@ -38,6 +39,9 @@ import play.data.validation.ValidationError;
  * @author Marc Schaer
  */
 public class UserListRequest {
+
+    @Inject
+    IAccountManagerPlugin accountManager;
 
     @JsonProperty
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
@@ -72,16 +76,7 @@ public class UserListRequest {
     public Boolean markedForDeletion;
 
     @JsonProperty
-    public List<? extends Role> roles = Collections.synchronizedList(new ArrayList<Role>());
-
-    @JsonProperty
-    public List<? extends Role> selectableRoles = Collections.synchronizedList(new ArrayList<Role>());
-
-    @JsonProperty
     public List<String> systemLevelRoleTypes = Collections.synchronizedList(new ArrayList<String>());
-
-    @JsonProperty
-    public List<? extends Permission> permissions = Collections.synchronizedList(new ArrayList<Permission>());
 
     /**
      * Constructor with arguments.
@@ -96,14 +91,10 @@ public class UserListRequest {
      * @param mail
      * @param preferredLanguage
      * @param markedForDeletion
-     * @param roles
-     * @param selectableRoles
      * @param systemLevelRoleTypes
-     * @param permissions
      */
     public UserListRequest(AccountType accountType, Boolean isActive, Boolean isDisplayed, String firstName, String lastName, Long mafUid, String uid,
-            String mail, String preferredLanguage, Boolean markedForDeletion, List<Role> roles, List<Role> selectableRoles, List<String> systemLevelRoleTypes,
-            List<Permission> permissions) {
+            String mail, String preferredLanguage, Boolean markedForDeletion, List<String> systemLevelRoleTypes) {
         this.accountType = accountType;
         this.isActive = isActive;
         this.isDisplayed = isDisplayed;
@@ -114,10 +105,7 @@ public class UserListRequest {
         this.mail = mail;
         this.preferredLanguage = preferredLanguage;
         this.markedForDeletion = markedForDeletion;
-        this.roles = roles;
-        this.selectableRoles = selectableRoles;
         this.systemLevelRoleTypes = systemLevelRoleTypes;
-        this.permissions = permissions;
     }
 
     public UserListRequest(IUserAccount account) throws AccountManagementException {
@@ -131,10 +119,7 @@ public class UserListRequest {
         this.mail = account.getMail();
         this.preferredLanguage = account.getPreferredLanguage();
         this.markedForDeletion = account.isMarkedForDeletion();
-        this.roles = account.getRoles();
-        this.selectableRoles = account.getSelectableRoles();
         this.systemLevelRoleTypes = account.getSystemLevelRoleTypeNames();
-        this.permissions = account.getPermissions();
     }
 
     /**
@@ -145,16 +130,21 @@ public class UserListRequest {
 
     /**
      * Form validator.
+     * 
+     * @throws AccountManagementException
      */
-    public List<ValidationError> validate() {
+    public List<ValidationError> validate() throws AccountManagementException {
         List<ValidationError> errors = new ArrayList<>();
 
-        // TODO
-        /*
-         * if (managerId != null && ActorDao.getActorById(managerId) == null) {
-         * errors.add(new ValidationError("managerId",
-         * "The manager does not exist")); }
-         */
+        if (mafUid != null && accountManager.getUserAccountFromMafUid(mafUid) == null) {
+            errors.add(new ValidationError("mafid", "The mafUid does not exist"));
+        }
+        if (uid != null && accountManager.getUserAccountFromUid(uid) == null) {
+            errors.add(new ValidationError("uid", "The uid does not exist"));
+        }
+        if (mail != null && accountManager.getUserAccountFromEmail(mail) == null) {
+            errors.add(new ValidationError("mail", "The mail does not exist"));
+        }
 
         return errors.isEmpty() ? null : errors;
 

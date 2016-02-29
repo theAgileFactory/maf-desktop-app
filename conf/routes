@@ -920,10 +920,15 @@ GET     /api/core/root/kpi/reload                                       controll
 
 #User
 GET     /api/core/user/find                                             controllers.api.core.UserApiController.getUsersList
-GET     /api/core/user/find/name/:name                                  controllers.api.core.UserApiController.getUsersFromName(name: String)
-GET     /api/core/user/find/mail/:mail                                  controllers.api.core.UserApiController.getUsersFromMail(mail: String)
-GET     /api/core/user/find/mafid/:maf_id                               controllers.api.core.UserApiController.getUsersFromMafId(maf_id: Long)
-GET     /api/core/user/find/uid/:uid                                    controllers.api.core.UserApiController.getUsersFromUid(uid: String)
+GET     /api/core/user/name/:name                                       controllers.api.core.UserApiController.getUsersFromName(name: String)
+GET     /api/core/user/mail/:mail                                       controllers.api.core.UserApiController.getUsersFromMail(mail: String)
+GET     /api/core/user/mafid/:maf_id                                    controllers.api.core.UserApiController.getUsersFromMafId(maf_id: Long)
+GET     /api/core/user/uid/:uid                                         controllers.api.core.UserApiController.getUsersFromUid(uid: String)
+GET     /api/core/user/uid/:uid/roles/find                              controllers.api.core.UserApiController.getUsersRoles(uid: String)
+POST    /api/core/user/                                                 controllers.api.core.UserApiController.createUser
+PUT     /api/core/user/:maf_id/                                         controllers.api.core.UserApiController.updateUser(maf_id: Long)
+PUT     /api/core/user/:uid/roles/:role_id/add                          controllers.api.core.UserApiController.addRole(uid: String, role_id: Long)
+PUT     /api/core/user/:uid/roles/:role_id/remove                       controllers.api.core.UserApiController.removeRole(uid: String, role_id: Long)
 
 
 # Doc
