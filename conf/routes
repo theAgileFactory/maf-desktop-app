@@ -778,6 +778,8 @@ PUT     /api/core/org-unit/:id                                             contr
 #OrgUnitType
 GET     /api/core/org-unit-type/find                                       controllers.api.core.OrgUnitTypeApiController.getOrgUnitTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/org-unit-type/:id                                        controllers.api.core.OrgUnitTypeApiController.getOrgUnitTypeById(id: Long)
+POST    /api/core/org-unit-type/                                           controllers.api.core.OrgUnitTypeApiController.createOrgUnitType
+PUT     /api/core/org-unit-type/:id                                        controllers.api.core.OrgUnitTypeApiController.updateOrgUnitType(id: Long)
 
 #Portfolio
 GET     /api/core/portfolio/find                                           controllers.api.core.PortfolioApiController.getPortfoliosList(isActive: java.lang.Boolean ?= null, managerId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null, portfolioTypeId: java.lang.Long ?= null)
@@ -812,6 +814,8 @@ GET     /api/core/portfolio-entry/:id/work-order/:workOrderId/amount-received co
 #PortfolioEntryType
 GET     /api/core/portfolio-entry-type/find                                controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypesList(selectable: java.lang.Boolean ?= null, isRelease: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-type/:id                                 controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypeById(id: Long)
+POST    /api/core/portfolio-entry-type/                                    controllers.api.core.PortfolioEntryTypeApiController.createPortfolioEntryType
+PUT     /api/core/portfolio-entry-type/:id                                 controllers.api.core.PortfolioEntryTypeApiController.updatePortfolioEntryType(id: Long)
 
 #PortfolioEntryEventType
 GET     /api/core/portfolio-entry-event-type/find                          controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypesList(selectable: java.lang.Boolean ?= null)
