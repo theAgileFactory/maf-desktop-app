@@ -790,6 +790,8 @@ PUT     /api/core/portfolio/:id                                            contr
 #PortfolioType
 GET     /api/core/portfolio-type/find                                      controllers.api.core.PortfolioTypeApiController.getPortfolioTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-type/:id                                       controllers.api.core.PortfolioTypeApiController.getPortfolioTypeById(id: Long)
+POST    /api/core/portfolio-type/                                          controllers.api.core.PortfolioTypeApiController.createPortfolioType
+PUT     /api/core/portfolio-type/:id                                       controllers.api.core.PortfolioTypeApiController.updatePortfolioType(id: Long)
 
 #PortfolioEntry
 GET     /api/core/portfolio-entry/find                                     controllers.api.core.PortfolioEntryApiController.getPortfolioEntriesList(managerId: java.lang.Long ?= null, sponsoringUnitId: java.lang.Long ?= null, deliveryUnitId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, archived: java.lang.Boolean ?= null, portfolioEntryTypeId: java.lang.Long ?= null, isPublic: java.lang.Boolean ?= null)
