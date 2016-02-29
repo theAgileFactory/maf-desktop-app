@@ -24,7 +24,10 @@
     budgetOpex: java.math.BigDecimal,
     forecast: java.math.BigDecimal,
     forecastCapex: java.math.BigDecimal,
-    forecastOpex: java.math.BigDecimal
+    forecastOpex: java.math.BigDecimal,
+    engaged: java.math.BigDecimal,
+    engagedCapex: java.math.BigDecimal,
+    engagedOpex: java.math.BigDecimal
 )
 
 @import be.objectify.deadbolt.java.views.html._
@@ -37,57 +40,81 @@
 
 @restrict(la(as(constants.IMafConstants.PORTFOLIO_ENTRY_VIEW_FINANCIAL_INFO_ALL_PERMISSION))) {
 
-<div class="col-sm-4">
-    <div class="panel cockpit-box cockpit-box-primary">
-        <div class="row header">
-            <div class="col-xs-offset-1 col-xs-3 icon">
-                <span class="fa fa-money"></span>
+    <div class="col-sm-3">
+        <div class="panel cockpit-box cockpit-box-primary">
+            <div class="row header">
+                <div class="col-xs-offset-1 col-xs-3 icon">
+                    <span class="fa fa-money"></span>
+                </div>
+                <div class="col-xs-8 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.main")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budget)</p>
+                </div>
             </div>
-            <div class="col-xs-8 value">
-                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.main")</span>
-                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budget)</p>
-            </div>
-        </div>
-        <div class="row content">
-            <div class="col-xs-offset-1 col-xs-5 value">
-                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.additional1")</span>
-                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budgetCapex)</p>
-            </div>
-            <div class="col-xs-6 value">
-                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.additional2")</span>
-                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budgetOpex)</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="col-sm-4">
-    <div class="panel cockpit-box cockpit-box-primary">
-        <div class="row header">
-            <div class="col-xs-offset-1 col-xs-3 icon">
-                <span class="fa fa-money"></span>
-            </div>
-            <div class="col-xs-8 value">
-                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.main")</span>
-                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecast)</p>
-            </div>
-        </div>
-        <div class="row content">
-            <div class="col-xs-offset-1 col-xs-5 value">
-                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.additional1")</span>
-                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecastCapex)</p>
-            </div>
-            <div class="col-xs-6 value">
-                <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.additional2")</span>
-                <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecastOpex)</p>
+            <div class="row content">
+                <div class="col-xs-offset-1 col-xs-5 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.additional1")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budgetCapex)</p>
+                </div>
+                <div class="col-xs-6 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.budget.additional2")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(budgetOpex)</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    
+    <div class="col-sm-3">
+        <div class="panel cockpit-box cockpit-box-primary">
+            <div class="row header">
+                <div class="col-xs-offset-1 col-xs-3 icon">
+                    <span class="fa fa-money"></span>
+                </div>
+                <div class="col-xs-8 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.main")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecast)</p>
+                </div>
+            </div>
+            <div class="row content">
+                <div class="col-xs-offset-1 col-xs-5 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.additional1")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecastCapex)</p>
+                </div>
+                <div class="col-xs-6 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.forecast.additional2")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(forecastOpex)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-3">
+        <div class="panel cockpit-box cockpit-box-primary">
+            <div class="row header">
+                <div class="col-xs-offset-1 col-xs-3 icon">
+                    <span class="fa fa-money"></span>
+                </div>
+                <div class="col-xs-8 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.engaged.main")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(engaged)</p>
+                </div>
+            </div>
+            <div class="row content">
+                <div class="col-xs-offset-1 col-xs-5 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.engaged.additional1")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(engagedCapex)</p>
+                </div>
+                <div class="col-xs-6 value">
+                    <span class="small">@parts.Msg("core.roadmap.simulator.capacity_kpis.engaged.additional2")</span>
+                    <p>@dao.finance.CurrencyDAO.getCurrencyDefault().code @display_number(engagedOpex)</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 }
 
-<div class="col-sm-4">
+<div class="col-sm-3">
     <div class="panel cockpit-box cockpit-box-primary">
         <div class="row header">
             <div class="col-xs-offset-1 col-xs-3 icon">
