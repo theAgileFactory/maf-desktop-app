@@ -39,7 +39,7 @@ import models.pmo.OrgUnitType;
 import play.mvc.Http;
 
 /**
- * DAO for the {@link OrgUnit} and {@link OrgUnitType} objects.
+ * DAO for the {@link OrgUnit} and {@link OrgUnitTypeRequest} objects.
  * 
  * @author Johann Kohler
  */
