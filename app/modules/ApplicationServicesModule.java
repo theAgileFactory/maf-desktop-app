@@ -68,8 +68,6 @@ import framework.services.plugins.IDashboardService;
 import framework.services.plugins.IEventBroadcastingService;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.PluginManagerServiceImpl;
-import framework.services.remote.AdPanelServiceImpl;
-import framework.services.remote.IAdPanelManagerService;
 import framework.services.router.CustomRouterServiceImpl;
 import framework.services.router.ICustomRouterNotificationService;
 import framework.services.router.ICustomRouterService;
@@ -177,7 +175,6 @@ public class ApplicationServicesModule extends FrameworkModule {
         bind(ICustomAttributeManagerService.class).to(CustomAttributeManagerServiceImpl.class).asEagerSingleton();
         bind(IPersonalStoragePlugin.class).to(PersonalStoragePluginImpl.class).asEagerSingleton();
         bind(ISharedStorageService.class).to(SharedStorageServiceImpl.class).asEagerSingleton();
-        bind(IAdPanelManagerService.class).to(AdPanelServiceImpl.class).asEagerSingleton();
         bind(IAttachmentManagerPlugin.class).to(DefaultAttachmentManagerPlugin.class).asEagerSingleton();
         bind(INotificationManagerPlugin.class).to(DefaultNotificationManagerPlugin.class).asEagerSingleton();
         bind(IPluginManagerService.class).to(PluginManagerServiceImpl.class).asEagerSingleton();

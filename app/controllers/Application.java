@@ -60,7 +60,6 @@ import framework.services.notification.INotificationManagerPlugin;
 import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.plugins.api.IPluginMenuDescriptor;
-import framework.services.remote.IAdPanelManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
@@ -81,7 +80,6 @@ import models.framework_models.common.DynamicSingleItemCustomAttributeValue;
 import models.framework_models.common.HelpTarget;
 import play.Configuration;
 import play.Logger;
-import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
@@ -110,8 +108,6 @@ public class Application extends Controller {
     private IUserSessionManagerPlugin userSessionManagerPlugin;
     @Inject
     private INotificationManagerPlugin notificationManagerPlugin;
-    @Inject
-    private IAdPanelManagerService adPanelManagerService;
     @Inject
     private IAttachmentManagerPlugin attachmentManagerPlugin;
     @Inject
@@ -740,16 +736,6 @@ public class Application extends Controller {
     }
 
     /**
-     * Return the AdPanel content for the specified page.
-     * 
-     * @param page
-     *            a page
-     */
-    public Promise<Result> getAdPanelContent(String page) {
-        return getAdPanelManagerService().getRemotePanel(page);
-    }
-
-    /**
      * Returns the data associated with the IDZone component.
      * 
      * @param userSessionManagerService
@@ -854,13 +840,6 @@ public class Application extends Controller {
      */
     private INotificationManagerPlugin getNotificationManagerPlugin() {
         return notificationManagerPlugin;
-    }
-
-    /**
-     * Get the ad panel manager service.
-     */
-    private IAdPanelManagerService getAdPanelManagerService() {
-        return adPanelManagerService;
     }
 
     /**

@@ -12,7 +12,6 @@ import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.configuration.Language;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.plugins.IPluginManagerService;
-import framework.services.remote.IAdPanelManagerService;
 import framework.utils.Utilities;
 import play.Logger;
 import play.libs.F.Promise;
@@ -50,9 +49,6 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
 
     @Inject
     private IPreferenceManagerPlugin preferenceManagerPlugin;
-
-    @Inject
-    private IAdPanelManagerService adPanelManagerService;
 
     @Inject
     private IBudgetTrackingService budgetTrackingService;
@@ -104,7 +100,6 @@ public class MafHttpRequestHandler extends AbstractRequestHandler {
         context.args.put(INotificationManagerPlugin.class.getName(), notificationService);
         context.args.put(IEchannelService.class.getName(), echannelService);
         context.args.put(IPreferenceManagerPlugin.class.getName(), preferenceManagerPlugin);
-        context.args.put(IAdPanelManagerService.class.getName(), adPanelManagerService);
         context.args.put(IBudgetTrackingService.class.getName(), budgetTrackingService);
         context.args.put(IPluginManagerService.class.getName(), pluginManagerService);
     }
