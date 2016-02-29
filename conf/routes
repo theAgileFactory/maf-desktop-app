@@ -762,6 +762,8 @@ GET     /api/core/actor-capacity/find                                     contro
 #ActorType
 GET     /api/core/actor-type/find                                         controllers.api.core.ActorTypeApiController.getActorTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/actor-type/:id                                          controllers.api.core.ActorTypeApiController.getActorTypeById(id: Long)
+POST    /api/core/actor-type/                                             controllers.api.core.ActorTypeApiController.createActorType
+PUT     /api/core/actor-type/:id                                          controllers.api.core.ActorTypeApiController.updateActorType(id: Long)
 
 #Competency
 GET     /api/core/competency/find                                          controllers.api.core.CompetencyApiController.getCompetenciesList(isActive: java.lang.Boolean ?= null, actorId: java.lang.Long ?= null)
