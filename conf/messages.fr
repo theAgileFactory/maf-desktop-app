@@ -1399,6 +1399,7 @@ object.portfolio_entry_budget_line.is_opex.label=OPEX
 object.portfolio_entry_budget_line.is_opex.help=Cocher cette case si la ligne de budget est de type OPEX, sinon elle sera de type CAPEX.
 object.portfolio_entry_budget_line.currency.label=Devise
 object.portfolio_entry_budget_line.amount.label=Montant
+object.portfolio_entry_budget_line.type.label=Catégorie de dépenses
 object.portfolio_entry_budget_line.budget_bucket.label=Enveloppe budgétaire
 object.portfolio_entry_budget_line.gl_account.label=Compte comptable
 object.portfolio_entry_budget_line.table.empty=Il n''existe aucune ligne de budget.

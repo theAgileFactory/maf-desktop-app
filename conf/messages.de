@@ -1400,6 +1400,7 @@ object.portfolio_entry_budget_line.is_opex.label=OPEX
 object.portfolio_entry_budget_line.is_opex.help=Nicht angekreuzt, wird als CAPEX verbucht.
 object.portfolio_entry_budget_line.currency.label=Währung
 object.portfolio_entry_budget_line.amount.label=Betrag
+object.portfolio_entry_budget_line.type.label=Ausgabenkategorie 
 object.portfolio_entry_budget_line.budget_bucket.label=Budgetposten
 object.portfolio_entry_budget_line.gl_account.label=GL Konto
 object.portfolio_entry_budget_line.table.empty=Keine Einträge

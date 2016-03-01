@@ -1387,6 +1387,7 @@ object.portfolio_entry_budget_line.is_opex.label=OPEX
 object.portfolio_entry_budget_line.is_opex.help=Check this box if the budget line is OPEX, else it means it''s CAPEX.
 object.portfolio_entry_budget_line.currency.label=Currency
 object.portfolio_entry_budget_line.amount.label=Amount
+object.portfolio_entry_budget_line.type.label=Expenditure Category
 object.portfolio_entry_budget_line.budget_bucket.label=Budget bucket
 object.portfolio_entry_budget_line.gl_account.label=GL account
 object.portfolio_entry_budget_line.table.empty=There is no budget line.
