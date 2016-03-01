@@ -1393,6 +1393,11 @@ object.portfolio_entry_budget_line.gl_account.label=GL account
 object.portfolio_entry_budget_line.table.empty=There is no budget line.
 
 #----------------------
+# portfolioEntryBudgetLineType
+#----------------------
+object.portfolio_entry_budget_line.table.empty=There is no expenditure categories.
+
+#----------------------
 # allocatedResource
 #----------------------
 

@@ -1405,6 +1405,11 @@ object.portfolio_entry_budget_line.gl_account.label=Compte comptable
 object.portfolio_entry_budget_line.table.empty=Il n''existe aucune ligne de budget.
 
 #----------------------
+# portfolioEntryBudgetLineType
+#----------------------
+object.portfolio_entry_budget_line_type.table.empty=Il n''existe aucune catégorie de dépenses.
+
+#----------------------
 # allocatedResource
 #----------------------
 
