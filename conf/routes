@@ -840,6 +840,8 @@ GET     /api/core/portfolio-entry-planning-package-group/:id/pattern/find  contr
 #PortfolioEntryReportStatusType
 GET     /api/core/portfolio-entry-report-status-type/find                  controllers.api.core.PortfolioEntryReportStatusTypeApiController.getPortfolioEntryReportStatusTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-report-status-type/:id                   controllers.api.core.PortfolioEntryReportStatusTypeApiController.getPortfolioEntryReportStatusTypeById(id: Long)
+POST    /api/core/portfolio-entry-report-status-type/                      controllers.api.core.PortfolioEntryReportStatusTypeApiController.createPortfolioEntryReportStatusType
+PUT     /api/core/portfolio-entry-report-status-type/:id                   controllers.api.core.PortfolioEntryReportStatusTypeApiController.udpatePortfolioEntryReportStatusType(id: Long)
 
 #PortfolioEntryRiskType
 GET     /api/core/portfolio-entry-risk-type/find                           controllers.api.core.PortfolioEntryRiskTypeApiController.getPortfolioEntryRiskTypesList(selectable: java.lang.Boolean ?= null)
