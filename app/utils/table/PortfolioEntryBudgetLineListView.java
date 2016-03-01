@@ -86,6 +86,10 @@ public class PortfolioEntryBudgetLineListView {
                     addColumn("amount", "amount", "object.portfolio_entry_budget_line.amount.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("amount", new NumberFormatter<PortfolioEntryBudgetLineListView>());
 
+                    addColumn("expenditureCategory", "expenditureCategory Cat.", "object.portfolio_entry_budget_line.type.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("expenditureCategory", new NumberFormatter<PortfolioEntryBudgetLineListView>());
+
                     addColumn("budgetBucket", "budgetBucket", "object.portfolio_entry_budget_line.budget_bucket.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("budgetBucket", new IColumnFormatter<PortfolioEntryBudgetLineListView>() {
                         @Override
