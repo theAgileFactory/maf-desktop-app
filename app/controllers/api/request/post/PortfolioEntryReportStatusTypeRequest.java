@@ -20,66 +20,46 @@ package controllers.api.request.post;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import dao.pmo.PortfolioEntryDao;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 
 /**
- * The portfolio entry put request.
+ * The portfolio entry Report Status type put/post request.
  * 
- * @author Johann Kohler
+ * @author Marc Schaer
  */
-public class PortfolioEntryRequestPut {
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class PortfolioEntryReportStatusTypeRequest {
 
     @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
+    @ApiModelProperty(required = true)
     public String name;
 
     @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
-    public Long portfolioEntryTypeId;
-
-    @JsonProperty
-    @MaxLength(value = IModelConstants.SMALL_STRING)
-    public String governanceId;
-
-    @JsonProperty
-    @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    public String erpRefId;
-
-    @JsonProperty
-    @Required
-    @ApiModelProperty(required = true)
-    @MaxLength(value = IModelConstants.XLARGE_STRING)
+    @MaxLength(value = IModelConstants.VLARGE_STRING)
     public String description;
 
+    /**
+     * The CSS class to be associated to this status. This is to be used to
+     * render visually (usually with a color) the status (RED, AMBER, GREEN)
+     */
+    @MaxLength(value = IModelConstants.SMALL_STRING)
     @JsonProperty
-    @Required
     @ApiModelProperty(required = true)
-    public Long managerId;
-
-    @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    @JsonProperty
-    public String refId;
+    public String cssClass;
 
     @JsonProperty
-    public boolean isPublic;
-
-    @JsonProperty
-    public boolean archived;
-
-    @JsonProperty
-    public Long sponsoringUnitId;
+    @ApiModelProperty(required = true)
+    public Boolean selectable;
 
     /**
      * Form validator.
@@ -87,19 +67,8 @@ public class PortfolioEntryRequestPut {
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-        if (portfolioEntryTypeId != null && PortfolioEntryDao.getPETypeById(portfolioEntryTypeId) == null) {
-            errors.add(new ValidationError("portfolioEntryTypeId", "The portfolioEntryType does not exist"));
-        }
-
-        if (managerId != null && ActorDao.getActorById(managerId) == null) {
-            errors.add(new ValidationError("managerId", "The manager does not exist"));
-        }
-
-        if (sponsoringUnitId != null && OrgUnitDao.getOrgUnitById(sponsoringUnitId) == null) {
-            errors.add(new ValidationError("sponsoringUnitId", "The sponsoringUnit does not exist"));
-        }
-
         return errors.isEmpty() ? null : errors;
+
     }
 
 }

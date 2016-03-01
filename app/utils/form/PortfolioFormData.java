@@ -27,7 +27,7 @@ import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 
 /**
- * An portfolio form data is used to manage the fields when editing a portfolio.
+ * A portfolio form data is used to manage the fields when editing a portfolio.
  * 
  * @author Johann Kohler
  */

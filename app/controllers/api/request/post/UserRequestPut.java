@@ -20,66 +20,56 @@ package controllers.api.request.post;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import dao.pmo.PortfolioEntryDao;
+import framework.services.account.IUserAccount;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 
 /**
- * The portfolio entry put request.
+ * The user put request.
  * 
- * @author Johann Kohler
+ * @author Marc Schaer
  */
-public class PortfolioEntryRequestPut {
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UserRequestPut {
 
     @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
+    @ApiModelProperty(required = true, value = "account type", allowableValues = "STANDARD,VIEWER")
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    public String name;
+    public String accountType;
 
     @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
-    public Long portfolioEntryTypeId;
+    public Boolean isActive;
 
     @JsonProperty
-    @MaxLength(value = IModelConstants.SMALL_STRING)
-    public String governanceId;
+    @ApiModelProperty(value = "2 letters code for language")
+    @MaxLength(value = 2)
+    public String preferredLanguage;
 
     @JsonProperty
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    public String erpRefId;
+    public String firstName;
 
     @JsonProperty
-    @Required
-    @ApiModelProperty(required = true)
-    @MaxLength(value = IModelConstants.XLARGE_STRING)
-    public String description;
-
-    @JsonProperty
-    @Required
-    @ApiModelProperty(required = true)
-    public Long managerId;
-
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    @JsonProperty
-    public String refId;
+    public String lastName;
 
     @JsonProperty
-    public boolean isPublic;
+    @MaxLength(value = IModelConstants.LARGE_STRING)
+    public String mail;
 
     @JsonProperty
-    public boolean archived;
+    public String password;
 
     @JsonProperty
-    public Long sponsoringUnitId;
+    public List<Long> systemLevelRoleTypesIds;
 
     /**
      * Form validator.
@@ -87,19 +77,16 @@ public class PortfolioEntryRequestPut {
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-        if (portfolioEntryTypeId != null && PortfolioEntryDao.getPETypeById(portfolioEntryTypeId) == null) {
-            errors.add(new ValidationError("portfolioEntryTypeId", "The portfolioEntryType does not exist"));
-        }
-
-        if (managerId != null && ActorDao.getActorById(managerId) == null) {
-            errors.add(new ValidationError("managerId", "The manager does not exist"));
-        }
-
-        if (sponsoringUnitId != null && OrgUnitDao.getOrgUnitById(sponsoringUnitId) == null) {
-            errors.add(new ValidationError("sponsoringUnitId", "The sponsoringUnit does not exist"));
+        if (!accountType.equals("")) {
+            try {
+                IUserAccount.AccountType.valueOf(accountType);
+            } catch (Exception e) {
+                errors.add(new ValidationError("accountType", "The account type is incorrect"));
+            }
         }
 
         return errors.isEmpty() ? null : errors;
+
     }
 
 }

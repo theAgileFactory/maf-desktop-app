@@ -23,12 +23,6 @@ import java.util.Map;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-import models.pmo.OrgUnit;
-import play.data.Form;
-import play.data.validation.ValidationError;
-import play.mvc.BodyParser;
-import play.mvc.Result;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordnik.swagger.annotations.Api;
@@ -47,6 +41,11 @@ import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
+import models.pmo.OrgUnit;
+import play.data.Form;
+import play.data.validation.ValidationError;
+import play.mvc.BodyParser;
+import play.mvc.Result;
 
 /**
  * The API controller for the {@link OrgUnit}.
@@ -82,11 +81,11 @@ public class OrgUnitApiController extends ApiController {
     @ApiOperation(value = "list the Org Units", notes = "Return the list of Org Units in the system", response = OrgUnit.class, httpMethod = "GET")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
-    public Result getOrgUnitsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive, @ApiParam(
-            value = "managerId", required = false) @QueryParam("managerId") Long managerId,
+    public Result getOrgUnitsList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive,
+            @ApiParam(value = "managerId", required = false) @QueryParam("managerId") Long managerId,
             @ApiParam(value = "parentId", required = false) @QueryParam("parentId") Long parentId,
-            @ApiParam(value = "orgUnitTypeId", required = false) @QueryParam("orgUnitTypeId") Long orgUnitTypeId, @ApiParam(value = "canSponsor",
-                    required = false) @QueryParam("canSponsor") Boolean canSponsor,
+            @ApiParam(value = "orgUnitTypeId", required = false) @QueryParam("orgUnitTypeId") Long orgUnitTypeId,
+            @ApiParam(value = "canSponsor", required = false) @QueryParam("canSponsor") Boolean canSponsor,
             @ApiParam(value = "canDeliver", required = false) @QueryParam("canDeliver") Boolean canDeliver) {
 
         try {
@@ -202,8 +201,7 @@ public class OrgUnitApiController extends ApiController {
      * @return the JSON object of the corresponding org unit.
      */
     @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
-    @ApiOperation(value = "Update the specified OrgUnit, default for empty fields : null", notes = "Update an OrgUnit", response = OrgUnitRequest.class,
-            httpMethod = "PUT")
+    @ApiOperation(value = "Update the specified OrgUnit, default for empty fields : null", notes = "Update an OrgUnit", response = OrgUnitRequest.class, httpMethod = "PUT")
     @ApiImplicitParams({ @ApiImplicitParam(name = "body", value = "An OrgUnit", required = true, dataType = "OrgUnitRequest", paramType = "body") })
     @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),

@@ -17,9 +17,7 @@
  */
 package controllers.api.request.post;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -28,43 +26,31 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import framework.services.api.commons.IApiConstants;
-import play.data.format.Formats.DateTime;
-import play.data.validation.Constraints.Required;
+import models.delivery.RequirementStatus.Type;
+import models.framework_models.parent.IModelConstants;
+import play.data.validation.Constraints.MaxLength;
 import play.data.validation.ValidationError;
 
 /**
- * The KPI data request.
+ * The requirement status type post/put request.
  * 
- * @author Johann Kohler
+ * @author Marc Schaer
  */
 @JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KpiDataRequest {
+public class RequirementStatusRequest {
 
     @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
-    public Long objectId;
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
+    public String name;
 
     @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
-    public BigDecimal mainValue;
+    @MaxLength(value = IModelConstants.XLARGE_STRING)
+    public String description;
 
     @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
-    public BigDecimal additional1Value;
-
-    @JsonProperty
-    @ApiModelProperty(required = true)
-    @Required
-    public BigDecimal additional2Value;
-
-    @JsonProperty
-    @DateTime(pattern = IApiConstants.DATE_FORMAT)
-    public Date timestamp;
+    @ApiModelProperty(required = true, value = "type", allowableValues = "NEW,OPEN,CLOSED,DEPLOYED")
+    public Type type;
 
     /**
      * Form validator.
@@ -75,5 +61,4 @@ public class KpiDataRequest {
         return errors.isEmpty() ? null : errors;
 
     }
-
 }

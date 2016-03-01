@@ -42,6 +42,8 @@ public abstract class PurchaseOrderDAO {
 
     public static Finder<Long, PurchaseOrder> findPurchaseOrder = new Finder<>(PurchaseOrder.class);
     public static Finder<Long, PurchaseOrderLineItem> findPurchaseOrderLineItem = new Finder<>(PurchaseOrderLineItem.class);
+    public static Finder<Long, PurchaseOrderLineShipmentStatusType> findPurchaseOrderLineShipmentStatusType = new Finder<>(
+            PurchaseOrderLineShipmentStatusType.class);
     public static Finder<Long, GoodsReceipt> findGoodsReceipt = new Finder<>(GoodsReceipt.class);
 
     /**
@@ -256,6 +258,43 @@ public abstract class PurchaseOrderDAO {
         }
 
         return e.findList();
+    }
+
+    /**
+     * Get the whole list of PurchaseOrderLineShipmentStatusType object.
+     * 
+     * @return a list of all purchase order list shipment status type
+     */
+    public static List<PurchaseOrderLineShipmentStatusType> getPurchaseOrderLineShipmentStatusTypeAsList() {
+
+        ExpressionList<PurchaseOrderLineShipmentStatusType> e = PurchaseOrderDAO.findPurchaseOrderLineShipmentStatusType.where().eq("deleted", false);
+
+        return e.findList();
+    }
+
+    /**
+     * Get a purchase order line shipment status type by id.
+     * 
+     * @param id
+     *            the purchase order line shipment status type id
+     * @return a purchase order line shipment status type specified by id
+     */
+    public static PurchaseOrderLineShipmentStatusType getPurchaseOrderLineShipmentStatutsTypeById(Long id) {
+        return findPurchaseOrderLineShipmentStatusType.where().eq("deleted", false).eq("id", id).findUnique();
+    }
+
+    /**
+     * Get a line item by ref id.
+     * 
+     * @param refId
+     *            the ref id
+     */
+    public static PurchaseOrderLineShipmentStatusType getPurchaseOrderLineShipmentStatusTypeByRefId(String refId) {
+        try {
+            return PurchaseOrderDAO.findPurchaseOrderLineShipmentStatusType.where().eq("deleted", false).eq("refId", refId).findUnique();
+        } catch (PersistenceException e) {
+            return PurchaseOrderDAO.findPurchaseOrderLineShipmentStatusType.where().eq("deleted", false).eq("refId", refId).findList().get(0);
+        }
     }
 
     /**

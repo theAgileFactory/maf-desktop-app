@@ -761,6 +761,8 @@ GET     /api/core/actor-capacity/find                                     contro
 #ActorType
 GET     /api/core/actor-type/find                                         controllers.api.core.ActorTypeApiController.getActorTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/actor-type/:id                                          controllers.api.core.ActorTypeApiController.getActorTypeById(id: Long)
+POST    /api/core/actor-type/                                             controllers.api.core.ActorTypeApiController.createActorType
+PUT     /api/core/actor-type/:id                                          controllers.api.core.ActorTypeApiController.updateActorType(id: Long)
 
 #Competency
 GET     /api/core/competency/find                                          controllers.api.core.CompetencyApiController.getCompetenciesList(isActive: java.lang.Boolean ?= null, actorId: java.lang.Long ?= null)
@@ -775,14 +777,20 @@ PUT     /api/core/org-unit/:id                                             contr
 #OrgUnitType
 GET     /api/core/org-unit-type/find                                       controllers.api.core.OrgUnitTypeApiController.getOrgUnitTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/org-unit-type/:id                                        controllers.api.core.OrgUnitTypeApiController.getOrgUnitTypeById(id: Long)
+POST    /api/core/org-unit-type/                                           controllers.api.core.OrgUnitTypeApiController.createOrgUnitType
+PUT     /api/core/org-unit-type/:id                                        controllers.api.core.OrgUnitTypeApiController.updateOrgUnitType(id: Long)
 
 #Portfolio
 GET     /api/core/portfolio/find                                           controllers.api.core.PortfolioApiController.getPortfoliosList(isActive: java.lang.Boolean ?= null, managerId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null, portfolioTypeId: java.lang.Long ?= null)
 GET     /api/core/portfolio/:id                                            controllers.api.core.PortfolioApiController.getPortfolioById(id: Long)
+POST    /api/core/portfolio                                                controllers.api.core.PortfolioApiController.createPortfolio()
+PUT     /api/core/portfolio/:id                                            controllers.api.core.PortfolioApiController.updatePortfolio(id: Long)
 
 #PortfolioType
 GET     /api/core/portfolio-type/find                                      controllers.api.core.PortfolioTypeApiController.getPortfolioTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-type/:id                                       controllers.api.core.PortfolioTypeApiController.getPortfolioTypeById(id: Long)
+POST    /api/core/portfolio-type/                                          controllers.api.core.PortfolioTypeApiController.createPortfolioType
+PUT     /api/core/portfolio-type/:id                                       controllers.api.core.PortfolioTypeApiController.updatePortfolioType(id: Long)
 
 #PortfolioEntry
 GET     /api/core/portfolio-entry/find                                     controllers.api.core.PortfolioEntryApiController.getPortfolioEntriesList(managerId: java.lang.Long ?= null, sponsoringUnitId: java.lang.Long ?= null, deliveryUnitId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, archived: java.lang.Boolean ?= null, portfolioEntryTypeId: java.lang.Long ?= null, isPublic: java.lang.Boolean ?= null)
@@ -807,14 +815,20 @@ GET     /api/core/portfolio-entry/:id/work-order/:workOrderId/amount-received co
 #PortfolioEntryType
 GET     /api/core/portfolio-entry-type/find                                controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypesList(selectable: java.lang.Boolean ?= null, isRelease: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-type/:id                                 controllers.api.core.PortfolioEntryTypeApiController.getPortfolioEntryTypeById(id: Long)
+POST    /api/core/portfolio-entry-type/                                    controllers.api.core.PortfolioEntryTypeApiController.createPortfolioEntryType
+PUT     /api/core/portfolio-entry-type/:id                                 controllers.api.core.PortfolioEntryTypeApiController.updatePortfolioEntryType(id: Long)
 
 #PortfolioEntryEventType
 GET     /api/core/portfolio-entry-event-type/find                          controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-event-type/:id                           controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypeById(id: Long)
+POST    /api/core/portfolio-entry-event-type/                              controllers.api.core.PortfolioEntryEventTypeApiController.createPortfolioEntryEventType
+PUT     /api/core/portfolio-entry-event-type/:id                           controllers.api.core.PortfolioEntryEventTypeApiController.udpatePortfolioEntryEventType(id: Long)
 
 #PortfolioEntryPlanningPackageType
 GET     /api/core/portfolio-entry-planning-package-type/find               controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.getPortfolioEntryPlanningPackageTypesList(isActive: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-planning-package-type/:id                controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.getPortfolioEntryPlanningPackageTypeById(id: Long)
+POST    /api/core/portfolio-entry-planning-package-type/                   controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.createPortfolioEntryPlanningPackageType
+PUT     /api/core/portfolio-entry-planning-package-type/:id                controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.udpatePortfolioEntryPlanningPackageType(id: Long)
 
 #PortfolioEntryPlanningPackageGroup
 GET     /api/core/portfolio-entry-planning-package-group/find              controllers.api.core.PortfolioEntryPlanningPackageGroupApiController.getPortfolioEntryPlanningPackageGroupsList(isActive: java.lang.Boolean ?= null)
@@ -825,10 +839,14 @@ GET     /api/core/portfolio-entry-planning-package-group/:id/pattern/find  contr
 #PortfolioEntryReportStatusType
 GET     /api/core/portfolio-entry-report-status-type/find                  controllers.api.core.PortfolioEntryReportStatusTypeApiController.getPortfolioEntryReportStatusTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-report-status-type/:id                   controllers.api.core.PortfolioEntryReportStatusTypeApiController.getPortfolioEntryReportStatusTypeById(id: Long)
+POST    /api/core/portfolio-entry-report-status-type/                      controllers.api.core.PortfolioEntryReportStatusTypeApiController.createPortfolioEntryReportStatusType
+PUT     /api/core/portfolio-entry-report-status-type/:id                   controllers.api.core.PortfolioEntryReportStatusTypeApiController.udpatePortfolioEntryReportStatusType(id: Long)
 
 #PortfolioEntryRiskType
 GET     /api/core/portfolio-entry-risk-type/find                           controllers.api.core.PortfolioEntryRiskTypeApiController.getPortfolioEntryRiskTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-risk-type/:id                            controllers.api.core.PortfolioEntryRiskTypeApiController.getPortfolioEntryRiskTypeById(id: Long)
+POST    /api/core/portfolio-entry-risk-type/                               controllers.api.core.PortfolioEntryRiskTypeApiController.createPortfolioEntryRiskType
+PUT     /api/core/portfolio-entry-risk-type/:id                            controllers.api.core.PortfolioEntryRiskTypeApiController.udpatePortfolioEntryRiskType(id: Long)
 
 #Stakeholder
 GET     /api/core/stakeholder/find                                        controllers.api.core.StakeholderApiController.getStakeholdersList(actorId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null, stakeholderTypeId: java.lang.Long ?= null)
@@ -841,14 +859,20 @@ GET     /api/core/stakeholder-type/:id                                    contro
 #Requirement Status
 GET     /api/core/requirement-status/find                                 controllers.api.core.RequirementStatusApiController.getRequirementStatusList()
 GET     /api/core/requirement-status/:id                                  controllers.api.core.RequirementStatusApiController.getRequirementStatusById(id: Long)
+POST    /api/core/requirement-status/                                     controllers.api.core.RequirementStatusApiController.createRequirementStatus
+PUT     /api/core/requirement-status/:id                                  controllers.api.core.RequirementStatusApiController.updateRequirementStatus(id: Long)
 
 #Requirement Priority
 GET     /api/core/requirement-priority/find                               controllers.api.core.RequirementPriorityApiController.getRequirementPrioritiesList()
 GET     /api/core/requirement-priority/:id                                controllers.api.core.RequirementPriorityApiController.getRequirementPriorityById(id: Long)
+POST    /api/core/requirement-priority/                                   controllers.api.core.RequirementPriorityApiController.createRequirementPriority
+PUT     /api/core/requirement-priority/:id                                controllers.api.core.RequirementPriorityApiController.udpateRequirementPriority(id: Long)
 
 #Requirement Severity
 GET     /api/core/requirement-severity/find                               controllers.api.core.RequirementSeverityApiController.getRequirementSeveritiesList()
 GET     /api/core/requirement-severity/:id                                controllers.api.core.RequirementSeverityApiController.getRequirementSeverityById(id: Long)
+POST    /api/core/requirement-severity/                                   controllers.api.core.RequirementSeverityApiController.createRequirementSeverity
+PUT     /api/core/requirement-severity/:id                                controllers.api.core.RequirementSeverityApiController.udpateRequirementSeverity(id: Long)
 
 #BudgetBucket
 GET     /api/core/budget-bucket/find                                      controllers.api.core.BudgetBucketApiController.getBudgetBucketsList(isActive: java.lang.Boolean ?= null, isApproved: java.lang.Boolean ?= null)
@@ -863,13 +887,27 @@ GET     /api/core/budget-bucket/:id/portfolio-entry-budget-line/find      contro
 #PurchaseOrder
 GET     /api/core/purchase-order/find                                     controllers.api.core.PurchaseOrderApiController.getPurchaseOrdersList(isCancelled: java.lang.Boolean ?= null)
 GET     /api/core/purchase-order/:id                                      controllers.api.core.PurchaseOrderApiController.getPurchaseOrderById(id: Long)
+POST    /api/core/purchase-order/                                         controllers.api.core.PurchaseOrderApiController.createPurchaseOrder
+PUT     /api/core/purchase-order/:id                                      controllers.api.core.PurchaseOrderApiController.updatePurchaseOrder(id: Long)
 
 #PurchaseOrderLineItem
-GET     /api/core/purchase-order/:id/line/find                            controllers.api.core.PurchaseOrderApiController.getPurchaseOrderLinesList(id: Long, isCancelled: java.lang.Boolean ?= null)
+GET     /api/core/purchase-order/:po_id/line/find                         controllers.api.core.PurchaseOrderLineItemApiController.getPurchaseOrderLinesList(po_id: Long, isCancelled: java.lang.Boolean ?= null)
+POST    /api/core/purchase-order/:po_id/line/                             controllers.api.core.PurchaseOrderLineItemApiController.createPurchaseOrderLineItem(po_id: Long)
+PUT     /api/core/purchase-order/:po_id/line/:line_id                     controllers.api.core.PurchaseOrderLineItemApiController.updatePurchaseOrderLineItem(po_id: Long, line_id: Long)
+
+#PurchaseOrderLineShipmentStatusType
+GET     /api/core/purchase-order-shipment-status-type/find                controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.getPurchaseOrdersLineShipmentStatusTypeList
+GET     /api/core/purchase-order-shipment-status-type/:id                 controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.getPurchaseOrderLineShipmentStatusTypeById(id: Long)
+POST    /api/core/purchase-order-shipment-status-type/                    controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.createPurchaseOrderLineShipmentStatusType
+PUT     /api/core/purchase-order-shipment-status-type/:id                 controllers.api.core.PurchaseOrderLineShipmentStatusTypeApiController.updatePurchaseOrderLineShipmentStatusType(id: Long)
 
 #CostCenter
 GET     /api/core/cost-center/find                                        controllers.api.core.CostCenterApiController.getCostCentersList()
 GET     /api/core/cost-center/:id                                         controllers.api.core.CostCenterApiController.getCostCenterById(id: Long)
+POST    /api/core/cost-center/                                            controllers.api.core.CostCenterApiController.createCostCenter
+PUT     /api/core/cost-center/:id                                         controllers.api.core.CostCenterApiController.updateCostCenter(id: Long)
+GET     /api/core/cost-center/:cc_id/line/find                            controllers.api.core.CostCenterApiController.getPurchaseOrderLinesListForCostCenter(cc_id: Long)
+GET     /api/core/cost-center/:cc_id/line/:line_id                        controllers.api.core.CostCenterApiController.getPurchaseOrderLineItemForCostCenter(cc_id: Long, line_id: Long)
 
 #Currency
 GET     /api/core/currency/find                                           controllers.api.core.CurrencyApiController.getCurrenciesList(isActive: java.lang.Boolean ?= null)
@@ -899,6 +937,19 @@ GET     /api/core/root/table/flush-cache                                controll
 GET     /api/core/root/filter/flush-cache                               controllers.api.core.RootApiController.filterFlushCache()
 GET     /api/core/root/report/reload                                    controllers.api.core.RootApiController.reportReload()
 GET     /api/core/root/kpi/reload                                       controllers.api.core.RootApiController.kpiReload()
+
+#User
+GET     /api/core/user/find                                             controllers.api.core.UserApiController.getUsersList
+GET     /api/core/user/name/:name                                       controllers.api.core.UserApiController.getUsersFromName(name: String)
+GET     /api/core/user/mail/:mail                                       controllers.api.core.UserApiController.getUsersFromMail(mail: String)
+GET     /api/core/user/mafid/:maf_id                                    controllers.api.core.UserApiController.getUsersFromMafId(maf_id: Long)
+GET     /api/core/user/uid/:uid                                         controllers.api.core.UserApiController.getUsersFromUid(uid: String)
+GET     /api/core/user/uid/:uid/roles/find                              controllers.api.core.UserApiController.getUsersRoles(uid: String)
+POST    /api/core/user/                                                 controllers.api.core.UserApiController.createUser
+PUT     /api/core/user/:maf_id/                                         controllers.api.core.UserApiController.updateUser(maf_id: Long)
+PUT     /api/core/user/:uid/roles/:role_id/add                          controllers.api.core.UserApiController.addRole(uid: String, role_id: Long)
+PUT     /api/core/user/:uid/roles/:role_id/remove                       controllers.api.core.UserApiController.removeRole(uid: String, role_id: Long)
+
 
 # Doc
 GET     /api-docs                                                         framework.services.api.doc.ApiHelpController.getResources
@@ -934,6 +985,7 @@ GET     /api-docs/api/core/requirement-status                             framew
 GET     /api-docs/api/core/budget-bucket                                  framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/budget-bucket")
 
 GET     /api-docs/api/core/purchase-order                                 framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/purchase-order")
+GET     /api-docs/api/core/purchase-order-shipment-status-type            framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/purchase-order-shipment-status-type")
 
 GET     /api-docs/api/core/cost-center                                    framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/cost-center")
 
@@ -946,3 +998,5 @@ GET     /api-docs/api/core/life-cycle-process                             framew
 GET     /api-docs/api/core/kpi                                            framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/kpi")
 
 GET     /api-docs/api/core/data-syndication                               framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/data-syndication")
+
+GET     /api-docs/api/core/user                                           framework.services.api.doc.ApiHelpController.getResource(path = "/api/core/user")

@@ -20,66 +20,70 @@ package controllers.api.request.post;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import dao.pmo.PortfolioEntryDao;
+import framework.services.account.IUserAccount;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 
 /**
- * The portfolio entry put request.
+ * The user post request.
  * 
- * @author Johann Kohler
+ * @author Marc Schaer
  */
-public class PortfolioEntryRequestPut {
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, isGetterVisibility = Visibility.NONE, creatorVisibility = Visibility.NONE)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UserRequestPost {
+
+    @JsonProperty
+    @ApiModelProperty(value = "account type", allowableValues = "STANDARD,VIEWER")
+    @Required
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
+    public String accountType;
+
+    @JsonProperty
+    public Boolean isActive;
+
+    @JsonProperty
+    @MaxLength(value = 2)
+    @ApiModelProperty(value = "2 letters code for language")
+    public String preferredLanguage;
 
     @JsonProperty
     @ApiModelProperty(required = true)
     @Required
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    public String name;
+    public String firstName;
 
-    @JsonProperty
     @ApiModelProperty(required = true)
+    @JsonProperty
     @Required
-    public Long portfolioEntryTypeId;
-
-    @JsonProperty
-    @MaxLength(value = IModelConstants.SMALL_STRING)
-    public String governanceId;
-
-    @JsonProperty
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    public String erpRefId;
+    public String lastName;
 
+    @ApiModelProperty(required = true)
     @JsonProperty
     @Required
-    @ApiModelProperty(required = true)
-    @MaxLength(value = IModelConstants.XLARGE_STRING)
-    public String description;
+    @MaxLength(value = IModelConstants.LARGE_STRING)
+    public String uid;
 
+    @ApiModelProperty(required = true)
     @JsonProperty
     @Required
-    @ApiModelProperty(required = true)
-    public Long managerId;
-
-    @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    @JsonProperty
-    public String refId;
+    @MaxLength(value = IModelConstants.LARGE_STRING)
+    public String mail;
 
     @JsonProperty
-    public boolean isPublic;
+    public String password;
 
     @JsonProperty
-    public boolean archived;
-
-    @JsonProperty
-    public Long sponsoringUnitId;
+    public List<Long> systemLevelRoleTypesIds;
 
     /**
      * Form validator.
@@ -87,19 +91,14 @@ public class PortfolioEntryRequestPut {
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-        if (portfolioEntryTypeId != null && PortfolioEntryDao.getPETypeById(portfolioEntryTypeId) == null) {
-            errors.add(new ValidationError("portfolioEntryTypeId", "The portfolioEntryType does not exist"));
-        }
-
-        if (managerId != null && ActorDao.getActorById(managerId) == null) {
-            errors.add(new ValidationError("managerId", "The manager does not exist"));
-        }
-
-        if (sponsoringUnitId != null && OrgUnitDao.getOrgUnitById(sponsoringUnitId) == null) {
-            errors.add(new ValidationError("sponsoringUnitId", "The sponsoringUnit does not exist"));
+        try {
+            IUserAccount.AccountType.valueOf(accountType);
+        } catch (Exception e) {
+            errors.add(new ValidationError("accountType", "The account type is incorrect"));
         }
 
         return errors.isEmpty() ? null : errors;
+
     }
 
 }
