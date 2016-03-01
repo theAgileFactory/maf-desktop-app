@@ -846,6 +846,8 @@ PUT     /api/core/portfolio-entry-report-status-type/:id                   contr
 #PortfolioEntryRiskType
 GET     /api/core/portfolio-entry-risk-type/find                           controllers.api.core.PortfolioEntryRiskTypeApiController.getPortfolioEntryRiskTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-risk-type/:id                            controllers.api.core.PortfolioEntryRiskTypeApiController.getPortfolioEntryRiskTypeById(id: Long)
+POST    /api/core/portfolio-entry-risk-type/                               controllers.api.core.PortfolioEntryRiskTypeApiController.createPortfolioEntryRiskType
+PUT     /api/core/portfolio-entry-risk-type/:id                            controllers.api.core.PortfolioEntryRiskTypeApiController.udpatePortfolioEntryRiskType(id: Long)
 
 #Stakeholder
 GET     /api/core/stakeholder/find                                        controllers.api.core.StakeholderApiController.getStakeholdersList(actorId: java.lang.Long ?= null, portfolioId: java.lang.Long ?= null, portfolioEntryId: java.lang.Long ?= null, stakeholderTypeId: java.lang.Long ?= null)
