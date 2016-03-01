@@ -852,6 +852,8 @@ GET     /api/core/stakeholder-type/:id                                    contro
 #Requirement Status
 GET     /api/core/requirement-status/find                                 controllers.api.core.RequirementStatusApiController.getRequirementStatusList()
 GET     /api/core/requirement-status/:id                                  controllers.api.core.RequirementStatusApiController.getRequirementStatusById(id: Long)
+POST    /api/core/requirement-status/                                     controllers.api.core.RequirementStatusApiController.createRequirementStatus
+PUT     /api/core/requirement-status/:id                                  controllers.api.core.RequirementStatusApiController.updateRequirementStatus(id: Long)
 
 #Requirement Priority
 GET     /api/core/requirement-priority/find                               controllers.api.core.RequirementPriorityApiController.getRequirementPrioritiesList()
