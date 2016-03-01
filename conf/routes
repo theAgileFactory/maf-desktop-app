@@ -862,6 +862,8 @@ PUT     /api/core/requirement-priority/:id                                contro
 #Requirement Severity
 GET     /api/core/requirement-severity/find                               controllers.api.core.RequirementSeverityApiController.getRequirementSeveritiesList()
 GET     /api/core/requirement-severity/:id                                controllers.api.core.RequirementSeverityApiController.getRequirementSeverityById(id: Long)
+POST    /api/core/requirement-severity/                                   controllers.api.core.RequirementSeverityApiController.createRequirementSeverity
+PUT     /api/core/requirement-severity/:id                                controllers.api.core.RequirementSeverityApiController.udpateRequirementSeverity(id: Long)
 
 #BudgetBucket
 GET     /api/core/budget-bucket/find                                      controllers.api.core.BudgetBucketApiController.getBudgetBucketsList(isActive: java.lang.Boolean ?= null, isApproved: java.lang.Boolean ?= null)
