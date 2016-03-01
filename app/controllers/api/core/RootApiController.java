@@ -35,7 +35,6 @@ import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
-import framework.services.remote.IAdPanelManagerService;
 import play.Configuration;
 import play.libs.Json;
 import play.mvc.Result;
@@ -53,8 +52,6 @@ public class RootApiController extends ApiController {
     private IAccountManagerPlugin accountManagerPlugin;
     @Inject
     private II18nMessagesPlugin i8nMessagesPlugin;
-    @Inject
-    private IAdPanelManagerService adPanelManagerService;
     @Inject
     private IKpiService kpiService;
     @Inject
@@ -233,27 +230,6 @@ public class RootApiController extends ApiController {
     }
 
     /**
-     * Flush the adPanel cache.
-     */
-    @ApiAuthentication(onlyRootKey = true)
-    public Result adPanelFlushCache() {
-
-        try {
-
-            getAdPanelManagerService().clearCache();
-
-            RootResponse response = new RootResponse();
-
-            return getJsonSuccessResponse(response);
-
-        } catch (Exception e) {
-
-            return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
-
-        }
-    }
-
-    /**
      * Reload the report definitions (jasper).
      */
     @ApiAuthentication(onlyRootKey = true)
@@ -317,13 +293,6 @@ public class RootApiController extends ApiController {
      */
     private II18nMessagesPlugin getI8nMessagesPlugin() {
         return i8nMessagesPlugin;
-    }
-
-    /**
-     * Get the ad panel manager service.
-     */
-    private IAdPanelManagerService getAdPanelManagerService() {
-        return adPanelManagerService;
     }
 
     /**

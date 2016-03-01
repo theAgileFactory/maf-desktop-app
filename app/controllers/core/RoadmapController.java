@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -466,6 +467,10 @@ public class RoadmapController extends Controller {
         BigDecimal forecastCapex = BigDecimal.ZERO;
         BigDecimal forecastOpex = BigDecimal.ZERO;
 
+        BigDecimal engaged = BigDecimal.ZERO;
+        BigDecimal engagedCapex = BigDecimal.ZERO;
+        BigDecimal engagedOpex = BigDecimal.ZERO;
+
         for (String idString : ids) {
 
             Long id = Long.valueOf(idString);
@@ -513,12 +518,29 @@ public class RoadmapController extends Controller {
                 forecastCapex = forecastCapex.add(new BigDecimal(entryCostToCompleteCapex + entryEngagedCapex));
                 forecastOpex = forecastOpex.add(new BigDecimal(entryCostToCompleteOpex + entryEngagedOpex));
 
+                // engaged
+                engaged = engaged.add(new BigDecimal(entryEngagedCapex + entryEngagedOpex));
+                engagedCapex = engagedCapex.add(new BigDecimal(entryEngagedCapex));
+                engagedOpex = engagedOpex.add(new BigDecimal(entryEngagedOpex));
+
             }
 
         }
 
+        budget = budget.setScale(2, RoundingMode.HALF_UP);
+        budgetCapex = budgetCapex.setScale(2, RoundingMode.HALF_UP);
+        budgetOpex = budgetOpex.setScale(2, RoundingMode.HALF_UP);
+
+        forecast = forecast.setScale(2, RoundingMode.HALF_UP);
+        forecastCapex = forecastCapex.setScale(2, RoundingMode.HALF_UP);
+        forecastOpex = forecastOpex.setScale(2, RoundingMode.HALF_UP);
+
+        engaged = engaged.setScale(2, RoundingMode.HALF_UP);
+        engagedCapex = engagedCapex.setScale(2, RoundingMode.HALF_UP);
+        engagedOpex = engagedOpex.setScale(2, RoundingMode.HALF_UP);
+
         return ok(views.html.core.roadmap.roadmap_simulator_kpis_fragment.render(allocation, allocationConfirmed, allocationNotConfirmed, budget, budgetCapex,
-                budgetOpex, forecast, forecastCapex, forecastOpex));
+                budgetOpex, forecast, forecastCapex, forecastOpex, engaged, engagedCapex, engagedOpex));
 
     }
 

@@ -96,11 +96,6 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     }
 
     @Override
-    public Call getRouteForAdPanelContent(String page) {
-        return controllers.routes.Application.getAdPanelContent(page);
-    }
-
-    @Override
     public boolean isFilterConfigurationActive() {
         return true;
     }
