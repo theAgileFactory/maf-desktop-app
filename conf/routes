@@ -856,6 +856,8 @@ GET     /api/core/requirement-status/:id                                  contro
 #Requirement Priority
 GET     /api/core/requirement-priority/find                               controllers.api.core.RequirementPriorityApiController.getRequirementPrioritiesList()
 GET     /api/core/requirement-priority/:id                                controllers.api.core.RequirementPriorityApiController.getRequirementPriorityById(id: Long)
+POST    /api/core/requirement-priority/                                   controllers.api.core.RequirementPriorityApiController.createRequirementPriority
+PUT     /api/core/requirement-priority/:id                                controllers.api.core.RequirementPriorityApiController.udpateRequirementPriority(id: Long)
 
 #Requirement Severity
 GET     /api/core/requirement-severity/find                               controllers.api.core.RequirementSeverityApiController.getRequirementSeveritiesList()
