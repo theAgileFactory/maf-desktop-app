@@ -822,6 +822,8 @@ PUT     /api/core/portfolio-entry-type/:id                                 contr
 #PortfolioEntryEventType
 GET     /api/core/portfolio-entry-event-type/find                          controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypesList(selectable: java.lang.Boolean ?= null)
 GET     /api/core/portfolio-entry-event-type/:id                           controllers.api.core.PortfolioEntryEventTypeApiController.getPortfolioEntryEventTypeById(id: Long)
+POST    /api/core/portfolio-entry-event-type/                              controllers.api.core.PortfolioEntryEventTypeApiController.createPortfolioEntryEventType
+PUT     /api/core/portfolio-entry-event-type/:id                           controllers.api.core.PortfolioEntryEventTypeApiController.udpatePortfolioEntryEventType(id: Long)
 
 #PortfolioEntryPlanningPackageType
 GET     /api/core/portfolio-entry-planning-package-type/find               controllers.api.core.PortfolioEntryPlanningPackageTypeApiController.getPortfolioEntryPlanningPackageTypesList(isActive: java.lang.Boolean ?= null)
