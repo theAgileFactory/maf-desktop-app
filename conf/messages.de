@@ -1400,7 +1400,7 @@ object.portfolio_entry_budget_line.is_opex.label=OPEX
 object.portfolio_entry_budget_line.is_opex.help=Nicht angekreuzt, wird als CAPEX verbucht.
 object.portfolio_entry_budget_line.currency.label=Währung
 object.portfolio_entry_budget_line.amount.label=Betrag
-object.portfolio_entry_budget_line.type.label=Ausgabenkategorie 
+object.portfolio_entry_budget_line.type.label=de: Budget line type 
 object.portfolio_entry_budget_line.budget_bucket.label=Budgetposten
 object.portfolio_entry_budget_line.gl_account.label=GL Konto
 object.portfolio_entry_budget_line.table.empty=Keine Einträge
@@ -2887,7 +2887,7 @@ admin.configuration.reference_data.portfolio.initiativetypes.title=Initiative Ty
 admin.configuration.reference_data.portfolio.releasetypes.title=Release Typen
 admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Abhängigkeitstypen
 admin.configuration.reference_data.portfolio.portfoliotypes.title=Portfolio Typen
-admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=:de Catégorie de dépenses
+admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=de: Type de ligne de budget
 admin.configuration.reference_data.actorsandorgunits.title=Mitarbeiter & Organisationseinheit
 admin.configuration.reference_data.actorsandorgunits.actortypes.title=Mitarbeiter Typen
 admin.configuration.reference_data.actorsandorgunits.orgunittypes.title=Organisationseinheit Typen
@@ -2910,7 +2910,7 @@ admin.configuration.reference_data.register.title=Berichterstattung
 admin.configuration.reference_data.register.risktypes.title=Risiko Typen
 admin.configuration.reference_data.register.report_status_types.title=Status Typen
 admin.configuration.reference_data.register.event_types.title=Ereigniss Typen
-admin.configuration.reference_data.currencies.title=de: Finances
+admin.configuration.reference_data.finances.title=de: Finances
 admin.configuration.reference_data.timesheetactivities.title=Adminsitrative Aktivitäten (Zeiterfassung)
 admin.configuration.reference_data.timesheetactivities.types.title=Typen
 admin.configuration.reference_data.timesheetactivities.activities.title=Aktivitäten
@@ -3049,11 +3049,11 @@ admin.configuration.reference_data.currency.set_as_default.confirm=de: By changi
 admin.configuration.reference_data.currency.set_as_default.successful=de: The currency is now the default one.
 
 #manage portfolio entry budget line type
-admin.configuration.reference_data.currency.pe_budget_line_type.manage.title=de: Manage an expenditure category
-admin.configuration.reference_data.currency.pe_budget_line_type.add.successful=de: La catégorie de dépenses a été ajoutée.
-admin.configuration.reference_data.currency.pe_budget_line_type.edit.successful=de: La catégorie de dépenses a été mise à jour.
-admin.configuration.reference_data.currency.pe_budget_line_type.delete.successful=de: La catégorie de dépenses a été supprimée.
-admin.configuration.reference_data.currency.pe_budget_line_type.delete.error.used=de: Impossible de supprimer une catégorie de dépenses utilisée par au moins une ligne de budget.
+admin.configuration.reference_data.finance.pe_budget_line_type.manage.title=de: Manage a budget line type
+admin.configuration.reference_data.finance.pe_budget_line_type.add.successful=de: The budget line type has been added successfully.
+admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful=de: The budget line type has been updated.
+admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful=de: The budget line type has been deleted.
+admin.configuration.reference_data.finance.pe_budget_line_type.delete.error.used=de: This is not possible to delete a budget line type used for at least one line.
 
 #manage timesheet activity type
 admin.configuration.reference_data.timesheetactivitytype.manage.title=Zeiterfassung Typen bearbeiten

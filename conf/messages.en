@@ -1387,7 +1387,7 @@ object.portfolio_entry_budget_line.is_opex.label=OPEX
 object.portfolio_entry_budget_line.is_opex.help=Check this box if the budget line is OPEX, else it means it''s CAPEX.
 object.portfolio_entry_budget_line.currency.label=Currency
 object.portfolio_entry_budget_line.amount.label=Amount
-object.portfolio_entry_budget_line.type.label=Expenditure Category
+object.portfolio_entry_budget_line.type.label=Budget line type
 object.portfolio_entry_budget_line.budget_bucket.label=Budget bucket
 object.portfolio_entry_budget_line.gl_account.label=GL account
 object.portfolio_entry_budget_line.table.empty=There is no budget line.
@@ -2874,7 +2874,7 @@ admin.configuration.reference_data.portfolio.initiativetypes.title=Initiative ty
 admin.configuration.reference_data.portfolio.releasetypes.title=Release types
 admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Dependency types
 admin.configuration.reference_data.portfolio.portfoliotypes.title=Portfolio types
-admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=Expenditure category
+admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=Budget line type
 admin.configuration.reference_data.actorsandorgunits.title=Employees & Org units
 admin.configuration.reference_data.actorsandorgunits.actortypes.title=Employee types
 admin.configuration.reference_data.actorsandorgunits.orgunittypes.title=Org unit types
@@ -2897,7 +2897,7 @@ admin.configuration.reference_data.register.title=Registers
 admin.configuration.reference_data.register.risktypes.title=Risk types
 admin.configuration.reference_data.register.report_status_types.title=Report status types
 admin.configuration.reference_data.register.event_types.title=Event types
-admin.configuration.reference_data.currencies.title=Finances
+admin.configuration.reference_data.finances.title=Finances
 admin.configuration.reference_data.timesheetactivities.title=Timesheet activities
 admin.configuration.reference_data.timesheetactivities.types.title=Types
 admin.configuration.reference_data.timesheetactivities.activities.title=Activities
@@ -3036,11 +3036,11 @@ admin.configuration.reference_data.currency.set_as_default.confirm=By changing t
 admin.configuration.reference_data.currency.set_as_default.successful=The currency is now the default one.
 
 #manage portfolio entry budget line type
-admin.configuration.reference_data.currency.pe_budget_line_type.manage.title=Manage an expenditure category
-admin.configuration.reference_data.currency.pe_budget_line_type.add.successful=The expenditure category has been added successfully.
-admin.configuration.reference_data.currency.pe_budget_line_type.edit.successful=The expenditure category has been updated.
-admin.configuration.reference_data.currency.pe_budget_line_type.delete.successful=The expenditure category has been deleted.
-admin.configuration.reference_data.currency.pe_budget_line_type.delete.error.used=This is not possible to delete an expenditure category used for at least one budget line.
+admin.configuration.reference_data.finance.pe_budget_line_type.manage.title=Manage a budget line type
+admin.configuration.reference_data.finance.pe_budget_line_type.add.successful=The budget line type has been added successfully.
+admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful=The budget line type has been updated.
+admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful=The budget line type has been deleted.
+admin.configuration.reference_data.finance.pe_budget_line_type.delete.error.used=This is not possible to delete a budget line type used for at least one line.
 
 #manage timesheet activity type
 admin.configuration.reference_data.timesheetactivitytype.manage.title=Manage a timesheet activity type
