@@ -1511,6 +1511,7 @@ object.work_order.portfolio_entry.label=Initiative
 object.work_order.is_engaged.label=Angelegt
 object.work_order.purchase_order_line_item.label=Item
 object.work_order.portfolio_entry_planning_package.label=Planungspaket
+object.work_order.portfolio_entry_budget_line.label=de: Ligne de budget
 object.work_order.follow_package_dates.label=Folgt Packetdatum
 object.work_order.table.empty=Keine Einträge
 

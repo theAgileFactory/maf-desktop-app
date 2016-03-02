@@ -27,6 +27,8 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
 import framework.services.account.IPreferenceManagerPlugin;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
 import models.finance.PortfolioEntryBudget;
 import models.finance.PortfolioEntryBudgetLine;
@@ -224,5 +226,12 @@ public abstract class PortfolioEntryBudgetDAO {
      */
     public static boolean hasPEBudgetLineByCurrency(String currency) {
         return findPortfolioEntryBudgetLine.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
+    }
+
+    /**
+     * Get Portfolio Entry Budget Line as value holder collection.
+     */
+    public static ISelectableValueHolderCollection<Long> getPortfolioEntryBudgetLineSelectableAsVHByPE(long id) {
+        return new DefaultSelectableValueHolderCollection<>(getPEBudgetLineAsListByPE(id));
     }
 }

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryBudgetDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
 import models.finance.WorkOrder;
@@ -75,6 +76,8 @@ public class WorkOrderFormData {
     public boolean shared;
 
     public BigDecimal amountReceived;
+
+    public Long portfolioEntryBudgetLine;
 
     public boolean followPackageDates;
 
@@ -131,6 +134,7 @@ public class WorkOrderFormData {
         this.shared = workOrder.shared != null ? workOrder.shared : false;
         this.amountReceived = workOrder.amountReceived;
         this.portfolioEntryPlanningPackage = workOrder.portfolioEntryPlanningPackage != null ? workOrder.portfolioEntryPlanningPackage.id : null;
+        this.portfolioEntryBudgetLine = (workOrder.portfolioEntryBudgetLine != null) ? workOrder.portfolioEntryBudgetLine.id : null;
         this.followPackageDates = workOrder.followPackageDates != null ? workOrder.followPackageDates : false;
     }
 
@@ -172,6 +176,7 @@ public class WorkOrderFormData {
         workOrder.isOpex = this.isOpex;
         workOrder.shared = this.shared;
         workOrder.amountReceived = this.amountReceived;
+        workOrder.portfolioEntryBudgetLine = PortfolioEntryBudgetDAO.getPEBudgetLineById(this.portfolioEntryBudgetLine);
 
     }
 

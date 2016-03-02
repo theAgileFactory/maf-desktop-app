@@ -124,7 +124,11 @@
                         } else {
                             <input type="hidden" id="@workOrderForm("amountReceived").id" data-primitive="true" name="@workOrderForm("amountReceived").name" value="@workOrderForm("amountReceived").value"/>
                         }
-                        
+                        @parts.dropdownlist(
+                            workOrderForm("portfolioEntryBudgetLine"),
+                            parts.Msg.asString("object.work_order.portfolio_entry_budget_line.label"),
+                            dao.finance.PortfolioEntryBudgetDAO.getPortfolioEntryBudgetLineSelectableAsVHByPE(portfolioEntry.id)
+                        )
                         @if(!fromResource) {
                             @parts.singlevalue_picker(
                                 workOrderForm("portfolioEntryPlanningPackage"), 
