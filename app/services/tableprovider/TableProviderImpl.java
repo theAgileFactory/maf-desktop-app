@@ -86,6 +86,7 @@ public class TableProviderImpl implements ITableProvider {
         this.get().deliverable.templateTable = this.get().deliverable.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntry.templateTable = this.get().portfolioEntry.getTable(this.getKpiService(), this.getI18nMessagesPlugin());
         this.get().portfolioEntryBudgetLine.templateTable = this.get().portfolioEntryBudgetLine.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntryBudgetLineType.templateTable = this.get().portfolioEntryBudgetLineType.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntryReport.templateTable = this.get().portfolioEntryReport.getTable(this.getI18nMessagesPlugin());
         this.get().iteration.templateTable = this.get().iteration.getTable(this.getI18nMessagesPlugin());
         this.get().orgUnit.templateTable = this.get().orgUnit.getTable(this.getI18nMessagesPlugin());

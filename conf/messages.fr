@@ -1407,6 +1407,10 @@ object.portfolio_entry_budget_line.table.empty=Il n''existe aucune ligne de budg
 #----------------------
 # portfolioEntryBudgetLineType
 #----------------------
+object.portfolio_entry_budget_line_type.ref_id.label=Référence
+object.portfolio_entry_budget_line_type.name.label=Nom
+object.portfolio_entry_budget_line_type.description.label=Description
+object.portfolio_entry_budget_line_type.selectable.label=Actif
 object.portfolio_entry_budget_line_type.table.empty=Il n''existe aucune catégorie de dépenses.
 
 #----------------------
@@ -2883,6 +2887,7 @@ admin.configuration.reference_data.portfolio.initiativetypes.title=Types d''init
 admin.configuration.reference_data.portfolio.releasetypes.title=Types de release
 admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Type de dépendance
 admin.configuration.reference_data.portfolio.portfoliotypes.title=Types de portefeuille
+admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=Catégorie de dépenses
 admin.configuration.reference_data.actorsandorgunits.title=Employés & Unités d''organisation
 admin.configuration.reference_data.actorsandorgunits.actortypes.title=Types d''employé
 admin.configuration.reference_data.actorsandorgunits.orgunittypes.title=Types d''unité d''organisation
@@ -2905,7 +2910,7 @@ admin.configuration.reference_data.register.title=Registres
 admin.configuration.reference_data.register.risktypes.title=Types de risque
 admin.configuration.reference_data.register.report_status_types.title=Types de statut de rapport
 admin.configuration.reference_data.register.event_types.title=Types d''événement
-admin.configuration.reference_data.currencies.title=Devises
+admin.configuration.reference_data.currencies.title=Finances
 admin.configuration.reference_data.timesheetactivities.title=Activités de feuille de temps
 admin.configuration.reference_data.timesheetactivities.types.title=Types
 admin.configuration.reference_data.timesheetactivities.activities.title=Activités
@@ -3042,6 +3047,13 @@ admin.configuration.reference_data.currency.delete.successful=La devise a été 
 admin.configuration.reference_data.currency.delete.error.used=Impossible de supprimer une devise utilisée pour au moins un montant.
 admin.configuration.reference_data.currency.set_as_default.confirm=En changeant la devise principale, tous les taux des données existantes (enveloppes budgétaires, bons de travail...)  devront être manuellement corrigés? Etes-vous sûr(e) de vouloir continuer?
 admin.configuration.reference_data.currency.set_as_default.successful=La devise principale a été modifiée.
+
+#manage portfolio entry budget line type
+admin.configuration.reference_data.currency.pe_budget_line_type.manage.title=Gérer une catégorie de dépenses
+admin.configuration.reference_data.currency.pe_budget_line_type.add.successful=La catégorie de dépenses a été ajoutée.
+admin.configuration.reference_data.currency.pe_budget_line_type.edit.successful=La catégorie de dépenses a été mise à jour.
+admin.configuration.reference_data.currency.pe_budget_line_type.delete.successful=La catégorie de dépenses a été supprimée.
+admin.configuration.reference_data.currency.pe_budget_line_type.delete.error.used=Impossible de supprimer une catégorie de dépenses utilisée par au moins une ligne de budget.
 
 #manage timesheet activity type
 admin.configuration.reference_data.timesheetactivitytype.manage.title=Gérer un type d''activité

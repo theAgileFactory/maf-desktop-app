@@ -21,8 +21,8 @@ import java.math.BigDecimal;
 
 import dao.finance.BudgetBucketDAO;
 import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryBudgetDAO;
 import models.finance.PortfolioEntryBudgetLine;
-import models.finance.PortfolioEntryBudgetLineType;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
@@ -61,7 +61,7 @@ public class PortfolioEntryBudgetLineFormData {
     @Required
     public BigDecimal amount;
 
-    public PortfolioEntryBudgetLineType portfolioEntryBudgetLineType;
+    public Long portfolioEntryBudgetLineType;
 
     public Long budgetBucket;
 
@@ -88,7 +88,7 @@ public class PortfolioEntryBudgetLineFormData {
         this.currencyCode = budgetLine.currency != null ? budgetLine.currency.code : null;
         this.currencyRate = budgetLine.currencyRate;
         this.amount = budgetLine.amount;
-        this.portfolioEntryBudgetLineType = budgetLine.portfolioEntryBudgetLineType != null ? budgetLine.portfolioEntryBudgetLineType : null;
+        this.portfolioEntryBudgetLineType = budgetLine.portfolioEntryBudgetLineType != null ? budgetLine.portfolioEntryBudgetLineType.id : null;
         this.budgetBucket = budgetLine.budgetBucket != null ? budgetLine.budgetBucket.id : null;
 
     }
@@ -106,7 +106,8 @@ public class PortfolioEntryBudgetLineFormData {
         budgetLine.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         budgetLine.currencyRate = this.currencyRate;
         budgetLine.amount = this.amount;
-        budgetLine.portfolioEntryBudgetLineType = this.portfolioEntryBudgetLineType;
+        budgetLine.portfolioEntryBudgetLineType = this.portfolioEntryBudgetLineType != null
+                ? PortfolioEntryBudgetDAO.getPEBudgetLineTypeById(this.portfolioEntryBudgetLineType) : null;
         budgetLine.budgetBucket = this.budgetBucket != null ? BudgetBucketDAO.getBudgetBucketById(this.budgetBucket) : null;
     }
 

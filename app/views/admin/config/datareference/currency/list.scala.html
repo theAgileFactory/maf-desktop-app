@@ -16,7 +16,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    currenciesTable: framework.utils.Table[utils.table.CurrencyListView]
+    currenciesTable: framework.utils.Table[utils.table.CurrencyListView],
+    peBudgetlineTypeTable: framework.utils.Table[utils.table.PortfolioEntryBudgetLineTypeListView]
 )
 
 @import helper._
@@ -46,6 +47,21 @@
     
         <div class="panel-body">
             @parts.table.tableview(currenciesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationCurrencyController.managePEBudgetLineType().url"><span class="fa fa-plus fa-lg"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(peBudgetlineTypeTable)
         </div>
     </div>
 

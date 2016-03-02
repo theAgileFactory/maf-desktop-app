@@ -31,6 +31,7 @@ import framework.utils.formats.StringFormatFormatter;
 import models.finance.BudgetBucket;
 import models.finance.Currency;
 import models.finance.PortfolioEntryBudgetLine;
+import models.finance.PortfolioEntryBudgetLineType;
 import models.pmo.PortfolioEntry;
 
 /**
@@ -86,8 +87,7 @@ public class PortfolioEntryBudgetLineListView {
                     addColumn("amount", "amount", "object.portfolio_entry_budget_line.amount.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("amount", new NumberFormatter<PortfolioEntryBudgetLineListView>());
 
-                    addColumn("expenditureCategory", "expenditureCategory Cat.", "object.portfolio_entry_budget_line.type.label",
-                            Table.ColumnDef.SorterType.NONE);
+                    addColumn("expenditureCategory", "expenditureCategory", "object.portfolio_entry_budget_line.type.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("expenditureCategory", new NumberFormatter<PortfolioEntryBudgetLineListView>());
 
                     addColumn("budgetBucket", "budgetBucket", "object.portfolio_entry_budget_line.budget_bucket.label", Table.ColumnDef.SorterType.NONE);
@@ -174,6 +174,8 @@ public class PortfolioEntryBudgetLineListView {
 
     public boolean fromResource;
 
+    public PortfolioEntryBudgetLineType portfolioEntryBudgetLineType;
+
     /**
      * Construct a list view with a DB entry.
      * 
@@ -194,5 +196,6 @@ public class PortfolioEntryBudgetLineListView {
         this.amount = budgetLine.amount;
         this.budgetBucket = budgetLine.budgetBucket;
         this.fromResource = budgetLine.resourceObjectType != null;
+        this.portfolioEntryBudgetLineType = budgetLine.portfolioEntryBudgetLineType;
     }
 }

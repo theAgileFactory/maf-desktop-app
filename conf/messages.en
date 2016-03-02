@@ -1395,7 +1395,11 @@ object.portfolio_entry_budget_line.table.empty=There is no budget line.
 #----------------------
 # portfolioEntryBudgetLineType
 #----------------------
-object.portfolio_entry_budget_line.table.empty=There is no expenditure categories.
+object.portfolio_entry_budget_line_type.ref_id.label=Reference
+object.portfolio_entry_budget_line_type.name.label=Name
+object.portfolio_entry_budget_line_type.description.label=Description
+object.portfolio_entry_budget_line_type.selectable.label=Active
+object.portfolio_entry_budget_line_type.table.empty=There is no expenditure categories.
 
 #----------------------
 # allocatedResource
@@ -2870,6 +2874,7 @@ admin.configuration.reference_data.portfolio.initiativetypes.title=Initiative ty
 admin.configuration.reference_data.portfolio.releasetypes.title=Release types
 admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Dependency types
 admin.configuration.reference_data.portfolio.portfoliotypes.title=Portfolio types
+admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=Expenditure category
 admin.configuration.reference_data.actorsandorgunits.title=Employees & Org units
 admin.configuration.reference_data.actorsandorgunits.actortypes.title=Employee types
 admin.configuration.reference_data.actorsandorgunits.orgunittypes.title=Org unit types
@@ -2892,7 +2897,7 @@ admin.configuration.reference_data.register.title=Registers
 admin.configuration.reference_data.register.risktypes.title=Risk types
 admin.configuration.reference_data.register.report_status_types.title=Report status types
 admin.configuration.reference_data.register.event_types.title=Event types
-admin.configuration.reference_data.currencies.title=Currencies
+admin.configuration.reference_data.currencies.title=Finances
 admin.configuration.reference_data.timesheetactivities.title=Timesheet activities
 admin.configuration.reference_data.timesheetactivities.types.title=Types
 admin.configuration.reference_data.timesheetactivities.activities.title=Activities
@@ -3029,6 +3034,13 @@ admin.configuration.reference_data.currency.delete.successful=The currency has b
 admin.configuration.reference_data.currency.delete.error.used=This is not possible to delete a currency used for at least one amount.
 admin.configuration.reference_data.currency.set_as_default.confirm=By changing the default currency, all rates of existing data (budget buckets, work orders...)  should be manually corrected. Are you sure to continue?
 admin.configuration.reference_data.currency.set_as_default.successful=The currency is now the default one.
+
+#manage portfolio entry budget line type
+admin.configuration.reference_data.currency.pe_budget_line_type.manage.title=Manage an expenditure category
+admin.configuration.reference_data.currency.pe_budget_line_type.add.successful=The expenditure category has been added successfully.
+admin.configuration.reference_data.currency.pe_budget_line_type.edit.successful=The expenditure category has been updated.
+admin.configuration.reference_data.currency.pe_budget_line_type.delete.successful=The expenditure category has been deleted.
+admin.configuration.reference_data.currency.pe_budget_line_type.delete.error.used=This is not possible to delete an expenditure category used for at least one budget line.
 
 #manage timesheet activity type
 admin.configuration.reference_data.timesheetactivitytype.manage.title=Manage a timesheet activity type
