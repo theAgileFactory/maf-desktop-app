@@ -25,7 +25,6 @@ import dao.pmo.OrgUnitDao;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
@@ -75,8 +74,13 @@ public class TimesheetLogListView {
                             new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.NONE);
 
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
-                    addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
-                            new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), true, false, SortStatusType.NONE);
+                    if (orgUnits != null && orgUnits.getValues().size() > 0) {
+                        addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
+                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), true, false, SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
+                                new NoneFilterComponent(), true, false, SortStatusType.NONE);
+                    }
 
                     addColumnConfiguration("logDate", "logDate", "object.timesheet_log.log_date.label",
                             new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);

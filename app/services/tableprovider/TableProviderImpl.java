@@ -94,6 +94,7 @@ public class TableProviderImpl implements ITableProvider {
         this.get().requirement.templateTable = this.get().requirement.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntryRisk.templateTable = this.get().portfolioEntryRisk.getTable(this.getI18nMessagesPlugin());
         this.get().workOrder.templateTable = this.get().workOrder.getTable(this.getI18nMessagesPlugin());
+        this.get().timesheetLog.templateTable = this.get().timesheetLog.getTable();
 
     }
 
@@ -109,6 +110,7 @@ public class TableProviderImpl implements ITableProvider {
         this.get().portfolioEntryResourcePlanAllocatedActor.filterConfig = this.get().portfolioEntryResourcePlanAllocatedActor.getFilterConfig();
         this.get().requirement.filterConfig = this.get().requirement.getFilterConfig();
         this.get().timesheetActivityAllocatedActor.filterConfig = this.get().timesheetActivityAllocatedActor.getFilterConfig();
+        this.get().timesheetLog.filterConfig = this.get().timesheetLog.getFilterConfig();
 
     }
 
