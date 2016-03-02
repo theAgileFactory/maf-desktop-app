@@ -29,12 +29,12 @@
 @breadcrump=@{
     Seq(
         ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
-        ("admin.configuration.reference_data.currencies.title", controllers.admin.routes.ConfigurationCurrencyController.list().url),
+        ("admin.configuration.reference_data.finances.title", controllers.admin.routes.ConfigurationFinanceController.list().url),
         ("admin.configuration.reference_data.currency.manage.title", null)
     )
 }
 
-@views.html.admin.config.config_template("admin.configuration.reference_data.currencies.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+@views.html.admin.config.config_template("admin.configuration.reference_data.finances.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
 
     <div class="maf-form">
         @if(currencyForm.hasErrors()){
@@ -43,7 +43,7 @@
             </div>
         }
         
-        @helper.form(action = controllers.admin.routes.ConfigurationCurrencyController.processManageCurrency()) {
+        @helper.form(action = controllers.admin.routes.ConfigurationFinanceController.processManageCurrency()) {
             <fieldset>
 
                 <input type="hidden" name="isDefault" value="@isDefault"/>
@@ -76,7 +76,7 @@
                 @parts.input_text(currencyForm("symbol"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.currency.symbol.label"))
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationCurrencyController.list()'>@parts.Msg("button.cancel")</a>
+                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationFinanceController.list()'>@parts.Msg("button.cancel")</a>
                 
             </fieldset>
         }

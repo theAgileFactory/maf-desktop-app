@@ -60,9 +60,9 @@ import utils.table.PortfolioEntryBudgetLineTypeListView;
  * 
  */
 @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-public class ConfigurationCurrencyController extends Controller {
+public class ConfigurationFinanceController extends Controller {
 
-    private static Logger.ALogger log = Logger.of(ConfigurationCurrencyController.class);
+    private static Logger.ALogger log = Logger.of(ConfigurationFinanceController.class);
 
     private static Form<CurrencyFormData> currencyFormTemplate = Form.form(CurrencyFormData.class);
     private static Form<PortfolioEntryBudgetLineTypeFormData> peBudgetLineTypeFormTemplate = Form.form(PortfolioEntryBudgetLineTypeFormData.class);
@@ -168,7 +168,7 @@ public class ConfigurationCurrencyController extends Controller {
 
         this.getTableProvider().flushFilterConfig();
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**
@@ -194,7 +194,7 @@ public class ConfigurationCurrencyController extends Controller {
                 || PortfolioEntryBudgetDAO.hasPEBudgetLineByCurrency(currency.code)) {
 
             Utilities.sendErrorFlashMessage(Msg.get("admin.configuration.reference_data.currency.delete.error.used"));
-            return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+            return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
 
         }
 
@@ -204,7 +204,7 @@ public class ConfigurationCurrencyController extends Controller {
 
         this.getTableProvider().flushFilterConfig();
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**
@@ -255,7 +255,7 @@ public class ConfigurationCurrencyController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.set_as_default.successful"));
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**
@@ -305,7 +305,7 @@ public class ConfigurationCurrencyController extends Controller {
             peBudgetLineTypeFormData.fill(peBudgetLineType);
             peBudgetLineType.save();
 
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.pe_budget_line_type.add.successful"));
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.finance.pe_budget_line_type.add.successful"));
 
         } else { // edit case
 
@@ -313,12 +313,12 @@ public class ConfigurationCurrencyController extends Controller {
             peBudgetLineTypeFormData.fill(peBudgetLineType);
             peBudgetLineType.update();
 
-            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.pe_budget_line_type.edit.successful"));
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful"));
         }
 
         this.getTableProvider().flushFilterConfig();
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**
@@ -333,11 +333,11 @@ public class ConfigurationCurrencyController extends Controller {
 
         peBudgetLineType.doDelete();
 
-        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.pe_budget_line_type.delete.successful"));
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful"));
 
         this.getTableProvider().flushFilterConfig();
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**

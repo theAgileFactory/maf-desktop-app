@@ -28,12 +28,12 @@
 @breadcrump=@{
     Seq(
         ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
-        ("admin.configuration.reference_data.currencies.title", controllers.admin.routes.ConfigurationCurrencyController.list().url),
-        ("admin.configuration.reference_data.currency.pe_budget_line_type.manage.title", null)
+        ("admin.configuration.reference_data.finances.title", controllers.admin.routes.ConfigurationFinanceController.list().url),
+        ("admin.configuration.reference_data.finance.pe_budget_line_type.manage.title", null)
     )
 }
 
-@views.html.admin.config.config_template("admin.configuration.reference_data.currencies.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+@views.html.admin.config.config_template("admin.configuration.reference_data.finances.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
 
     <div class="maf-form">
         @if(peBudgetLineTypeForm.hasErrors()){
@@ -42,7 +42,7 @@
             </div>
         }
         
-        @helper.form(action = controllers.admin.routes.ConfigurationCurrencyController.processManagePEBudgetLineType()) {
+        @helper.form(action = controllers.admin.routes.ConfigurationFinanceController.processManagePEBudgetLineType()) {
             <fieldset>
 
                 @if(peBudgetLineTypeForm("id").value!=null) {
@@ -68,7 +68,7 @@
                 )
                     
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
-                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationCurrencyController.list()'>@parts.Msg("button.cancel")</a>
+                <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationFinanceController.list()'>@parts.Msg("button.cancel")</a>
                 
             </fieldset>
         }

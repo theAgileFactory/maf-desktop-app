@@ -80,7 +80,7 @@ public class PortfolioEntryBudgetLineTypeListView {
 
                         @Override
                         public String convert(PortfolioEntryBudgetLineTypeListView portfolioEntryBudgetLineTypeListView) {
-                            return controllers.admin.routes.ConfigurationCurrencyController.managePEBudgetLineType(portfolioEntryBudgetLineTypeListView.id)
+                            return controllers.admin.routes.ConfigurationFinanceController.managePEBudgetLineType(portfolioEntryBudgetLineTypeListView.id)
                                     .url();
                         }
                     }));
@@ -95,7 +95,7 @@ public class PortfolioEntryBudgetLineTypeListView {
                         public String apply(PortfolioEntryBudgetLineTypeListView portfolioEntryBudgetLineTypeListView, Object value) {
                             String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
                                     Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.admin.routes.ConfigurationCurrencyController
+                            String url = controllers.admin.routes.ConfigurationFinanceController
                                     .deletePEBudgetLineType(portfolioEntryBudgetLineTypeListView.id).url();
                             return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                         }
