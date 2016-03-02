@@ -35,6 +35,7 @@ import utils.table.NotificationListView;
 import utils.table.OrgUnitListView;
 import utils.table.OrgUnitTypeListView;
 import utils.table.PortfolioEntryBudgetLineListView;
+import utils.table.PortfolioEntryBudgetLineTypeListView;
 import utils.table.PortfolioEntryDependencyListView;
 import utils.table.PortfolioEntryDependencyTypeListView;
 import utils.table.PortfolioEntryEventListView;
@@ -115,6 +116,7 @@ public class TableDefinitions {
     public OrgUnitListView.TableDefinition orgUnit;
     public OrgUnitTypeListView.TableDefinition orgUnitType;
     public PortfolioEntryBudgetLineListView.TableDefinition portfolioEntryBudgetLine;
+    public PortfolioEntryBudgetLineTypeListView.TableDefinition portfolioEntryBudgetLineType;
     public PortfolioEntryDependencyListView.TableDefinition portfolioEntryDependency;
     public PortfolioEntryDependencyTypeListView.TableDefinition portfolioEntryDependencyType;
     public PortfolioEntryEventListView.TableDefinition portfolioEntryEvent;
@@ -198,6 +200,7 @@ public class TableDefinitions {
         this.orgUnit = new OrgUnitListView.TableDefinition(i18nMessagesService);
         this.orgUnitType = new OrgUnitTypeListView.TableDefinition();
         this.portfolioEntryBudgetLine = new PortfolioEntryBudgetLineListView.TableDefinition(i18nMessagesService);
+        this.portfolioEntryBudgetLineType = new PortfolioEntryBudgetLineTypeListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryDependency = new PortfolioEntryDependencyListView.TableDefinition();
         this.portfolioEntryDependencyType = new PortfolioEntryDependencyTypeListView.TableDefinition();
         this.portfolioEntryEvent = new PortfolioEntryEventListView.TableDefinition(i18nMessagesService);

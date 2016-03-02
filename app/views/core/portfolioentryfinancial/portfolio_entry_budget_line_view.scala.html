@@ -84,6 +84,10 @@
                         <th>@parts.Msg("object.portfolio_entry_budget_line.amount.label")</th>
                         <td>@display_number(budgetLine.amount)</td>
                     </tr>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.type.label")</th>
+                        <td>@display_portfolio_entry_budget_line_type(budgetLine.portfolioEntryBudgetLineType)</td>
+                    </tr>
                     @***for the moment we hide the GL account because it cannot be edited, refs #501
                     <tr>
                         <th>@parts.Msg("core.portfolio_entry_financial.budget_line.view.glaccount.label")</th>

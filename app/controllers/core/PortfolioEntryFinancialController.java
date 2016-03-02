@@ -334,8 +334,8 @@ public class PortfolioEntryFinancialController extends Controller {
             Double costCapexTotalCostToComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
             Double costOpexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, true, false);
             Double costCapexTotalEngaged = PortfolioEntryDao.getPEAsEngagedAmountByOpex(this.getPreferenceManagerPlugin(), id, false, false);
-            costTotals = new Totals(costOpexTotalBudget, costCapexTotalBudget, costOpexTotalCostToComplete, costCapexTotalCostToComplete,
-                    costOpexTotalEngaged, costCapexTotalEngaged);
+            costTotals = new Totals(costOpexTotalBudget, costCapexTotalBudget, costOpexTotalCostToComplete, costCapexTotalCostToComplete, costOpexTotalEngaged,
+                    costCapexTotalEngaged);
 
         }
 
@@ -383,8 +383,7 @@ public class PortfolioEntryFinancialController extends Controller {
 
         }
 
-        return ok(
-                views.html.core.portfolioentryfinancial.portfolio_entry_financial_status.render(portfolioEntry, basicBar, totals, effortTotals, costTotals));
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_financial_status.render(portfolioEntry, basicBar, totals, effortTotals, costTotals));
 
     }
 
@@ -413,8 +412,8 @@ public class PortfolioEntryFinancialController extends Controller {
         // construct the corresponding form data (for the custom attributes)
         PortfolioEntryBudgetLineFormData portfolioEntryBudgetLineFormData = new PortfolioEntryBudgetLineFormData(budgetLine);
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_view.render(portfolioEntry, budgetLine,
-                portfolioEntryBudgetLineFormData));
+        return ok(
+                views.html.core.portfolioentryfinancial.portfolio_entry_budget_line_view.render(portfolioEntry, budgetLine, portfolioEntryBudgetLineFormData));
     }
 
     /**
@@ -787,8 +786,7 @@ public class PortfolioEntryFinancialController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.engage.successful"));
 
         if (remainingAmount > 0) {
-            return redirect(
-                    controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
+            return redirect(controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
         } else {
             return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
         }
@@ -1037,8 +1035,7 @@ public class PortfolioEntryFinancialController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_financial.work_order.line_item_select.successful"));
 
         if (remainingAmount > 0) {
-            return redirect(
-                    controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
+            return redirect(controllers.core.routes.PortfolioEntryFinancialController.workOrderReportBalance(portfolioEntry.id, workOrder.id, remainingAmount));
         } else {
             return redirect(controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id));
         }

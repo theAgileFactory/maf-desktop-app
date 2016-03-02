@@ -98,6 +98,12 @@
                             <input type="hidden" name="@budgetLineForm("amount").name" value="@budgetLineForm("amount").value"/>
                         }
                         
+                        @parts.dropdownlist(
+                            budgetLineForm("portfolioEntryBudgetLineType"),
+                            parts.Msg.asString("object.portfolio_entry_budget_line.type.label"),
+                            dao.finance.PortfolioEntryBudgetDAO.getPEBudgetLineTypeActiveAsVH()
+                        )
+                        
                         @parts.singlevalue_picker(
                             budgetLineForm("budgetBucket"), 
                             parts.Msg.asString("object.portfolio_entry_budget_line.budget_bucket.label"),

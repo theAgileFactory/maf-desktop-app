@@ -85,7 +85,7 @@ public class CurrencyListView {
                                 String setAsDefaultConfirmationMessage = MessageFormat.format(
                                         "<a onclick=\"return maf_confirmAction(''{0}'');\" href=\"%s\"><span class=\"fa fa-check-square-o\"></span></a>",
                                         Msg.get("admin.configuration.reference_data.currency.set_as_default.confirm"));
-                                String url = controllers.admin.routes.ConfigurationCurrencyController.setCurrencyAsDefault(currencyListView.id).url();
+                                String url = controllers.admin.routes.ConfigurationFinanceController.setCurrencyAsDefault(currencyListView.id).url();
                                 return views.html.framework_views.parts.formats.display_with_format.render(url, setAsDefaultConfirmationMessage).body();
                             }
                             return null;
@@ -100,7 +100,7 @@ public class CurrencyListView {
                             new StringFormatFormatter<CurrencyListView>(IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<CurrencyListView>() {
                         @Override
                         public String convert(CurrencyListView currencyListView) {
-                            return controllers.admin.routes.ConfigurationCurrencyController.manageCurrency(currencyListView.id).url();
+                            return controllers.admin.routes.ConfigurationFinanceController.manageCurrency(currencyListView.id).url();
                         }
                     }));
                     setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -113,7 +113,7 @@ public class CurrencyListView {
                             if (!currencyListView.isDefault) {
                                 String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
                                         Msg.get("default.delete.confirmation.message"));
-                                String url = controllers.admin.routes.ConfigurationCurrencyController.deleteCurrency(currencyListView.id).url();
+                                String url = controllers.admin.routes.ConfigurationFinanceController.deleteCurrency(currencyListView.id).url();
                                 return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                             }
                             return null;
