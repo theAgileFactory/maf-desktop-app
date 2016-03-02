@@ -100,6 +100,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
 import security.dynamic.PortfolioEntryDynamicHelper;
+import services.budgettracking.IBudgetTrackingService;
 import services.tableprovider.ITableProvider;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
@@ -133,6 +134,8 @@ public class RoadmapController extends Controller {
     private IPreferenceManagerPlugin preferenceManagerPlugin;
     @Inject
     private ITableProvider tableProvider;
+    @Inject
+    private IBudgetTrackingService budgetTrackingService;
 
     private static Logger.ALogger log = Logger.of(RoadmapController.class);
 
@@ -415,6 +418,23 @@ public class RoadmapController extends Controller {
     }
 
     /**
+     * Get the allocated days
+     * 
+     * @param days
+     *            the days
+     * @param forecastDays
+     *            forecast days
+     */
+    private BigDecimal getAllocatedDays(BigDecimal days, BigDecimal forecastDays) {
+        if (this.getBudgetTrackingService().isActive()) {
+            if (forecastDays != null && !forecastDays.equals(BigDecimal.ZERO)) {
+                return forecastDays;
+            }
+        }
+        return days;
+    }
+
+    /**
      * Get all portfolio entries id according to the current filter.
      */
     public Result getAllIds() {
@@ -637,7 +657,8 @@ public class RoadmapController extends Controller {
                     orgUnitCapacities.put(allocatedOrgUnit.orgUnit.id, orgUnitCapacity);
                 }
 
-                computeCapacity(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, allocatedOrgUnit.days, capacityForecastFormData.year, orgUnitCapacity);
+                computeCapacity(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays),
+                        capacityForecastFormData.year, orgUnitCapacity);
             }
 
             // Actor: the org unit is the one of the actor of the allocated
@@ -654,7 +675,8 @@ public class RoadmapController extends Controller {
                         orgUnitCapacities.put(allocatedActor.actor.orgUnit.id, orgUnitCapacity);
                     }
 
-                    computeCapacity(allocatedActor.startDate, allocatedActor.endDate, allocatedActor.days, capacityForecastFormData.year, orgUnitCapacity);
+                    computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
+                            capacityForecastFormData.year, orgUnitCapacity);
 
                 }
             }
@@ -696,7 +718,8 @@ public class RoadmapController extends Controller {
                         competencyCapacities.put(allocatedActor.actor.defaultCompetency.id, competencyCapacity);
                     }
 
-                    computeCapacity(allocatedActor.startDate, allocatedActor.endDate, allocatedActor.days, capacityForecastFormData.year, competencyCapacity);
+                    computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
+                            capacityForecastFormData.year, competencyCapacity);
 
                 }
             }
@@ -852,8 +875,9 @@ public class RoadmapController extends Controller {
                 CapacityDetails capacityDetailsOrgUnit = new CapacityDetails(orgUnit);
                 capacityDetailsRows.put(0L, capacityDetailsOrgUnit);
                 for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : allocatedOrgUnits) {
-                    computeCapacityDetails(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, allocatedOrgUnit.days, year, month, false,
-                            allocatedOrgUnit.isConfirmed, capacityDetailsOrgUnit);
+                    computeCapacityDetails(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate,
+                            getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays), year, month, false, allocatedOrgUnit.isConfirmed,
+                            capacityDetailsOrgUnit);
                 }
             }
 
@@ -880,8 +904,8 @@ public class RoadmapController extends Controller {
             }
             for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
                 CapacityDetails capacityDetailsActor = capacityDetailsRows.get(allocatedActor.actor.id);
-                computeCapacityDetails(allocatedActor.startDate, allocatedActor.endDate, allocatedActor.days, year, month, false, allocatedActor.isConfirmed,
-                        capacityDetailsActor);
+                computeCapacityDetails(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
+                        year, month, false, allocatedActor.isConfirmed, capacityDetailsActor);
             }
 
             /**
@@ -1588,6 +1612,13 @@ public class RoadmapController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    /**
+     * Get the budget tracking service.
+     */
+    private IBudgetTrackingService getBudgetTrackingService() {
+        return this.budgetTrackingService;
     }
 
 }
