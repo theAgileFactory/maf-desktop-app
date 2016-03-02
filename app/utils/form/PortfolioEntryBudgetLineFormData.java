@@ -109,6 +109,7 @@ public class PortfolioEntryBudgetLineFormData {
         budgetLine.portfolioEntryBudgetLineType = this.portfolioEntryBudgetLineType != null
                 ? PortfolioEntryBudgetDAO.getPEBudgetLineTypeById(this.portfolioEntryBudgetLineType) : null;
         budgetLine.budgetBucket = this.budgetBucket != null ? BudgetBucketDAO.getBudgetBucketById(this.budgetBucket) : null;
+
     }
 
 }

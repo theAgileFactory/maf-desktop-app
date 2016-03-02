@@ -87,8 +87,15 @@ public class PortfolioEntryBudgetLineListView {
                     addColumn("amount", "amount", "object.portfolio_entry_budget_line.amount.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("amount", new NumberFormatter<PortfolioEntryBudgetLineListView>());
 
-                    addColumn("expenditureCategory", "expenditureCategory", "object.portfolio_entry_budget_line.type.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("expenditureCategory", new NumberFormatter<PortfolioEntryBudgetLineListView>());
+                    addColumn("portfolioEntryBudgetLineType", "portfolioEntryBudgetLineType", "object.portfolio_entry_budget_line.type.label",
+                            Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryBudgetLineType", new IColumnFormatter<PortfolioEntryBudgetLineListView>() {
+                        @Override
+                        public String apply(PortfolioEntryBudgetLineListView portfolioEntryBudgetLineListView, Object value) {
+                            return views.html.modelsparts.display_portfolio_entry_budget_line_type
+                                    .render(portfolioEntryBudgetLineListView.portfolioEntryBudgetLineType).body();
+                        }
+                    });
 
                     addColumn("budgetBucket", "budgetBucket", "object.portfolio_entry_budget_line.budget_bucket.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("budgetBucket", new IColumnFormatter<PortfolioEntryBudgetLineListView>() {
