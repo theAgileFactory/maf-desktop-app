@@ -19,6 +19,8 @@ package dao.finance;
 
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
@@ -32,6 +34,7 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
 import models.finance.PortfolioEntryBudget;
 import models.finance.PortfolioEntryBudgetLine;
+import models.finance.PortfolioEntryBudgetLineType;
 import models.sql.TotalAmount;
 
 /**
@@ -39,12 +42,15 @@ import models.sql.TotalAmount;
  * objects.
  * 
  * @author Pierre-Yves Cloux
+ * @author Marc Schaer
  */
 public abstract class PortfolioEntryBudgetDAO {
 
     public static Finder<Long, PortfolioEntryBudget> findPortfolioEntryBudget = new Finder<>(PortfolioEntryBudget.class);
 
     public static Finder<Long, PortfolioEntryBudgetLine> findPortfolioEntryBudgetLine = new Finder<>(PortfolioEntryBudgetLine.class);
+
+    public static Finder<Long, PortfolioEntryBudgetLineType> findPortfolioEntryBudgetLineType = new Finder<>(PortfolioEntryBudgetLineType.class);
 
     /**
      * Default constructor.
@@ -233,5 +239,52 @@ public abstract class PortfolioEntryBudgetDAO {
      */
     public static ISelectableValueHolderCollection<Long> getPortfolioEntryBudgetLineSelectableAsVHByPE(long id) {
         return new DefaultSelectableValueHolderCollection<>(getPEBudgetLineAsListByPE(id));
+
+    /**
+     * Get all PE Budget Line types.
+     * 
+     */
+    public static List<PortfolioEntryBudgetLineType> getPEBudgetLineTypeAsList() {
+        return findPortfolioEntryBudgetLineType.where().eq("deleted", false).findList();
+    }
+
+    /**
+     * Get all selectable PE Budget Line types.
+     * 
+     */
+    public static List<PortfolioEntryBudgetLineType> getPEBudgetLineTypeActiveAsList() {
+        return findPortfolioEntryBudgetLineType.where().eq("deleted", false).eq("selectable", true).findList();
+    }
+
+    /**
+     * Get all selectable PE Budget line types as a value holder collection.
+     * 
+     */
+    public static ISelectableValueHolderCollection<Long> getPEBudgetLineTypeActiveAsVH() {
+        return new DefaultSelectableValueHolderCollection<>(getPEBudgetLineTypeActiveAsList());
+    }
+
+    /**
+     * Get the PE entry budget line type associated with the specified id.
+     * 
+     * @param refId
+     *            an actor type ref Id.
+     */
+    public static PortfolioEntryBudgetLineType getPEBudgetLineTypeById(Long id) {
+        return findPortfolioEntryBudgetLineType.where().eq("deleted", false).eq("id", id).findUnique();
+    }
+
+    /**
+     * Get the actor type associated with the specified id.
+     * 
+     * @param refId
+     *            an actor type ref Id.
+     */
+    public static PortfolioEntryBudgetLineType getPEBudgetLineTypeByRefId(String refId) {
+        try {
+            return findPortfolioEntryBudgetLineType.where().eq("deleted", false).eq("refId", refId).findUnique();
+        } catch (PersistenceException e) {
+            return findPortfolioEntryBudgetLineType.where().eq("deleted", false).eq("refId", refId).findList().get(0);
+        }
     }
 }

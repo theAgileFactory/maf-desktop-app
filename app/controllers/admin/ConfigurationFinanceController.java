@@ -41,6 +41,7 @@ import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.finance.Currency;
+import models.finance.PortfolioEntryBudgetLineType;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -48,7 +49,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.tableprovider.ITableProvider;
 import utils.form.CurrencyFormData;
+import utils.form.PortfolioEntryBudgetLineTypeFormData;
 import utils.table.CurrencyListView;
+import utils.table.PortfolioEntryBudgetLineTypeListView;
 
 /**
  * Manage the currencies.
@@ -57,11 +60,12 @@ import utils.table.CurrencyListView;
  * 
  */
 @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
-public class ConfigurationCurrencyController extends Controller {
+public class ConfigurationFinanceController extends Controller {
 
-    private static Logger.ALogger log = Logger.of(ConfigurationCurrencyController.class);
+    private static Logger.ALogger log = Logger.of(ConfigurationFinanceController.class);
 
     private static Form<CurrencyFormData> currencyFormTemplate = Form.form(CurrencyFormData.class);
+    private static Form<PortfolioEntryBudgetLineTypeFormData> peBudgetLineTypeFormTemplate = Form.form(PortfolioEntryBudgetLineTypeFormData.class);
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
@@ -77,6 +81,7 @@ public class ConfigurationCurrencyController extends Controller {
      */
     public Result list() {
 
+        // Currencies
         List<CurrencyListView> currenciesListView = new ArrayList<CurrencyListView>();
         for (Currency currency : CurrencyDAO.getCurrencyAsListByActive(null)) {
             currenciesListView.add(new CurrencyListView(currency));
@@ -84,7 +89,16 @@ public class ConfigurationCurrencyController extends Controller {
 
         Table<CurrencyListView> currenciesTable = this.getTableProvider().get().currency.templateTable.fill(currenciesListView);
 
-        return ok(views.html.admin.config.datareference.currency.list.render(currenciesTable));
+        // Portfolio Entry Budget Line Type
+        List<PortfolioEntryBudgetLineTypeListView> peBudgetLineTypeListView = new ArrayList<PortfolioEntryBudgetLineTypeListView>();
+        for (PortfolioEntryBudgetLineType peBudgetLineType : PortfolioEntryBudgetDAO.getPEBudgetLineTypeAsList()) {
+            peBudgetLineTypeListView.add(new PortfolioEntryBudgetLineTypeListView(peBudgetLineType));
+        }
+
+        Table<PortfolioEntryBudgetLineTypeListView> peBudgetLineTypeTable = this.getTableProvider().get().portfolioEntryBudgetLineType.templateTable
+                .fill(peBudgetLineTypeListView);
+
+        return ok(views.html.admin.config.datareference.currency.list.render(currenciesTable, peBudgetLineTypeTable));
     }
 
     /**
@@ -154,7 +168,7 @@ public class ConfigurationCurrencyController extends Controller {
 
         this.getTableProvider().flushFilterConfig();
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**
@@ -180,7 +194,7 @@ public class ConfigurationCurrencyController extends Controller {
                 || PortfolioEntryBudgetDAO.hasPEBudgetLineByCurrency(currency.code)) {
 
             Utilities.sendErrorFlashMessage(Msg.get("admin.configuration.reference_data.currency.delete.error.used"));
-            return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+            return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
 
         }
 
@@ -190,7 +204,7 @@ public class ConfigurationCurrencyController extends Controller {
 
         this.getTableProvider().flushFilterConfig();
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**
@@ -241,7 +255,89 @@ public class ConfigurationCurrencyController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.currency.set_as_default.successful"));
 
-        return redirect(controllers.admin.routes.ConfigurationCurrencyController.list());
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
+    }
+
+    /**
+     * Edit or create a Portfolio Entry Budget Line Type.
+     * 
+     * @param id
+     *            the pe budget line type id (set 0 for create case)
+     */
+    public Result managePEBudgetLineType(Long id) {
+
+        boolean isDefault = false;
+
+        // initiate the form with the template
+        Form<PortfolioEntryBudgetLineTypeFormData> peBudgetListTypeForm = peBudgetLineTypeFormTemplate;
+
+        // edit case: inject values
+        if (!id.equals(Long.valueOf(0))) {
+
+            PortfolioEntryBudgetLineType peBudgetLineType = PortfolioEntryBudgetDAO.getPEBudgetLineTypeById(id);
+
+            peBudgetListTypeForm = peBudgetLineTypeFormTemplate.fill(new PortfolioEntryBudgetLineTypeFormData(peBudgetLineType));
+
+        }
+
+        return ok(views.html.admin.config.datareference.currency.pe_budget_line_type_manage.render(peBudgetListTypeForm));
+    }
+
+    /**
+     * Process the edit/create form of a Portfolio Entry Budget Line Type.
+     */
+    public Result processManagePEBudgetLineType() {
+
+        // bind the form
+        Form<PortfolioEntryBudgetLineTypeFormData> boundForm = peBudgetLineTypeFormTemplate.bindFromRequest();
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.admin.config.datareference.currency.pe_budget_line_type_manage.render(boundForm));
+        }
+
+        PortfolioEntryBudgetLineTypeFormData peBudgetLineTypeFormData = boundForm.get();
+
+        PortfolioEntryBudgetLineType peBudgetLineType = null;
+
+        if (peBudgetLineTypeFormData.id == null) { // create case
+
+            peBudgetLineType = new PortfolioEntryBudgetLineType();
+            peBudgetLineTypeFormData.fill(peBudgetLineType);
+            peBudgetLineType.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.finance.pe_budget_line_type.add.successful"));
+
+        } else { // edit case
+
+            peBudgetLineType = PortfolioEntryBudgetDAO.getPEBudgetLineTypeById(peBudgetLineTypeFormData.id);
+            peBudgetLineTypeFormData.fill(peBudgetLineType);
+            peBudgetLineType.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful"));
+        }
+
+        this.getTableProvider().flushFilterConfig();
+
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
+    }
+
+    /**
+     * Delete a currency.
+     * 
+     * @param peBudgetLineTypeId
+     *            the currency id
+     */
+    public Result deletePEBudgetLineType(Long peBudgetLineTypeId) {
+
+        PortfolioEntryBudgetLineType peBudgetLineType = PortfolioEntryBudgetDAO.getPEBudgetLineTypeById(peBudgetLineTypeId);
+
+        peBudgetLineType.doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful"));
+
+        this.getTableProvider().flushFilterConfig();
+
+        return redirect(controllers.admin.routes.ConfigurationFinanceController.list());
     }
 
     /**

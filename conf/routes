@@ -614,11 +614,14 @@ GET    /admin/config/ref-data/event-type/manage                    controllers.a
 POST   /admin/config/ref-data/event-type/manage                    controllers.admin.ConfigurationRegisterController.processManageEventType()
 GET    /admin/config/ref-data/event-type/delete                    controllers.admin.ConfigurationRegisterController.deleteEventType(eventTypeId: Long ?= 0)
 
-GET    /admin/config/ref-data/currencies                           controllers.admin.ConfigurationCurrencyController.list()
-GET    /admin/config/ref-data/currency/manage                      controllers.admin.ConfigurationCurrencyController.manageCurrency(currencyId: Long ?= 0)
-POST   /admin/config/ref-data/currency/save                        controllers.admin.ConfigurationCurrencyController.processManageCurrency()
-GET    /admin/config/ref-data/currency/delete                      controllers.admin.ConfigurationCurrencyController.deleteCurrency(currencyId: Long)
-GET    /admin/config/ref-data/currency/set-as-default              controllers.admin.ConfigurationCurrencyController.setCurrencyAsDefault(currencyId: Long)
+GET    /admin/config/ref-data/finances                             controllers.admin.ConfigurationFinanceController.list()
+GET    /admin/config/ref-data/finance/currency/manage              controllers.admin.ConfigurationFinanceController.manageCurrency(currencyId: Long ?= 0)
+POST   /admin/config/ref-data/finance/currency/save                controllers.admin.ConfigurationFinanceController.processManageCurrency()
+GET    /admin/config/ref-data/finance/currency/delete              controllers.admin.ConfigurationFinanceController.deleteCurrency(currencyId: Long)
+GET    /admin/config/ref-data/finance/currency/set-as-default      controllers.admin.ConfigurationFinanceController.setCurrencyAsDefault(currencyId: Long)
+GET    /admin/config/ref-data/finance/pe-budget-line-type/manage   controllers.admin.ConfigurationFinanceController.managePEBudgetLineType(id: Long ?= 0)
+POST   /admin/config/ref-data/finance/pe-budget-line-type/save     controllers.admin.ConfigurationFinanceController.processManagePEBudgetLineType()
+GET    /admin/config/ref-data/finance/pe-budget-line-type/delete   controllers.admin.ConfigurationFinanceController.deletePEBudgetLineType(peBudgetLineTypeId: Long)
 
 GET    /admin/config/ref-data/timesheet-activities                  controllers.admin.ConfigurationTimesheetActivityController.list()
 GET    /admin/config/ref-data/timesheet-activity-type/manage        controllers.admin.ConfigurationTimesheetActivityController.manageTimesheetActivityType(timesheetActivityTypeId: Long ?= 0)
@@ -662,8 +665,8 @@ POST  /admin/password/reset/save                   controllers.admin.PasswordRes
 
 #Audit log
 GET    /admin/audit/list                       controllers.admin.AuditableController.listAuditable()
-GET    /admin/audit/delete/:objectClass                 controllers.admin.AuditableController.deleteAuditable(objectClass: java.lang.String)
-GET    /admin/audit/edit/:objectClass                   controllers.admin.AuditableController.editAuditable(objectClass: java.lang.String)
+GET    /admin/audit/delete/:objectClass        controllers.admin.AuditableController.deleteAuditable(objectClass: java.lang.String)
+GET    /admin/audit/edit/:objectClass          controllers.admin.AuditableController.editAuditable(objectClass: java.lang.String)
 GET    /admin/audit/create                     controllers.admin.AuditableController.createAuditable()
 POST   /admin/audit/save                       controllers.admin.AuditableController.saveAuditable()
 GET    /admin/audit/excel                      controllers.admin.AuditableController.excelAuditable()

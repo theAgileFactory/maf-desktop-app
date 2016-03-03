@@ -16,7 +16,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    currenciesTable: framework.utils.Table[utils.table.CurrencyListView]
+    currenciesTable: framework.utils.Table[utils.table.CurrencyListView],
+    peBudgetlineTypeTable: framework.utils.Table[utils.table.PortfolioEntryBudgetLineTypeListView]
 )
 
 @import helper._
@@ -28,24 +29,39 @@
 @breadcrump=@{
     Seq(
         ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
-        ("admin.configuration.reference_data.currencies.title", null)
+        ("admin.configuration.reference_data.finances.title", null)
     )
 }
 
-@views.html.admin.config.config_template("admin.configuration.reference_data.currencies.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
+@views.html.admin.config.config_template("admin.configuration.reference_data.finances.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
 
     <div class="panel panel-default">
     
         <div class="panel-heading">
-            @parts.Msg("admin.configuration.reference_data.currencies.title")
+            @parts.Msg("admin.configuration.reference_data.finances.title")
             
             <div class="pull-right">
-                <a href="@controllers.admin.routes.ConfigurationCurrencyController.manageCurrency().url"><span class="fa fa-plus fa-lg"></span></a>
+                <a href="@controllers.admin.routes.ConfigurationFinanceController.manageCurrency().url"><span class="fa fa-plus fa-lg"></span></a>
             </div>
         </div>
     
         <div class="panel-body">
             @parts.table.tableview(currenciesTable)
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+    
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title")
+            
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationFinanceController.managePEBudgetLineType().url"><span class="fa fa-plus fa-lg"></span></a>
+            </div>
+        </div>
+    
+        <div class="panel-body">
+            @parts.table.tableview(peBudgetlineTypeTable)
         </div>
     </div>
 

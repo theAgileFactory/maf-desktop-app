@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-04-22T16:11:07 -->
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2016-03-02T16:28:55 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_period_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="29f08652-1b12-42c0-baba-f81392540a08">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\ST.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
@@ -17,13 +18,14 @@
 	</parameter>
 	<parameter name="REPORT_TIMESHEET_PERIOD_END_DATE" class="java.util.Date" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,12,31)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[DATE(2016,12,31)]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT
 	a.first_name AS first_name,
 	a.last_name AS last_name,
 	ou.name AS org_unit_name,	
+	pe.governance_id AS governance_id,
 	pe.name AS portfolio_entry_name,
 	pepp.name AS planning_package_name,
 	IF(tar.id, IFNULL(i18n_tar.value, ''), null) AS activity_type_name,
@@ -56,6 +58,9 @@ GROUP BY
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="org_unit_name" class="java.lang.String"/>
+	<field name="governance_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="portfolio_entry_name" class="java.lang.String"/>
 	<field name="planning_package_name" class="java.lang.String"/>
 	<field name="activity_type_name" class="java.lang.String"/>
@@ -198,7 +203,10 @@ GROUP BY
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[IF($F{portfolio_entry_name} != null,$F{portfolio_entry_name},$F{activity_type_name})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[IF($F{portfolio_entry_name} != null,
+	IF($F{governance_id} != null && !$F{governance_id}.equals(""), $F{governance_id} + " - ", "")+ $F{portfolio_entry_name},
+	$F{activity_type_name}
+)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="row" stretchType="RelativeToBandHeight" x="400" y="0" width="100" height="20" uuid="b4272d9d-f299-446d-bbc5-9301a5cab54b">
