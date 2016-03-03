@@ -570,6 +570,10 @@ kpi.release_burndown.additional1.name=Effort effectué
 kpi.release_burndown.additional2.name=Estimation
 kpi.release_burndown.static_trend_line.name=Courbe théorique
 
+kpi.pe_allocation_progress.main.name=Progression
+kpi.pe_allocation_progress.additional1.name=Effective
+kpi.pe_allocation_progress.additional2.name=Prévue
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here

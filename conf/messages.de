@@ -570,6 +570,10 @@ kpi.release_burndown.additional1.name=Ausgeführt
 kpi.release_burndown.additional2.name=Schätzung
 kpi.release_burndown.static_trend_line.name=Theoritischer Restaufwand
 
+kpi.pe_allocation_progress.main.name=de: Allocations'' progress
+kpi.pe_allocation_progress.additional1.name=de: Effective
+kpi.pe_allocation_progress.additional2.name=de: Forecast
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here

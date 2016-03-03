@@ -732,6 +732,56 @@ public abstract class PortfolioEntryResourcePlanDAO {
     }
 
     /**
+     * Get the total allocated resources forecast days (for the current resource
+     * plan) of a portfolio entry.
+     * 
+     * Note: forecast days concern only actor and org unit.
+     * 
+     * @param portfolioEntry
+     *            the portfolio entry
+     */
+    public static BigDecimal getPEResourcePlanAsForecastDaysByPE(PortfolioEntry portfolioEntry) {
+
+        // get the current life cycle planning
+        LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+
+        // get the resource plan
+        PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
+
+        BigDecimal totalDays = BigDecimal.ZERO;
+
+        String sql1 = "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
+                + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND (perpaa.forecast_days IS NULL OR perpaa.forecast_days = 0)";
+        BigDecimal totalDaysActor = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql1).create()).findUnique().totalDays;
+        if (totalDaysActor != null) {
+            totalDays = totalDays.add(totalDaysActor);
+        }
+
+        String sql2 = "SELECT SUM(perpaa.forecast_days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
+                + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaa.forecast_days IS NOT NULL";
+        BigDecimal totalForecastDaysActor = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql2).create()).findUnique().totalDays;
+        if (totalForecastDaysActor != null) {
+            totalDays = totalDays.add(totalForecastDaysActor);
+        }
+
+        String sql3 = "SELECT SUM(perpaou.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaou WHERE perpaou.deleted = 0 "
+                + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND (perpaou.forecast_days IS NULL OR perpaou.forecast_days = 0)";
+        BigDecimal totalDaysOrgUnit = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql3).create()).findUnique().totalDays;
+        if (totalDaysOrgUnit != null) {
+            totalDays = totalDays.add(totalDaysOrgUnit);
+        }
+
+        String sql4 = "SELECT SUM(perpaou.forecast_days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaou WHERE perpaou.deleted = 0 "
+                + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaou.forecast_days IS NOT NULL";
+        BigDecimal totalForecastDaysOrgUnit = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql4).create()).findUnique().totalDays;
+        if (totalForecastDaysOrgUnit != null) {
+            totalDays = totalDays.add(totalForecastDaysOrgUnit);
+        }
+
+        return totalDays;
+    }
+
+    /**
      * Get the allocated org units of a portfolio entry.
      * 
      * @param portfolioEntryId

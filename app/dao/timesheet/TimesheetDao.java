@@ -352,6 +352,32 @@ public abstract class TimesheetDao {
     }
 
     /**
+     * Get the total timesheeted hours of a portfolio entry.
+     * 
+     * @param portfolioEntryId
+     *            the portfolio entry
+     */
+    public static BigDecimal getTimesheetLogAsTotalHoursByPE(Long portfolioEntryId) {
+
+        String sql = "SELECT SUM(tl.hours) AS totalHours FROM timesheet_log tl " + "JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id "
+                + "JOIN timesheet_report tr ON te.timesheet_report_id = tr.id "
+                + "WHERE tl.deleted = false AND te.deleted = false AND tr.deleted = false AND te.portfolio_entry_id = '" + portfolioEntryId
+                + "' AND (tr.status = '" + Status.APPROVED.name() + "' OR tr.status = '" + Status.LOCKED.name() + "' )";
+
+        RawSql rawSql = RawSqlBuilder.parse(sql).create();
+
+        Query<TotalHours> query = Ebean.find(TotalHours.class);
+
+        BigDecimal totalHours = query.setRawSql(rawSql).findUnique().totalHours;
+
+        if (totalHours == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return totalHours;
+    }
+
+    /**
      * Get the timesheet logs of a portfolio entry.
      * 
      * @param portfolioEntryId
