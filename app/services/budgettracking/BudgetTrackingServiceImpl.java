@@ -170,7 +170,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
         Long packageId = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
 
-        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByActor(allocatedActor.actor.id, packageId)).setScale(5);
+        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByActor(allocatedActor.actor.id, packageId)).setScale(5, BigDecimal.ROUND_HALF_UP);
         BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(this.getPreferenceManagerPlugin()), BigDecimal.ROUND_HALF_UP);
 
         BigDecimal forecastDays = allocatedActor.forecastDays != null ? allocatedActor.forecastDays : allocatedActor.days;
@@ -201,7 +201,7 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
 
         Long packageId = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id : null;
 
-        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByOrgUnit(allocatedOrgUnit.orgUnit.id, packageId)).setScale(5);
+        BigDecimal engagedHours = new BigDecimal(timesheetMap.consumeByOrgUnit(allocatedOrgUnit.orgUnit.id, packageId)).setScale(5, BigDecimal.ROUND_HALF_UP);
         BigDecimal engagedDays = engagedHours.divide(TimesheetDao.getTimesheetReportHoursPerDay(this.getPreferenceManagerPlugin()), BigDecimal.ROUND_HALF_UP);
 
         BigDecimal forecastDays = allocatedOrgUnit.forecastDays != null ? allocatedOrgUnit.forecastDays : allocatedOrgUnit.days;
@@ -253,9 +253,9 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
      *            the resource work orders
      */
     private void generateBudgetAndForecastFromResource(LifeCycleInstancePlanning planning, Long resourceObjectId, String resourceObjectType, String name,
-            Boolean followPackageDates, PortfolioEntryPlanningPackage planningPackage, Date startDate, Date endDate, Currency currency,
-            BigDecimal currencyRate, BigDecimal budgetAmount, BigDecimal costToCompleteAmount, BigDecimal engagedAmount,
-            Map<Long, PortfolioEntryBudgetLine> budgetsAsMap, Map<Long, WorkOrder> workOrdersAsMap) {
+            Boolean followPackageDates, PortfolioEntryPlanningPackage planningPackage, Date startDate, Date endDate, Currency currency, BigDecimal currencyRate,
+            BigDecimal budgetAmount, BigDecimal costToCompleteAmount, BigDecimal engagedAmount, Map<Long, PortfolioEntryBudgetLine> budgetsAsMap,
+            Map<Long, WorkOrder> workOrdersAsMap) {
 
         PortfolioEntry portfolioEntry = planning.lifeCycleInstance.portfolioEntry;
 
