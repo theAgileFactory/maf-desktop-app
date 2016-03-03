@@ -235,6 +235,12 @@ public abstract class PortfolioEntryBudgetDAO {
     }
 
     /**
+     * Get Portfolio Entry Budget Line as value holder collection.
+     */
+    public static ISelectableValueHolderCollection<Long> getPortfolioEntryBudgetLineSelectableAsVHByPE(long id) {
+        return new DefaultSelectableValueHolderCollection<>(getPEBudgetLineAsListByPE(id));
+
+    /**
      * Get all PE Budget Line types.
      * 
      */

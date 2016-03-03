@@ -1508,6 +1508,7 @@ object.work_order.portfolio_entry.label=Initiative
 object.work_order.is_engaged.label=Engaged
 object.work_order.purchase_order_line_item.label=Item
 object.work_order.portfolio_entry_planning_package.label=Package
+object.work_order.portfolio_entry_budget_line.label=Budget line
 object.work_order.follow_package_dates.label=Follow package dates
 object.work_order.table.empty=There is no work order.
 
