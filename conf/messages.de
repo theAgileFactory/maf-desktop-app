@@ -991,6 +991,7 @@ object.portfolio_entry_report_status_type.table.empty=Keine Einträge
 #----------------------
 
 object.portfolio_entry_event_type.name.label=Name
+object.portfolio_entry_event_type.id.label=Id
 object.portfolio_entry_event_type.selectable.label=Aktiviert
 object.portfolio_entry_event_type.bootstrap_glyphicon.label=Icon
 object.portfolio_entry_event_type.table.empty=Keine Einträge

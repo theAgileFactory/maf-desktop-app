@@ -71,6 +71,9 @@ public class PortfolioEntryEventTypeListView {
                         }
                     });
 
+                    addColumn("id", "id", "object.portfolio_entry_event_type.id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("id", new ObjectFormatter<PortfolioEntryEventTypeListView>());
+
                     addColumn("name", "name", "object.portfolio_entry_event_type.name.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryEventTypeListView>());
 
