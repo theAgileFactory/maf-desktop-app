@@ -990,6 +990,7 @@ object.portfolio_entry_report_status_type.table.empty=Il n''existe aucun type de
 #----------------------
 
 object.portfolio_entry_event_type.name.label=Nom
+object.portfolio_entry_event_type.id.label=Id
 object.portfolio_entry_event_type.selectable.label=Actif
 object.portfolio_entry_event_type.bootstrap_glyphicon.label=Icône
 object.portfolio_entry_event_type.table.empty=Il n''existe aucun type d''événement.
