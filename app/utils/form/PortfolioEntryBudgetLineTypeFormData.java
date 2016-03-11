@@ -20,6 +20,10 @@ package utils.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
+import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
+import framework.utils.MultiLanguagesString;
 import models.finance.PortfolioEntryBudgetLineType;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.MaxLength;
@@ -40,12 +44,12 @@ public class PortfolioEntryBudgetLineTypeFormData {
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String refId;
 
-    @Required
-    @MaxLength(value = IModelConstants.MEDIUM_STRING)
-    public String name;
+    @MultiLanguagesStringRequired
+    @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
+    public MultiLanguagesString name;
 
-    @MaxLength(value = IModelConstants.VLARGE_STRING)
-    public String description;
+    @MultiLanguagesStringMaxLength(value = IModelConstants.VLARGE_STRING)
+    public MultiLanguagesString description;
 
     @Required
     public boolean selectable;
@@ -71,12 +75,14 @@ public class PortfolioEntryBudgetLineTypeFormData {
      * 
      * @param budgetLineType
      *            the budget line in the DB
+     * @param i18nMessagesPlugin
+     *            the i18n manager
      */
-    public PortfolioEntryBudgetLineTypeFormData(PortfolioEntryBudgetLineType budgetLineType) {
+    public PortfolioEntryBudgetLineTypeFormData(PortfolioEntryBudgetLineType budgetLineType, II18nMessagesPlugin i18nMessagesPlugin) {
         this.id = budgetLineType.id;
         this.refId = budgetLineType.refId;
-        this.name = budgetLineType.name;
-        this.description = budgetLineType.description;
+        this.name = MultiLanguagesString.getByKey(budgetLineType.name, i18nMessagesPlugin);
+        this.description = MultiLanguagesString.getByKey(budgetLineType.description, i18nMessagesPlugin);
         this.selectable = budgetLineType.selectable;
 
     }
@@ -89,8 +95,8 @@ public class PortfolioEntryBudgetLineTypeFormData {
      */
     public void fill(PortfolioEntryBudgetLineType budgetLineType) {
         budgetLineType.refId = this.refId;
-        budgetLineType.name = this.name;
-        budgetLineType.description = this.description;
+        budgetLineType.name = this.name.getKeyIfValue();
+        budgetLineType.description = this.description.getKeyIfValue();
         budgetLineType.selectable = this.selectable;
     }
 

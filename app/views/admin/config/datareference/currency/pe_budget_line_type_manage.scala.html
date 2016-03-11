@@ -55,18 +55,11 @@
                 
                 @if(peBudgetLineTypeForm("id").value!=null) {
                     <input type="hidden" name="id" value="@peBudgetLineTypeForm("id").value"/>
-                    
-                    <div class="form-group ">
-                        <label class="control-label">@parts.Msg("object.portfolio_entry_budget_line_type.name.label")</label>
-                        <div class="">@peBudgetLineTypeForm("name").value</div>
-                    </div>
-                    
-                    <input type="hidden" name="@peBudgetLineTypeForm("name").name" value="@peBudgetLineTypeForm("name").value"/>
-                } else {
-                    @parts.input_text(peBudgetLineTypeForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line_type.name.label"))
                 }
 
-                @parts.input_text(peBudgetLineTypeForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_budget_line_type.description.label"))
+                @parts.multi_languages_input_text(peBudgetLineTypeForm("name"), parts.Msg.asString("object.portfolio_entry_budget_line_type.name.label"))
+
+                @parts.multi_languages_input_text(peBudgetLineTypeForm("description"), parts.Msg.asString("object.portfolio_entry_budget_line_type.description.label"))
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationFinanceController.list()'>@parts.Msg("button.cancel")</a>
