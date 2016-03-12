@@ -558,7 +558,7 @@ kpi.release_burndown.additional1.name=Effort made
 kpi.release_burndown.additional2.name=Estimation
 kpi.release_burndown.static_trend_line.name=Theoretical remaining effort
 
-kpi.pe_allocation_progress.main.name=Allocations'' progress
+kpi.pe_allocation_progress.main.name=Allocations progress
 kpi.pe_allocation_progress.additional1.name=Effective
 kpi.pe_allocation_progress.additional2.name=Forecast
 
@@ -872,7 +872,7 @@ object.custom_attribute_item.table.empty=There is currently no option.
 
 object.currency.is_active.label=Active
 object.currency.code.label=Code
-object.currency.code.help=3-letters ISO code of the currency. This attribute is definitive (could not be modified later).
+object.currency.code.help=3-letters ISO code of the currency.
 object.currency.code.error.bad_format=The code should contain exactly 3 letters.
 object.currency.code.error.already_used=This code is already used by another currency.
 object.currency.is_default.label=Default
@@ -1392,7 +1392,7 @@ object.portfolio_entry_budget_line.is_opex.label=OPEX
 object.portfolio_entry_budget_line.is_opex.help=Check this box if the budget line is OPEX, else it means it''s CAPEX.
 object.portfolio_entry_budget_line.currency.label=Currency
 object.portfolio_entry_budget_line.amount.label=Amount
-object.portfolio_entry_budget_line.type.label=Budget line type
+object.portfolio_entry_budget_line.type.label=Type
 object.portfolio_entry_budget_line.budget_bucket.label=Budget bucket
 object.portfolio_entry_budget_line.gl_account.label=GL account
 object.portfolio_entry_budget_line.table.empty=There is no budget line.
@@ -1429,7 +1429,7 @@ object.allocated_resource.package.label=Package
 object.allocated_resource.follow_package_dates.label=Follow package dates
 object.allocated_resource.is_confirmed.label=Confirmed
 object.allocated_resource.daily_rate.label=Daily rate
-object.allocated_resource.daily_rate.help=The budget cost per day for the allocated resource.
+object.allocated_resource.daily_rate.help=The budgeted cost per day for the allocated resource.
 object.allocated_resource.forecast_days.label=Forecast in days
 object.allocated_resource.forecast_days.help=Total forecast (effort done + remaining effort) in days for the allocated resource. Let empty to use the "Days" attribute.
 object.allocated_resource.forecast_daily_rate.label=Effective daily rate

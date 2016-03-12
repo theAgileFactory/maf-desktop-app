@@ -570,7 +570,7 @@ kpi.release_burndown.additional1.name=Ausgeführt
 kpi.release_burndown.additional2.name=Schätzung
 kpi.release_burndown.static_trend_line.name=Theoritischer Restaufwand
 
-kpi.pe_allocation_progress.main.name=de: Allocations'' progress
+kpi.pe_allocation_progress.main.name=Zuweisungen Fortschritt
 kpi.pe_allocation_progress.additional1.name=de: Effective
 kpi.pe_allocation_progress.additional2.name=de: Forecast
 
@@ -884,7 +884,7 @@ object.custom_attribute_item.table.empty=Kein Eintrag
 
 object.currency.is_active.label=Aktiviert
 object.currency.code.label=Code
-object.currency.code.help=de: 3-letters ISO code of the currency. This attribute is definitive (could not be modified later).
+object.currency.code.help=de: 3-letters ISO code of the currency.
 object.currency.code.error.bad_format=de: The code should contain exactly 3 letters.
 object.currency.code.error.already_used=de: This code is already used by another currency.
 object.currency.is_default.label=Main
@@ -1405,7 +1405,7 @@ object.portfolio_entry_budget_line.is_opex.label=OPEX
 object.portfolio_entry_budget_line.is_opex.help=Nicht angekreuzt, wird als CAPEX verbucht.
 object.portfolio_entry_budget_line.currency.label=Währung
 object.portfolio_entry_budget_line.amount.label=Betrag
-object.portfolio_entry_budget_line.type.label=de: Budget line type
+object.portfolio_entry_budget_line.type.label=Typ
 object.portfolio_entry_budget_line.budget_bucket.label=Budgetposten
 object.portfolio_entry_budget_line.gl_account.label=GL Konto
 object.portfolio_entry_budget_line.table.empty=Keine Einträge
@@ -1430,7 +1430,7 @@ object.allocated_resource.org_unit.label=Interne Zulieferer
 object.allocated_resource.competency.label=Kompetenzen
 object.allocated_resource.portfolio_entry.label=Initiative
 object.allocated_resource.timesheet_activity.label=Aktivität
-object.allocated_resource.currency.label=de: Currency
+object.allocated_resource.currency.label=Währung
 object.allocated_resource.days.label=Tage
 object.allocated_resource.date.label=Datum
 object.allocated_resource.date.period=von {0} bis {1}
@@ -1442,7 +1442,7 @@ object.allocated_resource.package.label=Planungspaket
 object.allocated_resource.follow_package_dates.label=Folgt Packetdatum
 object.allocated_resource.is_confirmed.label=Bestätigt
 object.allocated_resource.daily_rate.label=Tagessatz
-object.allocated_resource.daily_rate.help=de: The budget cost per day for the allocated resource.
+object.allocated_resource.daily_rate.help=de: The budgeted cost per day for the allocated resource.
 object.allocated_resource.forecast_days.label=Prognosse (in Tagen)
 object.allocated_resource.forecast_days.help=de: Total forecast (effort done + remaining effort) in days for the allocated resource. Let empty to use the "Days" attribute.
 object.allocated_resource.forecast_daily_rate.label=de: Effective daily rate
@@ -1526,7 +1526,7 @@ object.work_order.portfolio_entry.label=Initiative
 object.work_order.is_engaged.label=Angelegt
 object.work_order.purchase_order_line_item.label=Item
 object.work_order.portfolio_entry_planning_package.label=Planungspaket
-object.work_order.portfolio_entry_budget_line.label=de: Ligne de budget
+object.work_order.portfolio_entry_budget_line.label=Budget Eintrag
 object.work_order.follow_package_dates.label=Folgt Packetdatum
 object.work_order.table.empty=Keine Einträge
 
@@ -2893,7 +2893,7 @@ admin.configuration.reference_data.portfolio.initiativetypes.title=Initiative Ty
 admin.configuration.reference_data.portfolio.releasetypes.title=Release Typen
 admin.configuration.reference_data.portfolio.portfolioentrydependencytypes.title=Abhängigkeitstypen
 admin.configuration.reference_data.portfolio.portfoliotypes.title=Portfolio Typen
-admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=de: Type de ligne de budget
+admin.configuration.reference_data.portfolio.portfolioentrybudgetlinetype.title=Budget Eintrag Typen
 admin.configuration.reference_data.actorsandorgunits.title=Mitarbeiter & Organisationseinheit
 admin.configuration.reference_data.actorsandorgunits.actortypes.title=Mitarbeiter Typen
 admin.configuration.reference_data.actorsandorgunits.orgunittypes.title=Organisationseinheit Typen
@@ -2916,7 +2916,7 @@ admin.configuration.reference_data.register.title=Berichterstattung
 admin.configuration.reference_data.register.risktypes.title=Risiko Typen
 admin.configuration.reference_data.register.report_status_types.title=Status Typen
 admin.configuration.reference_data.register.event_types.title=Ereigniss Typen
-admin.configuration.reference_data.finances.title=de: Finances
+admin.configuration.reference_data.finances.title=Finanzen
 admin.configuration.reference_data.timesheetactivities.title=Adminsitrative Aktivitäten (Zeiterfassung)
 admin.configuration.reference_data.timesheetactivities.types.title=Typen
 admin.configuration.reference_data.timesheetactivities.activities.title=Aktivitäten
@@ -3042,23 +3042,23 @@ admin.configuration.reference_data.report_status_type.delete.successful=Typ entf
 #manage event type
 admin.configuration.reference_data.event_type.manage.title=Ereigniss Typ bearbeiten
 admin.configuration.reference_data.event_type.add.successful=Typ hinzugefügt.
-admin.configuration.reference_data.event_type.edit.successful=yp aktualisiert.
+admin.configuration.reference_data.event_type.edit.successful=Typ aktualisiert.
 admin.configuration.reference_data.event_type.delete.successful=Typ entfernt.
 
 #manage currency
-admin.configuration.reference_data.currency.manage.title=de: Manage a currency
-admin.configuration.reference_data.currency.add.successful=de: The currency has been added successfully.
-admin.configuration.reference_data.currency.edit.successful=de: The currency has been updated.
-admin.configuration.reference_data.currency.delete.successful=de: The currency has been deleted.
+admin.configuration.reference_data.currency.manage.title=Wählung bearbeiten
+admin.configuration.reference_data.currency.add.successful=Wählung hinzugefügt.
+admin.configuration.reference_data.currency.edit.successful=Wählung aktualisiert.
+admin.configuration.reference_data.currency.delete.successful=Wählung entfernt.
 admin.configuration.reference_data.currency.delete.error.used=de: This is not possible to delete a currency used for at least one amount.
 admin.configuration.reference_data.currency.set_as_default.confirm=de: By changing the default currency, all rates of existing data (budget buckets, work orders...)  should be manually corrected. Are you sure to continue?
 admin.configuration.reference_data.currency.set_as_default.successful=de: The currency is now the default one.
 
 #manage portfolio entry budget line type
-admin.configuration.reference_data.finance.pe_budget_line_type.manage.title=de: Manage a budget line type
-admin.configuration.reference_data.finance.pe_budget_line_type.add.successful=de: The budget line type has been added successfully.
-admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful=de: The budget line type has been updated.
-admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful=de: The budget line type has been deleted.
+admin.configuration.reference_data.finance.pe_budget_line_type.manage.title=Budget Eintrag Typ bearbeiten
+admin.configuration.reference_data.finance.pe_budget_line_type.add.successful=dudget Eintrag Typ hinzugefügt.
+admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful=udget Eintrag Typ aktualisiert.
+admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful=udget Eintrag Typ entfernt.
 admin.configuration.reference_data.finance.pe_budget_line_type.delete.error.used=de: This is not possible to delete a budget line type used for at least one line.
 
 #manage timesheet activity type
