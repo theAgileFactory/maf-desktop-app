@@ -1400,7 +1400,7 @@ object.portfolio_entry_budget_line.table.empty=There is no budget line.
 #----------------------
 # portfolioEntryBudgetLineType
 #----------------------
-object.portfolio_entry_budget_line_type.ref_id.label=Reference
+object.portfolio_entry_budget_line_type.ref_id.label=RefId
 object.portfolio_entry_budget_line_type.name.label=Name
 object.portfolio_entry_budget_line_type.description.label=Description
 object.portfolio_entry_budget_line_type.selectable.label=Active

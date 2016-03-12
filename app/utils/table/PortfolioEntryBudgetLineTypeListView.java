@@ -57,6 +57,14 @@ public class PortfolioEntryBudgetLineTypeListView {
                 {
                     setIdFieldName("id");
 
+                    addColumn("active", "active", "object.portfolio_entry_budget_line_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("active", new IColumnFormatter<PortfolioEntryBudgetLineTypeListView>() {
+                        @Override
+                        public String apply(PortfolioEntryBudgetLineTypeListView portfolioEntryBudgetLineTypeListView, Object value) {
+                            return views.html.framework_views.parts.formats.display_boolean.render(portfolioEntryBudgetLineTypeListView.selectable).body();
+                        }
+                    });
+
                     addColumn("refId", "refId", "object.portfolio_entry_budget_line_type.ref_id.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("refId", new ObjectFormatter<PortfolioEntryBudgetLineTypeListView>());
 
@@ -65,14 +73,6 @@ public class PortfolioEntryBudgetLineTypeListView {
 
                     addColumn("description", "description", "object.portfolio_entry_budget_line_type.description.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("description", new ObjectFormatter<PortfolioEntryBudgetLineTypeListView>());
-
-                    addColumn("active", "active", "object.portfolio_entry_budget_line_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("active", new IColumnFormatter<PortfolioEntryBudgetLineTypeListView>() {
-                        @Override
-                        public String apply(PortfolioEntryBudgetLineTypeListView portfolioEntryBudgetLineTypeListView, Object value) {
-                            return views.html.framework_views.parts.formats.display_boolean.render(portfolioEntryBudgetLineTypeListView.selectable).body();
-                        }
-                    });
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryBudgetLineTypeListView>(IMafConstants.EDIT_URL_FORMAT,
@@ -95,8 +95,8 @@ public class PortfolioEntryBudgetLineTypeListView {
                         public String apply(PortfolioEntryBudgetLineTypeListView portfolioEntryBudgetLineTypeListView, Object value) {
                             String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
                                     Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.admin.routes.ConfigurationFinanceController
-                                    .deletePEBudgetLineType(portfolioEntryBudgetLineTypeListView.id).url();
+                            String url = controllers.admin.routes.ConfigurationFinanceController.deletePEBudgetLineType(portfolioEntryBudgetLineTypeListView.id)
+                                    .url();
                             return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                         }
                     });

@@ -276,7 +276,7 @@ public class ConfigurationFinanceController extends Controller {
 
             PortfolioEntryBudgetLineType peBudgetLineType = PortfolioEntryBudgetDAO.getPEBudgetLineTypeById(id);
 
-            peBudgetListTypeForm = peBudgetLineTypeFormTemplate.fill(new PortfolioEntryBudgetLineTypeFormData(peBudgetLineType));
+            peBudgetListTypeForm = peBudgetLineTypeFormTemplate.fill(new PortfolioEntryBudgetLineTypeFormData(peBudgetLineType, i18nMessagesPlugin));
 
         }
 
@@ -315,6 +315,9 @@ public class ConfigurationFinanceController extends Controller {
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful"));
         }
+
+        peBudgetLineTypeFormData.description.persist(getI18nMessagesPlugin());
+        peBudgetLineTypeFormData.name.persist(getI18nMessagesPlugin());
 
         this.getTableProvider().flushFilterConfig();
 
