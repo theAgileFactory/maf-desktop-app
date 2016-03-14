@@ -46,9 +46,6 @@ public class CurrencyFormData {
     @Required
     public BigDecimal conversionRate;
 
-    @Required
-    public String symbol;
-
     /**
      * Default constructor.
      */
@@ -88,7 +85,6 @@ public class CurrencyFormData {
         this.isActive = currency.isActive;
         this.code = currency.code;
         this.conversionRate = currency.conversionRate;
-        this.symbol = currency.symbol;
     }
 
     /**
@@ -106,6 +102,5 @@ public class CurrencyFormData {
             currency.conversionRate = this.conversionRate;
         }
         currency.code = this.code.toUpperCase();
-        currency.symbol = this.symbol;
     }
 }

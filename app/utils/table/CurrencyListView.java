@@ -74,9 +74,6 @@ public class CurrencyListView {
                     addColumn("conversionRate", "conversionRate", "object.currency.conversion_rate.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("conversionRate", new NumberFormatter<CurrencyListView>());
 
-                    addColumn("symbol", "symbol", "object.currency.symbol.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("symbol", new ObjectFormatter<CurrencyListView>());
-
                     addColumn("setAsDefault", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("setAsDefault", new IColumnFormatter<CurrencyListView>() {
                         @Override
@@ -146,14 +143,12 @@ public class CurrencyListView {
 
     public BigDecimal conversionRate;
 
-    public String symbol;
-
-    /**
-     * Construct a list view with a DB entry.
+    /*
+     * Construct a list view with a DB entry.**
      * 
-     * @param currency
-     *            the currency in the DB
+     * @param currency the currency in the DB
      */
+
     public CurrencyListView(Currency currency) {
 
         this.id = currency.id;
@@ -163,7 +158,5 @@ public class CurrencyListView {
         if (!this.isDefault) {
             this.conversionRate = currency.conversionRate;
         }
-        this.symbol = currency.symbol;
-
     }
 }
