@@ -57,8 +57,8 @@ public class PortfolioEntryBudgetLineTypeListView {
                 {
                     setIdFieldName("id");
 
-                    addColumn("active", "active", "object.portfolio_entry_budget_line_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("active", new IColumnFormatter<PortfolioEntryBudgetLineTypeListView>() {
+                    addColumn("selectable", "selectable", "object.portfolio_entry_budget_line_type.selectable.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("selectable", new IColumnFormatter<PortfolioEntryBudgetLineTypeListView>() {
                         @Override
                         public String apply(PortfolioEntryBudgetLineTypeListView portfolioEntryBudgetLineTypeListView, Object value) {
                             return views.html.framework_views.parts.formats.display_boolean.render(portfolioEntryBudgetLineTypeListView.selectable).body();
