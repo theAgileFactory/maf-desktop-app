@@ -73,8 +73,6 @@
                     @parts.input_text(currencyForm("conversionRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.currency.conversion_rate.label"), '_help -> parts.Msg.asString("object.currency.conversion_rate.help"))
                 }
                 
-                @parts.input_text(currencyForm("symbol"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.currency.symbol.label"))
-
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.admin.routes.ConfigurationFinanceController.list()'>@parts.Msg("button.cancel")</a>
                 
