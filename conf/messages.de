@@ -571,8 +571,8 @@ kpi.release_burndown.additional2.name=Schätzung
 kpi.release_burndown.static_trend_line.name=Theoritischer Restaufwand
 
 kpi.pe_allocation_progress.main.name=Zuweisungen Fortschritt
-kpi.pe_allocation_progress.additional1.name=de: Effective
-kpi.pe_allocation_progress.additional2.name=de: Forecast
+kpi.pe_allocation_progress.additional1.name=Effektiv
+kpi.pe_allocation_progress.additional2.name=Prognose
 
 #----------------------
 # standard reports
@@ -887,15 +887,15 @@ object.custom_attribute_item.table.empty=Kein Eintrag
 
 object.currency.is_active.label=Aktiviert
 object.currency.code.label=Code
-object.currency.code.help=de: 3-letters ISO code of the currency.
-object.currency.code.error.bad_format=de: The code should contain exactly 3 letters.
-object.currency.code.error.already_used=de: This code is already used by another currency.
-object.currency.is_default.label=Main
+object.currency.code.help=ISO Alpha-3 Währungscode.
+object.currency.code.error.bad_format=Code besteht aus genau 3 Buchstaben.
+object.currency.code.error.already_used=Bereits verwendet.
+object.currency.is_default.label=Hauptwährung
 object.currency.conversion_rate.label=Wechselkurs
-object.currency.conversion_rate.help=de: The conversion rate is the value of 1 unity of the currency in the default currency.
+object.currency.conversion_rate.help=Der Wechselkurs ist der Wert einer Einheit in der Hauptwährung.
 object.currency.symbol.label=Symbol
-object.currency.rate.label=de: Rate
-object.currency.reload.help=de: Reload the default conversion rate for this currency.
+object.currency.rate.label=Kurs
+object.currency.reload.help=voreingestellten Wechselkurs laden.
 
 
 #----------------------
@@ -1067,7 +1067,7 @@ object.timesheet_report.status.REJECTED.label=Abgelehnt
 object.timesheet_report.status.LOCKED.label=Schreibgeschützt
 object.timesheet_report.status.UNLOCKED.label=Freischalten
 object.timesheet_report.reminder.help=Mitteilung an Mitarbeiter: Timesheet ausfüllen
-object.timesheet_report.approve.help=de: Approve the timesheet.
+object.timesheet_report.approve.help=Timesheet genehmigen.
 object.timesheet_report.comments.label=Anmerkungen
 object.timesheet_report.table.empty=Keine Zeiterfassung eingetragen
 
@@ -1445,11 +1445,11 @@ object.allocated_resource.package.label=Planungspaket
 object.allocated_resource.follow_package_dates.label=Folgt Packetdatum
 object.allocated_resource.is_confirmed.label=Bestätigt
 object.allocated_resource.daily_rate.label=Tagessatz
-object.allocated_resource.daily_rate.help=de: The budgeted cost per day for the allocated resource.
-object.allocated_resource.forecast_days.label=Prognosse (in Tagen)
-object.allocated_resource.forecast_days.help=de: Total forecast (effort done + remaining effort) in days for the allocated resource. Let empty to use the "Days" attribute.
-object.allocated_resource.forecast_daily_rate.label=de: Effective daily rate
-object.allocated_resource.forecast_daily_rate.help=de: The effective cost per day for the allocated resource. Let empty to use the "Daily rate" attribute.
+object.allocated_resource.daily_rate.help=Kosten pro Tag der zugewiesenen Resourcen.
+object.allocated_resource.forecast_days.label=Prognose (in Tagen)
+object.allocated_resource.forecast_days.help=Total Prognose (Bezug + Geplant) in Tagen der zugewiesenen Resourcen. Leer lassen um das Attribute "Tage" zu nutzen.
+object.allocated_resource.forecast_daily_rate.label=effektiver Tagssatz
+object.allocated_resource.forecast_daily_rate.help=Effektive Kosten pro Tage der zugewiesenen Resourcen. Leer lassen um das Attribut "Tagessatz" zu nutzen.
 object.allocated_resource.actor.table.empty=Keine Einträge
 object.allocated_resource.org_unit.table.empty=Keine Einträge
 object.allocated_resource.competency.table.empty=Keine Einträge
@@ -1912,7 +1912,7 @@ core.roadmap.simulator.capacity_kpis.budget.additional2=OPEX
 core.roadmap.simulator.capacity_kpis.forecast.main=Prognose
 core.roadmap.simulator.capacity_kpis.forecast.additional1=CAPEX
 core.roadmap.simulator.capacity_kpis.forecast.additional2=OPEX
-core.roadmap.simulator.capacity_kpis.engaged.main=de: Actuals
+core.roadmap.simulator.capacity_kpis.engaged.main=Effektiv
 core.roadmap.simulator.capacity_kpis.engaged.additional1=CAPEX
 core.roadmap.simulator.capacity_kpis.engaged.additional2=OPEX
 core.roadmap.simulator.capacity_kpis.allocation.main=Zuweisung
@@ -3053,16 +3053,16 @@ admin.configuration.reference_data.currency.manage.title=Wählung bearbeiten
 admin.configuration.reference_data.currency.add.successful=Wählung hinzugefügt.
 admin.configuration.reference_data.currency.edit.successful=Wählung aktualisiert.
 admin.configuration.reference_data.currency.delete.successful=Wählung entfernt.
-admin.configuration.reference_data.currency.delete.error.used=de: This is not possible to delete a currency used for at least one amount.
-admin.configuration.reference_data.currency.set_as_default.confirm=de: By changing the default currency, all rates of existing data (budget buckets, work orders...)  should be manually corrected. Are you sure to continue?
-admin.configuration.reference_data.currency.set_as_default.successful=de: The currency is now the default one.
+admin.configuration.reference_data.currency.delete.error.used=Kann nicht gelöscht werden, Währung wird noch verwendet.
+admin.configuration.reference_data.currency.set_as_default.confirm=Wenn die Hauptwährung geändert wird müssen sämtliche Wechselkurse der Bestehenden Einträge (Budget Buckets, Aufträge, ..) manuel angepasst werden. Neue Hauptwährung speichern?
+admin.configuration.reference_data.currency.set_as_default.successful=Neue Hauptwährung gespeichert.
 
 #manage portfolio entry budget line type
 admin.configuration.reference_data.finance.pe_budget_line_type.manage.title=Budget Eintrag Typ bearbeiten
-admin.configuration.reference_data.finance.pe_budget_line_type.add.successful=dudget Eintrag Typ hinzugefügt.
-admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful=udget Eintrag Typ aktualisiert.
-admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful=udget Eintrag Typ entfernt.
-admin.configuration.reference_data.finance.pe_budget_line_type.delete.error.used=de: This is not possible to delete a budget line type used for at least one line.
+admin.configuration.reference_data.finance.pe_budget_line_type.add.successful=Budget Eintrag Typ hinzugefügt.
+admin.configuration.reference_data.finance.pe_budget_line_type.edit.successful=Budget Eintrag Typ aktualisiert.
+admin.configuration.reference_data.finance.pe_budget_line_type.delete.successful=Budget Eintrag Typ entfernt.
+admin.configuration.reference_data.finance.pe_budget_line_type.delete.error.used=Kann nicht gelöscht werden, wird noch verwendet.
 
 #manage timesheet activity type
 admin.configuration.reference_data.timesheetactivitytype.manage.title=Zeiterfassung Typen bearbeiten
