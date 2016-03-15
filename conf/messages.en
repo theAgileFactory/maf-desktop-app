@@ -587,6 +587,9 @@ report.timesheet_project.initiative.name=Initiative
 report.milestones_overdue.name=Milestones overdue
 report.milestones_overdue.description=List of late milestones for the active initiatives.
 
+report.financial_per_type.name=Financial status by budget types
+report.financial_per_type.description=Financial status by budget types
+
 #----------------------
 # permissions
 #----------------------
