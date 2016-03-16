@@ -1945,7 +1945,7 @@ core.reporting.category.title=Reports repository
 
 #generate
 core.reporting.generate.request.success=Your request to download a report has been correctly submitted. You will be notified when the report will be ready.
-core.reporting.generate.process.success.title=A new report is ready to dowload
+core.reporting.generate.process.success.title=A new report is ready to download
 core.reporting.generate.process.success.message=A new report is available in your personal space and could be downloaded.
 core.reporting.generate.process.failure.title=Error during report creation
 core.reporting.generate.process.failure.message=An error has occured when creating a requested report, please try later.
@@ -3377,3 +3377,12 @@ admin.auditable.export.notification.not_found.message=No audit logs found for th
 admin.auditable.logging.title=Application logs
 admin.auditable.switchdebug.label=Switch to debug
 admin.auditable.download.label=Download
+
+#database dump
+admin.auditable.mysql.dump.title=Database Dump
+admin.auditable.mysql.dump=Dump Database
+admin.auditable.mysql.dump.request.success=Your request to create a database dump has been correctly submitted. You will be notified when the report will be ready.
+admin.auditable.mysql.dump.process.success.title=A new database dump is ready to download
+admin.auditable.mysql.dump.process.success.message=A new database dump is available in the data exchange storage and could be downloaded.
+admin.auditable.mysql.dump.process.failure.title=Error during database dump creation
+admin.auditable.mysql.dump.process.failure.message=An error has occured when creating a database dump, please try later.

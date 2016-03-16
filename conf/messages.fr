@@ -3392,3 +3392,12 @@ admin.auditable.export.notification.not_found.message=Aucun journal d''audit n''
 admin.auditable.logging.title=Logs d''application
 admin.auditable.switchdebug.label=Passer en mode debug
 admin.auditable.download.label=Télécharger
+
+#database dump
+admin.auditable.mysql.dump.title=Sauvegarde de la base de données
+admin.auditable.mysql.dump=Sauvegarder la base de données
+admin.auditable.mysql.dump.request.success=Votre demande de téléchargement d''une sauvegarde de la BD a été enregistrée. Vous serez notifié(e) lorsque la sauvegarde sera prête.
+admin.auditable.mysql.dump.process.success.title=Une sauvegarde de la BD est disponible au téléchargement
+admin.auditable.mysql.dump.process.success.message=Une nouvelle sauvegarde de la BD est disponible dans l'espace de stockage et peut être téléchargée.
+admin.auditable.mysql.dump.process.failure.title=Erreur lors de la création d''une sauvegarde de la BD.
+admin.auditable.mysql.dump.process.failure.message=Une erreur s''est produite lors de la création d''une sauvegarde de la BD, veuillez réessayer ultérieurement.
