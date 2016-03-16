@@ -99,6 +99,13 @@
             </p>
         </div>
     </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @parts.Msg("admin.auditable.mysql.dump.title")
+        </div>
+        <li class="list-group-item"><a href="@controllers.admin.routes.AuditableController.dumpDatabase()" class="btn btn-primary">@parts.Msg("admin.auditable.mysql.dump")</a></li>
+    </div>
 
     <script>
         function maf_confirmDelete(value){

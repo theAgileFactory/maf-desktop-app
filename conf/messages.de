@@ -3386,3 +3386,12 @@ admin.auditable.export.notification.not_found.message=Kein Audit-log vorhanden. 
 admin.auditable.logging.title=Anwendungslog
 admin.auditable.switchdebug.label=Debug-Modus einschalten
 admin.auditable.download.label=Downloaden
+
+##database dump
+admin.auditable.mysql.dump.title=de: Sauvegarde de la base de données
+admin.auditable.mysql.dump=de: Sauvegarder la base de données
+admin.auditable.mysql.dump.request.success=de: Votre demande de téléchargement d''une sauvegarde de la base de données a été enregistrée. Vous serez notifié(e) lorsque la sauvegarde sera prête.
+admin.auditable.mysql.dump.process.success.title=de: Une sauvegarde de la base de données est disponible au téléchargement
+admin.auditable.mysql.dump.process.success.message=de: Une nouvelle sauvegarde de la base de données est disponible dans l'espace de stockage et peut être téléchargée.
+admin.auditable.mysql.dump.process.failure.title=de: Erreur lors de la création d''une sauvegarde de la base de données
+admin.auditable.mysql.dump.process.failure.message=de: Une erreur s''est produite lors de la création d''une sauvegarde de la base de données, veuillez réessayer ultérieurement.

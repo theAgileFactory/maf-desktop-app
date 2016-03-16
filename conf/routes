@@ -672,8 +672,11 @@ POST   /admin/audit/save                       controllers.admin.AuditableContro
 GET    /admin/audit/excel                      controllers.admin.AuditableController.excelAuditable()
 POST   /admin/audit/pickerobjectclass/values   controllers.admin.AuditableController.singleValuePickerObjectClassValues()
 POST   /admin/audit/export                     controllers.admin.AuditableController.exportAuditLogs()
-GET   /admin/audit/technical/download          controllers.admin.AuditableController.downloadApplicationLog()
-GET   /admin/audit/technical/switchdebug       controllers.admin.AuditableController.switchToDebug()
+GET    /admin/audit/technical/download         controllers.admin.AuditableController.downloadApplicationLog()
+GET    /admin/audit/technical/switchdebug      controllers.admin.AuditableController.switchToDebug()
+
+#MySQL Dump
+GET    /admin/audit/mysql/dump                 controllers.admin.AuditableController.dumpDatabase()
 
 #Plugin manager
 GET    /admin/plugin/index                         controllers.admin.PluginManagerController.index()

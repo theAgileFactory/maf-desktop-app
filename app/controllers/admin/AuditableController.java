@@ -61,6 +61,7 @@ import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import play.Configuration;
 import play.Logger;
+import play.Play;
 import play.data.Form;
 import play.i18n.Messages;
 import play.libs.F.Function0;
@@ -352,6 +353,88 @@ public class AuditableController extends Controller {
                 }
             }
         });
+    }
+
+    public Result dumpDatabase() {
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.auditable.mysql.dump.request.success"));
+
+        // prepare the notification messages
+        final String successTitle = Msg.get("admin.auditable.mysql.dump.process.success.title");
+        final String successMessage = Msg.get("admin.auditable.mysql.dump.process.success.message");
+        final String failureTitle = Msg.get("admin.auditable.mysql.dump.process.failure.title");
+        final String failureMessage = Msg.get("admin.auditable.mysql.dump.process.failure.message");
+
+        final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+
+        getSysAdminUtils().scheduleOnce(false, "MySQL Dump", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+            @Override
+            public void run() {
+
+                INotificationManagerPlugin notificationManagerPlugin = getNotificationManagerPlugin();
+
+                try {
+                    String host = "localhost";
+                    String schema = "maf";
+                    String port = "3306";
+                    // URL pattern :
+                    // jdbc:mysql://[host1][:port1][,[host2][:port2]]...[/[database]]
+                    // [?propertyName1=propertyValue1[&propertyName2=propertyValue2]...]
+                    String[] completeUrl = Play.application().configuration().getString("db.default.url").split("//");
+                    // if there is informations in the url
+                    if (completeUrl.length > 1) {
+                        String tempUrl = completeUrl[1];
+                        // if many urls, get the first one only
+                        if (completeUrl[1].contains(",")) {
+                            tempUrl = completeUrl[1].split(",")[0];
+                        }
+                        // if there is a port
+                        if (tempUrl.contains(":")) {
+                            host = tempUrl.split(":")[0];
+                            String portAndSchema = tempUrl.split(":")[1];
+                            // Get the port
+                            if (!tempUrl.contains("/")) {
+                                port = portAndSchema;
+                            } else {
+                                port = portAndSchema.split("/")[0];
+                                schema = portAndSchema.split("/")[1];
+                                if (schema.contains("?")) {
+                                    schema = schema.split("\\?")[0];
+                                }
+                            }
+                            // if schema without port
+                        } else if (tempUrl.contains("/")) {
+                            host = tempUrl.split("/")[0];
+                            schema = tempUrl.split("/")[1];
+                            // if no schema and no port
+                        } else {
+                            host = tempUrl;
+                        }
+                        // properties are not considered for the dump
+                        if (schema.contains("?")) {
+                            schema = schema.split("\\?")[0];
+                        }
+                    }
+
+                    String user = Play.application().configuration().getString("db.default.username");
+                    String passwd = Play.application().configuration().getString("db.default.password");
+                    String path = Play.application().configuration().getString("maf.sftp.store.root");
+                    String cmd = "mysqldump -R -h " + host + " -P " + port + " -u " + user + " -p" + passwd + " " + schema + " | gzip > " + path
+                            + "/outputs/maf_`date +'%Y-%m-%d-%H-%M-%S'`.gz";
+                    Process p = Runtime.getRuntime().exec(new String[] { "sh", "-c", cmd });
+                    log.debug(IOUtils.toString(p.getInputStream(), "UTF-8"));
+                    log.debug(IOUtils.toString(p.getErrorStream(), "UTF-8"));
+                    p.waitFor();
+                    notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.INFORMATION), successTitle, successMessage,
+                            controllers.admin.routes.SharedStorageManagerController.index().url());
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                    notificationManagerPlugin.sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                            controllers.admin.routes.AuditableController.listAuditable().url());
+                }
+            }
+        });
+
+        return redirect(routes.AuditableController.listAuditable());
     }
 
     /*--------------------------------------------------------------------------------

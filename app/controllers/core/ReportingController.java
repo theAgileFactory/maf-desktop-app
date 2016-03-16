@@ -148,8 +148,8 @@ public class ReportingController extends Controller {
 
             List<Reporting> reports;
             try {
-                reports = ReportingDynamicHelper.getReportsViewAllowedAsQuery(
-                        Expr.and(Expr.eq("isActive", true), Expr.eq("reportingCategory.id", categoryId)), null, getSecurityService()).findList();
+                reports = ReportingDynamicHelper.getReportsViewAllowedAsQuery(Expr.and(Expr.eq("isActive", true), Expr.eq("reportingCategory.id", categoryId)),
+                        null, getSecurityService()).findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
@@ -189,8 +189,7 @@ public class ReportingController extends Controller {
         if (report.isActive) {
 
             // load the form
-            Form<ReportingParamsFormData> form = formTemplate
-                    .fill(new ReportingParamsFormData(report, getI18nMessagesPlugin().getCurrentLanguage().getCode()));
+            Form<ReportingParamsFormData> form = formTemplate.fill(new ReportingParamsFormData(report, getI18nMessagesPlugin().getCurrentLanguage().getCode()));
 
             return ok(views.html.core.reporting.parametrize.render(report, form));
 
