@@ -1102,6 +1102,7 @@ public class PortfolioEntryFinancialController extends Controller {
         newWorkOrder.followPackageDates = workOrder.followPackageDates;
         newWorkOrder.portfolioEntryPlanningPackage = workOrder.portfolioEntryPlanningPackage;
         newWorkOrder.startDate = workOrder.startDate;
+        newWorkOrder.portfolioEntryBudgetLine = workOrder.portfolioEntryBudgetLine;
 
         newWorkOrder.save();
 
