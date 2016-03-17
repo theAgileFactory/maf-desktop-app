@@ -17,7 +17,7 @@
     <queryString>
         <![CDATA[SELECT
             pe.name AS name,
-            IFNULL(m_name.value, '') AS peblt_name,
+            IFNULL(m_name.value, (SELECT m_name.value from i18n_messages m_name where peblt.name = m_name.`key` LIMIT 1 ORDER BY CASE WHEN language="en" THEN NULL ELSE language END ASC)) AS peblt_name,
             vpef.capex_budget AS capex_budget,
             vpef.opex_budget AS opex_budget,
             vpef.capex_cost_to_complete AS capex_cost_to_complete,
