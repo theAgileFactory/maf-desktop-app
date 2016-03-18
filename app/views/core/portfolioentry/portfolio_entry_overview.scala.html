@@ -40,7 +40,7 @@
 @portfolio_entry_template(portfolioEntry, controllers.core.PortfolioEntryController.MenuItemType.OVERVIEW, breadcrump){
 
     <span id="portfolio-entry-@(portfolioEntry.id)-details"></span>
-    
+
     <div class="row">
         @views.html.framework_views.parts.kpi.display_kpi_dashboard(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION) {
@@ -57,28 +57,28 @@
         <div class="panel-body">
 
             @Html(milestonesTrend.renderTable)
-            
+
         </div>
     </div>
-    
+
     <div class="row">
-    
+
         @if(portfolioEntry.lastPortfolioEntryReport != null) {
             <div class="col-md-6">
-            
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @parts.Msg("core.portfolio_entry.overview.status.panel.title")
-                        
+
                         <div class="pull-right">
                             @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                                 <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id, portfolioEntry.lastPortfolioEntryReport.id).url"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                                 &nbsp;&nbsp;
                             }
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url"><span class="fa fa-external-linkfa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url"><span class="fa fa-external-link fa-lg"></span></a>
                         </div>
                     </div>
-            
+
                     <div class="panel-body">
                         <table class="table table-condensed table-hover">
                             <colgroup>
@@ -102,27 +102,27 @@
                         </table>
                     </div>
                 </div>
-            
+
             </div>
         }
-        
+
         <div class="col-md-6">
-        
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     @parts.Msg("core.portfolio_entry.overview.milestones.panel.title")
-                    
+
                     <div class="pull-right">
                         <a href="@controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url"><span class="fa fa-external-linkfa-lg"></span></a>
                     </div>
                 </div>
-        
+
                 <div class="panel-body">
                     @parts.table.tableview(milestonesTable)
                 </div>
             </div>
-            
+
         </div>
     </div>
-   
+
 }
