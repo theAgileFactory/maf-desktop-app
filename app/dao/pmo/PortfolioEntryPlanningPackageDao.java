@@ -67,6 +67,22 @@ public abstract class PortfolioEntryPlanningPackageDao {
     public static PortfolioEntryPlanningPackage getPEPlanningPackageById(Long id) {
         return findPortfolioEntryPlanningPackage.where().eq("deleted", false).eq("id", id).findUnique();
     }
+    
+
+    /**
+     * Get a portfolio entry planning package by:
+     * <ul>
+     * <li>portfolio entry id</li>
+     * <li>refId</li>
+     * </ul>
+     * A planning package refId is unique for a named portfolio entry
+     * 
+     * @param peId a portfolio entry id
+     * @param refId a reference id
+     */
+    public static PortfolioEntryPlanningPackage getPEPlanningPackageByPEIdAndRefId(Long peId, String refId) {
+        return findPortfolioEntryPlanningPackage.where().eq("deleted", false).eq("portfolioEntry.id", peId).eq("refId", refId).findUnique();
+    }
 
     /**
      * Get all planning packages of a portfolio entry as an ordered (by end

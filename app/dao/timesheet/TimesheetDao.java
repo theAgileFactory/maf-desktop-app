@@ -421,6 +421,23 @@ public abstract class TimesheetDao {
     public static TimesheetReport getTimesheetReportByActorAndStartDate(Long actorId, Date startDate) {
         return findTimesheetReport.where().eq("deleted", false).eq("actor.id", actorId).eq("startDate", startDate).findUnique();
     }
+    
+    /**
+     * Look for a timesheet entry with the specified characteristics
+     * @param timeSheetReportId a report id
+     * @param peId a portfolioentryId
+     * @param pePlanningPackageId a planning package Id (optional, can be null)
+     * @return a timesheet entry
+     */
+    public static TimesheetEntry getTimesheetEntryByPEandPEPlanningPackage(Long timeSheetReportId, Long peId, Long pePlanningPackageId){
+        List<TimesheetEntry> list=null;
+        if(pePlanningPackageId==null){
+            list=findTimesheetEntry.where().eq("deleted", false).eq("timesheetReport.id", timeSheetReportId).eq("portfolioEntry.id",peId).findList();
+        }else{
+            list=findTimesheetEntry.where().eq("deleted", false).eq("timesheetReport.id", timeSheetReportId).eq("portfolioEntry.id",peId).eq("portfolioEntryPlanningPackage.id",pePlanningPackageId).findList();
+        }
+        return (list!=null&&list.size()!=0)?list.get(0):null;
+    }
 
     /**
      * Get the submitted timesheets of the subordinates of a manager.

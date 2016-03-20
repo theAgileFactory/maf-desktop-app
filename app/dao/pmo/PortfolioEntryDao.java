@@ -96,6 +96,20 @@ public abstract class PortfolioEntryDao {
             return findPortfolioEntry.where().eq("deleted", false).eq("erpRefId", erpRefId).findList().get(0);
         }
     }
+    
+    /**
+     * Get a portfolio entry by governanceId
+     * 
+     * @param governanceId
+     *            the governanceId
+     */
+    public static PortfolioEntry getPEByGovernanceId(String governanceId) {
+        try {
+            return findPortfolioEntry.where().eq("deleted", false).eq("governanceId", governanceId).findUnique();
+        } catch (PersistenceException e) {
+            return findPortfolioEntry.where().eq("deleted", false).eq("governanceId", governanceId).findList().get(0);
+        }
+    }
 
     /**
      * Get the budget of a portfolio entry.

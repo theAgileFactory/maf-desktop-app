@@ -80,6 +80,8 @@
                             <input type="hidden" name="isOpex" value="false" />
                         }
                         
+                        @parts.input_text(planningPackageForm("refId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.ref_id.label"))
+                        
                         @parts.input_text(planningPackageForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.name.label"), 'autofocus -> "autofocus")
                         
                         @helper.textarea(planningPackageForm("description"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_planning_package.description.label"), 'rows -> "5")
