@@ -1182,6 +1182,8 @@ object.portfolio_entry_event.table.empty=Il n''existe aucun évènement.
 # portfolioEntryPlanningPackage
 #----------------------
 
+object.portfolio_entry_planning_package.ref_id.label=Référence
+object.portfolio_entry_planning_package.ref_id.invalid=Référence déjà utilisée
 object.portfolio_entry_planning_package.date.label=Date
 object.portfolio_entry_planning_package.date.period=du {0} au {1}
 object.portfolio_entry_planning_package.start_date.label=Date de début
