@@ -21,12 +21,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.FileField;
 import framework.utils.FileFieldOptionalValidator;
 import framework.utils.Msg;
 import framework.utils.Utilities;
 import models.framework_models.parent.IModelConstants;
+import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryPlanningPackage.Status;
 import play.Logger;
@@ -47,6 +49,9 @@ public class PortfolioEntryPlanningPackageFormData {
     public Long id;
 
     public Long planningPackageId;
+    
+    @MaxLength(value = IModelConstants.MEDIUM_STRING)
+    public String refId;
 
     @Required
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
@@ -95,7 +100,12 @@ public class PortfolioEntryPlanningPackageFormData {
                 Logger.error("Impossible to parse the planning package date when validate them", e);
             }
         }
-
+        //Check the refId unicity
+        PortfolioEntryPlanningPackage pp=PortfolioEntryPlanningPackageDao.getPEPlanningPackageByPEIdAndRefId(id, refId);
+        if(pp!=null && pp.id!=planningPackageId){
+            errors.add(new ValidationError("refId", Msg.get("object.portfolio_entry_planning_package.ref_id.invalid")));
+        }
+        
         return errors.isEmpty() ? null : errors;
     }
 
@@ -117,6 +127,7 @@ public class PortfolioEntryPlanningPackageFormData {
         this.id = portfolioEntryPlanningPackage.portfolioEntry.id;
         this.planningPackageId = portfolioEntryPlanningPackage.id;
 
+        this.refId=portfolioEntryPlanningPackage.refId;
         this.name = portfolioEntryPlanningPackage.name;
         this.isOpex = portfolioEntryPlanningPackage.isOpex;
         this.description = portfolioEntryPlanningPackage.description;
@@ -137,7 +148,7 @@ public class PortfolioEntryPlanningPackageFormData {
      *            the portfolio entry planning package in the DB
      */
     public void fill(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage) {
-
+        portfolioEntryPlanningPackage.refId = this.refId;
         portfolioEntryPlanningPackage.name = this.name;
         portfolioEntryPlanningPackage.description = this.description;
         portfolioEntryPlanningPackage.isOpex = this.isOpex;

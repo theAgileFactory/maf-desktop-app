@@ -1183,6 +1183,8 @@ object.portfolio_entry_event.table.empty=Kein Ereignis eingetragen
 # portfolioEntryPlanningPackage
 #----------------------
 
+object.portfolio_entry_planning_package.ref_id.label=ID
+object.portfolio_entry_planning_package.ref_id.invalid=Bereits gebraucht
 object.portfolio_entry_planning_package.date.label=Datum
 object.portfolio_entry_planning_package.date.period=von {0} bis {1}
 object.portfolio_entry_planning_package.start_date.label=Startdatum
