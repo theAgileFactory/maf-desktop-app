@@ -45,7 +45,7 @@ import play.Play;
  * {@link PortfolioEntryResourcePlanAllocatedActor},
  * {@link PortfolioEntryResourcePlanAllocatedCompetency},
  * {@link PortfolioEntryResourcePlanAllocatedOrgUnit} objects.
- * 
+ *
  * @author Pierre-Yves Cloux
  */
 public abstract class PortfolioEntryResourcePlanDAO {
@@ -67,7 +67,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Get the total allocated actors days of a resource plan.
-     * 
+     *
      * @param resourcePlanId
      *            the resource plan id
      */
@@ -101,7 +101,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * get an allocated actor by id.
-     * 
+     *
      * @param id
      *            the allocated actor id
      */
@@ -112,7 +112,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of an actor for not archived portfolio entries as a
      * pagination object.
-     * 
+     *
      * @param actorId
      *            the actor id
      * @param activeOnly
@@ -126,7 +126,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Get all allocation of an actor for not archived portfolio entries.
-     * 
+     *
      * @param actorId
      *            the actor id
      * @param activeOnly
@@ -140,7 +140,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of an actor for not archived portfolio entries as an
      * expression list.
-     * 
+     *
      * @param actorId
      *            the actor id
      * @param activeOnly
@@ -168,7 +168,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of the actors of an org unit for not archived
      * portfolio entries.
-     * 
+     *
      * @param orgUnitId
      *            the org unit id
      * @param activeOnly
@@ -182,7 +182,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of the actors of an org unit for not archived
      * portfolio entries as an expression list.
-     * 
+     *
      * @param orgUnitId
      *            the org unit id
      * @param activeOnly
@@ -211,7 +211,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of the actors from the given manager for not archived
      * portfolio entries.
-     * 
+     *
      * @param actorId
      *            the manager id
      * @param activeOnly
@@ -225,7 +225,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of the actors from the given manager for not archived
      * portfolio entries, as an expression list.
-     * 
+     *
      * @param actorId
      *            the manager id
      * @param activeOnly
@@ -253,7 +253,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the actor allocations for a portfolio entry according to some
      * filters.
-     * 
+     *
      * @param portfolioEntryId
      *            the portfolio entry id
      * @param start
@@ -291,7 +291,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the total allocated actors days (for the current resource plan) of a
      * planning package.
-     * 
+     *
      * @param planningPackage
      *            the planning package
      */
@@ -323,7 +323,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the total allocated actors days (for the current resource plan) of a
      * portfolio entry.
-     * 
+     *
      * @param portfolioEntry
      *            the portfolio entry
      * @param isConfirmed
@@ -364,7 +364,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Get the allocated actors of a portfolio entry.
-     * 
+     *
      * @param portfolioEntryId
      *            the portfolio entry id
      **/
@@ -382,7 +382,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Return true if there is at least one allocated actor for the currency.
-     * 
+     *
      * @param currency
      *            the currency code
      */
@@ -392,7 +392,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * get an allocated competency by id.
-     * 
+     *
      * @param id
      *            the allocated competency id
      */
@@ -402,7 +402,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * get a deleted allocated competency by id.
-     * 
+     *
      * @param id
      *            the deleted allocated competency id
      */
@@ -413,7 +413,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the competencies allocations for a portfolio entry according to some
      * filters.
-     * 
+     *
      * @param portfolioEntryId
      *            the portfolio entry id
      * @param start
@@ -446,7 +446,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the total allocated competency days (for the current resource plan)
      * of a planning package.
-     * 
+     *
      * @param planningPackage
      *            the planning package
      */
@@ -478,7 +478,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the total allocated competency days (for the current resource plan)
      * of a portfolio entry.
-     * 
+     *
      * @param portfolioEntry
      *            the portfolio entry
      * @param isConfirmed
@@ -519,7 +519,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Get the allocated competencies of a portfolio entry.
-     * 
+     *
      * @param portfolioEntryId
      *            the portfolio entry id
      **/
@@ -538,7 +538,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Return true if there is at least one allocated competency for the
      * currency.
-     * 
+     *
      * @param currency
      *            the currency code
      */
@@ -548,7 +548,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * get an allocated org unit by id.
-     * 
+     *
      * @param id
      *            the allocated org unit id
      */
@@ -558,7 +558,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * get a deleted allocated org unit by id.
-     * 
+     *
      * @param id
      *            the deleted allocated org unit id
      */
@@ -569,7 +569,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of an org unit for not archived portfolio entries as a
      * pagination object.
-     * 
+     *
      * @param orgUnitId
      *            the org unit id
      * @param activeOnly
@@ -584,7 +584,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Get all allocation of an org unit for not archived portfolio entries.
-     * 
+     *
      * @param orgUnitId
      *            the org unit id
      * @param activeOnly
@@ -598,7 +598,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of an org unit for not archived portfolio entries as
      * an expression list.
-     * 
+     *
      * @param orgUnitId
      *            the org unit id
      * @param activeOnly
@@ -627,7 +627,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the org unit allocations for a portfolio entry according to some
      * filters.
-     * 
+     *
      * @param portfolioEntryId
      *            the portfolio entry id
      * @param start
@@ -660,7 +660,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the total allocated org units days (for the current resource plan) of
      * a planning package.
-     * 
+     *
      * @param planningPackage
      *            the planning package
      */
@@ -692,7 +692,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the total allocated org unit days (for the current resource plan) of
      * a portfolio entry.
-     * 
+     *
      * @param portfolioEntry
      *            the portfolio entry
      * @param isConfirmed
@@ -734,9 +734,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get the total allocated resources forecast days (for the current resource
      * plan) of a portfolio entry.
-     * 
+     *
      * Note: forecast days concern only actor and org unit.
-     * 
+     *
      * @param portfolioEntry
      *            the portfolio entry
      */
@@ -751,7 +751,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
         BigDecimal totalDays = BigDecimal.ZERO;
 
         String sql1 = "SELECT SUM(perpaa.days) as totalDays FROM portfolio_entry_resource_plan_allocated_actor perpaa WHERE perpaa.deleted = 0 "
-                + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND (perpaa.forecast_days IS NULL OR perpaa.forecast_days = 0)";
+                + "AND perpaa.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaa.forecast_days IS NULL";
         BigDecimal totalDaysActor = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql1).create()).findUnique().totalDays;
         if (totalDaysActor != null) {
             totalDays = totalDays.add(totalDaysActor);
@@ -765,7 +765,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
         }
 
         String sql3 = "SELECT SUM(perpaou.days) as totalDays FROM portfolio_entry_resource_plan_allocated_org_unit perpaou WHERE perpaou.deleted = 0 "
-                + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND (perpaou.forecast_days IS NULL OR perpaou.forecast_days = 0)";
+                + "AND perpaou.portfolio_entry_resource_plan_id = '" + resourcePlan.id + "' AND perpaou.forecast_days IS NULL";
         BigDecimal totalDaysOrgUnit = Ebean.find(TotalDays.class).setRawSql(RawSqlBuilder.parse(sql3).create()).findUnique().totalDays;
         if (totalDaysOrgUnit != null) {
             totalDays = totalDays.add(totalDaysOrgUnit);
@@ -783,7 +783,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Get the allocated org units of a portfolio entry.
-     * 
+     *
      * @param portfolioEntryId
      *            the portfolio entry id
      **/
@@ -802,7 +802,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Return true if there is at least one allocated org unit for the currency.
-     * 
+     *
      * @param currency
      *            the currency code
      */
