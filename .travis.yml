@@ -26,7 +26,7 @@ install:
 - cd ..
 script:
 - mvn install:install-file -Dfile=lib/app-framework-${APP_FRAMEWORK_VERSION}.jar -DgroupId=com.agifac.lib -DartifactId=app-framework -Dversion=${APP_FRAMEWORK_VERSION} -DpomFile=lib/app-framework-${APP_FRAMEWORK_VERSION}.pom -Dpackaging=jar
-- mvn install:install-file -Dfile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar -DgroupId=com.agifac.maf -DartifactId=maf-desktop-datamodel -Dversion=${MAF_DESKTOP_DATAMODEL_VERSION} -DpomFile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom -Dpackaging=jar
+- mvn install:install-file -Dfile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar -DgroupId=com.agifac.maf.desktop -DartifactId=maf-desktop-datamodel -Dversion=${MAF_DESKTOP_DATAMODEL_VERSION} -DpomFile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom -Dpackaging=jar
 - mvn -U clean install
 - bash travis/deploy.sh $APP_FRAMEWORK_VERSION $MAF_DESKTOP_DATAMODEL_VERSION
 notifications:

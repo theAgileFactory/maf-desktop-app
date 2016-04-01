@@ -2,7 +2,7 @@
 
 set -e
 
-mkdir -p git/snapshots/com/agifac/maf/maf-desktop-app/$2
+mkdir -p git/snapshots/com/agifac/maf/desktop/maf-desktop-app/$1
 
 cp ~/.m2/repository/com/agifac/maf/desktop/maf-desktop-app/$1/*.jar git/snapshots/com/agifac/maf/desktop/maf-desktop-app/$1
 cp ~/.m2/repository/com/agifac/maf/desktop/maf-desktop-app/$1/*.pom git/snapshots/com/agifac/maf/desktop/maf-desktop-app/$1
