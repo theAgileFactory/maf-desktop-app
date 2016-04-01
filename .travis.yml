@@ -1,0 +1,42 @@
+language: java
+jdk:
+  - oraclejdk8
+env:
+  global:
+    - ACTIVATOR_VERSION=1.3.7
+    - ACTIVATOR_ZIP_FILE=typesafe-activator-${ACTIVATOR_VERSION}-minimal.zip
+    - ACTIVATOR_ZIP_URL=http://downloads.typesafe.com/typesafe-activator/${ACTIVATOR_VERSION}/${ACTIVATOR_ZIP_FILE}
+    - PLAY2_HOME=${TRAVIS_BUILD_DIR}/activator-${ACTIVATOR_VERSION}-minimal
+    - SBT_EXECUTABLE_NAME=activator
+    - APP_FRAMEWORK_VERSION="12.1.1-SNAPSHOT"
+    - MAF_DEKSTOP_DATAMODEL_VERSION="12.1.1-SNAPSHOT"
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install --only-upgrade -y oracle-java8-installer
+install:
+  - wget ${ACTIVATOR_ZIP_URL}
+  - unzip -q ${ACTIVATOR_ZIP_FILE}
+  - mkdir lib && cd lib
+  - wget http://ablionge.github.io/app-framework/snapshots/com/agifac/lib/app-framework/${APP_FRAMEWORK_VERSION}/app-framework-${APP_FRAMEWORK_VERSION}.jar
+  - wget http://ablionge.github.io/app-framework/snapshots/com/agifac/lib/app-framework/${APP_FRAMEWORK_VERSION}/app-framework-${APP_FRAMEWORK_VERSION}.pom
+  - wget http://ablionge.github.io/maf-desktop-datamodel/snapshots/com/agifac/maf/maf-desktop-datamodel/${MAF_DESKTOP_DATAMODEL_VERSION}/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar
+  - wget http://ablionge.github.io/maf-desktop-datamodel/snapshots/com/agifac/maf/maf-desktop-datamodel/${MAF_DESKTOP_DATAMODEL_VERSION}/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom
+  - cd ..
+script:
+  - mvn install:install-file -Dfile=lib/app-framework-${APP_FRAMEWORK_VERSION}.jar -DgroupId=com.agifac.lib -DartifactId=app-framework -Dversion=${APP_FRAMEWORK_VERSION} -DpomFile=lib/app-framework-${APP_FRAMEWORK_VERSION}.pom -Dpackaging=jar
+  - mvn install:install-file -Dfile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar -DgroupId=com.agifac.maf -DartifactId=maf-desktop-datamodel -Dversion=${MAF_DESKTOP_DATAMODEL_VERSION} -DpomFile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom -Dpackaging=jar
+  - mvn -U clean install
+  - bash travis/deploy.sh $APP_FRAMEWORK_VERSION $MAF_DESKTOP_DATAMODEL_VERSION
+notifications:
+  email: false
+branches:
+  only:
+    - master
+scala:
+  - 2.11.8
+cache:
+  directories:
+    - .autoconf
+    - $HOME/.m2
+    - $HOME/.sbt
+    - $HOME/.ivy
