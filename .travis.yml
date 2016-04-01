@@ -1,42 +1,44 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
 env:
   global:
-    - ACTIVATOR_VERSION=1.3.7
-    - ACTIVATOR_ZIP_FILE=typesafe-activator-${ACTIVATOR_VERSION}-minimal.zip
-    - ACTIVATOR_ZIP_URL=http://downloads.typesafe.com/typesafe-activator/${ACTIVATOR_VERSION}/${ACTIVATOR_ZIP_FILE}
-    - PLAY2_HOME=${TRAVIS_BUILD_DIR}/activator-${ACTIVATOR_VERSION}-minimal
-    - SBT_EXECUTABLE_NAME=activator
-    - APP_FRAMEWORK_VERSION="12.1.1-SNAPSHOT"
-    - MAF_DEKSTOP_DATAMODEL_VERSION="12.1.1-SNAPSHOT"
+  - ACTIVATOR_VERSION=1.3.7
+  - ACTIVATOR_ZIP_FILE=typesafe-activator-${ACTIVATOR_VERSION}-minimal.zip
+  - ACTIVATOR_ZIP_URL=http://downloads.typesafe.com/typesafe-activator/${ACTIVATOR_VERSION}/${ACTIVATOR_ZIP_FILE}
+  - PLAY2_HOME=${TRAVIS_BUILD_DIR}/activator-${ACTIVATOR_VERSION}-minimal
+  - SBT_EXECUTABLE_NAME=activator
+  - APP_FRAMEWORK_VERSION="12.1.1-SNAPSHOT"
+  - MAF_DESKTOP_DATAMODEL_VERSION="12.1.1-SNAPSHOT"
+  - GH_REF=github.com/AblionGE/maf-desktop-app
+  - secure: Yxs7Jh+egY3CIx+4eyFdLO1rav/aFDHZ5hapcfHdr2sKQhVbbDOH4F1Gjaror0eEbD02bMxlD0BsXNHlShkCMKlLbPfLqyDkaiprfuZYyJByMl39xJCG6LaZjZjKf4/simEm94VY9IDpKHSB7JG+2MvxWlhrwe/+s7v1vmmxFQPHNpwkWaGNIsc1WY51N+XHL9vDjYBdhuw7iriyuobZCaUNC0RGpe5Op/bErYOmSrw9+6lTwsnq/WmiOpZSHNX3QIb8tqRkv3ZWXDrd3SQlkYI5LXX+h2nT9kgnlTkw6TV+QpyXa/7QuJlISfbTlDE6LFVedcyE9s+9hSAFk/qAvQW8Yv8tCHuA9eKc4/VpY/MXpHftD7U8ZWbGtF/M9wdVbOSKiIPjFeZAEbOaOdhdFLpedBBDbS496IKyx6AVlJPTY3aDnEgBRprVgV5PE0IRjj23LxBXOhjuuBSKMTqikGXHABnDMs/peClKgcXKsYmaBxAdv83dDvuLVrh2QWq7IWNe9hvGzITM1ld0Y3Cxg/+tgHtG1cf0kR06GKV4+RBysdy1Lh5x9ro8nbIcvIVPzFoE66vEZGtXA0WXIh3pwT7kgfx0uwE/RAQj3iBIylMiCXOC4S4i2MD7n4TEI5Xbc5DX0FPukIQl/6jnGrIO6xBF+8BoV1r6Gbh81o0D2+g=
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install --only-upgrade -y oracle-java8-installer
+- sudo apt-get update
+- sudo apt-get install --only-upgrade -y oracle-java8-installer
 install:
-  - wget ${ACTIVATOR_ZIP_URL}
-  - unzip -q ${ACTIVATOR_ZIP_FILE}
-  - mkdir lib && cd lib
-  - wget http://ablionge.github.io/app-framework/snapshots/com/agifac/lib/app-framework/${APP_FRAMEWORK_VERSION}/app-framework-${APP_FRAMEWORK_VERSION}.jar
-  - wget http://ablionge.github.io/app-framework/snapshots/com/agifac/lib/app-framework/${APP_FRAMEWORK_VERSION}/app-framework-${APP_FRAMEWORK_VERSION}.pom
-  - wget http://ablionge.github.io/maf-desktop-datamodel/snapshots/com/agifac/maf/maf-desktop-datamodel/${MAF_DESKTOP_DATAMODEL_VERSION}/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar
-  - wget http://ablionge.github.io/maf-desktop-datamodel/snapshots/com/agifac/maf/maf-desktop-datamodel/${MAF_DESKTOP_DATAMODEL_VERSION}/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom
-  - cd ..
+- wget ${ACTIVATOR_ZIP_URL}
+- unzip -q ${ACTIVATOR_ZIP_FILE}
+- mkdir lib && cd lib
+- wget http://ablionge.github.io/app-framework/snapshots/com/agifac/lib/app-framework/${APP_FRAMEWORK_VERSION}/app-framework-${APP_FRAMEWORK_VERSION}.jar
+- wget http://ablionge.github.io/app-framework/snapshots/com/agifac/lib/app-framework/${APP_FRAMEWORK_VERSION}/app-framework-${APP_FRAMEWORK_VERSION}.pom
+- wget http://ablionge.github.io/maf-desktop-datamodel/snapshots/com/agifac/maf/desktop/maf-desktop-datamodel/${MAF_DESKTOP_DATAMODEL_VERSION}/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar
+- wget http://ablionge.github.io/maf-desktop-datamodel/snapshots/com/agifac/maf/desktop/maf-desktop-datamodel/${MAF_DESKTOP_DATAMODEL_VERSION}/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom
+- cd ..
 script:
-  - mvn install:install-file -Dfile=lib/app-framework-${APP_FRAMEWORK_VERSION}.jar -DgroupId=com.agifac.lib -DartifactId=app-framework -Dversion=${APP_FRAMEWORK_VERSION} -DpomFile=lib/app-framework-${APP_FRAMEWORK_VERSION}.pom -Dpackaging=jar
-  - mvn install:install-file -Dfile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar -DgroupId=com.agifac.maf -DartifactId=maf-desktop-datamodel -Dversion=${MAF_DESKTOP_DATAMODEL_VERSION} -DpomFile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom -Dpackaging=jar
-  - mvn -U clean install
-  - bash travis/deploy.sh $APP_FRAMEWORK_VERSION $MAF_DESKTOP_DATAMODEL_VERSION
+- mvn install:install-file -Dfile=lib/app-framework-${APP_FRAMEWORK_VERSION}.jar -DgroupId=com.agifac.lib -DartifactId=app-framework -Dversion=${APP_FRAMEWORK_VERSION} -DpomFile=lib/app-framework-${APP_FRAMEWORK_VERSION}.pom -Dpackaging=jar
+- mvn install:install-file -Dfile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.jar -DgroupId=com.agifac.maf -DartifactId=maf-desktop-datamodel -Dversion=${MAF_DESKTOP_DATAMODEL_VERSION} -DpomFile=lib/maf-desktop-datamodel-${MAF_DESKTOP_DATAMODEL_VERSION}.pom -Dpackaging=jar
+- mvn -U clean install
+- bash travis/deploy.sh $APP_FRAMEWORK_VERSION $MAF_DESKTOP_DATAMODEL_VERSION
 notifications:
   email: false
 branches:
   only:
-    - master
+  - master
 scala:
   - 2.11.8
 cache:
   directories:
-    - .autoconf
-    - $HOME/.m2
-    - $HOME/.sbt
-    - $HOME/.ivy
+  - ".autoconf"
+  - "$HOME/.m2"
+  - "$HOME/.sbt"
+  - "$HOME/.ivy"
