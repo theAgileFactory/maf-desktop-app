@@ -562,6 +562,10 @@ kpi.pe_allocation_progress.main.name=Allocations progress
 kpi.pe_allocation_progress.additional1.name=Effective
 kpi.pe_allocation_progress.additional2.name=Forecast
 
+kpi.pe_actuals.main.name=Actuals
+kpi.pe_actuals.additional1.name=CAPEX
+kpi.pe_actuals.additional2.name=OPEX
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here

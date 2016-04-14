@@ -21,6 +21,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.FileField;
@@ -101,9 +103,11 @@ public class PortfolioEntryPlanningPackageFormData {
             }
         }
         //Check the refId unicity
-        PortfolioEntryPlanningPackage pp=PortfolioEntryPlanningPackageDao.getPEPlanningPackageByPEIdAndRefId(id, refId);
-        if(pp!=null && pp.id!=planningPackageId){
-            errors.add(new ValidationError("refId", Msg.get("object.portfolio_entry_planning_package.ref_id.invalid")));
+        if(!StringUtils.isBlank(refId)){
+	        PortfolioEntryPlanningPackage pp=PortfolioEntryPlanningPackageDao.getPEPlanningPackageByPEIdAndRefId(id, refId);
+	        if(pp!=null && pp.id!=planningPackageId){
+	            errors.add(new ValidationError("refId", Msg.get("object.portfolio_entry_planning_package.ref_id.invalid")));
+	        }
         }
         
         return errors.isEmpty() ? null : errors;
