@@ -105,7 +105,7 @@ public class PortfolioEntryPlanningPackageFormData {
         //Check the refId unicity
         if(!StringUtils.isBlank(refId)){
 	        PortfolioEntryPlanningPackage pp=PortfolioEntryPlanningPackageDao.getPEPlanningPackageByPEIdAndRefId(id, refId);
-	        if(pp!=null && pp.id!=planningPackageId){
+	        if(pp!=null && !pp.id.equals(planningPackageId)){
 	            errors.add(new ValidationError("refId", Msg.get("object.portfolio_entry_planning_package.ref_id.invalid")));
 	        }
         }
