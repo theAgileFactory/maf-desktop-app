@@ -16,6 +16,7 @@ env:
 before_install:
 - sudo apt-get update
 - sudo apt-get install --only-upgrade -y oracle-java8-installer
+- export SBT_OPTS="-Xms4096m -Xmx4096m -Xss4096k"
 - mkdir -p ~/.gnupg
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in secring.gpg.enc -out ~/.gnupg/secring.gpg
   -d
