@@ -1,0 +1,10 @@
+is_active;ref_id;name;owner_actor_ref_id
+TRUE;503100;CRM;009
+TRUE;503400;Billing;001
+TRUE;503500;Prepay;
+TRUE;503400;Billing again;001
+FALSE;012345;ERP;001
+TRUE;;Empty ref_id;009
+FALSE;XC234;;009
+TRUE;999999999;nom long avec des accents et des catactères marrants pour tout casser:èéà!#%&/;1234
+;456;ne devrait pas marcher non plus car le flag is_active n'est pas renseigné;009

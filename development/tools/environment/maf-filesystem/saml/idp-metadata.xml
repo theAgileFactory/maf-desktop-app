@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityID="https://ci.the-agile-factory.net/idp/shibboleth">
+
+    <IDPSSODescriptor protocolSupportEnumeration="urn:mace:shibboleth:1.0 urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">the-agile-factory.net</shibmd:Scope>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+MIIDTDCCAjSgAwIBAgIVALrc91Us/mfKOIa3OjLlZ3mrCh1WMA0GCSqGSIb3DQEB
+BQUAMCMxITAfBgNVBAMMGGNpLnRoZS1hZ2lsZS1mYWN0b3J5Lm5ldDAeFw0xNTAy
+MjQwODQ2MDlaFw0zNTAyMjQwODQ2MDlaMCMxITAfBgNVBAMMGGNpLnRoZS1hZ2ls
+ZS1mYWN0b3J5Lm5ldDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAI5y
+CNytBrUcqnD7mtFi0rfyRR51y7GXkdX9tRNjFNfge5KzSOwNHRaeiM5405nsAWbs
+mOCT0Me5oiyzIt0bNULnBl/xJUJ+mWcyRFY0fAPVGHE5OHTn6V9kntdYv79vIPVU
+7dgpBbjXD5agyPU+dlz9BmCyrxhiIbO9ZnGUi+warRkzv73Sjc1Btsc74tjost6t
+FhCNJIP/rWoSjlkuYsPDHsQd3zpqVc/ye/VxPbXdOLwLqFuiuFgYntbE1OS62ojl
+/IwoYxGJT7gs3vHk7aRMi/Kdmus7I0/B0e61Ys6oPZwtg6/0eAJcb6z2Uw33030J
+o3kyv2u9Gfib9nJI25sCAwEAAaN3MHUwHQYDVR0OBBYEFALEr7dA3wJl+JU8Xq7a
+Pz3VjyyMMFQGA1UdEQRNMEuCGGNpLnRoZS1hZ2lsZS1mYWN0b3J5Lm5ldIYvaHR0
+cHM6Ly9jaS50aGUtYWdpbGUtZmFjdG9yeS5uZXQvaWRwL3NoaWJib2xldGgwDQYJ
+KoZIhvcNAQEFBQADggEBAAkOP96xSB7si8hSRoySsUPI/rubzAyJ7L8Kl3/NNrzu
+flDcofVyGi/XBg1nWvBJM6ktm9JJdTQUZ3vEgrWRd5qUd2S4Gm+cLx7qDPWwNW25
+NataHTlkmjaqLyxudck4QT5l9b0RKaTqpcOsdEdWvLi3bqdWrjyZLZoq4uXenLTC
+RGNGse0OXAtKQ1DxWjGz1yT7h6ipFKlpkULmqOXMCKQqw1NyyvPNzpyx2tyzz0JV
+US3rK1AuEyN5J5YSvimNRvnnyAIgTjvTk0hbFoJlJWQdeVyPXd0CtOBGfkaJe3vT
+l03czX+ToSdr6PE7NtNH9rVMI2TtA99sjd0okE/l+8Q=
+
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://ci.the-agile-factory.net:8443/idp/profile/SAML1/SOAP/ArtifactResolution" index="1"/>
+
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://ci.the-agile-factory.net:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
+        
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://ci.the-agile-factory.net/idp/profile/SAML2/Redirect/SLO" />
+        
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ci.the-agile-factory.net/idp/profile/SAML2/POST/SLO" />
+        
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://ci.the-agile-factory.net:8443/idp/profile/SAML2/SOAP/SLO" />
+                                   
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" Location="https://ci.the-agile-factory.net/idp/profile/Shibboleth/SSO"/>
+        
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ci.the-agile-factory.net/idp/profile/SAML2/POST/SSO"/>
+
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://ci.the-agile-factory.net/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://ci.the-agile-factory.net/idp/profile/SAML2/Redirect/SSO"/>
+    </IDPSSODescriptor>
+
+    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">the-agile-factory.net</shibmd:Scope>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+MIIDTDCCAjSgAwIBAgIVALrc91Us/mfKOIa3OjLlZ3mrCh1WMA0GCSqGSIb3DQEB
+BQUAMCMxITAfBgNVBAMMGGNpLnRoZS1hZ2lsZS1mYWN0b3J5Lm5ldDAeFw0xNTAy
+MjQwODQ2MDlaFw0zNTAyMjQwODQ2MDlaMCMxITAfBgNVBAMMGGNpLnRoZS1hZ2ls
+ZS1mYWN0b3J5Lm5ldDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAI5y
+CNytBrUcqnD7mtFi0rfyRR51y7GXkdX9tRNjFNfge5KzSOwNHRaeiM5405nsAWbs
+mOCT0Me5oiyzIt0bNULnBl/xJUJ+mWcyRFY0fAPVGHE5OHTn6V9kntdYv79vIPVU
+7dgpBbjXD5agyPU+dlz9BmCyrxhiIbO9ZnGUi+warRkzv73Sjc1Btsc74tjost6t
+FhCNJIP/rWoSjlkuYsPDHsQd3zpqVc/ye/VxPbXdOLwLqFuiuFgYntbE1OS62ojl
+/IwoYxGJT7gs3vHk7aRMi/Kdmus7I0/B0e61Ys6oPZwtg6/0eAJcb6z2Uw33030J
+o3kyv2u9Gfib9nJI25sCAwEAAaN3MHUwHQYDVR0OBBYEFALEr7dA3wJl+JU8Xq7a
+Pz3VjyyMMFQGA1UdEQRNMEuCGGNpLnRoZS1hZ2lsZS1mYWN0b3J5Lm5ldIYvaHR0
+cHM6Ly9jaS50aGUtYWdpbGUtZmFjdG9yeS5uZXQvaWRwL3NoaWJib2xldGgwDQYJ
+KoZIhvcNAQEFBQADggEBAAkOP96xSB7si8hSRoySsUPI/rubzAyJ7L8Kl3/NNrzu
+flDcofVyGi/XBg1nWvBJM6ktm9JJdTQUZ3vEgrWRd5qUd2S4Gm+cLx7qDPWwNW25
+NataHTlkmjaqLyxudck4QT5l9b0RKaTqpcOsdEdWvLi3bqdWrjyZLZoq4uXenLTC
+RGNGse0OXAtKQ1DxWjGz1yT7h6ipFKlpkULmqOXMCKQqw1NyyvPNzpyx2tyzz0JV
+US3rK1AuEyN5J5YSvimNRvnnyAIgTjvTk0hbFoJlJWQdeVyPXd0CtOBGfkaJe3vT
+l03czX+ToSdr6PE7NtNH9rVMI2TtA99sjd0okE/l+8Q=
+
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://ci.the-agile-factory.net:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+        
+        <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://ci.the-agile-factory.net:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+        
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        
+    </AttributeAuthorityDescriptor>
+    
+</EntityDescriptor>
