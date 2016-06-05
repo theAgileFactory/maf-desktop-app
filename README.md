@@ -21,7 +21,7 @@ There are two sub-folders:
   * ```deadletters-reprocessing``` : contains, in case of system stop, the messages which have not been processed.
   These ones are supposed to be reprocessed at startup.
   * ```maf-filesystem``` : is the folder structure which contains various artifacts required by BizDock (extensions, file attachments, SAMLv2 configuration, etc.) 
-* ```sample-data``` : contains some sample test data to be loaded in your development instance (and modified when new features are added)
+* ```sample-data``` : contains some sample test data to be loaded in your development instance (and modified when new features are added). The users created by this sample data set have the password "pass1234".
 
 The tools folder contains also some scripts and a configuration file:
 * ```env.cfg``` : the development environment configuration file.
