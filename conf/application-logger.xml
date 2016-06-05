@@ -63,6 +63,8 @@
 	<logger name="framework.services.job" level="ERROR" />
 	<logger name="framework.services.database" level="ERROR" />
 	<logger name="framework.services.configuration" level="ERROR" />
+	<logger name="framework.services.email" level="ERROR" />
+        <logger name="framework.services.notification" level="ERROR" />
 	
 	<!-- Plugins and extensions -->
 	<logger name="framework.services.ext" level="ERROR" />
