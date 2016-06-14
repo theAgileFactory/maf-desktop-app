@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="target1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../dev/build/dbmdl-framework/trunk/target/dbmdl-framework-12.1.1-SNAPSHOT-nonregressiontest.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/dbmdl-framework/trunk/target/dbmdl-framework-12.1.1-SNAPSHOT.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/dbmdl-framework/trunk/target/dbmdl-framework-12.1.1-SNAPSHOT-properties.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/dbmdl-framework/trunk/target/dbmdl-framework-12.1.1-SNAPSHOT-nonregressiontest.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/dbmdl-framework/trunk/target/merged-dbmdl-framework-12.1.1-SNAPSHOT.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

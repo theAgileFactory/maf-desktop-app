@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="import-ps-next-1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dataload/trunk/target/script/custo/lausanne/import-ps-next-app/target/import-ps-next-1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

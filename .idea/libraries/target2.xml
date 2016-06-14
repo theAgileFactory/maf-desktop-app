@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="target2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dbmdl/trunk/target/maf-dbmdl-12.1.2-SNAPSHOT-nonregressiontest.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dbmdl/trunk/target/maf-dbmdl-12.1.2-SNAPSHOT-properties.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dbmdl/trunk/target/maf-dbmdl-12.1.2-SNAPSHOT-nonregressiontest.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dbmdl/trunk/target/merged-maf-dbmdl-12.1.2-SNAPSHOT.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dbmdl/trunk/target/maf-dbmdl-12.1.2-SNAPSHOT.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

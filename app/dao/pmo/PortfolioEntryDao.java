@@ -436,7 +436,7 @@ public abstract class PortfolioEntryDao {
      *            the actor id
      */
     public static List<PortfolioEntry> getPEAsListByMember(Long actorId) {
-        String raw = "deleted=false AND (";
+        String raw = "deleted=false AND archived=false AND (";
         raw += "manager.id=" + actorId + " OR ";
         raw += "(stakeholders.deleted=false AND stakeholders.actor.id=" + actorId + ") OR ";
         raw += "(portfolios.deleted=false AND portfolios.manager.id=" + actorId + ") OR ";

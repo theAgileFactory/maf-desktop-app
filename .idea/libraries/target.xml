@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="target">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dataload/trunk/target/maf-dataload-12.1.1-SNAPSHOT.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dataload/trunk/target/maf-dataload-12.1.1-SNAPSHOT-properties.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../dev/build/maf-dataload/trunk/target/merged-maf-dataload-12.1.1-SNAPSHOT.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
