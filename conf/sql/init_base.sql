@@ -1437,42 +1437,6 @@ INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.financial
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.viewer_role.description', 'de', 'Lesezugriff');
 
 #---------------------------------------------------------
-#
-# End of role descriptions
-#
-#---------------------------------------------------------
-
-#Admin users
-INSERT INTO `principal` (`uid`,`is_active`,`is_pending`,`validation_key`,`is_displayed`) VALUES ('admin',1,0,NULL,0);
-#Admin user for TAF (needed mainly for Jenkins configuration)
-INSERT INTO `principal` (`uid`,`is_active`,`is_pending`,`validation_key`,`is_displayed`) VALUES ('admin_taf',1,0,NULL,0);
-
-INSERT INTO `system_level_role`
-(`is_enabled`,
-`system_level_role_type_id`,
-`principal_id`)
-VALUES
-(
-1,
-(SELECT role_type.id FROM system_level_role_type as role_type WHERE role_type.name='SUPER_USER_ROLE'),
-(SELECT principal.id FROM principal WHERE principal.uid='admin')
-);
-
-INSERT INTO `system_level_role`
-(`is_enabled`,
-`system_level_role_type_id`,
-`principal_id`)
-VALUES
-(
-1,
-(SELECT role_type.id FROM system_level_role_type as role_type WHERE role_type.name='SUPER_USER_ROLE'),
-(SELECT principal.id FROM principal WHERE principal.uid='admin_taf')
-);
-
-INSERT INTO `credential` (`id`,`uid`,`first_name`,`last_name`,`full_name`,`mail`,`password`,`failed_login`,`is_active`,`last_update`) VALUES (3,'admin','Thomas','Garlot','Thomas Garlot','thomas.garlot@the-agile-factory.com','e1NTSEF9NG5UR3pDdGVMV2xqT1QzWmpFV2JNYkR4NWgyanM2TC91dUtoVHc9PQ==',0,1,'2014-11-09 11:03:06');
-INSERT INTO `credential` (`id`,`uid`,`first_name`,`last_name`,`full_name`,`mail`,`password`,`failed_login`,`is_active`,`last_update`) VALUES (4,'admin_taf','Patrick','Moiroux','Patrick Moiroux','patrick.moiroux@the-agile-factory.com','e1NTSEF9NG5UR3pDdGVMV2xqT1QzWmpFV2JNYkR4NWgyanM2TC91dUtoVHc9PQ==',0,1,'2014-11-09 11:03:06');
-
-#---------------------------------------------------------
 # Start of reference data
 #---------------------------------------------------------
 
@@ -1915,9 +1879,34 @@ INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES (
 INSERT INTO `plugin_definition` (`identifier`, `clazz`, `is_available`) VALUES ('widgetkit1', 'services.plugins.system.widgetkit1.StandardWidgetKitPlugin', '1');
 
 
--- API root key
+-- Default API root key
 
 INSERT INTO `api_registration` (`name`, `application_key`, `shared_secret`, `api_authorization`, `deleted`, `last_update`, `description`, `testable`) VALUES ('_root', '5p-1x5npqJbumZToiqrtiqTkv4_wnYqW5bOW5JqQ54mO7KWU7JmI6aO165yM762r7qWk4pym4pGx5ZiS6IWp5IGy54uJ6ICn67mR4LyO4q6I64C42Zruj7Xhh6PhhrLkrKbqg6HsuIbljK7voofpubDvg6rgr6Pii6PosZrbieyYreOst-6nluC4uem1g-K7hO2QlOSnm-evv-ehjOCjnMq24quP5KO_4a2O54Ss56uC6Lu_76K76oqQ', '6qme6r-I54u_6pKo57aI7Zei4Lat5q2W7oq865207ZeS7K6Y4YKV5IKN4a2Y6Kmq45K266mt5auV4LGI6r6X6reI65Sn5IKB5L2x7LKv5KSv8KSQuOqolei2uOqvk-Sdg-qTs-6lqem5ueW6nOC0ke6breWWoeKlsuKdquiMrOOqreSQoOWgs-OOquSLtu2fuuWigOaMheaeheWgmO-2i-SGlOq1puK1h-uem-6go--So-m8kui6he6rkuaPkw', 'GET (.*)\nPOST (.*)\nPUT (.*)\nDELETE (.*)', '0', NOW(), 'The root key', '1');
+
+#---------------------------------------------------------
+#
+# End of role descriptions
+#
+#---------------------------------------------------------
+
+#Admin users
+INSERT INTO `principal` (`uid`,`is_active`,`is_pending`,`validation_key`,`is_displayed`) VALUES ('admin',1,0,NULL,0);
+
+INSERT INTO `system_level_role`
+(`is_enabled`,
+`system_level_role_type_id`,
+`principal_id`)
+VALUES
+(
+1,
+(SELECT role_type.id FROM system_level_role_type as role_type WHERE role_type.name='SUPER_USER_ROLE'),
+(SELECT principal.id FROM principal WHERE principal.uid='admin')
+);
+
+INSERT INTO `credential` (`uid`,`first_name`,`last_name`,`full_name`,`mail`,`password`,`failed_login`,`is_active`,`last_update`) VALUES ('admin','Admin','Administrator','Admin Administrator','fake@none.com','e1NTSEF9NG5UR3pDdGVMV2xqT1QzWmpFV2JNYkR4NWgyanM2TC91dUtoVHc9PQ==',0,1,'2014-11-09 11:03:06');
+
+INSERT INTO `actor`(`deleted`, `ref_id`, `erp_ref_id`, `first_name`, `last_name`, `title`, `mail`, `mobile_phone`, `fix_phone`, `employee_id`, `uid`, `actor_type_id`, `manager_id`, `last_update`, `org_unit_id`, `is_active`) VALUES (0, '000', 'REG000', 'Admin', 'Administrator', 'Key User', 'fake@none.com', null, null, null, 'admin', 1, null, CURRENT_TIMESTAMP, null, 1);
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

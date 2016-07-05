@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.agifac.maf.desktop</groupId>
 	<artifactId>maf-desktop-app</artifactId>
-	<version>12.1.3-SNAPSHOT</version>
+	<version>12.1.4-SNAPSHOT</version>
 	<name>BizDock application</name>
 	<description>This is the BizDock application module</description>
 	<packaging>play2</packaging>
@@ -37,6 +37,11 @@
 			<name>typesafe-releases</name>
 			<url>http://repo.typesafe.com/typesafe/releases/</url>
 		</repository>
+		<repository>
+            <id>sonatype-snapshots</id>
+            <name>sonatype-snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository> 
 	</repositories>
 
 	<properties>
@@ -45,8 +50,8 @@
         <java.target>1.8</java.target>
         <scala.version>2.11</scala.version>
         <!-- Dependencies properties -->
-		<lib.app-framework.version>12.1.0</lib.app-framework.version>
-		<maf.maf-desktop-datamodel.version>12.1.0</maf.maf-desktop-datamodel.version>
+		<lib.app-framework.version>12.1.1-SNAPSHOT</lib.app-framework.version>
+		<maf.maf-desktop-datamodel.version>12.1.1-SNAPSHOT</maf.maf-desktop-datamodel.version>
         <!-- Plugin properties -->
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <ivy-maven-plugin.version>0.2.5</ivy-maven-plugin.version>
@@ -190,17 +195,23 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.6</version>
 				<executions>
 					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
+			          <id>sign-artifacts</id>
+			          <phase>verify</phase>
+			          <goals>
+			            <goal>sign</goal>
+			          </goals>
+			        </execution>
+			    </executions>
 			</plugin>
+			
+			<plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>versions-maven-plugin</artifactId>
+		        <version>2.2</version>
+		    </plugin>
 		</plugins>
 	</build>
 </project>
