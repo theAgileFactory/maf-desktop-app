@@ -68,15 +68,15 @@ public abstract class BudgetBucketDAO {
      * @param key
      *            the search criteria (wild cards should be %)
      */
-    public static List<BudgetBucket> getBudgetBucketAsListByName(String key) {
-        return BudgetBucketDAO.findBudgetBucket.where().eq("deleted", false).or(Expr.ilike("name", key + "%"), Expr.ilike("refId", key + "%")).findList();
+    public static List<BudgetBucket> getActiveBudgetBucketAsListByName(String key) {
+        return BudgetBucketDAO.findBudgetBucket.where().eq("deleted", false).eq("isActive", true).or(Expr.ilike("name", key + "%"), Expr.ilike("refId", key + "%")).findList();
     }
 
     /**
-     * Get all budget buckets as value holder collection.
+     * Get all active budget buckets as value holder collection.
      */
-    public static ISelectableValueHolderCollection<Long> getBudgetBucketSelectableAsList() {
-        return new DefaultSelectableValueHolderCollection<>(getBudgetBucketAsList());
+    public static ISelectableValueHolderCollection<Long> getActiveBudgetBucketSelectableAsList() {
+        return new DefaultSelectableValueHolderCollection<>(getBudgetBucketAsListByActiveAndApproved(new Boolean(true), null));
     }
 
     /**
@@ -86,8 +86,8 @@ public abstract class BudgetBucketDAO {
      * @param key
      *            the search criteria (wild cards should be %)
      */
-    public static ISelectableValueHolderCollection<Long> getBudgetBucketSelectableAsListByName(String key) {
-        return new DefaultSelectableValueHolderCollection<>(getBudgetBucketAsListByName(key));
+    public static ISelectableValueHolderCollection<Long> getActiveBudgetBucketSelectableAsListByName(String key) {
+        return new DefaultSelectableValueHolderCollection<>(getActiveBudgetBucketAsListByName(key));
     }
 
     /**

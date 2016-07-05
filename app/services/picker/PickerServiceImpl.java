@@ -230,13 +230,13 @@ public class PickerServiceImpl implements IPickerService {
 
             @Override
             public ISelectableValueHolderCollection<Long> getInitialValueHolders(List<Long> values, Map<String, String> context) {
-                return BudgetBucketDAO.getBudgetBucketSelectableAsList();
+                return BudgetBucketDAO.getActiveBudgetBucketSelectableAsList();
             }
 
             @Override
             public ISelectableValueHolderCollection<Long> getFoundValueHolders(String searchString, Map<String, String> context) {
                 searchString = searchString.replaceAll("\\*", "%");
-                return BudgetBucketDAO.getBudgetBucketSelectableAsListByName(searchString);
+                return BudgetBucketDAO.getActiveBudgetBucketSelectableAsListByName(searchString);
             }
 
         });
