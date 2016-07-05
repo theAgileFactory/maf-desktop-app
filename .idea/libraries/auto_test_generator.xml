@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="auto-test-generator">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../dev/scripts/auto-test-generator/target/auto-test-generator.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
