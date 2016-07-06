@@ -70,7 +70,7 @@ public class PortfolioEntryRiskListView {
                         public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
                             DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<PortfolioEntryRiskListView>();
                             if (portfolioEntryRiskListView.targetDate != null) {
-                                df.setAlert(portfolioEntryRiskListView.targetDate.before(new Date()));
+                                df.setAlert(portfolioEntryRiskListView.isActive && portfolioEntryRiskListView.targetDate.before(new Date()));
                             }
                             return df.apply(portfolioEntryRiskListView, value);
                         }
