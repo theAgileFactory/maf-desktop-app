@@ -176,6 +176,9 @@ public class PortfolioEntryListView {
                                 "object.portfolio_entry.status.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
                     }
 
+                    addColumnConfiguration("lastPEReportDate", "lastPortfolioEntryReport.publicationDate", "object.portfolio_entry_report.report_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
+
                     ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
                     if (lifeCycleMilestones != null && lifeCycleMilestones.getValues().size() > 0) {
                         addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
@@ -277,6 +280,9 @@ public class PortfolioEntryListView {
                     });
                     this.setColumnValueCssClass("portfolioEntryStatus", "rowlink-skip");
 
+                    addColumn("lastPEReportDate", "lastPEReportDate", "object.portfolio_entry_report.report_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastPEReportDate", new DateFormatter<PortfolioEntryListView>());
+
                     addColumn("archived", "archived", "object.portfolio_entry.archived.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("archived", new BooleanFormatter<PortfolioEntryListView>());
 
@@ -343,6 +349,7 @@ public class PortfolioEntryListView {
         columns.add("deliveryUnits");
         columns.add("portfolios");
         columns.add("stakeholders");
+        columns.add("lastPEReportDate");
         columns.add("dependencies");
         columns.add("lifeCycleProcess");
         columns.add("archived");
@@ -368,6 +375,7 @@ public class PortfolioEntryListView {
     public List<Portfolio> portfolios;
     public String lifeCycleProcess;
     public PortfolioEntryReport portfolioEntryStatus;
+    public Date lastPEReportDate;
     public LifeCycleMilestoneInstance lastMilestone;
     public boolean isConcept;
     public boolean archived;
@@ -397,6 +405,7 @@ public class PortfolioEntryListView {
         this.portfolios = portfolioEntry.portfolios;
         this.lifeCycleProcess = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.getName() : null;
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
+        this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
         this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
         this.archived = portfolioEntry.archived;
