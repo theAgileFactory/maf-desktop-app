@@ -380,7 +380,10 @@ public class RoadmapController extends Controller {
 
                                     String name = "";
                                     if (isFirstLoop) {
-                                        name = portfolioEntry.getName();
+                                        if (portfolioEntry.getGovernanceId() != null) {
+                                            name += portfolioEntry.getGovernanceId() + " - ";
+                                        }
+                                        name += portfolioEntry.getName();
                                     }
 
                                     SourceItem item = new SourceItem(name, "");
