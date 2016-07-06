@@ -75,6 +75,8 @@ public class PortfolioEntryPlanningPackageListView {
         public FilterConfig<PortfolioEntryPlanningPackageListView> getFilterConfig() {
             return new FilterConfig<PortfolioEntryPlanningPackageListView>() {
                 {
+                    addColumnConfiguration("refId", "refId", "object.portfolio_entry_planning_package.ref_id.label", new TextFieldFilterComponent("*"), true,
+                            false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("name", "name", "object.portfolio_entry_planning_package.name.label", new TextFieldFilterComponent("*"), true,
                             false, SortStatusType.UNSORTED);
@@ -132,6 +134,9 @@ public class PortfolioEntryPlanningPackageListView {
             return new Table<PortfolioEntryPlanningPackageListView>() {
                 {
                     setIdFieldName("id");
+
+                    addColumn("refId", "refId", "object.portfolio_entry_planning_package.ref_id.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("refId", new ObjectFormatter<PortfolioEntryPlanningPackageListView>());
 
                     addColumn("name", "name", "object.portfolio_entry_planning_package.name.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryPlanningPackageListView>());
@@ -225,6 +230,7 @@ public class PortfolioEntryPlanningPackageListView {
     public Long id;
     public Long portfolioEntryId;
 
+    public String refId;
     public String name;
     public Date startDate;
     public Date endDate;
@@ -250,6 +256,7 @@ public class PortfolioEntryPlanningPackageListView {
         this.id = portfolioEntryPlanningPackage.id;
         this.portfolioEntryId = portfolioEntryPlanningPackage.portfolioEntry.id;
 
+        this.refId = portfolioEntryPlanningPackage.refId;
         this.name = portfolioEntryPlanningPackage.name;
         this.type = portfolioEntryPlanningPackage.portfolioEntryPlanningPackageType;
 
