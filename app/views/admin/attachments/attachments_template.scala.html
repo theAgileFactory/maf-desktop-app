@@ -1,0 +1,37 @@
+@* LICENSE
+*
+* Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+* reserved.
+*
+* This program is free software; you can redistribute it and/or modify it under
+* the terms of the GNU General Public License as published by the Free Software
+* Foundation; version 2 of the License.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+* FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License along with
+* this program. If not, see <http://www.gnu.org/licenses/>.
+*@
+@(title: String, currentType: controllers.admin.AttachmentsController.MenuItemType = controllers.admin.AttachmentsController.MenuItemType.NONE)(content: Html)
+
+@import framework.utils.SideBar
+@import framework.utils.Menu.ClickableMenuItem
+
+@sidebarInstance=@{
+    val sidebarInstance=new SideBar();
+    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.attachments.sidebar.index",controllers.admin.routes.AttachmentsController.index(), "fa fa-file", currentType.equals(controllers.admin.AttachmentsController.MenuItemType.SEARCH)));
+    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.attachments.sidebar.download",controllers.admin.routes.AttachmentsController.downloadAttachments(), "fa fa-download", currentType.equals(controllers.admin.AttachmentsController.MenuItemType.DOWNLOAD)));
+    sidebarInstance;
+}
+
+@templates.main_bc_iconsbar(title,
+    sidebarInstance,
+    Seq(
+        ("admin.attachments.breadcrumb", controllers.admin.routes.AttachmentsController.index().url),
+        (title,null))){
+}{
+    @content
+}

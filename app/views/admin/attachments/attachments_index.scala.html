@@ -1,0 +1,44 @@
+@* LICENSE
+ *
+ * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+ * reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; version 2 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *@
+ 
+@(
+    attachmentTable: framework.utils.Table[utils.table.AttachmentManagementListView],
+    pagination: framework.utils.Pagination[models.framework_models.common.Attachment],
+    filterConfig: framework.utils.FilterConfig[utils.table.AttachmentManagementListView]
+)
+
+@import framework_views.parts._
+@import bootstrap3._
+
+@attachments_template("admin.attachments.index.title", controllers.admin.AttachmentsController.MenuItemType.SEARCH) {
+    <blockquote>@Msg("admin.attachments.index.header")</blockquote>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @Msg("admin.attachments.index.title")
+        </div>
+        <div class="panel-body">
+            @table.filtered_tableview(
+                attachmentTable,
+                pagination,
+                filterConfig,
+                controllers.admin.routes.AttachmentsController.attachmentsFilter().url,
+                null
+            )
+        </div>
+    </div>
+}

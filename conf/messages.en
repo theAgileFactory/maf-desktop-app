@@ -493,6 +493,7 @@ topmenubar.admin.integration.menu.label=Integration
 topmenubar.admin.kpimanager.menu.label=KPI manager
 topmenubar.admin.reporting.menu.label=Reporting manager
 topmenubar.admin.audit.menu.label=Audit log
+topmenubar.admin.attachments.menu.label=Documents
 
 #search
 topmenubar.search.menu.label=Search
@@ -667,6 +668,7 @@ permission.architecture_permission.description=Permission which allows a user to
 permission.application_block_edit_all_permission.description=Permission which allows a user to manage the application blocks (DevDock).
 permission.partner_syndication_permission.description=Permission which allows a user to manage the data syndication with partners.
 permission.admin_translation_key_edit_permission.description=Permission which allows a user to edit the translations of BizDock.
+permission.admin_attachments_management_permission.description=Permission which allows the user to manage the uploaded documents throughout the system.
 
 #----------------------
 # preferences
@@ -1387,6 +1389,9 @@ object.org_unit.table.empty=There is no org unit.
 object.attachment.name.label=Name
 object.attachment.document.label=Document
 object.attachment.last_update.label=Last update
+object.attachment.mime_type.label=MIME type
+object.attachment.object_type.label=Object type
+object.attachment.object_id.label=Object reference
 object.attachment.empty=There is no attachment.
 
 #----------------------
@@ -3392,3 +3397,19 @@ admin.auditable.mysql.dump.process.success.title=A new database dump is ready to
 admin.auditable.mysql.dump.process.success.message=A new database dump is available in the data exchange storage and could be downloaded.
 admin.auditable.mysql.dump.process.failure.title=Error during database dump creation
 admin.auditable.mysql.dump.process.failure.message=An error has occured when creating a database dump, please try later.
+
+#---------------
+# Attachments
+#---------------
+
+#helper
+admin.attachments.breadcrumb=<i class="fa fa-file"></i>&nbsp;Documents
+
+#sidebar
+admin.attachments.sidebar.index=Display documents
+admin.attachments.sidebar.download=Download all files (ZIP)
+
+#index
+admin.attachments.index.title=Document list
+admin.attachments.index.header=The table below lists all the documents attached across the Bizdock application. The \
+  link in the "Object reference" column allows a direct access to the document place in the application.

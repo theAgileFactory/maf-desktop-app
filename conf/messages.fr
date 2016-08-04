@@ -505,6 +505,7 @@ topmenubar.admin.integration.menu.label=Intégration
 topmenubar.admin.kpimanager.menu.label=Gestion des KPIs
 topmenubar.admin.reporting.menu.label=Gestion des rapports
 topmenubar.admin.audit.menu.label=Journal d''audit
+topmenubar.admin.attachments.menu.label=Documents
 
 #search
 topmenubar.search.menu.label=Rechercher
@@ -679,6 +680,7 @@ permission.architecture_permission.description=Autorise un utilisateur à utilis
 permission.application_block_edit_all_permission.description=Autorise un utilisateur à gérer les blocs applicatifs (DevDock).
 permission.partner_syndication_permission.description=Autorise un utilisateur à gérer la syndication des données avec des partenaires.
 permission.admin_translation_key_edit_permission.description=Autorise un utilisateur à mettre à jour les traductions de BizDock.
+permission.admin_attachments_management_permission.description=Autorise un utilisateur à gérer les documents uploadés dans le système.
 
 #----------------------
 # preferences
@@ -1399,6 +1401,9 @@ object.org_unit.table.empty=Il n''existe aucune unité d''organisation.
 object.attachment.name.label=Nom
 object.attachment.document.label=Document
 object.attachment.last_update.label=Dernière mise à jour
+object.attachment.mime_type.label=Type MIME
+object.attachment.object_type.label=Type d''objet
+object.attachment.object_id.label=Référence de l''objet
 object.attachment.empty=Il n''existe aucune pièce jointe.
 
 #----------------------
@@ -3407,3 +3412,20 @@ admin.auditable.mysql.dump.process.success.title=Une sauvegarde de la BD est dis
 admin.auditable.mysql.dump.process.success.message=Une nouvelle sauvegarde de la BD est disponible dans l'espace de stockage et peut être téléchargée.
 admin.auditable.mysql.dump.process.failure.title=Erreur lors de la création d''une sauvegarde de la BD.
 admin.auditable.mysql.dump.process.failure.message=Une erreur s''est produite lors de la création d''une sauvegarde de la BD, veuillez réessayer ultérieurement.
+
+#---------------
+# Documents
+#---------------
+
+#helper
+admin.attachments.breadcrumb=<i class="fa fa-file"></i>&nbsp;Documents
+
+#sidebar
+admin.attachments.sidebar.index=Afficher les documents
+admin.attachments.sidebar.download=Télécharger tous les documents (ZIP)
+
+#index
+admin.attachments.index.title=Liste des documents
+admin.attachments.index.header=Le tableau ci-dessous liste l''ensemble des documents attachés dans Bizdock. Le lien \
+  présent dans la colonne "Référence de l''objet" permet d''accéder directement à l''emplacement du document dans \
+  l''application.

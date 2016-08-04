@@ -112,10 +112,17 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
     private void defineAdminMenu(String perspectiveKey) {
         // Admin user management features
         HeaderMenuItem adminMenuItem = new HeaderMenuItem(TopMenus.ADMIN.name(), "topmenubar.admin.menu.label", "fa fa-cog", false);
-        adminMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
-                IMafConstants.ADMIN_AUDIT_LOG_PERMISSION, IMafConstants.REPORTING_ADMINISTRATION_PERMISSION, IMafConstants.ADMIN_CONFIGURATION_PERMISSION,
-                IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION, IMafConstants.ADMIN_KPI_MANAGER_PERMISSION, IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION,
-                IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION));
+        adminMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(
+                IMafConstants.ADMIN_USER_ADMINISTRATION_PERMISSION,
+                IMafConstants.ADMIN_AUDIT_LOG_PERMISSION,
+                IMafConstants.REPORTING_ADMINISTRATION_PERMISSION,
+                IMafConstants.ADMIN_CONFIGURATION_PERMISSION,
+                IMafConstants.ADMIN_PLUGIN_MANAGER_PERMISSION,
+                IMafConstants.ADMIN_KPI_MANAGER_PERMISSION,
+                IMafConstants.ADMIN_CUSTOM_ATTRIBUTE_PERMISSION,
+                IMafConstants.ADMIN_TRANSLATION_KEY_EDIT_PERMISSION,
+                IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION
+        ));
         if (perspectiveKey == null) {
             addMenuItemToMainPerspective(adminMenuItem);
         } else {
@@ -159,6 +166,11 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
                 controllers.admin.routes.AuditableController.listAuditable(), "fa fa-signal", false);
         auditLogMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_AUDIT_LOG_PERMISSION));
         adminMenuItem.addSubMenuItem(auditLogMenuItem);
+
+        // Attachments
+        ClickableMenuItem attachmentsMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(7), "topmenubar.admin.attachments.menu.label", controllers.admin.routes.AttachmentsController.index(), "fa fa-file", false);
+        attachmentsMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION));
+        adminMenuItem.addSubMenuItem(attachmentsMenuItem);
     }
 
     /**

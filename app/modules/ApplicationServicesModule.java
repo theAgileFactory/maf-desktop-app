@@ -332,7 +332,7 @@ public class ApplicationServicesModule extends FrameworkModule {
                         .put("shared", "object.work_order.shared.label").put("amountReceived", "object.work_order.amount_received.label").build());
         MafDataType.add(IMafConstants.Deliverable, "models.delivery.Deliverable", false, true,
                 ImmutableMap.<String, String> builder().put("name", "object.deliverable.name.label").build());
-
+        MafDataType.add(IMafConstants.LifeCycleMilestoneInstance, "models.governance.LifeCycleMilestoneInstance", false, false);
     }
 
     /**

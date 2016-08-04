@@ -678,6 +678,12 @@ GET    /admin/audit/technical/switchdebug      controllers.admin.AuditableContro
 #MySQL Dump
 GET    /admin/audit/mysql/dump                 controllers.admin.AuditableController.dumpDatabase()
 
+#Attachments
+GET    /admin/attachments             controllers.admin.AttachmentsController.index()
+POST   /admin/attachments/filter      controllers.admin.AttachmentsController.attachmentsFilter()
+GET    /admin/attachments/download    controllers.admin.AttachmentsController.downloadAttachments()
+GET    /admin/attachments/delete/:id  controllers.admin.AttachmentsController.deleteAttachment(id: Long)
+
 #Plugin manager
 GET    /admin/plugin/index                         controllers.admin.PluginManagerController.index()
 GET    /admin/plugin/registration/index            controllers.admin.PluginManagerController.registration()

@@ -112,6 +112,7 @@ public class TableProviderImpl implements ITableProvider {
         this.get().requirement.filterConfig = this.get().requirement.getFilterConfig();
         this.get().timesheetActivityAllocatedActor.filterConfig = this.get().timesheetActivityAllocatedActor.getFilterConfig();
         this.get().timesheetLog.filterConfig = this.get().timesheetLog.getFilterConfig();
+        this.get().attachmentManagement.filterConfig = this.get().attachmentManagement.getFilterConfig();
 
     }
 
