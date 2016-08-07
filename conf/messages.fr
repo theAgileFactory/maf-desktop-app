@@ -725,6 +725,8 @@ preference.notification_sending_system_preference.name=Système d''envoi des not
 preference.notification_sending_system_preference.description=Le sytème utilisé pour l''envoi des notifications. Il peut être soit par notifications BizDock, soit par email.
 preference.budget_tracking_effort_based_preference.name=Budget/prévison basé sur l''effort
 preference.budget_tracking_effort_based_preference.description=Défini si la partie financière (budget et prévision) d''une initiative inclut automatiquement l''effort des ressources. Si actif, en ajoutant une affectation alors une ligne de budget et de prévision sont également ajoutées.
+preference.read_only_governance_id_preference.name=Numéro de gouvernance d''initiative en lecture seule
+preference.read_only_governance_id_preference.description=Empêche la modification d''un numéro de gouvernance d'initiative une fois que celle-ci est créée
 
 #----------------------
 # authentication

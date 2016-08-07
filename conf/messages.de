@@ -725,6 +725,9 @@ preference.notification_sending_system_preference.name=System Mitteilungen
 preference.notification_sending_system_preference.description=Interne BizDock Mitteilung order via Email
 preference.budget_tracking_effort_based_preference.name=Budget/Kostenprognose nach Arbeitsaufwand
 preference.budget_tracking_effort_based_preference.description=Budget/Kostenprognose der Initiativen beinhalten automatisch den Aufwand der Ressourcen. Sobald eine Ressource zugeteilt wurde, erscheint sie im Budget.
+preference.read_only_governance_id_preference.name=Schreibgeschützte Initiative ID
+preference.read_only_governance_id_preference.description=Schreibgeschützte Initiative ID kann nicht gespeichert werden
+
 
 #----------------------
 # authentication
