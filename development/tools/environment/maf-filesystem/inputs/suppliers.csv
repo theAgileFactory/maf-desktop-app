@@ -1,0 +1,7 @@
+is_active;ref_id;name
+TRUE;SWORD;Sword Group
+TRUE;MICROSOFT;Microsoft Corporation
+FALSE;ORACLE;Oracle
+TRUE;;Atos Origin
+FALSE;CAP;
+TRUE;123;nom long avec des accents et des catactères marrants pour tout casser:èéà!#%&/

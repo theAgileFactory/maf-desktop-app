@@ -1,0 +1,12 @@
+is_active;ref_id;erp_ref_id;first_name;last_name;title;mail;mobile_phone;fix_phone;employee_id;login;actor_type_ref_id;manager_ref_id;org_unit_ref_id
+TRUE;001;REG01;Alfred;Exco;IT / Portfolio Manager;aeco@the-agile-factory.com;41123456483;41123456483;001;test_aexco;REGULAR;;DEV
+TRUE;002;NULL;John;Dm;Delivery manager;jdm@the-agile-factory.com;41123456789;;;test_jdm;REGULAR;;OPS
+TRUE;003;REG03;Robert0;Pm0;Project manager;rpm@the-agile-factory.com;41433456789;;;test_rpm;REGULAR;001;DEV
+TRUE;004;REG04;Suzan;Pmo;;spmo@the-agile-factory.com;41433456659;;;test_spmo;REGULAR;009;IT
+TRUE;005;REG05;Mary;Marketing;;mdirector@the-agile-factory.com;41123456483;;;to_make_it_work;REGULAR;001;OFFERS
+TRUE;006;REG06;Bill;VP;VP Marketing;bvp@the-agile-factory.com;41123456483;;;bvp;REGULAR;;MARKETING
+TRUE;007;REG07;James;Dev;Developper;jdev@the-agile-factory.com;41123456483;;;test_jdev;REGULAR;001;DEV
+TRUE;008;REG08;Gael;Archi;Enterprise Architect;garchi@the-agile-factory.com;;;;test_garchi;REGULAR;001;DEV
+TRUE;009;REG09;Sam;All;Key User;sall@the-agile-factory.com;;;;test_sall;REGULAR;;IT
+TRUE;010;REG11;Johann;Kohler;Key User;johann.kohler@the-agile-factory.com;;;;test_jkohler;REGULAR;;IT
+TRUE;011;REG12;Jean;Bon123;Charcuterie;jean.bon@taf.com;0791234567;0321234567;ID12;;EXTERNAL;010;SALES
