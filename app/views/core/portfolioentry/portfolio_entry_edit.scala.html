@@ -18,7 +18,8 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry, 
     portfolioEntryForm: Form[utils.form.PortfolioEntryEditFormData],
-    portfolioEntryTypes: framework.utils.ISelectableValueHolderCollection[_]
+    portfolioEntryTypes: framework.utils.ISelectableValueHolderCollection[_],
+    isGovernanceIdReadonly : Boolean
 )
 
 @import helper._
@@ -92,7 +93,9 @@
                         
                         @parts.dropdownlist(portfolioEntryForm("portfolioEntryType"), parts.Msg.asString("object.portfolio_entry.type.label"), portfolioEntryTypes)
         
-                        @parts.input_text(portfolioEntryForm("governanceId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.governance_id.label"))
+        				@if(!isGovernanceIdReadonly){
+                        	@parts.input_text(portfolioEntryForm("governanceId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.governance_id.label"))
+                        }
                         
                         @parts.input_text(portfolioEntryForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.erp_ref_id.label"))
                         

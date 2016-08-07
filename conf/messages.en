@@ -713,6 +713,8 @@ preference.notification_sending_system_preference.name=Notifications sending sys
 preference.notification_sending_system_preference.description=It could be either by BizDock notifications or email.
 preference.budget_tracking_effort_based_preference.name=Effort-based budget/forecast
 preference.budget_tracking_effort_based_preference.description=Define if the financial part (budget and forecast) of an initiative automatically includes the effort of the resources. If true, by adding an allocation then a budget and forecast lines are also added.
+preference.read_only_governance_id_preference.name=Read-only initiative governance id
+preference.read_only_governance_id_preference.description=Prevent the edition of the governance id once the initiative is created
 
 #----------------------
 # authentication

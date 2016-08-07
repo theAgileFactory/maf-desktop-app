@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.tuple.Triple;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
@@ -48,6 +49,7 @@ import dao.pmo.PortfolioEntryDao;
 import framework.security.ISecurityService;
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.notification.INotificationManagerPlugin;
@@ -138,6 +140,8 @@ public class PortfolioEntryController extends Controller {
     private ITableProvider tableProvider;
     @Inject
     private ICustomAttributeManagerService customAttributeManagerService;
+    @Inject
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
 
     private static Logger.ALogger log = Logger.of(PortfolioEntryController.class);
 
@@ -484,7 +488,8 @@ public class PortfolioEntryController extends Controller {
         this.getCustomAttributeManagerService().fillWithValues(portfolioEntryForm, PortfolioEntry.class, id);
 
         return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, portfolioEntryForm,
-                PortfolioEntryDao.getPETypeActiveAsVH(portfolioEntry.portfolioEntryType.isRelease)));
+                PortfolioEntryDao.getPETypeActiveAsVH(portfolioEntry.portfolioEntryType.isRelease),
+                getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.READONLY_GOVERNANCE_ID_PREFERENCE)));
     }
 
     /**
@@ -502,7 +507,8 @@ public class PortfolioEntryController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntry.class)) {
-            return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, boundForm, PortfolioEntryDao.getPETypeActiveAsVH()));
+            return ok(views.html.core.portfolioentry.portfolio_entry_edit.render(portfolioEntry, boundForm, PortfolioEntryDao.getPETypeActiveAsVH(),
+            		getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.READONLY_GOVERNANCE_ID_PREFERENCE)));
         }
 
         PortfolioEntryEditFormData portfolioEntryFormData = boundForm.get();
@@ -1060,4 +1066,8 @@ public class PortfolioEntryController extends Controller {
     private ICustomAttributeManagerService getCustomAttributeManagerService() {
         return this.customAttributeManagerService;
     }
+
+	private IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+		return preferenceManagerPlugin;
+	}
 }
