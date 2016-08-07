@@ -61,7 +61,7 @@ public class AttachmentsController extends Controller {
      */
     public Result index() {
         String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-        FilterConfig<AttachmentManagementListView> filterConfig = this.getTableProvider().get().attachmentManagement.filterConfig.getCurrent(uid, request());
+        FilterConfig<AttachmentManagementListView> filterConfig = this.getTableProvider().get().attachmentManagement.getResetedFilterConfig().getCurrent(uid, request());
 
         Pair<Table<AttachmentManagementListView>, Pagination<Attachment>> t = getTable(filterConfig);
 

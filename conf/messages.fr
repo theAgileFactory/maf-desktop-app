@@ -680,7 +680,7 @@ permission.architecture_permission.description=Autorise un utilisateur à utilis
 permission.application_block_edit_all_permission.description=Autorise un utilisateur à gérer les blocs applicatifs (DevDock).
 permission.partner_syndication_permission.description=Autorise un utilisateur à gérer la syndication des données avec des partenaires.
 permission.admin_translation_key_edit_permission.description=Autorise un utilisateur à mettre à jour les traductions de BizDock.
-permission.admin_attachments_management_permission.description=Autorise un utilisateur à gérer les documents uploadés dans le système.
+permission.admin_attachments_management_permission.description=Autorise un utilisateur à gérer les documents uploadés.
 
 #----------------------
 # preferences
@@ -3426,6 +3426,4 @@ admin.attachments.sidebar.download=Télécharger tous les documents (ZIP)
 
 #index
 admin.attachments.index.title=Liste des documents
-admin.attachments.index.header=Le tableau ci-dessous liste l''ensemble des documents attachés dans Bizdock. Le lien \
-  présent dans la colonne "Référence de l''objet" permet d''accéder directement à l''emplacement du document dans \
-  l''application.
+admin.attachments.index.header=Le tableau ci-dessous liste l''ensemble des documents attachés à des objets Bizdock.

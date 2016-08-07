@@ -17,21 +17,27 @@
  */
 package utils.table;
 
+import java.text.MessageFormat;
+import java.util.Date;
+
 import constants.IMafConstants;
 import constants.MafDataType;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
+import framework.commons.DataType;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.*;
+import framework.utils.FilterConfig;
+import framework.utils.IColumnFormatter;
+import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
-
-import java.text.MessageFormat;
-import java.util.Date;
 
 /**
  * An attachment management list view is used to display the attachments for the admin section.
@@ -54,6 +60,14 @@ public class AttachmentManagementListView {
             this.templateTable = getTable(i18nMessagesPlugin, attachmentManagerPlugin);
             this.filterConfig = getFilterConfig();
         }
+        
+        /**
+         * This method is to be used to force the reload of the filter config.
+         */
+        public FilterConfig<AttachmentManagementListView>  getResetedFilterConfig(){
+        	this.filterConfig = getFilterConfig();
+        	return this.filterConfig;
+        }
 
         /**
          * The attachment management table filter config
@@ -63,9 +77,12 @@ public class AttachmentManagementListView {
                 {
                     addColumnConfiguration("name", "name", "object.attachment.name.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
                     addColumnConfiguration("mimeType", "mimeType", "object.attachment.mime_type.label", new TextFieldFilterComponent("*"), false, false, SortStatusType.UNSORTED);
-
-                    ISelectableValueHolderCollection<String> objectTypes = Attachment.getAttachmentsObjectTypes();
-                    addColumnConfiguration("objectType", "objectType", "object.attachment.object_type.label", new SelectFilterComponent(objectTypes.getValues().iterator().next().getValue(), objectTypes), true, false, SortStatusType.UNSORTED);
+                    ISelectableValueHolderCollection<String> objectTypes = Attachment.getDistinctAttachmentsObjectTypes();
+                    String defaultObjectType="";
+                    if(objectTypes.getValues().size()>0){
+                    	defaultObjectType=objectTypes.getValues().iterator().next().getValue();
+                    }
+                    addColumnConfiguration("objectType", "objectType", "object.attachment.object_type.label", new SelectFilterComponent(defaultObjectType, objectTypes), true, false, SortStatusType.UNSORTED);                   
                     addColumnConfiguration("objectId", "objectId", "object.attachment.object_id.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
                     addColumnConfiguration("lastUpdate", "lastUpdate", "object.attachment.last_update.label", new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
                 }
@@ -83,6 +100,14 @@ public class AttachmentManagementListView {
                     addColumn("name", "name", "object.attachment.name.label", ColumnDef.SorterType.NONE);
                     addColumn("mimeType", "mimeType", "object.attachment.mime_type.label", ColumnDef.SorterType.NONE);
                     addColumn("objectType", "objectType", "object.attachment.object_type.label", ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("objectType", new IColumnFormatter<AttachmentManagementListView>() {
+						@Override
+						public String apply(AttachmentManagementListView column, Object value) {
+							String objectTypeClassNameAsString=String.valueOf(value);
+							DataType dt=DataType.getDataTypeFromClassName(objectTypeClassNameAsString);
+							return i18nMessagesPlugin.get(dt.getLabel());
+						}
+					});
 
                     // Depending on the object type, the object reference link will look different and point to different locations across the application
                     addColumn("objectId", "objectId", "object.attachment.object_id.label", ColumnDef.SorterType.NONE);
@@ -99,7 +124,7 @@ public class AttachmentManagementListView {
                         if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
                             return views.html.modelsparts.display_portfolio_entry_report.render(PortfolioEntryReportDao.getPEReportById(attachmentManagementListView.objectId)).body();
                         }
-                        return null;
+                        return "";
                     });
                     setColumnValueCssClass("objectId", "rowlink-skip");
 
