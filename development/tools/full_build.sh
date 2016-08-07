@@ -13,7 +13,7 @@ HELP=$'Possible arguments : \n\t--help (-h)\n\t--framework (-f)\n\t--model (-m)\
 
 Framework () {
   echo "---- BUILDING FRAMEWORK ----"
-  mvn -f $BIZDOCK_GIT_ROOT$APP_FRAMEWORK_PROJECT/pom2.xml clean install
+  mvn -f $BIZDOCK_GIT_ROOT$APP_FRAMEWORK_PROJECT/pom2.xml -Dgpg.skip clean install
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     exit
@@ -30,7 +30,7 @@ Framework () {
 
 Model () {
   echo "---- BUILDING DATA MODEL ----"
-  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_DATAMODEL/pom2.xml clean install
+  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_DATAMODEL/pom2.xml -Dgpg.skip clean install
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     exit
@@ -48,7 +48,7 @@ Model () {
 
 Desktop () {
   echo "---- BUILDING DESKTOP ----"
-  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_PROJECT/pom2.xml clean install
+  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_PROJECT/pom2.xml -Dgpg.skip clean install
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     exit
