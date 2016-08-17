@@ -18,10 +18,13 @@
 package utils.table;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import constants.IMafConstants;
 import constants.MafDataType;
+import controllers.admin.routes;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
@@ -35,9 +38,12 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import framework.utils.FilterConfig.AutocompleteFilterComponent;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
+import models.pmo.PortfolioEntry;
 
 /**
  * An attachment management list view is used to display the attachments for the admin section.
@@ -84,6 +90,7 @@ public class AttachmentManagementListView {
                     }
                     addColumnConfiguration("objectType", "objectType", "object.attachment.object_type.label", new SelectFilterComponent(defaultObjectType, objectTypes), true, false, SortStatusType.UNSORTED);                   
                     addColumnConfiguration("objectId", "objectId", "object.attachment.object_id.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
+                    addColumnConfiguration("portfolioEntryId", "portfolioEntryId","object.attachment.link_portfolioentry_id.label", new NoDbFilterComponentWrapper(new AutocompleteFilterComponent(controllers.routes.JsonController.portfolioEntry().url())), true, false, SortStatusType.NONE);
                     addColumnConfiguration("lastUpdate", "lastUpdate", "object.attachment.last_update.label", new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
                 }
             };
@@ -108,6 +115,11 @@ public class AttachmentManagementListView {
 							return i18nMessagesPlugin.get(dt.getLabel());
 						}
 					});
+                    
+                    addColumn("portfolioEntryId", "portfolioEntryId", "object.attachment.link_portfolioentry_id.label", ColumnDef.SorterType.STRING_SORTER);
+                    setJavaColumnFormatter("portfolioEntryId", (attachmentManagementListView, value) -> {
+                    	return views.html.modelsparts.display_portfolio_entry.render(PortfolioEntryDao.getPEById(attachmentManagementListView.portfolioEntryId), true).body();
+                    });
 
                     // Depending on the object type, the object reference link will look different and point to different locations across the application
                     addColumn("objectId", "objectId", "object.attachment.object_id.label", ColumnDef.SorterType.NONE);
@@ -134,7 +146,7 @@ public class AttachmentManagementListView {
                     addColumn("downloadActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<>(
                             IMafConstants.DOWNLOAD_URL_FORMAT,
-                            (StringFormatFormatter.Hook<AttachmentManagementListView>) attachmentManagementListView -> attachmentManagerPlugin.getAttachmentDownloadUrl(attachmentManagementListView.id))
+                            (StringFormatFormatter.Hook<AttachmentManagementListView>) attachmentManagementListView -> routes.AttachmentsController.downloadAttachment(attachmentManagementListView.id).url())
                     );
                     setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
@@ -164,6 +176,7 @@ public class AttachmentManagementListView {
 
     public String objectType;
     public Long objectId;
+    public Long portfolioEntryId;
 
     public String name;
     public String mimeType;
@@ -181,11 +194,34 @@ public class AttachmentManagementListView {
 
         this.objectId = attachment.objectId;
         this.objectType = attachment.objectType;
-
+        this.portfolioEntryId=getLinkedPortfolioEntry(objectType, objectId);
+        
         this.name = attachment.name;
         this.mimeType = attachment.mimeType;
         this.lastUpdate = attachment.lastUpdate;
 
+    }
+
+    /**
+     * Return the id of the linked {@link PortfolioEntry} when one is available
+     * @param objectType an object type
+     * @param objectId an object id
+     * @return a {@link PortfolioEntry} id
+     */
+    private static Long getLinkedPortfolioEntry(String objectType, Long objectId){
+    	if (objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
+            return PortfolioEntryDao.getPEById(objectId).id;
+        }
+        if (objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
+            return LifeCycleMilestoneDao.getLCMilestoneInstanceById(objectId).getLifeCycleInstance().portfolioEntry.id;
+        }
+        if (objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
+            return PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(objectId).portfolioEntry.id;
+        }
+        if (objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
+            return PortfolioEntryReportDao.getPEReportById(objectId).id;
+        }
+        return -1l;
     }
 
 }

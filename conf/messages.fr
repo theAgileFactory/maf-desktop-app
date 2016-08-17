@@ -1407,6 +1407,7 @@ object.attachment.mime_type.label=Type MIME
 object.attachment.object_type.label=Type d''objet
 object.attachment.object_id.label=Référence de l''objet
 object.attachment.empty=Il n''existe aucune pièce jointe.
+object.attachment.link_portfolioentry_id.label=Initiative liée
 
 #----------------------
 # portfolioEntryBudgetLine

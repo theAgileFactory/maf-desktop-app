@@ -17,18 +17,7 @@
 *@
 @(title: String, currentType: controllers.admin.AttachmentsController.MenuItemType = controllers.admin.AttachmentsController.MenuItemType.NONE)(content: Html)
 
-@import framework.utils.SideBar
-@import framework.utils.Menu.ClickableMenuItem
-
-@sidebarInstance=@{
-    val sidebarInstance=new SideBar();
-    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.attachments.sidebar.index",controllers.admin.routes.AttachmentsController.index(), "fa fa-file", currentType.equals(controllers.admin.AttachmentsController.MenuItemType.SEARCH)));
-    sidebarInstance.addMenuItem(new ClickableMenuItem("admin.attachments.sidebar.download",controllers.admin.routes.AttachmentsController.downloadAttachments(), "fa fa-download", currentType.equals(controllers.admin.AttachmentsController.MenuItemType.DOWNLOAD)));
-    sidebarInstance;
-}
-
-@templates.main_bc_iconsbar(title,
-    sidebarInstance,
+@templates.main_bc_nosidebar(title,
     Seq(
         ("admin.attachments.breadcrumb", controllers.admin.routes.AttachmentsController.index().url),
         (title,null))){
