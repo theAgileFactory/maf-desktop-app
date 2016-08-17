@@ -25,7 +25,9 @@ import dao.finance.PurchaseOrderDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioDao;
+import dao.pmo.PortfolioEntryDao;
 import framework.utils.Utilities;
+import models.pmo.PortfolioEntry;
 
 /**
  * The controller that provides the json data (API).
@@ -40,6 +42,14 @@ public class JsonController extends Controller {
      */
     public Result manager() {
         return ok(Utilities.marshallAsJson(ActorDao.getActorAsVHByKeywords(request().getQueryString("query")).getValues()));
+    }
+    
+    /**
+     * Search from portfolio entries
+     * (a limit of 30 entries is specified by default)
+     */
+    public Result portfolioEntry(){
+    	return ok(Utilities.marshallAsJson(PortfolioEntryDao.getPEAsVHByKeywords(request().getQueryString("query"),30).getValues()));
     }
 
     /**

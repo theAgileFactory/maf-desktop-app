@@ -125,6 +125,7 @@ GET   /json/delivery-unit                            controllers.JsonController.
 GET   /json/portfolio                                controllers.JsonController.portfolio()
 GET   /json/purchase-order                           controllers.JsonController.purchaseOrder()
 GET   /json/application-block                        controllers.JsonController.applicationBlock()
+GET   /json/portfolio-entry                          controllers.JsonController.portfolioEntry()
 
 #-------------------
 # Core: Picker
@@ -679,10 +680,11 @@ GET    /admin/audit/technical/switchdebug      controllers.admin.AuditableContro
 GET    /admin/audit/mysql/dump                 controllers.admin.AuditableController.dumpDatabase()
 
 #Attachments
-GET    /admin/attachments             controllers.admin.AttachmentsController.index()
-POST   /admin/attachments/filter      controllers.admin.AttachmentsController.attachmentsFilter()
-GET    /admin/attachments/download    controllers.admin.AttachmentsController.downloadAttachments()
-GET    /admin/attachments/delete/:id  controllers.admin.AttachmentsController.deleteAttachment(id: Long)
+GET    /admin/attachments             			controllers.admin.AttachmentsController.index()
+POST   /admin/attachments/filter      			controllers.admin.AttachmentsController.attachmentsFilter()
+GET    /admin/attachments/download_all    		controllers.admin.AttachmentsController.downloadAttachments()
+GET    /admin/attachments/download/:id    		controllers.admin.AttachmentsController.downloadAttachment(id: Long)
+GET    /admin/attachments/delete/:id  			controllers.admin.AttachmentsController.deleteAttachment(id: Long)
 
 #Plugin manager
 GET    /admin/plugin/index                         controllers.admin.PluginManagerController.index()

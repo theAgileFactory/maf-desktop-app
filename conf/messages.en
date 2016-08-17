@@ -1395,6 +1395,7 @@ object.attachment.mime_type.label=MIME type
 object.attachment.object_type.label=Object type
 object.attachment.object_id.label=Object reference
 object.attachment.empty=There is no attachment.
+object.attachment.link_portfolioentry_id.label=Linked initiative
 
 #----------------------
 # portfolioEntryBudgetLine

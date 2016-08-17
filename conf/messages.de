@@ -1409,6 +1409,7 @@ object.attachment.mime_type.label=MIME-Type
 object.attachment.object_type.label=Objekttyps
 object.attachment.object_id.label=Link
 object.attachment.empty=Keine Dokumente eingetragen
+object.attachment.link_portfolioentry_id.label=Initiative Link
 
 #----------------------
 # portfolioEntryBudgetLine

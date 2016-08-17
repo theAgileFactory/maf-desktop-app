@@ -23,6 +23,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
 import com.avaje.ebean.Query;
@@ -36,6 +37,7 @@ import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Pagination;
+import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryDependencyType;
@@ -601,6 +603,40 @@ public abstract class PortfolioEntryDao {
         }
 
         return e.findList();
+    }
+    
+    /**
+     * Get all selectable portfolio entry types as value holder collection.<br/>
+     * @param key
+     *            the search criteria (use % for wild cards)
+     * @param limit 
+     * 			   limit the number of entries (useful with auto-complete)
+     */
+    public static ISelectableValueHolderCollection<Long> getPEAsVHByKeywords(String key, int limit) {
+    	DefaultSelectableValueHolderCollection<Long> valueHolderCollection=new DefaultSelectableValueHolderCollection<Long>();
+    	List<PortfolioEntry> PEList=getPEAsListByKeywords(key, limit);
+    	if(PEList!=null){
+    		for(PortfolioEntry pe : PEList){
+    			valueHolderCollection.add(new DefaultSelectableValueHolder<Long>(pe.id,pe.name));
+    		}
+    	}
+    	return valueHolderCollection;
+    }
+    
+    /**
+     * Search from all portfolio entries for which the criteria matches the name or the
+     * ref id.
+     * 
+     * @param key
+     *            the search criteria (use % for wild cards)
+     * @param limit 
+     * 			   limit the number of entries (useful with auto-complete)
+     */
+    public static List<PortfolioEntry> getPEAsListByKeywords(String key, int limit) {
+    	if(limit!=0){
+    		return findPortfolioEntry.where().eq("deleted", false).or(Expr.ilike("name", key + "%"), Expr.ilike("refId", key + "%")).orderBy("name").setMaxRows(limit).findList();
+    	}
+    	return findPortfolioEntry.where().eq("deleted", false).or(Expr.ilike("name", key + "%"), Expr.ilike("refId", key + "%")).orderBy("name").findList();
     }
 
     /**
