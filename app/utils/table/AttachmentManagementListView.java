@@ -44,6 +44,7 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
 import models.pmo.PortfolioEntry;
+import play.Logger;
 
 /**
  * An attachment management list view is used to display the attachments for the admin section.
@@ -210,7 +211,8 @@ public class AttachmentManagementListView {
      */
     private static Long getLinkedPortfolioEntry(String objectType, Long objectId){
     	if (objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
-            return PortfolioEntryDao.getPEById(objectId).id;
+            PortfolioEntry pe = PortfolioEntryDao.getPEById(objectId); 
+    		return pe == null ? -1l : pe.id;
         }
         if (objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
             return LifeCycleMilestoneDao.getLCMilestoneInstanceById(objectId).getLifeCycleInstance().portfolioEntry.id;
