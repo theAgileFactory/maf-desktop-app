@@ -26,6 +26,7 @@ import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.admin.routes;
 import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.ProcessTransitionRequestDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
@@ -113,7 +114,7 @@ public class AttachmentManagementListView {
 						public String apply(AttachmentManagementListView column, Object value) {
 							String objectTypeClassNameAsString=String.valueOf(value);
 							DataType dt=DataType.getDataTypeFromClassName(objectTypeClassNameAsString);
-							return i18nMessagesPlugin.get(dt.getLabel());
+							return dt == null ? objectTypeClassNameAsString : i18nMessagesPlugin.get(dt.getLabel());
 						}
 					});
                     
@@ -137,6 +138,9 @@ public class AttachmentManagementListView {
                         if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
                             return views.html.modelsparts.display_portfolio_entry_report.render(PortfolioEntryReportDao.getPEReportById(attachmentManagementListView.objectId)).body();
                         }
+//                        if (attachmentManagementListView.objectType.equals(MafDataType.getProcessTransitionRequest().getDataTypeClassName())) {
+//                        	return ProcessTransitionRequestDao.getProcessTransitionRequestById(attachmentManagementListView.objectId).title;
+//                        }
                         return "";
                     });
                     setColumnValueCssClass("objectId", "rowlink-skip");
@@ -223,6 +227,9 @@ public class AttachmentManagementListView {
         if (objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
             return PortfolioEntryReportDao.getPEReportById(objectId).id;
         }
+//        if (objectType.equals(MafDataType.getTransitionProcessRequest().getDataTypeClassName())) {
+//        	return ProcessTransitionRequestDao.getProcessTransitionRequestById(objectId).id;
+//        }
         return -1l;
     }
 
