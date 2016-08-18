@@ -17,31 +17,36 @@
  */
 package controllers.admin;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.avaje.ebean.ExpressionList;
+
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
-import com.avaje.ebean.ExpressionList;
 import constants.IMafConstants;
-import controllers.core.OrgUnitController;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.*;
+import framework.utils.FileAttachmentHelper;
+import framework.utils.FilterConfig;
 import framework.utils.FilterConfig.UserColumnConfiguration;
+import framework.utils.Msg;
+import framework.utils.Pagination;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import models.framework_models.common.Attachment;
-import org.apache.commons.lang3.tuple.Pair;
-
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.tableprovider.ITableProvider;
 import utils.table.AttachmentManagementListView;
-
-import javax.inject.Inject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The administration page used to view, download and delete attached documents throughout the system.
@@ -131,11 +136,10 @@ public class AttachmentsController extends Controller {
     	ExpressionList<Attachment> expressionList = filterConfig.updateWithSearchExpression(Attachment.getAllBusinessObjectsAttachmentsAsExpression());
     	
     	filterConfig.updateWithSortExpression(expressionList);
-
-        Pagination<Attachment> pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
-        pagination.setCurrentPage(filterConfig.getCurrentPage());
-
-        List<AttachmentManagementListView> attachmentManagementListViews =null;
+    	
+    	Pagination<Attachment> pagination =null;
+    	List<AttachmentManagementListView> attachmentManagementListViews=null;
+        
         //Apply a second level filter based on the "linked portfolio entry id"
         UserColumnConfiguration ucc=filterConfig.getUserColumnConfigurations().get("portfolioEntryId");
         Long selectedPortfolioentry=0l;
@@ -147,20 +151,36 @@ public class AttachmentsController extends Controller {
         	}
         }
         if(selectedPortfolioentry>0){
-        	List<Attachment> foundAttachements= pagination.getListOfObjects();
-        	attachmentManagementListViews = new ArrayList<>();
-        	if(foundAttachements!=null){
-	        	for(Attachment attachement : foundAttachements){
+        	List<Attachment> foundAttachments=expressionList.findList();
+        	List<Attachment> filteredAttachments=new ArrayList<>();
+        	if(log.isDebugEnabled()){
+        		log.debug(">>> Selected portfolio entry is "+selectedPortfolioentry);
+        	}
+        	if(foundAttachments!=null){
+	        	for(Attachment attachement : foundAttachments){
 	        		AttachmentManagementListView view=new AttachmentManagementListView(attachement);
-	        		if(view.portfolioEntryId==selectedPortfolioentry){
-	        			attachmentManagementListViews.add(view);
+	        		if(view.portfolioEntryId!=null && view.portfolioEntryId.equals(selectedPortfolioentry)){
+	                	if(log.isDebugEnabled()){
+	                		log.debug(">>> Match with "+view.id);
+	                	}
+	                	filteredAttachments.add(attachement);
+	        		}else{
+	                	if(log.isDebugEnabled()){
+	                		log.debug(">>> NO match with "+view.id);
+	                	}
 	        		}
 	        	}
         	}
+        	pagination=new Pagination<>(getPreferenceManagerPlugin(),filteredAttachments.size());
+        	pagination.setCurrentPage(filterConfig.getCurrentPage());
+        	filteredAttachments=pagination.getEntriesForCurrentPage(filteredAttachments);
+        	attachmentManagementListViews = filteredAttachments.stream().map(AttachmentManagementListView::new).collect(Collectors.toList());
         }else{
-        	attachmentManagementListViews = pagination.getListOfObjects().stream().map(AttachmentManagementListView::new).collect(Collectors.toList());
+            pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
+            pagination.setCurrentPage(filterConfig.getCurrentPage());
+            attachmentManagementListViews = pagination.getListOfObjects().stream().map(AttachmentManagementListView::new).collect(Collectors.toList());
         }
-        
+    	
         Table<AttachmentManagementListView> table = getTableProvider().get().attachmentManagement.templateTable.fillForFilterConfig(attachmentManagementListViews, filterConfig.getColumnsToHide());
 
         return Pair.of(table, pagination);
