@@ -18,15 +18,12 @@
 package utils.table;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.admin.routes;
 import dao.governance.LifeCycleMilestoneDao;
-import dao.governance.ProcessTransitionRequestDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
@@ -34,13 +31,12 @@ import framework.commons.DataType;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.utils.FilterConfig.AutocompleteFilterComponent;
-import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
@@ -53,7 +49,8 @@ import play.Logger;
  * @author Guillaume Petit
  */
 public class AttachmentManagementListView {
-
+	private static Logger.ALogger log = Logger.of(AttachmentManagementListView.class);
+	
     /**
      * The definition of the table.
      *
@@ -126,21 +123,24 @@ public class AttachmentManagementListView {
                     // Depending on the object type, the object reference link will look different and point to different locations across the application
                     addColumn("objectId", "objectId", "object.attachment.object_id.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("objectId", (attachmentManagementListView, value) -> {
-                        if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
-                            return views.html.modelsparts.display_portfolio_entry.render(PortfolioEntryDao.getPEById(attachmentManagementListView.objectId), true).body();
-                        }
-                        if (attachmentManagementListView.objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
-                            return views.html.modelsparts.display_milestone_instance.render(LifeCycleMilestoneDao.getLCMilestoneInstanceById(attachmentManagementListView.objectId)).body();
-                        }
-                        if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
-                            return views.html.modelsparts.display_portfolio_entry_planning_package.render(PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(attachmentManagementListView.objectId)).body();
-                        }
-                        if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
-                            return views.html.modelsparts.display_portfolio_entry_report.render(PortfolioEntryReportDao.getPEReportById(attachmentManagementListView.objectId)).body();
-                        }
-//                        if (attachmentManagementListView.objectType.equals(MafDataType.getProcessTransitionRequest().getDataTypeClassName())) {
-//                        	return ProcessTransitionRequestDao.getProcessTransitionRequestById(attachmentManagementListView.objectId).title;
-//                        }
+                    	try{
+	                        if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
+	                            return views.html.modelsparts.display_portfolio_entry.render(PortfolioEntryDao.getPEById(attachmentManagementListView.objectId), true).body();
+	                        }
+	                        if (attachmentManagementListView.objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
+	                            return views.html.modelsparts.display_milestone_instance.render(LifeCycleMilestoneDao.getLCMilestoneInstanceById(attachmentManagementListView.objectId)).body();
+	                        }
+	                        if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
+	                            return views.html.modelsparts.display_portfolio_entry_planning_package.render(PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(attachmentManagementListView.objectId)).body();
+	                        }
+	                        if (attachmentManagementListView.objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
+	                            return views.html.modelsparts.display_portfolio_entry_report.render(PortfolioEntryReportDao.getPEReportById(attachmentManagementListView.objectId)).body();
+	                        }
+                    	}catch(NullPointerException e){
+                    		if(log.isDebugEnabled()){
+                    			log.debug("Error while looking for the objectid : "+value);
+                    		}
+                    	}
                         return "";
                     });
                     setColumnValueCssClass("objectId", "rowlink-skip");
@@ -219,17 +219,29 @@ public class AttachmentManagementListView {
     		return pe == null ? -1l : pe.id;
         }
         if (objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
-            return LifeCycleMilestoneDao.getLCMilestoneInstanceById(objectId).getLifeCycleInstance().portfolioEntry.id;
+        	try{
+        		return LifeCycleMilestoneDao.getLCMilestoneInstanceById(objectId).getLifeCycleInstance().portfolioEntry.id;
+        	}catch(NullPointerException e){
+        		log.warn("Error while looking for the objectid "+objectId+" with object type "+objectType);
+        		return -1l;
+        	}
         }
         if (objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
-            return PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(objectId).portfolioEntry.id;
+        	try{
+        		return PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(objectId).portfolioEntry.id;
+	    	}catch(NullPointerException e){
+	    		log.warn("Error while looking for the objectid "+objectId+" with object type "+objectType);
+	    		return -1l;
+	    	}
         }
         if (objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
-            return PortfolioEntryReportDao.getPEReportById(objectId).id;
+        	try{
+            	return PortfolioEntryReportDao.getPEReportById(objectId).id;
+	    	}catch(NullPointerException e){
+	    		log.warn("Error while looking for the objectid "+objectId+" with object type "+objectType);
+	    		return -1l;
+	    	}
         }
-//        if (objectType.equals(MafDataType.getTransitionProcessRequest().getDataTypeClassName())) {
-//        	return ProcessTransitionRequestDao.getProcessTransitionRequestById(objectId).id;
-//        }
         return -1l;
     }
 
