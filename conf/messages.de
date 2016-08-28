@@ -681,6 +681,7 @@ permission.application_block_edit_all_permission.description=Um die Applikations
 permission.partner_syndication_permission.description=BizDock Partner verwalten.
 permission.admin_translation_key_edit_permission.description=Übersetzung von BizDock bearbeiten.
 permission.admin_attachments_management_permission.description=Suchen und Löschen von Dokumenten
+permission.admin_attachments_management_permission_no_confidential.description=Suchen und Löschen von Dokumenten (ohne vertraulichen Initiativen)
 
 #----------------------
 # preferences

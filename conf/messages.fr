@@ -681,6 +681,7 @@ permission.application_block_edit_all_permission.description=Autorise un utilisa
 permission.partner_syndication_permission.description=Autorise un utilisateur à gérer la syndication des données avec des partenaires.
 permission.admin_translation_key_edit_permission.description=Autorise un utilisateur à mettre à jour les traductions de BizDock.
 permission.admin_attachments_management_permission.description=Autorise un utilisateur à gérer les documents uploadés.
+permission.admin_attachments_management_permission_no_confidential.description=Autorise un utilisateur à gérer les documents uploadés (à l''exclusion des initiatives confidentielles).
 
 #----------------------
 # preferences

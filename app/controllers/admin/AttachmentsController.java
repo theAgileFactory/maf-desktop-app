@@ -31,6 +31,9 @@ import com.avaje.ebean.ExpressionList;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
+import dao.pmo.PortfolioEntryDao;
+import framework.security.ISecurityService;
+import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
@@ -42,6 +45,7 @@ import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.framework_models.common.Attachment;
+import models.pmo.PortfolioEntry;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -53,7 +57,7 @@ import utils.table.AttachmentManagementListView;
  *
  * @author Guillaume Petit
  */
-@Restrict({ @Group(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION) })
+@Restrict({ @Group(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION), @Group(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION_NO_CONFIDENTIAL) })
 public class AttachmentsController extends Controller {
 	private static Logger.ALogger log = Logger.of(AttachmentsController.class);
 
@@ -68,6 +72,9 @@ public class AttachmentsController extends Controller {
 
     @Inject
     private ITableProvider tableProvider;
+    
+    @Inject
+    private ISecurityService securityService;
 
     /**
      * The attachments management main page. Displays a table with the list of all attachments across the application.
@@ -139,8 +146,9 @@ public class AttachmentsController extends Controller {
     	
     	Pagination<Attachment> pagination =null;
     	List<AttachmentManagementListView> attachmentManagementListViews=null;
-        
-        //Apply a second level filter based on the "linked portfolio entry id"
+    	List<Attachment> foundAttachments=null;
+    	
+        //Check if the user selected a portfolio_entry filter in the table
         UserColumnConfiguration ucc=filterConfig.getUserColumnConfigurations().get("portfolioEntryId");
         Long selectedPortfolioentry=0l;
         if(ucc.isFiltered() && ucc.isDisplayed() && ucc!=null){
@@ -150,33 +158,53 @@ public class AttachmentsController extends Controller {
         		log.debug("Selected portfolio entry "+selectedPortfolioentry);
         	}
         }
-        if(selectedPortfolioentry>0){
-        	List<Attachment> foundAttachments=expressionList.findList();
-        	List<Attachment> filteredAttachments=new ArrayList<>();
-        	if(log.isDebugEnabled()){
-        		log.debug(">>> Selected portfolio entry is "+selectedPortfolioentry);
-        	}
-        	if(foundAttachments!=null){
+    	
+		//Apply a RAM filter to remove the confidential projects (WARNING: this may have some performance issues)
+        //and (if selected) the attachment which do not belong to the selected portfolioentry
+    	boolean filterConfidentials=true;
+    	try{
+    		filterConfidentials=getSecurityService().restrict(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION_NO_CONFIDENTIAL);
+    	}catch(AccountManagementException e){
+    		log.error("Error while checking the permission ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION_NO_CONFIDENTIAL",e);
+    	}
+    	if(filterConfidentials || selectedPortfolioentry>0){
+    		foundAttachments=expressionList.findList();
+    		List<Attachment> filteredAttachments=new ArrayList<>();
+    		if(foundAttachments!=null){
 	        	for(Attachment attachement : foundAttachments){
 	        		AttachmentManagementListView view=new AttachmentManagementListView(attachement);
-	        		if(view.portfolioEntryId!=null && view.portfolioEntryId.equals(selectedPortfolioentry)){
-	                	if(log.isDebugEnabled()){
-	                		log.debug(">>> Match with "+view.id);
+	        		if(view.portfolioEntryId!=null){
+	        			boolean keepAttachment=true;
+	        			if(filterConfidentials){
+		        			PortfolioEntry pfe=PortfolioEntryDao.getPEById(view.portfolioEntryId);
+		                	if(pfe.isPublic){
+		                		keepAttachment=true;
+		                	}else{
+		                		keepAttachment=false;
+		                	}
+	        			}
+	        			if(selectedPortfolioentry>0 && !view.portfolioEntryId.equals(selectedPortfolioentry)){
+		                	if(log.isDebugEnabled()){
+		                		log.debug(">>> Match with "+view.id);
+		                	}
+		                	keepAttachment = false;
+	        			}
+	                	if(keepAttachment){
+	                		filteredAttachments.add(attachement);
 	                	}
-	                	filteredAttachments.add(attachement);
 	        		}else{
-	                	if(log.isDebugEnabled()){
-	                		log.debug(">>> NO match with "+view.id);
-	                	}
+	        			if(selectedPortfolioentry.longValue()==0){
+	        				filteredAttachments.add(attachement);
+	        			}
 	        		}
 	        	}
-        	}
+    		}
         	pagination=new Pagination<>(getPreferenceManagerPlugin(),filteredAttachments.size());
         	pagination.setCurrentPage(filterConfig.getCurrentPage());
         	filteredAttachments=pagination.getEntriesForCurrentPage(filteredAttachments);
         	attachmentManagementListViews = filteredAttachments.stream().map(AttachmentManagementListView::new).collect(Collectors.toList());
         }else{
-            pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
+        	pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
             pagination.setCurrentPage(filterConfig.getCurrentPage());
             attachmentManagementListViews = pagination.getListOfObjects().stream().map(AttachmentManagementListView::new).collect(Collectors.toList());
         }
@@ -202,7 +230,11 @@ public class AttachmentsController extends Controller {
         return preferenceManagerPlugin;
     }
 
-    public enum MenuItemType {
+    private ISecurityService getSecurityService() {
+		return securityService;
+	}
+
+	public enum MenuItemType {
         NONE, SEARCH, DOWNLOAD
     }
 }
