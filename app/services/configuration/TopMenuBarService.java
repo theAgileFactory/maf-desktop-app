@@ -169,7 +169,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
 
         // Attachments
         ClickableMenuItem attachmentsMenuItem = new ClickableMenuItem(TopMenus.ADMIN.name(7), "topmenubar.admin.attachments.menu.label", controllers.admin.routes.AttachmentsController.index(), "fa fa-file", false);
-        attachmentsMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION));
+        attachmentsMenuItem.setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION, IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION_NO_CONFIDENTIAL));
         adminMenuItem.addSubMenuItem(attachmentsMenuItem);
     }
 
