@@ -109,7 +109,7 @@ public abstract class PortfolioEntryDao {
         try {
             return findPortfolioEntry.where().eq("deleted", false).eq("governanceId", governanceId).findUnique();
         } catch (PersistenceException e) {
-            return findPortfolioEntry.where().eq("deleted", false).eq("governanceId", governanceId).findList().get(0);
+            return findPortfolioEntry.where().eq("deleted", false).eq("governanceId", governanceId).orderBy("archived ASC").findList().get(0);
         }
     }
 
