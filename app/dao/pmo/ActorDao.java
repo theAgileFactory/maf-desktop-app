@@ -321,6 +321,14 @@ public abstract class ActorDao {
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
         return findActor.query().setRawSql(rawSql).findList();
     }
+    public static List<Actor> getActorAsListByKeywords(String key, boolean active) {
+        key = key.replace("\"", "\\\"");
+        String sql = "SELECT a.id FROM actor a WHERE " + "a.deleted = false AND a.is_active = " + active + " AND (a.ref_id = \"" + key + "\" OR a.uid = \"" + key
+                + "\" OR CONCAT_WS(\" \", a.first_name, a.last_name) LIKE \"" + key + "%\" OR " + "CONCAT_WS(\" \", a.last_name, a.first_name) LIKE \"" + key
+                + "%\")";
+        RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("a.id", "id").create();
+        return findActor.query().setRawSql(rawSql).findList();
+    }
 
     /**
      * Search from all active actors for which the criteria matches with
