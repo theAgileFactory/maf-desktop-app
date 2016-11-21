@@ -577,8 +577,11 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            is in the future
      */
     public static Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsPaginationByOrgUnit(Long orgUnitId,
-            boolean activeOnly) {
-        return new Pagination<>(getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly), 5,
+            boolean activeOnly) 
+    {
+    	ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly);
+    	String str = expressionList.query().getGeneratedSql();
+        return new Pagination<>(expressionList, 5,
                 Play.application().configuration().getInt("maf.number_page_links"));
     }
 
@@ -618,7 +621,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
 
         if (activeOnly) {
-            expr = expr.disjunction().isNull("endDate").gt("endDate", new Date());
+            expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
         }
 
         return expr;
