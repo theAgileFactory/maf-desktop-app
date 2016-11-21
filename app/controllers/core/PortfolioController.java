@@ -94,7 +94,9 @@ public class PortfolioController extends Controller {
         // get the last red report of the entries
         List<PortfolioReportListView> portfolioReportsListView = new ArrayList<PortfolioReportListView>();
         for (PortfolioEntry portfolioEntry : PortfolioEntryDao.getPERedAsListByPortfolio(id)) {
+        	if (!portfolioEntry.archived) {        	
             portfolioReportsListView.add(new PortfolioReportListView(portfolioEntry.lastPortfolioEntryReport));
+        	}
         }
         Table<PortfolioReportListView> filledReportTable = this.getTableProvider().get().portfolioReport.templateTable.fill(portfolioReportsListView);
 
