@@ -247,6 +247,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         hideColumnsForRisk.add("dueDate");
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForRisk.add("editActionLink");
+            hideColumnsForRisk.add("deleteActionLink");
         }
 
         Table<PortfolioEntryRiskListView> filledRisksTable = this.getTableProvider().get().portfolioEntryRisk.templateTable.fill(portfolioEntryRisksListView,
@@ -268,6 +269,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         hideColumnsForIssue.add("targetDate");
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForIssue.add("editActionLink");
+            hideColumnsForIssue.add("deleteActionLink");
         }
 
         Table<PortfolioEntryRiskListView> filledIssuesTable = this.getTableProvider().get().portfolioEntryRisk.templateTable
@@ -688,6 +690,25 @@ public class PortfolioEntryStatusReportingController extends Controller {
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(id, 0, 0, 0, false, false));
 
     }
+    /**
+     * Delete a risk.
+     * 
+     * @param id
+     *            the portfolio entry id
+     * @param reportId
+     *            the report id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteRisk(Long id, Long riskId) {
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+        PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskDao.getPERiskById(riskId);
+        if (!portfolioEntryRisk.portfolioEntry.id.equals(id)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+        portfolioEntryRisk.doDelete();
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.event.delete.successful"));
+        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(id, 0, 0, 0, false, false));
     }
 
     /**
