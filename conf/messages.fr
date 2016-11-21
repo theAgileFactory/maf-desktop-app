@@ -1965,6 +1965,7 @@ core.search.type.budget_bucket=Enveloppe budgétaire
 core.search.keywords.placeholder=Veuillez saisir un mot clé
 core.search.submit.error=Veuillez saisir un mot clé
 core.search.submit.noresult=Aucun résultat
+core.search.checkbox.is_active=Actif
 
 #----------------------
 # reporting

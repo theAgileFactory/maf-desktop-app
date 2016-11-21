@@ -1949,6 +1949,7 @@ core.search.type.budget_bucket=Budget bucket
 core.search.keywords.placeholder=Enter search keyword
 core.search.submit.error=Please enter search keyword
 core.search.submit.noresult=There is no result for your search
+core.search.checkbox.is_active=Active
 
 #----------------------
 # reporting
