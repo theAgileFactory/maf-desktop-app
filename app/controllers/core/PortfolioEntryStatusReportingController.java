@@ -519,13 +519,14 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+        PortfolioEntryReport portfolioEntryReport = new PortfolioEntryReport();
 
         // initiate the form with the template
         Form<PortfolioEntryReportFormData> reportForm = reportFormTemplate;
 
         // edit case: inject values
         if (!reportId.equals(Long.valueOf(0))) {
-            PortfolioEntryReport portfolioEntryReport = PortfolioEntryReportDao.getPEReportById(reportId);
+            portfolioEntryReport = PortfolioEntryReportDao.getPEReportById(reportId);
 
             // security: the portfolioEntry must be related to the object
             if (!portfolioEntryReport.portfolioEntry.id.equals(id)) {
@@ -549,7 +550,19 @@ public class PortfolioEntryStatusReportingController extends Controller {
         DefaultSelectableValueHolderCollection<CssValueForValueHolder> selectablePortfolioEntryReportStatusTypes = PortfolioEntryReportDao
                 .getPEReportStatusTypeActiveAsCssVH();
 
-        return ok(views.html.core.portfolioentrystatusreporting.report_manage.render(portfolioEntry, selectablePortfolioEntryReportStatusTypes, reportForm));
+        FileAttachmentHelper.getFileAttachmentsForDisplay(PortfolioEntryReport.class, reportId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+        List<Attachment> attachments = Attachment.getAttachmentsFromObjectTypeAndObjectId(PortfolioEntryReport.class, reportId);
+        List<AttachmentListView> attachmentsListView = new ArrayList<AttachmentListView>();
+        for (Attachment attachment : attachments) {
+            attachmentsListView.add(new AttachmentListView(attachment,
+                    controllers.core.routes.PortfolioEntryStatusReportingController.deleteReportAttachment(id, reportId, attachment.id).url()));
+        }
+        Set<String> hideColumns = new HashSet<String>();
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            hideColumns.add("removeActionLink");
+        }
+        Table<AttachmentListView> attachmentsTable = this.getTableProvider().get().attachment.templateTable.fill(attachmentsListView, hideColumns);
+        return ok(views.html.core.portfolioentrystatusreporting.report_manage.render(portfolioEntry, selectablePortfolioEntryReportStatusTypes, reportForm, portfolioEntryReport, attachmentsTable));
     }
 
     /**
@@ -573,7 +586,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                     .getPEReportStatusTypeActiveAsCssVH();
 
             return ok(
-                    views.html.core.portfolioentrystatusreporting.report_manage.render(portfolioEntry, selectablePortfolioEntryReportStatusTypes, boundForm));
+                    views.html.core.portfolioentrystatusreporting.report_manage.render(portfolioEntry, selectablePortfolioEntryReportStatusTypes, boundForm, null, null));
         }
 
         PortfolioEntryReportFormData portfolioEntryReportFormData = boundForm.get();
@@ -674,6 +687,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(id, 0, 0, 0, false, false));
 
+    }
     }
 
     /**
