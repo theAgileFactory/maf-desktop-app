@@ -131,6 +131,9 @@ public class SortableCollection<T extends ISortableObject> {
         public String getSortableAttributesAsString() {
             return "[date: " + this.date + "]";
         }
+        public Date getDate() {
+            return this.date;
+        }
 
     }
 
