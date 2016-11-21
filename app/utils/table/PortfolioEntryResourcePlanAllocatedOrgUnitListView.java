@@ -19,10 +19,12 @@ package utils.table;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.Date;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -50,6 +52,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
      */
     public static class TableDefinition {
 
+    	public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig;
         public Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> templateTable;
 
         /**
@@ -59,9 +62,24 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
          *            the i18n messages service
          */
         public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+        	this.filterConfig = getFilterConfig();
             this.templateTable = getTable(i18nMessagesPlugin);
         }
 
+        public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> getFilterConfig() {
+            return new FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
+                {
+                    addColumnConfiguration("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", new CheckboxFilterComponent(true),
+                            true, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
+                            SortStatusType.UNSORTED);
+                    addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
+                            new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("portfolioEntryName", "portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.name", "object.allocated_resource.portfolio_entry.label",
+                    		new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                }
+            };
+        }
         /**
          * Get the table.
          * 
@@ -83,13 +101,13 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     });
                     setColumnValueCssClass("orgUnit", "rowlink-skip");
 
-                    addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
+                    addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.STRING_SORTER);
                     setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("currency", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
-                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
+                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NUMBER_SORTER);
                     setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
@@ -102,7 +120,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                             Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
-                    addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
+                    addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.STRING_SORTER);
                     setJavaColumnFormatter("planningPackage", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                         @Override
                         public String apply(PortfolioEntryResourcePlanAllocatedOrgUnitListView portfolioEntryResourcePlanAllocatedOrgUnitListView,
@@ -113,7 +131,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     });
                     setColumnValueCssClass("planningPackage", "rowlink-skip");
 
-                    addColumn("date", "date", "object.allocated_resource.date.label", Table.ColumnDef.SorterType.NONE);
+                    addColumn("date", "date", "object.allocated_resource.date.label", Table.ColumnDef.SorterType.DATE_SORTER);
                     setJavaColumnFormatter("date", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", Table.ColumnDef.SorterType.NONE);
