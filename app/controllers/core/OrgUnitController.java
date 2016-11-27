@@ -947,7 +947,9 @@ public class OrgUnitController extends Controller {
             Long orgUnitId, FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig, ISecurityService securityService) {
 
     	ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, true));
-
+    	expressionList = expressionList.setOrderBy("").having();
+    	
+    	filterConfig.updateWithSortExpression(expressionList);
         Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> pagination = new Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>(
                 this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());

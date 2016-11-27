@@ -33,6 +33,7 @@ import dao.pmo.PortfolioEntryReportDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.utils.FilterConfig;
+import framework.utils.FilterConfig.DateRangeFilterComponent;
 import framework.utils.FilterConfig.SortStatusType;
 import framework.utils.IColumnFormatter;
 import framework.utils.ISelectableValueHolderCollection;
@@ -203,15 +204,13 @@ public class PortfolioEntryListView {
                     addKpis(kpiService, "id", PortfolioEntry.class);
 
                     addCustomAttributesColumns("id", PortfolioEntry.class);
-                    addColumnConfiguration("lastMileStoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "Last milestone Date", 
+                    addColumnConfiguration("lastMileStoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label", 
                     		 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
                      		false, false, SortStatusType.UNSORTED);
-                    addColumnConfiguration("startDate", "startDate" ,"Start Date",
-                    		new NoneFilterComponent(), 
-                    		true, false, SortStatusType.NONE);
-                    addColumnConfiguration("endDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "End Date",
-                    		new NoneFilterComponent(),
-                    		false, false, SortStatusType.UNSORTED);                    
+                    addColumnConfiguration("startDate", "startDate" ,"object.portfolio_entry.start_date.label",
+                    		new NoneFilterComponent(), false, false, SortStatusType.NONE);    
+                    addColumnConfiguration("endDate", "endDate", "object.portfolio_entry.end_date.label",					
+                    		new NoneFilterComponent(), false, false, SortStatusType.NONE);          
                 }
             };
         }
@@ -316,11 +315,11 @@ public class PortfolioEntryListView {
 
                     addColumn("isPublic", "isPublic", "object.portfolio_entry.is_public.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("isPublic", new BooleanFormatter<PortfolioEntryListView>());
-                    addColumn("lastMileStoneDate", "lastMileStoneDate", "Last Milestone Date", Table.ColumnDef.SorterType.NONE);
+                    addColumn("lastMileStoneDate", "lastMileStoneDate", "object.portfolio_entry.last_milestone_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastMileStoneDate", new DateFormatter<PortfolioEntryListView>());
-                    addColumn("startDate", "startDate", "Start Date", Table.ColumnDef.SorterType.NONE);
+                    addColumn("startDate", "startDate", "object.portfolio_entry.start_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("startDate", new DateFormatter<PortfolioEntryListView>());
-                    addColumn("endDate", "endDate", "End Date", Table.ColumnDef.SorterType.NONE);
+                    addColumn("endDate", "endDate", "object.portfolio_entry.end_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("endDate", new DateFormatter<PortfolioEntryListView>());
 
                     addKpis(kpiService, PortfolioEntry.class);
