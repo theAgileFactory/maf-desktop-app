@@ -101,13 +101,13 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     });
                     setColumnValueCssClass("orgUnit", "rowlink-skip");
 
-                    addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.STRING_SORTER);
+                    addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("currency", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
-                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NUMBER_SORTER);
+                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
@@ -120,7 +120,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                             Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
-                    addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.STRING_SORTER);
+                    addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("planningPackage", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                         @Override
                         public String apply(PortfolioEntryResourcePlanAllocatedOrgUnitListView portfolioEntryResourcePlanAllocatedOrgUnitListView,
@@ -131,7 +131,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     });
                     setColumnValueCssClass("planningPackage", "rowlink-skip");
 
-                    addColumn("date", "date", "object.allocated_resource.date.label", Table.ColumnDef.SorterType.DATE_SORTER);
+                    addColumn("date", "date", "object.allocated_resource.date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("date", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>());
 
                     addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", Table.ColumnDef.SorterType.NONE);
