@@ -8,7 +8,7 @@
 	<description>This is the BizDock application module</description>
 	<packaging>play2</packaging>
 	<url>https://github.com/theAgileFactory</url>
-
+ 
 	<licenses>
 		<license>
 			<name>GNU General Public License, version 2</name>
