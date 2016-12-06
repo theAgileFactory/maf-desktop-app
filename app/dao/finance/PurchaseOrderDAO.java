@@ -115,6 +115,10 @@ public abstract class PurchaseOrderDAO {
                 .ilike("refId", key + "%").findList();
     }
 
+    public static List<PurchaseOrder> getPurchaseOrderAsListByRefIdLike2(String key) {
+        return PurchaseOrderDAO.findPurchaseOrder.where().eq("deleted", false).ne("refId", IMafConstants.PURCHASE_ORDER_REF_ID_FOR_BUDGET_TRACKING)
+                .ilike("refId", key ).findList();
+    }
     /**
      * Search from all active purchase orders for which the criteria matches
      * with the ref id.
