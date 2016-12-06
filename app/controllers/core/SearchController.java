@@ -172,11 +172,15 @@ public class SearchController extends Controller {
         
         // clean the key words
         String keywords = searchFormData.keywords.replaceAll("\\*", "%").trim();
+        if (!keywords.contains("%")) {
+        	 keywords = keywords.replaceAll(" ", "%").trim();
+             keywords = "%" + keywords + "%";
+        }
         boolean is_active = searchFormData.isActive;
         
-        Expression expression = Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("governanceId", keywords + "%")), Expr.ilike("refId", keywords + "%"));
-        Expression portfolioExpression = Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), Expr.ilike("refId", keywords + "%"));
-        Expression budgetBucketExpression = Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%"));
+        Expression expression = Expr.or(Expr.or(Expr.ilike("name", keywords), Expr.ilike("governanceId", keywords )), Expr.ilike("refId", keywords ));
+        Expression portfolioExpression = Expr.or(Expr.or(Expr.ilike("name", keywords ), Expr.ilike("refId", keywords )), Expr.ilike("refId", keywords));
+        Expression budgetBucketExpression = Expr.or(Expr.ilike("name", keywords ), Expr.ilike("refId", keywords ));
 
         switch (searchFormData.objectType) {
         case PORTFOLIO_ENTRY:
@@ -287,10 +291,10 @@ public class SearchController extends Controller {
             List<OrgUnit> orgUnits ;
             
             if (is_active) {
-            	orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter(keywords, true, false, false);
+            	orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter2(keywords, true, false, false);
             }
             else {
-            	orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter(keywords, false, false, false);
+            	orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter2(keywords, false, false, false);
             }
             if (orgUnits.size() > 0) {
                 if (orgUnits.size() == 1) {
@@ -310,7 +314,7 @@ public class SearchController extends Controller {
 
             Logger.debug("PURCHASE_ORDER");
 
-            List<PurchaseOrder> purchaseOrders = PurchaseOrderDAO.getPurchaseOrderAsListByRefIdLike(keywords);
+            List<PurchaseOrder> purchaseOrders = PurchaseOrderDAO.getPurchaseOrderAsListByRefIdLike2(keywords);
             
             if (purchaseOrders.size() > 0) {
                 if (purchaseOrders.size() == 1) {
