@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.agifac.maf.desktop</groupId>
 	<artifactId>maf-desktop-app</artifactId>
-	<version>14.0.0-SNAPSHOT</version>
-	<name>BizDock application</name>
+	<version>14.0.3</version>
+	<name>BizDock application</name> 
 	<description>This is the BizDock application module</description>
 	<packaging>play2</packaging>
 	<url>https://github.com/theAgileFactory</url>
-
+ 
 	<licenses>
 		<license>
 			<name>GNU General Public License, version 2</name>
@@ -38,10 +38,15 @@
 			<url>http://repo.typesafe.com/typesafe/releases/</url>
 		</repository>
 		<repository>
-            <id>sonatype-snapshots</id>
-            <name>sonatype-snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository> 
+            		<id>sonatype-snapshots</id>
+            		<name>sonatype-snapshots</name>
+            		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        	</repository>
+		<repository>
+            		<id>sonatype-release</id>
+            		<name>sonatype-release</name>
+            		<url>https://oss.sonatype.org/content/repositories/release</url>
+        	</repository> 
 	</repositories>
 
 	<properties>
@@ -50,8 +55,8 @@
         <java.target>1.8</java.target>
         <scala.version>2.11</scala.version>
         <!-- Dependencies properties -->
-		<lib.app-framework.version>14.0.0-SNAPSHOT</lib.app-framework.version>
-		<maf.maf-desktop-datamodel.version>14.0.0-SNAPSHOT</maf.maf-desktop-datamodel.version>
+		<lib.app-framework.version>14.0.0</lib.app-framework.version>
+		<maf.maf-desktop-datamodel.version>14.0.0</maf.maf-desktop-datamodel.version>
         <!-- Plugin properties -->
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <ivy-maven-plugin.version>0.2.5</ivy-maven-plugin.version>
