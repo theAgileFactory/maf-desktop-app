@@ -30,7 +30,7 @@
             vpef.capex_engaged AS capex_engaged,
             vpef.opex_engaged AS opex_engaged
         FROM portfolio_entry pe
-     LEFT JOIN pam.portfolio_has_portfolio_entry phpe 
+     LEFT JOIN portfolio_has_portfolio_entry phpe 
 	  ON ( ( $P{PORTFOLIO_ID} is not NULL) AND  phpe.portfolio_entry_id = pe.id AND phpe.portfolio_id =  $P{PORTFOLIO_ID} )
 	   LEFT JOIN portfolio p ON ( p.id = phpe.portfolio_id )
             JOIN life_cycle_instance lci ON (pe.active_life_cycle_instance_id = lci.id)
