@@ -1137,6 +1137,9 @@ object.portfolio_entry.deliverables.label=Ergebnisse
 object.portfolio_entry.deliverable.type.OWNER.label=Träger
 object.portfolio_entry.deliverable.type.FOLLOWER.label=Folger
 object.portfolio_entry.table.empty=Keine Initiativen eingetragen
+object.portfolio_entry.start_date.label=Startdatum
+object.portfolio_entry.end_date.label=Enddatum
+object.portfolio_entry.last_milestone_date.label=Letztes Meilensteindatum
 
 #----------------------
 # portfolio

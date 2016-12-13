@@ -200,6 +200,23 @@ public abstract class OrgUnitDao {
 
         return findOrgUnit.query().setRawSql(rawSql).findList();
     }
+    public static List<OrgUnit> getOrgUnitAsListByKeywordsAndFilter2(String key, boolean mustBeActive, boolean mustBeSponsor, boolean mustBeDelivery) {
+        key = key.replace("\"", "\\\"");
+        String sql = "SELECT ou.id FROM `org_unit` ou LEFT OUTER JOIN `i18n_messages` im ON im.key = ou.name WHERE ou.deleted = 0";
+        if (mustBeActive) {
+            sql += " AND ou.is_active = 1";
+        }
+        if (mustBeSponsor) {
+            sql += " AND ou.can_sponsor = 1";
+        }
+        if (mustBeDelivery) {
+            sql += " AND ou.can_deliver = 1";
+        }
+        sql += " AND (im.language = '" + Http.Context.current().lang().code() + "' OR im.language IS NULL)";
+        sql += " AND (ou.name LIKE \"" + key + "\" OR ou.ref_id LIKE \"" + key + "\" OR im.value LIKE \"" + key + "\") ";
+        RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("ou.id", "id").create();
+        return findOrgUnit.query().setRawSql(rawSql).findList();
+    }
 
     /**
      * Search from the active delivery units that are delivery units of a

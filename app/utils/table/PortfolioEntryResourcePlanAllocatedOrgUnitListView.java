@@ -19,10 +19,12 @@ package utils.table;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.Date;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -50,6 +52,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
      */
     public static class TableDefinition {
 
+    	public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig;
         public Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> templateTable;
 
         /**
@@ -59,9 +62,24 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
          *            the i18n messages service
          */
         public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+        	this.filterConfig = getFilterConfig();
             this.templateTable = getTable(i18nMessagesPlugin);
         }
 
+        public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> getFilterConfig() {
+            return new FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
+                {
+                    addColumnConfiguration("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", new CheckboxFilterComponent(true),
+                            true, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
+                            SortStatusType.UNSORTED);
+                    addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
+                            new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("portfolioEntryName", "portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.name", "object.allocated_resource.portfolio_entry.label",
+                    		new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                }
+            };
+        }
         /**
          * Get the table.
          * 

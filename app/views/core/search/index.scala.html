@@ -63,6 +63,11 @@
                         <button type="submit" class="btn btn-default">@parts.Msg("button.search")</button>
                         <span class="help-block text-muted"></span>
                     </div>
+					<br/>
+					<div class="form-group">
+						<input type="checkbox" name='@searchForm("isActive").name' id='@searchForm("isActive").id'  checked="checked" />
+						<strong>@parts.Msg("core.search.checkbox.is_active")</strong></label>
+					</div>
                 </fieldset>
             }
         </div>

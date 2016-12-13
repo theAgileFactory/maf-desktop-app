@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
+import com.avaje.ebean.ExpressionList;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -116,21 +117,29 @@ public class SearchController extends Controller {
 
         DefaultSelectableValueHolderCollection<ObjectTypes> objectTypes = new DefaultSelectableValueHolderCollection<ObjectTypes>();
 
-        objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PORTFOLIO_ENTRY, Msg.get("core.search.type.portfolio_entry")));
+        DefaultSelectableValueHolder<ObjectTypes> o1 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PORTFOLIO_ENTRY, Msg.get("core.search.type.portfolio_entry"));
+        DefaultSelectableValueHolder<ObjectTypes> o2 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ACTOR, Msg.get("core.search.type.actor"));
+        DefaultSelectableValueHolder<ObjectTypes> o3 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PORTFOLIO, Msg.get("core.search.type.portfolio"));
+        DefaultSelectableValueHolder<ObjectTypes> o4 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit"));
+        DefaultSelectableValueHolder<ObjectTypes> o5 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order"));
+        DefaultSelectableValueHolder<ObjectTypes> o6 = new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.BUDGET_BUCKET, Msg.get("core.search.type.budget_bucket"));
+        
+        o1.setOrder(1); o2.setOrder(2); o3.setOrder(3); o4.setOrder(4);         
+        objectTypes.add(o1);
+        objectTypes.add(o2);
+        objectTypes.add(o3);
+        objectTypes.add(o4);
 
-        objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ACTOR, Msg.get("core.search.type.actor")));
-
-        objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PORTFOLIO, Msg.get("core.search.type.portfolio")));
-
-        objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.ORGUNIT, Msg.get("core.search.type.org_unit")));
-
-        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin)
-                && securityService.restrict(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION, userAccount)) {
-            objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.PURCHASE_ORDER, Msg.get("core.search.type.purchase_order")));
+        if (PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(preferenceManagerPlugin) && securityService.restrict(IMafConstants.PURCHASE_ORDER_VIEW_ALL_PERMISSION, userAccount)) {
+            
+            o5.setOrder(5);
+            objectTypes.add(o5);
         }
 
         if (securityService.restrict(IMafConstants.BUDGET_BUCKET_VIEW_ALL_PERMISSION, userAccount)) {
-            objectTypes.add(new DefaultSelectableValueHolder<ObjectTypes>(ObjectTypes.BUDGET_BUCKET, Msg.get("core.search.type.budget_bucket")));
+            
+            o6.setOrder(6);
+            objectTypes.add(o6);
         }
 
         return objectTypes;
@@ -160,9 +169,18 @@ public class SearchController extends Controller {
         }
 
         SearchFormData searchFormData = boundForm.get();
-
+        
         // clean the key words
         String keywords = searchFormData.keywords.replaceAll("\\*", "%").trim();
+        if (!keywords.contains("%")) {
+        	 keywords = keywords.replaceAll(" ", "%").trim();
+             keywords = "%" + keywords + "%";
+        }
+        boolean is_active = searchFormData.isActive;
+        
+        Expression expression = Expr.or(Expr.or(Expr.ilike("name", keywords), Expr.ilike("governanceId", keywords )), Expr.ilike("refId", keywords ));
+        Expression portfolioExpression = Expr.or(Expr.or(Expr.ilike("name", keywords ), Expr.ilike("refId", keywords )), Expr.ilike("refId", keywords));
+        Expression budgetBucketExpression = Expr.or(Expr.ilike("name", keywords ), Expr.ilike("refId", keywords ));
 
         switch (searchFormData.objectType) {
         case PORTFOLIO_ENTRY:
@@ -170,11 +188,19 @@ public class SearchController extends Controller {
             Logger.debug("PORTFOLIO_ENTRY");
 
             // search the portfolioEntries
-            Expression expression = Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("governanceId", keywords + "%")),
-                    Expr.ilike("refId", keywords + "%"));
+            
             List<PortfolioEntry> portfolioEntries;
             try {
-                portfolioEntries = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService()).findList();
+            	
+            	ExpressionList<PortfolioEntry> expressionList; 
+            	
+            	if (is_active) {
+            		expressionList =  PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService()).eq("archived", false);
+            	}
+            	else {
+            		expressionList =  PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService());
+            	}
+                portfolioEntries = expressionList.findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
@@ -203,10 +229,16 @@ public class SearchController extends Controller {
 
             // search the portfolios
             List<Portfolio> portfolios = null;
-            try {
-                portfolios = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(
-                        Expr.or(Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), Expr.ilike("refId", keywords + "%")), null,
-                        getSecurityService()).findList();
+            try 
+            {
+            	ExpressionList<Portfolio> expressionList;
+            	if (is_active) {
+            		expressionList = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(portfolioExpression, null, getSecurityService()).eq("is_active", is_active); 
+            	}
+            	else {
+            		expressionList = PortfolioDynamicHelper.getPortfoliosViewAllowedAsQuery(portfolioExpression, null, getSecurityService());
+            	}
+                portfolios = expressionList.findList();              		
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
@@ -230,7 +262,14 @@ public class SearchController extends Controller {
 
             Logger.debug("ACTOR");
 
-            List<Actor> actors = ActorDao.getActorAsListByKeywords(keywords);
+            List<Actor> actors ;
+            if (is_active) {
+            	 actors = ActorDao.getActorAsListByKeywords(keywords, true);
+            }
+            else {
+            	 actors = ActorDao.getActorAsListByKeywords(keywords, false);
+            }
+            
             if (actors.size() > 0) {
                 if (actors.size() == 1) {
                     return redirect(controllers.core.routes.ActorController.view(actors.get(0).id));
@@ -249,7 +288,14 @@ public class SearchController extends Controller {
 
             Logger.debug("ORGUNIT");
 
-            List<OrgUnit> orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter(keywords, false, false, false);
+            List<OrgUnit> orgUnits ;
+            
+            if (is_active) {
+            	orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter2(keywords, true, false, false);
+            }
+            else {
+            	orgUnits = OrgUnitDao.getOrgUnitAsListByKeywordsAndFilter2(keywords, false, false, false);
+            }
             if (orgUnits.size() > 0) {
                 if (orgUnits.size() == 1) {
                     return redirect(controllers.core.routes.OrgUnitController.view(orgUnits.get(0).id, 0));
@@ -268,7 +314,8 @@ public class SearchController extends Controller {
 
             Logger.debug("PURCHASE_ORDER");
 
-            List<PurchaseOrder> purchaseOrders = PurchaseOrderDAO.getPurchaseOrderAsListByRefIdLike(keywords);
+            List<PurchaseOrder> purchaseOrders = PurchaseOrderDAO.getPurchaseOrderAsListByRefIdLike2(keywords);
+            
             if (purchaseOrders.size() > 0) {
                 if (purchaseOrders.size() == 1) {
                     return redirect(controllers.core.routes.PurchaseOrderController.view(purchaseOrders.get(0).id));
@@ -290,8 +337,16 @@ public class SearchController extends Controller {
             // search the budget buckets
             List<BudgetBucket> budgetBuckets;
             try {
-                budgetBuckets = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(
-                        Expr.or(Expr.ilike("name", keywords + "%"), Expr.ilike("refId", keywords + "%")), null, getSecurityService()).findList();
+            	ExpressionList<BudgetBucket> expressionList ; 
+                
+            	if (is_active) {
+            		expressionList = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(budgetBucketExpression, null, getSecurityService()).eq("is_active", is_active); 
+                    
+            	}
+            	else {
+            		expressionList = BudgetBucketDynamicHelper.getBudgetBucketsViewAllowedAsQuery(budgetBucketExpression, null, getSecurityService());                
+            	}
+            	budgetBuckets = expressionList.findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
@@ -335,8 +390,10 @@ public class SearchController extends Controller {
         @Required
         public ObjectTypes objectType;
 
-        @Required
+ 
         public String keywords;
+        
+        public boolean isActive;
 
     }
 

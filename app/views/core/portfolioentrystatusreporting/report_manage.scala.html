@@ -18,7 +18,9 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     selectablePortfolioEntryReportStatusTypes: framework.utils.ISelectableValueHolderCollection[framework.utils.CssValueForValueHolder],
-    portfolioEntryReportForm: Form[utils.form.PortfolioEntryReportFormData]
+    portfolioEntryReportForm: Form[utils.form.PortfolioEntryReportFormData],
+	report: models.pmo.PortfolioEntryReport,
+	attachmentsTable: framework.utils.Table[utils.table.AttachmentListView]
 )
 
 @import helper._
@@ -51,11 +53,9 @@
         
         @helper.form(action = controllers.core.routes.PortfolioEntryStatusReportingController.processManageReport(), 'enctype -> "multipart/form-data") {
         
-            @if(hasExtendedAttributes) {
             <div class="row">
         
                 <div class="col-md-6">
-            }
         
                     <fieldset>
                     
@@ -79,20 +79,35 @@
                         
                     </fieldset>
                     
-                @if(hasExtendedAttributes) {
                 </div>
                 
                 <div class="col-md-6">
+					<div class="row">
+					@if(hasExtendedAttributes) {
                     @if(portfolioEntryReportForm("reportId").value!=null) {
                         @parts.extended_attributes_input(portfolioEntryReportForm, classOf[models.pmo.PortfolioEntryReport], Long.parseLong(portfolioEntryReportForm("reportId").value))
                     } else {
                         @parts.extended_attributes_input(portfolioEntryReportForm, classOf[models.pmo.PortfolioEntryReport], null)
                     }
+					}
+					@if(portfolioEntryReportForm("reportId").value!=null) {
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								@parts.Msg("core.portfolio_entry.view.attachments.title")
+								<div class="pull-right">
+									@dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+									<a href="@controllers.core.routes.PortfolioEntryStatusReportingController.createReportAttachment(portfolioEntry.id, report.id).url"><span class="fa fa-plus fa-lg"></span></a>
+									}
                 </div>
-
+							</div>
+							<div class="panel-body">
+								@parts.table.tableview(attachmentsTable)
             </div>
+						</div>
             }
-                    
+					</div>	
+				</div>	
+			</div>     			
         }
 
     </div> 

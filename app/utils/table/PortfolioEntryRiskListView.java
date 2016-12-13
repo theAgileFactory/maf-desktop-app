@@ -26,6 +26,9 @@ import framework.utils.Table;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
+import java.text.MessageFormat;
+import framework.utils.Msg;
+import framework.utils.formats.ObjectFormatter;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntryRisk;
 import models.pmo.PortfolioEntryRiskType;
@@ -132,6 +135,18 @@ public class PortfolioEntryRiskListView {
                                     .viewRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url();
                         }
                     });
+                    addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryRiskListView>() 
+                    {
+                        @Override
+                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
+                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                            String url = controllers.core.routes.PortfolioEntryStatusReportingController.deleteRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url();
+                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                        }
+                    });                   
+                    setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                     setEmptyMessageKey("object.portfolio_entry_risk.table.empty");
 

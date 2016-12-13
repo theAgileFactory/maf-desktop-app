@@ -19,6 +19,7 @@
     orgUnit: models.pmo.OrgUnit,
     portfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView], 
     portfolioEntryPagination: framework.utils.Pagination[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit],
+	portfolioEntryFilter: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView], 
     actorPortfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
     actorPortfolioEntryPagination: framework.utils.Pagination[models.finance.PortfolioEntryResourcePlanAllocatedActor],
     actorPortfolioEntryFilter: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
@@ -38,7 +39,14 @@
             @parts.Msg("core.org_unit.allocation.details.requests.title")
         </div>
         <div class="panel-body">
-            @parts.table.tableview_with_pagination_and_queryparams(portfolioEntryTable, portfolioEntryPagination, null, null, "id=" + orgUnit.id)
+			<div id="confirm-result"></div>
+				@parts.table.filtered_tableview(
+					portfolioEntryTable, 
+					portfolioEntryPagination, 
+					portfolioEntryFilter, 
+					controllers.core.routes.OrgUnitController.portfolioEntryAllocationsFilter(orgUnit.id).url,
+					null
+				)
         </div>
     </div>
     

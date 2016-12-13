@@ -1135,6 +1135,9 @@ object.portfolio_entry.deliverables.label=Livrables
 object.portfolio_entry.deliverable.type.OWNER.label=Propriétaire
 object.portfolio_entry.deliverable.type.FOLLOWER.label=Suiveur
 object.portfolio_entry.table.empty=Il n''existe aucune initiative.
+object.portfolio_entry.start_date.label=Date de début
+object.portfolio_entry.end_date.label=Date de fin
+object.portfolio_entry.last_milestone_date.label=Date dernier jalon
 
 #----------------------
 # portfolio
@@ -1965,6 +1968,7 @@ core.search.type.budget_bucket=Enveloppe budgétaire
 core.search.keywords.placeholder=Veuillez saisir un mot clé
 core.search.submit.error=Veuillez saisir un mot clé
 core.search.submit.noresult=Aucun résultat
+core.search.checkbox.is_active=Actif
 
 #----------------------
 # reporting
