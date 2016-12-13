@@ -11,10 +11,7 @@
     <parameter name="format" class="java.lang.String" isForPrompting="false">
 <parameterDescription><![CDATA["PDF"]]></parameterDescription>
     </parameter>
-    <parameter name="use_purchase_order" class="java.lang.Boolean" isForPrompting="false">
-<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
-    </parameter>
-    <queryString>
+     <queryString>
         <![CDATA[SELECT
             pe.name AS name,
             IFNULL(m_name.value, '') AS peblt_name,
@@ -29,7 +26,7 @@
             JOIN v_pe_financial_per_type vpef ON (pe.id = vpef.id)
             JOIN portfolio_entry_budget_line_type peblt ON peblt.name = vpef.peblt_name
             LEFT OUTER JOIN i18n_messages m_name ON peblt.name = m_name.`key` AND m_name.language=$P{lang}
-        WHERE ((pe.deleted = 0) AND (pe.archived = 0) AND (pe.is_public = 1) AND (lci.is_concept = 0) AND (vpef.use_purchase_order = $P{use_purchase_order}) AND (vpef.capex_budget > 0 OR vpef.opex_budget OR vpef.capex_cost_to_complete > 0 OR vpef.opex_cost_to_complete > 0 OR vpef.capex_engaged > 0 OR vpef.opex_engaged > 0))
+        WHERE ((pe.deleted = 0) AND (pe.archived = 0) AND (pe.is_public = 1) AND (lci.is_concept = 0) AND (vpef.use_purchase_order = 0) AND (vpef.capex_budget > 0 OR vpef.opex_budget OR vpef.capex_cost_to_complete > 0 OR vpef.opex_cost_to_complete > 0 OR vpef.capex_engaged > 0 OR vpef.opex_engaged > 0))
         GROUP BY pe.id, vpef.peblt_id
         ORDER BY pe.id]]>
     </queryString>
