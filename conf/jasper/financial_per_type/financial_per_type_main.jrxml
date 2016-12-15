@@ -2,21 +2,6 @@
 <!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
 <!-- 2016-12-09T17:02:51 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="financial_per_type_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" whenResourceMissingType="Empty" uuid="aaf663fe-645c-463c-8090-1a86825967ca">
-<<<<<<< HEAD
-    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-    <template><![CDATA["styles.jrtx"]]></template>
-    <parameter name="lang" class="java.lang.String" isForPrompting="false">
-<parameterDescription><![CDATA[]]></parameterDescription>
-<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
-    </parameter>
-    <parameter name="format" class="java.lang.String" isForPrompting="false">
-<parameterDescription><![CDATA["PDF"]]></parameterDescription>
-    </parameter>
-     <queryString>
-        <![CDATA[SELECT
-            pe.name AS name,
-            IFNULL(m_name.value, '') AS peblt_name,
-=======
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="financial_per_type\CI-pam.xml"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
@@ -29,16 +14,12 @@
 	<parameter name="PORTFOLIO_ID" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="use_purchase_order" class="java.lang.Boolean" isForPrompting="false">
-		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
-	</parameter>
 	<queryString language="SQL">
 		<![CDATA[(
 		(SELECT 
         	 pe.name AS name,
 			 p.name as portfolio_name,
            IFNULL(m_name.value, '') AS peblt_name,
->>>>>>> branch 'master' of https://github.com/theAgileFactory/maf-desktop-app
             vpef.capex_budget AS capex_budget,
             vpef.opex_budget AS opex_budget,
             vpef.capex_cost_to_complete AS capex_cost_to_complete,
@@ -51,150 +32,9 @@
 	   LEFT JOIN portfolio p ON ( p.id = phpe.portfolio_id )
             JOIN life_cycle_instance lci ON (pe.active_life_cycle_instance_id = lci.id)
             JOIN v_pe_financial_per_type vpef ON (pe.id = vpef.id)
-<<<<<<< HEAD
-            JOIN portfolio_entry_budget_line_type peblt ON peblt.name = vpef.peblt_name
-            LEFT OUTER JOIN i18n_messages m_name ON peblt.name = m_name.`key` AND m_name.language=$P{lang}
-        WHERE ((pe.deleted = 0) AND (pe.archived = 0) AND (pe.is_public = 1) AND (lci.is_concept = 0) AND (vpef.use_purchase_order = 0) AND (vpef.capex_budget > 0 OR vpef.opex_budget OR vpef.capex_cost_to_complete > 0 OR vpef.opex_cost_to_complete > 0 OR vpef.capex_engaged > 0 OR vpef.opex_engaged > 0))
-        GROUP BY pe.id, vpef.peblt_id
-        ORDER BY pe.id]]>
-    </queryString>
-    <field name="name" class="java.lang.String"/>
-    <field name="peblt_name" class="java.lang.String"/>
-    <field name="capex_budget" class="java.math.BigDecimal"/>
-    <field name="opex_budget" class="java.math.BigDecimal"/>
-    <field name="capex_cost_to_complete" class="java.math.BigDecimal"/>
-    <field name="opex_cost_to_complete" class="java.math.BigDecimal"/>
-    <field name="capex_engaged" class="java.math.BigDecimal"/>
-    <field name="opex_engaged" class="java.math.BigDecimal"/>
-    <background>
-        <band splitType="Stretch"/>
-    </background>
-    <title>
-        <band height="60" splitType="Stretch">
-            <textField>
-                <reportElement style="title" x="0" y="0" width="555" height="60" uuid="0995b37c-775f-4375-9d0e-b6295b7b728c">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                </reportElement>
-                <textElement markup="none"/>
-<textFieldExpression><![CDATA[str("title")]]></textFieldExpression>
-            </textField>
-        </band>
-    </title>
-    <pageHeader>
-        <band splitType="Stretch">
-            <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-        </band>
-    </pageHeader>
-    <columnHeader>
-        <band height="32" splitType="Stretch">
-            <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-            <textField>
-                <reportElement style="row-header" isPrintRepeatedValues="false" x="0" y="1" width="70" height="30" uuid="1837efe9-449a-4520-95a7-f3d0fedae8cf">
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.initiative")]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row-header" positionType="FixRelativeToBottom" isPrintRepeatedValues="false" x="70" y="1" width="50" height="30" uuid="0752ae4d-2bc2-4586-8bc2-1a68d8428dd1">
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.type")]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row-header" isPrintRepeatedValues="false" x="120" y="1" width="60" height="30" uuid="98222329-83ea-4645-b54a-f42ec4f74f3d">
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.budget_opex")]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row-header" isPrintRepeatedValues="false" x="180" y="1" width="60" height="30" uuid="11f79514-662c-4fee-aa6b-1e2ed6e73834">
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.budget_capex")]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row-header" isPrintRepeatedValues="false" x="240" y="1" width="60" height="30" uuid="ba025c83-63c6-4ed5-b436-4a597c89c48a">
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.forecast_opex")]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row-header" isPrintRepeatedValues="false" x="300" y="1" width="60" height="30" uuid="2f60e687-17be-46ae-aad5-858374bd5ed9">
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.forecast_capex")]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row-header" isPrintRepeatedValues="false" x="360" y="1" width="100" height="30" uuid="9fe18075-9cae-4284-9842-9292979f67fc">
-                    <property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.forecast_opex_engaged")]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row-header" isPrintRepeatedValues="false" x="460" y="1" width="94" height="30" uuid="2afd6f01-96aa-46dd-98ef-1c100ca780a3">
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[str("label.forecast_capex_engaged")]]></textFieldExpression>
-            </textField>
-        </band>
-    </columnHeader>
-    <detail>
-        <band height="32" splitType="Stretch">
-            <textField>
-                <reportElement style="row" x="0" y="0" width="70" height="30" uuid="071dc849-1078-4722-8b7d-e777c7acac1f"/>
-<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="row" x="70" y="0" width="50" height="30" uuid="471c1b27-7022-490e-a0c4-acb5f4a8fdfa">
-                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-                </reportElement>
-<textFieldExpression><![CDATA[$F{peblt_name}]]></textFieldExpression>
-            </textField>
-            <textField pattern="#,##0.00">
-                <reportElement style="row" x="180" y="0" width="60" height="30" uuid="78120eaa-21d2-4f01-abd0-db5bbc28e22c"/>
-<textFieldExpression><![CDATA[$F{capex_budget}]]></textFieldExpression>
-            </textField>
-            <textField pattern="#,##0.00">
-                <reportElement style="row" x="240" y="0" width="60" height="30" uuid="89ee8048-8c3e-446a-bbd2-9b34eb0080c6"/>
-<textFieldExpression><![CDATA[$F{opex_cost_to_complete}]]></textFieldExpression>
-            </textField>
-            <textField pattern="#,##0.00">
-                <reportElement style="row" x="300" y="0" width="60" height="30" uuid="d63bcbc4-f2c0-4be0-b43c-5697803a15bf"/>
-<textFieldExpression><![CDATA[$F{capex_cost_to_complete}]]></textFieldExpression>
-            </textField>
-            <textField pattern="#,##0.00">
-                <reportElement style="row" x="360" y="0" width="100" height="30" uuid="6e49f3de-b33b-4282-b594-881cd20697cf"/>
-<textFieldExpression><![CDATA[$F{opex_engaged}]]></textFieldExpression>
-            </textField>
-            <textField pattern="#,##0.00">
-                <reportElement style="row" x="460" y="0" width="94" height="30" uuid="6634c411-4175-4ebb-b6bd-bcbaead761a3"/>
-<textFieldExpression><![CDATA[$F{capex_engaged}]]></textFieldExpression>
-            </textField>
-            <textField pattern="#,##0.00">
-                <reportElement style="row" x="120" y="0" width="60" height="30" uuid="66c216d7-c7e9-4263-b5cf-6f5bed468d3e"/>
-<textFieldExpression><![CDATA[$F{opex_budget}]]></textFieldExpression>
-            </textField>
-        </band>
-    </detail>
-    <columnFooter>
-        <band splitType="Stretch"/>
-    </columnFooter>
-    <pageFooter>
-        <band splitType="Stretch"/>
-    </pageFooter>
-    <summary>
-        <band splitType="Stretch"/>
-    </summary>
-</jasperReport>
-=======
              JOIN portfolio_entry_budget_line_type peblt ON peblt.name = vpef.peblt_name
              LEFT OUTER JOIN i18n_messages m_name ON peblt.name = m_name.`key` AND m_name.language='en'
-        WHERE  ((pe.deleted = 0) AND (pe.archived = 0) AND (pe.is_public = 1) AND (lci.is_concept = 0) AND (vpef.use_purchase_order =1) AND (vpef.capex_budget > 0 OR vpef.opex_budget OR vpef.capex_cost_to_complete > 0 OR vpef.opex_cost_to_complete > 0 OR vpef.capex_engaged > 0 OR vpef.opex_engaged > 0))
+        WHERE  ((pe.deleted = 0) AND (pe.archived = 0) AND (pe.is_public = 1) AND (lci.is_concept = 0) AND (vpef.use_purchase_order =0) AND (vpef.capex_budget > 0 OR vpef.opex_budget OR vpef.capex_cost_to_complete > 0 OR vpef.opex_cost_to_complete > 0 OR vpef.capex_engaged > 0 OR vpef.opex_engaged > 0))
   and (phpe.portfolio_id = $P{PORTFOLIO_ID} OR $P{PORTFOLIO_ID} is NULL)
        GROUP BY pe.id, phpe.portfolio_id, vpef.peblt_id
         ORDER BY pe.id )
@@ -414,4 +254,3 @@
 		<band splitType="Stretch"/>
 	</summary>
 </jasperReport>
->>>>>>> branch 'master' of https://github.com/theAgileFactory/maf-desktop-app
