@@ -18,6 +18,7 @@
 package dao.governance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,10 @@ import java.util.Map;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.SqlUpdate;
 import com.avaje.ebean.Model.Finder;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
 
 import dao.pmo.PortfolioEntryDao;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -34,6 +38,7 @@ import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
 import models.finance.WorkOrder;
+import models.framework_models.common.MultiItemCustomAttributeValue;
 import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCycleMilestone;
 import models.governance.LifeCycleMilestoneInstance;
@@ -42,6 +47,7 @@ import models.governance.LifeCycleMilestoneInstanceStatusType;
 import models.governance.LifeCyclePhase;
 import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.PortfolioEntry;
+import play.Logger;
 import services.budgettracking.IBudgetTrackingService;
 
 /**
@@ -65,6 +71,8 @@ public abstract class LifeCycleMilestoneDao {
             LifeCycleMilestoneInstanceStatusType.class);
 
     public static Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>(LifeCyclePhase.class);
+    
+    private static Logger.ALogger log = Logger.of(LifeCycleMilestoneDao.class);
 
     /**
      * Default constructor.
@@ -315,6 +323,9 @@ public abstract class LifeCycleMilestoneDao {
                     workOrder.save();
                 }
             }
+           
+            // reassign the new allocated resources in custom attribute tables
+            update_custom_attribute_tables(allocatedResourcesMapOldToNew);
         }
         planning.save();
 
@@ -349,7 +360,133 @@ public abstract class LifeCycleMilestoneDao {
         return lifeCycleMilestoneInstance;
 
     }
+    
+    private static void update_custom_attribute_tables(Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew)
+    {
+    	List<String> list = Arrays.asList(
+    			"boolean_custom_attribute_value",
+    			"integer_custom_attribute_value",
+    			"date_custom_attribute_value",
+    			"decimal_custom_attribute_value",
+    			"string_custom_attribute_value",
+    			"text_custom_attribute_value",
+    			"dynamic_single_item_custom_attribute_value"
+    			);
+    	
+    	 for (String t :list)
+    	 {
+    		 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdate(k,v,t));
+    	 }
+    	 
+    	 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdateSingleItemCustomAttribute(k,v));    	 
+    	 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdateMultiItemCustomAttribute(k,v));
+    }
+    
+    private static void doUpdate( String objectType, Map<Long, Long> mapOldToNew, String tableName)
+    {
+    	
+    	mapOldToNew.forEach((k,v) -> {         
+            String str = String.format("insert into  %s ( object_type, object_id, value, deleted, last_update, custom_attribute_definition_id)" 
+            		+ " select object_type, %s, value, deleted, Now() , custom_attribute_definition_id from %s where object_id = %s " 
+            		+ " and object_type = '%s' ", tableName, v, tableName, k,  objectType);
 
+            SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
+            int rowModified = insertQuery.execute();
+            
+            if (rowModified>0 )
+            {
+            	log.info("updating " + objectType + "in " + tableName );
+            	log.info(str);
+            	log.info("Nbr of row inserted: "  + rowModified) ;
+            }
+    	});         	
+    }
+
+    private static void doUpdateSingleItemCustomAttribute( String objectType, Map<Long, Long> mapOldToNew)
+    {
+    	String tableName = "single_item_custom_attribute_value";
+    	mapOldToNew.forEach((k,v) -> {         
+            String str = String.format("insert into  %s ( object_type, object_id, deleted, last_update, custom_attribute_definition_id, value_id)" 
+            		+ " select object_type, %s, deleted, Now() , custom_attribute_definition_id, value_id from %s where object_id = %s " 
+            		+ " and object_type = '%s' ", tableName, v, tableName, k,  objectType);
+
+            SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
+            int rowModified = insertQuery.execute();
+            
+            if (rowModified>0 )
+            {
+            	log.info("updating " + objectType + "in " + tableName );
+            	log.info(str);
+            	log.info("Nbr of row inserted: "  + rowModified) ;
+            }
+    	}
+        );         	
+    }
+    
+    private static void doUpdateMultiItemCustomAttribute( String objectType, Map<Long, Long> mapOldToNew)
+    {
+    	String tableName = "multi_item_custom_attribute_value";
+    	mapOldToNew.forEach((k,v) -> {   
+    		
+    		MultiItemCustomAttributeValue obj = Ebean.find(MultiItemCustomAttributeValue.class).where().eq("object_id", k).findUnique();
+    		Long oldItem = 0L;
+    		if (obj != null)
+    		{
+    			oldItem	=	obj.getId();
+    		}
+    		
+    		Long newItem =getCurrentAutoIncrementValue()  + 5; // +5 just be sure that there's no concurrent thread using this value.
+
+            String str = String.format("insert into  %s ( id, object_type, object_id, deleted, last_update, custom_attribute_definition_id)" 
+            		+ " select %d, object_type, %s, deleted, Now(), custom_attribute_definition_id from %s where object_id = %s " 
+            		+ " and object_type = '%s' ", tableName, newItem, v, tableName, k,  objectType);
+
+            SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
+            int rowModified = insertQuery.execute();
+            
+            if (rowModified>0 )
+            {
+            	log.info("updating " + objectType + "in " + tableName );
+            	log.info(str);
+            	log.info("Nbr of row inserted: "  + rowModified) ;
+            	
+            	 //Long newItem = Ebean.find(MultiItemCustomAttributeValue.class).where().eq("object_id", k).findUnique().getId();
+            	 doUpdateMultiItemValues(newItem, oldItem);
+            } 
+    	}
+        );         	
+    }
+    
+    private static Long getCurrentAutoIncrementValue()
+    {
+    	 SqlQuery query = Ebean.createSqlQuery("SELECT max(id) as MAXID from multi_item_custom_attribute_value");
+         List<SqlRow> rows = query.findList();
+         
+         if (rows != null) {
+        	 return rows.get(0).getLong("MAXID"); 
+         }
+         else
+         {
+        	 return 0L;
+         }
+         
+    }
+    
+    private static void doUpdateMultiItemValues(Long new_id, Long old_id)
+    {       
+        String str = String.format("INSERT INTO multi_item_ca_value_has_ca_multi_item_option (multi_item_custom_attribute_value_id, custom_attribute_multi_item_option_id)" 
+        		+ " select %d, custom_attribute_multi_item_option_id from multi_item_ca_value_has_ca_multi_item_option where multi_item_custom_attribute_value_id =  %d" , new_id, old_id);
+
+        SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
+        int rowModified = insertQuery.execute();
+        
+        if (rowModified>0 )
+        {
+        	log.info(str);
+        	log.info("Nbr of row inserted: "  + rowModified) ;
+        }
+    }
+    
     /**
      * Get all active milestone instances of portfolio entry for a specific
      * milestone.
