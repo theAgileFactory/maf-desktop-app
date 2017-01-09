@@ -154,6 +154,20 @@ public abstract class LifeCyclePlanningDao {
                 .eq("lifeCycleInstancePlanning.lifeCycleInstance.portfolioEntryWithCurrentInstanceAsActive.archived", false)
                 .eq("lifeCycleInstancePlanning.lifeCycleInstance.portfolioEntryWithCurrentInstanceAsActive.portfolios.id", portfolioId).findList();
     }
+    
+    /**
+     * Get not approved and late milestone owned by a manager.
+     * 
+     * @param portfolioId
+     *            the portfolio id
+     */
+    public static List<PlannedLifeCycleMilestoneInstance> getPlannedLCMilestoneInstanceNotApprovedAsListOfManager(Long managerId) {
+        return findPlannedLifeCycleMilestoneInstance.where().eq("deleted", false).le("plannedDate", new Date())
+                .eq("lifeCycleInstancePlanning.isFrozen", false)
+                .eq("lifeCycleInstancePlanning.lifeCycleInstance.portfolioEntryWithCurrentInstanceAsActive.deleted", false)
+                .eq("lifeCycleInstancePlanning.lifeCycleInstance.portfolioEntryWithCurrentInstanceAsActive.archived", false)
+                .eq("lifeCycleInstancePlanning.lifeCycleInstance.portfolioEntryWithCurrentInstanceAsActive.manager.id", managerId).findList();
+    }
 
     /**
      * Get not approved milestone of a portfolio entry.
