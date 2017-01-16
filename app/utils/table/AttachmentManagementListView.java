@@ -236,7 +236,7 @@ public class AttachmentManagementListView {
         }
         if (objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
         	try{
-            	return PortfolioEntryReportDao.getPEReportById(objectId).id;
+            	return PortfolioEntryReportDao.getPEReportById(objectId).portfolioEntry.id;
 	    	}catch(NullPointerException e){
 	    		log.warn("Error while looking for the objectid "+objectId+" with object type "+objectType);
 	    		return -1l;
