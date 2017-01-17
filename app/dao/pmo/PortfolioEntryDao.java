@@ -86,6 +86,16 @@ public abstract class PortfolioEntryDao {
     }
 
     /**
+     * Get a portfolio entry by id.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    public static PortfolioEntry getPEAllById(Long id) {
+        return findPortfolioEntry.where().eq("id", id).findUnique();
+    }
+    
+    /**
      * Get a portfolio entry by erp ref id.
      * 
      * @param erpRefId

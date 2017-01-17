@@ -215,7 +215,7 @@ public class AttachmentManagementListView {
      */
     private static Long getLinkedPortfolioEntry(String objectType, Long objectId){
     	if (objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
-            PortfolioEntry pe = PortfolioEntryDao.getPEById(objectId); 
+            PortfolioEntry pe = PortfolioEntryDao.getPEAllById(objectId); 
     		return pe == null ? -1l : pe.id;
         }
         if (objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {

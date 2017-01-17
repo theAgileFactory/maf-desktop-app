@@ -176,8 +176,8 @@ public class AttachmentsController extends Controller {
 	        		if(view.portfolioEntryId!=null){
 	        			boolean keepAttachment=true;
 	        			if(filterConfidentials){
-		        			PortfolioEntry pfe=PortfolioEntryDao.getPEById(view.portfolioEntryId);
-		                	if(pfe.isPublic){
+		        			PortfolioEntry pfe=PortfolioEntryDao.getPEAllById(view.portfolioEntryId);
+		                	if(pfe.isPublic && !pfe.deleted){
 		                		keepAttachment=true;
 		                	}else{
 		                		keepAttachment=false;
