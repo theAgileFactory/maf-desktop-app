@@ -327,7 +327,7 @@ data_type.Requirement.label=Anforderungen
 data_type.TimesheetActivityAllocatedActor.label=Zugeweise Mitarbeiter (Aktivität)
 data_type.WorkOrder.label=Bestellung
 data_type.ApplicationBlock.label=Applikationsblock
-
+data_type.LifeCycleMilestoneInstance.label=Meilenstein
 #----------------------
 # Custom attribute types
 #----------------------

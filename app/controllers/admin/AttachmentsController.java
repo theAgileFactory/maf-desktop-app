@@ -173,7 +173,7 @@ public class AttachmentsController extends Controller {
     		if(foundAttachments!=null){
 	        	for(Attachment attachement : foundAttachments){
 	        		AttachmentManagementListView view=new AttachmentManagementListView(attachement);
-	        		if(view.portfolioEntryId!=null){
+	        		if(view.portfolioEntryId!=null && view.portfolioEntryId > 0){
 	        			boolean keepAttachment=true;
 	        			if(filterConfidentials){
 		        			PortfolioEntry pfe=PortfolioEntryDao.getPEAllById(view.portfolioEntryId);

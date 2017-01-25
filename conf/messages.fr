@@ -327,6 +327,7 @@ data_type.Requirement.label=Exigence
 data_type.TimesheetActivityAllocatedActor.label=Allocation d''employé (activité)
 data_type.WorkOrder.label=Bon de travail
 data_type.ApplicationBlock.label=Bloc applicatif
+data_type.LifeCycleMilestoneInstance.label=Jalon
 
 #----------------------
 # Custom attribute types

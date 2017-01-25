@@ -315,6 +315,7 @@ data_type.Requirement.label=Requirement
 data_type.TimesheetActivityAllocatedActor.label=Allocated employee (activity)
 data_type.WorkOrder.label=Work order
 data_type.ApplicationBlock.label=Application block
+data_type.LifeCycleMilestoneInstance.label=Milestone
 
 #----------------------
 # Custom attribute types
