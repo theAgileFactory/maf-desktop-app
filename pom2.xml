@@ -29,6 +29,11 @@
 			<name>Pierre-Yves Cloux</name>
 			<email>dev@pycloux.com</email>
 		</developer>
+		<developer>
+			<id>gpetit</id>
+			<name>Guillaume Petit</name>
+			<email>guillaume.petit@sword-group.com</email>
+		</developer>
 	</developers>
 
 	<repositories>
