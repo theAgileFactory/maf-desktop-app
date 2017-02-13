@@ -461,15 +461,10 @@ public abstract class LifeCycleMilestoneDao {
     {
     	 SqlQuery query = Ebean.createSqlQuery("SELECT max(id) as MAXID from multi_item_custom_attribute_value");
          List<SqlRow> rows = query.findList();
-         
-         if (rows != null) {
-        	 return rows.get(0).getLong("MAXID"); 
-         }
-         else
-         {
-        	 return 0L;
-         }
-         
+
+        Long maxId = rows.get(0).getLong("MAXID");
+
+        return maxId != null ? maxId : 0L;
     }
     
     private static void doUpdateMultiItemValues(Long new_id, Long old_id)
