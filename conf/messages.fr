@@ -811,6 +811,7 @@ object.user_account.permissions.label=Permissions
 object.user_account.password.label=Mot de passe
 object.user_account.password_confirmation.label=Confirmation du mot de passe
 object.user_account.old_password.label=Ancien mot de passe
+object.user_account.last_login_date.label=Dernière connexion
 
 #----------------------
 # apiRegistration

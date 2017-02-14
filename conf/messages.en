@@ -799,6 +799,7 @@ object.user_account.permissions.label=Permissions
 object.user_account.password.label=Password
 object.user_account.password_confirmation.label=Password confirmation
 object.user_account.old_password.label=Old password
+object.user_account.last_login_date.label=Last login date
 
 #----------------------
 # apiRegistration

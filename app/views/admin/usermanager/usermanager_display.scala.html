@@ -20,6 +20,7 @@
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
+@import framework_views.parts.formats._
 
 @usermanager_template(userAccount.getUid(), controllers.admin.UserManager.MenuItemType.SEARCH) {
 
@@ -83,6 +84,12 @@
                         <td>
                             @userAccount.getAccountType().getLabel()
                             <a class="pull-right" href="@controllers.admin.routes.UserManager.editUserAccountType(userAccount.getUid())"><span class="fa fa-pencil-square-o"></span></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="20%">@parts.Msg("object.user_account.last_login_date.label")</th>
+                        <td>
+                            @display_date(userAccount.getLastLoginDate())
                         </td>
                     </tr>
                     <tr>
