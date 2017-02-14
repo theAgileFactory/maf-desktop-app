@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.agifac.maf.desktop</groupId>
 	<artifactId>maf-desktop-app</artifactId>
-	<version>14.1.0-SNAPSHOT</version>
+	<version>14.1.1-SNAPSHOT</version>
 	<name>BizDock application</name> 
 	<description>This is the BizDock application module</description>
 	<packaging>play2</packaging>
