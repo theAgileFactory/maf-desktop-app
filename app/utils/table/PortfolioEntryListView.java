@@ -31,7 +31,6 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
 import models.governance.LifeCycleMilestoneInstance;
-import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.*;
 
 import java.util.*;
@@ -187,10 +186,10 @@ public class PortfolioEntryListView {
                     addColumnConfiguration("lastMileStoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label", 
                     		 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
                      		false, false, SortStatusType.UNSORTED);
-                    addColumnConfiguration("firstPlannedLifecycleMilestoneInstanceDate", "firstPlannedLifecycleMilestoneInstance.plannedDate" ,"object.portfolio_entry.start_date.label",
+                    addColumnConfiguration("startDate", "startDate" ,"object.portfolio_entry.start_date.label",
                     		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
                     		false, false, SortStatusType.UNSORTED);
-                    addColumnConfiguration("lastPlannedLifecycleMilestoneInstanceDate", "lastPlannedLifecycleMilestoneInstance.plannedDate", "object.portfolio_entry.end_date.label",
+                    addColumnConfiguration("endDate", "endDate", "object.portfolio_entry.end_date.label",
                     		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
                     		false, false, SortStatusType.UNSORTED);
                 }
@@ -299,10 +298,10 @@ public class PortfolioEntryListView {
                     setJavaColumnFormatter("isPublic", new BooleanFormatter<PortfolioEntryListView>());
                     addColumn("lastMileStoneDate", "lastMileStoneDate", "object.portfolio_entry.last_milestone_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastMileStoneDate", new DateFormatter<PortfolioEntryListView>());
-                    addColumn("firstPlannedLifecycleMilestoneInstanceDate", "firstPlannedLifecycleMilestoneInstanceDate", "object.portfolio_entry.start_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("firstPlannedLifecycleMilestoneInstanceDate", new DateFormatter<>());
-                    addColumn("lastPlannedLifecycleMilestoneInstanceDate", "lastPlannedLifecycleMilestoneInstanceDate", "object.portfolio_entry.end_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lastPlannedLifecycleMilestoneInstanceDate", new DateFormatter<>());
+                    addColumn("startDate", "startDate", "object.portfolio_entry.start_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("startDate", new DateFormatter<>());
+                    addColumn("endDate", "endDate", "object.portfolio_entry.end_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("endDate", new DateFormatter<>());
 
                     addKpis(kpiService, PortfolioEntry.class);
 
@@ -385,10 +384,8 @@ public class PortfolioEntryListView {
     public List<Actor> stakeholders;
     public List<PortfolioEntry> dependencies;
     public Date lastMileStoneDate; 
-    public PlannedLifeCycleMilestoneInstance firstPlannedLifecycleMilestoneInstance;
-    public PlannedLifeCycleMilestoneInstance lastPlannedLifecycleMilestoneInstance;
-    public Date firstPlannedLifecycleMilestoneInstanceDate;
-    public Date lastPlannedLifecycleMilestoneInstanceDate;
+    public Date startDate;
+    public Date endDate;
 
 
     // contextual attributes
@@ -416,14 +413,9 @@ public class PortfolioEntryListView {
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
-        this.firstPlannedLifecycleMilestoneInstance = portfolioEntry.firstPlannedLifecycleMilestoneInstance;
-        this.lastPlannedLifecycleMilestoneInstance = portfolioEntry.lastPlannedLifecycleMilestoneInstance;
-        this.firstPlannedLifecycleMilestoneInstanceDate =
-                this.firstPlannedLifecycleMilestoneInstance != null ?
-                        this.firstPlannedLifecycleMilestoneInstance.plannedDate : null;
-        this.lastPlannedLifecycleMilestoneInstanceDate =
-                this.lastPlannedLifecycleMilestoneInstance != null ?
-                        this.lastPlannedLifecycleMilestoneInstance.plannedDate : null;
+        portfolioEntry.updateFirstLastPlannedDate();
+        this.startDate = portfolioEntry.startDate;
+        this.endDate = portfolioEntry.endDate;
         this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
         this.archived = portfolioEntry.archived;
         if (  this.lastMilestone!= null && this.lastMilestone.passedDate != null)
