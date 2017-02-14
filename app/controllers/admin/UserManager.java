@@ -58,6 +58,7 @@ import framework.utils.Table;
 import framework.utils.Table.ColumnDef.SorterType;
 import framework.utils.TableExcelRenderer;
 import framework.utils.Utilities;
+import framework.utils.formats.DateFormatter;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.account.SystemLevelRoleType;
@@ -133,6 +134,8 @@ public class UserManager extends Controller {
                     return userAccount.getAccountType().getLabel();
                 }
             });
+            this.addColumn("lastLoginDate", "lastLoginDate", "object.user_account.last_login_date.label", SorterType.NONE);
+            this.setJavaColumnFormatter("lastLoginDate", new DateFormatter<>());
 
             this.setLineAction(new IColumnFormatter<IUserAccount>() {
                 @Override
@@ -788,6 +791,7 @@ public class UserManager extends Controller {
         final String isActiveLabel = Msg.get("object.user_account.is_active.label");
         final String rolesLabel = Msg.get("object.user_account.roles.label");
         final String permissionsLabel = Msg.get("object.user_account.permissions.label");
+        final String lastLoginDateLabel = Msg.get("object.user_account.last_login_date.label");
 
         getSysAdminUtils().scheduleOnce(false, "UserManager Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
             @Override
@@ -806,6 +810,8 @@ public class UserManager extends Controller {
                             }
                         });
                         this.addColumn("active", "active", isActiveLabel, SorterType.NONE);
+                        this.addColumn("lastLoginDate", "lastLoginDate", lastLoginDateLabel, SorterType.NONE);
+                        this.setJavaColumnFormatter("lastLoginDate", new DateFormatter<IUserAccount>());
                         this.addColumn("mafUid", "mafUid", "BizDock Id", SorterType.NONE);
                         this.addColumn("systemLevelRoleTypeNames", "uid", rolesLabel, SorterType.NONE);
                         this.setJavaColumnFormatter("systemLevelRoleTypeNames", new IColumnFormatter<IUserAccount>() {

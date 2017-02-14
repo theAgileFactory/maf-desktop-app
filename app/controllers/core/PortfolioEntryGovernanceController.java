@@ -546,11 +546,11 @@ public class PortfolioEntryGovernanceController extends Controller {
         // bind the form
         Form<PlannedDatesFormData> boundForm = plannedDatesFormTemplate.bindFromRequest();
 
-        if (boundForm.hasErrors()) {
+        // get the portfolioEntry
+        Long id = Long.valueOf(boundForm.data().get("id"));
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
-            // get the portfolioEntry
-            Long id = Long.valueOf(boundForm.data().get("id"));
-            PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+        if (boundForm.hasErrors()) {
 
             // get the last planning
             LifeCycleInstancePlanning lastPlanning = LifeCyclePlanningDao.getLCInstancePlanningAsLastByPE(id);
@@ -574,6 +574,8 @@ public class PortfolioEntryGovernanceController extends Controller {
                 updPlannedLifeCycleMilestoneInstance.update();
             }
         }
+
+        portfolioEntry.updateFirstLastPlannedDate();
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.planning.edit.successful"));
 
@@ -643,7 +645,7 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             portfolioEntry.activeLifeCycleInstance = lifeCycleInstance;
             portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
-            portfolioEntry.save();
+            portfolioEntry.updateFirstLastPlannedDate();
 
             /*
              * create the planning

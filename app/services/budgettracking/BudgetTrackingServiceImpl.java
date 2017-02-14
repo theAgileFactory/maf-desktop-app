@@ -405,8 +405,10 @@ public class BudgetTrackingServiceImpl implements IBudgetTrackingService {
             this.values.put(timesheetLog.id, timesheetLog.hours);
 
             Long actorId = timesheetLog.timesheetEntry.timesheetReport.actor.id;
+
             Long orgUnitId = timesheetLog.timesheetEntry.timesheetReport.orgUnit != null ? timesheetLog.timesheetEntry.timesheetReport.orgUnit.id
-                    : timesheetLog.timesheetEntry.timesheetReport.actor.orgUnit.id;
+                    : timesheetLog.timesheetEntry.timesheetReport.actor.orgUnit != null ? timesheetLog.timesheetEntry.timesheetReport.actor.orgUnit.id
+                    : null;
             Long packageId = timesheetLog.timesheetEntry.portfolioEntryPlanningPackage != null ? timesheetLog.timesheetEntry.portfolioEntryPlanningPackage.id
                     : null;
 

@@ -17,14 +17,7 @@
  */
 package utils.table;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import dao.governance.LifeCycleMilestoneDao;
-import dao.governance.LifeCyclePlanningDao;
 import dao.governance.LifeCycleProcessDao;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioDao;
@@ -32,29 +25,15 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
-import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.DateRangeFilterComponent;
-import framework.utils.FilterConfig.SortStatusType;
-import framework.utils.IColumnFormatter;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Table;
-import framework.utils.Utilities;
+import framework.utils.*;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
 import models.governance.LifeCycleMilestoneInstance;
-import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.pmo.Actor;
-import models.pmo.OrgUnit;
-import models.pmo.Portfolio;
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryDependency;
-import models.pmo.PortfolioEntryReport;
-import models.pmo.PortfolioEntryType;
-import models.pmo.Stakeholder;
-import utils.SortableCollection;
-import utils.SortableCollection.DateSortableObject;
+import models.pmo.*;
+
+import java.util.*;
 
 /**
  * A portfolio entry list view is used to display an portfolio entry row in a
@@ -208,9 +187,11 @@ public class PortfolioEntryListView {
                     		 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
                      		false, false, SortStatusType.UNSORTED);
                     addColumnConfiguration("startDate", "startDate" ,"object.portfolio_entry.start_date.label",
-                    		new NoneFilterComponent(), false, false, SortStatusType.NONE);    
-                    addColumnConfiguration("endDate", "endDate", "object.portfolio_entry.end_date.label",					
-                    		new NoneFilterComponent(), false, false, SortStatusType.NONE);          
+                    		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
+                    		false, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("endDate", "endDate", "object.portfolio_entry.end_date.label",
+                    		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
+                    		false, false, SortStatusType.UNSORTED);
                 }
             };
         }
@@ -318,9 +299,9 @@ public class PortfolioEntryListView {
                     addColumn("lastMileStoneDate", "lastMileStoneDate", "object.portfolio_entry.last_milestone_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastMileStoneDate", new DateFormatter<PortfolioEntryListView>());
                     addColumn("startDate", "startDate", "object.portfolio_entry.start_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("startDate", new DateFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("startDate", new DateFormatter<>());
                     addColumn("endDate", "endDate", "object.portfolio_entry.end_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("endDate", new DateFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("endDate", new DateFormatter<>());
 
                     addKpis(kpiService, PortfolioEntry.class);
 
@@ -406,6 +387,7 @@ public class PortfolioEntryListView {
     public Date startDate;
     public Date endDate;
 
+
     // contextual attributes
     public List<String> stakeholderTypes = new ArrayList<String>();
 
@@ -431,29 +413,14 @@ public class PortfolioEntryListView {
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
+        portfolioEntry.updateFirstLastPlannedDate();
+        this.startDate = portfolioEntry.startDate;
+        this.endDate = portfolioEntry.endDate;
         this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
         this.archived = portfolioEntry.archived;
         if (  this.lastMilestone!= null && this.lastMilestone.passedDate != null)
         {
         	this.lastMileStoneDate = this.lastMilestone.passedDate;
-        }
-        List<PlannedLifeCycleMilestoneInstance> lastPlannedMilestoneInstances = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(this.id);
-        SortableCollection<DateSortableObject> plannedDatesList = new SortableCollection<>();
-        for (PlannedLifeCycleMilestoneInstance lastPlannedMilestoneInstance : lastPlannedMilestoneInstances) 
-        {
-        	if (lastPlannedMilestoneInstance.plannedDate != null)
-        	{
-        		plannedDatesList.addObject(new DateSortableObject(lastPlannedMilestoneInstance.plannedDate, lastPlannedMilestoneInstance));
-        	}
-        }   
-        if (plannedDatesList.getSorted().size() == 1 )
-        {
-        	startDate = endDate = plannedDatesList.getSorted().get(0).getDate(); 
-        }
-        if (plannedDatesList.getSorted().size() > 1 )
-        {
-	        startDate = plannedDatesList.getSorted().get(0).getDate();        
-	        endDate = plannedDatesList.getSorted().get( plannedDatesList.getSorted().size() - 1).getDate(); 
         }
 
         this.stakeholders = new ArrayList<>();
@@ -467,14 +434,14 @@ public class PortfolioEntryListView {
 
         this.dependencies = new ArrayList<>();
         Set<Long> dependencyIds = new HashSet<>();
-        for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getDestinationDependencies()) {
+        for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.destinationDependencies) {
             PortfolioEntry dependency = portfolioEntryDependency.getSourcePortfolioEntry();
             if (dependency != null && !dependencyIds.contains(dependency.id)) {
                 dependencyIds.add(dependency.id);
                 this.dependencies.add(dependency);
             }
         }
-        for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.getSourceDependencies()) {
+        for (PortfolioEntryDependency portfolioEntryDependency : portfolioEntry.destinationDependencies) {
             PortfolioEntry dependency = portfolioEntryDependency.getDestinationPortfolioEntry();
             if (dependency != null && !dependencyIds.contains(dependency.id)) {
                 dependencyIds.add(dependency.id);
