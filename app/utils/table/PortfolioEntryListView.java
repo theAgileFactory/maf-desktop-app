@@ -187,10 +187,10 @@ public class PortfolioEntryListView {
                     		 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
                      		false, false, SortStatusType.UNSORTED);
                     addColumnConfiguration("startDate", "startDate" ,"object.portfolio_entry.start_date.label",
-                    		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
+                    		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
                     		false, false, SortStatusType.UNSORTED);
                     addColumnConfiguration("endDate", "endDate", "object.portfolio_entry.end_date.label",
-                    		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
+                    		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
                     		false, false, SortStatusType.UNSORTED);
                 }
             };
@@ -413,7 +413,6 @@ public class PortfolioEntryListView {
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
-        portfolioEntry.updateFirstLastPlannedDate();
         this.startDate = portfolioEntry.startDate;
         this.endDate = portfolioEntry.endDate;
         this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
