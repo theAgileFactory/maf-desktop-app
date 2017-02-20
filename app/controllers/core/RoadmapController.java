@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -896,7 +897,7 @@ public class RoadmapController extends Controller {
 
             // Actor
             if (orgUnit != null) {
-                for (Actor actor : orgUnit.actors) {
+                for (Actor actor : orgUnit.actors.stream().filter(a -> a.isActive).collect(Collectors.toList())) {
                     capacityDetailsRows.put(actor.id, new CapacityDetails(actor));
                 }
             }
