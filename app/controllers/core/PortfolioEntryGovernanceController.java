@@ -645,6 +645,7 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             portfolioEntry.activeLifeCycleInstance = lifeCycleInstance;
             portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
+            portfolioEntry.startDate = portfolioEntry.endDate = null;
 
             /*
              * create the planning
