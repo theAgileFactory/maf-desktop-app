@@ -333,6 +333,7 @@ public class ApplicationServicesModule extends FrameworkModule {
         MafDataType.add(IMafConstants.Deliverable, "models.delivery.Deliverable", false, true,
                 ImmutableMap.<String, String> builder().put("name", "object.deliverable.name.label").build());
         MafDataType.add(IMafConstants.LifeCycleMilestoneInstance, "models.governance.LifeCycleMilestoneInstance", false, false);
+        MafDataType.add(IMafConstants.PlannedLifeCycleMilestoneInstance, "models.governance.PlannedLifeCycleMilestoneInstance", false, false);
     }
 
     /**
