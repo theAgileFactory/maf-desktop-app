@@ -48,6 +48,7 @@ import models.framework_models.account.NotificationCategory.Code;
 import models.reporting.Reporting;
 import models.reporting.Reporting.Format;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
+import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -56,6 +57,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRPptxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
@@ -66,8 +68,10 @@ import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
 import net.sf.jasperreports.export.SimpleDocxReportConfiguration;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleRtfReportConfiguration;
 import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+import net.sf.jasperreports.export.WriterExporterOutput;
 import play.Configuration;
 import play.Environment;
 import play.Logger;
@@ -102,6 +106,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
     private static final String PDF_FILE_NAME = "report_%s_%s_%s.pdf";
     private static final String CSV_FILE_NAME = "report_%s_%s_%s.csv";
     private static final String WORD_FILE_NAME = "report_%s_%s_%s.docx";
+    private static final String RTF_FILE_NAME = "report_%s_%s_%s.doc";
     private static final String POWER_POINT_FILE_NAME = "report_%s_%s_%s.pptx";
 
     /**
@@ -249,7 +254,7 @@ public class ReportingUtilsImpl implements IReportingUtils {
                         docxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
                         docxExporter.exportReport();
                         break;
-
+                        
                     case EXCEL:
                         fileName = String.format(EXCEL_FILE_NAME, report.template, language, new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()));
                         out = personalStorage.createNewFile(uid, fileName);
@@ -269,6 +274,19 @@ public class ReportingUtilsImpl implements IReportingUtils {
                         fileName = String.format(PDF_FILE_NAME, report.template, language, new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()));
                         out = personalStorage.createNewFile(uid, fileName);
                         exportManager.exportToPdfStream(print, out);
+                        break;
+                        
+                    case RTF:
+                        fileName = String.format(RTF_FILE_NAME, report.template, language, new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()));
+                        out = personalStorage.createNewFile(uid, fileName);
+
+                        JRRtfExporter  rtfExporter = new JRRtfExporter ();
+                       // rtfExporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+                       //SimpleRtfReportConfiguration rtfConfig = new SimpleRtfReportConfiguration();
+                       // rtfExporter.setConfiguration(rtfConfig);
+                        rtfExporter.setExporterInput(new SimpleExporterInput(print));
+                        rtfExporter.setExporterOutput(new SimpleWriterExporterOutput(out));
+                        rtfExporter.exportReport();
                         break;
 
                     case CSV:
