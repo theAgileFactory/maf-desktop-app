@@ -80,7 +80,22 @@
             <artifactId>maf-desktop-datamodel</artifactId>
             <version>${maf.maf-desktop-datamodel.version}</version>
         </dependency>
-        <!-- <dependency>
+		<dependency>
+			<groupId>com.typesafe.play</groupId>
+			<artifactId>play_2.11</artifactId>
+			<version>2.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.play</groupId>
+			<artifactId>play-java_2.11</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.avaje.ebeanorm</groupId>
+			<artifactId>avaje-ebeanorm</artifactId>
+			<version>4.6.2</version>
+		</dependency>
+		<!-- <dependency>
             <groupId>com.agifac.maf</groupId>
             <artifactId>maf-desktop-patcher</artifactId>
             <version>${maf.maf-desktop-patcher.version}</version>
