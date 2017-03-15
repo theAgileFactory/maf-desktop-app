@@ -11,7 +11,7 @@ echo -e "\n>>> Prepare the dbmdl-framework package..."
 rm -rf $SCRIPT_DIR/dbmdl-framework
 cp -R $BIZDOCK_GIT_ROOT$DBMDL_FRAMEWORK_PROJECT $SCRIPT_DIR/dbmdl-framework
 cd dbmdl-framework
-mvn -f pom2.xml clean package
+mvn clean package
 cd target
 packageVersion=$(cat version.properties)
 mvn com.agifac.deploy:replacer-maven-plugin:replace -Dsource=dbmdl-framework-$packageVersion.zip -Denv=properties/empty.properties
@@ -25,7 +25,7 @@ echo -e "\n>>> Prepare the maf-dbmdl package"
 rm -rf $SCRIPT_DIR/maf-dbmdl
 cp -R $BIZDOCK_GIT_ROOT$MAF_DBMDL_PROJECT $SCRIPT_DIR/maf-dbmdl
 cd maf-dbmdl
-mvn -f pom2.xml clean package
+mvn clean package
 cd target
 packageVersion=$(cat version.properties)
 mvn com.agifac.deploy:replacer-maven-plugin:replace -Dsource=maf-dbmdl-$packageVersion.zip -Denv=properties/empty.properties

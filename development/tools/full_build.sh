@@ -13,14 +13,14 @@ HELP=$'Possible arguments : \n\t--help (-h)\n\t--framework (-f)\n\t--model (-m)\
 
 Framework () {
   echo "---- BUILDING FRAMEWORK ----"
-  mvn -f $BIZDOCK_GIT_ROOT$APP_FRAMEWORK_PROJECT/pom2.xml -Dgpg.skip clean install
+  mvn -f $BIZDOCK_GIT_ROOT$APP_FRAMEWORK_PROJECT/pom.xml -Dgpg.skip clean install
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     exit
   fi
   if [ "$USE_ECLIPSE" = "true" ]; then
   	echo ">>> Configuring the eclipse project"
-    mvn -f $BIZDOCK_GIT_ROOT$APP_FRAMEWORK_PROJECT/pom2.xml play2:eclipse
+    mvn -f $BIZDOCK_GIT_ROOT$APP_FRAMEWORK_PROJECT/pom.xml play2:eclipse
     if [ $STATUS -ne 0 ]; then
       exit
     fi
@@ -30,14 +30,14 @@ Framework () {
 
 Model () {
   echo "---- BUILDING DATA MODEL ----"
-  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_DATAMODEL/pom2.xml -Dgpg.skip clean install
+  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_DATAMODEL/pom.xml -Dgpg.skip clean install
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     exit
   fi
   if [ "$USE_ECLIPSE" = "true" ]; then
     echo ">>> Configuring the eclipse project"
-    mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_DATAMODEL/pom2.xml play2:eclipse
+    mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_DATAMODEL/pom.xml play2:eclipse
     if [ $STATUS -ne 0 ]; then
       exit
     fi
@@ -48,14 +48,14 @@ Model () {
 
 Desktop () {
   echo "---- BUILDING DESKTOP ----"
-  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_PROJECT/pom2.xml -Dgpg.skip clean install
+  mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_PROJECT/pom.xml -Dgpg.skip clean install
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     exit
   fi
   if [ "$USE_ECLIPSE" = "true" ]; then
     echo ">>> Configuring the eclipse project"
-    mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_PROJECT/pom2.xml play2:eclipse
+    mvn -f $BIZDOCK_GIT_ROOT$MAF_DESKTOP_PROJECT/pom.xml play2:eclipse
     if [ $STATUS -ne 0 ]; then
       exit
     fi
