@@ -5,7 +5,7 @@ body='{
   "branch":"master"
 }}'
 
-echo "Building the dependent project : maf-desktop-datamodel"
+echo "Building the dependent project : maf-defaultplugins-extension"
 curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
