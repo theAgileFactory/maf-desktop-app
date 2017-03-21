@@ -22,6 +22,8 @@ import java.text.MessageFormat;
 
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -54,18 +56,35 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
     public static class TableDefinition {
 
         public Table<PortfolioEntryResourcePlanAllocatedResourceListView> templateTable;
+        public FilterConfig<PortfolioEntryResourcePlanAllocatedResourceListView> filterConfig;
 
         /**
          * Default constructor.
          */
-        public TableDefinition() {
-            this.templateTable = getTable();
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+        	this.filterConfig = getFilterConfig();
+            this.templateTable = getTable(i18nMessagesPlugin);
         }
 
+        public FilterConfig<PortfolioEntryResourcePlanAllocatedResourceListView> getFilterConfig() {
+            return new FilterConfig<PortfolioEntryResourcePlanAllocatedResourceListView>() {
+                {
+                    addColumnConfiguration("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", new CheckboxFilterComponent(true),
+                            true, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
+                            SortStatusType.UNSORTED);
+                    addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
+                            new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                    addColumnConfiguration("portfolioEntryName", "portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.name", "object.allocated_resource.portfolio_entry.label",
+                    		new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                }
+            };
+        }
+        
         /**
          * Get the table.
          */
-        public Table<PortfolioEntryResourcePlanAllocatedResourceListView> getTable() {
+        public Table<PortfolioEntryResourcePlanAllocatedResourceListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryResourcePlanAllocatedResourceListView>() {
                 {
                     setIdFieldName("id");
@@ -164,6 +183,9 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
                     setColumnCssClass("reallocate", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("reallocate", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedCompetency.class);
+                    
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>(
                             IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<PortfolioEntryResourcePlanAllocatedResourceListView>() {
