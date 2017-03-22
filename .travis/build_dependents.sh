@@ -1,9 +1,9 @@
 #!/bin/bash
 
-body='{
-"request": {
-  "branch":"master"
-}}'
+body="{
+\"request\": {
+  \"branch\":\"$TRAVIS_BRANCH\"
+}}"
 
 echo "Building the dependent project : maf-defaultplugins-extension"
 curl -s -X POST \

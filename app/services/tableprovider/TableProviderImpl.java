@@ -73,7 +73,7 @@ public class TableProviderImpl implements ITableProvider {
     public void flushTables() {
 
         // table
-        this.get().portfolioEntryResourcePlanAllocatedResource.templateTable = this.get().portfolioEntryResourcePlanAllocatedResource.getTable();
+        this.get().portfolioEntryResourcePlanAllocatedResource.templateTable = this.get().portfolioEntryResourcePlanAllocatedResource.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable = this.get().portfolioEntryResourcePlanAllocatedOrgUnit
                 .getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntryResourcePlanAllocatedActor.templateTable = this.get().portfolioEntryResourcePlanAllocatedActor

@@ -145,7 +145,7 @@ public class TableDefinitions {
         this.portfolioEntryReportStatusType = new PortfolioEntryReportStatusTypeListView.TableDefinition();
         this.portfolioEntryResourcePlanAllocatedActor = new PortfolioEntryResourcePlanAllocatedActorListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryResourcePlanAllocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnitListView.TableDefinition(i18nMessagesService);
-        this.portfolioEntryResourcePlanAllocatedResource = new PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition();
+        this.portfolioEntryResourcePlanAllocatedResource = new PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryRisk = new PortfolioEntryRiskListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryRiskType = new PortfolioEntryRiskTypeListView.TableDefinition();
         this.portfolioEntryStakeholder = new PortfolioEntryStakeholderListView.TableDefinition();
