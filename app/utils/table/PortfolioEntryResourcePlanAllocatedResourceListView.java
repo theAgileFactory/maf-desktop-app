@@ -160,6 +160,9 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
                     addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("isConfirmed", new BooleanFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>());
 
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
+                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedCompetency.class);
+                    
                     addColumn("reallocate", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("reallocate",
                             new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>(
@@ -182,9 +185,6 @@ public class PortfolioEntryResourcePlanAllocatedResourceListView {
                     }));
                     setColumnCssClass("reallocate", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("reallocate", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
-                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedCompetency.class);
                     
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedResourceListView>(
