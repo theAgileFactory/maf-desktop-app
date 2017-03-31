@@ -34,6 +34,11 @@
 			<name>Guillaume Petit</name>
 			<email>guillaume.petit@sword-group.com</email>
 		</developer>
+		<developer>
+			<id>mes</id>
+			<name>Salah Mezaache</name>
+			<email>salah.mezaache@sword-group.com</email>
+		</developer>
 	</developers>
 
 	<repositories>
