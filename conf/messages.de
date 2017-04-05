@@ -1474,6 +1474,7 @@ object.allocated_resource.actor.table.empty=Keine Einträge
 object.allocated_resource.org_unit.table.empty=Keine Einträge
 object.allocated_resource.competency.table.empty=Keine Einträge
 object.allocated_resource.table.empty=Keine Einträge
+object.allocated_resource.monthly_allocated.label=Monatliche Zuwendung
 
 #----------------------
 # deliverable

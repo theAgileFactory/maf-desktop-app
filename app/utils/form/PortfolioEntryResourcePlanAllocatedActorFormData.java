@@ -19,14 +19,14 @@ package utils.form;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import dao.finance.CurrencyDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
+import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import play.Logger;
@@ -85,6 +85,33 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
     public BigDecimal forecastDailyRate;
 
+    public boolean monthlyAllocated;
+
+    public List<MonthAllocation> monthAllocations;
+
+    public class MonthAllocation {
+        public Integer year;
+        public Double januaryAllocationValue;
+        public Double februaryAllocationValue;
+        public Double marchAllocationValue;
+        public Double aprilAllocationValue;
+        public Double mayAllocationValue;
+        public Double juneAllocationValue;
+        public Double julyAllocationValue;
+        public Double augustAllocationValue;
+        public Double septemberAllocationValue;
+        public Double octoberAllocationValue;
+        public Double novemberAllocationValue;
+        public Double decemberAllocationValue;
+
+        public MonthAllocation() {
+        }
+
+        public MonthAllocation(Integer year) {
+            this.year = year;
+        }
+    }
+
     /**
      * Validate the dates.
      */
@@ -119,6 +146,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
      * Default constructor.
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
+        this.monthAllocations = new ArrayList<>();
+        this.monthAllocations.add(new MonthAllocation());
     }
 
     /**
@@ -145,6 +174,55 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.dailyRate = allocatedActor.dailyRate;
         this.forecastDays = allocatedActor.forecastDays;
         this.forecastDailyRate = allocatedActor.forecastDailyRate;
+
+        List<PortfolioEntryResourcePlanAllocatedActorDetail> details = allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails;
+        this.monthlyAllocated = !details.isEmpty();
+        this.monthAllocations = new ArrayList<>();
+        for(PortfolioEntryResourcePlanAllocatedActorDetail detail : details) {
+            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(detail.year)).findFirst();
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(detail.year);
+            switch (detail.month) {
+                case 1:
+                    monthAllocation.januaryAllocationValue = detail.days;
+                    break;
+                case 2:
+                    monthAllocation.februaryAllocationValue = detail.days;
+                    break;
+                case 3:
+                    monthAllocation.marchAllocationValue = detail.days;
+                    break;
+                case 4:
+                    monthAllocation.aprilAllocationValue = detail.days;
+                    break;
+                case 5:
+                    monthAllocation.mayAllocationValue = detail.days;
+                    break;
+                case 6:
+                    monthAllocation.juneAllocationValue = detail.days;
+                    break;
+                case 7:
+                    monthAllocation.julyAllocationValue = detail.days;
+                    break;
+                case 8:
+                    monthAllocation.augustAllocationValue = detail.days;
+                    break;
+                case 9:
+                    monthAllocation.septemberAllocationValue = detail.days;
+                    break;
+                case 10:
+                    monthAllocation.octoberAllocationValue = detail.days;
+                    break;
+                case 11:
+                    monthAllocation.novemberAllocationValue = detail.days;
+                    break;
+                case 12:
+                default:
+                    monthAllocation.decemberAllocationValue = detail.days;
+            }
+            if (!optionalMonthlyAllocation.isPresent()) {
+                monthAllocations.add(monthAllocation);
+            }
+        }
 
         this.followPackageDates = allocatedActor.followPackageDates != null ? allocatedActor.followPackageDates : false;
 
@@ -227,7 +305,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
         allocatedActor.followPackageDates = allocatedActor.portfolioEntryPlanningPackage != null ? this.followPackageDates : null;
 
-        if (allocatedActor.followPackageDates == null || allocatedActor.followPackageDates == false) {
+        if (allocatedActor.followPackageDates == null || !allocatedActor.followPackageDates) {
             try {
                 allocatedActor.startDate = Utilities.getDateFormat(null).parse(this.startDate);
             } catch (ParseException e) {
@@ -249,10 +327,51 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         allocatedActor.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedActor.currencyRate = this.currencyRate;
 
-        allocatedActor.days = this.days;
         allocatedActor.dailyRate = this.dailyRate;
         allocatedActor.forecastDays = this.forecastDays;
         allocatedActor.forecastDailyRate = this.forecastDailyRate;
 
+        allocatedActor.days = BigDecimal.valueOf(0);
+
+        if (this.monthlyAllocated) {
+            for (MonthAllocation monthAllocation : monthAllocations) {
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 1, monthAllocation.januaryAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 2, monthAllocation.februaryAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 3, monthAllocation.marchAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 4, monthAllocation.aprilAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 5, monthAllocation.mayAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 6, monthAllocation.juneAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 7, monthAllocation.julyAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 8, monthAllocation.augustAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 9, monthAllocation.septemberAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 10, monthAllocation.octoberAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 11, monthAllocation.novemberAllocationValue));
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(createOrUpdateAllocationDetail(allocatedActor, monthAllocation.year, 12, monthAllocation.decemberAllocationValue));
+            }
+        } else {
+            allocatedActor.days = this.days;
+            for (PortfolioEntryResourcePlanAllocatedActorDetail detail : allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails) {
+                detail.doDelete();
+                detail.save();
+            }
+            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.clear();
+        }
+    }
+
+    private PortfolioEntryResourcePlanAllocatedActorDetail createOrUpdateAllocationDetail(PortfolioEntryResourcePlanAllocatedActor allocatedActor, Integer year, Integer month, Double days) {
+        Optional<PortfolioEntryResourcePlanAllocatedActorDetail> optionalDetail = allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.stream().filter(detail -> detail.year.equals(year) && detail.month.equals(month)).findFirst();
+        PortfolioEntryResourcePlanAllocatedActorDetail detail;
+        if (optionalDetail.isPresent()) {
+            // Update
+            detail = optionalDetail.get();
+            detail.days = days;
+            detail.update();
+        } else {
+            // Create
+            detail = new PortfolioEntryResourcePlanAllocatedActorDetail(allocatedActor, year, month, days);
+            detail.save();
+        }
+        allocatedActor.days = allocatedActor.days.add(BigDecimal.valueOf(days == null ? 0 : days));
+        return detail;
     }
 }

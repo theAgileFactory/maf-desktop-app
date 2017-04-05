@@ -1473,6 +1473,7 @@ object.allocated_resource.actor.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.org_unit.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.competency.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.table.empty=Il n''existe aucune allocation.
+object.allocated_resource.monthly_allocated.label=Allocation mensuelle
 
 #----------------------
 # deliverable
