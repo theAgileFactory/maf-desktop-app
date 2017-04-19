@@ -947,6 +947,9 @@ public class PortfolioEntryController extends Controller {
 
             reportingMenu.addSubMenuItem(new ClickableMenuItem("core.portfolio_entry.sidebar.status_reporting.timesheets.label",
                     controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(portfolioEntryId), "fa fa-clock-o", false));
+            
+            reportingMenu.addSubMenuItem(new ClickableMenuItem("Docs",
+                    controllers.core.routes.PortfolioEntryStatusReportingController.docs(portfolioEntryId), "fa fa-file", false));
 
             sideBar.addMenuItem(reportingMenu);
 

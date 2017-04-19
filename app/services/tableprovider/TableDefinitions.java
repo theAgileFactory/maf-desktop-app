@@ -18,6 +18,7 @@ public class TableDefinitions {
     public ApplicationBlockListView.TableDefinition applicationBlock;
     public AttachmentListView.TableDefinition attachment;
     public AttachmentManagementListView.TableDefinition attachmentManagement;
+    public PortfolioEntryAttachmentListView.TableDefinition docsTableDefinition;
     public BudgetBucketLineListView.TableDefinition budgetBucketLine;
     public BudgetBucketListView.TableDefinition budgetBucket;
     public CompetencyListView.TableDefinition competency;
@@ -103,6 +104,7 @@ public class TableDefinitions {
         this.applicationBlock = new ApplicationBlockListView.TableDefinition(i18nMessagesService);
         this.attachment = new AttachmentListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
         this.attachmentManagement = new AttachmentManagementListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
+        this.docsTableDefinition = new PortfolioEntryAttachmentListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
         this.budgetBucketLine = new BudgetBucketLineListView.TableDefinition(i18nMessagesService);
         this.budgetBucket = new BudgetBucketListView.TableDefinition(i18nMessagesService);
         this.competency = new CompetencyListView.TableDefinition();

@@ -366,6 +366,10 @@ GET    /portfolio-entry/event/delete              controllers.core.PortfolioEntr
 GET    /portfolio-entry/timesheets                controllers.core.PortfolioEntryStatusReportingController.timesheets(id: Long)
 POST   /portfolio-entry/timesheets/filter         controllers.core.PortfolioEntryStatusReportingController.timesheetsFilter(id: Long)
 POST   /portfolio-entry/timesheets/export         controllers.core.PortfolioEntryStatusReportingController.exportTimesheetsAsExcel(id: Long)
+GET    /portfolio-entry/docs                	  controllers.core.PortfolioEntryStatusReportingController.docs(id: Long)
+POST   /portfolio-entry/docs/filter         	  controllers.core.PortfolioEntryStatusReportingController.docsFilter(id: Long)
+GET    /portfolio-entry/docs/download  	  		  controllers.core.PortfolioEntryStatusReportingController.downloadAttachment(id: Long)
+GET    /portfolio-entry/docs/delete		       	  controllers.core.PortfolioEntryStatusReportingController.deleteAttachment(id: Long, attachmentId: Long)
 
 #-------------------
 # Core: PortfolioEntryDataSyndication

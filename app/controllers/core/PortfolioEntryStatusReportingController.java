@@ -28,25 +28,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model.Finder;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
+import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryEventDao;
+import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.PortfolioEntryReportDao;
 import dao.pmo.PortfolioEntryRiskDao;
 import dao.reporting.ReportingDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
+import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.custom_attribute.ICustomAttributeManagerService;
@@ -64,12 +71,15 @@ import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.TableExcelRenderer;
 import framework.utils.Utilities;
+import framework.utils.FilterConfig.UserColumnConfiguration;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
+import models.governance.LifeCycleMilestoneInstance;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryEvent;
+import models.pmo.PortfolioEntryPlanningPackage;
 import models.pmo.PortfolioEntryReport;
 import models.pmo.PortfolioEntryRisk;
 import models.reporting.Reporting;
@@ -96,6 +106,7 @@ import utils.form.PortfolioEntryReportFormData;
 import utils.form.PortfolioEntryRiskFormData;
 import utils.reporting.IReportingUtils;
 import utils.table.AttachmentListView;
+import utils.table.PortfolioEntryAttachmentListView;
 import utils.table.PortfolioEntryEventListView;
 import utils.table.PortfolioEntryReportListView;
 import utils.table.PortfolioEntryRiskListView;
@@ -1170,6 +1181,238 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         }
     }
+    
+    /**
+     * Download the attachments file.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result downloadAttachment(Long id) {
+
+        try {
+
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryAttachmentListView> filterConfig = this.getTableProvider().get().docsTableDefinition.filterConfig.persistCurrentInDefault(uid, request());
+
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
+
+                // get the table
+                Pair<Table<PortfolioEntryAttachmentListView>, Pagination<Attachment>> t = getDocsTable(id, filterConfig);
+
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
+
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+        }
+    }
+    
+    /**
+     * Delete an attachment
+     *
+     * @param id the attachment id
+     */
+    //@With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result deleteAttachment(Long id, Long attachmentId) {
+		// get the attachment
+		Attachment attachment = Attachment.getAttachmentFromId(attachmentId);
+		
+		// security: the portfolioEntry must be related to the object
+		/*if (!attachment.objectId.equals(id)) {
+		    return forbidden(views.html.error.access_forbidden.render(""));
+		}*/
+		
+		// delete the attachment
+		FileAttachmentHelper.deleteFileAttachment(attachmentId, getAttachmentManagerPlugin(), getUserSessionManagerPlugin());
+		
+		attachment.doDelete();
+		
+		Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry.attachment.delete"));
+		
+		return docs(id);
+    }
+    
+    /**
+     * Filter the attachments files.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result docsFilter(Long id) {
+
+        try {
+
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryAttachmentListView> filterConfig = this.getTableProvider().get().docsTableDefinition.filterConfig.persistCurrentInDefault(uid, request());
+
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
+
+                // get the table
+                Pair<Table<PortfolioEntryAttachmentListView>, Pagination<Attachment>> t = getDocsTable(id, filterConfig);
+
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
+
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+        }
+    }
+    
+    /**
+     * Display the list of attachments.
+     * 
+     * @param id
+     *            the portfolio entry id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result docs(Long id) {
+
+        try {
+
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<PortfolioEntryAttachmentListView> filterConfig = this.getTableProvider().get().docsTableDefinition.filterConfig.getCurrent(uid, request());
+
+            // get the table
+            Pair<Table<PortfolioEntryAttachmentListView>, Pagination<Attachment>> t = getDocsTable(id,filterConfig);
+
+            //
+            return ok(views.html.core.portfolioentrystatusreporting.docs.render(PortfolioEntryDao.getPEById(id), t.getLeft(), t.getRight(), filterConfig));
+
+        } catch (Exception e) {
+
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
+        }
+    }
+    
+    private List<Attachment> getAttachmentsByPE(Long portfolioEntryId, ExpressionList<Attachment> expressionList)
+    {
+    	List<PortfolioEntryReport> perList = PortfolioEntryReportDao.getPEReportAsListByPE(portfolioEntryId);
+    	List<LifeCycleMilestoneInstance> lcmiList = LifeCycleMilestoneDao.findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("lifeCycleInstance.portfolioEntry.id", portfolioEntryId).findList();
+    	List<PortfolioEntryPlanningPackage> pkgList = PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsListByPE(portfolioEntryId);
+
+    	expressionList.where()
+		.disjunction()
+			.conjunction()
+				.eq("object_type","models.pmo.PortfolioEntryReport")
+				.in("object_id", perList.stream().map(PortfolioEntryReport::getId).collect(Collectors.toList()))
+			.endJunction()  
+			.conjunction()
+				.eq("object_type","models.pmo.PortfolioEntryPlanningPackage")
+				.in("object_id", pkgList.stream().map(PortfolioEntryPlanningPackage::getId).collect(Collectors.toList()))
+			.endJunction()
+			.conjunction()
+				.eq("object_type","models.governance.LifeCycleMilestoneInstance")
+				.in("object_id", lcmiList.stream().map(LifeCycleMilestoneInstance::getId).collect(Collectors.toList()))
+			.endJunction()    	
+			.conjunction()
+				.eq("object_type","models.pmo.PortfolioEntry")
+				.eq("object_id", portfolioEntryId)
+			.endJunction()
+		.endJunction();
+    	
+    	return expressionList.findList();
+    }
+    
+    
+    /**
+     * Get the attachment management table.
+     *
+     * @param filterConfig the table filter configuration
+     */
+    private Pair<Table<PortfolioEntryAttachmentListView>, Pagination<Attachment>> getDocsTable(Long portfolioEntryId,FilterConfig<PortfolioEntryAttachmentListView> filterConfig) {
+    	ExpressionList<Attachment> expressionList = filterConfig.updateWithSearchExpression(Attachment.getAllBusinessObjectsAttachmentsAsExpression());
+    	
+    	filterConfig.updateWithSortExpression(expressionList);
+    	
+    	List<Attachment> attachmentsList = getAttachmentsByPE(portfolioEntryId, expressionList);
+
+    	Pagination<Attachment> pagination =null;
+    	List<PortfolioEntryAttachmentListView> attachmentByPEListView=null;
+    	List<Attachment> foundAttachments=null;
+    	
+        //Check if the user selected a portfolio_entry filter in the table
+        UserColumnConfiguration ucc=filterConfig.getUserColumnConfigurations().get("portfolioEntryId");
+        Long selectedPortfolioentry=0l;
+        if(ucc.isFiltered() && ucc.isDisplayed() && ucc!=null){
+        	Object[] valueStructure=(Object[]) ucc.getFilterValue();
+        	selectedPortfolioentry=(Long) valueStructure[0];
+        	if(log.isDebugEnabled()){
+        		log.debug("Selected portfolio entry "+selectedPortfolioentry);
+        	}
+        }
+    	
+		//Apply a RAM filter to remove the confidential projects (WARNING: this may have some performance issues)
+        //and (if selected) the attachment which do not belong to the selected portfolioentry
+    	boolean filterConfidentials=true;
+    	try{
+    		filterConfidentials=getSecurityService().restrict(IMafConstants.ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION_NO_CONFIDENTIAL);
+    	}catch(AccountManagementException e){
+    		log.error("Error while checking the permission ADMIN_ATTACHMENTS_MANAGEMENT_PERMISSION_NO_CONFIDENTIAL",e);
+    	}
+    	if(filterConfidentials || selectedPortfolioentry>0){
+    		foundAttachments=attachmentsList;
+    		List<Attachment> filteredAttachments=new ArrayList<>();
+    		if(foundAttachments!=null){
+	        	for(Attachment attachement : foundAttachments){
+	        		PortfolioEntryAttachmentListView view=new PortfolioEntryAttachmentListView(attachement);
+	        		if(view.portfolioEntryId!=null && view.portfolioEntryId > 0){
+	        			boolean keepAttachment=true;
+	        			if(filterConfidentials){
+		        			PortfolioEntry pfe=PortfolioEntryDao.getPEAllById(view.portfolioEntryId);
+		                	if(pfe.isPublic && !pfe.deleted){
+		                		keepAttachment=true;
+		                	}else{
+		                		keepAttachment=false;
+		                	}
+	        			}
+	        			if(selectedPortfolioentry>0 && !view.portfolioEntryId.equals(selectedPortfolioentry)){
+		                	if(log.isDebugEnabled()){
+		                		log.debug(">>> Match with "+view.id);
+		                	}
+		                	keepAttachment = false;
+	        			}
+	                	if(keepAttachment){
+	                		filteredAttachments.add(attachement);
+	                	}
+	        		}else{
+	        			if(selectedPortfolioentry.longValue()==0){
+	        				filteredAttachments.add(attachement);
+	        			}
+	        		}
+	        	}
+    		}
+        	pagination=new Pagination<>(getPreferenceManagerPlugin(),filteredAttachments.size());
+        	pagination.setCurrentPage(filterConfig.getCurrentPage());
+        	filteredAttachments=pagination.getEntriesForCurrentPage(filteredAttachments);
+        	attachmentByPEListView = filteredAttachments.stream().map(PortfolioEntryAttachmentListView::new).collect(Collectors.toList());
+        }else{
+        	pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
+            pagination.setCurrentPage(filterConfig.getCurrentPage());
+            attachmentByPEListView = pagination.getListOfObjects().stream().map(PortfolioEntryAttachmentListView::new).collect(Collectors.toList());
+        }
+    	
+        Table<PortfolioEntryAttachmentListView> table = getTableProvider().get().docsTableDefinition.templateTable.fillForFilterConfig(attachmentByPEListView, filterConfig.getColumnsToHide());
+
+        return Pair.of(table, pagination);
+    }
+
 
     /**
      * Filter the timesheet logs.
