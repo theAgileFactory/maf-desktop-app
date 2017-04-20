@@ -22,6 +22,7 @@ import java.util.Date;
 
 import constants.IMafConstants;
 import constants.MafDataType;
+import controllers.admin.routes;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
@@ -36,6 +37,7 @@ import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
+import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
 import models.pmo.PortfolioEntry;
 import play.Logger;
@@ -144,14 +146,16 @@ public class PortfolioEntryAttachmentListView {
                     addColumn("lastUpdate", "lastUpdate", "object.attachment.last_update.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastUpdate", new DateFormatter<>());
 
-                   /* addColumn("downloadActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    // download the attachment
+                    addColumn("downloadActionLink", "id", "", Table.ColumnDef.SorterType.NONE);                 
                     setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<>(
                             IMafConstants.DOWNLOAD_URL_FORMAT,
-                            (StringFormatFormatter.Hook<PortfolioEntryAttachmentListView>) AttachmentsByPEListView -> routes.AttachmentsController.downloadAttachment(AttachmentsByPEListView.id).url())
+                            (StringFormatFormatter.Hook<PortfolioEntryAttachmentListView>) attachmentManagementListView -> routes.AttachmentsController.downloadAttachment(attachmentManagementListView.id).url())
                     );
+                    
                     setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
-                    */
+                    
 
                     addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("removeActionLink", (AttachmentsByPEListView, value) -> {
