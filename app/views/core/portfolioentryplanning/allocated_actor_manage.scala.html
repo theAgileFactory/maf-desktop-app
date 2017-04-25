@@ -27,6 +27,7 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 @import commons._
+@import java.time.Year
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor])
@@ -95,7 +96,7 @@
                             <input type="hidden" name="@allocatedActorForm("currencyRate").name" value="1"/>
                         }
                         
-                        @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'readonly -> allocatedActorForm("monthlyAllocated").value)
+                        @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"))
                         
                         @if(_budgetTrackingService.isActive()) {
                             @parts.input_text(allocatedActorForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
@@ -128,33 +129,44 @@
 
                         <div class="form-group">
                             <div class="btn-group" id="year-picker-block">
-                                <a class="btn btn-default" role="button">&laquo;</a>
+                                <a class="btn btn-default" role="button" id="previous-year">&laquo;</a>
                                 <a class="btn btn-default" role="button" id="year-picker"></a>
-                                <a class="btn btn-default" role="button">&raquo;</a>
+                                <a class="btn btn-default" role="button" id="next-year">&raquo;</a>
                             </div>
                         </div>
 
-                        @repeat(allocatedActorForm("monthAllocations"), min = 1) { monthAllocationField =>
-                            <div class="row" id="monthAllocations_@monthAllocationField("year").value">
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".januaryAllocationValue"), '_label -> parts.Msg("month.january"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".februaryAllocationValue"), '_label -> parts.Msg("month.february"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".marchAllocationValue"), '_label -> parts.Msg("month.march"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".aprilAllocationValue"), '_label -> parts.Msg("month.april"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".mayAllocationValue"), '_label -> parts.Msg("month.may"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".juneAllocationValue"), '_label -> parts.Msg("month.june"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".julyAllocationValue"), '_label -> parts.Msg("month.july"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".augustAllocationValue"), '_label -> parts.Msg("month.august"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".septemberAllocationValue"), '_label -> parts.Msg("month.september"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".octoberAllocationValue"), '_label -> parts.Msg("month.october"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".novemberAllocationValue"), '_label -> parts.Msg("month.november"))</div>
-                                <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".decemberAllocationValue"), '_label -> parts.Msg("month.december"))</div>
-                            </div>
-                            @parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".year"), '_label -> null)
-                        }
+                        <div id="monthAllocations">
+                            @repeat(allocatedActorForm("monthAllocations")) { monthAllocationField =>
+                                <div class="monthAllocation">
+                                    @if(monthAllocationField("year").value.isEmpty) {
+                                        <div class="row" id="monthAllocations_@Year.now().getValue">
+                                    } else {
+                                        <div class="row" id="monthAllocations_@monthAllocationField("year").value">
+                                    }
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".januaryAllocationValue"), '_label -> parts.Msg("month.january"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".februaryAllocationValue"), '_label -> parts.Msg("month.february"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".marchAllocationValue"), '_label -> parts.Msg("month.march"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".aprilAllocationValue"), '_label -> parts.Msg("month.april"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".mayAllocationValue"), '_label -> parts.Msg("month.may"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".juneAllocationValue"), '_label -> parts.Msg("month.june"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".julyAllocationValue"), '_label -> parts.Msg("month.july"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".augustAllocationValue"), '_label -> parts.Msg("month.august"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".septemberAllocationValue"), '_label -> parts.Msg("month.september"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".octoberAllocationValue"), '_label -> parts.Msg("month.october"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".novemberAllocationValue"), '_label -> parts.Msg("month.november"))</div>
+                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".decemberAllocationValue"), '_label -> parts.Msg("month.december"))</div>
+                                    </div>
+                                    @if(monthAllocationField("year").value.isEmpty) {
+                                        <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@Year.now().getValue" />
+                                    } else {
+                                        <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@monthAllocationField("year").value" />
+                                    }
+                                </div>
+                            }
+                        </div>
 
-                        <small>@parts.Msg("core.actor.capacity.footer")</small>
+                        <div><small>@parts.Msg("core.actor.capacity.footer")</small></div>
 
-                        <br />
                         <br />
 
                         @allocated_resource_manage_js()
@@ -173,28 +185,52 @@
                                 $('#@allocatedActorForm("days").id').prop('readonly', false);
                                 $('#year-picker-block').find('a').prop('readonly', true);
                                 $('[id$=AllocationValue]').prop('readonly', true);
+                                $('#next-year').attr('disabled', true);
+                                $('#previous-year').attr('disabled', true);
+                                $('#year-picker').attr('disabled', true);
                             } else {
                                 $('#@allocatedActorForm("days").id').prop('readonly', true);
                                 $('#year-picker-block').find('a').prop('readonly', false);
                                 $('[id$=AllocationValue]').prop('readonly', false);
+                                $('#next-year').attr('disabled', false);
+                                $('#previous-year').attr('disabled', false);
+                                $('#year-picker').attr('disabled', false);
                             }
                         });
 
-                        $('[id$=AllocationValue]').change(function() {
-                            var days = 0;
-                            $('[id$=AllocationValue]').each(function () {
-                                days += +$(this).val();
-                            });
-                            $('#@allocatedActorForm("days").id').val(days);
+                        $('[id$=AllocationValue]').change(recomputeDays);
+
+                        $('#previous-year').click(function () {
+                            var yearPicker = $('#year-picker');
+                            var currentYear = +yearPicker.html();
+                            yearPicker.html(currentYear - 1);
+                            $('#monthAllocations_'+currentYear).parent().hide();
+                            showOrCreateMonthAllocation(currentYear - 1);
                         });
-        
+
+                        $('#next-year').click(function () {
+                            var yearPicker = $('#year-picker');
+                            var currentYear = +yearPicker.html();
+                            yearPicker.html(currentYear + 1);
+                            $('#monthAllocations_'+currentYear).parent().hide();
+                            showOrCreateMonthAllocation(currentYear + 1);
+                        });
+
                         maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
 
-                        // Initialize year picker
-                        $('#year-picker').html($('#monthAllocations_0_year').val());
+                        // Initialization
+                        currentYear = new Date().getFullYear();
+                        $('#year-picker').html(currentYear);
+                        $('#monthAllocations').children().hide();
+                        showOrCreateMonthAllocation(currentYear);
 
                         if (!$('#@allocatedActorForm("monthlyAllocated").id').prop('checked')) {
                             $('[id$=AllocationValue]').prop('readonly', true);
+                            $('#next-year').attr('disabled', true);
+                            $('#previous-year').attr('disabled', true);
+                            $('#year-picker').attr('disabled', true);
+                        } else {
+                            $('#@allocatedActorForm("days").id').prop('readonly', true);
                         }
 
                         </script>

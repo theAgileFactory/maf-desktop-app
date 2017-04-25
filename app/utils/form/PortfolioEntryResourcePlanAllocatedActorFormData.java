@@ -89,7 +89,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
     public List<MonthAllocation> monthAllocations;
 
-    public class MonthAllocation {
+    public static class MonthAllocation {
         public Integer year;
         public Double januaryAllocationValue;
         public Double februaryAllocationValue;
@@ -147,7 +147,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
         this.monthAllocations = new ArrayList<>();
-        this.monthAllocations.add(new MonthAllocation());
     }
 
     /**

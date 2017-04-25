@@ -16,28 +16,63 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 <script>
-function maf_recomputeFields(packageInputId, followPackageDatesInputId, startDateInputId, endDateInputId) {
+    function maf_recomputeFields(packageInputId, followPackageDatesInputId, startDateInputId, endDateInputId) {
 
-    if($('#' + packageInputId).val() == "") {
-        $('#' + followPackageDatesInputId).prop('checked', false);
-        $('#' + followPackageDatesInputId).prop('disabled', true);
-        $('#' + startDateInputId).prop('disabled', false);
-        $('#' + endDateInputId).prop('disabled', false);
-    } else {
-        $('#' + followPackageDatesInputId).prop('disabled', false);
-    }
-
-    if($('#' + followPackageDatesInputId).prop('disabled') == false) {
-        if($('#' + followPackageDatesInputId).prop('checked')) {
-            $('#' + startDateInputId).val("");
-            $('#' + startDateInputId).prop('disabled', true);
-            $('#' + endDateInputId).val("");
-            $('#' + endDateInputId).prop('disabled', true);
-        } else {
+        if($('#' + packageInputId).val() == "") {
+            $('#' + followPackageDatesInputId).prop('checked', false);
+            $('#' + followPackageDatesInputId).prop('disabled', true);
             $('#' + startDateInputId).prop('disabled', false);
             $('#' + endDateInputId).prop('disabled', false);
+        } else {
+            $('#' + followPackageDatesInputId).prop('disabled', false);
+        }
+
+        if($('#' + followPackageDatesInputId).prop('disabled') == false) {
+            if($('#' + followPackageDatesInputId).prop('checked')) {
+                $('#' + startDateInputId).val("");
+                $('#' + startDateInputId).prop('disabled', true);
+                $('#' + endDateInputId).val("");
+                $('#' + endDateInputId).prop('disabled', true);
+            } else {
+                $('#' + startDateInputId).prop('disabled', false);
+                $('#' + endDateInputId).prop('disabled', false);
+            }
+        }
+
+    }
+
+    function showOrCreateMonthAllocation(year) {
+        if (document.getElementById('monthAllocations_'+year)) {
+            $('#monthAllocations_'+year).parent().show();
+        } else {
+            var newYearDiv = $('#monthAllocations').append($('#monthAllocations').children().first().clone()).children().last();
+            newYearDiv.find('input').val(0);
+            newYearDiv.children().first().attr('id', 'monthAllocations_' + year);
+            newYearDiv.find('[name$=year]').val(year);
+            recomputeIdsAndNames();
+            newYearDiv.find('[id$=AllocationValue]').change(recomputeDays);
+            newYearDiv.show();
         }
     }
-    
-}
+
+    function recomputeIdsAndNames() {
+        var monthAllocationDivs = $('.monthAllocation');
+        monthAllocationDivs.each(function (i, element) {
+            $(element).find('label').each(function (j, element) {
+                $(element).attr('for', $(element).attr('for').replace(/monthAllocations_./, 'monthAllocations_'+i));
+            });
+            $(element).find('input').each(function (j, element) {
+                element.id = element.id.replace(/monthAllocations_./, 'monthAllocations_'+i);
+                element.name = element.name.replace(/monthAllocations\[./, 'monthAllocations['+i);
+            });
+        });
+    }
+
+    function recomputeDays() {
+        var days = 0;
+        $('[id$=AllocationValue]').each(function () {
+            days += +$(this).val();
+        });
+        $('#days').val(days);
+    }
 </script>
