@@ -88,7 +88,14 @@
                                 dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id)
                             )
                         }
-                        
+
+                        @parts.singlevalue_picker(
+                            allocatedActorForm("portfolioEntryPlanningPackage"),
+                            parts.Msg.asString("object.allocated_resource.package.label"),
+                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
+                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                        )
+
                         @if(_budgetTrackingService.isActive()) {
                             @currency_field(allocatedActorForm("currencyCode"), allocatedActorForm("currencyRate"), "object.allocated_resource.currency.label", null)
                         } else {
@@ -97,35 +104,20 @@
                         }
                         
                         @parts.input_text(allocatedActorForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"))
-                        
-                        @if(_budgetTrackingService.isActive()) {
-                            @parts.input_text(allocatedActorForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
-                            @parts.input_text(allocatedActorForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
-                            @parts.input_text(allocatedActorForm("forecastDailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.help"))
-                        } else {
-                            <input type="hidden" name="dailyRate" value="0" />
-                        }
-                        
-                        @parts.singlevalue_picker(
-                            allocatedActorForm("portfolioEntryPlanningPackage"), 
-                            parts.Msg.asString("object.allocated_resource.package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
-                        )
-                        
-                        @parts.checkbox(
-                            allocatedActorForm("followPackageDates"), 
-                            parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
-                        )
-                        
-                        @parts.dateinput(allocatedActorForm("startDate"), "object.allocated_resource.start_date.label")
-                        
-                        @parts.dateinput(allocatedActorForm("endDate"), "object.allocated_resource.end_date.label")
 
                         @parts.checkbox(
                             allocatedActorForm("monthlyAllocated"),
                             parts.Msg.asString("object.allocated_resource.monthly_allocated.label")
                         )
+
+                        @parts.checkbox(
+                            allocatedActorForm("followPackageDates"),
+                            parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
+                        )
+
+                        @parts.dateinput(allocatedActorForm("startDate"), "object.allocated_resource.start_date.label")
+
+                        @parts.dateinput(allocatedActorForm("endDate"), "object.allocated_resource.end_date.label")
 
                         <div class="form-group">
                             <div class="btn-group" id="year-picker-block">
@@ -136,38 +128,47 @@
                         </div>
 
                         <div id="monthAllocations">
-                            @repeat(allocatedActorForm("monthAllocations")) { monthAllocationField =>
-                                <div class="monthAllocation">
-                                    @if(monthAllocationField("year").value.isEmpty) {
-                                        <div class="row" id="monthAllocations_@Year.now().getValue">
+                        @repeat(allocatedActorForm("monthAllocations")) { monthAllocationField =>
+                            <div class="monthAllocation">
+                                @if(monthAllocationField("year").value.isEmpty) {
+                                    <div class="row" id="monthAllocations_@Year.now().getValue">
                                     } else {
-                                        <div class="row" id="monthAllocations_@monthAllocationField("year").value">
+                                    <div class="row" id="monthAllocations_@monthAllocationField("year").value">
                                     }
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".januaryAllocationValue"), '_label -> parts.Msg("month.january"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".februaryAllocationValue"), '_label -> parts.Msg("month.february"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".marchAllocationValue"), '_label -> parts.Msg("month.march"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".aprilAllocationValue"), '_label -> parts.Msg("month.april"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".mayAllocationValue"), '_label -> parts.Msg("month.may"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".juneAllocationValue"), '_label -> parts.Msg("month.june"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".julyAllocationValue"), '_label -> parts.Msg("month.july"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".augustAllocationValue"), '_label -> parts.Msg("month.august"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".septemberAllocationValue"), '_label -> parts.Msg("month.september"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".octoberAllocationValue"), '_label -> parts.Msg("month.october"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".novemberAllocationValue"), '_label -> parts.Msg("month.november"))</div>
-                                        <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".decemberAllocationValue"), '_label -> parts.Msg("month.december"))</div>
-                                    </div>
-                                    @if(monthAllocationField("year").value.isEmpty) {
-                                        <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@Year.now().getValue" />
-                                    } else {
-                                        <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@monthAllocationField("year").value" />
-                                    }
-                                </div>
-                            }
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".januaryAllocationValue"), '_label -> parts.Msg("month.january"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".februaryAllocationValue"), '_label -> parts.Msg("month.february"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".marchAllocationValue"), '_label -> parts.Msg("month.march"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".aprilAllocationValue"), '_label -> parts.Msg("month.april"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".mayAllocationValue"), '_label -> parts.Msg("month.may"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".juneAllocationValue"), '_label -> parts.Msg("month.june"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".julyAllocationValue"), '_label -> parts.Msg("month.july"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".augustAllocationValue"), '_label -> parts.Msg("month.august"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".septemberAllocationValue"), '_label -> parts.Msg("month.september"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".octoberAllocationValue"), '_label -> parts.Msg("month.october"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".novemberAllocationValue"), '_label -> parts.Msg("month.november"))</div>
+                            <div class="col-md-1 text-center">@parts.input_text(allocatedActorForm(monthAllocationField.name.toString + ".decemberAllocationValue"), '_label -> parts.Msg("month.december"))</div>
+                            </div>
+                                @if(monthAllocationField("year").value.isEmpty) {
+                                    <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@Year.now().getValue" />
+                                } else {
+                                    <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@monthAllocationField("year").value" />
+                                }
+                            </div>
+                        }
                         </div>
 
-                        <div><small>@parts.Msg("core.actor.capacity.footer")</small></div>
+                            <div><small>@parts.Msg("core.actor.capacity.footer")</small></div>
 
-                        <br />
+                            <br />
+
+                        @if(_budgetTrackingService.isActive()) {
+                            @parts.input_text(allocatedActorForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
+                            @parts.input_text(allocatedActorForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
+                            @parts.input_text(allocatedActorForm("forecastDailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.help"))
+                        } else {
+                            <input type="hidden" name="dailyRate" value="0" />
+                        }
+                        
 
                         @allocated_resource_manage_js()
                         
@@ -183,18 +184,18 @@
                         $('#@allocatedActorForm("monthlyAllocated").id').change(function() {
                             if ($('#@allocatedActorForm("monthlyAllocated").id').prop('checked') == false) {
                                 $('#@allocatedActorForm("days").id').prop('readonly', false);
-                                $('#year-picker-block').find('a').prop('readonly', true);
-                                $('[id$=AllocationValue]').prop('readonly', true);
-                                $('#next-year').attr('disabled', true);
-                                $('#previous-year').attr('disabled', true);
-                                $('#year-picker').attr('disabled', true);
+                                $('#year-picker-block').hide();
+                                $('#monthAllocations').hide();
+                                $('#@allocatedActorForm("followPackageDates").id').parent().parent().show();
+                                $('#@allocatedActorForm("startDate").id').parent().parent().show();
+                                $('#@allocatedActorForm("endDate").id').parent().parent().show();
                             } else {
                                 $('#@allocatedActorForm("days").id').prop('readonly', true);
-                                $('#year-picker-block').find('a').prop('readonly', false);
-                                $('[id$=AllocationValue]').prop('readonly', false);
-                                $('#next-year').attr('disabled', false);
-                                $('#previous-year').attr('disabled', false);
-                                $('#year-picker').attr('disabled', false);
+                                $('#year-picker-block').show();
+                                $('#monthAllocations').show();
+                                $('#@allocatedActorForm("followPackageDates").id').parent().parent().hide();
+                                $('#@allocatedActorForm("startDate").id').parent().parent().hide();
+                                $('#@allocatedActorForm("endDate").id').parent().parent().hide();
                             }
                         });
 
@@ -225,12 +226,13 @@
                         showOrCreateMonthAllocation(currentYear);
 
                         if (!$('#@allocatedActorForm("monthlyAllocated").id').prop('checked')) {
-                            $('[id$=AllocationValue]').prop('readonly', true);
-                            $('#next-year').attr('disabled', true);
-                            $('#previous-year').attr('disabled', true);
-                            $('#year-picker').attr('disabled', true);
+                            $('#year-picker-block').hide();
+                            $('#monthAllocations').hide();
                         } else {
                             $('#@allocatedActorForm("days").id').prop('readonly', true);
+                            $('#@allocatedActorForm("followPackageDates").id').parent().parent().hide();
+                            $('#@allocatedActorForm("startDate").id').parent().parent().hide();
+                            $('#@allocatedActorForm("endDate").id').parent().parent().hide();
                         }
 
                         </script>
