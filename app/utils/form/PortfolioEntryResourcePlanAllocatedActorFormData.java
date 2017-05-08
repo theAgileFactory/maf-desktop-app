@@ -365,7 +365,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
             c.set(startMonth.year, startMonth.month, 1);
             allocatedActor.startDate = c.getTime();
 
-            c.set(endMonth.year, endMonth.month, 0);
+            c.set(endMonth.year, endMonth.month, 1);
             c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
             allocatedActor.endDate = c.getTime();
 

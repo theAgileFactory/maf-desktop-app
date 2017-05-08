@@ -41,6 +41,40 @@
 
     }
 
+    function toggleMonthyAllocationFields(monthlyAllocatedInputId, daysInputId, followPackageDatesInputId, startDateInputId, endDateInputId) {
+        if ($('#'+monthlyAllocatedInputId).prop('checked') == false) {
+            $('#'+daysInputId).prop('readonly', false);
+            $('#year-picker-block').hide();
+            $('#monthAllocations').hide();
+            $('#'+followPackageDatesInputId).parent().parent().show();
+            $('#'+startDateInputId).parent().parent().show();
+            $('#'+endDateInputId).parent().parent().show();
+        } else {
+            $('#'+daysInputId).prop('readonly', true);
+            $('#year-picker-block').show();
+            $('#monthAllocations').show();
+            $('#'+followPackageDatesInputId).parent().parent().hide();
+            $('#'+startDateInputId).parent().parent().hide();
+            $('#'+endDateInputId).parent().parent().hide();
+        }
+    }
+
+    function previousYearAction() {
+        var yearPicker = $('#year-picker');
+        var currentYear = +yearPicker.html();
+        yearPicker.html(currentYear - 1);
+        $('#monthAllocations_'+currentYear).parent().hide();
+        showOrCreateMonthAllocation(currentYear - 1);
+    }
+
+    function nextYearAction() {
+        var yearPicker = $('#year-picker');
+        var currentYear = +yearPicker.html();
+        yearPicker.html(currentYear + 1);
+        $('#monthAllocations_'+currentYear).parent().hide();
+        showOrCreateMonthAllocation(currentYear + 1);
+    }
+
     function showOrCreateMonthAllocation(year) {
         if (document.getElementById('monthAllocations_'+year)) {
             $('#monthAllocations_'+year).parent().show();

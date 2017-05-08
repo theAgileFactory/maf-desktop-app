@@ -96,7 +96,7 @@
                             Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
                         )
 
-                        @if(_budgetTrackingService.isActive()) {
+                        @if(_budgetTrackingService.isActive) {
                             @currency_field(allocatedActorForm("currencyCode"), allocatedActorForm("currencyRate"), "object.allocated_resource.currency.label", null)
                         } else {
                             <input type="hidden" name="@allocatedActorForm("currencyCode").name" value="@dao.finance.CurrencyDAO.getCurrencyDefaultAsCode()"/>
@@ -182,40 +182,14 @@
                         });
 
                         $('#@allocatedActorForm("monthlyAllocated").id').change(function() {
-                            if ($('#@allocatedActorForm("monthlyAllocated").id').prop('checked') == false) {
-                                $('#@allocatedActorForm("days").id').prop('readonly', false);
-                                $('#year-picker-block').hide();
-                                $('#monthAllocations').hide();
-                                $('#@allocatedActorForm("followPackageDates").id').parent().parent().show();
-                                $('#@allocatedActorForm("startDate").id').parent().parent().show();
-                                $('#@allocatedActorForm("endDate").id').parent().parent().show();
-                            } else {
-                                $('#@allocatedActorForm("days").id').prop('readonly', true);
-                                $('#year-picker-block').show();
-                                $('#monthAllocations').show();
-                                $('#@allocatedActorForm("followPackageDates").id').parent().parent().hide();
-                                $('#@allocatedActorForm("startDate").id').parent().parent().hide();
-                                $('#@allocatedActorForm("endDate").id').parent().parent().hide();
-                            }
+                            toggleMonthyAllocationFields('@allocatedActorForm("monthlyAllocated").id', '@allocatedActorForm("days").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id')
                         });
 
                         $('[id$=AllocationValue]').change(recomputeDays);
 
-                        $('#previous-year').click(function () {
-                            var yearPicker = $('#year-picker');
-                            var currentYear = +yearPicker.html();
-                            yearPicker.html(currentYear - 1);
-                            $('#monthAllocations_'+currentYear).parent().hide();
-                            showOrCreateMonthAllocation(currentYear - 1);
-                        });
+                        $('#previous-year').click(previousYearAction);
 
-                        $('#next-year').click(function () {
-                            var yearPicker = $('#year-picker');
-                            var currentYear = +yearPicker.html();
-                            yearPicker.html(currentYear + 1);
-                            $('#monthAllocations_'+currentYear).parent().hide();
-                            showOrCreateMonthAllocation(currentYear + 1);
-                        });
+                        $('#next-year').click(nextYearAction);
 
                         maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
 
