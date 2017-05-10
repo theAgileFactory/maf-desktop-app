@@ -18,7 +18,8 @@
 @(
     capacityForecastForm: Form[controllers.core.RoadmapController.CapacityForecastForm],
     orgUnitCapacities: List[controllers.core.RoadmapController.OrgUnitCapacity],
-    competencyCapacities: List[controllers.core.RoadmapController.CompetencyCapacity]
+    competencyCapacities: List[controllers.core.RoadmapController.CompetencyCapacity],
+    actorCapacities: List[controllers.core.RoadmapController.ActorCapacity]
 )
 
 @import commons._
@@ -96,6 +97,12 @@
     <li  >
         <a href="#competencies-content" id="#competencies-tab" data-toggle="tab" aria-controls="competencies-content">
            @parts.Msg("core.roadmap.simulator.capacity_forecast.competencies.label")
+        </a>
+    </li>
+
+    <li >
+        <a href="#actors-content" id="#actors-tab" data-toggle="tab" aria-controls="actors-content">
+            @parts.Msg("core.roadmap.simulator.capacity_forecast.actors.label")
         </a>
     </li>
 </ul>
@@ -200,13 +207,70 @@
                 </thead>
                 
                 <tbody>
-                    @for(competencyCapacity <- competencyCapacities) {
+                @for(competencyCapacity <- competencyCapacities) {
+                    <tr>
+                        <td>@display_competency(competencyCapacity.getCompetency)</td>
+                        @for((key, competencyCapacityMonth) <- competencyCapacity.getResourceCapacityMonths) {
+                            <td class="bg-@competencyCapacityMonth.getBootstrapBackground text-center cell">
+                                <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.Competency].getName, competencyCapacity.getCompetency.id, capacityForecastForm("year").value.toInt, key)');">
+                                    @display_number(competencyCapacityMonth.getPlanned) / @display_number(competencyCapacityMonth.getAvailable)
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="tab-pane fade" id="actors-content" aria-labelledby="actors-tab">
+
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <colgroup>
+                    <col style="width: 16%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                    <col style="width: 7%;">
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.actor.label")</th>
+                        <th class="text-center">@parts.Msg("month.january")</th>
+                        <th class="text-center">@parts.Msg("month.february")</th>
+                        <th class="text-center">@parts.Msg("month.march")</th>
+                        <th class="text-center">@parts.Msg("month.april")</th>
+                        <th class="text-center">@parts.Msg("month.may")</th>
+                        <th class="text-center">@parts.Msg("month.june")</th>
+                        <th class="text-center">@parts.Msg("month.july")</th>
+                        <th class="text-center">@parts.Msg("month.august")</th>
+                        <th class="text-center">@parts.Msg("month.september")</th>
+                        <th class="text-center">@parts.Msg("month.october")</th>
+                        <th class="text-center">@parts.Msg("month.november")</th>
+                        <th class="text-center">@parts.Msg("month.december")</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for(actorCapacity <- actorCapacities) {
                         <tr>
-                            <td>@display_competency(competencyCapacity.getCompetency)</td>
-                            @for((key, competencyCapacityMonth) <- competencyCapacity.getResourceCapacityMonths) {
-                                <td class="bg-@competencyCapacityMonth.getBootstrapBackground text-center cell">
+                            <td>@display_actor(actorCapacity.getActor)</td>
+                            @for((key, actorCapacityMonth) <- actorCapacity.getResourceCapacityMonths) {
+                                <td class="bg-@actorCapacityMonth.getBootstrapBackground text-center cell">
                                     <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.Competency].getName, competencyCapacity.getCompetency.id, capacityForecastForm("year").value.toInt, key)');">
-                                        @display_number(competencyCapacityMonth.getPlanned) / @display_number(competencyCapacityMonth.getAvailable)
+                                        @display_number(actorCapacityMonth.getPlanned) / @display_number(actorCapacityMonth.getAvailable)
                                     </a>
                                 </td>
                             }
@@ -217,7 +281,6 @@
         </div>
 
     </div>
-
 </div>
 
 <script>
