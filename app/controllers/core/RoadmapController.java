@@ -17,37 +17,14 @@
  */
 package controllers.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
-
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.OrderBy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.finance.PortfolioEntryResourcePlanDAO;
@@ -66,16 +43,9 @@ import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.FilterConfig;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.JqueryGantt;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.Table;
-import framework.utils.TableExcelRenderer;
+import framework.utils.*;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
+import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.framework_models.account.NotificationCategory;
@@ -83,13 +53,10 @@ import models.framework_models.account.NotificationCategory.Code;
 import models.governance.LifeCycleInstance;
 import models.governance.LifeCyclePhase;
 import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.pmo.Actor;
-import models.pmo.ActorCapacity;
-import models.pmo.Competency;
-import models.pmo.OrgUnit;
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryReport;
+import models.pmo.*;
 import models.timesheet.TimesheetActivityAllocatedActor;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -107,6 +74,18 @@ import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
 import utils.table.PortfolioEntryListView;
+
+import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The controller which displays the roadmap (list of portfolio entries that can
@@ -748,11 +727,11 @@ public class RoadmapController extends Controller {
                 }
 
                 // Get the available actor capacities.
-                List<ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByOrgUnitAndYear(orgUnitCapacity.getOrgUnit().id,
+                List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByOrgUnitAndYear(orgUnitCapacity.getOrgUnit().id,
                         capacityForecastFormData.year);
 
                 // Compute the available actor capacities.
-                for (ActorCapacity actorCapacity : actorCapacities) {
+                for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
                     orgUnitCapacity.addAvailable(actorCapacity.month.intValue() - 1, actorCapacity.value);
                 }
             }
@@ -772,17 +751,46 @@ public class RoadmapController extends Controller {
                 }
 
                 // Get the available actor capacities.
-                List<ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByCompetencyAndYear(competencyCapacity.getCompetency().id,
+                List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByCompetencyAndYear(competencyCapacity.getCompetency().id,
                         capacityForecastFormData.year);
 
                 // Compute the available actor capacities.
-                for (ActorCapacity actorCapacity : actorCapacities) {
+                for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
                     competencyCapacity.addAvailable(actorCapacity.month.intValue() - 1, actorCapacity.value);
                 }
             }
 
+            // Add actor capacities group by actor
+            Map<Long, ActorCapacity> actorCapacities = new HashMap<>();
+            for (PortfolioEntryResourcePlanAllocatedActor allocatedActor: allocatedActors) {
+
+                ActorCapacity actorCapacity;
+                if (actorCapacities.containsKey(allocatedActor.actor.id)) {
+                    actorCapacity = actorCapacities.get(allocatedActor.actor.id);
+                } else {
+                    actorCapacity = new ActorCapacity(warningLimitPercent, allocatedActor.actor);
+                }
+
+                // Add availables
+                models.pmo.ActorCapacity[] actorAvailables = ActorDao.getActorCapacityAsArrayByActorAndYear(allocatedActor.actor, capacityForecastFormData.year);
+                for (models.pmo.ActorCapacity available : actorAvailables) {
+                    actorCapacity.addAvailable(available.month - 1, available.value == null ? 0.0 : available.value);
+                }
+
+                // Add planned
+                if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
+                    allocatedActor.computeAllocationDetails();
+                }
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
+                        .stream()
+                        .filter(detail -> detail.year.equals(capacityForecastFormData.year))
+                        .forEach(detail -> actorCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+
+                actorCapacities.put(allocatedActor.actor.id, actorCapacity);
+            }
+
             return ok(views.html.core.roadmap.roadmap_capacity_forecast.render(capacityForecastForm,
-                    new ArrayList<OrgUnitCapacity>(orgUnitCapacities.values()), new ArrayList<CompetencyCapacity>(competencyCapacities.values())));
+                    new ArrayList<OrgUnitCapacity>(orgUnitCapacities.values()), new ArrayList<CompetencyCapacity>(competencyCapacities.values()), new ArrayList<>(actorCapacities.values())));
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -934,7 +942,7 @@ public class RoadmapController extends Controller {
                     }
 
                     // Get the available actor capacity
-                    ActorCapacity actorCapacity = ActorDao.getActorCapacityByActorAndPeriod(capacityDetails.getActor().id, year, month.intValue() + 1);
+                    models.pmo.ActorCapacity actorCapacity = ActorDao.getActorCapacityByActorAndPeriod(capacityDetails.getActor().id, year, month + 1);
                     if (actorCapacity != null) {
                         capacityDetails.addAvailable(actorCapacity.value);
                     }
@@ -981,6 +989,60 @@ public class RoadmapController extends Controller {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
         }
 
+    }
+
+    public Result simulatorCapacityForecastActorsCellDetailsFragment(Long actorId, Integer year, Integer month) {
+
+        Actor actor = ActorDao.getActorById(actorId);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, month);
+
+        List<PortfolioEntryResourcePlanAllocatedActor> allocations = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActiveAndArchived(actorId, false, true);
+
+        Map<Long, ActorCapacityDetails> capacityDetailsRows = new HashMap<>();
+
+        allocations.stream().forEach(allocation -> {
+            PortfolioEntryResourcePlanAllocatedActorDetail allocationDetail = allocation.getDetail(year, month);
+            if (allocationDetail != null && allocationDetail.days != 0.0) {
+                PortfolioEntry pe = allocation.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry;
+                ActorCapacityDetails detail = null;
+                if (capacityDetailsRows.containsKey(pe.id)) {
+                    detail = capacityDetailsRows.get(pe.id);
+                } else {
+                    detail = new ActorCapacityDetails(pe);
+                }
+                if (allocation.isConfirmed) {
+                    detail.confirmedAllocation += allocationDetail.days;
+                } else {
+                    detail.notConfirmedAllocation += allocationDetail.days;
+                }
+                capacityDetailsRows.put(pe.id, detail);
+            }
+        });
+
+        BasicBar basicBarChart = new BasicBar();
+
+        BasicBar.Elem confirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_kpis.allocation.additional1"));
+        BasicBar.Elem notConfirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_kpis.allocation.additional2"));
+
+        capacityDetailsRows.values().stream().forEach(value -> {
+            String category = value.portfolioEntry.governanceId != null ? value.portfolioEntry.governanceId : value.portfolioEntry.name;
+            basicBarChart.addCategory(category);
+
+            notConfirmedElem.addValue(value.notConfirmedAllocation);
+            confirmedElem.addValue(value.confirmedAllocation);
+        });
+
+        basicBarChart.addElem(notConfirmedElem);
+        basicBarChart.addElem(confirmedElem);
+
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_actors_cell_details_fragment.render(
+                actor,
+                new SimpleDateFormat("MMMM").format(cal.getTime()),
+                new ArrayList<>(capacityDetailsRows.values()),
+                basicBarChart
+        ));
     }
 
     /**
@@ -1234,6 +1296,8 @@ public class RoadmapController extends Controller {
             this.resourceCapacityMonths.get(month).addPlanned(planned);
         }
 
+
+
         /**
          * increase the available value for a month.
          * 
@@ -1277,6 +1341,25 @@ public class RoadmapController extends Controller {
             return orgUnit;
         }
 
+    }
+
+    public static class ActorCapacity extends ResourceRequestCapacity {
+
+        private Actor actor;
+
+        /**
+         * Default constructor.
+         *
+         * @param warningLimitPercent the warning limit in percent
+         */
+        public ActorCapacity(int warningLimitPercent, Actor actor) {
+            super(warningLimitPercent);
+            this.actor = actor;
+        }
+
+        public Actor getActor() {
+            return actor;
+        }
     }
 
     /**
@@ -1380,6 +1463,22 @@ public class RoadmapController extends Controller {
          */
         public void addAvailable(double available) {
             this.available += available;
+        }
+    }
+
+    public static class ActorCapacityDetails {
+        public PortfolioEntry portfolioEntry;
+        public double confirmedAllocation;
+        public double notConfirmedAllocation;
+
+        public ActorCapacityDetails() {
+            this.confirmedAllocation = 0;
+            this.notConfirmedAllocation = 0;
+        }
+
+        public ActorCapacityDetails(PortfolioEntry portfolioEntry) {
+            super();
+            this.portfolioEntry = portfolioEntry;
         }
     }
 

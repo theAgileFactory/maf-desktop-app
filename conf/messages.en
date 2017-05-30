@@ -1929,16 +1929,21 @@ core.roadmap.simulator.capacity_kpis.allocation.additional2=Not confirmed
 core.roadmap.simulator.capacity_forecast=Capacity table
 core.roadmap.simulator.capacity_forecast.org_units.label=Org units
 core.roadmap.simulator.capacity_forecast.competencies.label=Competencies
+core.roadmap.simulator.capacity_forecast.actors.label=Employees
 core.roadmap.simulator.capacity_forecast.year.label=Year
 core.roadmap.simulator.capacity_forecast.only_confirmed.label=Only confirmed
 core.roadmap.simulator.capacity_forecast.org_unit.label=Org unit
 core.roadmap.simulator.capacity_forecast.competency.label=Competency
+core.roadmap.simulator.capacity_forecast.actor.label=Employee
 core.roadmap.simulator.capacity_forecast.resource.label=Resource
+core.roadmap.simulator.capacity_forecast.initiative.label=Initiative
 core.roadmap.simulator.capacity_forecast.confirmed_initiatives.label=Confirmed initiatives
 core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label=Not confirmed initiatives
 core.roadmap.simulator.capacity_forecast.activities.label=Activities
 core.roadmap.simulator.capacity_forecast.available.label=Available
 core.roadmap.simulator.capacity_forecast.planned.label=Planned
+core.roadmap.simulator.capacity_forecast.confirmed_allocation.label=Confirmed allocation
+core.roadmap.simulator.capacity_forecast.requested_allocation.label=Requested allocation
 
 #----------------------
 # search

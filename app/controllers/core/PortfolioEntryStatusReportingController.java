@@ -1541,8 +1541,6 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
-        columnsToHide.add("portfolioEntry");
-        columnsToHide.add("timesheetActivity");
 
         Table<TimesheetLogListView> table = this.getTableProvider().get().timesheetLog.templateTable.fillForFilterConfig(timesheetLogListView, columnsToHide);
 
