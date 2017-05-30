@@ -45,6 +45,7 @@ import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
 import framework.utils.*;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
+import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.framework_models.account.NotificationCategory;
@@ -777,6 +778,9 @@ public class RoadmapController extends Controller {
                 }
 
                 // Add planned
+                if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
+                    allocatedActor.computeAllocationDetails();
+                }
                 allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
                         .stream()
                         .filter(detail -> detail.year.equals(capacityForecastFormData.year))
@@ -989,7 +993,56 @@ public class RoadmapController extends Controller {
 
     public Result simulatorCapacityForecastActorsCellDetailsFragment(Long actorId, Integer year, Integer month) {
 
-        return ok();
+        Actor actor = ActorDao.getActorById(actorId);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, month);
+
+        List<PortfolioEntryResourcePlanAllocatedActor> allocations = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActiveAndArchived(actorId, false, true);
+
+        Map<Long, ActorCapacityDetails> capacityDetailsRows = new HashMap<>();
+
+        allocations.stream().forEach(allocation -> {
+            PortfolioEntryResourcePlanAllocatedActorDetail allocationDetail = allocation.getDetail(year, month);
+            if (allocationDetail != null && allocationDetail.days != 0.0) {
+                PortfolioEntry pe = allocation.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry;
+                ActorCapacityDetails detail = null;
+                if (capacityDetailsRows.containsKey(pe.id)) {
+                    detail = capacityDetailsRows.get(pe.id);
+                } else {
+                    detail = new ActorCapacityDetails(pe);
+                }
+                if (allocation.isConfirmed) {
+                    detail.confirmedAllocation += allocationDetail.days;
+                } else {
+                    detail.notConfirmedAllocation += allocationDetail.days;
+                }
+                capacityDetailsRows.put(pe.id, detail);
+            }
+        });
+
+        BasicBar basicBarChart = new BasicBar();
+
+        BasicBar.Elem confirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_kpis.allocation.additional1"));
+        BasicBar.Elem notConfirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_kpis.allocation.additional2"));
+
+        capacityDetailsRows.values().stream().forEach(value -> {
+            String category = value.portfolioEntry.governanceId != null ? value.portfolioEntry.governanceId : value.portfolioEntry.name;
+            basicBarChart.addCategory(category);
+
+            notConfirmedElem.addValue(value.notConfirmedAllocation);
+            confirmedElem.addValue(value.confirmedAllocation);
+        });
+
+        basicBarChart.addElem(notConfirmedElem);
+        basicBarChart.addElem(confirmedElem);
+
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_actors_cell_details_fragment.render(
+                actor,
+                new SimpleDateFormat("MMMM").format(cal.getTime()),
+                new ArrayList<>(capacityDetailsRows.values()),
+                basicBarChart
+        ));
     }
 
     /**
@@ -1410,6 +1463,22 @@ public class RoadmapController extends Controller {
          */
         public void addAvailable(double available) {
             this.available += available;
+        }
+    }
+
+    public static class ActorCapacityDetails {
+        public PortfolioEntry portfolioEntry;
+        public double confirmedAllocation;
+        public double notConfirmedAllocation;
+
+        public ActorCapacityDetails() {
+            this.confirmedAllocation = 0;
+            this.notConfirmedAllocation = 0;
+        }
+
+        public ActorCapacityDetails(PortfolioEntry portfolioEntry) {
+            super();
+            this.portfolioEntry = portfolioEntry;
         }
     }
 

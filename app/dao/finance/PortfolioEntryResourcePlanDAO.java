@@ -120,7 +120,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            is in the future
      */
     public static Pagination<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsPaginationByActorAndActive(Long actorId, boolean activeOnly) {
-        return new Pagination<>(getPEPlanAllocatedActorAsExprByActorAndActive(actorId, activeOnly), 5,
+        return new Pagination<>(getPEPlanAllocatedActorAsExprByActorAndActive(actorId, activeOnly, false), 5,
                 Play.application().configuration().getInt("maf.number_page_links"));
     }
 
@@ -133,8 +133,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            if true, it returns only the allocation for which the end date
      *            is in the future
      */
-    public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByActorAndActive(Long actorId, boolean activeOnly) {
-        return getPEPlanAllocatedActorAsExprByActorAndActive(actorId, activeOnly).findList();
+    public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByActorAndActiveAndArchived(Long actorId, boolean activeOnly, boolean withArchived) {
+        return getPEPlanAllocatedActorAsExprByActorAndActive(actorId, activeOnly, withArchived).findList();
     }
 
     /**
@@ -147,7 +147,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            if true, it returns only the allocation for which the end date
      *            is in the future
      */
-    public static ExpressionList<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsExprByActorAndActive(Long actorId, boolean activeOnly) {
+    public static ExpressionList<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsExprByActorAndActive(Long actorId, boolean activeOnly, boolean withArchived) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.orderBy("endDate")
                 .where().eq("deleted", false).eq("actor.id", actorId).eq("portfolioEntryResourcePlan.deleted", false)
@@ -155,8 +155,11 @@ public abstract class PortfolioEntryResourcePlanDAO {
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
-                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false)
-                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false);
+                .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.deleted", false);
+
+        if (!withArchived) {
+            expr = expr.add(Expr.eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.archived", false));
+        }
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));

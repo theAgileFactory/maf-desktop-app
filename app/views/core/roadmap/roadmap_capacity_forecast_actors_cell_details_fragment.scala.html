@@ -18,7 +18,8 @@
 @(
     actor: models.pmo.Actor,
     monthName: String,
-    capacityDetailsRows: List[controllers.core.RoadmapController.ActorCapacityDetails]
+    capacityDetailsRows: List[controllers.core.RoadmapController.ActorCapacityDetails],
+    basicBarChart: framework.highcharts.pattern.BasicBar
 )
 
 @import framework_views.parts.formats._
@@ -41,25 +42,23 @@
                         <th>@parts.Msg("object.portfolio_entry.name.label")</th>
                         <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.not_confirmed_allocation.label")</th>
                         <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.confirmed_allocation.label")</th>
-                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.available.label")</th>
                     </tr>
                 </thead>
                 
                 <tbody>
                     @for(capacityDetails <- capacityDetailsRows) {
                         <tr>
-                            <td>@capacityDetails.getPortfolioEntry.getGovernanceId</td>
-                            <td>@display_portfolio_entry(capacityDetails.getPortfolioEntry)</td>
-                            <td class="text-center">@display_number(capacityDetails.getPlannedActivityConfirmed)</td>
-                            <td class="text-center">@display_number(capacityDetails.getPlannedActivityNotConfirmed)</td>
-                            <td class="text-center">@display_number(capacityDetails.getAvailable)</td>
+                            <td>@capacityDetails.portfolioEntry.governanceId</td>
+                            <td>@display_portfolio_entry(capacityDetails.portfolioEntry)</td>
+                            <td class="text-center">@display_number(capacityDetails.notConfirmedAllocation)</td>
+                            <td class="text-center">@display_number(capacityDetails.confirmedAllocation)</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-    
+
     <div class="col-md-6">
         <div id="basicBarChart"></div>
         <script type="text/javascript">
@@ -89,7 +88,7 @@
                     tooltip: {
                         headerFormat: '<table>',
                         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
-                            '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
                         footerFormat: '</table>',
                         shared: true,
                         useHTML: true
@@ -97,6 +96,9 @@
                     plotOptions: {
                         column: {
                             borderWidth: 0
+                        },
+                        series: {
+                            stacking: 'normal'
                         }
                     },
                     series: @Html(basicBarChart.getSeriesContainer.toJsonArray)
@@ -105,5 +107,5 @@
             });
         </script>
     </div>
-    
+
 </div>

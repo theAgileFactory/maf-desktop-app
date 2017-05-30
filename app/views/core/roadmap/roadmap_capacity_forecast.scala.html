@@ -269,7 +269,7 @@
                             <td>@display_actor(actorCapacity.getActor)</td>
                             @for((key, actorCapacityMonth) <- actorCapacity.getResourceCapacityMonths) {
                                 <td class="bg-@actorCapacityMonth.getBootstrapBackground text-center cell">
-                                    <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.Competency].getName, competencyCapacity.getCompetency.id, capacityForecastForm("year").value.toInt, key)');">
+                                    <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastActorsCellDetailsFragment(actorCapacity.getActor.id, capacityForecastForm("year").value.toInt, key)');">
                                         @display_number(actorCapacityMonth.getPlanned) / @display_number(actorCapacityMonth.getAvailable)
                                     </a>
                                 </td>

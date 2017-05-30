@@ -1955,6 +1955,8 @@ core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label=Nicht b
 core.roadmap.simulator.capacity_forecast.activities.label=Aktivitäten
 core.roadmap.simulator.capacity_forecast.available.label=Verfügbar
 core.roadmap.simulator.capacity_forecast.planned.label=Geplant
+core.roadmap.simulator.capacity_forecast.confirmed_allocation.label=Bestätigte Arbeitsaufgabe
+core.roadmap.simulator.capacity_forecast.not_confirmed_allocation.label=Nicht bestätigte Arbeitsaufgabe
 
 #----------------------
 # search

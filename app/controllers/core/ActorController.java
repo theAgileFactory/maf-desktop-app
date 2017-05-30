@@ -469,17 +469,20 @@ public class ActorController extends Controller {
 
         // prepare the data (to order them)
         SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
-        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActive(id,
-                true)) {
-            if (allocatedActor.endDate != null) {
-                sortableCollection.addObject(new DateSortableObject(allocatedActor.endDate, allocatedActor));
-            }
-        }
-        for (TimesheetActivityAllocatedActor allocatedActivity : TimesheetDao.getTimesheetActivityAllocatedActorAsListByActor(id, true)) {
-            if (allocatedActivity.endDate != null) {
-                sortableCollection.addObject(new DateSortableObject(allocatedActivity.endDate, allocatedActivity));
-            }
-        }
+
+        PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActiveAndArchived(id, true, false)
+                .stream()
+                .filter(allocatedActor -> allocatedActor.endDate != null)
+                .forEach(allocatedActor -> {
+                    sortableCollection.addObject(new DateSortableObject(allocatedActor.endDate, allocatedActor));
+                });
+
+        TimesheetDao.getTimesheetActivityAllocatedActorAsListByActor(id, true)
+                .stream()
+                .filter(allocatedActivity -> allocatedActivity.endDate != null)
+                .forEach(allocatedActivity -> {
+                    sortableCollection.addObject(new DateSortableObject(allocatedActivity.endDate, allocatedActivity));
+                });
 
         // construct the gantt
 
