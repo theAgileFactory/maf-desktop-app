@@ -312,6 +312,15 @@ public class PortfolioEntryDynamicHelper {
                     return true;
                 }
 
+                // user has permission
+                // PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_STAKEHOLDER_PERMISSION AND user
+                // is portfolio stakeholder of the portfolioEntry
+                if (securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_STAKEHOLDER_PERMISSION, userAccount)
+                        && PortfolioEntryDao.isPortfolioStakeholderOfPE(actor.id, portfolioEntry.id)) {
+                    Logger.debug("has PORTFOLIO_ENTRY_EDIT_AS_PORTFOLIO_STAKEHOLDER_PERMISSION and is portfolio stakeholder");
+                    return true;
+                }
+
             }
 
         } catch (Exception e) {
@@ -441,14 +450,26 @@ public class PortfolioEntryDynamicHelper {
                 return true;
             }
 
-            // user has permission
-            // PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION
-            // AND is manager of the portfolioEntry
             Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
-            if (actor != null && securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION, userAccount)
-                    && actor.id.equals(portfolioEntry.manager.id)) {
-                Logger.debug("has PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION and is manager");
-                return true;
+            if (actor != null) {
+
+                // user has permission
+                // PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION
+                // AND is manager of the portfolioEntry
+                if (securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION, userAccount)
+                        && actor.id.equals(portfolioEntry.manager.id)) {
+                    Logger.debug("has PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_MANAGER_PERMISSION and is manager");
+                    return true;
+                }
+
+                // user has permission
+                // PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_PORTFOLIO_STAKEHOLDER_PERMISSION AND user
+                // is portfolio stakeholder of the portfolioEntry
+                if (securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_PORTFOLIO_STAKEHOLDER_PERMISSION, userAccount)
+                        && PortfolioEntryDao.isPortfolioStakeholderOfPE(actor.id, portfolioEntry.id)) {
+                    Logger.debug("has PORTFOLIO_ENTRY_EDIT_FINANCIAL_INFO_AS_PORTFOLIO_STAKEHOLDER_PERMISSION and is portfolio stakeholder");
+                    return true;
+                }
             }
 
         } catch (Exception e) {

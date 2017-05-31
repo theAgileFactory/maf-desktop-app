@@ -620,12 +620,14 @@ permission.portfolio_entry_view_details_as_portfolio_manager_permission.descript
 permission.portfolio_entry_edit_all_permission.description=Ändern aller Daten sämtlicher Initiativen.
 permission.portfolio_entry_edit_as_manager_permission.description=Verantwortlicher kann alle Daten seiner Initiativen ändern (ausgenommen Finanzdaten).
 permission.portfolio_entry_edit_as_portfolio_manager_permission.description=Ändern aller Daten von Initiativen in denen der Benutzer mindesten für ein Portfolio verantwortlich ist (ausgenommen Finanzdaten).
+permission.portfolio_entry_edit_as_portfolio_stakeholder_permission.description=Ändern aller Daten von Initiativen in denen der Benutzer mindesten für ein Portfolio eine Funktion inne hat (ausgenommen Finanzdaten).
 permission.portfolio_entry_view_financial_info_all_permission.description=Finanzdaten sämtlicher Initiativen einsehen.
 permission.portfolio_entry_view_financial_info_as_manager_permission.description=Verantwortlicher kann Finanzdaten seiner Initiativen einsehen.
 permission.portfolio_entry_view_financial_info_as_stakeholder_permission.description=Finanzdaten von Initiativen einsehen in denen der Benutzer eine Funktion inne hat.
 permission.portfolio_entry_view_financial_info_as_portfolio_manager_permission.description=Finanzdaten von Initiativen einsehen in denen der Benutzer mindesten für ein Portfolio verantwortlich ist.
 permission.portfolio_entry_edit_financial_info_all_permission.description=Ändern und Löschen der Finanzdaten sämtlicher Initiativen.
 permission.portfolio_entry_edit_financial_info_as_manager_permission.description=Verantwortlicher kann Finanzdaten seiner Initiativen ändern und löschen.
+permission.portfolio_entry_edit_financial_info_as_portfolio_stakeholder_permission.description=Ändern und Löschen der Finanzdaten von Initiativen in denen der Benutzer mindesten für ein Portfolio eine Funktion inne hat (ausgenommen Finanzdaten).
 permission.portfolio_entry_delete_all_permission.description=Kann alle Initiativen löschen.
 permission.portfolio_entry_review_request_all_permission.description=Anfragen einsehen und bearbeiten aller Initiativen.
 permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Anfragen einsehen und bearbeiten von Initiativen in denen der Benutzer mindesten für ein Portfolio verantwortlich ist.

@@ -609,12 +609,14 @@ permission.portfolio_entry_view_details_as_portfolio_manager_permission.descript
 permission.portfolio_entry_edit_all_permission.description=Permission which allows a user to edit all the details of any initiatives.
 permission.portfolio_entry_edit_as_manager_permission.description=Permission which allows a user to edit all the details of an initiative (except the financial details) for which he is the manager.
 permission.portfolio_entry_edit_as_portfolio_manager_permission.description=Permission which allows a user to edit all the details of an initiative (except the financial details) for which he is a manager of at least one portfolio.
+permission.portfolio_entry_edit_as_portfolio_stakeholder_permission.description=Permission which allows a user to edit all the details of an initiative (except the financial details) for which he is a stakeholder of at least one portfolio.
 permission.portfolio_entry_view_financial_info_all_permission.description=Permission which allows a user to view the financial details of any initiatives.
 permission.portfolio_entry_view_financial_info_as_manager_permission.description=Permission which allows a user to view the financial details of an initiative for which he is the manager.
 permission.portfolio_entry_view_financial_info_as_stakeholder_permission.description=Permission which allows a user to view the financial details of an initiative for which he is a direct or a portfolio stakeholder.
 permission.portfolio_entry_view_financial_info_as_portfolio_manager_permission.description=Permission which allows a user to view the financial details of an initiative for which he is a manager of at least one portfolio.
 permission.portfolio_entry_edit_financial_info_all_permission.description=Permission which allows a user to edit and remove the financial details of any initiatives.
 permission.portfolio_entry_edit_financial_info_as_manager_permission.description=Permission which allows a user to edit and remove the financial details of an initiative for which he is the manager.
+permission.portfolio_entry_edit_financial_info_as_portfolio_stakeholder_permission.description=Permission which allows a user to edit and remove the financial details of an initiative for which he is a stakeholder of at least one portfolio.
 permission.portfolio_entry_delete_all_permission.description=Permission which allows a user to delete any initiatives.
 permission.portfolio_entry_review_request_all_permission.description=Permission which allows a user to display and process all the review requests of any initiatives.
 permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Permission which allows a user to display and process all the review requests of any initiatives for which he is a manager of at least one portfolio.
