@@ -563,19 +563,7 @@ public class RoadmapController extends Controller {
 
             session("roadmap.selected.rows", idsAsJson);
 
-            /**
-             * Bind the form: if the previous page is the roadmap, then we fill
-             * the form with default values, else we use the submitted ones.
-             */
-            Form<CapacityForecastForm> capacityForecastForm;
-            Form<CapacityForecastForm> boundForm = capacityForecastFormTemplate.bindFromRequest();
-            if (boundForm.data().get("year") == null) {
-                capacityForecastForm = capacityForecastFormTemplate.fill(new CapacityForecastForm(idsAsJson, Calendar.getInstance().get(Calendar.YEAR)));
-            } else {
-                capacityForecastForm = boundForm;
-            }
-
-            return ok(views.html.core.roadmap.roadmap_capacity_forecast.render(capacityForecastForm));
+            return ok(views.html.core.roadmap.roadmap_capacity_forecast.render());
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -610,18 +598,16 @@ public class RoadmapController extends Controller {
     /**
      * Get capacity table by employee
      */
-    public Result simulatorCapacityForecastTableActorsFragment() {
+    public Result simulatorCapacityForecastTableActorsFragment(Integer year, Boolean onlyConfirmed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
-        JsonNode body = request().body().asJson();
+        JsonNode idsAsJson = Json.parse(session("roadmap.selected.rows"));
 
         ArrayList<Long> ids = new ArrayList<>();
-        for(JsonNode id: body.get("ids")) {
+        for(JsonNode id: idsAsJson) {
             ids.add(id.asLong());
         }
-        Integer year = body.get("year").asInt();
-        Boolean onlyConfirmed = body.get("onlyConfirmed").asBoolean(false);
 
         List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
 
@@ -661,18 +647,16 @@ public class RoadmapController extends Controller {
         return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(new ArrayList<>(actorCapacities.values()), year));
     }
 
-    public Result simulatorCapacityForecastTableOrgUnitsFragment() {
+    public Result simulatorCapacityForecastTableOrgUnitsFragment(Integer year, Boolean onlyConfirmed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
-        JsonNode body = request().body().asJson();
+        JsonNode idsAsJson = Json.parse(session("roadmap.selected.rows"));
 
         ArrayList<Long> ids = new ArrayList<>();
-        for(JsonNode id: body.get("ids")) {
+        for(JsonNode id: idsAsJson) {
             ids.add(id.asLong());
         }
-        Integer year = body.get("year").asInt();
-        Boolean onlyConfirmed = body.get("onlyConfirmed").asBoolean(false);
 
         List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
         List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits = new ArrayList<>();
@@ -759,18 +743,16 @@ public class RoadmapController extends Controller {
         return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment.render(new ArrayList<>(orgUnitCapacities.values()), year));
     }
 
-    public Result simulatorCapacityForecastTableCompetenciesFragment() {
+    public Result simulatorCapacityForecastTableCompetenciesFragment(Integer year, Boolean onlyConfirmed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
-        JsonNode body = request().body().asJson();
+        JsonNode idsAsJson = Json.parse(session("roadmap.selected.rows"));
 
         ArrayList<Long> ids = new ArrayList<>();
-        for(JsonNode id: body.get("ids")) {
+        for(JsonNode id: idsAsJson) {
             ids.add(id.asLong());
         }
-        Integer year = body.get("year").asInt();
-        Boolean onlyConfirmed = body.get("onlyConfirmed").asBoolean(false);
 
         List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
         List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies = new ArrayList<>();

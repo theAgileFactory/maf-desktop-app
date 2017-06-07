@@ -87,8 +87,10 @@ import models.pmo.PortfolioEntryPlanningPackagePattern;
 import models.pmo.Stakeholder;
 import play.Configuration;
 import play.Logger;
+import play.api.mvc.Results;
 import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.With;
 import security.CheckPortfolioEntryExists;
@@ -1359,7 +1361,7 @@ public class PortfolioEntryPlanningController extends Controller {
         PortfolioEntryResourcePlanAllocatedActor allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(allocatedActorId);
         allocatedActor.createOrUpdateAllocationDetail(year, month, days);
 
-        return ok();
+        return status(Http.Status.NO_CONTENT);
     }
 
     /**

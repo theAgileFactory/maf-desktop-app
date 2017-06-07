@@ -15,9 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(
-    capacityForecastForm: Form[controllers.core.RoadmapController.CapacityForecastForm]
-)
+@()
 
 @import commons._
 @import framework_views.parts
@@ -57,28 +55,24 @@
 
 <span id="roadmap-capacity"></span>
 
-@helper.form(action = controllers.core.routes.RoadmapController.simulatorCapacityForecast(), 'class -> "form-inline pull-right") {
-
-    <input type="hidden" name="selectedRows" value="@capacityForecastForm("selectedRows").value"/>
-    
-    @parts.dropdownlist(capacityForecastForm("year"), parts.Msg.asString("core.roadmap.simulator.capacity_forecast.year.label"), controllers.core.RoadmapController.CapacityForecastForm.getYears())
-    
-    &nbsp; &nbsp; &nbsp;
-    
-    @parts.checkbox(
-        capacityForecastForm("onlyConfirmed"), 
-        parts.Msg.asString("core.roadmap.simulator.capacity_forecast.only_confirmed.label"), 
-        ""
-    )
-    
-    &nbsp; &nbsp; &nbsp;
-    
+<form class="form-inline pull-right">
     <div class="form-group">
-        <input class="btn btn-default" type="submit" value="@parts.Msg("button.change")" />
-        <span class="help-block text-muted"></span>
+        <label class="control-label" for="year">@parts.Msg.asString("core.roadmap.simulator.capacity_forecast.year.label")</label>
+        <select class="form-control" id="year" name="year">
+            @for((item, index) <- controllers.core.RoadmapController.CapacityForecastForm.getYears.getSortedValues.zipWithIndex) {
+                <option value="@item.getValue" @if(index == 1) { selected="selected" }>@item.getName</option>
+            }
+        </select>
     </div>
 
-}
+    &nbsp; &nbsp; &nbsp;
+
+    <div class="checkbox">
+        <label for="only-confirmed">
+            <input type="checkbox" id="only-confirmed" name="only-confirmed" value="true" />
+            <strong>@parts.Msg.asString("core.roadmap.simulator.capacity_forecast.only_confirmed.label")</strong></label>
+    </div>
+</form>
 
 <div class="clearfix"></div>
 
@@ -115,39 +109,20 @@
 @roadmap_capacity_forecast_js()
 
 <script>
-    function maf_capacityForecastLoadCellDetails(e, url) {
 
-        $(".cell").css('border','inherit');
-        $(".cell").css('font-weight','normal');
-        $(e).parent().css('font-weight','bold');
-        $(e).parent().css('border','1px solid #aaa');
-
-        $('#capacity-forecast-cell-details').html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
-        
-        $.ajax({
-            url: url,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({"selectedRows" : @Html(capacityForecastForm("selectedRows").value)}),
-            success: function (data) {
-                $("#capacity-forecast-cell-details").html(data);
-            }
-        });
-    }
-
-    $('a[id="actors-tab"]').on('show.bs.tab', function (e) {
-        reloadActorsTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        reloadActiveTable();
     });
 
-    $('a[id="org-units-tab"]').on('show.bs.tab', function (e) {
-        reloadOrgUnitsTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+    $('#year').on('change', function (e) {
+        reloadActiveTable();
     });
 
-    $('a[id="competencies-tab"]').on('show.bs.tab', function (e) {
-        reloadCompetenciesTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+    $('#only-confirmed').on('change', function (e) {
+        reloadActiveTable();
     });
 
-    reloadOrgUnitsTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+    reloadActiveTable();
 
 </script>
 
