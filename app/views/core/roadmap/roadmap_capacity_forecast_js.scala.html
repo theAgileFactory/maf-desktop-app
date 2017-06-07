@@ -1,0 +1,62 @@
+@* LICENSE
+*
+* Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+* reserved.
+*
+* This program is free software; you can redistribute it and/or modify it under
+* the terms of the GNU General Public License as published by the Free Software
+* Foundation; version 2 of the License.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+* FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License along with
+* this program. If not, see <http://www.gnu.org/licenses/>.
+*@
+@import commons._
+
+<script>
+    function reloadOrgUnitsTable(ids, year, onlyConfirmed) {
+        $('#org-units-content').html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
+
+        $.ajax({
+            url: "@controllers.core.routes.RoadmapController.simulatorCapacityForecastTableOrgUnitsFragment()",
+            type: "POST",
+            data: JSON.stringify({"ids" : ids, "year" : year, "onlyConfirmed" : onlyConfirmed}),
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#org-units-content").html(data);
+            }
+        });
+    }
+
+    function reloadCompetenciesTable(ids, year, onlyConfirmed) {
+        $('#competencies-content').html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
+
+        $.ajax({
+            url: "@controllers.core.routes.RoadmapController.simulatorCapacityForecastTableCompetenciesFragment()",
+            type: "POST",
+            data: JSON.stringify({"ids" : ids, "year" : year, "onlyConfirmed" : onlyConfirmed}),
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#competencies-content").html(data);
+            }
+        });
+    }
+
+    function reloadActorsTable(ids, year, onlyConfirmed) {
+        $('#actors-content').html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
+
+        $.ajax({
+            url: "@controllers.core.routes.RoadmapController.simulatorCapacityForecastTableActorsFragment()",
+            type: "POST",
+            data: JSON.stringify({"ids" : ids, "year" : year, "onlyConfirmed" : onlyConfirmed}),
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#actors-content").html(data);
+            }
+        });
+    }
+</script>

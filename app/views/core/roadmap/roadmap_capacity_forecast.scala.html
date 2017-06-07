@@ -16,16 +16,11 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    capacityForecastForm: Form[controllers.core.RoadmapController.CapacityForecastForm],
-    orgUnitCapacities: List[controllers.core.RoadmapController.OrgUnitCapacity],
-    competencyCapacities: List[controllers.core.RoadmapController.CompetencyCapacity],
-    actorCapacities: List[controllers.core.RoadmapController.ActorCapacity]
+    capacityForecastForm: Form[controllers.core.RoadmapController.CapacityForecastForm]
 )
 
 @import commons._
-@import framework_views.parts.formats._
 @import framework_views.parts
-@import views.html.modelsparts._
 @import framework.utils.SideBar
 @import framework.utils.Menu.ClickableMenuItem
 
@@ -95,13 +90,13 @@
     </li>
     
     <li  >
-        <a href="#competencies-content" id="#competencies-tab" data-toggle="tab" aria-controls="competencies-content">
+        <a href="#competencies-content" id="competencies-tab" data-toggle="tab" aria-controls="competencies-content">
            @parts.Msg("core.roadmap.simulator.capacity_forecast.competencies.label")
         </a>
     </li>
 
     <li >
-        <a href="#actors-content" id="#actors-tab" data-toggle="tab" aria-controls="actors-content">
+        <a href="#actors-content" id="actors-tab" data-toggle="tab" aria-controls="actors-content">
             @parts.Msg("core.roadmap.simulator.capacity_forecast.actors.label")
         </a>
     </li>
@@ -110,178 +105,14 @@
 <br/>
 
 <div class="tab-content">
-    
-    <div class="tab-pane fade in active" id="org-units-content" aria-labelledby="org-units-tab">
-    
-        <div class="table-responsive">
-            <table class="table table-condensed">
-                <colgroup>
-                    <col style="width: 16%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                </colgroup>
-                
-                <thead>
-                    <tr>
-                        <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.org_unit.label")</th>
-                        <th class="text-center">@parts.Msg("month.january")</th>
-                        <th class="text-center">@parts.Msg("month.february")</th>
-                        <th class="text-center">@parts.Msg("month.march")</th>
-                        <th class="text-center">@parts.Msg("month.april")</th>
-                        <th class="text-center">@parts.Msg("month.may")</th>
-                        <th class="text-center">@parts.Msg("month.june")</th>
-                        <th class="text-center">@parts.Msg("month.july")</th>
-                        <th class="text-center">@parts.Msg("month.august")</th>
-                        <th class="text-center">@parts.Msg("month.september")</th>
-                        <th class="text-center">@parts.Msg("month.october")</th>
-                        <th class="text-center">@parts.Msg("month.november")</th>
-                        <th class="text-center">@parts.Msg("month.december")</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    @for(orgUnitCapacity <- orgUnitCapacities) {
-                        <tr>
-                            <td>@display_org_unit(orgUnitCapacity.getOrgUnit)</td>
-                            @for((key, orgUnitCapacityMonth) <- orgUnitCapacity.getResourceCapacityMonths) {
-                                <td class="bg-@orgUnitCapacityMonth.getBootstrapBackground text-center cell">
-                                    <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.OrgUnit].getName, orgUnitCapacity.getOrgUnit.id, capacityForecastForm("year").value.toInt, key)');">
-                                        @display_number(orgUnitCapacityMonth.getPlanned) / @display_number(orgUnitCapacityMonth.getAvailable)
-                                    </a>
-                                </td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    
-    </div>
+    <div class="tab-pane fade in active" id="org-units-content" aria-labelledby="org-units-tab"></div>
 
-    <div class="tab-pane fade" id="competencies-content" aria-labelledby="competencies-tab">
-    
-        <div class="table-responsive">
-            <table class="table table-condensed">
-                <colgroup>
-                    <col style="width: 16%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                </colgroup>
-                
-                <thead>
-                    <tr>
-                        <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.competency.label")</th>
-                        <th class="text-center">@parts.Msg("month.january")</th>
-                        <th class="text-center">@parts.Msg("month.february")</th>
-                        <th class="text-center">@parts.Msg("month.march")</th>
-                        <th class="text-center">@parts.Msg("month.april")</th>
-                        <th class="text-center">@parts.Msg("month.may")</th>
-                        <th class="text-center">@parts.Msg("month.june")</th>
-                        <th class="text-center">@parts.Msg("month.july")</th>
-                        <th class="text-center">@parts.Msg("month.august")</th>
-                        <th class="text-center">@parts.Msg("month.september")</th>
-                        <th class="text-center">@parts.Msg("month.october")</th>
-                        <th class="text-center">@parts.Msg("month.november")</th>
-                        <th class="text-center">@parts.Msg("month.december")</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                @for(competencyCapacity <- competencyCapacities) {
-                    <tr>
-                        <td>@display_competency(competencyCapacity.getCompetency)</td>
-                        @for((key, competencyCapacityMonth) <- competencyCapacity.getResourceCapacityMonths) {
-                            <td class="bg-@competencyCapacityMonth.getBootstrapBackground text-center cell">
-                                <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.Competency].getName, competencyCapacity.getCompetency.id, capacityForecastForm("year").value.toInt, key)');">
-                                    @display_number(competencyCapacityMonth.getPlanned) / @display_number(competencyCapacityMonth.getAvailable)
-                                </a>
-                            </td>
-                        }
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+    <div class="tab-pane fade" id="competencies-content" aria-labelledby="competencies-tab"></div>
 
-    </div>
-
-    <div class="tab-pane fade" id="actors-content" aria-labelledby="actors-tab">
-
-        <div class="table-responsive">
-            <table class="table table-condensed">
-                <colgroup>
-                    <col style="width: 16%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                    <col style="width: 7%;">
-                </colgroup>
-
-                <thead>
-                    <tr>
-                        <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.actor.label")</th>
-                        <th class="text-center">@parts.Msg("month.january")</th>
-                        <th class="text-center">@parts.Msg("month.february")</th>
-                        <th class="text-center">@parts.Msg("month.march")</th>
-                        <th class="text-center">@parts.Msg("month.april")</th>
-                        <th class="text-center">@parts.Msg("month.may")</th>
-                        <th class="text-center">@parts.Msg("month.june")</th>
-                        <th class="text-center">@parts.Msg("month.july")</th>
-                        <th class="text-center">@parts.Msg("month.august")</th>
-                        <th class="text-center">@parts.Msg("month.september")</th>
-                        <th class="text-center">@parts.Msg("month.october")</th>
-                        <th class="text-center">@parts.Msg("month.november")</th>
-                        <th class="text-center">@parts.Msg("month.december")</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @for(actorCapacity <- actorCapacities) {
-                        <tr>
-                            <td>@display_actor(actorCapacity.getActor)</td>
-                            @for((key, actorCapacityMonth) <- actorCapacity.getResourceCapacityMonths) {
-                                <td class="bg-@actorCapacityMonth.getBootstrapBackground text-center cell">
-                                    <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastActorsCellDetailsFragment(actorCapacity.getActor.id, capacityForecastForm("year").value.toInt, key)');">
-                                        @display_number(actorCapacityMonth.getPlanned) / @display_number(actorCapacityMonth.getAvailable)
-                                    </a>
-                                </td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-    </div>
+    <div class="tab-pane fade" id="actors-content" aria-labelledby="actors-tab"></div>
 </div>
+
+@roadmap_capacity_forecast_js()
 
 <script>
     function maf_capacityForecastLoadCellDetails(e, url) {
@@ -303,6 +134,21 @@
             }
         });
     }
+
+    $('a[id="actors-tab"]').on('show.bs.tab', function (e) {
+        reloadActorsTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+    });
+
+    $('a[id="org-units-tab"]').on('show.bs.tab', function (e) {
+        reloadOrgUnitsTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+    });
+
+    $('a[id="competencies-tab"]').on('show.bs.tab', function (e) {
+        reloadCompetenciesTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+    });
+
+    reloadOrgUnitsTable(@Html(capacityForecastForm("selectedRows").value), @Html(capacityForecastForm("year").value), @Html(capacityForecastForm("onlyConfirmed").value));
+
 </script>
 
 <div id="capacity-forecast-cell-details"></div>

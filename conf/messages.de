@@ -71,6 +71,19 @@ month.october=Oktober
 month.november=November
 month.december=Dezember
 
+month.january.abbreviated=Jan.
+month.february.abbreviated=Febr.
+month.march.abbreviated=März
+month.april.abbreviated=Apr.
+month.may.abbreviated=Mai
+month.june.abbreviated=Juni
+month.july.abbreviated=Juli
+month.august.abbreviated=Aug.
+month.september.abbreviated=Sept.
+month.october.abbreviated=Okt.
+month.november.abbreviated=Nov.
+month.december.abbreviated=Dez.
+
 #----------------------
 # units
 #----------------------
@@ -1957,8 +1970,8 @@ core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label=Nicht b
 core.roadmap.simulator.capacity_forecast.activities.label=Aktivitäten
 core.roadmap.simulator.capacity_forecast.available.label=Verfügbar
 core.roadmap.simulator.capacity_forecast.planned.label=Geplant
-core.roadmap.simulator.capacity_forecast.confirmed_allocation.label=Bestätigte Arbeitsaufgabe
-core.roadmap.simulator.capacity_forecast.not_confirmed_allocation.label=Nicht bestätigte Arbeitsaufgabe
+core.roadmap.simulator.capacity_forecast.days.label=Arbeitsaufgabe
+core.roadmap.simulator.capacity_forecast.confirmed.label=Bestätigte
 
 #----------------------
 # search

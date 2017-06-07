@@ -23,6 +23,9 @@ import java.util.*;
 
 import javax.inject.Inject;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.Ebean;
@@ -1339,6 +1342,24 @@ public class PortfolioEntryPlanningController extends Controller {
 
         return ok(views.html.core.portfolioentryplanning.allocated_actor_manage.render(portfolioEntry, allocatedActorForm));
 
+    }
+
+    /**
+     * Update the number of days for an allocated actor
+     */
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result updateAllocatedActorDetail() {
+
+        JsonNode json = request().body().asJson();
+        Long allocatedActorId = json.findPath("allocatedActorId").asLong();
+        Double days = json.findPath("days").asDouble();
+        Integer month = json.findPath("month").asInt();
+        Integer year = json.findPath("year").asInt();
+
+        PortfolioEntryResourcePlanAllocatedActor allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(allocatedActorId);
+        allocatedActor.createOrUpdateAllocationDetail(year, month, days);
+
+        return ok();
     }
 
     /**

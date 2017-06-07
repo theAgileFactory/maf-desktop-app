@@ -66,6 +66,8 @@ import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.Char;
+import scala.collection.JavaConverters;
 import scala.concurrent.duration.Duration;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import services.budgettracking.IBudgetTrackingService;
@@ -554,243 +556,26 @@ public class RoadmapController extends Controller {
     public Result simulatorCapacityForecast() {
 
         try {
-
-            Integer percentage = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
-            int warningLimitPercent = percentage.intValue();
-
             List<String> ids = FilterConfig.getIdsFromRequest(request());
 
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String idsAsJson = ow.writeValueAsString(ids);
 
+            session("roadmap.selected.rows", idsAsJson);
+
             /**
              * Bind the form: if the previous page is the roadmap, then we fill
              * the form with default values, else we use the submitted ones.
              */
-            Form<CapacityForecastForm> capacityForecastForm = null;
+            Form<CapacityForecastForm> capacityForecastForm;
             Form<CapacityForecastForm> boundForm = capacityForecastFormTemplate.bindFromRequest();
             if (boundForm.data().get("year") == null) {
                 capacityForecastForm = capacityForecastFormTemplate.fill(new CapacityForecastForm(idsAsJson, Calendar.getInstance().get(Calendar.YEAR)));
             } else {
                 capacityForecastForm = boundForm;
             }
-            CapacityForecastForm capacityForecastFormData = capacityForecastForm.get();
 
-            /**
-             * Compute the period according to the selected year.
-             */
-            Calendar yearStartDay = Calendar.getInstance();
-            yearStartDay.set(Calendar.YEAR, capacityForecastFormData.year.intValue());
-            yearStartDay.set(Calendar.MONTH, 0);
-            yearStartDay.set(Calendar.DAY_OF_MONTH, 1);
-            yearStartDay.set(Calendar.HOUR_OF_DAY, 0);
-            yearStartDay.set(Calendar.MINUTE, 0);
-            yearStartDay.set(Calendar.SECOND, 0);
-            yearStartDay.set(Calendar.MILLISECOND, 0);
-
-            Calendar yearEndDay = Calendar.getInstance();
-            yearEndDay.set(Calendar.YEAR, capacityForecastFormData.year.intValue());
-            yearEndDay.set(Calendar.MONTH, 11);
-            yearEndDay.set(Calendar.DAY_OF_MONTH, 31);
-            yearEndDay.set(Calendar.HOUR_OF_DAY, 23);
-            yearEndDay.set(Calendar.MINUTE, 59);
-            yearEndDay.set(Calendar.SECOND, 59);
-            yearEndDay.set(Calendar.MILLISECOND, 999);
-
-            /**
-             * Get the PE allocations.
-             */
-            List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits = new ArrayList<>();
-            List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies = new ArrayList<>();
-            List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
-            for (String idString : ids) {
-
-                Long id = Long.valueOf(idString);
-
-                // Org unit: all allocated org units of the selected PE
-                allocatedOrgUnits.addAll(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsListByPE(id, yearStartDay.getTime(),
-                        yearEndDay.getTime(), capacityForecastFormData.onlyConfirmed, null));
-
-                // Competencies: all allocated competencies of the selected PE
-                allocatedCompetencies.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedCompetencyAsListByPE(id, yearStartDay.getTime(),
-                        yearEndDay.getTime(), capacityForecastFormData.onlyConfirmed, null));
-
-                // Actor: all allocated actors of the selected PE
-                allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id, yearStartDay.getTime(), yearEndDay.getTime(),
-                        capacityForecastFormData.onlyConfirmed, null, null));
-
-            }
-
-            /**
-             * Compute the capacities for the org unit and actor allocations and
-             * group them by org unit.
-             */
-
-            Map<Long, OrgUnitCapacity> orgUnitCapacities = new HashMap<>();
-
-            // Org unit: the org unit is simply the one of the allocated org
-            // unit.
-            for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : allocatedOrgUnits) {
-
-                OrgUnitCapacity orgUnitCapacity = null;
-                if (orgUnitCapacities.containsKey(allocatedOrgUnit.orgUnit.id)) {
-                    orgUnitCapacity = orgUnitCapacities.get(allocatedOrgUnit.orgUnit.id);
-                } else {
-                    orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedOrgUnit.orgUnit);
-                    orgUnitCapacities.put(allocatedOrgUnit.orgUnit.id, orgUnitCapacity);
-                }
-
-                computeCapacity(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays),
-                        capacityForecastFormData.year, orgUnitCapacity);
-            }
-
-            // Actor: the org unit is the one of the actor of the allocated
-            // actor.
-            for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
-
-                if (allocatedActor.actor.orgUnit != null) {
-
-                    OrgUnitCapacity orgUnitCapacity = null;
-                    if (orgUnitCapacities.containsKey(allocatedActor.actor.orgUnit.id)) {
-                        orgUnitCapacity = orgUnitCapacities.get(allocatedActor.actor.orgUnit.id);
-                    } else {
-                        orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedActor.actor.orgUnit);
-                        orgUnitCapacities.put(allocatedActor.actor.orgUnit.id, orgUnitCapacity);
-                    }
-
-                    computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
-                            capacityForecastFormData.year, orgUnitCapacity);
-
-                }
-            }
-
-            /**
-             * Compute the capacities for the competencies and actor allocations
-             * and group them by competency.
-             */
-
-            Map<Long, CompetencyCapacity> competencyCapacities = new HashMap<>();
-
-            // Competency: the competency is simply the one of the allocated
-            // comptency.
-            for (PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency : allocatedCompetencies) {
-
-                CompetencyCapacity competencyCapacity = null;
-                if (competencyCapacities.containsKey(allocatedCompetency.competency.id)) {
-                    competencyCapacity = competencyCapacities.get(allocatedCompetency.competency.id);
-                } else {
-                    competencyCapacity = new CompetencyCapacity(warningLimitPercent, allocatedCompetency.competency);
-                    competencyCapacities.put(allocatedCompetency.competency.id, competencyCapacity);
-                }
-
-                computeCapacity(allocatedCompetency.startDate, allocatedCompetency.endDate, allocatedCompetency.days, capacityForecastFormData.year,
-                        competencyCapacity);
-            }
-
-            // Actor: the competency is the one of the actor of the allocated
-            // actor.
-            for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
-
-                if (allocatedActor.actor.defaultCompetency != null) {
-
-                    CompetencyCapacity competencyCapacity = null;
-                    if (competencyCapacities.containsKey(allocatedActor.actor.defaultCompetency.id)) {
-                        competencyCapacity = competencyCapacities.get(allocatedActor.actor.defaultCompetency.id);
-                    } else {
-                        competencyCapacity = new CompetencyCapacity(warningLimitPercent, allocatedActor.actor.defaultCompetency);
-                        competencyCapacities.put(allocatedActor.actor.defaultCompetency.id, competencyCapacity);
-                    }
-
-                    computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
-                            capacityForecastFormData.year, competencyCapacity);
-
-                }
-            }
-
-            /**
-             * Get and compute the activity capacities and the actor available
-             * capacities.
-             */
-
-            for (Entry<Long, OrgUnitCapacity> entry : orgUnitCapacities.entrySet()) {
-
-                OrgUnitCapacity orgUnitCapacity = entry.getValue();
-
-                // Get the activity allocations.
-                List<TimesheetActivityAllocatedActor> allocatedActivities = TimesheetDao.getTimesheetActivityAllocatedActorAsListByOrgUnitAndPeriod(
-                        orgUnitCapacity.getOrgUnit().id, yearStartDay.getTime(), yearEndDay.getTime());
-
-                // Compute the activity allocations.
-                for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
-                    computeCapacity(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, capacityForecastFormData.year,
-                            orgUnitCapacity);
-                }
-
-                // Get the available actor capacities.
-                List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByOrgUnitAndYear(orgUnitCapacity.getOrgUnit().id,
-                        capacityForecastFormData.year);
-
-                // Compute the available actor capacities.
-                for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
-                    orgUnitCapacity.addAvailable(actorCapacity.month.intValue() - 1, actorCapacity.value);
-                }
-            }
-
-            for (Entry<Long, CompetencyCapacity> entry : competencyCapacities.entrySet()) {
-
-                CompetencyCapacity competencyCapacity = entry.getValue();
-
-                // Get the activity allocations.
-                List<TimesheetActivityAllocatedActor> allocatedActivities = TimesheetDao.getTimesheetActivityAllocatedActorAsListByCompetencyAndPeriod(
-                        competencyCapacity.getCompetency().id, yearStartDay.getTime(), yearEndDay.getTime());
-
-                // Compute the activity allocations.
-                for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
-                    computeCapacity(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, capacityForecastFormData.year,
-                            competencyCapacity);
-                }
-
-                // Get the available actor capacities.
-                List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByCompetencyAndYear(competencyCapacity.getCompetency().id,
-                        capacityForecastFormData.year);
-
-                // Compute the available actor capacities.
-                for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
-                    competencyCapacity.addAvailable(actorCapacity.month.intValue() - 1, actorCapacity.value);
-                }
-            }
-
-            // Add actor capacities group by actor
-            Map<Long, ActorCapacity> actorCapacities = new HashMap<>();
-            for (PortfolioEntryResourcePlanAllocatedActor allocatedActor: allocatedActors) {
-
-                ActorCapacity actorCapacity;
-                if (actorCapacities.containsKey(allocatedActor.actor.id)) {
-                    actorCapacity = actorCapacities.get(allocatedActor.actor.id);
-                } else {
-                    actorCapacity = new ActorCapacity(warningLimitPercent, allocatedActor.actor);
-                }
-
-                // Add availables
-                models.pmo.ActorCapacity[] actorAvailables = ActorDao.getActorCapacityAsArrayByActorAndYear(allocatedActor.actor, capacityForecastFormData.year);
-                for (models.pmo.ActorCapacity available : actorAvailables) {
-                    actorCapacity.addAvailable(available.month - 1, available.value == null ? 0.0 : available.value);
-                }
-
-                // Add planned
-                if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                    allocatedActor.computeAllocationDetails();
-                }
-                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
-                        .stream()
-                        .filter(detail -> detail.year.equals(capacityForecastFormData.year))
-                        .forEach(detail -> actorCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
-
-                actorCapacities.put(allocatedActor.actor.id, actorCapacity);
-            }
-
-            return ok(views.html.core.roadmap.roadmap_capacity_forecast.render(capacityForecastForm,
-                    new ArrayList<OrgUnitCapacity>(orgUnitCapacities.values()), new ArrayList<CompetencyCapacity>(competencyCapacities.values()), new ArrayList<>(actorCapacities.values())));
+            return ok(views.html.core.roadmap.roadmap_capacity_forecast.render(capacityForecastForm));
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -798,9 +583,278 @@ public class RoadmapController extends Controller {
 
     }
 
+    private Date getYearEndTime(Integer year) {
+        Calendar yearEndDay = Calendar.getInstance();
+        yearEndDay.set(Calendar.YEAR, year);
+        yearEndDay.set(Calendar.MONTH, 11);
+        yearEndDay.set(Calendar.DAY_OF_MONTH, 31);
+        yearEndDay.set(Calendar.HOUR_OF_DAY, 23);
+        yearEndDay.set(Calendar.MINUTE, 59);
+        yearEndDay.set(Calendar.SECOND, 59);
+        yearEndDay.set(Calendar.MILLISECOND, 999);
+        return yearEndDay.getTime();
+    }
+
+    private Date getYearStartTime(Integer year) {
+        Calendar yearStartDay = Calendar.getInstance();
+        yearStartDay.set(Calendar.YEAR, year);
+        yearStartDay.set(Calendar.MONTH, 0);
+        yearStartDay.set(Calendar.DAY_OF_MONTH, 1);
+        yearStartDay.set(Calendar.HOUR_OF_DAY, 0);
+        yearStartDay.set(Calendar.MINUTE, 0);
+        yearStartDay.set(Calendar.SECOND, 0);
+        yearStartDay.set(Calendar.MILLISECOND, 0);
+        return yearStartDay.getTime();
+    }
+
+    /**
+     * Get capacity table by employee
+     */
+    public Result simulatorCapacityForecastTableActorsFragment() {
+
+        int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
+
+        JsonNode body = request().body().asJson();
+
+        ArrayList<Long> ids = new ArrayList<>();
+        for(JsonNode id: body.get("ids")) {
+            ids.add(id.asLong());
+        }
+        Integer year = body.get("year").asInt();
+        Boolean onlyConfirmed = body.get("onlyConfirmed").asBoolean(false);
+
+        List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
+
+        ids.stream().forEach(
+            id -> allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id,getYearStartTime(year), getYearEndTime(year), onlyConfirmed, null, null))
+        );
+
+        // Add actor capacities group by actor
+        Map<Long, ActorCapacity> actorCapacities = new HashMap<>();
+        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor: allocatedActors) {
+
+            ActorCapacity actorCapacity;
+            if (actorCapacities.containsKey(allocatedActor.actor.id)) {
+                actorCapacity = actorCapacities.get(allocatedActor.actor.id);
+            } else {
+                actorCapacity = new ActorCapacity(warningLimitPercent, allocatedActor.actor);
+            }
+
+            // Add availables
+            models.pmo.ActorCapacity[] actorAvailables = ActorDao.getActorCapacityAsArrayByActorAndYear(allocatedActor.actor, year);
+            for (models.pmo.ActorCapacity available : actorAvailables) {
+                actorCapacity.addAvailable(available.month - 1, available.value == null ? 0.0 : available.value);
+            }
+
+            // Add planned
+            if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
+                allocatedActor.computeAllocationDetails();
+            }
+            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
+                    .stream()
+                    .filter(detail -> detail.year.equals(year))
+                    .forEach(detail -> actorCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+
+            actorCapacities.put(allocatedActor.actor.id, actorCapacity);
+        }
+
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(new ArrayList<>(actorCapacities.values()), year));
+    }
+
+    public Result simulatorCapacityForecastTableOrgUnitsFragment() {
+
+        int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
+
+        JsonNode body = request().body().asJson();
+
+        ArrayList<Long> ids = new ArrayList<>();
+        for(JsonNode id: body.get("ids")) {
+            ids.add(id.asLong());
+        }
+        Integer year = body.get("year").asInt();
+        Boolean onlyConfirmed = body.get("onlyConfirmed").asBoolean(false);
+
+        List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
+        List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits = new ArrayList<>();
+        Date yearStartTime = getYearStartTime(year);
+        Date yearEndTime = getYearEndTime(year);
+
+        ids.stream().forEach(
+                id -> {
+                    allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null, null));
+                    allocatedOrgUnits.addAll(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null));
+                }
+        );
+
+        /**
+         * Compute the capacities for the org unit and actor allocations and
+         * group them by org unit.
+         */
+
+        Map<Long, OrgUnitCapacity> orgUnitCapacities = new HashMap<>();
+
+        // Org unit: the org unit is simply the one of the allocated org
+        // unit.
+        for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : allocatedOrgUnits) {
+
+            OrgUnitCapacity orgUnitCapacity;
+            if (orgUnitCapacities.containsKey(allocatedOrgUnit.orgUnit.id)) {
+                orgUnitCapacity = orgUnitCapacities.get(allocatedOrgUnit.orgUnit.id);
+            } else {
+                orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedOrgUnit.orgUnit);
+                orgUnitCapacities.put(allocatedOrgUnit.orgUnit.id, orgUnitCapacity);
+            }
+
+            computeCapacity(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays),
+                    year, orgUnitCapacity);
+        }
+
+        // Actor: the org unit is the one of the actor of the allocated
+        // actor.
+        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
+
+            if (allocatedActor.actor.orgUnit != null) {
+
+                OrgUnitCapacity orgUnitCapacity;
+                if (orgUnitCapacities.containsKey(allocatedActor.actor.orgUnit.id)) {
+                    orgUnitCapacity = orgUnitCapacities.get(allocatedActor.actor.orgUnit.id);
+                } else {
+                    orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedActor.actor.orgUnit);
+                    orgUnitCapacities.put(allocatedActor.actor.orgUnit.id, orgUnitCapacity);
+                }
+
+                computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
+                        year, orgUnitCapacity);
+
+            }
+        }
+
+        /**
+         * Get and compute the activity capacities and the actor available
+         * capacities.
+         */
+
+        for (Entry<Long, OrgUnitCapacity> entry : orgUnitCapacities.entrySet()) {
+
+            OrgUnitCapacity orgUnitCapacity = entry.getValue();
+
+            // Get the activity allocations.
+            List<TimesheetActivityAllocatedActor> allocatedActivities = TimesheetDao.getTimesheetActivityAllocatedActorAsListByOrgUnitAndPeriod(
+                    orgUnitCapacity.getOrgUnit().id, yearStartTime, yearEndTime);
+
+            // Compute the activity allocations.
+            for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
+                computeCapacity(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, year, orgUnitCapacity);
+            }
+
+            // Get the available actor capacities.
+            List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByOrgUnitAndYear(orgUnitCapacity.getOrgUnit().id, year);
+
+            // Compute the available actor capacities.
+            for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
+                orgUnitCapacity.addAvailable(actorCapacity.month - 1, actorCapacity.value);
+            }
+        }
+
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment.render(new ArrayList<>(orgUnitCapacities.values()), year));
+    }
+
+    public Result simulatorCapacityForecastTableCompetenciesFragment() {
+
+        int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
+
+        JsonNode body = request().body().asJson();
+
+        ArrayList<Long> ids = new ArrayList<>();
+        for(JsonNode id: body.get("ids")) {
+            ids.add(id.asLong());
+        }
+        Integer year = body.get("year").asInt();
+        Boolean onlyConfirmed = body.get("onlyConfirmed").asBoolean(false);
+
+        List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
+        List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies = new ArrayList<>();
+        Date yearStartTime = getYearStartTime(year);
+        Date yearEndTime = getYearEndTime(year);
+
+        ids.stream().forEach(
+                id -> {
+                    allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null, null));
+                    allocatedCompetencies.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedCompetencyAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null));
+                }
+        );
+
+        /**
+         * Compute the capacities for the competencies and actor allocations
+         * and group them by competency.
+         */
+
+        Map<Long, CompetencyCapacity> competencyCapacities = new HashMap<>();
+
+        // Competency: the competency is simply the one of the allocated
+        // comptency.
+        for (PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency : allocatedCompetencies) {
+
+            CompetencyCapacity competencyCapacity = null;
+            if (competencyCapacities.containsKey(allocatedCompetency.competency.id)) {
+                competencyCapacity = competencyCapacities.get(allocatedCompetency.competency.id);
+            } else {
+                competencyCapacity = new CompetencyCapacity(warningLimitPercent, allocatedCompetency.competency);
+                competencyCapacities.put(allocatedCompetency.competency.id, competencyCapacity);
+            }
+
+            computeCapacity(allocatedCompetency.startDate, allocatedCompetency.endDate, allocatedCompetency.days, year,
+                    competencyCapacity);
+        }
+
+        // Actor: the competency is the one of the actor of the allocated
+        // actor.
+        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
+
+            if (allocatedActor.actor.defaultCompetency != null) {
+
+                CompetencyCapacity competencyCapacity = null;
+                if (competencyCapacities.containsKey(allocatedActor.actor.defaultCompetency.id)) {
+                    competencyCapacity = competencyCapacities.get(allocatedActor.actor.defaultCompetency.id);
+                } else {
+                    competencyCapacity = new CompetencyCapacity(warningLimitPercent, allocatedActor.actor.defaultCompetency);
+                    competencyCapacities.put(allocatedActor.actor.defaultCompetency.id, competencyCapacity);
+                }
+
+                computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
+                        year, competencyCapacity);
+
+            }
+        }
+
+        for (Entry<Long, CompetencyCapacity> entry : competencyCapacities.entrySet()) {
+
+            CompetencyCapacity competencyCapacity = entry.getValue();
+
+            // Get the activity allocations.
+            List<TimesheetActivityAllocatedActor> allocatedActivities = TimesheetDao.getTimesheetActivityAllocatedActorAsListByCompetencyAndPeriod(
+                    competencyCapacity.getCompetency().id, yearStartTime, yearEndTime);
+
+            // Compute the activity allocations.
+            for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
+                computeCapacity(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, year, competencyCapacity);
+            }
+
+            // Get the available actor capacities.
+            List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByCompetencyAndYear(competencyCapacity.getCompetency().id, year);
+
+            // Compute the available actor capacities.
+            for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
+                competencyCapacity.addAvailable(actorCapacity.month - 1, actorCapacity.value);
+            }
+        }
+
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_competencies_fragment.render(new ArrayList<>(competencyCapacities.values()), year));
+    }
+
     /**
      * The details of a cell of the the capacity forecast table.
-     * 
+     *
      * @param objectType
      *            the object type (org unit or competency)
      * @param objectId
@@ -995,9 +1049,6 @@ public class RoadmapController extends Controller {
 
         Actor actor = ActorDao.getActorById(actorId);
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, month);
-
         List<PortfolioEntryResourcePlanAllocatedActor> allocations = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActiveAndArchived(actorId, false, true);
 
         Map<Long, ActorCapacityDetails> capacityDetailsRows = new HashMap<>();
@@ -1007,17 +1058,17 @@ public class RoadmapController extends Controller {
             if (allocationDetail != null && allocationDetail.days != 0.0) {
                 PortfolioEntry pe = allocation.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry;
                 ActorCapacityDetails detail = null;
-                if (capacityDetailsRows.containsKey(pe.id)) {
-                    detail = capacityDetailsRows.get(pe.id);
+                if (capacityDetailsRows.containsKey(allocation.id)) {
+                    detail = capacityDetailsRows.get(allocation.id);
                 } else {
-                    detail = new ActorCapacityDetails(pe);
+                    detail = new ActorCapacityDetails(allocation.id, pe);
                 }
                 if (allocation.isConfirmed) {
                     detail.confirmedAllocation += allocationDetail.days;
                 } else {
                     detail.notConfirmedAllocation += allocationDetail.days;
                 }
-                capacityDetailsRows.put(pe.id, detail);
+                capacityDetailsRows.put(allocation.id, detail);
             }
         });
 
@@ -1026,20 +1077,33 @@ public class RoadmapController extends Controller {
         BasicBar.Elem confirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_kpis.allocation.additional1"));
         BasicBar.Elem notConfirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_kpis.allocation.additional2"));
 
-        capacityDetailsRows.values().stream().forEach(value -> {
-            String category = value.portfolioEntry.governanceId != null ? value.portfolioEntry.governanceId : value.portfolioEntry.name;
-            basicBarChart.addCategory(category);
+        Map<Long, ActorCapacityDetails> barMap = capacityDetailsRows.values().stream()
+            .collect(Collectors.toMap(
+                detail -> detail.portfolioEntry.id,
+                detail -> detail,
+                (d1, d2) -> {
+                    ActorCapacityDetails mergedDetail = new ActorCapacityDetails(d1.id, d1.portfolioEntry);
+                    mergedDetail.confirmedAllocation = d1.confirmedAllocation + d2.confirmedAllocation;
+                    mergedDetail.notConfirmedAllocation = d1.notConfirmedAllocation + d2.notConfirmedAllocation;
+                    return mergedDetail;
+                }
+            ));
 
-            notConfirmedElem.addValue(value.notConfirmedAllocation);
-            confirmedElem.addValue(value.confirmedAllocation);
-        });
+        barMap.values().forEach(value -> {
+                String category = value.portfolioEntry.governanceId != null ? value.portfolioEntry.governanceId : value.portfolioEntry.name;
+                basicBarChart.addCategory(category);
+
+                notConfirmedElem.addValue(value.notConfirmedAllocation);
+                confirmedElem.addValue(value.confirmedAllocation);
+            });
 
         basicBarChart.addElem(notConfirmedElem);
         basicBarChart.addElem(confirmedElem);
 
         return ok(views.html.core.roadmap.roadmap_capacity_forecast_actors_cell_details_fragment.render(
                 actor,
-                new SimpleDateFormat("MMMM").format(cal.getTime()),
+                year,
+                month,
                 new ArrayList<>(capacityDetailsRows.values()),
                 basicBarChart
         ));
@@ -1467,6 +1531,7 @@ public class RoadmapController extends Controller {
     }
 
     public static class ActorCapacityDetails {
+        public Long id;
         public PortfolioEntry portfolioEntry;
         public double confirmedAllocation;
         public double notConfirmedAllocation;
@@ -1476,8 +1541,9 @@ public class RoadmapController extends Controller {
             this.notConfirmedAllocation = 0;
         }
 
-        public ActorCapacityDetails(PortfolioEntry portfolioEntry) {
+        public ActorCapacityDetails(Long id, PortfolioEntry portfolioEntry) {
             super();
+            this.id = id;
             this.portfolioEntry = portfolioEntry;
         }
     }

@@ -17,7 +17,8 @@
  *@
 @(
     actor: models.pmo.Actor,
-    monthName: String,
+    year: Integer,
+    month: Integer,
     capacityDetailsRows: List[controllers.core.RoadmapController.ActorCapacityDetails],
     basicBarChart: framework.highcharts.pattern.BasicBar
 )
@@ -25,10 +26,11 @@
 @import framework_views.parts.formats._
 @import framework_views.parts
 @import views.html.modelsparts.display_portfolio_entry
+@import java.text.DateFormatSymbols
 
 <hr/>
 <h4>
-    @actor.getFirstName &nbsp; @actor.getLastName / @parts.Msg("month." + monthName.toLowerCase)
+    @actor.getFirstName @actor.getLastName / @parts.Msg("month." + new DateFormatSymbols().getMonths.lift(month).get.toLowerCase)
 </h4>
 
 <div class="row">
@@ -40,8 +42,8 @@
                     <tr>
                         <th>@parts.Msg("object.portfolio_entry.governance_id.label")</th>
                         <th>@parts.Msg("object.portfolio_entry.name.label")</th>
-                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.not_confirmed_allocation.label")</th>
-                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.confirmed_allocation.label")</th>
+                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.days.label")</th>
+                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.confirmed.label")</th>
                     </tr>
                 </thead>
                 
@@ -50,8 +52,13 @@
                         <tr>
                             <td>@capacityDetails.portfolioEntry.governanceId</td>
                             <td>@display_portfolio_entry(capacityDetails.portfolioEntry)</td>
-                            <td class="text-center">@display_number(capacityDetails.notConfirmedAllocation)</td>
-                            <td class="text-center">@display_number(capacityDetails.confirmedAllocation)</td>
+                            @if(capacityDetails.confirmedAllocation != 0) {
+                                <td class="text-center"><span data-allocation-id="@capacityDetails.id" id="capacity-details-allocated-days-@capacityDetails.id">@display_number(capacityDetails.confirmedAllocation)</span></td>
+                                <td class="text-center">@display_boolean(true)</td>
+                            } else {
+                                <td class="text-center"><span data-allocation-id="@capacityDetails.id" id="capacity-details-allocated-days-@capacityDetails.id">@display_number(capacityDetails.notConfirmedAllocation)</span></td>
+                                <td class="text-center">@display_boolean(false)</td>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -107,5 +114,43 @@
             });
         </script>
     </div>
+
+    <script>
+        $('[id^=capacity-details-allocated-days]').each(function () {
+            $(this).editable({
+                mode: 'popup',
+                type: 'text',
+                success: function(response, newValue){
+
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        url: "@controllers.core.routes.PortfolioEntryPlanningController.updateAllocatedActorDetail().url",
+                        data: JSON.stringify({
+                            allocatedActorId: $(this).data("allocationId"),
+                            year: @year,
+                            month: @month,
+                            days: newValue
+                        }),
+                        error: function(response, newValue) {
+                            switch (response.status){
+                                case 200:
+                                    break;
+                                case 400:
+                                    alert("@parts.Msg("bad_request.error.title")");
+                                    break;
+                                default:
+                                    alert("@parts.Msg("unexpected.error.title")");
+                            }
+                        },
+                        success: function(response){
+                            reloadActorsTable()
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 
 </div>

@@ -336,55 +336,20 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         if (this.monthlyAllocated) {
 
             // Set allocations by month
+            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.clear();
             for (MonthAllocation monthAllocation : monthAllocations) {
-                if (monthAllocation.januaryAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 0, monthAllocation.januaryAllocationValue)
-                    );
-                if (monthAllocation.februaryAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 1, monthAllocation.februaryAllocationValue)
-                    );
-                if (monthAllocation.marchAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 2, monthAllocation.marchAllocationValue)
-                    );
-                if (monthAllocation.aprilAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 3, monthAllocation.aprilAllocationValue)
-                    );
-                if (monthAllocation.mayAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 4, monthAllocation.mayAllocationValue)
-                    );
-                if (monthAllocation.juneAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 5, monthAllocation.juneAllocationValue)
-                    );
-                if (monthAllocation.julyAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 6, monthAllocation.julyAllocationValue)
-                    );
-                if (monthAllocation.augustAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 7, monthAllocation.augustAllocationValue)
-                    );
-                if (monthAllocation.septemberAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 8, monthAllocation.septemberAllocationValue)
-                    );
-                if (monthAllocation.octoberAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 9, monthAllocation.octoberAllocationValue)
-                    );
-                if (monthAllocation.novemberAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 10, monthAllocation.novemberAllocationValue)
-                    );
-                if (monthAllocation.decemberAllocationValue != null)
-                    allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(
-                            allocatedActor.createOrUpdateAllocationDetail(monthAllocation.year, 11, monthAllocation.decemberAllocationValue)
-                    );
+                processMonthAllocation(allocatedActor, monthAllocation.year, 0, monthAllocation.januaryAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 1, monthAllocation.februaryAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 2, monthAllocation.marchAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 3, monthAllocation.aprilAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 4, monthAllocation.mayAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 5, monthAllocation.juneAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 6, monthAllocation.julyAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 7, monthAllocation.augustAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 8, monthAllocation.septemberAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 9, monthAllocation.octoberAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 10, monthAllocation.novemberAllocationValue);
+                processMonthAllocation(allocatedActor, monthAllocation.year, 11, monthAllocation.decemberAllocationValue);
             }
 
             // Set start date and end date
@@ -411,4 +376,15 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         }
     }
 
+    private void processMonthAllocation(PortfolioEntryResourcePlanAllocatedActor allocatedActor, Integer year, Integer month, Double days) {
+        if (days != null && days != 0) {
+            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(allocatedActor.createOrUpdateAllocationDetail(year, month, days));
+        } else {
+            PortfolioEntryResourcePlanAllocatedActorDetail detail = allocatedActor.getDetail(year, month);
+            if (detail != null) {
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.remove(detail);
+                detail.doDelete();
+            }
+        }
+    }
 }

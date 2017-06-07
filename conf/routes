@@ -196,14 +196,17 @@ GET    /budget-bucket/line/delete                    controllers.core.BudgetBuck
 # Core: Roadmap
 #-------------------
 
-GET    /roadmap                                  controllers.core.RoadmapController.index()
-POST   /roadmap/filter                           controllers.core.RoadmapController.indexFilter()
-GET    /roadmap/planning/view                    controllers.core.RoadmapController.viewPlanning()
-POST   /roadmap/export                           controllers.core.RoadmapController.exportAsExcel()
-POST   /roadmap/simulator/all-ids                controllers.core.RoadmapController.getAllIds()
-POST   /roadmap/simulator/kpis/fragment          controllers.core.RoadmapController.simulatorKpisFragment()
-POST   /roadmap/simulator/capacity-forecast      controllers.core.RoadmapController.simulatorCapacityForecast()
-POST   /roadmap/simulator/capacity-forecast/cell/details/fragment    controllers.core.RoadmapController.simulatorCapacityForecastCellDetailsFragment(objectType: String, objectId: Long, year: Integer, month: Integer)
+GET    /roadmap                                                             controllers.core.RoadmapController.index()
+POST   /roadmap/filter                                                      controllers.core.RoadmapController.indexFilter()
+GET    /roadmap/planning/view                                               controllers.core.RoadmapController.viewPlanning()
+POST   /roadmap/export                                                      controllers.core.RoadmapController.exportAsExcel()
+POST   /roadmap/simulator/all-ids                                           controllers.core.RoadmapController.getAllIds()
+POST   /roadmap/simulator/kpis/fragment                                     controllers.core.RoadmapController.simulatorKpisFragment()
+POST   /roadmap/simulator/capacity-forecast                                 controllers.core.RoadmapController.simulatorCapacityForecast()
+POST   /roadmap/simulator/capacity-forecast/table/actors/fragment           controllers.core.RoadmapController.simulatorCapacityForecastTableActorsFragment()
+POST   /roadmap/simulator/capacity-forecast/table/orgunits/fragment         controllers.core.RoadmapController.simulatorCapacityForecastTableOrgUnitsFragment()
+POST   /roadmap/simulator/capacity-forecast/table/competencies/fragment     controllers.core.RoadmapController.simulatorCapacityForecastTableCompetenciesFragment()
+POST   /roadmap/simulator/capacity-forecast/cell/details/fragment           controllers.core.RoadmapController.simulatorCapacityForecastCellDetailsFragment(objectType: String, objectId: Long, year: Integer, month: Integer)
 POST   /roadmap/simulator/capacity-forecast/actors/cell/details/fragment    controllers.core.RoadmapController.simulatorCapacityForecastActorsCellDetailsFragment(actorId: Long, year: Integer, month: Integer)
 
 #-------------------
@@ -326,6 +329,7 @@ GET    /portfolio-entry/resources                                              c
 GET    /portfolio-entry/allocated-actor/manage                                 controllers.core.PortfolioEntryPlanningController.manageAllocatedActor(id: Long, allocatedActorId: Long ?= 0)
 POST   /portfolio-entry/allocated-actor/manage                                 controllers.core.PortfolioEntryPlanningController.processManageAllocatedActor()
 GET    /portfolio-entry/allocated-actor/delete                                 controllers.core.PortfolioEntryPlanningController.deleteAllocatedActor(id: Long, allocatedActorId: Long)
+POST   /portfolio-entry/allocated-actor/update                                 controllers.core.PortfolioEntryPlanningController.updateAllocatedActorDetail()
 GET    /portfolio-entry/allocated-org-unit/manage                              controllers.core.PortfolioEntryPlanningController.manageAllocatedOrgUnit(id: Long, allocatedOrgUnitId: Long ?= 0)
 POST   /portfolio-entry/allocated-org-unit/manage                              controllers.core.PortfolioEntryPlanningController.processManageAllocatedOrgUnit()
 GET    /portfolio-entry/allocated-org-unit/delete                              controllers.core.PortfolioEntryPlanningController.deleteAllocatedOrgUnit(id: Long, allocatedOrgUnitId: Long)
