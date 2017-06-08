@@ -859,7 +859,12 @@ public class RoadmapController extends Controller {
                 competency = ActorDao.getCompetencyById(objectId);
             }
 
-            List<String> ids = FilterConfig.getIdsFromRequest(request());
+            JsonNode idsAsJson = Json.parse(session("roadmap.selected.rows"));
+
+            ArrayList<Long> ids = new ArrayList<>();
+            for(JsonNode id: idsAsJson) {
+                ids.add(id.asLong());
+            }
 
             /**
              * Compute the period according to the selected year.
@@ -889,9 +894,7 @@ public class RoadmapController extends Controller {
             List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies = new ArrayList<>();
             List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
 
-            for (String idString : ids) {
-
-                Long id = Long.valueOf(idString);
+            for (Long id : ids) {
 
                 if (orgUnit != null) {
 
