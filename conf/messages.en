@@ -2535,7 +2535,8 @@ core.portfolio_entry_planning.packages.manage.successful=The packages has been u
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Allocated employees
-core.portfolio_entry_planning.resources.general.title=Allocation requests
+core.portfolio_entry_planning.resources.org_unit.title=Delivery unit allocation requests
+core.portfolio_entry_planning.resources.competency.title=Competency allocation requests
 core.portfolio_entry_planning.resources.new.org_unit=Delivery unit
 core.portfolio_entry_planning.resources.new.competency=Competency
 core.portfolio_entry_planning.resources.no_competency=There is no competency available

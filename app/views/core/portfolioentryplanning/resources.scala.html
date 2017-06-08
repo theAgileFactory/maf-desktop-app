@@ -15,11 +15,21 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import models.finance.PortfolioEntryResourcePlanAllocatedActor
+@import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit
+@import models.finance.PortfolioEntryResourcePlanAllocatedCompetency
+@import dao.pmo.ActorDao
 @(
-    portfolioEntry: models.pmo.PortfolioEntry,
-    allocatedActorTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
-    allocatedResourcesTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedResourceListView],
-    existCompetencies: Boolean
+        portfolioEntry: models.pmo.PortfolioEntry,
+        allocatedActorTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
+        allocatedActorPagination: framework.utils.Pagination[PortfolioEntryResourcePlanAllocatedActor],
+        allocatedActorFilterConfig: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
+        allocatedOrgUnitTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView],
+        allocatedOrgUnitPagination: framework.utils.Pagination[PortfolioEntryResourcePlanAllocatedOrgUnit],
+        allocatedOrgUnitFilterConfig: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView],
+        allocatedCompetencyTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedCompetencyListView],
+        allocatedCompetencyPagination: framework.utils.Pagination[PortfolioEntryResourcePlanAllocatedCompetency],
+        allocatedCompetencyFilterConfig: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedCompetencyListView]
 )
 
 @import be.objectify.deadbolt.java.views.html._
@@ -42,32 +52,47 @@
     <div class="panel panel-default" id="allocated-orgunits-table">
     
         <div class="panel-heading">
-            @parts.Msg("core.portfolio_entry_planning.resources.general.title")
+            @parts.Msg("core.portfolio_entry_planning.resources.org_unit.title")
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <div class="btn-group">
-                        <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-plus fa-lg"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right text-left">
-                            <li><a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllocatedOrgUnit(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_planning.resources.new.org_unit")</a></li>
-                            @if(!existCompetencies) {
-                                <li><a href='javascript: alert("@parts.Msg("core.portfolio_entry_planning.resources.no_competency")");'>@parts.Msg("core.portfolio_entry_planning.resources.new.competency")</a></li>
-                            } else {
-                                <li><a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllocatedCompetency(portfolioEntry.id).url">@parts.Msg("core.portfolio_entry_planning.resources.new.competency")</a></li>
-                            }
-                        </ul>
-                    </div>
+                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllocatedOrgUnit(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
         </div>
 
         <div class="panel-body">
-            @parts.table.tableview(allocatedResourcesTable)
+        @parts.table.filtered_tableview(
+            allocatedOrgUnitTable,
+            allocatedOrgUnitPagination,
+            allocatedOrgUnitFilterConfig,
+            controllers.core.routes.PortfolioEntryPlanningController.resourcesAllocatedOrgUnitFilter(portfolioEntry.id).url)
         </div>
     </div>
-    
+
+    @if(ActorDao.getCompetencyActiveAsList.size() > 0) {
+        <div class="panel panel-default" id="allocated-competencies-table">
+
+            <div class="panel-heading">
+                @parts.Msg("core.portfolio_entry_planning.resources.competency.title")
+
+                <div class="pull-right">
+                @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllocatedCompetency(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                }
+                </div>
+            </div>
+
+            <div class="panel-body">
+            @parts.table.filtered_tableview(
+                allocatedCompetencyTable,
+                allocatedCompetencyPagination,
+                allocatedCompetencyFilterConfig,
+                controllers.core.routes.PortfolioEntryPlanningController.resourcesAllocatedCompetencyFilter(portfolioEntry.id).url)
+            </div>
+        </div>
+    }
+
     <div class="panel panel-default" id="allocated-actors-table">
     
         <div class="panel-heading">
@@ -81,7 +106,11 @@
         </div>
 
         <div class="panel-body">
-            @parts.table.tableview(allocatedActorTable)
+            @parts.table.filtered_tableview(
+                allocatedActorTable,
+                allocatedActorPagination,
+                allocatedActorFilterConfig,
+                controllers.core.routes.PortfolioEntryPlanningController.resourcesAllocatedActorFilter(portfolioEntry.id).url)
         </div>
     </div>
 

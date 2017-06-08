@@ -17,6 +17,7 @@
  */
 package controllers;
 
+import dao.finance.CurrencyDAO;
 import play.mvc.Controller;
 import play.mvc.Result;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
@@ -85,5 +86,9 @@ public class JsonController extends Controller {
      */
     public Result applicationBlock() {
         return ok(Utilities.marshallAsJson(ArchitectureDao.getApplicationBlockAsVHByKeywords(request().getQueryString("query")).getValues()));
+    }
+
+    public Result currency() {
+        return ok(Utilities.marshallAsJson(CurrencyDAO.getCurrencyAsVHByKeywords(request().getQueryString("query")).getValues()));
     }
 }

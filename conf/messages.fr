@@ -2552,7 +2552,8 @@ core.portfolio_entry_planning.packages.manage.successful=Les résultats ont ét�
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Employés affectés
-core.portfolio_entry_planning.resources.general.title=Requêtes d''affectation
+core.portfolio_entry_planning.resources.org_unit.title=Requêtes d''affectation de fournisseur interne
+core.portfolio_entry_planning.resources.competency.title=Requêtes d''affectation de compétence
 core.portfolio_entry_planning.resources.new.org_unit=Fournisseur interne
 core.portfolio_entry_planning.resources.new.competency=Compétence
 core.portfolio_entry_planning.resources.no_competency=Aucune compétence disponible

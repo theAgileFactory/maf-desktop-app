@@ -2548,7 +2548,8 @@ core.portfolio_entry_planning.packages.manage.successful=Packete aktualisiert
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Mitarbeiter
-core.portfolio_entry_planning.resources.general.title=Zuweisungsanfragen
+core.portfolio_entry_planning.resources.org_unit.title=Organisationseinheit Zuweisungsanfragen
+core.portfolio_entry_planning.resources.competency.title=Kompetenz Zuweisungsanfragen
 core.portfolio_entry_planning.resources.new.org_unit=Organisationseinheit
 core.portfolio_entry_planning.resources.new.competency=Kompetenz
 core.portfolio_entry_planning.resources.no_competency=Keine Kompetenz vorhanden

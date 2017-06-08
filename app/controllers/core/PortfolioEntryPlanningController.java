@@ -20,11 +20,10 @@ package controllers.core;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -87,7 +86,6 @@ import models.pmo.PortfolioEntryPlanningPackagePattern;
 import models.pmo.Stakeholder;
 import play.Configuration;
 import play.Logger;
-import play.api.mvc.Results;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -113,10 +111,7 @@ import utils.form.PortfolioEntryResourcePlanAllocatedOrgUnitFormData;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
-import utils.table.AttachmentListView;
-import utils.table.PortfolioEntryPlanningPackageListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
+import utils.table.*;
 
 /**
  * The controller which allows to manage the planning of a portfolio entry.
@@ -1224,31 +1219,241 @@ public class PortfolioEntryPlanningController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Result resources(Long id) {
 
+        // Get user session id
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
+        // Get resource plan
+        PortfolioEntryResourcePlan resourcePlan = getResourcePlan(portfolioEntry);
+
+        // construct the allocated actors table
+        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> allocatedActorFilterConfig =
+                getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.filterConfig.getCurrent(uid, request());
+
+        Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> allocatedActorTable =
+                getAllocatedActorTable(resourcePlan, allocatedActorFilterConfig);
+
+        // construct the org unit allocation table
+        FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> allocatedOrgUnitFilterConfig =
+                getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.getCurrent(uid, request());
+
+        Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> allocatedOrgUnitTable =
+                getAllocatedOrgUnitTable(resourcePlan, allocatedOrgUnitFilterConfig);
+
+        // construct the competency allocation table
+        FilterConfig<PortfolioEntryResourcePlanAllocatedCompetencyListView> allocatedCompetencyFilterConfig =
+                getTableProvider().get().portfolioEntryResourcePlanAllocatedCompetency.filterConfig.getCurrent(uid, request());
+
+        Pair<Table<PortfolioEntryResourcePlanAllocatedCompetencyListView>, Pagination<PortfolioEntryResourcePlanAllocatedCompetency>> allocatedCompetencyTable =
+                getAllocatedCompetencyTable(resourcePlan, allocatedCompetencyFilterConfig);
+
+        return ok(views.html.core.portfolioentryplanning.resources.render(
+                portfolioEntry,
+                allocatedActorTable.getLeft(),
+                allocatedActorTable.getRight(),
+                allocatedActorFilterConfig,
+                allocatedOrgUnitTable.getLeft(),
+                allocatedOrgUnitTable.getRight(),
+                allocatedOrgUnitFilterConfig,
+                allocatedCompetencyTable.getLeft(),
+                allocatedCompetencyTable.getRight(),
+                allocatedCompetencyFilterConfig
+        ));
+    }
+
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result resourcesAllocatedActorFilter(Long id) {
+
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // Get resource plan
+        PortfolioEntryResourcePlan resourcePlan = getResourcePlan(portfolioEntry);
+
+        if (filterConfig == null) {
+            return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+        } else {
+            Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getAllocatedActorTable(resourcePlan, filterConfig);
+            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+        }
+    }
+
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result resourcesAllocatedOrgUnitFilter(Long id) {
+
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig = getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.persistCurrentInDefault(uid, request());
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // Get resource plan
+        PortfolioEntryResourcePlan resourcePlan = getResourcePlan(portfolioEntry);
+
+        if (filterConfig == null) {
+            return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+        } else {
+            Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> table = getAllocatedOrgUnitTable(resourcePlan, filterConfig);
+            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(table.getLeft(), table.getRight()));
+        }
+    }
+
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result resourcesAllocatedCompetencyFilter(Long id) {
+
+        String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+        FilterConfig<PortfolioEntryResourcePlanAllocatedCompetencyListView> filterConfig = getTableProvider().get().portfolioEntryResourcePlanAllocatedCompetency.filterConfig.persistCurrentInDefault(uid, request());
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // Get resource plan
+        PortfolioEntryResourcePlan resourcePlan = getResourcePlan(portfolioEntry);
+
+        if (filterConfig == null) {
+            return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+        } else {
+            Pair<Table<PortfolioEntryResourcePlanAllocatedCompetencyListView>, Pagination<PortfolioEntryResourcePlanAllocatedCompetency>> table = getAllocatedCompetencyTable(resourcePlan, filterConfig);
+            return ok(views.html.framework_views.parts.table.dynamic_tableview.render(table.getLeft(), table.getRight()));
+        }
+    }
+
+    /**
+     * Get Allocated actors table
+     *
+     * @param resourcePlan the resource plan associated to the allocations
+     * @param filterConfig the table filter config
+     *
+     * @return a Pair of table and pagination
+     */
+    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getAllocatedActorTable(
+            PortfolioEntryResourcePlan resourcePlan,
+            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig
+    ) {
+
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor
+                .where()
+                .eq("deleted", false)
+                .eq("portfolioEntryResourcePlan.id", resourcePlan.id);
+
+        expressionList = filterConfig.updateWithSearchExpression(expressionList);
+        filterConfig.updateWithSortExpression(expressionList);
+
+        Pagination<PortfolioEntryResourcePlanAllocatedActor> pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
+        pagination.setCurrentPage(filterConfig.getCurrentPage());
+        pagination.setPageQueryName("allocatedActorsPage");
+
+        List<PortfolioEntryResourcePlanAllocatedActor> allocatedActorList = pagination.getListOfObjects();
+
+        List<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryResourcePlanAllocatedActorListView = new ArrayList<>();
+        portfolioEntryResourcePlanAllocatedActorListView.addAll(allocatedActorList.stream().map(PortfolioEntryResourcePlanAllocatedActorListView::new).collect(Collectors.toList()));
+
+        Set<String> notDisplayedColumns = filterConfig.getColumnsToHide();
+        notDisplayedColumns.add("portfolioEntryName");
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+            notDisplayedColumns.add("editActionLink");
+            notDisplayedColumns.add("removeActionLink");
+        }
+
+        Table<PortfolioEntryResourcePlanAllocatedActorListView> allocatedActorsTable = this.getTableProvider()
+                .get().portfolioEntryResourcePlanAllocatedActor.templateTable.fillForFilterConfig(portfolioEntryResourcePlanAllocatedActorListView,
+                        notDisplayedColumns);
+
+        return Pair.of(allocatedActorsTable, pagination);
+    }
+
+    /**
+     * Get allocated org unit table
+     *
+     * @param resourcePlan the resource plan linked to the allocations
+     * @param filterConfig the filter configuration for the table
+     *
+     * @return a pair of the table and the pagination
+     */
+    private Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> getAllocatedOrgUnitTable(PortfolioEntryResourcePlan resourcePlan, FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig) {
+        ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit
+                .where()
+                .eq("deleted", false)
+                .eq("portfolioEntryResourcePlan.id", resourcePlan.id);
+
+        expressionList = filterConfig.updateWithSearchExpression(expressionList);
+        filterConfig.updateWithSortExpression(expressionList);
+
+        Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
+        pagination.setCurrentPage(filterConfig.getCurrentPage());
+        pagination.setPageQueryName("allocatedOrgUnitPage");
+
+        List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnitList = pagination.getListOfObjects();
+
+        List<PortfolioEntryResourcePlanAllocatedOrgUnitListView> listView = new ArrayList<>();
+        listView.addAll(allocatedOrgUnitList.stream().map(PortfolioEntryResourcePlanAllocatedOrgUnitListView::new).collect(Collectors.toList()));
+
+        Set<String> notDisplayedColumns = filterConfig.getColumnsToHide();
+        notDisplayedColumns.add("portfolioEntryName");
+
+        Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> allocatedOrgUnitTable =
+                getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable.fillForFilterConfig(listView, notDisplayedColumns);
+
+        return Pair.of(allocatedOrgUnitTable, pagination);
+    }
+
+    /**
+     * Get allocated org unit table
+     *
+     * @param resourcePlan the resource plan linked to the allocations
+     * @param filterConfig the filter configuration for the table
+     *
+     * @return a pair of the table and the pagination
+     */
+    private Pair<Table<PortfolioEntryResourcePlanAllocatedCompetencyListView>, Pagination<PortfolioEntryResourcePlanAllocatedCompetency>> getAllocatedCompetencyTable(PortfolioEntryResourcePlan resourcePlan, FilterConfig<PortfolioEntryResourcePlanAllocatedCompetencyListView> filterConfig) {
+        ExpressionList<PortfolioEntryResourcePlanAllocatedCompetency> expressionList = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedCompetency
+                .where()
+                .eq("deleted", false)
+                .eq("portfolioEntryResourcePlan.id", resourcePlan.id);
+
+        expressionList = filterConfig.updateWithSearchExpression(expressionList);
+        filterConfig.updateWithSortExpression(expressionList);
+
+        Pagination<PortfolioEntryResourcePlanAllocatedCompetency> pagination = new Pagination<>(getPreferenceManagerPlugin(), expressionList);
+        pagination.setCurrentPage(filterConfig.getCurrentPage());
+        pagination.setPageQueryName("allocatedCompetencyPage");
+
+        List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencyList = pagination.getListOfObjects();
+
+        List<PortfolioEntryResourcePlanAllocatedCompetencyListView> listView = new ArrayList<>();
+        listView.addAll(allocatedCompetencyList.stream().map(PortfolioEntryResourcePlanAllocatedCompetencyListView::new).collect(Collectors.toList()));
+
+        Set<String> notDisplayedColumns = filterConfig.getColumnsToHide();
+        notDisplayedColumns.add("portfolioEntryName");
+
+        Table<PortfolioEntryResourcePlanAllocatedCompetencyListView> allocatedCompetencyTable =
+                getTableProvider().get().portfolioEntryResourcePlanAllocatedCompetency.templateTable.fillForFilterConfig(listView, notDisplayedColumns);
+
+        return Pair.of(allocatedCompetencyTable, pagination);
+    }
+
+    /**
+     * Get or create if not exist the resource plan associated to an initiative
+     *
+     * @param portfolioEntry the initiative
+     *
+     * @return the PortfolioEntryResourcePlan
+     */
+    private PortfolioEntryResourcePlan getResourcePlan(PortfolioEntry portfolioEntry) {
         // get current planning
         LifeCycleInstancePlanning planning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
         /*
          * create the resource plan allocated actors/org unit tables
          */
-
-        // hide columns for resource plan tables
-        Set<String> hideColumnsForResourcePlanTable = new HashSet<String>();
-        hideColumnsForResourcePlanTable.add("portfolioEntryName");
-        hideColumnsForResourcePlanTable.add("followPackageDates");
-        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
-            hideColumnsForResourcePlanTable.add("editActionLink");
-            hideColumnsForResourcePlanTable.add("removeActionLink");
-            hideColumnsForResourcePlanTable.add("reallocate");
-        }
-        if (!getBudgetTrackingService().isActive()) {
-            hideColumnsForResourcePlanTable.add("currency");
-            hideColumnsForResourcePlanTable.add("dailyRate");
-            hideColumnsForResourcePlanTable.add("forecastDays");
-            hideColumnsForResourcePlanTable.add("forecastDailyRate");
-        }
 
         // get or create the resource plan
         PortfolioEntryResourcePlan resourcePlan = planning.portfolioEntryResourcePlan;
@@ -1259,46 +1464,7 @@ public class PortfolioEntryPlanningController extends Controller {
             planning.save();
         }
 
-        // construct the allocated actors table
-        List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = resourcePlan.portfolioEntryResourcePlanAllocatedActors;
-        List<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryResourcePlanAllocatedActorListView;
-        portfolioEntryResourcePlanAllocatedActorListView = new ArrayList<PortfolioEntryResourcePlanAllocatedActorListView>();
-        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
-            portfolioEntryResourcePlanAllocatedActorListView.add(new PortfolioEntryResourcePlanAllocatedActorListView(allocatedActor));
-        }
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> allocatedActorsTable = this.getTableProvider()
-                .get().portfolioEntryResourcePlanAllocatedActor.templateTable.fill(portfolioEntryResourcePlanAllocatedActorListView,
-                        hideColumnsForResourcePlanTable);
-
-        // construct the general allocation table
-        List<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourceListView = new ArrayList<>();
-
-        SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
-        for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : resourcePlan.portfolioEntryResourcePlanAllocatedOrgUnits) {
-            sortableCollection.addObject(new DateSortableObject(allocatedOrgUnit.endDate, allocatedOrgUnit));
-        }
-        for (PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency : resourcePlan.portfolioEntryResourcePlanAllocatedCompetencies) {
-            sortableCollection.addObject(new DateSortableObject(allocatedCompetency.endDate, allocatedCompetency));
-        }
-
-        for (DateSortableObject dateSortableObject : sortableCollection.getSorted()) {
-            if (dateSortableObject.getObject() instanceof PortfolioEntryResourcePlanAllocatedOrgUnit) {
-                PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = (PortfolioEntryResourcePlanAllocatedOrgUnit) dateSortableObject.getObject();
-                allocatedResourceListView.add(new PortfolioEntryResourcePlanAllocatedResourceListView(allocatedOrgUnit));
-            } else if (dateSortableObject.getObject() instanceof PortfolioEntryResourcePlanAllocatedCompetency) {
-                PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency = (PortfolioEntryResourcePlanAllocatedCompetency) dateSortableObject
-                        .getObject();
-                allocatedResourceListView.add(new PortfolioEntryResourcePlanAllocatedResourceListView(allocatedCompetency));
-            }
-        }
-
-        Table<PortfolioEntryResourcePlanAllocatedResourceListView> allocatedResourcesTable = this.getTableProvider()
-                .get().portfolioEntryResourcePlanAllocatedResource.templateTable.fill(allocatedResourceListView, hideColumnsForResourcePlanTable);
-
-        // check if there are active competencies
-        boolean existCompetencies = ActorDao.getCompetencyActiveAsList().size() > 0 ? true : false;
-
-        return ok(views.html.core.portfolioentryplanning.resources.render(portfolioEntry, allocatedActorsTable, allocatedResourcesTable, existCompetencies));
+        return resourcePlan;
     }
 
     /**

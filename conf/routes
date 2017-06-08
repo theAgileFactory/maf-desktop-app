@@ -126,6 +126,7 @@ GET   /json/portfolio                                controllers.JsonController.
 GET   /json/purchase-order                           controllers.JsonController.purchaseOrder()
 GET   /json/application-block                        controllers.JsonController.applicationBlock()
 GET   /json/portfolio-entry                          controllers.JsonController.portfolioEntry()
+GET   /json/currency                                 controllers.JsonController.currency()
 
 #-------------------
 # Core: Picker
@@ -326,6 +327,9 @@ GET    /portfolio-entry/package/attachment/create                              c
 POST   /portfolio-entry/package/attachment/create                              controllers.core.PortfolioEntryPlanningController.processCreatePackageAttachment()
 GET    /portfolio-entry/package/attachment/delete                              controllers.core.PortfolioEntryPlanningController.deletePackageAttachment(id: Long, planningPackageId: Long, attachmentId: Long)
 GET    /portfolio-entry/resources                                              controllers.core.PortfolioEntryPlanningController.resources(id: Long)
+POST   /portfolio-entry/resources/allocated-actor/filter                       controllers.core.PortfolioEntryPlanningController.resourcesAllocatedActorFilter(id: Long)
+POST   /portfolio-entry/resources/allocated-orgunit/filter                     controllers.core.PortfolioEntryPlanningController.resourcesAllocatedOrgUnitFilter(id: Long)
+POST   /portfolio-entry/resources/allocated-competency/filter                  controllers.core.PortfolioEntryPlanningController.resourcesAllocatedCompetencyFilter(id: Long)
 GET    /portfolio-entry/allocated-actor/manage                                 controllers.core.PortfolioEntryPlanningController.manageAllocatedActor(id: Long, allocatedActorId: Long ?= 0)
 POST   /portfolio-entry/allocated-actor/manage                                 controllers.core.PortfolioEntryPlanningController.processManageAllocatedActor()
 GET    /portfolio-entry/allocated-actor/delete                                 controllers.core.PortfolioEntryPlanningController.deleteAllocatedActor(id: Long, allocatedActorId: Long)

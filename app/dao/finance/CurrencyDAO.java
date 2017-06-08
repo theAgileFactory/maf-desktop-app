@@ -110,4 +110,15 @@ public abstract class CurrencyDAO {
         return CurrencyDAO.find.where().eq("deleted", false).eq("code", code).findUnique();
     }
 
+    /**
+     * Get currency as value holder by keyword
+     *
+     * @param key the query string to search in currency name
+     */
+    public static DefaultSelectableValueHolderCollection<Long> getCurrencyAsVHByKeywords(String key) {
+        return new DefaultSelectableValueHolderCollection<>(
+                find.where().eq("deleted", false).ilike("code", "%" + key + "%").findList()
+        );
+    }
+
 }

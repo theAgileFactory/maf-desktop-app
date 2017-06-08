@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 import constants.IMafConstants;
+import controllers.routes;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
@@ -85,6 +86,18 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                             "portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.name",
                             "object.allocated_resource.portfolio_entry.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.NONE);
 
+                    addColumnConfiguration("currency", "currency.id", "object.allocated_resource.currency.label",
+                            new FilterConfig.AutocompleteFilterComponent(controllers.routes.JsonController.currency().url()), false, false, FilterConfig.SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label",
+                            new FilterConfig.NumericFieldFilterComponent("0", "="), false, false, FilterConfig.SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label",
+                            new FilterConfig.NumericFieldFilterComponent("0", "="), false, false, FilterConfig.SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
+                            new FilterConfig.NumericFieldFilterComponent("0", "="), false, false, FilterConfig.SortStatusType.UNSORTED);
+
                     addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
                             SortStatusType.UNSORTED);
 
@@ -104,7 +117,6 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                             true, false, SortStatusType.UNSORTED);
 
                     addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedActor.class);
-
                 }
             };
         }
