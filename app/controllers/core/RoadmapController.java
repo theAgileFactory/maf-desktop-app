@@ -624,12 +624,13 @@ public class RoadmapController extends Controller {
                 actorCapacity = actorCapacities.get(allocatedActor.actor.id);
             } else {
                 actorCapacity = new ActorCapacity(warningLimitPercent, allocatedActor.actor);
-            }
 
-            // Add availables
-            models.pmo.ActorCapacity[] actorAvailables = ActorDao.getActorCapacityAsArrayByActorAndYear(allocatedActor.actor, year);
-            for (models.pmo.ActorCapacity available : actorAvailables) {
-                actorCapacity.addAvailable(available.month - 1, available.value == null ? 0.0 : available.value);
+                // Add availables just once
+                models.pmo.ActorCapacity[] actorAvailables = ActorDao.getActorCapacityAsArrayByActorAndYear(allocatedActor.actor, year);
+                for (models.pmo.ActorCapacity available : actorAvailables) {
+                    actorCapacity.addAvailable(available.month - 1, available.value == null ? 0.0 : available.value);
+                }
+
             }
 
             // Add planned
@@ -644,7 +645,7 @@ public class RoadmapController extends Controller {
             actorCapacities.put(allocatedActor.actor.id, actorCapacity);
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(new ArrayList<>(actorCapacities.values()), year));
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(actorCapacities.values().stream().sorted((a1, a2) -> a1.getActor().firstName.compareTo(a2.getActor().firstName)).collect(Collectors.toList()), year));
     }
 
     public Result simulatorCapacityForecastTableOrgUnitsFragment(Integer year, Boolean onlyConfirmed) {
@@ -740,7 +741,7 @@ public class RoadmapController extends Controller {
             }
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment.render(new ArrayList<>(orgUnitCapacities.values()), year));
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment.render(orgUnitCapacities.values().stream().sorted((t1, t2) -> t1.getOrgUnit().name.compareTo(t2.getOrgUnit().name)).collect(Collectors.toList()), year));
     }
 
     public Result simulatorCapacityForecastTableCompetenciesFragment(Integer year, Boolean onlyConfirmed) {

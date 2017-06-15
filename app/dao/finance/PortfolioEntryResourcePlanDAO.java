@@ -272,7 +272,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
      */
     public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByPE(Long portfolioEntryId, Date start, Date end,
             boolean onlyConfirmed, Long orgUnitId, Long competencyId) {
-        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> exprAllocatedActors = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where()
+        ExpressionList<PortfolioEntryResourcePlanAllocatedActor> exprAllocatedActors = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor
+                .fetch("actor").where()
                 .eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end).ge("endDate", start)
                 .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
@@ -648,7 +649,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     public static List<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsListByPE(Long portfolioEntryId, Date start, Date end,
             boolean onlyConfirmed, Long orgUnitId) {
         ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> exprAllocatedOrgUnits = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit
-                .where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end).ge("endDate", start)
+                .fetch("orgUnit").where().eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end).ge("endDate", start)
                 .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.deleted", false)
