@@ -592,6 +592,14 @@ kpi.pe_actuals.main.name=Effektiv
 kpi.pe_actuals.additional1.name=CAPEX
 kpi.pe_actuals.additional2.name=OPEX
 
+kpi.pe_budget.main.name=Budget
+kpi.pe_budget.additional1.name=CAPEX
+kpi.pe_budget.additional2.name=OPEX
+
+kpi.pe_forecast.main.name=Prognose
+kpi.pe_forecast.additional1.name=CAPEX
+kpi.pe_forecast.additional2.name=OPEX
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
@@ -3332,6 +3340,7 @@ admin.kpi.view.scheduler.delete.comfirm=Sind Sie sicher, dass Sie den Planer lö
 admin.kpi.view.scheduler.no_scheduler=Planer nicht konfiguriert. Bitte auf <span class="fa fa-sliders"></span> klicken.
 admin.kpi.scheduler.delete=Planer entfernt
 admin.kpi.scheduler.trigger=Planer ausgeführt
+admin.kpi.view.permissions.title=Benutzerrechte
 admin.kpi.view.values.title=Definition der Felder
 admin.kpi.view.rules.title=Definition der Farben Regeln
 admin.kpi.rule.delete=Definition gelöscht
@@ -3346,6 +3355,10 @@ admin.kpi.value.edit.successful=Änderungen gespeichert
 #edit scheduler
 admin.kpi.editscheduler.title=Planer Konfiguration
 admin.kpi.editscheduler.successful=Änderungen gespeichert
+
+#edit permissions
+admin.kpi.edit_permissions.title=Benutzerrechte Konfiguration
+admin.kpi.edit_permissions.successful=Änderungen gespeichert
 
 #edit color
 admin.kpi.rule.manage.title=Farben Regeln

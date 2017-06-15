@@ -581,6 +581,14 @@ kpi.pe_actuals.main.name=Actuals
 kpi.pe_actuals.additional1.name=CAPEX
 kpi.pe_actuals.additional2.name=OPEX
 
+kpi.pe_budget.main.name=Budget
+kpi.pe_budget.additional1.name=CAPEX
+kpi.pe_budget.additional2.name=OPEX
+
+kpi.pe_forecast.main.name=Forecast
+kpi.pe_forecast.additional1.name=CAPEX
+kpi.pe_forecast.additional2.name=OPEX
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
@@ -3321,6 +3329,7 @@ admin.kpi.view.scheduler.delete.comfirm=Are you sure you want to delete the sche
 admin.kpi.view.scheduler.no_scheduler=There is no scheduler configured. Please click on the icon <span class="fa fa-sliders"></span> to configure it.
 admin.kpi.scheduler.delete=The scheduler has been correctly removed
 admin.kpi.scheduler.trigger=The scheduler has been correctly triggered
+admin.kpi.view.permissions.title=Permissions
 admin.kpi.view.values.title=Values'' definition
 admin.kpi.view.rules.title=Coloring rules
 admin.kpi.rule.delete=The rule has been removed
@@ -3335,6 +3344,10 @@ admin.kpi.value.edit.successful=The KPI value definition has been updated.
 #edit scheduler
 admin.kpi.editscheduler.title=Configure the scheduler
 admin.kpi.editscheduler.successful=The scheduler has been updated.
+
+#edit permissions
+admin.kpi.edit_permissions.title=Permissions configuration
+admin.kpi.edit_permissions.successful=The KPI permissions have been updated
 
 #edit color
 admin.kpi.rule.manage.title=Manage a coloring rule

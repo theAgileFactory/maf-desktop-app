@@ -593,6 +593,14 @@ kpi.pe_actuals.main.name=Engagé
 kpi.pe_actuals.additional1.name=CAPEX
 kpi.pe_actuals.additional2.name=OPEX
 
+kpi.pe_budget.main.name=Budget
+kpi.pe_budget.additional1.name=CAPEX
+kpi.pe_budget.additional2.name=OPEX
+
+kpi.pe_forecast.main.name=Prévision
+kpi.pe_forecast.additional1.name=CAPEX
+kpi.pe_forecast.additional2.name=OPEX
+
 #----------------------
 # standard reports
 # Note: some standard reports'' translations are currently in the DB (i18n_messages table), they should be moved here
@@ -3335,6 +3343,7 @@ admin.kpi.view.scheduler.delete.comfirm=Etes-vous sûr(e) de vouloir supprimer l
 admin.kpi.view.scheduler.no_scheduler=Aucun planificateur n''est configuré. Veuillez cliquer sur l''icône <span class="fa fa-sliders"></span> pour le configurer.
 admin.kpi.scheduler.delete=Le planificateur a été supprimé.
 admin.kpi.scheduler.trigger=Le planificateur a été déclenché.
+admin.kpi.view.permissions.title=Permissions
 admin.kpi.view.values.title=Définition des valeurs
 admin.kpi.view.rules.title=Règles de coloration
 admin.kpi.rule.delete=La règle a été supprimée.
@@ -3349,6 +3358,10 @@ admin.kpi.value.edit.successful=La définition de la valeur de l''KPI a été mi
 #edit scheduler
 admin.kpi.editscheduler.title=Configurer le plannificateur
 admin.kpi.editscheduler.successful=Le plannificateur a été mis à jour.
+
+#edit permissions
+admin.kpi.edit_permissions.title=Configurer les permissions
+admin.kpi.edit_permissions.successful=Les permissions du KPI ont été mises à jour.
 
 #edit color
 admin.kpi.rule.manage.title=Gérer une règle de coloration
