@@ -124,6 +124,7 @@ public class UserManager extends Controller {
     // Table to display search results
     private static Table<IUserAccount> tableTemplate = new Table<IUserAccount>() {
         {
+            this.addColumn("uid", "uid", "object.user_account.uid.label", SorterType.NONE);
             this.addColumn("firstName", "firstName", "object.user_account.first_name.label", SorterType.NONE);
             this.addColumn("lastName", "lastName", "object.user_account.last_name.label", SorterType.NONE);
             this.addColumn("mail", "mail", "object.user_account.email.label", SorterType.NONE);

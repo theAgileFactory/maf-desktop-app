@@ -27,30 +27,35 @@
         <tbody>
             <tr>
                 <th width="20%">
-                    @parts.Msg("object.user_account.first_name.label")</th>
-                <td>@userAccount.getFirstName()</td>
+                @parts.Msg("object.user_account.uid.label")</th>
+                <td>@userAccount.getUid</td>
+            </tr>
+            <tr>
+                <th width="20%">
+                @parts.Msg("object.user_account.first_name.label")</th>
+                <td>@userAccount.getFirstName</td>
             </tr>
             <tr>
                 <th width="20%">
                     @parts.Msg("object.user_account.last_name.label")</th>
-                <td>@userAccount.getLastName()</td>
+                <td>@userAccount.getLastName</td>
             </tr>
             <tr>
                 <th width="20%">
                     @parts.Msg("object.user_account.email.label")</th>
-                <td>@userAccount.getMail()</td>
+                <td>@userAccount.getMail</td>
             </tr>
             <tr>
                 <th width="20%">
                     @parts.Msg("object.user_account.preferred_language.label")</th>
-                <td>@if(userAccount.getPreferredLanguage() != null) { @_messagesPluginService.getLanguageByCode(userAccount.getPreferredLanguage).getName }</td>
+                <td>@if(userAccount.getPreferredLanguage != null) { @_messagesPluginService.getLanguageByCode(userAccount.getPreferredLanguage).getName }</td>
             </tr>
             <tr>
                 <th width="20%">
                     @parts.Msg("object.user_account.roles.label")</th>
                 <td>
                     <ul class="list-unstyled">
-                    @for(systemLevelRoleTypeName <- userAccount.getSystemLevelRoleTypeNames()){
+                    @for(systemLevelRoleTypeName <- userAccount.getSystemLevelRoleTypeNames){
                            <li><small>@systemLevelRoleTypeName</small></li>
                         }
                         </ul>

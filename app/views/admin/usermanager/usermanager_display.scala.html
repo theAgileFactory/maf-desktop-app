@@ -66,6 +66,12 @@
             <table class="table table-condensed table-hover">
                 <tbody>
                     <tr>
+                        <th width="20%">@parts.Msg("object.user_account.uid.label")</th>
+                        <td>
+                            @userAccount.getUid
+                        </td>
+                    </tr>
+                    <tr>
                         <th width="20%">@parts.Msg("object.user_account.full_name.label")</th>
                         <td>
                             @userAccount.getFirstName() @userAccount.getLastName()
