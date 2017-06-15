@@ -110,6 +110,8 @@ GET   /admin/kpi/scheduler/delete         controllers.admin.KpiManagerController
 GET   /admin/kpi/scheduler/edit           controllers.admin.KpiManagerController.editScheduler(kpiDefinitionId: Long)
 POST  /admin/kpi/scheduler/save           controllers.admin.KpiManagerController.saveScheduler()
 GET   /admin/kpi/scheduler/trigger        controllers.admin.KpiManagerController.triggerScheduler(kpiDefinitionId: Long)
+GET   /admin/kpi/permissions/edit         controllers.admin.KpiManagerController.editPermissions(kpiDefinitionId: Long)
+POST  /admin/kpi/permissions/save         controllers.admin.KpiManagerController.savePermissions()
 GET   /admin/kpi/create                   controllers.admin.KpiManagerController.create(objectType)
 POST  /admin/kpi/create                   controllers.admin.KpiManagerController.processCreate()
 GET   /admin/kpi/delete                   controllers.admin.KpiManagerController.delete(kpiDefinitionId: Long)

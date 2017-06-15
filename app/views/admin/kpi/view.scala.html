@@ -158,6 +158,25 @@
                 </div>
         
             }
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @parts.Msg("admin.kpi.view.permissions.title")
+
+                    <div class="pull-right">
+                        <a href="@controllers.admin.routes.KpiManagerController.editPermissions(kpiDefinition.id).url"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                    </div>
+
+                </div>
+
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        @for(permission <- kpiDefinition.systemPermissions) {
+                            <li>@permission.getName</li>
+                        }
+                    </ul>
+                </div>
+            </div>
         
         </div>
     

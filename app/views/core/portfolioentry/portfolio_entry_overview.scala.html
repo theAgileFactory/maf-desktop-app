@@ -43,10 +43,6 @@
 
     <div class="row">
         @views.html.framework_views.parts.kpi.display_kpi_dashboard(classOf[models.pmo.PortfolioEntry], portfolioEntry.id)
-        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_VIEW_DYNAMIC_PERMISSION) {
-            @views.html.framework_views.parts.kpi.display_kpi_box("KPI_DEVIATION_CAPEX", portfolioEntry.id)
-            @views.html.framework_views.parts.kpi.display_kpi_box("KPI_DEVIATION_OPEX", portfolioEntry.id)
-        }
     </div>
 
     <div class="panel panel-default">

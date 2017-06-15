@@ -40,6 +40,7 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import models.framework_models.account.SystemPermission;
 import models.framework_models.kpi.KpiColorRule;
 import models.framework_models.kpi.KpiData;
 import models.framework_models.kpi.KpiDefinition;
@@ -50,11 +51,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.duration.Duration;
 import services.tableprovider.ITableProvider;
-import utils.form.CustomExternalKpiFormData;
-import utils.form.KpiColorRuleFormData;
-import utils.form.KpiDefinitionFormData;
-import utils.form.KpiSchedulerFormData;
-import utils.form.KpiValueDefinitionFormData;
+import utils.form.*;
 import utils.table.KpiColorRuleListView;
 import utils.table.KpiDefinitionListView;
 import utils.table.KpiValueDefinitionListView;
@@ -82,6 +79,7 @@ public class KpiManagerController extends Controller {
     public static Form<KpiValueDefinitionFormData> customKpiValueDefinitionFormTemplate = Form.form(KpiValueDefinitionFormData.class,
             KpiValueDefinitionFormData.StandardGroup.class);
     public static Form<KpiSchedulerFormData> kpiSchedulerFormTemplate = Form.form(KpiSchedulerFormData.class);
+    public static Form<KpiPermissionsFormData> kpiPermissionsFormTemplate = Form.form(KpiPermissionsFormData.class);
     public static Form<KpiColorRuleFormData> kpiColorRuleFormTemplate = Form.form(KpiColorRuleFormData.class);
     public static Form<CustomExternalKpiFormData> customExternalKpiFormTemplate = Form.form(CustomExternalKpiFormData.class);
 
@@ -546,6 +544,43 @@ public class KpiManagerController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.scheduler.trigger"));
 
         return redirect(controllers.admin.routes.KpiManagerController.view(kpiDefinitionId));
+    }
+
+    public Result editPermissions(Long kpiDefinitionId) {
+
+        // get the KPI
+        KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
+
+        Form<KpiPermissionsFormData> form = kpiPermissionsFormTemplate.fill(new KpiPermissionsFormData(kpiDefinition));
+
+        return ok(views.html.admin.kpi.editPermissions.render(kpiDefinition, kpi, form, SystemPermission.getAllSelectableSystemPermissions()));
+    }
+
+    public Result savePermissions() {
+
+        // bind the form
+        Form<KpiPermissionsFormData> boundForm = kpiPermissionsFormTemplate.bindFromRequest();
+
+        // get the KPI
+        Long kpiDefinitionId = Long.valueOf(boundForm.data().get("id"));
+        KpiDefinition kpiDefinition = KpiDefinition.getById(kpiDefinitionId);
+        Kpi kpi = new Kpi(kpiDefinition, getKpiService());
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.admin.kpi.editPermissions.render(kpiDefinition, kpi, boundForm, SystemPermission.getAllSelectableSystemPermissions()));
+        }
+
+        KpiPermissionsFormData kpiPermissionsFormData = boundForm.get();
+
+        kpiPermissionsFormData.fill(kpiDefinition);
+        kpiDefinition.update();
+
+        reloadKpiDefinition(kpiDefinition.uid);
+
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.kpi.edit_permissions.successful"));
+
+        return redirect(controllers.admin.routes.KpiManagerController.view(kpiDefinition.id));
     }
 
     /**

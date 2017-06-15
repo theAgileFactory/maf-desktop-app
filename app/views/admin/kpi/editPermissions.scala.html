@@ -1,0 +1,71 @@
+@* LICENSE
+*
+* Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+* reserved.
+*
+* This program is free software; you can redistribute it and/or modify it under
+* the terms of the GNU General Public License as published by the Free Software
+* Foundation; version 2 of the License.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+* FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License along with
+* this program. If not, see <http://www.gnu.org/licenses/>.
+*@
+
+@import framework.services.kpi.Kpi
+@import framework.utils.ISelectableValueHolderCollection
+@import models.framework_models.kpi.KpiDefinition
+@import utils.form.KpiPermissionsFormData
+
+@import framework_views.parts
+@import views.html.helper
+
+@(
+    kpiDefinition: KpiDefinition,
+    kpi: Kpi,
+    kpiPermissionsForm: Form[KpiPermissionsFormData],
+    permissionsList: ISelectableValueHolderCollection[Long]
+)
+
+@templates.main_bc_nosidebar(
+    parts.Msg.asString("topmenubar.admin.kpimanager.menu.label"),
+    Seq(
+        ("admin.kpi.breadcrumb", controllers.admin.routes.KpiManagerController.index().url),
+        ("admin.kpi.object_type." + kpi.getObjectType, controllers.admin.routes.KpiManagerController.index().url),
+        (kpi.getValueName(Kpi.DataType.MAIN), controllers.admin.routes.KpiManagerController.view(kpiDefinition.id).url),
+        ("admin.kpi.edit_permissions.title", null)
+    )
+){
+}{
+
+    <div class="maf-form">
+        @if(kpiPermissionsForm.hasErrors) {
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br />
+            </div>
+        }
+
+        @helper.form(action = controllers.admin.routes.KpiManagerController.savePermissions()) {
+
+            <fieldset>
+
+                <input type="hidden" name="id" value="@kpiPermissionsForm("id").value" />
+
+                @parts.checkboxlist(kpiPermissionsForm("permissions"), "object.role.permissions.label", "", permissionsList)
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.admin.routes.KpiManagerController.view(kpiDefinition.id)">
+                    @parts.Msg("button.cancel")
+                </a>
+
+            </fieldset>
+
+        }
+
+    </div>
+
+}
