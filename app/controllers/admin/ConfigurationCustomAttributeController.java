@@ -17,31 +17,14 @@
  */
 package controllers.admin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
-
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import framework.commons.DataType;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.ISelectableValueHolder;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
-import models.framework_models.common.CustomAttributeDefinition;
-import models.framework_models.common.CustomAttributeItemOption;
-import models.framework_models.common.CustomAttributeMultiItemOption;
-import models.framework_models.common.ICustomAttributeValue;
+import framework.utils.*;
+import models.framework_models.common.*;
 import models.framework_models.common.ICustomAttributeValue.AttributeType;
 import play.Configuration;
 import play.Logger;
@@ -51,9 +34,14 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.tableprovider.ITableProvider;
 import utils.form.CustomAttributeDefinitionFormData;
+import utils.form.CustomAttributeGroupFormData;
 import utils.form.CustomAttributeItemFormData;
+import utils.table.CustomAttributeGroupListView;
 import utils.table.CustomAttributeItemListView;
 import utils.table.CustomAttributeListView;
+
+import javax.inject.Inject;
+import java.util.*;
 
 /**
  * Manage the custom attributes.
@@ -72,6 +60,7 @@ public class ConfigurationCustomAttributeController extends Controller {
     private static Form<DataTypeForm> dataTypeFormTemplate = Form.form(DataTypeForm.class);
     private static Form<CustomAttributeDefinitionFormData> customAttributeFormTemplate = Form.form(CustomAttributeDefinitionFormData.class);
     private static Form<CustomAttributeItemFormData> itemFormTemplate = Form.form(CustomAttributeItemFormData.class);
+    private static Form<CustomAttributeGroupFormData> groupFormTemplate = Form.form(CustomAttributeGroupFormData.class);
 
     @Inject
     private II18nMessagesPlugin i18nMessagesPlugin;
@@ -194,7 +183,7 @@ public class ConfigurationCustomAttributeController extends Controller {
         boolean canAddConditionalRule = true;
 
         // edit case: inject values
-        if (!id.equals(Long.valueOf(0))) {
+        if (!id.equals(0L)) {
 
             CustomAttributeDefinition customAttribute = CustomAttributeDefinition.getCustomAttributeDefinitionFromId(id);
             uuid = customAttribute.uuid;
@@ -202,6 +191,8 @@ public class ConfigurationCustomAttributeController extends Controller {
 
             customAttributeForm = customAttributeFormTemplate.fill(new CustomAttributeDefinitionFormData(customAttribute, getI18nMessagesPlugin()));
 
+        } else {
+            customAttributeForm = customAttributeFormTemplate.fill(new CustomAttributeDefinitionFormData(objectType));
         }
 
         try {
@@ -575,6 +566,147 @@ public class ConfigurationCustomAttributeController extends Controller {
         DataType dataType = DataType.getDataTypeFromClassName(customAttribute.objectType);
 
         return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.list(dataType.getDataName()));
+    }
+
+    /**
+     * Displays the table of all the groups defined for a data type
+     *
+     * @param dataTypeName the data type name
+     */
+    public Result groups(String dataTypeName) {
+        DataType dataType = DataType.getDataType(dataTypeName);
+
+        List<CustomAttributeGroup> groups = CustomAttributeGroup.getOrderedCustomAttributeGroupsByObjectType(dataType.getDataTypeClassName());
+
+        if (groups.size() == 0) {
+            groups.add(CustomAttributeGroup.createDefaultGroup(dataType.getDataTypeClassName()));
+        }
+
+        List<CustomAttributeGroupListView> listView = new ArrayList<>(groups.size());
+
+        groups.stream().forEach(group -> listView.add(new CustomAttributeGroupListView(group)));
+
+        Table<CustomAttributeGroupListView> table = this.getTableProvider().get().customAttributeGroup.templateTable.fill(listView);
+
+        return ok(views.html.admin.config.customattribute.group.render(dataType, table));
+    }
+
+    /**
+     * Changes the display order of the group
+     *
+     * @param id the id of the group
+     * @param isDecrement true if the order is to be decremented, false instead
+     */
+    public Result changeGroupOrder(Long id, Boolean isDecrement) {
+
+        CustomAttributeGroup group = CustomAttributeGroup.getById(id);
+        CustomAttributeGroup groupToReverse = isDecrement ? group.previous() : group.next();
+
+        if (groupToReverse != null) {
+            Integer newOrder = groupToReverse.order;
+
+            groupToReverse.order = group.order;
+            groupToReverse.save();
+
+            group.order = newOrder;
+            group.save();
+        }
+
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
+
+        DataType dataType = DataType.getDataTypeFromClassName(group.objectType);
+        return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.groups(dataType != null ? dataType.getDataName() : null));
+    }
+
+    /**
+     * Displays the form for creating or editing a group
+     *
+     * @param dataTypeName the custom attribute associated {@link DataType}
+     * @param id the id of the group (0 if it is a creation)
+     */
+    public Result manageGroup(String dataTypeName, Long id) {
+        DataType dataType = DataType.getDataType(dataTypeName);
+
+        Form<CustomAttributeGroupFormData> form = groupFormTemplate;
+
+        if (!id.equals(0L)) {
+            CustomAttributeGroup customAttributeGroup = CustomAttributeGroup.getById(id);
+            form = groupFormTemplate.fill(new CustomAttributeGroupFormData(customAttributeGroup, getI18nMessagesPlugin()));
+        }
+
+        return ok(views.html.admin.config.customattribute.group_manage.render(dataType, form));
+    }
+
+    /**
+     * Process the form for creating or editing a group
+     */
+    public Result processManageGroup() {
+
+        Form<CustomAttributeGroupFormData> form = groupFormTemplate.bindFromRequest();
+        CustomAttributeGroupFormData formData = form.get();
+
+        DataType dataType = DataType.getDataTypeFromClassName(formData.objectType);
+
+        if (form.hasErrors()) {
+            return ok(views.html.admin.config.customattribute.group_manage.render(dataType, form));
+        }
+
+
+        CustomAttributeGroup group;
+
+        if (formData.id == null) {
+            group = new CustomAttributeGroup();
+            group.order = CustomAttributeGroup.getLastOrder(formData.objectType) + 1;
+            formData.fill(group);
+            group.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.group.add.successful"));
+        } else {
+
+            group = CustomAttributeGroup.getById(formData.id);
+
+            formData.fill(group);
+            group.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.group.edit.successful"));
+        }
+
+        formData.label.persist(getI18nMessagesPlugin());
+
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
+
+        return redirect(routes.ConfigurationCustomAttributeController.groups(dataType != null ? dataType.getDataName() : null));
+    }
+
+    /**
+     * Delete a {@link CustomAttributeGroup}
+     *
+     * Deleting a group is not possible if some {@link CustomAttributeDefinition} still belong to that group <br />
+     * or if it is the last group of its type.
+     *
+     * @param id the id of the custom attribute group
+     */
+    public Result deleteGroup(Long id) {
+
+        CustomAttributeGroup group = CustomAttributeGroup.getById(id);
+        List<CustomAttributeGroup> groups = CustomAttributeGroup.getOrderedCustomAttributeGroupsByObjectType(group.objectType);
+        DataType dataType = DataType.getDataTypeFromClassName(group.objectType);
+
+        if (!group.customAttributeDefinitions.isEmpty()) {
+            Utilities.sendErrorFlashMessage(Msg.get("admin.configuration.custom_attribute.group.delete.error.group_not_empty"));
+        } else if (groups.size() == 1) {
+            Utilities.sendErrorFlashMessage(Msg.get("admin.configuration.custom_attribute.group.delete.error.last_group"));
+        } else {
+            group.doDelete();
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.custom_attribute.group.delete.successful"));
+        }
+
+        this.getTableProvider().flushFilterConfig();
+        this.getTableProvider().flushTables();
+
+        return redirect(routes.ConfigurationCustomAttributeController.groups(dataType != null ? dataType.getDataName() : null));
     }
 
     /**

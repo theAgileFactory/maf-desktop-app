@@ -110,9 +110,9 @@
                 </tbody>
             </table>
             
-            @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryRisk], portfolioEntryRisk.id, portfolioEntryRiskFormData)
         </div>
     </div>
-    
+    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryRisk], portfolioEntryRisk.id, portfolioEntryRiskFormData)
+
     <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.back")</a>
 }

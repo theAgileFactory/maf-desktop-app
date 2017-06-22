@@ -1,0 +1,68 @@
+@* LICENSE
+*
+* Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
+* reserved.
+*
+* This program is free software; you can redistribute it and/or modify it under
+* the terms of the GNU General Public License as published by the Free Software
+* Foundation; version 2 of the License.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+* FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+* details.
+*
+* You should have received a copy of the GNU General Public License along with
+* this program. If not, see <http://www.gnu.org/licenses/>.
+*@
+
+@import framework.commons.DataType
+@import utils.form.CustomAttributeGroupFormData
+@import framework_views.parts
+
+@(
+    dataType: DataType,
+    form: Form[CustomAttributeGroupFormData]
+)
+
+@breadcrump=@{
+    Seq(
+        ("admin.configuration.breadcrumb", controllers.admin.routes.ConfigurationController.systemPreferences().url),
+        ("admin.configuration.custom_attributes.title", controllers.admin.routes.ConfigurationCustomAttributeController.list(dataType.getDataName).url),
+        ("admin.configuration.custom_attribute.groups.title", controllers.admin.routes.ConfigurationCustomAttributeController.groups(dataType.getDataName).url),
+        ("admin.configuration.custom_attribute.group.manage.title", null)
+    )
+}
+
+@views.html.admin.config.config_template("admin.configuration.custom_attributes.title", controllers.admin.ConfigurationController.MenuItemType.CUSTOM_ATTRIBUTES, breadcrump) {
+
+    <div class="maf-form">
+        @if(form.hasErrors) {
+            <div class="alert alert-danger">
+                <strong>@parts.Msg("standard.form.error.title")</strong><br />
+            </div>
+        }
+
+        @helper.form(action = controllers.admin.routes.ConfigurationCustomAttributeController.processManageGroup()) {
+
+            <fieldset>
+
+                @if(form("id").value!=null) {
+                    <input type="hidden" name="id" value="@form("id").value" />
+                }
+
+                <input type="hidden" name="objectType" value="@dataType.getDataTypeClassName" />
+
+                @parts.input_text(form("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.custom_attribute_group.name.label"))
+
+                @parts.multi_languages_input_text(form("label"), parts.Msg.asString("object.custom_attribute_group.label.label"), parts.Msg.asString("object.custom_attribute_group.label.help"))
+
+                <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
+                <a class="btn btn-default" href="@controllers.admin.routes.ConfigurationCustomAttributeController.groups(dataType.getDataName).url">@parts.Msg("button.cancel")</a>
+
+            </fieldset>
+
+        }
+    </div>
+
+}

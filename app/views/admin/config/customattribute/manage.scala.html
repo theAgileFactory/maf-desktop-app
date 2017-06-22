@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import models.framework_models.common.CustomAttributeGroup
 @(
     dataType: framework.commons.DataType,
     customAttributeForm: Form[utils.form.CustomAttributeDefinitionFormData],
@@ -63,7 +64,7 @@
                     </div>
                     <div class="form-group ">
                         <label class="control-label">@parts.Msg("object.custom_attribute_definition.attribute_type.label")</label>
-                        <div class="">@models.framework_models.common.ICustomAttributeValue.AttributeType.valueOf(customAttributeForm("attributeType").value).getLabel()</div>
+                        <div class="">@models.framework_models.common.ICustomAttributeValue.AttributeType.valueOf(customAttributeForm("attributeType").value).getLabel</div>
                     </div>
                 } else {
                     @parts.dropdownlist(customAttributeForm("attributeType"), parts.Msg.asString("object.custom_attribute_definition.attribute_type.label"), controllers.admin.ConfigurationCustomAttributeController.getAllAttributeTypes)
@@ -74,7 +75,16 @@
                     parts.Msg.asString("object.custom_attribute_definition.is_displayed.label"),
                     parts.Msg.asString("object.custom_attribute_definition.is_displayed.help")
                 )
-                
+
+                @parts.dropdownlist(
+                    customAttributeForm("customAttributeGroup"),
+                    parts.Msg.asString("object.custom_attribute_definition.group.label"),
+                    CustomAttributeGroup.getOrderedCustomAttributeGroupsByObjectTypeAsVH(customAttributeForm("objectType").value),
+                    null,
+                    isDescriptionVisible = true,
+                    forceRequired = true
+                )
+
                 @parts.multi_languages_input_text(customAttributeForm("name"), parts.Msg.asString("object.custom_attribute_definition.name.label"))
 
                 @parts.multi_languages_input_text(customAttributeForm("description"), parts.Msg.asString("object.custom_attribute_definition.description.label"))

@@ -896,6 +896,7 @@ object.role.permissions.label=Permissions
 
 object.custom_attribute_definition.uuid.label=ID
 object.custom_attribute_definition.attribute_type.label=Type
+object.custom_attribute_definition.group.label=Groupe
 object.custom_attribute_definition.name.label=Nom
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
@@ -905,6 +906,15 @@ object.custom_attribute_definition.conditional_rule.label=Règle conditionnelle
 object.custom_attribute_definition.conditional_rule.help=Règle pour limiter l''activation de l''attribut personnalisé selon la valeur d''un autre attribut. Pas disponible pour le type "Menu déroulant à choix multiple".
 object.custom_attribute_definition.conditional_rule.invalid=La règle n''est pas correctement paramétrée, veuillez choisir un attribut et saisir une valeur.
 object.custom_attribute_definition.table.empty=Il n''existe aucun attribut personnalisé.
+
+#----------------------
+# customAttributeGroup
+#----------------------
+
+object.custom_attribute_group.name.label=Nom
+object.custom_attribute_group.label.label=Label
+object.custom_attribute_group.label.help=Sera affiché en en-tête du groupe d''attributs
+object.custom_attribute_group.table.empty=Il n''existe aucun groupe d'attributs personnalisé pour l''instant.
 
 #----------------------
 # customAttributeItem
@@ -3148,6 +3158,17 @@ admin.configuration.custom_attribute.item.manage.title=Gérer une option
 admin.configuration.custom_attribute.item.add.successful=L''option a été ajoutée.
 admin.configuration.custom_attribute.item.edit.successful=L''option a été mise à jour.
 admin.configuration.custom_attribute.item.delete.successful=L''option a été supprimée.
+
+#groups
+admin.configuration.custom_attribute.groups.title=Groupes
+
+#manage group
+admin.configuration.custom_attribute.group.manage.title=Gérer un groupe
+admin.configuration.custom_attribute.group.add.successful=Le groupe a été ajouté.
+admin.configuration.custom_attribute.group.edit.successful=Le groupe a été mis à jour.
+admin.configuration.custom_attribute.group.delete.error.group_not_empty=Impossible de supprimer un groupe qui n''est pas vide. Veuillez d''abord dissocier les attributs personnalisés de ce groupe.
+admin.configuration.custom_attribute.group.delete.error.last_group=Il doit exister au moins un groupe.
+admin.configuration.custom_attribute.group.delete.successful=Le groupe a été supprimé.
 
 #----------------------
 # configuration: translations

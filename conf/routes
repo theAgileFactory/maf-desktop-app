@@ -562,6 +562,11 @@ GET    /admin/config/custom-attribute/item/manage                   controllers.
 POST   /admin/config/custom-attribute/item/manage                   controllers.admin.ConfigurationCustomAttributeController.processManageItem()
 GET    /admin/config/custom-attribute/item/delete                   controllers.admin.ConfigurationCustomAttributeController.deleteItem(id: Long, itemId: Long ?= 0)
 GET    /admin/config/custom-attribute/delete                        controllers.admin.ConfigurationCustomAttributeController.delete(id: Long)
+GET    /admin/config/custom-attribute/groups                         controllers.admin.ConfigurationCustomAttributeController.groups(dataTypeName: String)
+GET    /admin/config/custom-attribute/groups/change-order            controllers.admin.ConfigurationCustomAttributeController.changeGroupOrder(id: Long, isDecrement: Boolean)
+GET    /admin/config/custom-attribute/groups/manage                  controllers.admin.ConfigurationCustomAttributeController.manageGroup(dataTypeName: String, id: Long ?= 0)
+POST   /admin/config/custom-attribute/groups/manage                  controllers.admin.ConfigurationCustomAttributeController.processManageGroup()
+GET    /admin/config/custom-attribute/groups/delete                  controllers.admin.ConfigurationCustomAttributeController.deleteGroup(id: Long)
 
 GET    /admin/config/translation/search                            controllers.admin.ConfigurationController.searchTranslations()
 POST   /admin/config/translation/search                            controllers.admin.ConfigurationController.processSearchTranslations()

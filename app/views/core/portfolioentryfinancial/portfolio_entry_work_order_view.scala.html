@@ -128,10 +128,10 @@
                 </tbody>
             </table>
             
-            @parts.formats.display_extended_attributes(classOf[models.finance.WorkOrder], workOrder.id, workOrderFormData)
-            
+
         </div>
     </div>
+    @parts.formats.display_extended_attributes(classOf[models.finance.WorkOrder], workOrder.id, workOrderFormData)
 
     @if(dao.finance.PurchaseOrderDAO.isSystemPreferenceUsePurchaseOrder(_preferenceManagerPlugin)) {
     

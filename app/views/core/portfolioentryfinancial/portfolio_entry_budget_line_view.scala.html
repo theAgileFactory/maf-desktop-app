@@ -101,10 +101,10 @@
                 </tbody>
             </table>
             
-            @parts.formats.display_extended_attributes(classOf[models.finance.PortfolioEntryBudgetLine], budgetLine.id, portfolioEntryBudgetLineFormData)
 
         </div>
     </div>
+    @parts.formats.display_extended_attributes(classOf[models.finance.PortfolioEntryBudgetLine], budgetLine.id, portfolioEntryBudgetLineFormData)
 
     <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryFinancialController.details(portfolioEntry.id)">@parts.Msg("button.back")</a>
    

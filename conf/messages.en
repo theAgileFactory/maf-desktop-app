@@ -884,6 +884,7 @@ object.role.permissions.label=Permissions
 
 object.custom_attribute_definition.uuid.label=ID
 object.custom_attribute_definition.attribute_type.label=Type
+object.custom_attribute_definition.group.label=Group
 object.custom_attribute_definition.name.label=Name
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
@@ -893,6 +894,15 @@ object.custom_attribute_definition.conditional_rule.label=Conditional rule
 object.custom_attribute_definition.conditional_rule.help=Rule to limit the activation of the custom attribute according to the value of another attribute. Not available for "multi dropdown" type.
 object.custom_attribute_definition.conditional_rule.invalid=The rule is not correctly settled, please select an attribute and set a value.
 object.custom_attribute_definition.table.empty=There is currently no custom attribute.
+
+#----------------------
+# customAttributeGroup
+#----------------------
+
+object.custom_attribute_group.name.label=Name
+object.custom_attribute_group.label.label=Label
+object.custom_attribute_group.label.help=This will be displayed as the header of the custom attributes group.
+object.custom_attribute_group.table.empty=There is currently no custom attribute group.
 
 #----------------------
 # customAttributeItem
@@ -3135,6 +3145,18 @@ admin.configuration.custom_attribute.item.manage.title=Manage an option
 admin.configuration.custom_attribute.item.add.successful=The option has been added successfully.
 admin.configuration.custom_attribute.item.edit.successful=The option has been updated.
 admin.configuration.custom_attribute.item.delete.successful=The option has been removed.
+
+#groups
+admin.configuration.custom_attribute.groups.title=Groups
+
+#manage group
+admin.configuration.custom_attribute.group.manage.title=Manage a group
+admin.configuration.custom_attribute.group.add.successful=The group has been added successfully.
+admin.configuration.custom_attribute.group.edit.successful=The group has been updated successfully.
+admin.configuration.custom_attribute.group.delete.error.group_not_empty=Impossible to remove a non-empty group. Please first reallocate all custom attributes for this group.
+admin.configuration.custom_attribute.group.delete.error.last_group=There must be at least one group defined.
+admin.configuration.custom_attribute.group.delete.successful=The group has been removed.
+
 
 #----------------------
 # configuration: translations

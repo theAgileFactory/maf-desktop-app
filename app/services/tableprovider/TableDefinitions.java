@@ -25,6 +25,7 @@ public class TableDefinitions {
     public CurrencyListView.TableDefinition currency;
     public CustomAttributeItemListView.TableDefinition customAttributeItem;
     public CustomAttributeListView.TableDefinition customAttribute;
+    public CustomAttributeGroupListView.TableDefinition customAttributeGroup;
     public DataSyndicationAgreementLinkListView.TableDefinition dataSyndicationAgreementLink;
     public DataSyndicationAgreementListView.TableDefinition dataSyndicationAgreement;
     public DataSyndicationPartnerListView.TableDefinition dataSyndicationPartner;
@@ -112,6 +113,7 @@ public class TableDefinitions {
         this.currency = new CurrencyListView.TableDefinition();
         this.customAttributeItem = new CustomAttributeItemListView.TableDefinition();
         this.customAttribute = new CustomAttributeListView.TableDefinition();
+        this.customAttributeGroup = new CustomAttributeGroupListView.TableDefinition();
         this.dataSyndicationAgreementLink = new DataSyndicationAgreementLinkListView.TableDefinition();
         this.dataSyndicationAgreement = new DataSyndicationAgreementListView.TableDefinition();
         this.dataSyndicationPartner = new DataSyndicationPartnerListView.TableDefinition();

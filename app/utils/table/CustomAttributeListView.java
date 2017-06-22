@@ -17,8 +17,6 @@
  */
 package utils.table;
 
-import java.text.MessageFormat;
-
 import constants.IMafConstants;
 import controllers.admin.ConfigurationCustomAttributeController;
 import framework.utils.IColumnFormatter;
@@ -29,6 +27,8 @@ import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.CustomAttributeDefinition;
 import models.framework_models.common.ICustomAttributeValue.AttributeType;
+
+import java.text.MessageFormat;
 
 /**
  * An custom attribute list view is used to display a custom attribute row in a
@@ -74,6 +74,9 @@ public class CustomAttributeListView {
 
                     addColumn("uuid", "uuid", "object.custom_attribute_definition.uuid.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("uuid", new ObjectFormatter<CustomAttributeListView>());
+
+                    addColumn("group", "group", "object.custom_attribute_definition.group.label", ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("group", new ObjectFormatter<>());
 
                     addColumn("attributeType", "attributeType", "object.custom_attribute_definition.attribute_type.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("attributeType", new IColumnFormatter<CustomAttributeListView>() {
@@ -161,6 +164,7 @@ public class CustomAttributeListView {
     public String name;
     public String description;
     public boolean isDisplayed;
+    public String group;
 
     /**
      * Construct a list view with a DB entry.
@@ -176,5 +180,8 @@ public class CustomAttributeListView {
         this.name = customAttributeDefinition.name;
         this.description = customAttributeDefinition.description;
         this.isDisplayed = customAttributeDefinition.isDisplayed;
+        if (customAttributeDefinition.customAttributeGroup != null) {
+            this.group = customAttributeDefinition.customAttributeGroup.getName();
+        }
     }
 }

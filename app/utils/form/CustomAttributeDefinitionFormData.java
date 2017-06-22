@@ -17,18 +17,19 @@
  */
 package utils.form;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.CustomConstraints.MultiLanguagesStringMaxLength;
 import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
 import models.framework_models.common.CustomAttributeDefinition;
+import models.framework_models.common.CustomAttributeGroup;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An custom attribute definition form data is used to manage the fields when
@@ -40,6 +41,10 @@ public class CustomAttributeDefinitionFormData {
 
     public Long id;
     public String objectType;
+
+    @Required
+    public Long customAttributeGroup;
+
     public String uuid;
     public boolean canAddConditionalRule;
 
@@ -65,6 +70,11 @@ public class CustomAttributeDefinitionFormData {
      * Default constructor.
      */
     public CustomAttributeDefinitionFormData() {
+    }
+
+    public CustomAttributeDefinitionFormData(String objectType) {
+        this.objectType = objectType;
+        this.customAttributeGroup = CustomAttributeGroup.getOrderedCustomAttributeGroupsByObjectType(objectType).get(0).id;
     }
 
     /**
@@ -94,6 +104,9 @@ public class CustomAttributeDefinitionFormData {
 
         this.id = customAttribute.id;
         this.objectType = customAttribute.objectType;
+        if (customAttribute.customAttributeGroup != null) {
+            this.customAttributeGroup = customAttribute.customAttributeGroup.id;
+        }
         this.uuid = customAttribute.uuid;
 
         this.configuration = customAttribute.configuration != null ? new String(customAttribute.configuration) : null;
@@ -117,6 +130,7 @@ public class CustomAttributeDefinitionFormData {
      */
     public void fill(CustomAttributeDefinition customAttribute) {
 
+        customAttribute.customAttributeGroup = CustomAttributeGroup.getById(this.customAttributeGroup);
         customAttribute.configuration = this.configuration.getBytes();
         customAttribute.attributeType = this.attributeType;
         customAttribute.name = this.name.getKeyIfValue();

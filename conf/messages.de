@@ -907,6 +907,15 @@ object.custom_attribute_definition.conditional_rule.invalid=Regel ungültig. Bit
 object.custom_attribute_definition.table.empty=Die Zusatzfelder definiert
 
 #----------------------
+# customAttributeGroup
+#----------------------
+
+object.custom_attribute_group.name.label=Name
+object.custom_attribute_group.label.label=Label
+object.custom_attribute_group.label.help=Wirdt oben Zusatzfelder Gruppe angezeit.
+object.custom_attribute_group.table.empty=Derzeit keine Zusatzfelder Gruppe.
+
+#----------------------
 # customAttributeItem
 #----------------------
 
@@ -3144,9 +3153,20 @@ admin.configuration.custom_attribute.items.title=Optionen
 
 #manage item
 admin.configuration.custom_attribute.item.manage.title=Option bearbeiten
-admin.configuration.custom_attribute.item.add.successful=Option inzugefügt.
+admin.configuration.custom_attribute.item.add.successful=Option hinzugefügt.
 admin.configuration.custom_attribute.item.edit.successful=Option aktualisiert.
 admin.configuration.custom_attribute.item.delete.successful=Option entfernt.
+
+#groups
+admin.configuration.custom_attribute.groups.title=Gruppen
+
+#manage group
+admin.configuration.custom_attribute.group.manage.title=Gruppe bearbeiten
+admin.configuration.custom_attribute.group.add.successful=Gruppe hinzugefügt.
+admin.configuration.custom_attribute.group.edit.successful=Gruppe aktualisiert.
+admin.configuration.custom_attribute.group.delete.error.group_not_empty=Impossible to remove a non-empty group. Please first reallocate all custom attributes for this group.
+admin.configuration.custom_attribute.group.delete.error.last_group=There must be at least one group defined.
+admin.configuration.custom_attribute.group.delete.successful=Gruppe entfernt.
 
 #----------------------
 # configuration: translations
