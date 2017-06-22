@@ -579,7 +579,7 @@ public class ConfigurationCustomAttributeController extends Controller {
         List<CustomAttributeGroup> groups = CustomAttributeGroup.getOrderedCustomAttributeGroupsByObjectType(dataType.getDataTypeClassName());
 
         if (groups.size() == 0) {
-            groups.add(CustomAttributeGroup.createDefaultGroup(dataType.getDataTypeClassName()));
+            groups.add(CustomAttributeGroup.getOrCreateDefaultGroup(dataType.getDataTypeClassName()));
         }
 
         List<CustomAttributeGroupListView> listView = new ArrayList<>(groups.size());
