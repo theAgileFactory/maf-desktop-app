@@ -379,7 +379,6 @@ POST   /portfolio-entry/timesheets/filter         controllers.core.PortfolioEntr
 POST   /portfolio-entry/timesheets/export         controllers.core.PortfolioEntryStatusReportingController.exportTimesheetsAsExcel(id: Long)
 GET    /portfolio-entry/docs                	  controllers.core.PortfolioEntryStatusReportingController.docs(id: Long)
 POST   /portfolio-entry/docs/filter         	  controllers.core.PortfolioEntryStatusReportingController.docsFilter(id: Long)
-GET    /portfolio-entry/docs/download  	  		  controllers.core.PortfolioEntryStatusReportingController.downloadAttachment(id: Long)
 GET    /portfolio-entry/docs/delete		       	  controllers.core.PortfolioEntryStatusReportingController.deleteAttachment(id: Long, attachmentId: Long)
 
 #-------------------
@@ -706,7 +705,6 @@ GET    /admin/audit/mysql/dump                 controllers.admin.AuditableContro
 #Attachments
 GET    /admin/attachments             			controllers.admin.AttachmentsController.index()
 POST   /admin/attachments/filter      			controllers.admin.AttachmentsController.attachmentsFilter()
-GET    /admin/attachments/download_all    		controllers.admin.AttachmentsController.downloadAttachments()
 GET    /admin/attachments/download/:id    		controllers.admin.AttachmentsController.downloadAttachment(id: Long)
 GET    /admin/attachments/delete/:id  			controllers.admin.AttachmentsController.deleteAttachment(id: Long)
 

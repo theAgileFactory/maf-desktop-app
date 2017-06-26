@@ -113,13 +113,6 @@ public class AttachmentsController extends Controller {
     }
 
     /**
-     * Downloads all attachments as an archive
-     */
-    public Result downloadAttachments() {
-        return ok();
-    }
-
-    /**
      * Delete an attachment
      *
      * @param id the attachment id

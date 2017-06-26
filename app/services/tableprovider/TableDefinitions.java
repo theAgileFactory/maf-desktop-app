@@ -106,7 +106,7 @@ public class TableDefinitions {
         this.applicationBlock = new ApplicationBlockListView.TableDefinition(i18nMessagesService);
         this.attachment = new AttachmentListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
         this.attachmentManagement = new AttachmentManagementListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
-        this.docsTableDefinition = new PortfolioEntryAttachmentListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
+        this.docsTableDefinition = new PortfolioEntryAttachmentListView.TableDefinition(i18nMessagesService);
         this.budgetBucketLine = new BudgetBucketLineListView.TableDefinition(i18nMessagesService);
         this.budgetBucket = new BudgetBucketListView.TableDefinition(i18nMessagesService);
         this.competency = new CompetencyListView.TableDefinition();

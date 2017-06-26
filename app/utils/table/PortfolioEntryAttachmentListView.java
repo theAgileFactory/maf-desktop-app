@@ -17,30 +17,20 @@
  */
 package utils.table;
 
-import java.text.MessageFormat;
-import java.util.Date;
-
 import constants.IMafConstants;
 import constants.MafDataType;
-import controllers.admin.routes;
-import dao.governance.LifeCycleMilestoneDao;
-import dao.pmo.PortfolioEntryDao;
-import dao.pmo.PortfolioEntryPlanningPackageDao;
-import dao.pmo.PortfolioEntryReportDao;
+import controllers.*;
 import framework.commons.DataType;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.FilterConfig;
-import framework.utils.IColumnFormatter;
-import framework.utils.ISelectableValueHolderCollection;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
+import framework.utils.*;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
-import models.pmo.PortfolioEntry;
 import play.Logger;
+
+import java.text.MessageFormat;
+import java.util.Date;
 
 /**
  * This class is used to display the attachments list in the Status reporting section for a portfolio entry .
@@ -59,19 +49,11 @@ public class PortfolioEntryAttachmentListView {
         public Table<PortfolioEntryAttachmentListView> templateTable;
         public FilterConfig<PortfolioEntryAttachmentListView> filterConfig;
 
-        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin, IAttachmentManagerPlugin attachmentManagerPlugin) {
-            this.templateTable = getTable(i18nMessagesPlugin, attachmentManagerPlugin);
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin);
             this.filterConfig = getFilterConfig();
         }
         
-        /**
-         * This method is to be used to force the reload of the filter config.
-         */
-        public FilterConfig<PortfolioEntryAttachmentListView>  getResetedFilterConfig(){
-        	this.filterConfig = getFilterConfig();
-        	return this.filterConfig;
-        }
-
         /**
          * The attachment management table filter config
          */
@@ -86,8 +68,6 @@ public class PortfolioEntryAttachmentListView {
                     	defaultObjectType=objectTypes.getValues().iterator().next().getValue();
                     }
                     addColumnConfiguration("objectType", "objectType", "object.attachment.object_type.label", new SelectFilterComponent(defaultObjectType, objectTypes), true, false, SortStatusType.UNSORTED);                   
-                    addColumnConfiguration("objectId", "objectId", "object.attachment.object_id.label", new NoneFilterComponent(), true, false, SortStatusType.NONE);
-                    addColumnConfiguration("portfolioEntryId", "portfolioEntryId","object.attachment.link_portfolioentry_id.label", new NoDbFilterComponentWrapper(new AutocompleteFilterComponent(controllers.routes.JsonController.portfolioEntry().url())), true, false, SortStatusType.NONE);
                     addColumnConfiguration("lastUpdate", "lastUpdate", "object.attachment.last_update.label", new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
                 }
             };
@@ -96,7 +76,7 @@ public class PortfolioEntryAttachmentListView {
         /**
          * The attachment management table definition
          */
-        public Table<PortfolioEntryAttachmentListView> getTable(II18nMessagesPlugin i18nMessagesPlugin, IAttachmentManagerPlugin attachmentManagerPlugin) {
+        public Table<PortfolioEntryAttachmentListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryAttachmentListView>() {
                 {
                     setIdFieldName("id");
@@ -104,53 +84,46 @@ public class PortfolioEntryAttachmentListView {
                     addColumn("name", "name", "object.attachment.name.label", ColumnDef.SorterType.NONE);
                     addColumn("mimeType", "mimeType", "object.attachment.mime_type.label", ColumnDef.SorterType.NONE);
                     addColumn("objectType", "objectType", "object.attachment.object_type.label", ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("objectType", new IColumnFormatter<PortfolioEntryAttachmentListView>() {
-						@Override
-						public String apply(PortfolioEntryAttachmentListView column, Object value) {
-							String objectTypeClassNameAsString=String.valueOf(value);
-							DataType dt=DataType.getDataTypeFromClassName(objectTypeClassNameAsString);
-							return dt == null ? objectTypeClassNameAsString : i18nMessagesPlugin.get(dt.getLabel());
-						}
-					});
-                    
-                    addColumn("portfolioEntryId", "portfolioEntryId", "object.attachment.link_portfolioentry_id.label", ColumnDef.SorterType.STRING_SORTER);
-                    setJavaColumnFormatter("portfolioEntryId", (AttachmentsByPEListView, value) -> {
-                    	return views.html.modelsparts.display_portfolio_entry.render(PortfolioEntryDao.getPEById(AttachmentsByPEListView.portfolioEntryId), true).body();
+                    setJavaColumnFormatter("objectType", (column, value) -> {
+                        String objectTypeClassNameAsString=String.valueOf(value);
+                        DataType dt=DataType.getDataTypeFromClassName(objectTypeClassNameAsString);
+                        return dt == null ? objectTypeClassNameAsString : i18nMessagesPlugin.get(dt.getLabel());
                     });
-
-                    // Depending on the object type, the object reference link will look different and point to different locations across the application
-                    addColumn("objectId", "objectId", "object.attachment.object_id.label", ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("objectId", (AttachmentsByPEListView, value) -> {
-                    	try{
-	                        if (AttachmentsByPEListView.objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
-	                            return views.html.modelsparts.display_portfolio_entry.render(PortfolioEntryDao.getPEById(AttachmentsByPEListView.objectId), true).body();
-	                        }
-	                        if (AttachmentsByPEListView.objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
-	                            return views.html.modelsparts.display_milestone_instance.render(LifeCycleMilestoneDao.getLCMilestoneInstanceById(AttachmentsByPEListView.objectId)).body();
-	                        }
-	                        if (AttachmentsByPEListView.objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
-	                            return views.html.modelsparts.display_portfolio_entry_planning_package.render(PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(AttachmentsByPEListView.objectId)).body();
-	                        }
-	                        if (AttachmentsByPEListView.objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
-	                            return views.html.modelsparts.display_portfolio_entry_report.render(PortfolioEntryReportDao.getPEReportById(AttachmentsByPEListView.objectId)).body();
-	                        }
-                    	}catch(NullPointerException e){
-                    		if(log.isDebugEnabled()){
-                    			log.debug("Error while looking for the objectid : "+value);
-                    		}
-                    	}
-                        return "";
-                    });
-                    setColumnValueCssClass("objectId", "rowlink-skip");
 
                     addColumn("lastUpdate", "lastUpdate", "object.attachment.last_update.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastUpdate", new DateFormatter<>());
+
+                    addColumn("viewActionLink", "id", "", ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("viewActionLink", new StringFormatFormatter<>(IMafConstants.DISPLAY_URL_FORMAT, view -> {
+                        try {
+                            if (view.objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
+                                return controllers.core.routes.PortfolioEntryController.view(view.objectId, 0).url();
+                            }
+                            if (view.objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
+                                return controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(view.portfolioEntryId, view.objectId).url();
+                            }
+                            if (view.objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
+                                return controllers.core.routes.PortfolioEntryPlanningController.viewPackage(view.portfolioEntryId, view.objectId).url();
+                            }
+                            if (view.objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
+                                return controllers.core.routes.PortfolioEntryStatusReportingController.viewReport(view.portfolioEntryId, view.objectId).url();
+                            }
+                        } catch (NullPointerException e) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Error while looking for the objectid : " + view.objectId);
+                            }
+                        }
+                        return "";
+                    }));
+                    setColumnCssClass("viewActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("viewActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
                     // download the attachment
                     addColumn("downloadActionLink", "id", "", Table.ColumnDef.SorterType.NONE);                 
                     setJavaColumnFormatter("downloadActionLink", new StringFormatFormatter<>(
                             IMafConstants.DOWNLOAD_URL_FORMAT,
-                            (StringFormatFormatter.Hook<PortfolioEntryAttachmentListView>) attachmentManagementListView -> routes.AttachmentsController.downloadAttachment(attachmentManagementListView.id).url())
+                            (StringFormatFormatter.Hook<PortfolioEntryAttachmentListView>) attachmentManagementListView ->
+                                    controllers.routes.Application.downloadFileAttachment(attachmentManagementListView.id).url())
                     );
                     
                     setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -194,56 +167,18 @@ public class PortfolioEntryAttachmentListView {
      * @param attachment
      *            the attachment in the DB
      */
-    public PortfolioEntryAttachmentListView(Attachment attachment) {
+    public PortfolioEntryAttachmentListView(Long portfolioEntryId, Attachment attachment) {
 
         this.id = attachment.id;
 
         this.objectId = attachment.objectId;
         this.objectType = attachment.objectType;
-        this.portfolioEntryId=getLinkedPortfolioEntry(objectType, objectId);
+        this.portfolioEntryId = portfolioEntryId;
         
         this.name = attachment.name;
         this.mimeType = attachment.mimeType;
         this.lastUpdate = attachment.lastUpdate;
 
-    }
-
-    /**
-     * Return the id of the linked {@link PortfolioEntry} when one is available
-     * @param objectType an object type
-     * @param objectId an object id
-     * @return a {@link PortfolioEntry} id
-     */
-    private static Long getLinkedPortfolioEntry(String objectType, Long objectId){
-    	if (objectType.equals(MafDataType.getPortfolioEntry().getDataTypeClassName())) {
-            PortfolioEntry pe = PortfolioEntryDao.getPEAllById(objectId); 
-    		return pe == null ? -1l : pe.id;
-        }
-        if (objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
-        	try{
-        		return LifeCycleMilestoneDao.getLCMilestoneInstanceById(objectId).getLifeCycleInstance().portfolioEntry.id;
-        	}catch(NullPointerException e){
-        		log.warn("Error while looking for the objectid "+objectId+" with object type "+objectType);
-        		return -1l;
-        	}
-        }
-        if (objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
-        	try{
-        		return PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(objectId).portfolioEntry.id;
-	    	}catch(NullPointerException e){
-	    		log.warn("Error while looking for the objectid "+objectId+" with object type "+objectType);
-	    		return -1l;
-	    	}
-        }
-        if (objectType.equals(MafDataType.getPortfolioEntryReport().getDataTypeClassName())) {
-        	try{
-            	return PortfolioEntryReportDao.getPEReportById(objectId).portfolioEntry.id;
-	    	}catch(NullPointerException e){
-	    		log.warn("Error while looking for the objectid "+objectId+" with object type "+objectType);
-	    		return -1l;
-	    	}
-        }
-        return -1l;
     }
 
 }
