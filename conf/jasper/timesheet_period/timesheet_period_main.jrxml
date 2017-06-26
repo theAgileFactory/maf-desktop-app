@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-03-02T16:28:55 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-26T16:47:39 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_period_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="29f08652-1b12-42c0-baba-f81392540a08">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\ST.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -36,7 +36,7 @@ FROM timesheet_log tl
 	JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id AND te.deleted = 0
 	JOIN timesheet_report tr ON te.timesheet_report_id = tr.id AND tr.deleted = 0
 	JOIN actor a ON tr.actor_id = a.id AND a.deleted = 0
-	JOIN org_unit ou ON a.org_unit_id = ou.id AND ou.deleted = 0
+	LEFT OUTER JOIN org_unit ou ON a.org_unit_id = ou.id AND ou.deleted = 0
 	LEFT OUTER JOIN portfolio_entry pe ON te.portfolio_entry_id = pe.id AND pe.deleted = 0
 	LEFT OUTER JOIN portfolio_entry_planning_package pepp ON te.portfolio_entry_planning_package_id = pepp.id AND pepp.deleted = 0
 	LEFT OUTER JOIN timesheet_activity ta ON te.timesheet_activity_id = ta.id AND ta.deleted = 0
