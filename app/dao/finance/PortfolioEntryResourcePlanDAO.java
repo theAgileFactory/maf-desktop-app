@@ -273,7 +273,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
     public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByPE(Long portfolioEntryId, Date start, Date end,
             boolean onlyConfirmed, Long orgUnitId, Long competencyId) {
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> exprAllocatedActors = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor
-                .fetch("actor.orgUnit").where()
+                .fetch("actor").fetch("actor.orgUnit").where()
                 .eq("deleted", false).isNotNull("startDate").isNotNull("endDate").le("startDate", end).ge("endDate", start)
                 .eq("portfolioEntryResourcePlan.deleted", false).eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.deleted", false)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.isFrozen", false)
