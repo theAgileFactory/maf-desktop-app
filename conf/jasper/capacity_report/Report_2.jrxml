@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-27T09:48:44 -->
+<!-- 2017-06-27T12:05:00 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_2" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ee4de764-58be-4b83-aa8b-922492101e4f">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -29,15 +29,17 @@ from
       and lcip.deleted = 0 and lcip.is_frozen = 0
       and lci.deleted = 0
       and pe.deleted = 0
-      and perpaa.end_date >= date_sub($P{date_report}, interval 4 month)
-      and perpaa.start_date <= date_add($P{date_report}, interval 7 month) order by pe.name]]>
+      and perpaa.end_date >= date_sub($P{date_report}, interval 7 month)
+      and perpaa.start_date <= date_add($P{date_report}, interval 8 month) order by pe.name]]>
 	</queryString>
 	<field name="project_id" class="java.lang.String"/>
 	<detail>
-		<band height="33" splitType="Stretch">
+		<band height="26" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<subreport>
-				<reportElement x="0" y="0" width="842" height="30" uuid="26c443f3-5da6-4de5-a603-265825fc05d9">
+				<reportElement x="0" y="0" width="842" height="24" uuid="26c443f3-5da6-4de5-a603-265825fc05d9">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<subreportParameter name="date_report">
 					<subreportParameterExpression><![CDATA[$P{date_report}]]></subreportParameterExpression>
@@ -49,12 +51,11 @@ from
 				<subreportExpression><![CDATA["Report_2_project.jasper"]]></subreportExpression>
 			</subreport>
 			<line>
-				<reportElement positionType="Float" x="0" y="31" width="842" height="1" uuid="9e2c41d9-afd6-4a30-9a08-74c81940873e">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement positionType="Float" x="0" y="24" width="842" height="1" uuid="eca44137-d670-47d3-9832-ac0b3a69185f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<graphicElement>
-					<pen lineWidth="2.0" lineStyle="Double" lineColor="#FF0019"/>
+					<pen lineWidth="3.0" lineStyle="Double"/>
 				</graphicElement>
 			</line>
 		</band>

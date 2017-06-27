@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-27T09:48:43 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_2_row" columnCount="12" printOrder="Horizontal" pageWidth="546" pageHeight="60" columnWidth="45" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="44bfd0b4-42b6-4f20-b0dc-8a11d50e7c16">
+<!-- 2017-06-27T11:22:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_2_row" columnCount="16" printOrder="Horizontal" pageWidth="560" pageHeight="60" columnWidth="35" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="44bfd0b4-42b6-4f20-b0dc-8a11d50e7c16">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -75,9 +75,12 @@ where a.id = $P{actor_id}
 and pe.id = $P{project_id}
 
 
-and str_to_date(concat(allocations.year, '-', allocations.month, '-', '01'), '%Y-%m-%d') >= date_sub($P{date_report}, interval 4 month)
-and str_to_date(concat(allocations.year, '-', allocations.month, '-', '01'), '%Y-%m-%d') <= date_add($P{date_report}, interval 7 month)
+and str_to_date(concat(allocations.year, '-', allocations.month, '-', '01'), '%Y-%m-%d') >= date_sub($P{date_report}, interval 7 month)
+and str_to_date(concat(allocations.year, '-', allocations.month, '-', '01'), '%Y-%m-%d') <= date_add($P{date_report}, interval 8 month)
 
+union select $P{project_name}, $P{actor_name}, month(date_sub($P{date_report}, interval 7 month)), year(date_sub($P{date_report}, interval 7 month)), 0, 0 from dual 
+union select $P{project_name}, $P{actor_name}, month(date_sub($P{date_report}, interval 6 month)), year(date_sub($P{date_report}, interval 6 month)), 0, 0 from dual 
+union select $P{project_name}, $P{actor_name}, month(date_sub($P{date_report}, interval 5 month)), year(date_sub($P{date_report}, interval 5 month)), 0, 0 from dual 
 union select $P{project_name}, $P{actor_name}, month(date_sub($P{date_report}, interval 4 month)), year(date_sub($P{date_report}, interval 4 month)), 0, 0 from dual 
 union select $P{project_name}, $P{actor_name}, month(date_sub($P{date_report}, interval 3 month)), year(date_sub($P{date_report}, interval 3 month)), 0,  0 from dual 
 union select $P{project_name}, $P{actor_name}, month(date_sub($P{date_report}, interval 2 month)), year(date_sub($P{date_report}, interval 2 month)), 0,  0 from dual 
@@ -90,6 +93,7 @@ union select $P{project_name}, $P{actor_name}, month(date_add($P{date_report}, i
 union select $P{project_name}, $P{actor_name}, month(date_add($P{date_report}, interval 5 month)), year(date_add($P{date_report}, interval 5 month)), 0, 0 from dual 
 union select $P{project_name}, $P{actor_name}, month(date_add($P{date_report}, interval 6 month)), year(date_add($P{date_report}, interval 6 month)), 0,  0 from dual 
 union select $P{project_name}, $P{actor_name}, month(date_add($P{date_report}, interval 7 month)), year(date_add($P{date_report}, interval 7 month)), 0,  0 from dual 
+union select $P{project_name}, $P{actor_name}, month(date_add($P{date_report}, interval 8 month)), year(date_add($P{date_report}, interval 8 month)), 0,  0 from dual 
 
 ) base
 group by projet, ressource, annee, mois
@@ -100,18 +104,27 @@ order by projet, ressource, annee, mois]]>
 	<field name="mois" class="java.lang.String"/>
 	<field name="annee" class="java.lang.String"/>
 	<detail>
-		<band height="30" splitType="Stretch">
+		<band height="24" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement style="row_allocated" x="0" y="0" width="45" height="15" uuid="1825da04-b38d-4f0a-87c9-4383df6833d3"/>
-				<textElement textAlignment="Right"/>
+				<reportElement style="row_allocated" x="0" y="0" width="35" height="12" uuid="1825da04-b38d-4f0a-87c9-4383df6833d3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{allocated}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="15" width="45" height="15" uuid="944cf628-520a-4d8b-b157-f4a55fb87128"/>
+				<reportElement x="0" y="12" width="35" height="12" uuid="944cf628-520a-4d8b-b157-f4a55fb87128">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{consumed}]]></textFieldExpression>
 			</textField>
 		</band>

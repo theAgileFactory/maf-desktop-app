@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-27T09:48:44 -->
+<!-- 2017-06-27T11:22:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_1" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ee4de764-58be-4b83-aa8b-922492101e4f">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -40,11 +40,10 @@ order by ressource_id]]>
 	<field name="ressource_name" class="java.lang.String"/>
 	<field name="ressource_id" class="java.lang.String"/>
 	<detail>
-		<band height="46" splitType="Stretch">
+		<band height="37" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<subreport>
-				<reportElement x="151" y="0" width="546" height="45" uuid="734dcbeb-a894-4fb0-9fb2-f28a5939151e">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement x="150" y="0" width="560" height="36" uuid="734dcbeb-a894-4fb0-9fb2-f28a5939151e"/>
 				<subreportParameter name="ressource_name">
 					<subreportParameterExpression><![CDATA[$F{ressource_name}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -61,38 +60,53 @@ order by ressource_id]]>
 				<subreportExpression><![CDATA["Report_1_ressources.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="0" width="100" height="15" backcolor="#FFF5E0" uuid="019e32f4-b53d-49e4-b29c-e5bb7fe23862">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="12" backcolor="#FFF5E0" uuid="019e32f4-b53d-49e4-b29c-e5bb7fe23862"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA["id=" +$F{ressource_id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="15" width="100" height="30" backcolor="#FFF5E0" uuid="15dbc63e-37ee-4be0-aedc-e4a439b971c2"/>
+				<reportElement mode="Opaque" x="0" y="12" width="100" height="24" backcolor="#FFF5E0" uuid="15dbc63e-37ee-4be0-aedc-e4a439b971c2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{ressource_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="51" height="15" uuid="9ca553bc-6f80-43f3-a048-f6c3b994d583">
+				<reportElement x="100" y="0" width="50" height="12" uuid="9ca553bc-6f80-43f3-a048-f6c3b994d583">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA["capacity"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="15" width="51" height="15" uuid="1827c5a9-cf5c-4428-beaa-99bfa19ed2d1">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement x="100" y="12" width="50" height="12" uuid="1827c5a9-cf5c-4428-beaa-99bfa19ed2d1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA["allocated"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="30" width="51" height="15" uuid="574949ef-2e44-4bdd-a616-aa6303cee134">
+				<reportElement x="100" y="24" width="50" height="12" uuid="574949ef-2e44-4bdd-a616-aa6303cee134">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA["consumed"]]></textFieldExpression>
 			</textField>
 		</band>
