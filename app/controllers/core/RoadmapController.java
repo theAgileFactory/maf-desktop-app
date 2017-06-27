@@ -741,7 +741,19 @@ public class RoadmapController extends Controller {
             }
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment.render(orgUnitCapacities.values().stream().sorted((t1, t2) -> t1.getOrgUnit().name.compareTo(t2.getOrgUnit().name)).collect(Collectors.toList()), year));
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment.render(
+                orgUnitCapacities
+                        .values()
+                        .stream()
+                        .sorted((orgUnit1, orgUnit2) -> {
+                            if (orgUnit1 == null || orgUnit2 == null) {
+                                return 0;
+                            }
+                            return orgUnit1.getOrgUnit().name.compareTo(orgUnit2.getOrgUnit().name);
+                        })
+                        .collect(Collectors.toList())
+                , year
+        ));
     }
 
     public Result simulatorCapacityForecastTableCompetenciesFragment(Integer year, Boolean onlyConfirmed) {
