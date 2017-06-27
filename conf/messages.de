@@ -2246,6 +2246,7 @@ core.portfolio_entry.sidebar.status_reporting.label=Berichterstattung
 core.portfolio_entry.sidebar.status_reporting.registers.label=Register
 core.portfolio_entry.sidebar.status_reporting.events.label=Ereignisse
 core.portfolio_entry.sidebar.status_reporting.timesheets.label=Zeiterfassung
+core.portfolio_entry.sidebar.status_reporting.documents.label=Dokuments
 core.portfolio_entry.sidebar.integration.label=Integration
 core.portfolio_entry.sidebar.integration.plugins.label=Plugins
 core.portfolio_entry.sidebar.integration.data_syndication.label=Partner Vereinbarungen

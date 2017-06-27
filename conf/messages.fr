@@ -2252,6 +2252,7 @@ core.portfolio_entry.sidebar.status_reporting.label=Rapports d''état
 core.portfolio_entry.sidebar.status_reporting.registers.label=Registres d''état
 core.portfolio_entry.sidebar.status_reporting.events.label=Evènements
 core.portfolio_entry.sidebar.status_reporting.timesheets.label=Feuilles de temps
+core.portfolio_entry.sidebar.status_reporting.documents.label=Documents
 core.portfolio_entry.sidebar.integration.label=Intégration
 core.portfolio_entry.sidebar.integration.plugins.label=Plugins
 core.portfolio_entry.sidebar.integration.data_syndication.label=Syndication de partenaires
