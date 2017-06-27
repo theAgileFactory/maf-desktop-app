@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-27T09:48:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_1" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ee4de764-58be-4b83-aa8b-922492101e4f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="columnHeader"/>
+	<parameter name="date_report" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[select distinct 
+  a.id as ressource_id, a.employee_id as ressource_name
+from
+  portfolio_entry_resource_plan_allocated_actor perpaa
+  left join portfolio_entry_resource_plan perp on perpaa.portfolio_entry_resource_plan_id = perp.id
+  left join life_cycle_instance_planning lcip on perp.id = lcip.portfolio_entry_resource_plan_id
+  left join life_cycle_instance lci on lcip.life_cycle_instance_id = lci.id
+  left join portfolio_entry pe on lci.id = pe.active_life_cycle_instance_id
+  left join portfolio_has_portfolio_entry phpe on pe.id = phpe.portfolio_entry_id
+  left join portfolio p on phpe.portfolio_id = p.id
+  left join actor a on perpaa.actor_id = a.id
+where perpaa.deleted = 0
+      and perp.deleted = 0
+      and lcip.deleted = 0 
+      and lcip.is_frozen = 0
+      and lci.deleted = 0
+      and pe.deleted = 0
+      and pe.archived = 0
+order by ressource_id]]>
+	</queryString>
+	<field name="ressource_name" class="java.lang.String"/>
+	<field name="ressource_id" class="java.lang.String"/>
+	<detail>
+		<band height="46" splitType="Stretch">
+			<subreport>
+				<reportElement x="151" y="0" width="546" height="45" uuid="734dcbeb-a894-4fb0-9fb2-f28a5939151e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="ressource_name">
+					<subreportParameterExpression><![CDATA[$F{ressource_name}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ressource_id">
+					<subreportParameterExpression><![CDATA[$F{ressource_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nb_lignes">
+					<subreportParameterExpression><![CDATA[$V{REPORT_COUNT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date_report">
+					<subreportParameterExpression><![CDATA[$P{date_report}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Report_1_ressources.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="15" backcolor="#FFF5E0" uuid="019e32f4-b53d-49e4-b29c-e5bb7fe23862">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["id=" +$F{ressource_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="15" width="100" height="30" backcolor="#FFF5E0" uuid="15dbc63e-37ee-4be0-aedc-e4a439b971c2"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ressource_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="51" height="15" uuid="9ca553bc-6f80-43f3-a048-f6c3b994d583">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["capacity"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="15" width="51" height="15" uuid="1827c5a9-cf5c-4428-beaa-99bfa19ed2d1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["allocated"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="30" width="51" height="15" uuid="574949ef-2e44-4bdd-a616-aa6303cee134">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA["consumed"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
