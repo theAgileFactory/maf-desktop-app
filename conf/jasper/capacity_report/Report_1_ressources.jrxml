@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-27T09:48:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_1_ressources" columnCount="12" printOrder="Horizontal" pageWidth="546" pageHeight="60" columnWidth="45" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="44bfd0b4-42b6-4f20-b0dc-8a11d50e7c16">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="247"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="748"/>
+	<style name="row_allocated" mode="Opaque" forecolor="#000000" backcolor="#EEEEEE" fontSize="10">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean(Double.parseDouble($F{allocated}) > Double.parseDouble($F{capacity}))]]></conditionExpression>
+			<style backcolor="#FF0000" isBold="true"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="ressource_name" class="java.lang.String"/>
+	<parameter name="ressource_id" class="java.lang.String"/>
+	<parameter name="date_report" class="java.util.Date"/>
+	<parameter name="nb_lignes" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select
+  employee_id,
+  `month` as mois,
+  `year` as annee,
+  round(capacity,1) as capacity,
+  round(sum(allocated),1) as allocated,
+  round(sum(consumed),1) as consumed
+FROM
+(
+select a.id, a.employee_id,
+  allocations.`month`,
+  allocations.`year`,
+  capacity.capacity,
+ allocations.allocated,
+  ts.consumed from
+  portfolio_entry pe
+
+  join (
+    select
+      pe.id as portfolio_entry_id,
+      a.id as actor_id,
+      perpaad.`month` + 1 as `month`,
+      perpaad.`year`,
+      perpaad.days as allocated
+    from portfolio_entry pe
+    join life_cycle_instance lci on pe.active_life_cycle_instance_id = lci.id and pe.archived = 0 and pe.deleted = 0
+    join life_cycle_instance_planning lcip on lci.id = lcip.life_cycle_instance_id and lcip.is_frozen = 0
+    join portfolio_entry_resource_plan perp on lcip.portfolio_entry_resource_plan_id = perp.id
+    join portfolio_entry_resource_plan_allocated_actor perpaa on perp.id = perpaa.portfolio_entry_resource_plan_id
+    join portfolio_entry_resource_plan_allocated_actor_detail perpaad on perpaa.id = perpaad.portfolio_entry_resource_plan_allocated_actor_id
+    join actor a on perpaa.actor_id = a.id
+            ) allocations on allocations.portfolio_entry_id = pe.id
+  join actor a on allocations.actor_id = a.id
+  join (
+    select
+      a.id as actor_id,
+      ac.`month`,
+      ac.`year`,
+      ac.value as capacity
+    from
+      actor a
+    join actor_capacity ac on a.id = ac.actor_id
+       ) capacity on a.id = capacity.actor_id and allocations.`month` = capacity.`month` and allocations.`year` = capacity.`year`
+  left join (
+           select
+             pe.id as portfolio_entry_id,
+             a.id as actor_id,
+             month(tl.log_date) as 'month',
+             year(tl.log_date) as 'year',
+             sum(tl.hours) / 8 as consumed
+           from timesheet_entry te
+             join portfolio_entry pe on te.portfolio_entry_id = pe.id
+             join timesheet_report tr on te.timesheet_report_id = tr.id
+             join actor a on tr.actor_id = a.id
+             join timesheet_log tl on te.id = tl.timesheet_entry_id
+           group by pe.id, a.id, `year`, `month`
+         ) ts on a.id = ts.actor_id and ts.portfolio_entry_id = pe.id and ts.`month` = allocations.`month` and ts.`year` = allocations.`year`
+where employee_id = $P{ressource_name} 
+and str_to_date(concat(allocations.year, '-', allocations.month, '-', '01'), '%Y-%m-%d') >= date_sub($P{date_report}, interval 4 month)
+and str_to_date(concat(allocations.year, '-', allocations.month, '-', '01'), '%Y-%m-%d') <= date_add($P{date_report}, interval 7 month)
+union select null, $P{ressource_name}, month(date_sub($P{date_report}, interval 4 month)), year(date_sub($P{date_report}, interval 4 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_sub($P{date_report}, interval 3 month)), year(date_sub($P{date_report}, interval 3 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_sub($P{date_report}, interval 2 month)), year(date_sub($P{date_report}, interval 2 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_sub($P{date_report}, interval 1 month)), year(date_sub($P{date_report}, interval 1 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month($P{date_report}), year($P{date_report}), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_add($P{date_report}, interval 1 month)), year(date_add($P{date_report}, interval 1 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_add($P{date_report}, interval 2 month)), year(date_add($P{date_report}, interval 2 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_add($P{date_report}, interval 3 month)), year(date_add($P{date_report}, interval 3 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_add($P{date_report}, interval 4 month)), year(date_add($P{date_report}, interval 4 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_add($P{date_report}, interval 5 month)), year(date_add($P{date_report}, interval 5 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_add($P{date_report}, interval 6 month)), year(date_add($P{date_report}, interval 6 month)), 0, 0, 0 from dual 
+union select null, $P{ressource_name}, month(date_add($P{date_report}, interval 7 month)), year(date_add($P{date_report}, interval 7 month)), 0, 0, 0 from dual 
+
+) base
+group by employee_id, `year`, `month`
+order by employee_id, `year`, `month`]]>
+	</queryString>
+	<field name="capacity" class="java.lang.String"/>
+	<field name="allocated" class="java.lang.String"/>
+	<field name="consumed" class="java.lang.String"/>
+	<field name="mois" class="java.lang.String"/>
+	<field name="annee" class="java.lang.String"/>
+	<variable name="nb_lignes" class="java.lang.Integer">
+		<variableExpression><![CDATA[$P{nb_lignes}]]></variableExpression>
+	</variable>
+	<detail>
+		<band height="45" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement key="" x="0" y="0" width="45" height="15" uuid="5b673d58-59df-4332-b038-487f9c7a33ff">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{capacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="row_allocated" x="0" y="15" width="45" height="15" uuid="1825da04-b38d-4f0a-87c9-4383df6833d3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{allocated}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="45" height="15" uuid="944cf628-520a-4d8b-b157-f4a55fb87128"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{consumed}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

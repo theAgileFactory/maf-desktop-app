@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-27T09:48:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_2_project" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ee4de764-58be-4b83-aa8b-922492101e4f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="date_report" class="java.util.Date"/>
+	<parameter name="project_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select distinct
+  pe.name as project_name,
+  pe.archived as statut_projet,
+  a.ref_id as actor_name,
+  a.id as actor_id, 
+  pet.name as project_type,
+  ou.name as departement
+from
+  portfolio_entry_resource_plan_allocated_actor perpaa
+  left join portfolio_entry_resource_plan perp on perpaa.portfolio_entry_resource_plan_id = perp.id
+  left join life_cycle_instance_planning lcip on perp.id = lcip.portfolio_entry_resource_plan_id
+  left join life_cycle_instance lci on lcip.life_cycle_instance_id = lci.id
+  left join portfolio_entry pe on lci.id = pe.active_life_cycle_instance_id
+  left join portfolio_entry_type pet on pe.portfolio_entry_type_id = pet.id
+  left join actor a on perpaa.actor_id = a.id
+  left join org_unit ou on pe.sponsoring_unit_id = ou.id where perpaa.deleted = 0
+      and perp.deleted = 0
+      and lcip.deleted = 0 and lcip.is_frozen = 0
+      and lci.deleted = 0
+      and pe.deleted = 0
+      and pe.id = $P{project_id}
+      and perpaa.end_date >= date_sub($P{date_report}, interval 4 month)
+      and perpaa.start_date <= date_add($P{date_report}, interval 7 month) order by pe.name]]>
+	</queryString>
+	<field name="project_name" class="java.lang.String"/>
+	<field name="statut_projet" class="java.lang.String"/>
+	<field name="actor_id" class="java.lang.String"/>
+	<field name="actor_name" class="java.lang.String"/>
+	<field name="project_type" class="java.lang.String"/>
+	<field name="departement" class="java.lang.String"/>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="15" backcolor="#FFF5E0" uuid="ed99725e-01c7-4ddd-9372-40a5d4ccb0d0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{project_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="15" width="100" height="15" backcolor="#FFF5E0" uuid="dba47893-6a6d-4b48-a3dd-a1e7efe82aa7">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{statut_projet}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="15" width="51" height="15" uuid="ee89a572-f4d2-4715-af5b-b6e09b3b2ed3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{actor_name}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="151" y="0" width="546" height="30" uuid="3d72d75c-d115-4497-99e4-24cdf71fdf6e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="project_id">
+					<subreportParameterExpression><![CDATA[$P{project_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date_report">
+					<subreportParameterExpression><![CDATA[$P{date_report}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="project_name">
+					<subreportParameterExpression><![CDATA[$F{project_name}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actor_name">
+					<subreportParameterExpression><![CDATA[$F{actor_name}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="actor_id">
+					<subreportParameterExpression><![CDATA[$F{actor_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Report_2_row.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="100" y="0" width="51" height="15" uuid="a1b3aeec-4c66-4c5d-ab2b-dda934ce910f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{actor_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="697" y="0" width="73" height="30" uuid="f554aa92-d622-4712-8c90-b54a96eca412"/>
+				<textFieldExpression><![CDATA[$F{project_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="770" y="0" width="72" height="30" uuid="de7b7612-7c14-4c65-bf2c-f7e0a5022aec"/>
+				<textFieldExpression><![CDATA[$F{departement}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
