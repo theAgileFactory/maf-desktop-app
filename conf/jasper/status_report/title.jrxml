@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-05-01T08:23:34 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-28T11:04:07 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="title" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="ea04c021-2365-4415-9655-2119c321f6e8">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -11,7 +11,10 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CompenswissDS.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="368"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="625"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="portfolioEntryId" class="java.lang.Long" isForPrompting="false">
 		<defaultValueExpression><![CDATA[1L]]></defaultValueExpression>
@@ -34,11 +37,12 @@
 	
 	
 	FROM portfolio_entry pe
-	LEFT OUTER JOIN portfolio_entry_report per ON pe.last_portfolio_entry_report_id = per.id AND per.deleted = 0
+	LEFT OUTER JOIN portfolio_entry_report per ON pe.id = per.portfolio_entry_id AND per.deleted = 0
 	LEFT OUTER JOIN portfolio_entry_report_status_type perst ON per.portfolio_entry_report_status_type_id = perst.id AND perst.deleted = 0
 	LEFT OUTER JOIN i18n_messages i18n_perst ON perst.name = i18n_perst.key AND i18n_perst.language = $P{lang}
 	LEFT OUTER JOIN actor a ON per.author_id = a.id AND a.deleted = 0
-	WHERE pe.deleted = 0 AND pe.id = $P{portfolioEntryId}]]>
+	WHERE pe.deleted = 0 AND pe.id = $P{portfolioEntryId}
+	ORDER BY report_date DESC]]>
 	</queryString>
 	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -50,16 +54,20 @@
 	<field name="governance_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<detail>
-		<band height="184" splitType="Stretch">
-			<property name="local_mesure_unitheight" value="pixel"/>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	<pageHeader>
+		<band height="60">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
 				<reportElement style="title" x="0" y="0" width="555" height="60" uuid="5e87337c-d9f9-4ff0-a327-64cc03309c13"/>
 				<textFieldExpression><![CDATA[str("title") + " " + $F{name} + IF($F{governance_id} != null," (" + $F{governance_id} + ")","")]]></textFieldExpression>
 			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" x="0" y="70" width="555" height="20" uuid="145887ac-d169-469b-9c43-9e5f2335cef7">
+				<reportElement style="row-header" x="0" y="0" width="555" height="20" uuid="145887ac-d169-469b-9c43-9e5f2335cef7">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -70,8 +78,14 @@
 				</reportElement>
 				<textFieldExpression><![CDATA[str("label.latest_status_report")]]></textFieldExpression>
 			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement style="row-header" x="0" y="92" width="120" height="20" uuid="2fad449d-b7df-4bf5-b176-c989ee7d334f">
+				<reportElement style="row-header" x="0" y="0" width="185" height="20" uuid="2fad449d-b7df-4bf5-b176-c989ee7d334f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -83,7 +97,7 @@
 				<textFieldExpression><![CDATA[str("label.date")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" x="120" y="112" width="120" height="20" uuid="ae06bfad-9493-4012-ad82-b776a75e5c93">
+				<reportElement style="row" x="185" y="20" width="185" height="20" uuid="ae06bfad-9493-4012-ad82-b776a75e5c93">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -94,12 +108,12 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{report_author}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row-header" x="0" y="112" width="120" height="20" uuid="542fc2d8-17ff-4a89-988f-b3edd833393b">
+				<reportElement style="row-header" x="185" y="0" width="185" height="20" uuid="542fc2d8-17ff-4a89-988f-b3edd833393b">
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -109,7 +123,7 @@
 				<textFieldExpression><![CDATA[str("label.author")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row-header" x="0" y="132" width="120" height="20" uuid="88e18b18-4ee9-475e-bdec-c7e512c83c09">
+				<reportElement style="row-header" x="370" y="0" width="185" height="20" uuid="88e18b18-4ee9-475e-bdec-c7e512c83c09">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -121,7 +135,7 @@
 				<textFieldExpression><![CDATA[str("label.status")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-				<reportElement style="row" x="120" y="92" width="120" height="20" uuid="37e50734-0440-4e8c-b2a9-a3bbb9ee1c4c">
+				<reportElement style="row" x="0" y="20" width="185" height="20" uuid="37e50734-0440-4e8c-b2a9-a3bbb9ee1c4c">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -130,10 +144,11 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{report_date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" x="120" y="132" width="120" height="20" uuid="832724bd-873f-41bb-9c53-9ead8e7a62d9">
+				<reportElement style="row" x="370" y="20" width="185" height="20" uuid="832724bd-873f-41bb-9c53-9ead8e7a62d9">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -144,10 +159,11 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{report_status_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row" x="240" y="92" width="315" height="60" uuid="8ad7d72d-278a-40c1-a746-c787f8e2e14c">
+				<reportElement style="row" x="0" y="40" width="555" height="60" uuid="8ad7d72d-278a-40c1-a746-c787f8e2e14c">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -165,14 +181,17 @@
 	$F{report_comments}
 )]]></textFieldExpression>
 			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="50">
 			<subreport>
-				<reportElement positionType="Float" x="0" y="162" width="555" height="22" uuid="193c1717-4062-4d77-aeee-f6f79a012b92">
+				<reportElement positionType="Float" x="0" y="0" width="555" height="50" uuid="193c1717-4062-4d77-aeee-f6f79a012b92">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<printWhenExpression><![CDATA[$P{format}.equals("PDF")]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="lang">
@@ -188,5 +207,5 @@
 				<subreportExpression><![CDATA["milestones.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-	</detail>
+	</summary>
 </jasperReport>

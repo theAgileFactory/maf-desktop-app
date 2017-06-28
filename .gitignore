@@ -9,3 +9,5 @@ lib/
 .checkstyle
 *.log
 .idea
+/CompenswissDS.xml
+/PAMDS.xml

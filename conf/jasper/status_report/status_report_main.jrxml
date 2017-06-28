@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-03-04T10:27:54 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-28T11:05:11 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="status_report_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="503f3ea5-4cfd-40cf-9138-2328fb03b992">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CompenswissDS.xml"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -11,7 +11,7 @@
 	<parameter name="format" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="REPORT_STATUS_REPORT_PORTFOLIO_ENTRY" class="java.lang.Long" isForPrompting="false">
+	<parameter name="REPORT_STATUS_REPORT_PORTFOLIO_ENTRY" class="java.lang.Long">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[1L]]></defaultValueExpression>
 	</parameter>
