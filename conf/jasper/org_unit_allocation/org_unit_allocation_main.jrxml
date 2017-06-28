@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-06-17T14:53:34 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-28T10:25:28 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="org_unit_allocation_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="2a0e196b-90ac-410b-b397-f8ce01858593">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ST"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PAMDS.xml"/>
+	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.page.break.no.pagination" value="apply"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.all" value="Data/Footnotes"/>
+	<property name="net.sf.jasperreports.export.xls.freeze.row" value="3"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.exports.xls.font.size.fix.enabled" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="columnHeader"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -12,11 +25,12 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="REPORT_ORG_UNIT_ALLOCATION_ORG_UNIT" class="java.lang.Long" isForPrompting="false">
-		<defaultValueExpression><![CDATA[2L]]></defaultValueExpression>
+	<parameter name="REPORT_ORG_UNIT_ALLOCATION_ORG_UNIT" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[20L]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT ou.name AS org_unit_name, pe.name AS portfolio_entry_name, perpaou.days AS days,
+	perpaou.forecast_days AS forecast_days, 
 	perpaou.start_date AS start_date, perpaou.end_date AS end_date, pepp.name AS package_name, perpaou.is_confirmed AS is_confirmed
 FROM portfolio_entry_resource_plan_allocated_org_unit perpaou
 	JOIN org_unit ou ON perpaou.org_unit_id = ou.id AND ou.deleted = 0
@@ -43,6 +57,7 @@ ORDER BY perpaou.end_date]]>
 	<field name="is_confirmed" class="java.lang.Boolean">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="forecast_days" class="java.lang.String"/>
 	<title>
 		<band height="65" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $P{format}.equals("EXCEL")]]></printWhenExpression>
@@ -58,6 +73,7 @@ ORDER BY perpaou.end_date]]>
 	</title>
 	<columnHeader>
 		<band height="22" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $V{PAGE_NUMBER}.equals(1)]]></printWhenExpression>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="150" height="20" uuid="8506f227-d30c-4516-8b45-7d704901c82b">
@@ -68,67 +84,91 @@ ORDER BY perpaou.end_date]]>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[str("label.initiative")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="150" y="0" width="50" height="20" uuid="c23f3252-5169-4580-96ed-f89e721748c0">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="150" y="0" width="60" height="20" uuid="c23f3252-5169-4580-96ed-f89e721748c0">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.days")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="200" y="0" width="90" height="20" uuid="d4b37ef7-7dbd-4a5c-aed8-5331e7097992">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="270" y="0" width="65" height="20" uuid="d4b37ef7-7dbd-4a5c-aed8-5331e7097992">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.start_date")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="290" y="0" width="90" height="20" uuid="e29e08e9-c579-4a88-b0eb-e31c387ed5d4">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="335" y="0" width="65" height="20" uuid="e29e08e9-c579-4a88-b0eb-e31c387ed5d4">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.end_date")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="380" y="0" width="100" height="20" uuid="136778fa-7374-477b-9a76-1a516d72343c">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="400" y="0" width="90" height="20" uuid="136778fa-7374-477b-9a76-1a516d72343c">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box leftPadding="5" rightPadding="5"/>
 				<textFieldExpression><![CDATA[str("label.package")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="480" y="0" width="75" height="20" uuid="7212c2c1-39d2-4c68-8614-fb44135334a2">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="490" y="0" width="65" height="20" uuid="7212c2c1-39d2-4c68-8614-fb44135334a2">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box leftPadding="5" rightPadding="5"/>
 				<textFieldExpression><![CDATA[str("label.is_confirmed")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="210" y="0" width="60" height="20" uuid="0800582a-8d50-4466-9f2b-d89136e33eaf">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[str("label.forecast_days")]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="150" height="20" uuid="05183102-6d1f-48cf-9356-8a499a68ec62">
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -141,7 +181,7 @@ ORDER BY perpaou.end_date]]>
 				<textFieldExpression><![CDATA[$F{portfolio_entry_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="150" y="0" width="50" height="20" uuid="e1764283-bdec-4b38-bf8e-d0f41b98f476">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="150" y="0" width="60" height="20" uuid="e1764283-bdec-4b38-bf8e-d0f41b98f476">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -149,10 +189,11 @@ ORDER BY perpaou.end_date]]>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{days}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="200" y="0" width="90" height="20" uuid="9c3b695c-729d-48ce-a44e-5949205903a6">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="270" y="0" width="65" height="20" uuid="9c3b695c-729d-48ce-a44e-5949205903a6">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -160,10 +201,11 @@ ORDER BY perpaou.end_date]]>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="290" y="0" width="90" height="20" uuid="55964d00-8d64-4adc-8e8e-1c291e65d8c1">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="335" y="0" width="65" height="20" uuid="55964d00-8d64-4adc-8e8e-1c291e65d8c1">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -171,10 +213,11 @@ ORDER BY perpaou.end_date]]>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="380" y="0" width="100" height="20" uuid="c33d6303-5b01-4bdb-8244-b9b71ec17b1c">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="400" y="0" width="90" height="20" uuid="c33d6303-5b01-4bdb-8244-b9b71ec17b1c">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -185,7 +228,7 @@ ORDER BY perpaou.end_date]]>
 				<textFieldExpression><![CDATA[$F{package_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="480" y="0" width="75" height="20" uuid="4bd263c2-a8c8-4965-8d50-740d02f13e80">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="490" y="0" width="65" height="20" uuid="4bd263c2-a8c8-4965-8d50-740d02f13e80">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -193,7 +236,20 @@ ORDER BY perpaou.end_date]]>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[IF($F{is_confirmed},str("label.yes"),str("label.no"))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="210" y="0" width="60" height="20" uuid="588e3a53-3f99-479d-a939-889ea16f8155">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{forecast_days}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
