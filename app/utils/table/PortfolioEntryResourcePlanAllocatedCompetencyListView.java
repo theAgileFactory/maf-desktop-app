@@ -192,8 +192,6 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
                     setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                     setEmptyMessageKey("object.allocated_resource.competency.table.empty");
-
-                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedCompetency.class);
                 }
             };
 

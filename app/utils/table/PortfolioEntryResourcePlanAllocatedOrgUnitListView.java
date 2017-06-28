@@ -202,8 +202,6 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                     setEmptyMessageKey("object.allocated_resource.org_unit.table.empty");
-
-                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
                 }
             };
 
