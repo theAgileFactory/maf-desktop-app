@@ -20,6 +20,7 @@ package utils.table;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.*;
+import dao.governance.LifeCycleMilestoneDao;
 import framework.commons.DataType;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
@@ -27,6 +28,7 @@ import framework.utils.*;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
+import models.governance.LifeCycleMilestone;
 import play.Logger;
 
 import java.text.MessageFormat;
@@ -100,7 +102,8 @@ public class PortfolioEntryAttachmentListView {
                                 return controllers.core.routes.PortfolioEntryController.view(view.objectId, 0).url();
                             }
                             if (view.objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
-                                return controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(view.portfolioEntryId, view.objectId).url();
+                                LifeCycleMilestone lifeCycleMilestone = LifeCycleMilestoneDao.getLCMilestoneInstanceById(view.objectId).lifeCycleMilestone;
+                                return controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(view.portfolioEntryId, lifeCycleMilestone.id).url();
                             }
                             if (view.objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
                                 return controllers.core.routes.PortfolioEntryPlanningController.viewPackage(view.portfolioEntryId, view.objectId).url();

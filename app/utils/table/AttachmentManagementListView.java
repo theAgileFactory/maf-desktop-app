@@ -31,6 +31,7 @@ import framework.utils.*;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.framework_models.common.Attachment;
+import models.governance.LifeCycleMilestone;
 import models.pmo.PortfolioEntry;
 import play.Logger;
 import views.html.modelsparts.display_portfolio_entry;
@@ -121,7 +122,8 @@ public class AttachmentManagementListView {
                                 return controllers.core.routes.PortfolioEntryController.view(view.objectId, 0).url();
                             }
                             if (view.objectType.equals(MafDataType.getLifeCycleMilestoneInstance().getDataTypeClassName())) {
-                                return controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(view.portfolioEntryId, view.objectId).url();
+                                LifeCycleMilestone lifeCycleMilestone = LifeCycleMilestoneDao.getLCMilestoneInstanceById(view.objectId).lifeCycleMilestone;
+                                return controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(view.portfolioEntryId, lifeCycleMilestone.id).url();
                             }
                             if (view.objectType.equals(MafDataType.getPortfolioEntryPlanningPackage().getDataTypeClassName())) {
                                 return controllers.core.routes.PortfolioEntryPlanningController.viewPackage(view.portfolioEntryId, view.objectId).url();

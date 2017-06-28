@@ -1263,7 +1263,11 @@ public class PortfolioEntryStatusReportingController extends Controller {
     private List<Attachment> getAttachmentsByPE(Long portfolioEntryId, ExpressionList<Attachment> expressionList)
     {
     	List<PortfolioEntryReport> perList = PortfolioEntryReportDao.getPEReportAsListByPE(portfolioEntryId);
-    	List<LifeCycleMilestoneInstance> lcmiList = LifeCycleMilestoneDao.findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("lifeCycleInstance.portfolioEntry.id", portfolioEntryId).findList();
+    	List<LifeCycleMilestoneInstance> lcmiList = LifeCycleMilestoneDao.findLifeCycleMilestoneInstance.where()
+                .eq("deleted", false)
+                .eq("lifeCycleInstance.portfolioEntry.id", portfolioEntryId)
+                .eq("lifeCycleInstance.isActive", true)
+                .findList();
     	List<PortfolioEntryPlanningPackage> pkgList = PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsListByPE(portfolioEntryId);
 
     	expressionList.where()
