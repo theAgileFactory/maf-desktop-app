@@ -635,7 +635,7 @@ public class RoadmapController extends Controller {
 
             // Add planned
             if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                allocatedActor.computeAllocationDetails();
+                allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive());
             }
             allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
                     .stream()
@@ -1052,6 +1052,9 @@ public class RoadmapController extends Controller {
         Map<Long, ActorCapacityDetails> capacityDetailsRows = new HashMap<>();
 
         allocations.stream().forEach(allocation -> {
+            if (allocation.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
+                allocation.computeAllocationDetails(budgetTrackingService.isActive());
+            }
             PortfolioEntryResourcePlanAllocatedActorDetail allocationDetail = allocation.getDetail(year, month);
             if (allocationDetail != null && allocationDetail.days != 0.0) {
                 PortfolioEntry pe = allocation.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry;

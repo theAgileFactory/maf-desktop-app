@@ -102,11 +102,11 @@
         });
     }
 
-    function recomputeDays() {
+    function recomputeDays(daysInputId) {
         var days = 0;
         $('[id$=AllocationValue]').each(function () {
             days += +$(this).val();
         });
-        $('#days').val(days);
+        $('#'+daysInputId).val(days);
     }
 </script>

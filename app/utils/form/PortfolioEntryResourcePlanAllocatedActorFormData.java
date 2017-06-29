@@ -17,10 +17,6 @@
  */
 package utils.form;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.*;
-
 import dao.finance.CurrencyDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
@@ -30,9 +26,16 @@ import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import play.Logger;
+import play.Play;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
+import services.budgettracking.IBudgetTrackingService;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A portfolio entry resource plan allocated actor form data is used to manage
@@ -41,6 +44,8 @@ import play.i18n.Messages;
  * @author Johann Kohler
  */
 public class PortfolioEntryResourcePlanAllocatedActorFormData {
+
+    IBudgetTrackingService budgetTrackingService;
 
     // the portfolioEntry id
     public Long id;
@@ -147,6 +152,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
         this.monthAllocations = new ArrayList<>();
+        this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
     }
 
     /**
@@ -336,21 +342,24 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         if (this.monthlyAllocated) {
 
             // Set allocations by month
-            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.clear();
+
+            List<PortfolioEntryResourcePlanAllocatedActorDetail> details = new ArrayList<>();
             for (MonthAllocation monthAllocation : monthAllocations) {
-                processMonthAllocation(allocatedActor, monthAllocation.year, 0, monthAllocation.januaryAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 1, monthAllocation.februaryAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 2, monthAllocation.marchAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 3, monthAllocation.aprilAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 4, monthAllocation.mayAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 5, monthAllocation.juneAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 6, monthAllocation.julyAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 7, monthAllocation.augustAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 8, monthAllocation.septemberAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 9, monthAllocation.octoberAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 10, monthAllocation.novemberAllocationValue);
-                processMonthAllocation(allocatedActor, monthAllocation.year, 11, monthAllocation.decemberAllocationValue);
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 0, monthAllocation.januaryAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 1, monthAllocation.februaryAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 2, monthAllocation.marchAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 3, monthAllocation.aprilAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 4, monthAllocation.mayAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 5, monthAllocation.juneAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 6, monthAllocation.julyAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 7, monthAllocation.augustAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 8, monthAllocation.septemberAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 9, monthAllocation.octoberAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 10, monthAllocation.novemberAllocationValue));
+                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 11, monthAllocation.decemberAllocationValue));
             }
+            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.clear();
+            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.addAll(details.stream().filter(detail -> detail != null).collect(Collectors.toList()));
 
             // Set start date and end date
             Comparator<? super PortfolioEntryResourcePlanAllocatedActorDetail> comp = (d1, d2) -> {
@@ -370,21 +379,25 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
             allocatedActor.endDate = c.getTime();
 
         } else if (allocatedActor.startDate != null && allocatedActor.endDate != null) { // If start and end dates are provided, distribute evenly the days across the months
-            allocatedActor.computeAllocationDetails();
+            allocatedActor.computeAllocationDetails(budgetTrackingService.isActive());
         } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
             allocatedActor.clearAllocations();
         }
     }
 
-    private void processMonthAllocation(PortfolioEntryResourcePlanAllocatedActor allocatedActor, Integer year, Integer month, Double days) {
+    private PortfolioEntryResourcePlanAllocatedActorDetail processMonthAllocation(PortfolioEntryResourcePlanAllocatedActor allocatedActor, Integer year, Integer month, Double days) {
         if (days != null && days != 0) {
-            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.add(allocatedActor.createOrUpdateAllocationDetail(year, month, days));
+            return allocatedActor.createOrUpdateAllocationDetail(year, month, days);
         } else {
+            if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
+                allocatedActor.computeAllocationDetails(budgetTrackingService.isActive());
+            }
             PortfolioEntryResourcePlanAllocatedActorDetail detail = allocatedActor.getDetail(year, month);
             if (detail != null) {
                 allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.remove(detail);
                 detail.doDelete();
             }
+            return null;
         }
     }
 }

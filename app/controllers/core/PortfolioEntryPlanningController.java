@@ -1526,6 +1526,12 @@ public class PortfolioEntryPlanningController extends Controller {
 
         PortfolioEntryResourcePlanAllocatedActor allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(allocatedActorId);
         allocatedActor.createOrUpdateAllocationDetail(year, month, days);
+        if (getBudgetTrackingService().isActive()) {
+            allocatedActor.forecastDays = allocatedActor.getDetailsAsTotalDays();
+        } else {
+            allocatedActor.days = allocatedActor.getDetailsAsTotalDays();
+        }
+        allocatedActor.save();
 
         return status(Http.Status.NO_CONTENT);
     }
