@@ -18,6 +18,7 @@
 package utils.form;
 
 import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
@@ -25,6 +26,7 @@ import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import org.apache.commons.lang3.tuple.Pair;
 import play.Logger;
 import play.Play;
 import play.data.validation.Constraints.Required;
@@ -115,6 +117,47 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         public MonthAllocation(Integer year) {
             this.year = year;
         }
+
+        public void addValue(Integer month, Double days) {
+            switch (month) {
+                case 0:
+                    this.januaryAllocationValue = days;
+                    break;
+                case 1:
+                    this.februaryAllocationValue = days;
+                    break;
+                case 2:
+                    this.marchAllocationValue = days;
+                    break;
+                case 3:
+                    this.aprilAllocationValue = days;
+                    break;
+                case 4:
+                    this.mayAllocationValue = days;
+                    break;
+                case 5:
+                    this.juneAllocationValue = days;
+                    break;
+                case 6:
+                    this.julyAllocationValue = days;
+                    break;
+                case 7:
+                    this.augustAllocationValue = days;
+                    break;
+                case 8:
+                    this.septemberAllocationValue = days;
+                    break;
+                case 9:
+                    this.octoberAllocationValue = days;
+                    break;
+                case 10:
+                    this.novemberAllocationValue = days;
+                    break;
+                case 11:
+                default:
+                    this.decemberAllocationValue = days;
+            }
+        }
     }
 
     /**
@@ -163,6 +206,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
 
+        this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+
         this.id = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedActorId = allocatedActor.id;
 
@@ -186,44 +231,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         for(PortfolioEntryResourcePlanAllocatedActorDetail detail : details) {
             Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(detail.year)).findFirst();
             MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(detail.year);
-            switch (detail.month) {
-                case 0:
-                    monthAllocation.januaryAllocationValue = detail.days;
-                    break;
-                case 1:
-                    monthAllocation.februaryAllocationValue = detail.days;
-                    break;
-                case 2:
-                    monthAllocation.marchAllocationValue = detail.days;
-                    break;
-                case 3:
-                    monthAllocation.aprilAllocationValue = detail.days;
-                    break;
-                case 4:
-                    monthAllocation.mayAllocationValue = detail.days;
-                    break;
-                case 5:
-                    monthAllocation.juneAllocationValue = detail.days;
-                    break;
-                case 6:
-                    monthAllocation.julyAllocationValue = detail.days;
-                    break;
-                case 7:
-                    monthAllocation.augustAllocationValue = detail.days;
-                    break;
-                case 8:
-                    monthAllocation.septemberAllocationValue = detail.days;
-                    break;
-                case 9:
-                    monthAllocation.octoberAllocationValue = detail.days;
-                    break;
-                case 10:
-                    monthAllocation.novemberAllocationValue = detail.days;
-                    break;
-                case 11:
-                default:
-                    monthAllocation.decemberAllocationValue = detail.days;
-            }
+            monthAllocation.addValue(detail.month, detail.days);
             if (!optionalMonthlyAllocation.isPresent()) {
                 monthAllocations.add(monthAllocation);
             }
@@ -243,6 +251,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
 
+        this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+
         this.id = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedOrgUnitId = allocatedOrgUnit.id;
 
@@ -260,6 +270,20 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.forecastDays = allocatedOrgUnit.forecastDays;
         this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate;
 
+        this.monthAllocations = new ArrayList<>();
+
+        Map<Pair<Integer, Integer>, Double> allocationDistribution = PortfolioEntryResourcePlanAllocatedActor.getAllocationDistribution(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, budgetTrackingService.isActive() ? this.forecastDays : this.days);
+        allocationDistribution.forEach((key, days) -> {
+            Integer year = key.getLeft();
+            Integer month = key.getRight();
+            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
+            monthAllocation.addValue(month, days);
+            if (!optionalMonthlyAllocation.isPresent()) {
+                monthAllocations.add(monthAllocation);
+            }
+        });
+
         this.followPackageDates = allocatedOrgUnit.followPackageDates != null ? allocatedOrgUnit.followPackageDates : false;
 
     }
@@ -273,6 +297,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
      *            the allocated competency
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency) {
+
+        this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
 
         this.id = allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedCompetencyId = allocatedCompetency.id;
@@ -290,6 +316,20 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.dailyRate = allocatedCompetency.dailyRate;
         this.forecastDays = null;
         this.forecastDailyRate = null;
+
+        this.monthAllocations = new ArrayList<>();
+
+        Map<Pair<Integer, Integer>, Double> allocationDistribution = PortfolioEntryResourcePlanAllocatedActor.getAllocationDistribution(allocatedCompetency.startDate, allocatedCompetency.endDate, budgetTrackingService.isActive() ? this.forecastDays : this.days);
+        allocationDistribution.forEach((key, days) -> {
+            Integer year = key.getLeft();
+            Integer month = key.getRight();
+            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
+            monthAllocation.addValue(month, days);
+            if (!optionalMonthlyAllocation.isPresent()) {
+                monthAllocations.add(monthAllocation);
+            }
+        });
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
 
