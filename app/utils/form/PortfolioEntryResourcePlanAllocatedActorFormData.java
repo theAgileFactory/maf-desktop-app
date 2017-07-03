@@ -429,9 +429,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         if (days != null && days != 0) {
             return allocatedActor.createOrUpdateAllocationDetail(year, month, days);
         } else {
-            if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                allocatedActor.computeAllocationDetails(budgetTrackingService.isActive());
-            }
             PortfolioEntryResourcePlanAllocatedActorDetail detail = allocatedActor.getDetail(year, month);
             if (detail != null) {
                 allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.remove(detail);
