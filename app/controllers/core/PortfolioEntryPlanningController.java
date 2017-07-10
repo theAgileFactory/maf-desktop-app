@@ -1380,6 +1380,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     private Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> getAllocatedOrgUnitTable(PortfolioEntryResourcePlan resourcePlan, FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig) {
         ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit
+                .fetch("orgUnit")
                 .where()
                 .eq("deleted", false)
                 .eq("portfolioEntryResourcePlan.id", resourcePlan.id);

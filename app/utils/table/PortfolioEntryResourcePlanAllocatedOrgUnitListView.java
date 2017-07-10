@@ -23,6 +23,7 @@ import java.util.Date;
 
 import constants.IMafConstants;
 import controllers.routes;
+import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.*;
@@ -64,8 +65,9 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
         public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> getFilterConfig() {
             return new FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                 {
-                    addColumnConfiguration("orgUnit", "orgUnit", "object.allocated_resource.org_unit.label",
-                            new AutocompleteFilterComponent(routes.JsonController.sponsoringUnit().url()), true, false, SortStatusType.UNSORTED);
+                    ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
+                    addColumnConfiguration("orgUnit", "orgUnit.id", "object.allocated_resource.org_unit.label",
+                            new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[] {"name"}), true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
                             new AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, SortStatusType.UNSORTED);
