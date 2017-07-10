@@ -31,7 +31,7 @@
             }
         </style>
         
-        <div class="report-status-container-@(report.id)">
+        <div class="report-status-container-@(report.id) wrap-word">
             <a style="text-decoration: none;" id="report-status-@(report.id)" data-toggle="tooltip" data-html="true" title="@(report.comments.replace("\n", "<br />").replace("\"", "'"))" href="@controllers.core.routes.PortfolioEntryStatusReportingController.viewReport(report.portfolioEntry.id, report.id)">
                 @display_portfolio_entry_report_status_type(report.portfolioEntryReportStatusType)
             </a>

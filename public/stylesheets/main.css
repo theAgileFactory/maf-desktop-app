@@ -44,3 +44,13 @@ table.jqplot-table-legend { border: 0 solid #CCCCCC !important;}
 tbody tr:hover td.hasRowSpan { 
     background-color: #FFFFFF !important;
 }
+
+th, td {
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+.wrap-word {
+	word-wrap: break-word;
+	word-break: break-all;
+}
