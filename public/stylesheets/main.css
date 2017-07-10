@@ -47,10 +47,10 @@ tbody tr:hover td.hasRowSpan {
 
 th, td {
 	word-wrap: break-word;
-	word-break: break-all;
+	word-break: break-word;
 }
 
 .wrap-word {
 	word-wrap: break-word;
-	word-break: break-all;
+	word-break: break-word;
 }
