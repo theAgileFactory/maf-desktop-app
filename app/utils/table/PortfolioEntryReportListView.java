@@ -85,7 +85,8 @@ public class PortfolioEntryReportListView {
                     });
 
                     addColumn("comments", "comments", "object.portfolio_entry_report.comments.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("comments", new ObjectFormatter<PortfolioEntryReportListView>());
+                    setColumnValueCssClass("comments", "wrap-word");
+                    setJavaColumnFormatter("comments", new ObjectFormatter<>());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryReport.class);
 
