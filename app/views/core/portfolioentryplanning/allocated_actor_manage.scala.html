@@ -176,33 +176,37 @@
                         @allocated_resource_manage_js()
                         
                         <script>
-        
-                        $('#@allocatedActorForm("portfolioEntryPlanningPackage").id').change(function() { 
-                            maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
-                        });
-                        $('#@allocatedActorForm("followPackageDates").id').change(function() { 
-                            maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id') 
-                        });
 
-                        $('#@allocatedActorForm("monthlyAllocated").id').change(function() {
-                            toggleMonthyAllocationFields('@allocatedActorForm("monthlyAllocated").id', '@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id')
-                        });
+                                $('#@allocatedActorForm("portfolioEntryPlanningPackage").id').change(function() {
+                                    maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
+                                });
+                                $('#@allocatedActorForm("followPackageDates").id').change(function() {
+                                    maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id')
+                                });
 
-                        $('[id$=AllocationValue]').change(function() {
-                            recomputeDays('@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}');
-                        });
+                                $('#@allocatedActorForm("monthlyAllocated").id').change(function() {
+                                    toggleMonthyAllocationFields('@allocatedActorForm("monthlyAllocated").id', '@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id')
+                                });
 
-                        $('#previous-year').click(previousYearAction);
+                                $('[id$=AllocationValue]').change(function() {
+                                    recomputeDays('@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}');
+                                });
 
-                        $('#next-year').click(nextYearAction);
+                                $('#previous-year').click(function() {
+                                    previousYearAction('@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}')
+                                });
 
-                        maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
+                                $('#next-year').click(function() {
+                                    nextYearAction('@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}')
+                                });
+
+                                maf_recomputeFields('@allocatedActorForm("portfolioEntryPlanningPackage").id', '@allocatedActorForm("followPackageDates").id', '@allocatedActorForm("startDate").id', '@allocatedActorForm("endDate").id');
 
                         // Initialization
                         currentYear = new Date().getFullYear();
                         $('#year-picker').html(currentYear);
                         $('#monthAllocations').children().hide();
-                        showOrCreateMonthAllocation(currentYear);
+                        showOrCreateMonthAllocation(currentYear, '@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}');
 
                         if (!$('#@allocatedActorForm("monthlyAllocated").id').prop('checked')) {
                             $('#year-picker-block').hide();

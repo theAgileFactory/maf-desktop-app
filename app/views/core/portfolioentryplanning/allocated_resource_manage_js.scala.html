@@ -59,23 +59,23 @@
         }
     }
 
-    function previousYearAction() {
+    function previousYearAction(daysInputId) {
         var yearPicker = $('#year-picker');
         var currentYear = +yearPicker.html();
         yearPicker.html(currentYear - 1);
         $('#monthAllocations_'+currentYear).parent().hide();
-        showOrCreateMonthAllocation(currentYear - 1);
+        showOrCreateMonthAllocation(currentYear - 1, daysInputId);
     }
 
-    function nextYearAction() {
+    function nextYearAction(daysInputId) {
         var yearPicker = $('#year-picker');
         var currentYear = +yearPicker.html();
         yearPicker.html(currentYear + 1);
         $('#monthAllocations_'+currentYear).parent().hide();
-        showOrCreateMonthAllocation(currentYear + 1);
+        showOrCreateMonthAllocation(currentYear + 1, daysInputId);
     }
 
-    function showOrCreateMonthAllocation(year) {
+    function showOrCreateMonthAllocation(year, daysInputId) {
         if (document.getElementById('monthAllocations_'+year)) {
             $('#monthAllocations_'+year).parent().show();
         } else {
@@ -84,7 +84,9 @@
             newYearDiv.children().first().attr('id', 'monthAllocations_' + year);
             newYearDiv.find('[name$=year]').val(year);
             recomputeIdsAndNames();
-            newYearDiv.find('[id$=AllocationValue]').change(recomputeDays);
+            newYearDiv.find('[id$=AllocationValue]').change(function() {
+                recomputeDays(daysInputId);
+            });
             newYearDiv.show();
         }
     }

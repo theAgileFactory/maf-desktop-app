@@ -17,29 +17,22 @@
  */
 package utils.table;
 
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.Date;
-
 import constants.IMafConstants;
-import controllers.routes;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
-import framework.utils.FilterConfig.SortStatusType;
-import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.utils.formats.BooleanFormatter;
-import framework.utils.formats.DateFormatter;
-import framework.utils.formats.NumberFormatter;
-import framework.utils.formats.ObjectFormatter;
-import framework.utils.formats.StringFormatFormatter;
+import framework.utils.formats.*;
 import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntryPlanningPackage;
+
+import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.Date;
 
 /**
  * A portfolio entry resource plan allocated actor list view is used to display
@@ -133,84 +126,66 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                     setIdFieldName("id");
 
                     addColumn("actor", "actor", "object.allocated_resource.actor.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("actor", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
-                        @Override
-                        public String apply(PortfolioEntryResourcePlanAllocatedActorListView portfolioEntryResourcePlanAllocatedActorListView, Object value) {
-                            return views.html.modelsparts.display_actor.render(portfolioEntryResourcePlanAllocatedActorListView.actor).body();
-                        }
-                    });
+                    setJavaColumnFormatter("actor", (portfolioEntryResourcePlanAllocatedActorListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryResourcePlanAllocatedActorListView.actor).body());
                     setColumnValueCssClass("actor", "rowlink-skip");
 
                     addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<>());
 
                     addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("currency", new ObjectFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("currency", new ObjectFormatter<>());
 
                     addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("days", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("days", new NumberFormatter<>());
 
                     addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("dailyRate", new NumberFormatter<>());
 
                     addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("forecastDays", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("forecastDays", new NumberFormatter<>());
 
                     addColumn("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<>());
 
                     addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("planningPackage", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
-                        @Override
-                        public String apply(PortfolioEntryResourcePlanAllocatedActorListView portfolioEntryResourcePlanAllocatedActorListView, Object value) {
-                            return views.html.modelsparts.display_portfolio_entry_planning_package
-                                    .render(portfolioEntryResourcePlanAllocatedActorListView.planningPackage).body();
-                        }
-                    });
+                    setJavaColumnFormatter("planningPackage", (portfolioEntryResourcePlanAllocatedActorListView, value) -> views.html.modelsparts.display_portfolio_entry_planning_package
+                            .render(portfolioEntryResourcePlanAllocatedActorListView.planningPackage).body());
                     setColumnValueCssClass("planningPackage", "rowlink-skip");
 
                     addColumn("followPackageDates", "followPackageDates", "object.allocated_resource.follow_package_dates.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("followPackageDates", new BooleanFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("followPackageDates", new BooleanFormatter<>());
 
                     addColumn("startDate", "startDate", "object.allocated_resource.start_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("startDate", new DateFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("startDate", new DateFormatter<>());
 
                     addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("endDate", new DateFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("endDate", new DateFormatter<>());
 
                     addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isConfirmed", new BooleanFormatter<PortfolioEntryResourcePlanAllocatedActorListView>());
+                    setJavaColumnFormatter("isConfirmed", new BooleanFormatter<>());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedActor.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryResourcePlanAllocatedActorListView>(
-                            IMafConstants.EDIT_URL_FORMAT, new StringFormatFormatter.Hook<PortfolioEntryResourcePlanAllocatedActorListView>() {
-                        @Override
-                        public String convert(PortfolioEntryResourcePlanAllocatedActorListView portfolioEntryResourcePlanAllocatedActorListView) {
-                            return controllers.core.routes.PortfolioEntryPlanningController
-                                    .manageAllocatedActor(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId,
-                                            portfolioEntryResourcePlanAllocatedActorListView.id)
-                                    .url();
-                        }
-                    }));
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<>(
+                            IMafConstants.EDIT_URL_FORMAT, portfolioEntryResourcePlanAllocatedActorListView -> controllers.core.routes.PortfolioEntryPlanningController
+                            .manageAllocatedActor(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId,
+                                    portfolioEntryResourcePlanAllocatedActorListView.id)
+                            .url()));
                     setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                     addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("removeActionLink", new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
-                        @Override
-                        public String apply(PortfolioEntryResourcePlanAllocatedActorListView portfolioEntryResourcePlanAllocatedActorListView, Object value) {
-                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                    Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.core.routes.PortfolioEntryPlanningController
-                                    .deleteAllocatedActor(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId,
-                                            portfolioEntryResourcePlanAllocatedActorListView.id)
-                                    .url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                        }
+                    setJavaColumnFormatter("removeActionLink", (portfolioEntryResourcePlanAllocatedActorListView, value) -> {
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = controllers.core.routes.PortfolioEntryPlanningController
+                                .deleteAllocatedActor(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId,
+                                        portfolioEntryResourcePlanAllocatedActorListView.id)
+                                .url();
+                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     });
                     setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
@@ -277,9 +252,8 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
         this.currency = allocatedActor.currency;
         this.days = allocatedActor.days;
         this.dailyRate = allocatedActor.dailyRate;
-        this.forecastDays = allocatedActor.forecastDays != null ? allocatedActor.forecastDays : allocatedActor.days;
+        this.forecastDays = allocatedActor.forecastDays;
         this.forecastDailyRate = allocatedActor.forecastDailyRate != null ? allocatedActor.forecastDailyRate : allocatedActor.dailyRate;
-
     }
 
 }
