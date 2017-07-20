@@ -1045,9 +1045,31 @@ public class RoadmapController extends Controller {
 
     public Result simulatorCapacityForecastActorsCellDetailsFragment(Long actorId, Integer year, Integer month) {
 
+        JsonNode idsAsJson = Json.parse(session("roadmap.selected.rows"));
+
+        ArrayList<Long> ids = new ArrayList<>();
+        for(JsonNode id: idsAsJson) {
+            ids.add(id.asLong());
+        }
+
         Actor actor = ActorDao.getActorById(actorId);
 
         List<PortfolioEntryResourcePlanAllocatedActor> allocations = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByActorAndActiveAndArchived(actorId, false, true);
+
+        // Filter selected initiatives only
+        allocations = allocations
+                .stream()
+                .filter(
+                    allocation -> ids.contains(
+                        allocation.portfolioEntryResourcePlan.lifeCycleInstancePlannings
+                                .stream()
+                                .filter(planning -> !planning.isFrozen)
+                                .findFirst()
+                                .get()
+                                .lifeCycleInstance.portfolioEntry.id
+                    )
+                )
+                .collect(Collectors.toList());
 
         Map<Long, ActorCapacityDetails> capacityDetailsRows = new HashMap<>();
 
