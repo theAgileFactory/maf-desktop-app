@@ -152,25 +152,50 @@ public class PortfolioEntryStatusReportingController extends Controller {
      * Export the actor allocation.
      * 
      * @param id
-     *            the actor id
+     *            the initiative id
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result exportStatusReport(Long id) {
+    public Promise<Result> exportStatusReportAsExcel(Long id) {
 
-        Pair<String, Format> reportNameAndFormat = getReportStatusTemplateNameAndFormat();
+        return Promise.promise(() -> {
 
-        Reporting report = ReportingDao.getReportingByTemplate(reportNameAndFormat.getLeft());
+           String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-        // construct the report parameters
-        Map<String, Object> reportParameters = new HashMap<String, Object>();
-        reportParameters.put("REPORT_" + reportNameAndFormat.getLeft().toUpperCase() + "_PORTFOLIO_ENTRY", id);
+           List<PortfolioEntryReport> reports = PortfolioEntryReportDao.getPEReportAsListByPE(id);
 
-        getReportingUtils().generate(ctx(), report, getI18nMessagesPlugin().getCurrentLanguage().getCode(), reportNameAndFormat.getRight(), reportParameters);
+           List<PortfolioEntryReportListView> listView = reports.stream().map(PortfolioEntryReportListView::new).collect(Collectors.toList());
 
-        Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
+           Set<String> columnsToHide = new HashSet<>();
+           columnsToHide.add("editActionLink");
+           columnsToHide.add("removeActionLink");
 
-        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(id, 0, 0, 0, false, false));
+           Table<PortfolioEntryReportListView> table = this.getTableProvider().get().portfolioEntryReport.templateTable
+                   .fill(listView, columnsToHide);
+
+           final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
+
+           final String fileName = String.format("statusReportsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
+           final String successTitle = Msg.get("excel.export.success.title");
+           final String successMessage = Msg.get("excel.export.success.message", fileName);
+           final String failureTitle = Msg.get("excel.export.failure.title");
+           final String failureMessage = Msg.get("excel.export.failure.message");
+
+           getSysAdminUtils().scheduleOnce(false, "Status Reports Excel Report", Duration.create(0, TimeUnit.MILLISECONDS), () -> {
+               try {
+                   OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
+                   IOUtils.copy(new ByteArrayInputStream(excelFile), out);
+                   getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle, successMessage,
+                           controllers.my.routes.MyPersonalStorage.index().url());
+               } catch (IOException e) {
+                   log.error("Unable to export the excel file", e);
+                   getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                           routes.PortfolioEntryStatusReportingController.registers(id, 1, 1, 1, false, false).url());
+               }
+           });
+
+           return ok(Json.newObject());
+       });
     }
 
     /**
@@ -281,11 +306,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Table<PortfolioEntryRiskListView> filledIssuesTable = this.getTableProvider().get().portfolioEntryRisk.templateTable
                 .fill(portfolioEntryIssuesListView, hideColumnsForIssue);
 
-        // get the report in order to know if it is active
-        Reporting report = ReportingDao.getReportingByTemplate(getReportStatusTemplateNameAndFormat().getLeft());
-
         return ok(views.html.core.portfolioentrystatusreporting.registers.render(portfolioEntry, filledReportsTable, reportsPagination, filledRisksTable,
-                risksPagination, filledIssuesTable, issuesPagination, viewAllRisks, viewAllIssues, report.isActive, agreementLinks, agreementItem));
+                risksPagination, filledIssuesTable, issuesPagination, viewAllRisks, viewAllIssues, agreementLinks, agreementItem));
     }
 
     /**
@@ -363,62 +385,59 @@ public class PortfolioEntryStatusReportingController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Promise<Result> exportEventsAsExcel(final Long id) {
 
-        return Promise.promise(new Function0<Result>() {
-            @Override
-            public Result apply() throws Throwable {
+        return Promise.promise(() -> {
 
-                try {
+            try {
 
-                    // Get the current user
-                    final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+                // Get the current user
+                final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-                    // construct the table
-                    FilterConfig<PortfolioEntryEventListView> filterConfig = getTableProvider().get().portfolioEntryEvent.filterConfig.getCurrent(uid,
-                            request());
+                // construct the table
+                FilterConfig<PortfolioEntryEventListView> filterConfig = getTableProvider().get().portfolioEntryEvent.filterConfig.getCurrent(uid,
+                        request());
 
-                    ExpressionList<PortfolioEntryEvent> expressionList = filterConfig
-                            .updateWithSearchExpression(PortfolioEntryEventDao.getPEEventAsExprByPE(id));
-                    filterConfig.updateWithSortExpression(expressionList);
+                ExpressionList<PortfolioEntryEvent> expressionList = filterConfig
+                        .updateWithSearchExpression(PortfolioEntryEventDao.getPEEventAsExprByPE(id));
+                filterConfig.updateWithSortExpression(expressionList);
 
-                    List<PortfolioEntryEventListView> portfolioEntryEventListView = new ArrayList<PortfolioEntryEventListView>();
-                    for (PortfolioEntryEvent portfolioEntryEvent : expressionList.findList()) {
-                        portfolioEntryEventListView.add(new PortfolioEntryEventListView(portfolioEntryEvent));
-                    }
-
-                    Table<PortfolioEntryEventListView> table = getTableProvider().get().portfolioEntryEvent.templateTable
-                            .fillForFilterConfig(portfolioEntryEventListView, filterConfig.getColumnsToHide());
-
-                    final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
-
-                    final String fileName = String.format("eventsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
-                    final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName);
-                    final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message");
-
-                    // Execute asynchronously
-                    getSysAdminUtils().scheduleOnce(false, "Events Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
-                                IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
-                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
-                            } catch (IOException e) {
-                                log.error("Unable to export the excel file", e);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
-                                        controllers.core.routes.PortfolioEntryStatusReportingController.events(id).url());
-                            }
-                        }
-                    });
-
-                    return ok(Json.newObject());
-
-                } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+                List<PortfolioEntryEventListView> portfolioEntryEventListView = new ArrayList<PortfolioEntryEventListView>();
+                for (PortfolioEntryEvent portfolioEntryEvent : expressionList.findList()) {
+                    portfolioEntryEventListView.add(new PortfolioEntryEventListView(portfolioEntryEvent));
                 }
+
+                Table<PortfolioEntryEventListView> table = getTableProvider().get().portfolioEntryEvent.templateTable
+                        .fillForFilterConfig(portfolioEntryEventListView, filterConfig.getColumnsToHide());
+
+                final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
+
+                final String fileName = String.format("eventsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
+                final String successTitle = Msg.get("excel.export.success.title");
+                final String successMessage = Msg.get("excel.export.success.message", fileName);
+                final String failureTitle = Msg.get("excel.export.failure.title");
+                final String failureMessage = Msg.get("excel.export.failure.message");
+
+                // Execute asynchronously
+                getSysAdminUtils().scheduleOnce(false, "Events Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
+                            IOUtils.copy(new ByteArrayInputStream(excelFile), out);
+                            getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                    successMessage, controllers.my.routes.MyPersonalStorage.index().url());
+                        } catch (IOException e) {
+                            log.error("Unable to export the excel file", e);
+                            getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                    routes.PortfolioEntryStatusReportingController.events(id).url());
+                        }
+                    }
+                });
+
+                return ok(Json.newObject());
+
+            } catch (Exception e) {
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         });
 
@@ -1462,23 +1481,6 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         return Pair.of(table, pagination);
 
-    }
-
-    /**
-     * Get the template name and format for the status report.
-     * 
-     * It is represented by the standard report in PDF if the corresponding
-     * preference is empty, or a custom report else.
-     */
-    private Pair<String, Format> getReportStatusTemplateNameAndFormat() {
-        String customTemplateNameAndFormat = getPreferenceManagerPlugin()
-                .getPreferenceValueAsString(IMafConstants.CUSTOM_REPORT_TEMPLATE_FOR_STATUS_REPORT_PREFERENCE);
-        if (customTemplateNameAndFormat == null || customTemplateNameAndFormat.equals("")) {
-            return Pair.of("status_report", Format.PDF);
-        } else {
-            String[] tmp = customTemplateNameAndFormat.split(",");
-            return Pair.of(tmp[0], Format.valueOf(tmp[1]));
-        }
     }
 
     /**

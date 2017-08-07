@@ -25,7 +25,6 @@
     issuesPagination: framework.utils.Pagination[models.pmo.PortfolioEntryRisk], 
     viewAllRisks: Boolean,
     viewAllIssues: Boolean,
-    isActiveReport: Boolean,
     agreementLinks: List[services.datasyndication.models.DataSyndicationAgreementLink],
     agreementItem: services.datasyndication.models.DataSyndicationAgreementItem
 )
@@ -51,11 +50,9 @@
         <div class="panel-heading">
             &nbsp;
             <div class="pull-right">
-                @if(isActiveReport) {
-                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)"><span class="fa fa-download fa-lg"></span></a>
-                    &nbsp;
-                }
+                <a href="#" id="exportReportsLink" onclick="exportReportsAsExcel()"><span class="fa fa-download fa-lg"></span></a>
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                    &nbsp;
                     <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
@@ -131,4 +128,21 @@
         </div>
     
     </div>
+
+    <script>
+        function exportReportsAsExcel() {
+            var exportLink = $('#exportReportsLink');
+            exportLink.attr('disabled','disabled');
+            $.ajax({
+                type: "GET",
+                url: '@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReportAsExcel(portfolioEntry.id)'
+            })
+            .done(function(){
+                exportLink.removeAttr('disabled');
+            })
+            .fail(function(){
+                exportLink.removeAttr('disabled');
+            });
+        }
+    </script>
 }

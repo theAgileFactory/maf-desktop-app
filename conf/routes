@@ -355,7 +355,7 @@ GET    /portfolio-entry/allocated-competency/reallocate/report-balance/process c
 # Core: PortfolioEntryStatusReporting
 #-------------------
 
-GET    /portfolio-entry/status-report/export      controllers.core.PortfolioEntryStatusReportingController.exportStatusReport(id: Long)
+GET    /portfolio-entry/status-report/export      controllers.core.PortfolioEntryStatusReportingController.exportStatusReportAsExcel(id: Long)
 GET    /portfolio-entry/registers                 controllers.core.PortfolioEntryStatusReportingController.registers(id: Long, pageReports: Integer ?= 0, pageRisks: Integer ?= 0, pageIssues: Integer ?= 0, viewAllRisks: Boolean ?= false, viewAllIssues: Boolean ?= false)
 GET    /portfolio-entry/risk/view                 controllers.core.PortfolioEntryStatusReportingController.viewRisk(id: Long, riskId: Long)
 GET    /portfolio-entry/risk/delete               controllers.core.PortfolioEntryStatusReportingController.deleteRisk(id: Long, riskId: Long)
