@@ -242,6 +242,7 @@ object.filter_configuration.name.error=Name ist ein Pflichtfeld
 object.filter_configuration.delete.confirmation=Diesen Filter löschen?
 object.filter_configuration.stored_filters=Gespeicherte Filter
 
+object.filter_configuration.action.clear=Leeren
 object.filter_configuration.action.reload=Nachladen
 object.filter_configuration.action.save=Speichern
 object.filter_configuration.action.save_as=Speichern als

@@ -230,6 +230,7 @@ object.filter_configuration.name.error=The name should not be empty
 object.filter_configuration.delete.confirmation=Are you sure you want to delete this filter?
 object.filter_configuration.stored_filters=Stored filters
 
+object.filter_configuration.action.clear=Clear
 object.filter_configuration.action.reload=Reload
 object.filter_configuration.action.save=Save
 object.filter_configuration.action.save_as=Save as
