@@ -29,6 +29,7 @@ POST    /filter-configuration/change            framework.utils.FilterConfigCont
 POST    /filter-configuration/edit              framework.utils.FilterConfigController.filterConfigurationEdit()
 POST    /filter-configuration/delete            framework.utils.FilterConfigController.filterConfigurationDelete()
 POST    /filter-configuration/share             framework.utils.FilterConfigController.filterConfigurationShare()
+POST    /filter-configuration/clear             framework.utils.FilterConfigController.filterConfigurationClear()
 GET     /filter-configuration/principal/search  framework.utils.FilterConfigController.filterConfigurationSearchPrincipal()
 
 #Application controller

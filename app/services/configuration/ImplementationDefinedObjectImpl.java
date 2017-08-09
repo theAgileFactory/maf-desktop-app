@@ -24,6 +24,7 @@ import controllers.Assets.Asset;
 import dao.finance.CurrencyDAO;
 import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.database.IDatabaseDependencyService;
+import framework.utils.routes;
 import models.delivery.Deliverable;
 import models.pmo.Actor;
 import models.pmo.OrgUnit;
@@ -133,6 +134,11 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
     @Override
     public Call getRouteForFilterConfigurationSearchPrincipal() {
         return framework.utils.routes.FilterConfigController.filterConfigurationSearchPrincipal();
+    }
+
+    @Override
+    public Call getRouteForFilterConfigurationClear() {
+        return routes.FilterConfigController.filterConfigurationClear();
     }
 
     @Override
