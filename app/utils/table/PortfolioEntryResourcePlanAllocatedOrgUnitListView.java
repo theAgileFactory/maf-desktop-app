@@ -67,7 +67,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                 {
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
                     addColumnConfiguration("orgUnit", "orgUnit.id", "object.allocated_resource.org_unit.label",
-                            new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[] {"name"}), true, false, SortStatusType.UNSORTED);
+                            new SelectFilterComponent(orgUnits.getValues().isEmpty() ? null : orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[] {"name"}), true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
                             new AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, SortStatusType.UNSORTED);
