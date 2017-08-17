@@ -2432,6 +2432,7 @@ core.portfolio_entry_governance.milestone.view.status.rejected=Etape rejetée
 core.portfolio_entry_governance.milestone.view.status.pending=Etape en attente
 core.portfolio_entry_governance.milestone.view.empty=Il n''existe aucun détail pour ce jalon.
 core.portfolio_entry_governance.milestone.view.panel.details.title=Détails
+core.portfolio_entry_governance.milestone.view.panel.details.delete.confirmation.message=Êtes-vous sûr(e) de vouloir supprimer cette étape ?
 core.portfolio_entry_governance.milestone.view.panel.approvers.title=Approbateurs
 core.portfolio_entry_governance.milestone.view.panel.budget.title=Etat du budget au {0}
 core.portfolio_entry_governance.milestone.view.panel.resources.title=Etat des ressources au {0}

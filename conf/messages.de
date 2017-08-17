@@ -2426,6 +2426,7 @@ core.portfolio_entry_governance.milestone.view.status.rejected=Abgelehnt Aufsich
 core.portfolio_entry_governance.milestone.view.status.pending=Ausstehend Aufsichtsratsbeschluss
 core.portfolio_entry_governance.milestone.view.empty=Kein Details
 core.portfolio_entry_governance.milestone.view.panel.details.title=Details
+core.portfolio_entry_governance.milestone.view.panel.details.delete.confirmation.message=Aufsichtsratsbeschluss löschen ?
 core.portfolio_entry_governance.milestone.view.panel.approvers.title=Genehmiger
 core.portfolio_entry_governance.milestone.view.panel.budget.title=Budgetstatus am {0}
 core.portfolio_entry_governance.milestone.view.panel.resources.title=Ressourcenstatus am {0}

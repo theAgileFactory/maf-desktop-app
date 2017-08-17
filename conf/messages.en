@@ -2415,6 +2415,7 @@ core.portfolio_entry_governance.milestone.view.status.rejected=Rejected gate
 core.portfolio_entry_governance.milestone.view.status.pending=Pending gate
 core.portfolio_entry_governance.milestone.view.empty=There is no details for this milestone.
 core.portfolio_entry_governance.milestone.view.panel.details.title=Details
+core.portfolio_entry_governance.milestone.view.panel.details.delete.confirmation.message=Are you sure you want to delete this gate?
 core.portfolio_entry_governance.milestone.view.panel.approvers.title=Approvers
 core.portfolio_entry_governance.milestone.view.panel.budget.title=Budget status at {0}
 core.portfolio_entry_governance.milestone.view.panel.resources.title=Resources status at {0}

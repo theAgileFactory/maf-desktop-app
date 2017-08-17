@@ -233,12 +233,66 @@ public abstract class LifeCycleMilestoneDao {
     }
 
     /**
+     * delete a life cycle milestone instance and rollback the planning
+     *
+     * @param lifecycleMilestoneInstanceId the life cycle milestone instance to be deleted
+     * @param budgetTrackingService the budget tracking service
+     */
+    public static void doDelete(Long lifecycleMilestoneInstanceId, IBudgetTrackingService budgetTrackingService) {
+
+        LifeCycleMilestoneInstance lifeCycleMilestoneInstance = getLCMilestoneInstanceById(lifecycleMilestoneInstanceId);
+
+        PortfolioEntry portfolioEntry = lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry;
+
+        /*
+         * update the plannings
+         */
+
+        LifeCycleInstancePlanning currentPlanning = lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.activeLifeCycleInstance
+                .getCurrentLifeCycleInstancePlanning();
+
+        // recompute the budget tracking for resources
+        if (budgetTrackingService.isActive()) {
+            budgetTrackingService.recomputeAllBugdetAndForecastFromResource(currentPlanning);
+        }
+
+        List<LifeCycleMilestoneInstance> approvedLifecycleMilestoneInstances = lifeCycleMilestoneInstance.lifeCycleInstance.getApprovedLifecycleMilestoneInstances();
+
+        // update the lifecycle instance
+        if (!lifeCycleMilestoneInstance.lifeCycleInstance.isConcept && approvedLifecycleMilestoneInstances.isEmpty()) {
+            lifeCycleMilestoneInstance.lifeCycleInstance.isConcept = true;
+        }
+
+        // update the portfolio entry
+        if (lifeCycleMilestoneInstance.id.equals(portfolioEntry.lastApprovedLifeCycleMilestoneInstance.id)) {
+            if (approvedLifecycleMilestoneInstances.isEmpty()) {
+                portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
+            } else {
+                portfolioEntry.lastApprovedLifeCycleMilestoneInstance = approvedLifecycleMilestoneInstances
+                        .stream()
+                        .sorted((m1, m2) -> m2.passedDate.compareTo(m1.passedDate))
+                        .findFirst()
+                        .get();
+            }
+            portfolioEntry.save();
+        }
+
+        lifeCycleMilestoneInstance.lifeCycleInstance.save();
+
+        // Delete the lifecycle milestone instance
+        lifeCycleMilestoneInstance.doDelete();
+        createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
+
+
+    }
+
+    /**
      * Process the life cycle milestone instance to pass it.<br/>
      * -set the isPassed attribute to true and assign the status type<br/>
      * -assign the current portfolio entry budget and create a new one<br/>
      * -freeze all plannings and create a new one<br/>
      * -if the milestone is approved, set the is concept flag to false<br/>
-     * 
+     *
      * @param lifeCycleMilestoneInstanceId
      *            the milestone instance to pass
      * @param lifeCycleMilestoneInstanceStatusType
@@ -300,30 +354,32 @@ public abstract class LifeCycleMilestoneDao {
 
         }
 
-        /*
-         * update the plannings
-         */
+        createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
 
+        return lifeCycleMilestoneInstance;
+
+    }
+
+    private static void createNextPlanningFromPreviousOne(LifeCycleMilestoneInstance lifeCycleMilestoneInstance, LifeCycleInstancePlanning oldPlanning) {
         // set all plannings to frozen
-        for (LifeCycleInstancePlanning planning : lifeCycleMilestoneInstance.lifeCycleInstance.lifeCycleInstancePlannings) {
-            planning.doFrozen();
-        }
+        lifeCycleMilestoneInstance.lifeCycleInstance.lifeCycleInstancePlannings.forEach(LifeCycleInstancePlanning::doFrozen);
 
         // create the new planning
         LifeCycleInstancePlanning planning = new LifeCycleInstancePlanning(lifeCycleMilestoneInstance.lifeCycleInstance);
-        if (currentPlanning.portfolioEntryBudget != null && currentPlanning.portfolioEntryResourcePlan != null) {
+        if (oldPlanning.portfolioEntryBudget != null && oldPlanning.portfolioEntryResourcePlan != null) {
             Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew = new HashMap<>();
-            planning.portfolioEntryResourcePlan = currentPlanning.portfolioEntryResourcePlan.cloneInDB(allocatedResourcesMapOldToNew);
-            planning.portfolioEntryBudget = currentPlanning.portfolioEntryBudget.cloneInDB(allocatedResourcesMapOldToNew);
+            planning.portfolioEntryResourcePlan = oldPlanning.portfolioEntryResourcePlan.cloneInDB(allocatedResourcesMapOldToNew);
+            planning.portfolioEntryBudget = oldPlanning.portfolioEntryBudget.cloneInDB(allocatedResourcesMapOldToNew);
 
             // reassign the new allocated resources to existing work order
-            for (WorkOrder workOrder : lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.workOrders) {
-                if (workOrder.resourceObjectType != null) {
-                    workOrder.resourceObjectId = allocatedResourcesMapOldToNew.get(workOrder.resourceObjectType).get(workOrder.resourceObjectId);
-                    workOrder.save();
-                }
-            }
-           
+            lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.workOrders
+                    .stream()
+                    .filter(workOrder -> workOrder.resourceObjectType != null)
+                    .forEach(workOrder -> {
+                        workOrder.resourceObjectId = allocatedResourcesMapOldToNew.get(workOrder.resourceObjectType).get(workOrder.resourceObjectId);
+                        workOrder.save();
+            });
+
             // reassign the new allocated resources in custom attribute tables
             update_custom_attribute_tables(allocatedResourcesMapOldToNew);
         }
@@ -343,8 +399,10 @@ public abstract class LifeCycleMilestoneDao {
              * Check if the milestone for the portfolio entry has an approved
              * milestone instance, meaning the milestone is passed and approved.
              */
-            boolean hasApprovedInstancesForMilestoneOfPortfolioEntry = Ebean.find(LifeCycleMilestoneInstance.class).where().eq("deleted", false)
-                    .eq("lifeCycleMilestone.id", milestone.id).eq("isPassed", true)
+            boolean hasApprovedInstancesForMilestoneOfPortfolioEntry = Ebean.find(LifeCycleMilestoneInstance.class).where()
+                    .eq("deleted", false)
+                    .eq("lifeCycleMilestone.id", milestone.id)
+                    .eq("isPassed", true)
                     .eq("lifeCycleInstance.portfolioEntry.id", lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.id)
                     .eq("lifeCycleInstance.isActive", true).eq("lifeCycleMilestoneInstanceStatusType.isApproved", true).findRowCount() > 0;
 
@@ -356,11 +414,8 @@ public abstract class LifeCycleMilestoneDao {
                 plannedInstance.save();
             }
         }
-
-        return lifeCycleMilestoneInstance;
-
     }
-    
+
     private static void update_custom_attribute_tables(Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew)
     {
     	List<String> list = Arrays.asList(
@@ -378,8 +433,8 @@ public abstract class LifeCycleMilestoneDao {
     		 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdate(k,v,t));
     	 }
     	 
-    	 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdateSingleItemCustomAttribute(k,v));    	 
-    	 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdateMultiItemCustomAttribute(k,v));
+    	 allocatedResourcesMapOldToNew.forEach(LifeCycleMilestoneDao::doUpdateSingleItemCustomAttribute);
+    	 allocatedResourcesMapOldToNew.forEach(LifeCycleMilestoneDao::doUpdateMultiItemCustomAttribute);
     }
     
     private static void doUpdate( String objectType, Map<Long, Long> mapOldToNew, String tableName)

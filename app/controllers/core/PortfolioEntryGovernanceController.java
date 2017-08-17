@@ -298,6 +298,19 @@ public class PortfolioEntryGovernanceController extends Controller {
     }
 
     /**
+     * Delete a milestone instance
+     *
+     * @param id the portfolio entry id
+     * @param milestoneId the milestone id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteMilestone(Long id, Long milestoneId) {
+        LifeCycleMilestoneDao.doDelete(milestoneId, getBudgetTrackingService());
+        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.index(id));
+    }
+
+    /**
      * Form to request a milestone approval for a milestone.
      * 
      * @param id
