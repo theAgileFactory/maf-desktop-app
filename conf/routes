@@ -274,6 +274,7 @@ GET    /portfolio-entry/stakeholder/delete      controllers.core.PortfolioEntryS
 
 GET    /portfolio-entry/governance                         controllers.core.PortfolioEntryGovernanceController.index(id: Long)
 GET    /portfolio-entry/governance/milestone/view          controllers.core.PortfolioEntryGovernanceController.viewMilestone(id: Long, milestoneId: Long)
+GET    /portfolio-entry/governance/milestone/delete        controllers.core.PortfolioEntryGovernanceController.deleteMilestone(id: Long, milestoneId: Long)
 GET    /portfolio-entry/governance/milestone/request       controllers.core.PortfolioEntryGovernanceController.requestMilestone(id: Long, milestoneId: Long)
 POST   /portfolio-entry/governance/milestone/request       controllers.core.PortfolioEntryGovernanceController.processRequestMilestone()
 GET    /portfolio-entry/governance/planning/edit           controllers.core.PortfolioEntryGovernanceController.editPlanning(id: Long)
