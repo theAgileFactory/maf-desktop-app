@@ -1,5 +1,6 @@
 package services.tableprovider;
 
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.services.storage.IAttachmentManagerPlugin;
@@ -92,15 +93,16 @@ public class TableDefinitions {
 
     /**
      * Default constructor.
-     * 
-     * @param kpiService
+     *  @param kpiService
      *            the KPI service
      * @param i18nMessagesService
      *            the i18n messages service
      * @param attachmentManagerPlugin
      *            the attachment manager service
+     * @param iPreferenceManagerPlugin
+     *            the preference manager service
      */
-    public TableDefinitions(IKpiService kpiService, II18nMessagesPlugin i18nMessagesService, IAttachmentManagerPlugin attachmentManagerPlugin) {
+    public TableDefinitions(IKpiService kpiService, II18nMessagesPlugin i18nMessagesService, IAttachmentManagerPlugin attachmentManagerPlugin, IPreferenceManagerPlugin iPreferenceManagerPlugin) {
         this.actor = new ActorListView.TableDefinition(i18nMessagesService);
         this.actorType = new ActorTypeListView.TableDefinition();
         this.applicationBlock = new ApplicationBlockListView.TableDefinition(i18nMessagesService);
@@ -135,7 +137,7 @@ public class TableDefinitions {
         this.notification = new NotificationListView.TableDefinition();
         this.orgUnit = new OrgUnitListView.TableDefinition(i18nMessagesService);
         this.orgUnitType = new OrgUnitTypeListView.TableDefinition();
-        this.portfolioEntryBudgetLine = new PortfolioEntryBudgetLineListView.TableDefinition(i18nMessagesService);
+        this.portfolioEntryBudgetLine = new PortfolioEntryBudgetLineListView.TableDefinition(i18nMessagesService, iPreferenceManagerPlugin);
         this.portfolioEntryBudgetLineType = new PortfolioEntryBudgetLineTypeListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryDependency = new PortfolioEntryDependencyListView.TableDefinition();
         this.portfolioEntryDependencyType = new PortfolioEntryDependencyTypeListView.TableDefinition();

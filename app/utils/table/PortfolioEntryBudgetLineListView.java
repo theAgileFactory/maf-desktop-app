@@ -24,7 +24,6 @@ import constants.IMafConstants;
 import controllers.core.routes;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
@@ -53,8 +52,8 @@ public class PortfolioEntryBudgetLineListView {
 
         public Table<PortfolioEntryBudgetLineListView> templateTable;
 
-        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
-            this.templateTable = getTable(i18nMessagesPlugin);
+        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin, IPreferenceManagerPlugin iPreferenceManagerPlugin) {
+            this.templateTable = getTable(i18nMessagesPlugin, iPreferenceManagerPlugin);
         }
 
         /**
