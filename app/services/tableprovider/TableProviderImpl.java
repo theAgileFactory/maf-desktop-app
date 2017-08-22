@@ -1,15 +1,15 @@
 package services.tableprovider;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
 import framework.services.storage.IAttachmentManagerPlugin;
-import play.Configuration;
 import play.Logger;
 import play.inject.ApplicationLifecycle;
 import play.libs.F.Promise;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * The service that provides the tables.
@@ -27,13 +27,13 @@ public class TableProviderImpl implements ITableProvider {
 
     private IAttachmentManagerPlugin attachmentManagerPlugin;
 
+    private IPreferenceManagerPlugin preferenceManagerPlugin;
+
     /**
      * Initialize the service.
      * 
      * @param lifecycle
      *            the Play life cycle service
-     * @param configuration
-     *            the Play configuration service
      * @param kpiService
      *            the KPI service
      * @param i18nMessagesPlugin
@@ -42,14 +42,15 @@ public class TableProviderImpl implements ITableProvider {
      *            the attachment manager service
      */
     @Inject
-    public TableProviderImpl(ApplicationLifecycle lifecycle, Configuration configuration, IKpiService kpiService, II18nMessagesPlugin i18nMessagesPlugin,
-            IAttachmentManagerPlugin attachmentManagerPlugin) {
+    public TableProviderImpl(ApplicationLifecycle lifecycle, IKpiService kpiService, II18nMessagesPlugin i18nMessagesPlugin,
+            IAttachmentManagerPlugin attachmentManagerPlugin, IPreferenceManagerPlugin preferenceManagerPlugin) {
 
         Logger.info("SERVICE>>> TableProviderImpl starting...");
 
         this.kpiService = kpiService;
         this.i18nMessagesPlugin = i18nMessagesPlugin;
         this.attachmentManagerPlugin = attachmentManagerPlugin;
+        this.preferenceManagerPlugin = preferenceManagerPlugin;
         this.tableDefinitions = null;
 
         lifecycle.addStopHook(() -> {
@@ -64,7 +65,7 @@ public class TableProviderImpl implements ITableProvider {
     @Override
     public TableDefinitions get() {
         if (this.tableDefinitions == null) {
-            this.tableDefinitions = new TableDefinitions(this.getKpiService(), this.getI18nMessagesPlugin(), this.getAttachmentManagerPlugin());
+            this.tableDefinitions = new TableDefinitions(this.getKpiService(), this.getI18nMessagesPlugin(), this.getAttachmentManagerPlugin(), this.getPreferenceManagerPlugin());
         }
         return this.tableDefinitions;
     }
@@ -85,7 +86,7 @@ public class TableProviderImpl implements ITableProvider {
         this.get().portfolioEntryEvent.templateTable = this.get().portfolioEntryEvent.getTable(this.getI18nMessagesPlugin());
         this.get().deliverable.templateTable = this.get().deliverable.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntry.templateTable = this.get().portfolioEntry.getTable(this.getKpiService(), this.getI18nMessagesPlugin());
-        this.get().portfolioEntryBudgetLine.templateTable = this.get().portfolioEntryBudgetLine.getTable(this.getI18nMessagesPlugin());
+        this.get().portfolioEntryBudgetLine.templateTable = this.get().portfolioEntryBudgetLine.getTable(this.getI18nMessagesPlugin(), this.getPreferenceManagerPlugin());
         this.get().portfolioEntryBudgetLineType.templateTable = this.get().portfolioEntryBudgetLineType.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntryReport.templateTable = this.get().portfolioEntryReport.getTable(this.getI18nMessagesPlugin());
         this.get().iteration.templateTable = this.get().iteration.getTable(this.getI18nMessagesPlugin());
@@ -137,4 +138,7 @@ public class TableProviderImpl implements ITableProvider {
         return this.attachmentManagerPlugin;
     }
 
+    public IPreferenceManagerPlugin getPreferenceManagerPlugin() {
+        return preferenceManagerPlugin;
+    }
 }
