@@ -17,9 +17,6 @@
  */
 package utils.table;
 
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-
 import constants.IMafConstants;
 import controllers.core.routes;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -34,6 +31,9 @@ import models.finance.Currency;
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryBudgetLineType;
 import models.pmo.PortfolioEntry;
+
+import java.math.BigDecimal;
+import java.text.MessageFormat;
 
 /**
  * A portfolio entry budget line list view is used to display an portfolio entry
@@ -81,8 +81,9 @@ public class PortfolioEntryBudgetLineListView {
                     setJavaColumnFormatter("currency", new ObjectFormatter<>());
 
                     addSummableColumn("amount", "amount", "object.portfolio_entry_budget_line.amount.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("amount", new NumberFormatter<>(preferenceManagerPlugin.getPreferenceValueAsString(IMafConstants.FINANCIAL_NUMBERS_FORMAT_PREFERENCE)));
-                    setColumnCssClass("amount", "text-right");
+                    setJavaColumnFormatter("amount", new NumberFormatter<>(NumberFormatter.CURRENCY_PATTERN));
+                    setColumnValueCssClass("amount", "text-right");
+                    setColumnHeaderCssClass("amount", "text-right");
 
                     addColumn("portfolioEntryBudgetLineType", "portfolioEntryBudgetLineType", "object.portfolio_entry_budget_line.type.label",
                             Table.ColumnDef.SorterType.NONE);

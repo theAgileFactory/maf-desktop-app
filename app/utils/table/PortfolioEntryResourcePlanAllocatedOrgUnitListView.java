@@ -17,10 +17,6 @@
  */
 package utils.table;
 
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.Date;
-
 import constants.IMafConstants;
 import controllers.routes;
 import dao.pmo.OrgUnitDao;
@@ -32,6 +28,10 @@ import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntryPlanningPackage;
+
+import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.Date;
 
 /**
  * A portfolio entry resource plan allocated org unit list view is used to
@@ -128,14 +128,18 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("currency", new ObjectFormatter<>());
 
-                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
+                    addSummableColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<>());
+                    setColumnHeaderCssClass("days", "text-right");
+                    setColumnValueCssClass("days", "text-right");
 
                     addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("dailyRate", new NumberFormatter<>());
 
-                    addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
+                    addSummableColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("forecastDays", new NumberFormatter<>());
+                    setColumnHeaderCssClass("forecastDays", "text-right");
+                    setColumnValueCssClass("forecastDays", "text-right");
 
                     addColumn("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
                             Table.ColumnDef.SorterType.NONE);

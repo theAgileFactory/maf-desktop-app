@@ -17,12 +17,9 @@
  */
 package utils.table;
 
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-
 import constants.IMafConstants;
+import controllers.core.routes;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.NumberFormatter;
@@ -30,6 +27,9 @@ import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.finance.BudgetBucketLine;
 import models.finance.Currency;
+
+import java.math.BigDecimal;
+import java.text.MessageFormat;
 
 /**
  * A budget bucket line list view is used to display a line of a budget bucket
@@ -71,49 +71,38 @@ public class BudgetBucketLineListView {
                     setIdFieldName("id");
 
                     addColumn("refId", "refId", "object.budget_bucket_line.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("refId", new ObjectFormatter<BudgetBucketLineListView>());
+                    setJavaColumnFormatter("refId", new ObjectFormatter<>());
 
                     addColumn("name", "name", "object.budget_bucket_line.name.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("name", new ObjectFormatter<BudgetBucketLineListView>());
+                    setJavaColumnFormatter("name", new ObjectFormatter<>());
 
                     addColumn("isOpex", "isOpex", "object.budget_bucket_line.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isOpex", new IColumnFormatter<BudgetBucketLineListView>() {
-                        @Override
-                        public String apply(BudgetBucketLineListView budgetBucketLineListView, Object value) {
-                            return views.html.modelsparts.display_is_opex.render(budgetBucketLineListView.isOpex).body();
-                        }
-                    });
+                    setJavaColumnFormatter("isOpex", (budgetBucketLineListView, value) -> views.html.modelsparts.display_is_opex.render(budgetBucketLineListView.isOpex).body());
 
                     addColumn("currency", "currency", "object.budget_bucket_line.currency.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("currency", new ObjectFormatter<BudgetBucketLineListView>());
+                    setJavaColumnFormatter("currency", new ObjectFormatter<>());
 
-                    addColumn("amount", "amount", "object.budget_bucket_line.amount.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("amount", new NumberFormatter<BudgetBucketLineListView>());
+                    addSummableColumn("amount", "amount", "object.budget_bucket_line.amount.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("amount", new NumberFormatter<>(NumberFormatter.CURRENCY_PATTERN));
+                    setColumnHeaderCssClass("amount", "text-right");
+                    setColumnValueCssClass("amount", "text-right");
 
                     addCustomAttributeColumns(i18nMessagesPlugin, BudgetBucketLine.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<BudgetBucketLineListView>(IMafConstants.EDIT_URL_FORMAT,
-                            new StringFormatFormatter.Hook<BudgetBucketLineListView>() {
-                        @Override
-                        public String convert(BudgetBucketLineListView budgetBucketLineListView) {
-                            return controllers.core.routes.BudgetBucketController
-                                    .manageLine(budgetBucketLineListView.budgetBucketId, budgetBucketLineListView.id).url();
-                        }
-                    }));
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<>(IMafConstants.EDIT_URL_FORMAT,
+                            (StringFormatFormatter.Hook<BudgetBucketLineListView>) budgetBucketLineListView -> routes.BudgetBucketController
+                                    .manageLine(budgetBucketLineListView.budgetBucketId, budgetBucketLineListView.id).url()));
                     setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                     addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("removeActionLink", new IColumnFormatter<BudgetBucketLineListView>() {
-                        @Override
-                        public String apply(BudgetBucketLineListView budgetBucketLineListView, Object value) {
-                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                    Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.core.routes.BudgetBucketController
-                                    .deleteLine(budgetBucketLineListView.budgetBucketId, budgetBucketLineListView.id).url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                        }
+                    setJavaColumnFormatter("removeActionLink", (budgetBucketLineListView, value) -> {
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = routes.BudgetBucketController
+                                .deleteLine(budgetBucketLineListView.budgetBucketId, budgetBucketLineListView.id).url();
+                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     });
                     setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
