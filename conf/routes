@@ -161,6 +161,7 @@ GET    /request/milestone/list                   controllers.core.ProcessTransit
 GET    /request/milestone/process                controllers.core.ProcessTransitionRequestController.processMilestoneRequest(id: Long, requestId: Long)
 POST   /request/milestone/accept                 controllers.core.ProcessTransitionRequestController.acceptMilestoneRequest()
 GET    /request/milestone/reject                 controllers.core.ProcessTransitionRequestController.rejectMilestoneRequest(id: Long, requestId: Long)
+GET    /request/milestone/cancel                 controllers.core.ProcessTransitionRequestController.cancelMilestoneRequest(id: Long, requestId: Long)
 
 #-------------------
 # Core: Portfolio

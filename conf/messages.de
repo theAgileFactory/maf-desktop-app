@@ -1363,6 +1363,7 @@ object.life_cycle_milestone_instance.table.approval.empty=Es gibt keine Meilenst
 object.planned_life_cycle_milestone_instance.planned_date.label=Geplantes Datum
 object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Bereit
 object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Datum hinzufügen
+object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label=Anstehenden Genehmigung
 
 #----------------------
 # lifeCycleMilestoneInstanceApprover
@@ -2182,6 +2183,7 @@ core.process_transition_request.process_milestone_request.panel.form.vote_requir
 core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message=Bitte genehmigen Sie den Meilenstein Initiative von "{0}"
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title=Meilenstein akzeptiert
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message=Meilenstein Initiative von "{0}" wurde akzeptiert. Keine weitere Genehmigung nötig: Meilenstein ist genehmigt.
+core.process_transition_request.cancel_milestone_request.notification.message.success=Meilenstein Initiative gelöscht.
 
 #----------------------
 # portfolio
