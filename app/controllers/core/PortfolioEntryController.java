@@ -375,7 +375,7 @@ public class PortfolioEntryController extends Controller {
             governanceListView.add(new GovernanceListView(lastPlannedMilestoneInstance));
         }
         Set<String> hideColumnsForGovernance = new HashSet<String>();
-        hideColumnsForGovernance.add("requestActionLink");
+        hideColumnsForGovernance.add("actionLink");
         Table<GovernanceListView> milestonesTable = this.getTableProvider().get().governance.templateTable.fill(governanceListView, hideColumnsForGovernance);
 
         // Milestones trend

@@ -575,7 +575,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the milestone id
      */
     public static List<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsListByPEAndLCMilestone(Long portfolioEntryId, Long lifeCycleMilestoneId) {
-        return getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntryId, lifeCycleMilestoneId, "");
+        return getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntryId, lifeCycleMilestoneId, "DESC");
     }
 
     /**

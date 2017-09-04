@@ -22,17 +22,15 @@ import java.util.Date;
 import java.util.List;
 
 import constants.IMafConstants;
+import controllers.core.routes;
 import dao.governance.LifeCycleMilestoneDao;
-import framework.utils.IColumnFormatter;
+import dao.governance.ProcessTransitionRequestDao;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
-import framework.utils.formats.StringFormatFormatter;
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstance;
-import models.governance.PlannedLifeCycleMilestoneInstance;
+import models.governance.*;
 
 /**
  * A governance list view is used to display a governance row in a table.
@@ -66,54 +64,43 @@ public class GovernanceListView {
                     setIdFieldName("id");
 
                     addColumn("milestone", "milestone", "object.life_cycle_milestone_instance.milestone.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("milestone", new IColumnFormatter<GovernanceListView>() {
-                        @Override
-                        public String apply(GovernanceListView governanceListView, Object value) {
-                            return views.html.modelsparts.display_milestone.render(governanceListView.milestone).body();
-                        }
-                    });
+                    setJavaColumnFormatter("milestone", (governanceListView, value) -> views.html.modelsparts.display_milestone.render(governanceListView.milestone).body());
                     setColumnCssClass("milestone", IMafConstants.BOOTSTRAP_COLUMN_4);
 
                     addColumn("lastPlannedDate", "lastPlannedDate", "object.planned_life_cycle_milestone_instance.planned_date.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lastPlannedDate", new IColumnFormatter<GovernanceListView>() {
-                        @Override
-                        public String apply(GovernanceListView governanceListView, Object value) {
-                            DateFormatter<GovernanceListView> df = new DateFormatter<GovernanceListView>();
-                            if (governanceListView.lastPlannedDate != null) {
-                                df.setAlert(!governanceListView.hasMilestoneInstances && governanceListView.lastPlannedDate.before(new Date()));
-                            }
-                            return df.apply(governanceListView, value);
+                    setJavaColumnFormatter("lastPlannedDate", (governanceListView, value) -> {
+                        DateFormatter<GovernanceListView> df = new DateFormatter<>();
+                        if (governanceListView.lastPlannedDate != null) {
+                            df.setAlert(!governanceListView.hasMilestoneInstances && governanceListView.lastPlannedDate.before(new Date()));
                         }
+                        return df.apply(governanceListView, value);
                     });
                     setColumnCssClass("lastPlannedDate", IMafConstants.BOOTSTRAP_COLUMN_4);
 
                     addColumn("status", "status", "object.life_cycle_milestone_instance.status.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("status", new ListOfValuesFormatter<GovernanceListView>());
+                    setJavaColumnFormatter("status", new ListOfValuesFormatter<>());
                     setColumnCssClass("status", IMafConstants.BOOTSTRAP_COLUMN_3);
 
-                    addColumn("requestActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("requestActionLink", new StringFormatFormatter<GovernanceListView>(IMafConstants.REQUEST_URL_FORMAT,
-                            new StringFormatFormatter.Hook<GovernanceListView>() {
-                        @Override
-                        public String convert(GovernanceListView governanceListView) {
-                            if (!governanceListView.isPending) {
-                                return controllers.core.routes.PortfolioEntryGovernanceController
-                                        .requestMilestone(governanceListView.portfolioEntryId, governanceListView.id).url();
-                            }
-                            return null;
+                    addColumn("actionLink", "id", "", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("actionLink", (GovernanceListView governanceListView, Object cellValue) -> {
+                        String format = "";
+                        String url = null;
+                        if (governanceListView.lifeCycleMilestoneReviewRequest != null && governanceListView.lifeCycleMilestoneReviewRequest.processTransitionRequest.accepted == null) {
+                            format = IMafConstants.CANCEL_URL_FORMAT;
+                            url = routes.ProcessTransitionRequestController.cancelMilestoneRequest(governanceListView.portfolioEntryId, governanceListView.lifeCycleMilestoneReviewRequest.processTransitionRequest.id).url();
+                        } else if (!governanceListView.isPending) {
+                            format = IMafConstants.REQUEST_URL_FORMAT;
+                            url = routes.PortfolioEntryGovernanceController
+                                    .requestMilestone(governanceListView.portfolioEntryId, governanceListView.id).url();
                         }
-                    }));
-                    setColumnCssClass("requestActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                    setColumnValueCssClass("requestActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                    this.setLineAction(new IColumnFormatter<GovernanceListView>() {
-                        @Override
-                        public String apply(GovernanceListView governanceListView, Object value) {
-                            return controllers.core.routes.PortfolioEntryGovernanceController
-                                    .viewMilestone(governanceListView.portfolioEntryId, governanceListView.id).url();
-                        }
+                        return views.html.framework_views.parts.formats.display_with_format.render(url, format).body();
                     });
+                    setColumnCssClass("actionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
+                    setColumnValueCssClass("actionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
+
+                    this.setLineAction((governanceListView, value) -> controllers.core.routes.PortfolioEntryGovernanceController
+                            .viewMilestone(governanceListView.portfolioEntryId, governanceListView.id).url());
 
                 }
             };
@@ -137,10 +124,12 @@ public class GovernanceListView {
 
     public Date lastPlannedDate;
 
-    public List<String> status = new ArrayList<String>();
+    public List<String> status = new ArrayList<>();
 
     public Boolean hasMilestoneInstances;
     public Boolean isPending = false;
+
+    public LifeCycleMilestoneReviewRequest lifeCycleMilestoneReviewRequest;
 
     /**
      * Construct a list view with a DB entry.
@@ -160,44 +149,22 @@ public class GovernanceListView {
                 plannedMilestone.lifeCycleMilestone.id);
 
         // compute hasMilestoneInstances
-        this.hasMilestoneInstances = milestoneInstances != null && !milestoneInstances.isEmpty() ? true : false;
+        this.hasMilestoneInstances = milestoneInstances != null && !milestoneInstances.isEmpty();
+
+        // Get the process transition request
+        this.lifeCycleMilestoneReviewRequest = ProcessTransitionRequestDao.getProcessTransitionRequestMilestoneApprovalToReviewByPortfolioEntryAndMilestoneId(this.portfolioEntryId, plannedMilestone.lifeCycleMilestone.id);
 
         // compute status
         String format = null;
         String content = "";
 
-        if (hasMilestoneInstances) {
-
-            for (LifeCycleMilestoneInstance milestone : milestoneInstances) {
-
-                switch (milestone.getStatus()) {
-                case APPROVED:
-                    content = milestone.lifeCycleMilestoneInstanceStatusType.getName();
-                    format = IMafConstants.LABEL_SUCCESS_FORMAT;
-                    break;
-                case PENDING:
-                    content = Msg.get("object.life_cycle_milestone_instance.status." + milestone.getStatus() + ".label");
-                    format = IMafConstants.LABEL_WARNING_FORMAT;
-                    isPending = true;
-                    break;
-                case REJECTED:
-                    content = milestone.lifeCycleMilestoneInstanceStatusType.getName();
-                    format = IMafConstants.LABEL_DANGER_FORMAT;
-                    break;
-                case UNKNOWN:
-                    content = Msg.get("object.life_cycle_milestone_instance.status." + milestone.getStatus() + ".label");
-                    format = IMafConstants.LABEL_DEFAULT_FORMAT;
-                    break;
-                }
-
-                if (milestone.passedDate != null) {
-                    content += " (" + Utilities.getDateFormat(null).format(milestone.passedDate) + ")";
-                }
-
-                status.add("<div style='height: 26px;'>" + String.format(format, content) + "</div>");
-            }
-
-        } else {
+        if (lifeCycleMilestoneReviewRequest != null && lifeCycleMilestoneReviewRequest.processTransitionRequest.accepted == null) {
+            String pendingReviewLabel = String.format(
+                    IMafConstants.LABEL_DEFAULT_FORMAT,
+                    Msg.get("object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label")
+                            + " (" + Utilities.getDateFormat(null).format(lifeCycleMilestoneReviewRequest.approvalDate) + ")");
+            status.add("<div style='height: 26px;'>" + pendingReviewLabel + "</div>");
+        } else if (!hasMilestoneInstances){
 
             content = Msg.get("object.planned_life_cycle_milestone_instance.status." + plannedMilestone.getStatus() + ".label");
 
@@ -211,6 +178,39 @@ public class GovernanceListView {
             }
 
             status.add(String.format(format, content));
+        }
+
+        if (hasMilestoneInstances) {
+
+            for (LifeCycleMilestoneInstance milestone : milestoneInstances) {
+
+                switch (milestone.getStatus()) {
+                    case APPROVED:
+                        content = milestone.lifeCycleMilestoneInstanceStatusType.getName();
+                        format = IMafConstants.LABEL_SUCCESS_FORMAT;
+                        break;
+                    case PENDING:
+                        content = Msg.get("object.life_cycle_milestone_instance.status." + milestone.getStatus() + ".label");
+                        format = IMafConstants.LABEL_WARNING_FORMAT;
+                        isPending = true;
+                        break;
+                    case REJECTED:
+                        content = milestone.lifeCycleMilestoneInstanceStatusType.getName();
+                        format = IMafConstants.LABEL_DANGER_FORMAT;
+                        break;
+                    case UNKNOWN:
+                        content = Msg.get("object.life_cycle_milestone_instance.status." + milestone.getStatus() + ".label");
+                        format = IMafConstants.LABEL_DEFAULT_FORMAT;
+                        break;
+                }
+
+                if (milestone.passedDate != null) {
+                    content += " (" + Utilities.getDateFormat(null).format(milestone.passedDate) + ")";
+                }
+
+                status.add("<div style='height: 26px;'>" + String.format(format, content) + "</div>");
+            }
+
         }
 
     }

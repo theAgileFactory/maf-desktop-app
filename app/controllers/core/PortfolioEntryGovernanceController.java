@@ -17,6 +17,7 @@
  */
 package controllers.core;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,14 +53,7 @@ import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
-import models.governance.LifeCycleInstance;
-import models.governance.LifeCycleInstancePlanning;
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstance;
-import models.governance.LifeCycleMilestoneInstanceApprover;
-import models.governance.LifeCycleProcess;
-import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.governance.ProcessTransitionRequest;
+import models.governance.*;
 import models.pmo.Actor;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
@@ -138,7 +132,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
         Set<String> hideColumnsForGovernance = new HashSet<String>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
-            hideColumnsForGovernance.add("requestActionLink");
+            hideColumnsForGovernance.add("actionLink");
         }
 
         Table<GovernanceListView> filledTable = this.getTableProvider().get().governance.templateTable.fill(governanceListView, hideColumnsForGovernance);
@@ -416,6 +410,14 @@ public class PortfolioEntryGovernanceController extends Controller {
             ProcessTransitionRequest processTransitionRequest = new ProcessTransitionRequest();
             requestMilestoneFormData.create(processTransitionRequest, actor);
             processTransitionRequest.save();
+
+            LifeCycleMilestoneReviewRequest reviewRequest = null;
+            try {
+                reviewRequest = new LifeCycleMilestoneReviewRequest(portfolioEntry, lifeCycleMilestone, processTransitionRequest, Utilities.getDateFormat(null).parse(requestMilestoneFormData.passedDate));
+            } catch (ParseException e) {
+                return badRequest();
+            }
+            reviewRequest.save();
 
             // store the request details
             try {

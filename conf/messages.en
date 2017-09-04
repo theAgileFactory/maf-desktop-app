@@ -1351,6 +1351,7 @@ object.life_cycle_milestone_instance.table.approval.empty=There is no milestone 
 object.planned_life_cycle_milestone_instance.planned_date.label=Planned date
 object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Available
 object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Not planned
+object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label=Pending review
 
 #----------------------
 # lifeCycleMilestoneInstanceApprover
@@ -2171,6 +2172,7 @@ core.process_transition_request.process_milestone_request.panel.form.vote_requir
 core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message=You are required to vote for a milestone approval of the Initiative "{0}"
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title=Milestone approved
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message=The milestone approval request for the Initiative "{0}" has been accepted and no further approval required: the milestone is approved.
+core.process_transition_request.cancel_milestone_request.notification.message.success=The milestone approval request has been canceled
 
 #----------------------
 # portfolio

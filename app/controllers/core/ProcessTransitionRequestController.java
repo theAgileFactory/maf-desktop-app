@@ -367,6 +367,23 @@ public class ProcessTransitionRequestController extends Controller {
     }
 
     /**
+     * Cancels a milestone request
+     *
+     * @param id the portfolio id
+     * @param requestId the process request id
+     *
+     * @return a redirection to the initiative governance page
+     */
+    public Result cancelMilestoneRequest(Long id, Long requestId) {
+
+        ProcessTransitionRequestDao.getProcessTransitionRequestById(requestId).doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.process_transition_request.cancel_milestone_request.notification.message.success"));
+
+        return redirect(routes.PortfolioEntryGovernanceController.index(id));
+    }
+
+    /**
      * Get the attachment manager service.
      */
     private IAttachmentManagerPlugin getAttachmentManagerPlugin() {
