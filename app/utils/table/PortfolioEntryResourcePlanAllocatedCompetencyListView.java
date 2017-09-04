@@ -123,8 +123,10 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
                     addColumn("currency", "currency", "object.allocated_resource.currency.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("currency", new ObjectFormatter<>());
 
-                    addColumn("days", "days", "object.allocated_resource.days.label", ColumnDef.SorterType.NONE);
+                    addSummableColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<>());
+                    setColumnHeaderCssClass("days", "text-right");
+                    setColumnValueCssClass("days", "text-right");
 
                     addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("dailyRate", new NumberFormatter<>());

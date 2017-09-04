@@ -135,14 +135,18 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                     addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("currency", new ObjectFormatter<>());
 
-                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
+                    addSummableColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<>());
+                    setColumnHeaderCssClass("days", "text-right");
+                    setColumnValueCssClass("days", "text-right");
 
                     addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("dailyRate", new NumberFormatter<>());
 
-                    addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
+                    addSummableColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("forecastDays", new NumberFormatter<>());
+                    setColumnHeaderCssClass("forecastDays", "text-right");
+                    setColumnValueCssClass("forecastDays", "text-right");
 
                     addColumn("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
                             Table.ColumnDef.SorterType.NONE);
