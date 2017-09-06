@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
@@ -55,7 +57,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
 
     public Long portfolioEntryPlanningPackage;
 
-    public boolean isConfirmed;
+    public String allocationStatus;
 
     public boolean followPackageDates;
 
@@ -105,6 +107,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
      * Default constructor.
      */
     public PortfolioEntryResourcePlanAllocatedCompetencyFormData() {
+        this.allocationStatus = PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT.name();
     }
 
     /**
@@ -123,8 +126,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
         this.endDate = allocatedCompetency.endDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id
                 : null;
-
-        this.isConfirmed = allocatedCompetency.isConfirmed;
+        this.allocationStatus = allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType.status.name();
 
         this.currencyCode = allocatedCompetency.currency != null ? allocatedCompetency.currency.code : null;
         this.currencyRate = allocatedCompetency.currencyRate;
@@ -151,7 +153,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
 
         allocatedCompetency.followPackageDates = allocatedCompetency.portfolioEntryPlanningPackage != null ? this.followPackageDates : null;
 
-        if (allocatedCompetency.followPackageDates == null || allocatedCompetency.followPackageDates == false) {
+        if (allocatedCompetency.followPackageDates == null || !allocatedCompetency.followPackageDates) {
             try {
                 allocatedCompetency.startDate = Utilities.getDateFormat(null).parse(this.startDate);
             } catch (ParseException e) {
@@ -168,7 +170,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
             allocatedCompetency.endDate = allocatedCompetency.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedCompetency.isConfirmed = this.isConfirmed;
+        allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
 
         allocatedCompetency.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedCompetency.currencyRate = this.currencyRate;

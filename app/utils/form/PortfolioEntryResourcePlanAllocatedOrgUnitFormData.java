@@ -17,20 +17,22 @@
  */
 package utils.form;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A portfolio entry resource plan allocated org unit form data is used to
@@ -55,7 +57,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
 
     public Long portfolioEntryPlanningPackage;
 
-    public boolean isConfirmed;
+    public String allocationStatus;
 
     public boolean followPackageDates;
 
@@ -109,6 +111,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
      * Default constructor.
      */
     public PortfolioEntryResourcePlanAllocatedOrgUnitFormData() {
+        this.allocationStatus = PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT.name();
     }
 
     /**
@@ -127,8 +130,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
         this.endDate = allocatedOrgUnit.endDate != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id
                 : null;
-
-        this.isConfirmed = allocatedOrgUnit.isConfirmed;
+        this.allocationStatus = allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType.status.name();
 
         this.currencyCode = allocatedOrgUnit.currency != null ? allocatedOrgUnit.currency.code : null;
         this.currencyRate = allocatedOrgUnit.currencyRate;
@@ -157,7 +159,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
 
         allocatedOrgUnit.followPackageDates = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? this.followPackageDates : null;
 
-        if (allocatedOrgUnit.followPackageDates == null || allocatedOrgUnit.followPackageDates == false) {
+        if (allocatedOrgUnit.followPackageDates == null || !allocatedOrgUnit.followPackageDates) {
             try {
                 allocatedOrgUnit.startDate = Utilities.getDateFormat(null).parse(this.startDate);
             } catch (ParseException e) {
@@ -174,7 +176,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
             allocatedOrgUnit.endDate = allocatedOrgUnit.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedOrgUnit.isConfirmed = this.isConfirmed;
+        allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
 
         allocatedOrgUnit.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedOrgUnit.currencyRate = this.currencyRate;

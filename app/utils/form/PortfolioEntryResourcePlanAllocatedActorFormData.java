@@ -22,10 +22,7 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
-import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
-import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.*;
 import org.apache.commons.lang3.tuple.Pair;
 import play.Logger;
 import play.Play;
@@ -72,7 +69,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
     public Long portfolioEntryPlanningPackage;
 
-    public boolean isConfirmed;
+    public String allocationStatus;
 
     public boolean followPackageDates;
 
@@ -196,6 +193,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
         this.monthAllocations = new ArrayList<>();
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.allocationStatus = PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT.name();
     }
 
     /**
@@ -215,7 +213,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.startDate = allocatedActor.startDate != null ? Utilities.getDateFormat(null).format(allocatedActor.startDate) : null;
         this.endDate = allocatedActor.endDate != null ? Utilities.getDateFormat(null).format(allocatedActor.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
-        this.isConfirmed = allocatedActor.isConfirmed;
+        this.allocationStatus = allocatedActor.portfolioEntryResourcePlanAllocationStatusType.status.name();
 
         this.currencyCode = allocatedActor.currency != null ? allocatedActor.currency.code : null;
         this.currencyRate = allocatedActor.currencyRate;
@@ -260,7 +258,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.endDate = allocatedOrgUnit.endDate != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id
                 : null;
-        this.isConfirmed = true;
+
+        this.allocationStatus = PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT.name();
 
         this.currencyCode = allocatedOrgUnit.currency != null ? allocatedOrgUnit.currency.code : null;
         this.currencyRate = allocatedOrgUnit.currencyRate;
@@ -307,7 +306,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.endDate = allocatedCompetency.endDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id
                 : null;
-        this.isConfirmed = true;
+
+        this.allocationStatus = PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT.name();
 
         this.currencyCode = allocatedCompetency.currency != null ? allocatedCompetency.currency.code : null;
         this.currencyRate = allocatedCompetency.currencyRate;
@@ -367,7 +367,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
             allocatedActor.endDate = allocatedActor.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedActor.isConfirmed = this.isConfirmed;
+        allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
 
         allocatedActor.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedActor.currencyRate = this.currencyRate;

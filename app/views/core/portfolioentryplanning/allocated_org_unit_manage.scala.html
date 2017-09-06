@@ -32,6 +32,10 @@
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit])
 }
 
+@allocationStatus=@{
+    dao.finance.PortfolioEntryResourcePlanDAO.getAllocationStatusByName(allocatedOrgUnitForm("allocationStatus").value)
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -66,12 +70,12 @@
                         @if(allocatedOrgUnitForm("allocatedOrgUnitId").value!=null) {
                             <input type="hidden" name="allocatedOrgUnitId" value="@allocatedOrgUnitForm("allocatedOrgUnitId").value"/>
                         }
-                        
-                         @parts.checkbox(
-                            allocatedOrgUnitForm("isConfirmed"), 
-                            parts.Msg.asString("object.allocated_resource.is_confirmed.label")
-                        )
-                        
+
+                        <div class="form-group">
+                            <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            @display_allocation_status(allocationStatus)
+                        </div>
+
                         @parts.singlevalue_picker(
                             allocatedOrgUnitForm("orgUnit"), 
                             parts.Msg.asString("object.allocated_resource.org_unit.label"),

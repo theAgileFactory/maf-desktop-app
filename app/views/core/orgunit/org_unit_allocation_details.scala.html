@@ -39,7 +39,7 @@
             @parts.Msg("core.org_unit.allocation.details.requests.title")
         </div>
         <div class="panel-body">
-			<div id="confirm-result"></div>
+            <div id="orgunit-result"></div>
 				@parts.table.filtered_tableview(
 					portfolioEntryTable, 
 					portfolioEntryPagination, 
@@ -55,7 +55,7 @@
             @parts.Msg("core.org_unit.allocation.details.actors.portfolio_entry.title")
         </div>
         <div class="panel-body">
-            <div id="confirm-result"></div>
+            <div id="actor-result"></div>
             @parts.table.filtered_tableview(
                 actorPortfolioEntryTable, 
                 actorPortfolioEntryPagination, 
@@ -85,7 +85,4 @@
             )
         </div>
     </div>
-    
-
-
 }

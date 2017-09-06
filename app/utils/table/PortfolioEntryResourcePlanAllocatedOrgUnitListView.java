@@ -23,9 +23,13 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.*;
-import framework.utils.formats.*;
+import framework.utils.formats.DateFormatter;
+import framework.utils.formats.NumberFormatter;
+import framework.utils.formats.ObjectFormatter;
+import framework.utils.formats.StringFormatFormatter;
 import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntryPlanningPackage;
 
@@ -72,7 +76,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
                             new AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, SortStatusType.UNSORTED);
 
-                    addColumnConfiguration("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", new CheckboxFilterComponent(true),
+                    addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new NoneFilterComponent(),
                             true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
@@ -161,8 +165,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("endDate", new DateFormatter<>());
 
-                    addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isConfirmed", new BooleanFormatter<>());
+                    addColumn("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.status", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryResourcePlanAllocationStatusType", (value, cellValue) -> views.html.modelsparts.display_allocation_status.render(value.portfolioEntryResourcePlanAllocationStatusType).body());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
 
@@ -245,7 +249,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
     public PortfolioEntryPlanningPackage planningPackage;
 
-    public boolean isConfirmed;
+    public PortfolioEntryResourcePlanAllocationStatusType portfolioEntryResourcePlanAllocationStatusType;
 
     public Boolean followPackageDates;
 
@@ -263,7 +267,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
         this.startDate = allocatedOrgUnit.startDate;
         this.endDate = allocatedOrgUnit.endDate;
         this.planningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage;
-        this.isConfirmed = allocatedOrgUnit.isConfirmed;
+        this.portfolioEntryResourcePlanAllocationStatusType = allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType;
         this.followPackageDates = allocatedOrgUnit.followPackageDates;
 
         this.currency = allocatedOrgUnit.currency;

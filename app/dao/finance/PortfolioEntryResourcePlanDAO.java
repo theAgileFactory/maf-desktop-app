@@ -30,10 +30,7 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 
 import framework.utils.Pagination;
-import models.finance.PortfolioEntryResourcePlan;
-import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.*;
 import models.governance.LifeCycleInstancePlanning;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
@@ -58,6 +55,8 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     public static Finder<Long, PortfolioEntryResourcePlanAllocatedOrgUnit> findPEResourcePlanAllocatedOrgUnit = new Finder<>(
             PortfolioEntryResourcePlanAllocatedOrgUnit.class);
+
+    public static Finder<Long, PortfolioEntryResourcePlanAllocationStatusType> findAllocationStatusType = new Finder<>(PortfolioEntryResourcePlanAllocationStatusType.class);
 
     /**
      * Default constructor.
@@ -171,15 +170,14 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of the actors of an org unit for not archived
      * portfolio entries.
-     *
-     * @param orgUnitId
+     *  @param orgUnitId
      *            the org unit id
      * @param activeOnly
      *            if true, it returns only the allocation for which the end date
-     *            is in the future
+     * @param draftExcluded
      */
-    public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByOrgUnitAndActive(Long orgUnitId, boolean activeOnly) {
-        return getPEPlanAllocatedActorAsExprByOrgUnitAndActive(orgUnitId, activeOnly).findList();
+    public static List<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsListByOrgUnitAndActive(Long orgUnitId, boolean activeOnly, boolean draftExcluded) {
+        return getPEPlanAllocatedActorAsExprByOrgUnitAndActive(orgUnitId, activeOnly, draftExcluded).findList();
     }
 
     /**
@@ -193,7 +191,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            is in the future
      */
     public static ExpressionList<PortfolioEntryResourcePlanAllocatedActor> getPEPlanAllocatedActorAsExprByOrgUnitAndActive(Long orgUnitId,
-            boolean activeOnly) {
+            boolean activeOnly, boolean draftExcluded) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expr = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor.where()
                 .eq("deleted", false).eq("actor.isActive", true).eq("actor.deleted", false).eq("actor.orgUnit.id", orgUnitId)
@@ -206,6 +204,10 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
+        }
+
+        if (draftExcluded) {
+            expr = expr.not(Expr.eq("portfolioEntryResourcePlanAllocationStatusType", PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT)));
         }
 
         return expr;
@@ -281,7 +283,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
-            exprAllocatedActors = exprAllocatedActors.eq("isConfirmed", true);
+            exprAllocatedActors = exprAllocatedActors.eq("portfolioEntryResourcePlanAllocationStatusType.name", PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
         }
         if (orgUnitId != null) {
             exprAllocatedActors = exprAllocatedActors.eq("actor.orgUnit.id", orgUnitId);
@@ -347,9 +349,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
         if (isConfirmed != null) {
             if (isConfirmed) {
-                sql += " AND perpaa.is_confirmed = '1'";
+                sql += " AND perpaa.portfolio_entry_resource_plan_allocation_status_type_id = (SELECT id FROM portfolio_entry_resource_plan_allocation_status_type WHERE status = 'CONFIRMED')";
             } else {
-                sql += " AND perpaa.is_confirmed = '0'";
+                sql += " AND perpaa.portfolio_entry_resource_plan_allocation_status_type_id in (SELECT id FROM portfolio_entry_resource_plan_allocation_status_type WHERE status != 'CONFIRMED')";
             }
         }
 
@@ -439,7 +441,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
-            exprAllocatedCompetencies = exprAllocatedCompetencies.eq("isConfirmed", true);
+            exprAllocatedCompetencies = exprAllocatedCompetencies.eq("portfolioEntryResourcePlanAllocationStatusType.name", PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
         }
         if (competencyId != null) {
             exprAllocatedCompetencies = exprAllocatedCompetencies.eq("competency.id", competencyId);
@@ -502,9 +504,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
         if (isConfirmed != null) {
             if (isConfirmed) {
-                sql += " AND perpac.is_confirmed = '1'";
+                sql += " AND perpac.portfolio_entry_resource_plan_allocation_status_type_id = (SELECT id FROM portfolio_entry_resource_plan_allocation_status_type WHERE status = 'CONFIRMED')";
             } else {
-                sql += " AND perpac.is_confirmed = '0'";
+                sql += " AND perpac.portfolio_entry_resource_plan_allocation_status_type_id in (SELECT id FROM portfolio_entry_resource_plan_allocation_status_type WHERE status != 'CONFIRMED')";
             }
         }
 
@@ -573,17 +575,17 @@ public abstract class PortfolioEntryResourcePlanDAO {
     /**
      * Get all allocation of an org unit for not archived portfolio entries as a
      * pagination object.
-     *
-     * @param orgUnitId
+     *  @param orgUnitId
      *            the org unit id
      * @param activeOnly
      *            if true, it returns only the allocation for which the end date
-     *            is in the future
+     * @param excludeDraft
+     *            if true, filters out draft allocation requests
      */
     public static Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsPaginationByOrgUnit(Long orgUnitId,
-            boolean activeOnly) 
+                                                                                                                                boolean activeOnly, boolean excludeDraft)
     {
-    	ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly);
+    	ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly, excludeDraft);
     	String str = expressionList.query().getGeneratedSql();
         return new Pagination<>(expressionList, 5,
                 Play.application().configuration().getInt("maf.number_page_links"));
@@ -591,15 +593,15 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
     /**
      * Get all allocation of an org unit for not archived portfolio entries.
-     *
-     * @param orgUnitId
+     *  @param orgUnitId
      *            the org unit id
      * @param activeOnly
      *            if true, it returns only the allocation for which the end date
-     *            is in the future
+     * @param excludeDraft
+     *            if true, it filters out the requests with draft status
      */
-    public static List<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsListByOrgUnit(Long orgUnitId, boolean activeOnly) {
-        return getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly).findList();
+    public static List<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsListByOrgUnit(Long orgUnitId, boolean activeOnly, boolean excludeDraft) {
+        return getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, activeOnly, excludeDraft).findList();
     }
 
     /**
@@ -613,7 +615,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
      *            is in the future
      */
     public static ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(Long orgUnitId,
-            boolean activeOnly) {
+            boolean activeOnly, boolean draftExcluded) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expr = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedOrgUnit.orderBy("endDate")
                 .where().eq("deleted", false).eq("orgUnit.id", orgUnitId).eq("portfolioEntryResourcePlan.deleted", false)
@@ -626,6 +628,10 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
         if (activeOnly) {
             expr = expr.add(Expr.or(Expr.isNull("endDate"), Expr.gt("endDate", new Date())));
+        }
+
+        if (draftExcluded) {
+            expr = expr.not(Expr.eq("portfolioEntryResourcePlanAllocationStatusType", PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT)));
         }
 
         return expr;
@@ -656,7 +662,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
-            exprAllocatedOrgUnits = exprAllocatedOrgUnits.eq("isConfirmed", true);
+            exprAllocatedOrgUnits = exprAllocatedOrgUnits.eq("portfolioEntryResourcePlanAllocationStatusType.name", PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
         }
         if (orgUnitId != null) {
             exprAllocatedOrgUnits = exprAllocatedOrgUnits.eq("orgUnit.id", orgUnitId);
@@ -719,9 +725,9 @@ public abstract class PortfolioEntryResourcePlanDAO {
 
         if (isConfirmed != null) {
             if (isConfirmed) {
-                sql += " AND perpaou.is_confirmed = '1'";
+                sql += " AND perpaou.portfolio_entry_resource_plan_allocation_status_type_id = (SELECT id FROM portfolio_entry_resource_plan_allocation_status_type WHERE status = 'CONFIRMED')";
             } else {
-                sql += " AND perpaou.is_confirmed = '0'";
+                sql += " AND perpaou.portfolio_entry_resource_plan_allocation_status_type_id in (SELECT id FROM portfolio_entry_resource_plan_allocation_status_type WHERE status != 'CONFIRMED')";
             }
         }
 
@@ -817,4 +823,11 @@ public abstract class PortfolioEntryResourcePlanDAO {
         return findPEResourcePlanAllocatedOrgUnit.where().eq("deleted", false).eq("currency.code", currency).findRowCount() > 0;
     }
 
+    public static PortfolioEntryResourcePlanAllocationStatusType getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus status) {
+        return findAllocationStatusType.where().eq("status", status.name()).eq("deleted", false).findUnique();
+    }
+
+    public static PortfolioEntryResourcePlanAllocationStatusType getAllocationStatusByName(String name) {
+        return getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.valueOf(name));
+    }
 }
