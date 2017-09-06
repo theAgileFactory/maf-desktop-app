@@ -1485,7 +1485,7 @@ object.allocated_resource.end_date.label=End date
 object.allocated_resource.end_date.invalid=The end date should be after the start date.
 object.allocated_resource.package.label=Package
 object.allocated_resource.follow_package_dates.label=Follow package dates
-object.allocated_resource.is_confirmed.label=Confirmed
+object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label=Status
 object.allocated_resource.daily_rate.label=Daily rate
 object.allocated_resource.daily_rate.help=The budgeted cost per day for the allocated resource.
 object.allocated_resource.forecast_days.label=Forecast in days
@@ -1497,6 +1497,15 @@ object.allocated_resource.org_unit.table.empty=There is no allocation.
 object.allocated_resource.competency.table.empty=There is no allocation.
 object.allocated_resource.table.empty=There is no allocation.
 object.allocated_resource.monthly_allocated.label=Monthly allocation
+
+#----------------------
+# allocation status
+#----------------------
+
+object.allocated_resource.status_type.DRAFT.label=Draft
+object.allocated_resource.status_type.PENDING.label=Pending
+object.allocated_resource.status_type.CONFIRMED.label=Confirmed
+object.allocated_resource.status_type.REFUSED.label=Refused
 
 #----------------------
 # deliverable
@@ -2780,6 +2789,10 @@ core.org_unit.allocation.details.actors.portfolio_entry.title=Initiative''s allo
 core.org_unit.allocation.details.actors.activity.title=Activity''s allocations for the employees
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Confirm
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=The allocations have been confirmed successfully.
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse=Refuse
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful=The allocations have been refused successfully.
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit=Submit
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful=The allocations have been submitted successfully.
 
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Manage an allocated activity for an employee

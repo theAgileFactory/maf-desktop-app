@@ -57,6 +57,7 @@ import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.pmo.Actor;
 import models.pmo.ActorCapacity;
 import models.pmo.Competency;
@@ -522,11 +523,7 @@ public class ActorController extends Controller {
 
                 }
 
-                if (allocatedActor.isConfirmed) {
-                    cssClass += "success";
-                } else {
-                    cssClass += "warning";
-                }
+                cssClass += allocatedActor.portfolioEntryResourcePlanAllocationStatusType.getCssClass();
 
                 SourceDataValue dataValue = new SourceDataValue(controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id).url(),
                         null, null, null, null);

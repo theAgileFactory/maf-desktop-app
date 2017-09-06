@@ -1497,7 +1497,7 @@ object.allocated_resource.end_date.label=Date de fin
 object.allocated_resource.end_date.invalid=La date de fin doit être ultérieure à la date de début.
 object.allocated_resource.package.label=Résultat
 object.allocated_resource.follow_package_dates.label=Suivre les dates du résultat
-object.allocated_resource.is_confirmed.label=Confirmé
+object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label=Statut
 object.allocated_resource.daily_rate.label=Coût journalier
 object.allocated_resource.daily_rate.help=Le coût budgété par jour pour la ressource affectée.
 object.allocated_resource.forecast_days.label=Prévision en jours
@@ -1509,6 +1509,15 @@ object.allocated_resource.org_unit.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.competency.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.monthly_allocated.label=Allocation mensuelle
+
+#----------------------
+# allocation status
+#----------------------
+
+object.allocated_resource.status_type.DRAFT.label=Brouillon
+object.allocated_resource.status_type.PENDING.label=En attente
+object.allocated_resource.status_type.CONFIRMED.label=Confirmé
+object.allocated_resource.status_type.REFUSED.label=Refusé
 
 #----------------------
 # deliverable
@@ -2797,6 +2806,10 @@ core.org_unit.allocation.details.actors.portfolio_entry.title=Affectations d''in
 core.org_unit.allocation.details.actors.activity.title=Affectations d''activité pour les employés
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Confirmer
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=Les affectations ont été confirmées.
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse=Refuser
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful=Les affectations ont été refusées.
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit=Soumettre
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful=Les affectations ont été soumises.
 
 #manage actor allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Géré une activité affectée pour un employé

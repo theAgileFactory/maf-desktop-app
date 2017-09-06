@@ -25,9 +25,13 @@ import framework.utils.FilterConfig;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.utils.formats.*;
+import framework.utils.formats.DateFormatter;
+import framework.utils.formats.NumberFormatter;
+import framework.utils.formats.ObjectFormatter;
+import framework.utils.formats.StringFormatFormatter;
 import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.pmo.Competency;
 import models.pmo.PortfolioEntryPlanningPackage;
 
@@ -73,7 +77,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
                     addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
                             new AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, SortStatusType.UNSORTED);
 
-                    addColumnConfiguration("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", new CheckboxFilterComponent(true),
+                    addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new NoneFilterComponent(),
                             true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
@@ -147,8 +151,8 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
                     addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("endDate", new DateFormatter<>());
 
-                    addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isConfirmed", new BooleanFormatter<>());
+                    addColumn("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.status", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryResourcePlanAllocationStatusType", (value, cellValue) -> views.html.modelsparts.display_allocation_status.render(value.portfolioEntryResourcePlanAllocationStatusType).body());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedCompetency.class);
 
@@ -227,7 +231,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
 
     public PortfolioEntryPlanningPackage planningPackage;
 
-    public boolean isConfirmed;
+    public PortfolioEntryResourcePlanAllocationStatusType portfolioEntryResourcePlanAllocationStatusType;
 
     public Boolean followPackageDates;
 
@@ -245,7 +249,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
         this.startDate = allocatedCompetency.startDate;
         this.endDate = allocatedCompetency.endDate;
         this.planningPackage = allocatedCompetency.portfolioEntryPlanningPackage;
-        this.isConfirmed = allocatedCompetency.isConfirmed;
+        this.portfolioEntryResourcePlanAllocationStatusType = allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType;
         this.followPackageDates = allocatedCompetency.followPackageDates;
 
         this.currency = allocatedCompetency.currency;

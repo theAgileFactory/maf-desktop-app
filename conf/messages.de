@@ -1497,7 +1497,7 @@ object.allocated_resource.end_date.label=Enddatum
 object.allocated_resource.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.allocated_resource.package.label=Planungspaket
 object.allocated_resource.follow_package_dates.label=Folgt Packetdatum
-object.allocated_resource.is_confirmed.label=Bestätigt
+object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label=Status
 object.allocated_resource.daily_rate.label=Tagessatz
 object.allocated_resource.daily_rate.help=Kosten pro Tag der zugewiesenen Resourcen.
 object.allocated_resource.forecast_days.label=Prognose (in Tagen)
@@ -1509,6 +1509,15 @@ object.allocated_resource.org_unit.table.empty=Keine Einträge
 object.allocated_resource.competency.table.empty=Keine Einträge
 object.allocated_resource.table.empty=Keine Einträge
 object.allocated_resource.monthly_allocated.label=Monatliche Zuwendung
+
+#----------------------
+# allocation status
+#----------------------
+
+object.allocated_resource.status_type.DRAFT.label=Entwurf
+object.allocated_resource.status_type.PENDING.label=Anstehend
+object.allocated_resource.status_type.CONFIRMED.label=Bestätigt
+object.allocated_resource.status_type.REFUSED.label=Abgelehnt
 
 #----------------------
 # deliverable
@@ -2792,6 +2801,10 @@ core.org_unit.allocation.details.actors.portfolio_entry.title=Initiativen Mitarb
 core.org_unit.allocation.details.actors.activity.title=Aktivitäten Mitarbeiterzuweisungen
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Bestätigen
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=Die Zuweisungen haben erfolgreich bestätigt.
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse=Ablehnen
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful=Die Zuweisungen haben erfolgreich abgelehnt.
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit=Einreichen
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful=Die Zuweisungen haben eingereicht.
 
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Verwalten einer zugewiesenen Tätigkeit für einen Mitarbeiter

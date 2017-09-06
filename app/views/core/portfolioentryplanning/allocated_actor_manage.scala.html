@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     allocatedActorForm: Form[utils.form.PortfolioEntryResourcePlanAllocatedActorFormData]
@@ -31,6 +32,10 @@
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor])
+}
+
+@allocationStatus=@{
+    dao.finance.PortfolioEntryResourcePlanDAO.getAllocationStatusByName(allocatedActorForm("allocationStatus").value)
 }
 
 @breadcrump=@{
@@ -67,12 +72,12 @@
                         @if(allocatedActorForm("allocatedActorId").value!=null) {
                             <input type="hidden" name="allocatedActorId" value="@allocatedActorForm("allocatedActorId").value"/>
                         }
-                        
-                        @parts.checkbox(
-                            allocatedActorForm("isConfirmed"), 
-                            parts.Msg.asString("object.allocated_resource.is_confirmed.label")
-                        )
-                        
+
+                        <div class="form-group">
+                            <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            @display_allocation_status(allocationStatus)
+                        </div>
+
                         @parts.singlevalue_picker(
                             allocatedActorForm("actor"), 
                             parts.Msg.asString("object.allocated_resource.actor.label"),

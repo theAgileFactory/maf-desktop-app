@@ -44,10 +44,7 @@ import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
 import framework.utils.*;
-import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
-import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.*;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.governance.LifeCycleInstance;
@@ -940,7 +937,7 @@ public class RoadmapController extends Controller {
                 capacityDetailsRows.put(0L, capacityDetailsOrgUnit);
                 for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : allocatedOrgUnits) {
                     computeCapacityDetails(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate,
-                            getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays), year, month, false, allocatedOrgUnit.isConfirmed,
+                            getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays), year, month, false, allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType.status.equals(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED),
                             capacityDetailsOrgUnit);
                 }
             }
@@ -951,7 +948,7 @@ public class RoadmapController extends Controller {
                 capacityDetailsRows.put(0L, capacityDetailsCompetency);
                 for (PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency : allocatedCompetencies) {
                     computeCapacityDetails(allocatedCompetency.startDate, allocatedCompetency.endDate, allocatedCompetency.days, year, month, false,
-                            allocatedCompetency.isConfirmed, capacityDetailsCompetency);
+                            allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType.status.equals(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED), capacityDetailsCompetency);
                 }
             }
 
@@ -969,7 +966,7 @@ public class RoadmapController extends Controller {
             for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
                 CapacityDetails capacityDetailsActor = capacityDetailsRows.get(allocatedActor.actor.id);
                 computeCapacityDetails(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
-                        year, month, false, allocatedActor.isConfirmed, capacityDetailsActor);
+                        year, month, false, allocatedActor.portfolioEntryResourcePlanAllocationStatusType.status.equals(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED), capacityDetailsActor);
             }
 
             /**
@@ -1086,7 +1083,7 @@ public class RoadmapController extends Controller {
                 } else {
                     detail = new ActorCapacityDetails(allocation.id, pe);
                 }
-                if (allocation.isConfirmed) {
+                if (allocation.portfolioEntryResourcePlanAllocationStatusType.status.equals(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED)) {
                     detail.confirmedAllocation += allocationDetail.days;
                 } else {
                     detail.notConfirmedAllocation += allocationDetail.days;
