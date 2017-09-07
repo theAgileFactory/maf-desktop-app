@@ -83,11 +83,11 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                             true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",
-                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), actorFieldsSort), true, false,
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), actorFieldsSort), false, false,
                             SortStatusType.UNSORTED);
 
                     addColumnConfiguration("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label",
-                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
                             SortStatusType.UNSORTED);
@@ -111,7 +111,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                             new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("endDate", "endDate", "object.allocated_resource.end_date.label",
-                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
 
                     addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedOrgUnit.class);
                 }

@@ -1048,6 +1048,7 @@ public class OrgUnitController extends Controller {
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
         columnsToHide.add("editActionLink");
         columnsToHide.add("removeActionLink");
+        columnsToHide.add("reallocate");
         columnsToHide.add("followPackageDates");
         columnsToHide.add("orgUnit");
         if (!getBudgetTrackingService().isActive()) {
