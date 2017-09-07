@@ -108,11 +108,11 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                             true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",
-                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), new String[]{"lastStatusTypeUpdateActor.lastName", "lastStatusTypeUpdateActor.firstName"}), true, false,
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), new String[]{"lastStatusTypeUpdateActor.lastName", "lastStatusTypeUpdateActor.firstName"}), false, false,
                             SortStatusType.UNSORTED);
 
                     addColumnConfiguration("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label",
-                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
 
                     addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedActor.class);
                 }
