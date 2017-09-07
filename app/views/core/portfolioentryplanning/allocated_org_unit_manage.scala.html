@@ -36,6 +36,8 @@
     dao.finance.PortfolioEntryResourcePlanDAO.getAllocationStatusByName(allocatedOrgUnitForm("allocationStatus").value)
 }
 
+@lastStatusTypeUpdateActor=@{dao.pmo.ActorDao.getActorById(java.lang.Long.valueOf(allocatedOrgUnitForm("lastStatusTypeUpdateActor").value))}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -74,6 +76,7 @@
                         <div class="form-group">
                             <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
                             @display_allocation_status(allocationStatus)
+                            @if(lastStatusTypeUpdateActor != null) { <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value)</span> }
                         </div>
 
                         @parts.singlevalue_picker(

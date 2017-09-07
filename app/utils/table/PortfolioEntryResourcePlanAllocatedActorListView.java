@@ -107,6 +107,13 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
                     addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new NoneFilterComponent(),
                             true, false, SortStatusType.UNSORTED);
 
+                    addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), new String[]{"lastStatusTypeUpdateActor.lastName", "lastStatusTypeUpdateActor.firstName"}), true, false,
+                            SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
+
                     addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedActor.class);
                 }
             };
@@ -167,6 +174,13 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
                     addColumn("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.status", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("portfolioEntryResourcePlanAllocationStatusType", (value, cellValue) -> views.html.modelsparts.display_allocation_status.render(value.portfolioEntryResourcePlanAllocationStatusType).body());
+
+                    addColumn("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor", "object.allocated_resource.last_update_status_type_actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastStatusTypeUpdateActor", (portfolioEntryResourcePlanAllocatedActorListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryResourcePlanAllocatedActorListView.lastStatusTypeUpdateActor).body());
+                    setColumnValueCssClass("lastStatusTypeUpdateActor", "rowlink-skip");
+
+                    addColumn("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastStatusTypeUpdateTime", new DateFormatter<>());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedActor.class);
 
@@ -232,6 +246,10 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
 
     public PortfolioEntryResourcePlanAllocationStatusType portfolioEntryResourcePlanAllocationStatusType;
 
+    public Actor lastStatusTypeUpdateActor;
+
+    public Date lastStatusTypeUpdateTime;
+
     public Boolean followPackageDates;
 
     /**
@@ -249,6 +267,8 @@ public class PortfolioEntryResourcePlanAllocatedActorListView {
         this.endDate = allocatedActor.endDate;
         this.planningPackage = allocatedActor.portfolioEntryPlanningPackage;
         this.portfolioEntryResourcePlanAllocationStatusType = allocatedActor.portfolioEntryResourcePlanAllocationStatusType;
+        this.lastStatusTypeUpdateActor = allocatedActor.lastStatusTypeUpdateActor;
+        this.lastStatusTypeUpdateTime = allocatedActor.lastStatusTypeUpdateTime;
         this.followPackageDates = allocatedActor.followPackageDates;
 
         this.currency = allocatedActor.currency;

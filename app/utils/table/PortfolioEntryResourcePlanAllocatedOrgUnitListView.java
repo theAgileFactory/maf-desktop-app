@@ -30,6 +30,7 @@ import framework.utils.formats.StringFormatFormatter;
 import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
+import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntryPlanningPackage;
 
@@ -69,6 +70,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
         public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> getFilterConfig() {
             return new FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                 {
+                    String[] actorFieldsSort = { "lastStatusTypeUpdateActor.lastName", "lastStatusTypeUpdateActor.firstName" };
+
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
                     addColumnConfiguration("orgUnit", "orgUnit.id", "object.allocated_resource.org_unit.label",
                             new SelectFilterComponent(orgUnits.getValues().isEmpty() ? null : orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[] {"name"}), true, false, SortStatusType.UNSORTED);
@@ -78,6 +81,13 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
                     addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new NoneFilterComponent(),
                             true, false, SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), actorFieldsSort), true, false,
+                            SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
 
                     addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
                             SortStatusType.UNSORTED);
@@ -101,7 +111,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                             new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("endDate", "endDate", "object.allocated_resource.end_date.label",
-                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
 
                     addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedOrgUnit.class);
                 }
@@ -167,6 +177,13 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
                     addColumn("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.status", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("portfolioEntryResourcePlanAllocationStatusType", (value, cellValue) -> views.html.modelsparts.display_allocation_status.render(value.portfolioEntryResourcePlanAllocationStatusType).body());
+
+                    addColumn("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor", "object.allocated_resource.last_update_status_type_actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastStatusTypeUpdateActor", (portfolioEntryResourcePlanAllocatedActorListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryResourcePlanAllocatedActorListView.lastStatusTypeUpdateActor).body());
+                    setColumnValueCssClass("lastStatusTypeUpdateActor", "rowlink-skip");
+
+                    addColumn("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastStatusTypeUpdateTime", new DateFormatter<>());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
 
@@ -251,6 +268,10 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
 
     public PortfolioEntryResourcePlanAllocationStatusType portfolioEntryResourcePlanAllocationStatusType;
 
+    public Actor lastStatusTypeUpdateActor;
+
+    public Date lastStatusTypeUpdateTime;
+
     public Boolean followPackageDates;
 
     /**
@@ -268,6 +289,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
         this.endDate = allocatedOrgUnit.endDate;
         this.planningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage;
         this.portfolioEntryResourcePlanAllocationStatusType = allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType;
+        this.lastStatusTypeUpdateActor = allocatedOrgUnit.lastStatusTypeUpdateActor;
+        this.lastStatusTypeUpdateTime = allocatedOrgUnit.lastStatusTypeUpdateTime;
         this.followPackageDates = allocatedOrgUnit.followPackageDates;
 
         this.currency = allocatedOrgUnit.currency;
