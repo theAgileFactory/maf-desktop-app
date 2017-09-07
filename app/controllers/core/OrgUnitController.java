@@ -17,28 +17,15 @@
  */
 package controllers.core;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
-import org.apache.commons.lang3.tuple.Pair;
-
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.finance.PortfolioEntryResourcePlanDAO;
@@ -47,27 +34,21 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
-import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.FilterConfig;
-import framework.utils.IColumnFormatter;
-import framework.utils.JqueryGantt;
+import framework.utils.*;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.SideBar;
-import framework.utils.Table;
-import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntry;
 import models.timesheet.TimesheetActivityAllocatedActor;
+import org.apache.commons.lang3.tuple.Pair;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -85,12 +66,11 @@ import utils.form.TimesheetActivityAllocatedActorFormData;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
-import utils.table.ActorListView;
-import utils.table.OrgUnitListView;
-import utils.table.PortfolioEntryListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView;
-import utils.table.TimesheetActivityAllocatedActorListView;
+import utils.table.*;
+
+import javax.inject.Inject;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The controller which displays / allows to edit an org unit.
@@ -594,7 +574,7 @@ public class OrgUnitController extends Controller {
      * @param id
      *            the org unit id
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result getDeliveryUnitAllocationIds(Long id) {
 
         try {
@@ -627,7 +607,7 @@ public class OrgUnitController extends Controller {
      * @param id
      *            the org unit id
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result getAllActorsPortfolioEntryAllocationIds(Long id) {
 
         try {
@@ -656,11 +636,11 @@ public class OrgUnitController extends Controller {
             return internalServerError();
         }
     }
-    
+
     /**
      * Confirm the selected actors portfolio entry allocations.
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result confirmDeliveryUnitsAllocations() {
 
         try {
@@ -678,9 +658,29 @@ public class OrgUnitController extends Controller {
     }
 
     /**
+     * Cancel the selected actors portfolio entry allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result cancelDeliveryUnitsAllocations() {
+
+        try {
+
+            List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+            updateDeliveryUnitsAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+
+            return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful")
+                    + "</div>");
+
+        } catch (Exception e) {
+            return internalServerError();
+        }
+    }
+
+    /**
      * Refuse the selected delivery units allocations.
      */
-    @Restrict({@Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)})
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result refuseDeliveryUnitsAllocations() {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
@@ -694,7 +694,7 @@ public class OrgUnitController extends Controller {
     /**
      * Refuse the selected delivery units allocations.
      */
-    @Restrict({@Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)})
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result submitDeliveryUnitsAllocations() {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
@@ -711,6 +711,8 @@ public class OrgUnitController extends Controller {
                 Long id = Long.parseLong(idAsString);
                 PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitById(id);
                 allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(status);
+                allocatedOrgUnit.lastStatusTypeUpdateTime = new Date();
+                allocatedOrgUnit.lastStatusTypeUpdateActor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
                 allocatedOrgUnit.update();
             });
         }
@@ -719,7 +721,7 @@ public class OrgUnitController extends Controller {
     /**
      * Confirm the selected actors portfolio entry allocations.
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result confirmActorsPortfolioEntryAllocations() {
 
         try {
@@ -737,9 +739,29 @@ public class OrgUnitController extends Controller {
     }
 
     /**
+     * Cancel the selected actors portfolio entry allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result cancelActorsPortfolioEntryAllocations() {
+
+        try {
+
+            List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+            updateActorsPortfolioEntryAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+
+            return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful")
+                    + "</div>");
+
+        } catch (Exception e) {
+            return internalServerError();
+        }
+    }
+
+    /**
      * Refuse the selected actors portfolio entry allocations.
      */
-    @Restrict({@Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)})
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result refuseActorsPortfolioEntryAllocations() {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
@@ -753,7 +775,7 @@ public class OrgUnitController extends Controller {
     /**
      * Submit the selected actors portfolio entry allocations.
      */
-    @Restrict({@Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)})
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result submitActorsPortfolioEntryAllocations() {
 
         List<String> ids = FilterConfig.getIdsFromRequest(request());
@@ -776,6 +798,8 @@ public class OrgUnitController extends Controller {
                 Long id = Long.parseLong(idAsString);
                 PortfolioEntryResourcePlanAllocatedActor allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(id);
                 allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(status);
+                allocatedActor.lastStatusTypeUpdateTime = new Date();
+                allocatedActor.lastStatusTypeUpdateActor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
                 allocatedActor.update();
             });
         }
@@ -944,37 +968,26 @@ public class OrgUnitController extends Controller {
         Table<PortfolioEntryResourcePlanAllocatedActorListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
-        try {
+        if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
 
-            if (securityService.restrict(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)) {
+            table.addAjaxRowAction(
+                    Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
+                    routes.OrgUnitController.confirmActorsPortfolioEntryAllocations().url(),
+                    "actor-result"
+            );
 
-                table.addAjaxRowAction(
-                        Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
-                        controllers.core.routes.OrgUnitController.confirmActorsPortfolioEntryAllocations().url(),
-                        "actor-result"
-                );
+            table.addAjaxRowAction(
+                    Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse"),
+                    routes.OrgUnitController.refuseActorsPortfolioEntryAllocations().url(),
+                    "actor-result"
+            );
 
-                table.addAjaxRowAction(
-                        Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse"),
-                        routes.OrgUnitController.refuseActorsPortfolioEntryAllocations().url(),
-                        "actor-result"
-                );
+            table.setAllIdsUrl(routes.OrgUnitController.getAllActorsPortfolioEntryAllocationIds(orgUnitId).url());
 
-                table.setAllIdsUrl(controllers.core.routes.OrgUnitController.getAllActorsPortfolioEntryAllocationIds(orgUnitId).url());
-
-            }
-
-        } catch (AccountManagementException e) {
-            Logger.error("OrgUnit / Allocated actors for PE / Error when compute restric: the actions are not added", e);
         }
 
-        table.setLineAction(new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
-            @Override
-            public String apply(PortfolioEntryResourcePlanAllocatedActorListView portfolioEntryResourcePlanAllocatedActorListView, Object value) {
-                return controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId)
-                        .url();
-            }
-        });
+        table.setLineAction((portfolioEntryResourcePlanAllocatedActorListView, value) -> routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId)
+                .url());
 
         return Pair.of(table, pagination);
 
@@ -1011,12 +1024,7 @@ public class OrgUnitController extends Controller {
         Table<TimesheetActivityAllocatedActorListView> table = this.getTableProvider().get().timesheetActivityAllocatedActor.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
-        table.setLineAction(new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
-            @Override
-            public String apply(TimesheetActivityAllocatedActorListView timesheetActivityAllocatedActorListView, Object value) {
-                return controllers.core.routes.ActorController.allocationDetails(timesheetActivityAllocatedActorListView.actor.id, 0, 0, false).url();
-            }
-        });
+        table.setLineAction((timesheetActivityAllocatedActorListView, value) -> routes.ActorController.allocationDetails(timesheetActivityAllocatedActorListView.actor.id, 0, 0, false).url());
 
         return Pair.of(table, pagination);
 
@@ -1052,21 +1060,15 @@ public class OrgUnitController extends Controller {
         Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
-        try {
+        if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
 
-            if (securityService.restrict(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)) {
+            table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
+                    routes.OrgUnitController.confirmDeliveryUnitsAllocations().url(), "orgunit-result");
 
-                table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
-                        controllers.core.routes.OrgUnitController.confirmDeliveryUnitsAllocations().url(), "orgunit-result");
+            table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse"),
+                    routes.OrgUnitController.refuseDeliveryUnitsAllocations().url(), "orgunit-result");
 
-                table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse"),
-                        controllers.core.routes.OrgUnitController.refuseDeliveryUnitsAllocations().url(), "orgunit-result");
-
-                table.setAllIdsUrl(controllers.core.routes.OrgUnitController.getDeliveryUnitAllocationIds(orgUnitId).url());
-            }
-
-        } catch (AccountManagementException e) {
-            Logger.error("OrgUnit / Allocated actors for PE / Error when compute restric: the actions are not added", e);
+            table.setAllIdsUrl(routes.OrgUnitController.getDeliveryUnitAllocationIds(orgUnitId).url());
         }
 
         table.setLineAction(

@@ -71,6 +71,10 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
     public String allocationStatus;
 
+    public Long lastStatusTypeUpdateActor = 0L;
+
+    public String lastStatusTypeUpdateTime;
+
     public boolean followPackageDates;
 
     @Required
@@ -214,6 +218,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.endDate = allocatedActor.endDate != null ? Utilities.getDateFormat(null).format(allocatedActor.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
         this.allocationStatus = allocatedActor.portfolioEntryResourcePlanAllocationStatusType.status.name();
+        this.lastStatusTypeUpdateActor = allocatedActor.lastStatusTypeUpdateActor != null ? allocatedActor.lastStatusTypeUpdateActor.id : 0L;
+        this.lastStatusTypeUpdateTime = allocatedActor.lastStatusTypeUpdateTime != null ? Utilities.getDateFormat(null).format(allocatedActor.lastStatusTypeUpdateTime) : null;
 
         this.currencyCode = allocatedActor.currency != null ? allocatedActor.currency.code : null;
         this.currencyRate = allocatedActor.currencyRate;

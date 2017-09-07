@@ -1498,6 +1498,8 @@ object.allocated_resource.end_date.invalid=Enddatum muss nach Startdatum liegen.
 object.allocated_resource.package.label=Planungspaket
 object.allocated_resource.follow_package_dates.label=Folgt Packetdatum
 object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label=Status
+object.allocated_resource.last_update_status_type_actor.label=Status aktualisiert
+object.allocated_resource.last_update_status_type_time.label=Status aktualisiert Datum
 object.allocated_resource.daily_rate.label=Tagessatz
 object.allocated_resource.daily_rate.help=Kosten pro Tag der zugewiesenen Resourcen.
 object.allocated_resource.forecast_days.label=Prognose (in Tagen)
@@ -2585,6 +2587,9 @@ core.portfolio_entry_planning.resources.new.org_unit=Organisationseinheit
 core.portfolio_entry_planning.resources.new.competency=Kompetenz
 core.portfolio_entry_planning.resources.no_competency=Keine Kompetenz vorhanden
 
+#allocation status
+core.portfolio_entry_planning.resources.allocation.status.last_update.label=Aktualisiert:
+
 #manage allocated actor
 core.portfolio_entry_planning.allocated_actor.manage.title=Mitarbeiter Zuweisungen bearbeiten
 core.portfolio_entry_planning.allocated_actor.add.successful=Mitarbeiter zugewiesen
@@ -2805,6 +2810,7 @@ core.org_unit.allocation.details.actors.portfolio_entry.action.refuse=Ablehnen
 core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful=Die Zuweisungen haben erfolgreich abgelehnt.
 core.org_unit.allocation.details.actors.portfolio_entry.action.submit=Einreichen
 core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful=Die Zuweisungen haben eingereicht.
+core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful=Die Zuweisungen haben gelöscht.
 
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Verwalten einer zugewiesenen Tätigkeit für einen Mitarbeiter

@@ -242,7 +242,7 @@ object.filter_configuration.name.error=Le nom du filtre ne doit pas être vide
 object.filter_configuration.delete.confirmation=Etes-vous sûr(e) de vouloir supprimer ce filtre?
 object.filter_configuration.stored_filters=Filtres sauvés
 
-object.filter_configuration.action.reload=Effacer
+object.filter_configuration.action.clear=Effacer
 object.filter_configuration.action.reload=Recharger
 object.filter_configuration.action.save=Enregistrer
 object.filter_configuration.action.save_as=Enregistrer sous
@@ -1498,6 +1498,8 @@ object.allocated_resource.end_date.invalid=La date de fin doit être ultérieure
 object.allocated_resource.package.label=Résultat
 object.allocated_resource.follow_package_dates.label=Suivre les dates du résultat
 object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label=Statut
+object.allocated_resource.last_update_status_type_actor.label=Statut mis à jour par
+object.allocated_resource.last_update_status_type_time.label=Statut mis à jour le
 object.allocated_resource.daily_rate.label=Coût journalier
 object.allocated_resource.daily_rate.help=Le coût budgété par jour pour la ressource affectée.
 object.allocated_resource.forecast_days.label=Prévision en jours
@@ -2590,6 +2592,9 @@ core.portfolio_entry_planning.resources.new.org_unit=Fournisseur interne
 core.portfolio_entry_planning.resources.new.competency=Compétence
 core.portfolio_entry_planning.resources.no_competency=Aucune compétence disponible
 
+#allocation status
+core.portfolio_entry_planning.resources.allocation.status.last_update.label=Dernière mise à jour :
+
 #manage allocated actor
 core.portfolio_entry_planning.allocated_actor.manage.title=Gérer un employé affecté
 core.portfolio_entry_planning.allocated_actor.add.successful=L''employé a été affecté.
@@ -2810,6 +2815,7 @@ core.org_unit.allocation.details.actors.portfolio_entry.action.refuse=Refuser
 core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful=Les affectations ont été refusées.
 core.org_unit.allocation.details.actors.portfolio_entry.action.submit=Soumettre
 core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful=Les affectations ont été soumises.
+core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful=Les affectations ont été annulées.
 
 #manage actor allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Géré une activité affectée pour un employé

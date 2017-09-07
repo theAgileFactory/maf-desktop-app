@@ -59,6 +59,10 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
 
     public String allocationStatus;
 
+    public Long lastStatusTypeUpdateActor = 0L;
+
+    public String lastStatusTypeUpdateTime;
+
     public boolean followPackageDates;
 
     @Required
@@ -131,6 +135,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData {
         this.portfolioEntryPlanningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id
                 : null;
         this.allocationStatus = allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType.status.name();
+        this.lastStatusTypeUpdateActor = allocatedOrgUnit.lastStatusTypeUpdateActor != null ? allocatedOrgUnit.lastStatusTypeUpdateActor.id : 0L;
+        this.lastStatusTypeUpdateTime = allocatedOrgUnit.lastStatusTypeUpdateTime != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.lastStatusTypeUpdateTime) : null;
 
         this.currencyCode = allocatedOrgUnit.currency != null ? allocatedOrgUnit.currency.code : null;
         this.currencyRate = allocatedOrgUnit.currencyRate;
