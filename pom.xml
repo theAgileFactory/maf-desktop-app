@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.agifac.maf.desktop</groupId>
 	<artifactId>maf-desktop-app</artifactId>
-	<version>15.0.8</version>
+	<version>15.0.9</version>
 	<name>BizDock application</name> 
 	<description>This is the BizDock application module</description>
 	<packaging>play2</packaging>
@@ -65,8 +65,8 @@
         <java.target>1.8</java.target>
         <scala.version>2.11</scala.version>
         <!-- Dependencies properties -->
-		<lib.app-framework.version>15.0.8</lib.app-framework.version>
-		<maf.maf-desktop-datamodel.version>15.0.8</maf.maf-desktop-datamodel.version>
+		<lib.app-framework.version>15.0.9</lib.app-framework.version>
+		<maf.maf-desktop-datamodel.version>15.0.9</maf.maf-desktop-datamodel.version>
         <!-- Plugin properties -->
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <ivy-maven-plugin.version>0.2.5</ivy-maven-plugin.version>

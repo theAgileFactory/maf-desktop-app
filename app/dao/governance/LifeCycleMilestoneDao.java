@@ -428,14 +428,17 @@ public abstract class LifeCycleMilestoneDao {
     	String tableName = "multi_item_custom_attribute_value";
     	mapOldToNew.forEach((k,v) -> {   
     		
-    		MultiItemCustomAttributeValue obj = Ebean.find(MultiItemCustomAttributeValue.class).where().eq("object_id", k).findUnique();
+    		MultiItemCustomAttributeValue obj = Ebean.find(MultiItemCustomAttributeValue.class)
+                    .where()
+                    .eq("object_id", k)
+                    .eq("object_type", objectType)
+                    .findUnique();
    		
     		if (obj == null) return;
     		    		
-    		Long oldItem = 0L;
-    		oldItem	=	obj.getId();
-    		    		
-    		Long newItem =getCurrentAutoIncrementValue()  + 5; // +5 just be sure that there's no concurrent thread using this value.
+    		Long oldItem = obj.id;
+
+            Long newItem =getCurrentAutoIncrementValue()  + 5; // +5 just be sure that there's no concurrent thread using this value.
 
             String str = String.format("insert into  %s ( id, object_type, object_id, deleted, last_update, custom_attribute_definition_id)" 
             		+ " select %d, object_type, %s, deleted, Now(), custom_attribute_definition_id from %s where object_id = %s " 
