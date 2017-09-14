@@ -27,7 +27,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;

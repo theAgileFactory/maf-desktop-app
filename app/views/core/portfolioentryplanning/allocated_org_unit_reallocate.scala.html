@@ -75,8 +75,8 @@
                         </div>
 
                         @parts.dropdownlist(
-                            allocatedActorForm("actor"), 
-                            parts.Msg.asString("object.allocated_resource.actor.label"), 
+                            allocatedActorForm("actor"),
+                            parts.Msg.asString("object.allocated_resource.actor.label"),
                             dao.pmo.ActorDao.getActorActiveAsVHByOrgUnit(orgUnit.id),
                             null,
                             false
@@ -198,9 +198,18 @@
 
                         currentYear = new Date().getFullYear();
                         $('#year-picker').html(currentYear);
-                        showOrCreateMonthAllocation(currentYear);
-                        $('#year-picker-block').hide();
-                        $('#monthAllocations').hide();
+                        $('#monthAllocations').children().hide();
+                        showOrCreateMonthAllocation(currentYear, '@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}');
+
+                        if (!$('#@allocatedActorForm("monthlyAllocated").id').prop('checked')) {
+                            $('#year-picker-block').hide();
+                            $('#monthAllocations').hide();
+                        } else {
+                            $('#@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}').prop('readonly', true);
+                            $('#@allocatedActorForm("followPackageDates").id').parent().parent().hide();
+                            $('#@allocatedActorForm("startDate").id').parent().parent().hide();
+                            $('#@allocatedActorForm("endDate").id').parent().parent().hide();
+                        }
 
                         </script>
         

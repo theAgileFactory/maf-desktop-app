@@ -18,6 +18,7 @@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     allocatedOrgUnit: models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit,
+    allocatedActorId: Long,
     days: Double
 )
 
@@ -40,7 +41,7 @@
 
     @parts.Msg("core.portfolio_entry_planning.reallocate.report_balance.header", days)<br/><br/>
 
-    <a href="@controllers.core.routes.PortfolioEntryPlanningController.processReallocateOrgUnitReportBalance(portfolioEntry.id, allocatedOrgUnit.id, days)" class="btn btn-primary">@parts.Msg("core.portfolio_entry_planning.reallocate.report_balance.yes")</a>
+    <a href="@controllers.core.routes.PortfolioEntryPlanningController.processReallocateOrgUnitReportBalance(portfolioEntry.id, allocatedOrgUnit.id, allocatedActorId)" class="btn btn-primary">@parts.Msg("core.portfolio_entry_planning.reallocate.report_balance.yes")</a>
     <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id)'>@parts.Msg("core.portfolio_entry_planning.reallocate.report_balance.no")</a>
 
 }

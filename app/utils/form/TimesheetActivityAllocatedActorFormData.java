@@ -17,19 +17,16 @@
  */
 package utils.form;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import dao.pmo.ActorDao;
 import dao.timesheet.TimesheetDao;
 import framework.utils.Utilities;
 import models.timesheet.TimesheetActivityAllocatedActor;
-import play.Logger;
+import models.timesheet.TimesheetActivityAllocatedActorDetail;
 import play.data.validation.Constraints.Required;
-import play.data.validation.ValidationError;
-import play.i18n.Messages;
+
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A timesheet activity allocated actor form data is used to manage the fields
@@ -37,12 +34,7 @@ import play.i18n.Messages;
  * 
  * @author Johann Kohler
  */
-public class TimesheetActivityAllocatedActorFormData {
-
-    // the current object id (actor id or org unit id)
-    public Long id;
-
-    public Long allocatedActivityId;
+public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationFormData {
 
     @Required
     public Long actorId;
@@ -53,44 +45,11 @@ public class TimesheetActivityAllocatedActorFormData {
     @Required
     public Long timesheetActivity;
 
-    @Required
-    public BigDecimal days;
-
-    public String startDate;
-
-    public String endDate;
-
-    /**
-     * Validate the dates.
-     */
-    public List<ValidationError> validate() {
-
-        List<ValidationError> errors = new ArrayList<>();
-
-        try {
-
-            if (!this.startDate.equals("") && this.endDate.equals("")) {
-                // the start date cannot be filled alone
-                errors.add(new ValidationError("startDate", Messages.get("object.allocated_resource.start_date.invalid")));
-            }
-
-            if (!this.startDate.equals("") && !this.endDate.equals("")
-                    && Utilities.getDateFormat(null).parse(this.startDate).after(Utilities.getDateFormat(null).parse(this.endDate))) {
-                // the end date should be after the start date
-                errors.add(new ValidationError("endDate", Messages.get("object.allocated_resource.end_date.invalid")));
-            }
-
-        } catch (Exception e) {
-            Logger.warn("impossible to parse the allocation dates when testing the formats");
-        }
-
-        return errors.isEmpty() ? null : errors;
-    }
-
     /**
      * Default constructor.
      */
     public TimesheetActivityAllocatedActorFormData() {
+        super();
     }
 
     /**
@@ -104,7 +63,7 @@ public class TimesheetActivityAllocatedActorFormData {
     public TimesheetActivityAllocatedActorFormData(Long id, TimesheetActivityAllocatedActor allocatedActivity) {
 
         this.id = id;
-        this.allocatedActivityId = allocatedActivity.id;
+        this.allocationId = allocatedActivity.id;
 
         this.actorId = allocatedActivity.actor.id;
         this.timesheetActivityType = allocatedActivity.timesheetActivity.timesheetActivityType.id;
@@ -113,6 +72,17 @@ public class TimesheetActivityAllocatedActorFormData {
         this.startDate = allocatedActivity.startDate != null ? Utilities.getDateFormat(null).format(allocatedActivity.startDate) : null;
         this.endDate = allocatedActivity.endDate != null ? Utilities.getDateFormat(null).format(allocatedActivity.endDate) : null;
 
+        this.monthlyAllocated = allocatedActivity.monthlyAllocated;
+        this.monthAllocations = new ArrayList<>();
+        List<TimesheetActivityAllocatedActorDetail> details = allocatedActivity.timesheetActivityAllocatedActorDetails;
+        for(TimesheetActivityAllocatedActorDetail detail : details) {
+            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(detail.year)).findFirst();
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(detail.year);
+            monthAllocation.addValue(detail.month, detail.days);
+            if (!optionalMonthlyAllocation.isPresent()) {
+                monthAllocations.add(monthAllocation);
+            }
+        }
     }
 
     /**
@@ -137,6 +107,53 @@ public class TimesheetActivityAllocatedActorFormData {
             allocatedActivity.endDate = Utilities.getDateFormat(null).parse(this.endDate);
         } catch (ParseException e) {
             allocatedActivity.endDate = null;
+        }
+
+        allocatedActivity.monthlyAllocated = this.monthlyAllocated;
+
+        if (this.monthlyAllocated) {
+
+            // Set allocations by month
+            List<TimesheetActivityAllocatedActorDetail> details = new ArrayList<>();
+            for (MonthAllocation monthAllocation : monthAllocations) {
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 0, monthAllocation.januaryAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 1, monthAllocation.februaryAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 2, monthAllocation.marchAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 3, monthAllocation.aprilAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 4, monthAllocation.mayAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 5, monthAllocation.juneAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 6, monthAllocation.julyAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 7, monthAllocation.augustAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 8, monthAllocation.septemberAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 9, monthAllocation.octoberAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 10, monthAllocation.novemberAllocationValue));
+                details.add((TimesheetActivityAllocatedActorDetail) processMonthAllocation(allocatedActivity, monthAllocation.year, 11, monthAllocation.decemberAllocationValue));
+            }
+
+            allocatedActivity.timesheetActivityAllocatedActorDetails.clear();
+            allocatedActivity.timesheetActivityAllocatedActorDetails.addAll(details.stream().filter(detail -> detail != null).collect(Collectors.toList()));
+
+            // Set start date and end date
+            Comparator<? super TimesheetActivityAllocatedActorDetail> comp = (d1, d2) -> {
+                int c = Integer.compare(d1.year, d2.year);
+                return c == 0 ? Integer.compare(d1.month, d2.month) : c;
+            };
+
+            TimesheetActivityAllocatedActorDetail startMonth = allocatedActivity.timesheetActivityAllocatedActorDetails.stream().min(comp).get();
+            TimesheetActivityAllocatedActorDetail endMonth = allocatedActivity.timesheetActivityAllocatedActorDetails.stream().max(comp).get();
+
+            Calendar c = GregorianCalendar.getInstance();
+            c.set(startMonth.year, startMonth.month, 1);
+            allocatedActivity.startDate = c.getTime();
+
+            c.set(endMonth.year, endMonth.month, 1);
+            c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+            allocatedActivity.endDate = c.getTime();
+
+        } else if (allocatedActivity.startDate != null && allocatedActivity.endDate != null) { // If start and end dates are provided, distribute evenly the days across the months
+            allocatedActivity.computeAllocationDetails(false);
+        } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
+            allocatedActivity.clearAllocations();
         }
 
     }

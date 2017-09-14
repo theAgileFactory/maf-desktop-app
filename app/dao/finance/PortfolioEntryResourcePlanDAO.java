@@ -283,7 +283,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
-            exprAllocatedActors = exprAllocatedActors.eq("portfolioEntryResourcePlanAllocationStatusType.name", PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
+            exprAllocatedActors = exprAllocatedActors.eq("portfolioEntryResourcePlanAllocationStatusType.status", PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
         }
         if (orgUnitId != null) {
             exprAllocatedActors = exprAllocatedActors.eq("actor.orgUnit.id", orgUnitId);
@@ -662,7 +662,7 @@ public abstract class PortfolioEntryResourcePlanDAO {
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.isActive", true)
                 .eq("portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.id", portfolioEntryId);
         if (onlyConfirmed) {
-            exprAllocatedOrgUnits = exprAllocatedOrgUnits.eq("portfolioEntryResourcePlanAllocationStatusType.name", PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
+            exprAllocatedOrgUnits = exprAllocatedOrgUnits.eq("portfolioEntryResourcePlanAllocationStatusType.status", PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
         }
         if (orgUnitId != null) {
             exprAllocatedOrgUnits = exprAllocatedOrgUnits.eq("orgUnit.id", orgUnitId);
