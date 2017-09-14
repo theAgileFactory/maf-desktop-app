@@ -71,8 +71,8 @@
                     
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
                         
-                        @if(allocatedActorForm("allocatedActorId").value!=null) {
-                            <input type="hidden" name="allocatedActorId" value="@allocatedActorForm("allocatedActorId").value"/>
+                        @if(allocatedActorForm("allocationId").value!=null) {
+                            <input type="hidden" name="allocationId" value="@allocatedActorForm("allocationId").value"/>
                         }
 
                         <div class="form-group">
@@ -87,7 +87,7 @@
                             controllers.routes.PickerController.actor().url
                         )
                         
-                        @if(allocatedActorForm("allocatedActorId").value!=null) {
+                        @if(allocatedActorForm("allocationId").value!=null) {
                             <input type="hidden" name="stakeholderType" value="0"/>
                         } else {
                             @parts.dropdownlist(
@@ -180,7 +180,6 @@
                             <input type="hidden" name="dailyRate" value="0" />
                         }
                         
-
                         @allocated_resource_manage_js()
                         
                         <script>
@@ -237,8 +236,8 @@
                 </div>
 
                 <div class="col-md-6">
-                    @if(allocatedActorForm("allocatedActorId").value!=null) {
-                        @parts.extended_attributes_input(allocatedActorForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor], Long.parseLong(allocatedActorForm("allocatedActorId").value))
+                    @if(allocatedActorForm("allocationId").value!=null) {
+                        @parts.extended_attributes_input(allocatedActorForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor], Long.parseLong(allocatedActorForm("allocationId").value))
                     } else {
                         @parts.extended_attributes_input(allocatedActorForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor], null)
                     }

@@ -22,7 +22,6 @@ import controllers.core.routes;
 import dao.finance.PurchaseOrderDAO;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.IColumnFormatter;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.*;

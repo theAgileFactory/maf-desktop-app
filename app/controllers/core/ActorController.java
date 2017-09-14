@@ -57,7 +57,6 @@ import framework.utils.SideBar;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.pmo.Actor;
 import models.pmo.ActorCapacity;
 import models.pmo.Competency;
@@ -747,7 +746,7 @@ public class ActorController extends Controller {
 
         TimesheetActivityAllocatedActor allocatedActivity = null;
 
-        if (allocatedActivityFormData.allocatedActivityId == null) { // create
+        if (allocatedActivityFormData.allocationId == null) { // create
                                                                      // case
 
             allocatedActivity = new TimesheetActivityAllocatedActor();
@@ -758,7 +757,7 @@ public class ActorController extends Controller {
 
         } else { // edit case
 
-            allocatedActivity = TimesheetDao.getTimesheetActivityAllocatedActorById(allocatedActivityFormData.allocatedActivityId);
+            allocatedActivity = TimesheetDao.getTimesheetActivityAllocatedActorById(allocatedActivityFormData.allocationId);
 
             // security: the actor must be related to the object
             if (!allocatedActivity.actor.id.equals(id)) {
