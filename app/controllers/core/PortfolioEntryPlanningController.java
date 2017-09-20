@@ -85,6 +85,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The controller which allows to manage the planning of a portfolio entry.
@@ -2215,11 +2216,29 @@ public class PortfolioEntryPlanningController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.reallocate_resource.successful"));
 
         if (allocatedOrgUnit.days.compareTo(allocatedActor.days) > 0) {
+            // Compute remaining balance by substracting days allocated to the actor from the initial org unit allocation month by month (minimum 0 for a month)
+            Double daysBalance = allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.stream()
+                    .mapToDouble(detail -> {
+                        Double days = detail.days;
+                        // Get the corresponding month in the actor allocation
+                        Optional<PortfolioEntryResourcePlanAllocatedActorDetail> optionalActorDetail = allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
+                                .stream()
+                                .filter(actorDetail -> actorDetail.year.equals(detail.year) && actorDetail.month.equals(detail.month))
+                                .findFirst();
+                        // If the corresponding month exists in the actor allocation, substract (minimum 0)
+                        if (optionalActorDetail.isPresent()) {
+                            days = optionalActorDetail.get().days > days ? 0 : optionalActorDetail.get().days - days;
+                        }
+                        return days;
+                    })
+                    .sum();
+
             return redirect(controllers.core.routes.PortfolioEntryPlanningController.reallocateOrgUnitReportBalance(
                     portfolioEntry.id,
                     allocatedOrgUnit.id,
                     allocatedActor.id,
-                    allocatedOrgUnit.days.subtract(allocatedActor.days).doubleValue()));
+                    daysBalance
+            ));
         } else {
             return redirect(controllers.core.routes.PortfolioEntryPlanningController.resources(id));
         }
@@ -2280,9 +2299,14 @@ public class PortfolioEntryPlanningController extends Controller {
                 .stream()
                 .forEach(detail -> {
                     ResourceAllocationDetail allocatedActorDetail = allocatedActor.getDetail(detail.getYear(), detail.getMonth());
-                    if (allocatedActorDetail != null && detail.getDays().compareTo(allocatedActorDetail.getDays()) > 0) {
-                        detail.setDays(detail.getDays() - allocatedActorDetail.getDays());
-                        allocatedOrgUnit.days = allocatedOrgUnit.days.subtract(BigDecimal.valueOf(allocatedActorDetail.getDays()));
+                    if (allocatedActorDetail != null) {
+                        if (detail.getDays().compareTo(allocatedActorDetail.getDays()) > 0) {
+                            detail.setDays(detail.getDays() - allocatedActorDetail.getDays());
+                            allocatedOrgUnit.days = allocatedOrgUnit.days.subtract(BigDecimal.valueOf(allocatedActorDetail.getDays()));
+                        } else {
+                            allocatedOrgUnit.days = allocatedOrgUnit.days.subtract(BigDecimal.valueOf(detail.getDays()));
+                            detail.setDays(0.0);
+                        }
                         detail.save();
                     }
                 });
