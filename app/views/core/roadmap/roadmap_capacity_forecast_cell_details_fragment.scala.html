@@ -20,7 +20,9 @@
     competency: models.pmo.Competency,
     monthName: String,
     capacityDetailsRows: List[controllers.core.RoadmapController.CapacityDetails],
-    basicBarChart: framework.highcharts.pattern.BasicBar
+    capacityDetailsByInitiativeRows: List[controllers.core.RoadmapController.CapacityDetailsByInitiative],
+    resourceBarChart: framework.highcharts.pattern.BasicBar,
+    initiativeBarChart: framework.highcharts.pattern.BasicBar
 )
 
 @import framework_views.parts.formats._
@@ -35,68 +37,133 @@
 
 <div class="row">
 
-    <div class="col-md-6">
-        <div class="table-responsive">
-            <table class="table table-condensed">
-                <colgroup>
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                </colgroup>
-                
-                <thead>
-                    <tr>
-                        <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.resource.label")</th>
-                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.confirmed_initiatives.label")</th>
-                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label")</th>
-                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.activities.label")</th>
-                        <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.available.label")</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    @for(capacityDetails <- capacityDetailsRows) {
-                        @if(capacityDetails.getOrgUnit != null) {
-                            <tr>
-                                <td>@display_org_unit(capacityDetails.getOrgUnit)</td>
-                                <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryConfirmed)</td>
-                                <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryNotConfirmed)</td>
-                                <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
-                                <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
-                            </tr>
-                        } else { @if(capacityDetails.getCompetency != null) {
-                            <tr>
-                                <td>@display_competency(capacityDetails.getCompetency)</td>
-                                <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryConfirmed)</td>
-                                <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryNotConfirmed)</td>
-                                <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
-                                <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
-                            </tr>
-                        } else {
-                            @if(capacityDetails.displayActorRow) {
-                                <tr class="bg-@capacityDetails.getBootstrapBackground">
-                                    <td>@display_actor(capacityDetails.getActor)</td>
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#details-by-resources-content" id="details-by-resources-tab" data-toggle="tab" aria-controls="details-by-resources-content" aria-expanded="true">
+            @parts.Msg("core.roadmap.simulator.capacity_forecast.resource.label")
+            </a>
+        </li>
+        <li>
+            <a href="#details-by-initiatives-content" id="details-by-initiatives-tab" data-toggle="tab" aria-controls="details-by-initiatives-content">
+            @parts.Msg("core.roadmap.simulator.capacity_forecast.initiative.label")
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-pane fade in active" id="details-by-resources-content" aria-labelledby="details-by-resources-tab">
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <colgroup>
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.resource.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.confirmed_initiatives.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.not_confirmed_initiatives.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.activities.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.available.label")</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for(capacityDetails <- capacityDetailsRows) {
+                            @if(capacityDetails.getOrgUnit != null) {
+                                <tr>
+                                    <td>@display_org_unit(capacityDetails.getOrgUnit)</td>
                                     <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryConfirmed)</td>
                                     <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryNotConfirmed)</td>
-                                    <td class="text-center">@display_number(capacityDetails.getPlannedActivity)</td>
-                                    <td class="text-center">@display_number(capacityDetails.getAvailable)</td>
+                                    <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
+                                    <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
                                 </tr>
-                            }
-                        }}
-                    }
-                </tbody>
-            </table>
+                            } else { @if(capacityDetails.getCompetency != null) {
+                                <tr>
+                                    <td>@display_competency(capacityDetails.getCompetency)</td>
+                                    <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryConfirmed)</td>
+                                    <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryNotConfirmed)</td>
+                                    <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
+                                    <td class="text-center">@framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA</td>
+                                </tr>
+                            } else {
+                                @if(capacityDetails.displayActorRow) {
+                                    <tr class="bg-@capacityDetails.getBootstrapBackground">
+                                        <td>@display_actor(capacityDetails.getActor)</td>
+                                        <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryConfirmed)</td>
+                                        <td class="text-center">@display_number(capacityDetails.getPlannedPortfolioEntryNotConfirmed)</td>
+                                        <td class="text-center">@display_number(capacityDetails.getPlannedActivity)</td>
+                                        <td class="text-center">@display_number(capacityDetails.getAvailable)</td>
+                                    </tr>
+                                }
+                            }}
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div id="resourceBarChart"></div>
         </div>
     </div>
-    
-    <div class="col-md-6">
-        <div id="basicBarChart"></div>
-        <script type="text/javascript">
+
+    <div class="tab-pane fade" id="details-by-initiatives-content" aria-labelledby="details-by-initiatives-tab">
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <colgroup>
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                        <col style="width: 10%;">
+                        <col style="width: 10%;">
+                        <col style="width: 10%;">
+                        <col style="width: 10%;">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th>@parts.Msg("object.portfolio_entry.governance_id.label")</th>
+                            <th>@parts.Msg("object.portfolio_entry.name.label")</th>
+                            <th>@parts.Msg("object.portfolio_entry.manager.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.generic_confirmed.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.generic_not_confirmed.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.nominative_confirmed.label")</th>
+                            <th class="text-center">@parts.Msg("core.roadmap.simulator.capacity_forecast.nominative_not_confirmed.label")</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    @for(detailsByInitiative <- capacityDetailsByInitiativeRows) {
+                        <tr>
+                            <td>@detailsByInitiative.getPortfolioEntry.governanceId</td>
+                            <td>@display_portfolio_entry(detailsByInitiative.getPortfolioEntry)</td>
+                            <td>@display_actor(detailsByInitiative.getPortfolioEntry.manager)</td>
+                            <td class="text-center">@display_number(detailsByInitiative.getGenericConfirmed)</td>
+                            <td class="text-center">@display_number(detailsByInitiative.getGenericNotConfirmed)</td>
+                            <td class="text-center">@display_number(detailsByInitiative.getNominativeConfirmed)</td>
+                            <td class="text-center">@display_number(detailsByInitiative.getNominativeNotConfirmed)</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div id="initiativeBarChart"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
             $(function () {
 
-                $('#basicBarChart').highcharts({
+                $('#initiativeBarChart').highcharts({
                     credits: {
                         enabled: false
                     },
@@ -108,7 +175,7 @@
                         text: ''
                     },
                     xAxis: {
-                        categories: @Html(basicBarChart.getCategoriesAsJson)
+                        categories: @Html(initiativeBarChart.getCategoriesAsJson)
                     },
                     yAxis: {
                         min: 0,
@@ -120,21 +187,75 @@
                     tooltip: {
                         headerFormat: '<table>',
                         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
-                            '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
                         footerFormat: '</table>',
                         shared: true,
                         useHTML: true
                     },
                     plotOptions: {
                         column: {
-                            borderWidth: 0
+                            borderWidth: 0,
+                            maxPointWidth: 100
+                        },
+                        series: {
+                            stacking: 'normal'
                         }
                     },
-                    series: @Html(basicBarChart.getSeriesContainer.toJsonArray)
+                    series: @Html(initiativeBarChart.getSeriesContainer.toJsonArray)
                 });
 
+                $('#resourceBarChart').highcharts({
+                    credits: {
+                        enabled: false
+                    },
+                    colors: @Html(framework.highcharts.HighchartsUtils.getColorsAsJson),
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: @Html(resourceBarChart.getCategoriesAsJson)
+                    },
+                    yAxis: {
+                        min: 0,
+                        minTickInterval: 1,
+                        title: {
+                            text: ''
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            borderWidth: 0,
+                            maxPointWidth: 100
+                        }
+                    },
+                    series: @Html(resourceBarChart.getSeriesContainer.toJsonArray)
+                });
+
+                $('#capacity-forecast-cell-details').show();
+
+                $('#details-by-initiatives-tab').on('click', function(e) {
+                    $('#details-by-resources-content').hide();
+                    $('#details-by-initiatives-content').show();
+                });
+
+                $('#details-by-resources-tab').on('click', function(e) {
+                    $('#details-by-initiatives-content').hide();
+                    $('#details-by-resources-content').show();
+                });
+
+                $('#details-by-initiatives-content').hide();
+
             });
-        </script>
-    </div>
-    
+    </script>
 </div>
