@@ -2002,6 +2002,10 @@ core.roadmap.simulator.capacity_forecast.available.label=Verfügbar
 core.roadmap.simulator.capacity_forecast.planned.label=Geplant
 core.roadmap.simulator.capacity_forecast.days.label=Arbeitsaufgabe
 core.roadmap.simulator.capacity_forecast.confirmed.label=Bestätigte
+core.roadmap.simulator.capacity_forecast.generic_confirmed.label=Bestätigte Organisationseinheiten
+core.roadmap.simulator.capacity_forecast.generic_not_confirmed.label=Unbestätigte Organisationseinheiten
+core.roadmap.simulator.capacity_forecast.nominative_confirmed.label=Bestätigte Ressourcen
+core.roadmap.simulator.capacity_forecast.nominative_not_confirmed.label=Unbestätigte Ressourcen
 
 #----------------------
 # search

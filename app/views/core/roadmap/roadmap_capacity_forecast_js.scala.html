@@ -38,9 +38,10 @@
     }
 
     function reloadActiveTable() {
-        var activeTab = $('.tab-pane.active');
+        var activeTab = $('.tab-content .tab-pane.active');
 
         activeTab.html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
+        $('#capacity-forecast-cell-details').hide();
 
         $.ajax({
             url: getUrl(activeTab.attr('id')),
