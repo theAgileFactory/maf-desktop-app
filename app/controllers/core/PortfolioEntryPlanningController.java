@@ -2220,14 +2220,10 @@ public class PortfolioEntryPlanningController extends Controller {
             Double daysBalance = allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.stream()
                     .mapToDouble(detail -> {
                         Double days = detail.days;
-                        // Get the corresponding month in the actor allocation
-                        Optional<PortfolioEntryResourcePlanAllocatedActorDetail> optionalActorDetail = allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
-                                .stream()
-                                .filter(actorDetail -> actorDetail.year.equals(detail.year) && actorDetail.month.equals(detail.month))
-                                .findFirst();
+                        ResourceAllocationDetail actorDetail = allocatedActor.getDetail(detail.year, detail.month);
                         // If the corresponding month exists in the actor allocation, substract (minimum 0)
-                        if (optionalActorDetail.isPresent()) {
-                            days = optionalActorDetail.get().days > days ? 0 : optionalActorDetail.get().days - days;
+                        if (actorDetail != null) {
+                            days = actorDetail.getDays() > days ? 0 : actorDetail.getDays() - days;
                         }
                         return days;
                     })
