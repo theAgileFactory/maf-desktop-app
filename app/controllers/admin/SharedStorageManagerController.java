@@ -123,11 +123,11 @@ public class SharedStorageManagerController extends Controller {
     private static Table<SharedStorageFile> getInputFileTable() {
         return new Table<SharedStorageFile>() {
             {
-                this.addColumn("name", "name", "admin.shared_storage.view.file.name.label", SorterType.STRING_SORTER, true);
+                this.addColumn("name", "name", "admin.shared_storage.view.file.name.label", SorterType.NONE, true);
                 this.setColumnCssClass("name", IMafConstants.BOOTSTRAP_COLUMN_4);
 
                 this.addColumn("lastModified", "lastModified", "admin.shared_storage.view.file.last_modified.label", SorterType.DATE_TIME_SORTER, true);
-                this.setJavaColumnFormatter("lastModified", new DateFormatter<SharedStorageFile>("dd/MM/yyyy HH:mm"));
+                this.setJavaColumnFormatter("lastModified", new DateFormatter<>("dd/MM/yyyy HH:mm"));
                 this.setColumnCssClass("lastModified", IMafConstants.BOOTSTRAP_COLUMN_3);
 
                 this.addColumn("length", "size", "admin.shared_storage.view.file.size.label", SorterType.NONE, true);
@@ -135,24 +135,16 @@ public class SharedStorageManagerController extends Controller {
 
                 this.addColumn("downloadActionLink", "id", "", SorterType.NONE);
                 this.setJavaColumnFormatter("downloadActionLink",
-                        new StringFormatFormatter<SharedStorageFile>(IMafConstants.DISPLAY_URL_FORMAT, new Hook<SharedStorageFile>() {
-                            @Override
-                            public String convert(SharedStorageFile value) {
-                                return routes.SharedStorageManagerController.download(value.getId()).url();
-                            }
-                        }));
+                        new StringFormatFormatter<>(IMafConstants.DISPLAY_URL_FORMAT, value -> routes.SharedStorageManagerController.download(value.getId()).url()));
                 this.setColumnCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 this.setColumnValueCssClass("downloadActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
 
                 this.addColumn("deleteActionLink", "id", "", SorterType.NONE);
-                setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<SharedStorageFile>() {
-                    @Override
-                    public String apply(SharedStorageFile sharedStorageFile, Object value) {
-                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                Msg.get("default.delete.confirmation.message"));
-                        String url = routes.SharedStorageManagerController.delete(sharedStorageFile.getId()).url();
-                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                    }
+                setJavaColumnFormatter("deleteActionLink", (sharedStorageFile, value) -> {
+                    String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                            Msg.get("default.delete.confirmation.message"));
+                    String url = routes.SharedStorageManagerController.delete(sharedStorageFile.getId()).url();
+                    return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                 });
                 this.setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                 this.setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
