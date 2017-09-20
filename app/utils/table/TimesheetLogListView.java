@@ -88,9 +88,9 @@ public class TimesheetLogListView {
                     addColumnConfiguration("hours", "hours", "object.timesheet_log.hours.label", new NumericFieldFilterComponent("0", "="), true, false,
                             SortStatusType.UNSORTED);
 
-                    ISelectableValueHolderCollection<String> statusVH = new DefaultSelectableValueHolderCollection<String>();
+                    ISelectableValueHolderCollection<String> statusVH = new DefaultSelectableValueHolderCollection<>();
                     for (TimesheetReport.Status status : TimesheetReport.Status.values()) {
-                        statusVH.add(new DefaultSelectableValueHolder<String>(status.name(),
+                        statusVH.add(new DefaultSelectableValueHolder<>(status.name(),
                                 Msg.get("object.timesheet_report.status." + status.name() + ".label")));
                     }
                     addColumnConfiguration("status", "timesheetEntry.timesheetReport.status", "object.timesheet_report.status.label",
@@ -113,54 +113,33 @@ public class TimesheetLogListView {
                     setIdFieldName("id");
 
                     addColumn("actor", "actor", "object.timesheet_report.actor.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("actor", new IColumnFormatter<TimesheetLogListView>() {
-                        @Override
-                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                            return views.html.modelsparts.display_actor.render(timesheetLogListView.actor).body();
-                        }
-                    });
+                    setJavaColumnFormatter("actor", (timesheetLogListView, value) -> views.html.modelsparts.display_actor.render(timesheetLogListView.actor).body());
                     this.setColumnValueCssClass("actor", "rowlink-skip");
 
                     addColumn("orgUnit", "orgUnit", "object.timesheet_report.org_unit.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("orgUnit", new IColumnFormatter<TimesheetLogListView>() {
-                        @Override
-                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                            return views.html.modelsparts.display_org_unit.render(timesheetLogListView.orgUnit).body();
-                        }
-                    });
+                    setJavaColumnFormatter("orgUnit", (timesheetLogListView, value) -> views.html.modelsparts.display_org_unit.render(timesheetLogListView.orgUnit).body());
                     this.setColumnValueCssClass("orgUnit", "rowlink-skip");
 
                     addColumn("logDate", "logDate", "object.timesheet_log.log_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("logDate", new DateFormatter<TimesheetLogListView>());
+                    setJavaColumnFormatter("logDate", new DateFormatter<>());
 
-                    addColumn("hours", "hours", "object.timesheet_log.hours.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("hours", new NumberFormatter<TimesheetLogListView>());
+                    addSummableColumn("hours", "hours", "object.timesheet_log.hours.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("hours", new NumberFormatter<>());
+                    setColumnHeaderCssClass("hours", "text-right");
+                    setColumnValueCssClass("hours", "text-right");
 
                     addColumn("status", "status", "object.timesheet_report.status.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("status", new IColumnFormatter<TimesheetLogListView>() {
-                        @Override
-                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                            return "<span class=\"label label-" + timesheetLogListView.statusClass + "\">"
-                                    + Msg.get("object.timesheet_report.status." + timesheetLogListView.status.name() + ".label") + "</span>";
-                        }
-                    });
+                    setJavaColumnFormatter("status", (timesheetLogListView, value) -> "<span class=\"label label-" + timesheetLogListView.statusClass + "\">"
+                            + Msg.get("object.timesheet_report.status." + timesheetLogListView.status.name() + ".label") + "</span>");
 
                     addColumn("planningPackage", "planningPackage", "object.timesheet_entry.planning_package.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("planningPackage", new IColumnFormatter<TimesheetLogListView>() {
-                        @Override
-                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                            return views.html.modelsparts.display_portfolio_entry_planning_package.render(timesheetLogListView.planningPackage).body();
-                        }
-                    });
+                    setJavaColumnFormatter("planningPackage", (timesheetLogListView, value) -> views.html.modelsparts.display_portfolio_entry_planning_package.render(timesheetLogListView.planningPackage).body());
                     this.setColumnValueCssClass("planningPackage", "rowlink-skip");
 
-                    this.setLineAction(new IColumnFormatter<TimesheetLogListView>() {
-                        @Override
-                        public String apply(TimesheetLogListView timesheetLogListView, Object value) {
-                            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                            String stringDate = df.format(timesheetLogListView.startDate);
-                            return controllers.core.routes.ActorController.viewWeeklyTimesheet(timesheetLogListView.actor.id, stringDate).url();
-                        }
+                    this.setLineAction((timesheetLogListView, value) -> {
+                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        String stringDate = df.format(timesheetLogListView.startDate);
+                        return controllers.core.routes.ActorController.viewWeeklyTimesheet(timesheetLogListView.actor.id, stringDate).url();
                     });
 
                     setEmptyMessageKey("object.timesheet_log.table.empty");
