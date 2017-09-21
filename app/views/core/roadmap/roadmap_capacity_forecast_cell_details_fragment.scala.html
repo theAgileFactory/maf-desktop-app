@@ -163,47 +163,6 @@
     <script type="text/javascript">
             $(function () {
 
-                $('#initiativeBarChart').highcharts({
-                    credits: {
-                        enabled: false
-                    },
-                    colors: @Html(framework.highcharts.HighchartsUtils.getColorsAsJson),
-                    chart: {
-                        type: 'column'
-                    },
-                    title: {
-                        text: ''
-                    },
-                    xAxis: {
-                        categories: @Html(initiativeBarChart.getCategoriesAsJson)
-                    },
-                    yAxis: {
-                        min: 0,
-                        minTickInterval: 1,
-                        title: {
-                            text: ''
-                        }
-                    },
-                    tooltip: {
-                        headerFormat: '<table>',
-                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
-                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
-                        footerFormat: '</table>',
-                        shared: true,
-                        useHTML: true
-                    },
-                    plotOptions: {
-                        column: {
-                            borderWidth: 0,
-                            maxPointWidth: 100
-                        },
-                        series: {
-                            stacking: 'normal'
-                        }
-                    },
-                    series: @Html(initiativeBarChart.getSeriesContainer.toJsonArray)
-                });
-
                 $('#resourceBarChart').highcharts({
                     credits: {
                         enabled: false
@@ -236,10 +195,51 @@
                     plotOptions: {
                         column: {
                             borderWidth: 0,
-                            maxPointWidth: 100
+                            maxPointWidth: 75
                         }
                     },
                     series: @Html(resourceBarChart.getSeriesContainer.toJsonArray)
+                });
+
+                $('#initiativeBarChart').highcharts({
+                    credits: {
+                        enabled: false
+                    },
+                    colors: @Html(framework.highcharts.HighchartsUtils.getColorsAsJson),
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: @Html(initiativeBarChart.getCategoriesAsJson)
+                    },
+                    yAxis: {
+                        min: 0,
+                        minTickInterval: 1,
+                        title: {
+                            text: ''
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: &nbsp;</td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            borderWidth: 0,
+                            maxPointWidth: 75
+                        },
+                        series: {
+                            stacking: 'normal'
+                        }
+                    },
+                    series: @Html(initiativeBarChart.getSeriesContainer.toJsonArray)
                 });
 
                 $('#capacity-forecast-cell-details').show();
