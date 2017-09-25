@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.7.0_75" class="java.beans.XMLDecoder">
+<java version="1.8.0_131" class="java.beans.XMLDecoder">
  <object class="java.util.Collections" method="synchronizedMap">
   <object class="java.util.HashMap">
    <void method="put">
     <string>models.pmo.Actor</string>
     <boolean>false</boolean>
+   </void>
+   <void method="put">
+    <string>models.pmo.PortfolioEntry</string>
+    <boolean>true</boolean>
    </void>
   </object>
  </object>

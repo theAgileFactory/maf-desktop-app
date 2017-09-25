@@ -20,6 +20,7 @@
 @import helper._
 @import bootstrap3._
 @import framework_views.parts
+@import commons._
 
 @templates.main_bc_nosidebar(
     "admin.auditable.manage.title",
@@ -43,12 +44,17 @@
                 @if(objectForm("id").value!=null) {
                     <input type="hidden" name="id" value='@objectForm("id").value' >
                 }
-                
-                @parts.singlevalue_picker(
+
+                @parts.dropdownlist(
                     objectForm("objectClass"),
                     parts.Msg.asString("admin.auditable.object_class.label"),
-                    controllers.admin.routes.AuditableController.singleValuePickerObjectClassValues().url,
-                    Seq("currentObjectClass"->objectForm("objectClass").value))
+                    controllers.admin.AuditableController.getSelectableValuesListForObjectClass(objectForm("objectClass").value, _auditLoggerService),
+                    null,
+                    isDescriptionVisible = true,
+                    forceRequired = false,
+                    liveSearch = true,
+                    multiple = false
+                )
                 
                 @parts.checkbox(
                     objectForm("isAuditable"), 

@@ -73,17 +73,13 @@
                         
                         @helper.textarea(newPortfolioEntryForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"), 'rows -> "5")
                         
-                        @parts.singlevalue_picker(newPortfolioEntryForm("portfolio"),parts.Msg.asString("object.portfolio_entry.portfolio.label"),controllers.routes.PickerController.portfolio().url)
+                        @parts.dropdownlist(newPortfolioEntryForm("portfolios"),parts.Msg.asString("object.portfolio_entry.portfolio.label"), dao.pmo.PortfolioDao.getPortfolioActiveAsVH, null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true)
                         
                         @parts.dropdownlist(newPortfolioEntryForm("portfolioEntryType"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(isRelease))
                         
                         @parts.dropdownlist(newPortfolioEntryForm("requestedLifeCycleProcess"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH(isRelease))
                         
-                        @parts.singlevalue_picker(
-                            newPortfolioEntryForm("manager"), 
-                            parts.Msg.asString("object.portfolio_entry.manager.label"),
-                            controllers.routes.PickerController.manager().url
-                        )
+                        @parts.dropdownlist(newPortfolioEntryForm("manager"), parts.Msg.asString("object.portfolio_entry.manager.label"), dao.pmo.ActorDao.getActorActiveAsVH, null, isDescriptionVisible = true, forceRequired = false, liveSearch = true)
                         
                         @parts.file_field(newPortfolioEntryForm("scopeDescription"),Messages("object.portfolio_entry.scope_description.label"))
         

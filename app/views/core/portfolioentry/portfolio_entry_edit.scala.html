@@ -103,16 +103,18 @@
                         
                         @parts.input_text(portfolioEntryForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.erp_ref_id.label"))
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             portfolioEntryForm("manager"), 
                             parts.Msg.asString("object.portfolio_entry.manager.label"),
-                            controllers.routes.PickerController.manager().url
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             portfolioEntryForm("sponsoringUnit"), 
                             parts.Msg.asString("object.portfolio_entry.sponsoring_unit.label"),
-                            controllers.routes.PickerController.sponsoringUnit().url
+                            dao.pmo.OrgUnitDao.getOrgUnitActiveCanSponsorAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                         
                         @parts.multivalue_picker(

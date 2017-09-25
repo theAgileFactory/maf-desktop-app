@@ -111,10 +111,11 @@
                             </script>
                         }
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             portfolioEntryRiskForm("owner"), 
                             parts.Msg.asString("object.portfolio_entry_risk.owner.label"),
-                            controllers.routes.PickerController.owner().url
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

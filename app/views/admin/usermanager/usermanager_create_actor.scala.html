@@ -50,10 +50,11 @@
                     <p>@parts.Msg("admin.user_manager.create.actor.select.header")</p>
                     @helper.form(action = controllers.admin.routes.UserManager.selectActorForUser()) {
                         <input type="hidden" name="uid" value="@uid">
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             selectActorForUserFormData("actor"), 
                             parts.Msg.asString("admin.user_manager.create.actor.select.label"),
-                            controllers.routes.PickerController.actorWithoutUid().url
+                            dao.pmo.ActorDao.getActorActiveWithoutUidAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.associate")">
                     }

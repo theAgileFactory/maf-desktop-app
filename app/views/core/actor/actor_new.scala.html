@@ -78,19 +78,21 @@
                         @parts.dropdownlist(actorForm("actorType"), parts.Msg.asString("object.actor.type.label"), actorTypes)
                         
                         @parts.input_text(actorForm("erpRefId"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.actor.erp_ref_id.label"))
-        
-                        @parts.singlevalue_picker(
-                            actorForm("orgUnit"), 
+
+                        @parts.dropdownlist(
+                            actorForm("orgUnit"),
                             parts.Msg.asString("object.actor.org_unit.label"),
-                            controllers.routes.PickerController.orgUnit().url
+                            dao.pmo.OrgUnitDao.getOrgUnitActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
-        
-                        @parts.singlevalue_picker(
-                            actorForm("manager"), 
+
+                        @parts.dropdownlist(
+                            actorForm("manager"),
                             parts.Msg.asString("object.actor.manager.label"),
-                            controllers.routes.PickerController.manager().url
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
-                        
+
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />
                     </fieldset>
                     

@@ -89,11 +89,11 @@
 
                         }
 
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             deliverableForm("planningPackage"), 
                             parts.Msg.asString("object.deliverable.planning_package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                            dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, false),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                    
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

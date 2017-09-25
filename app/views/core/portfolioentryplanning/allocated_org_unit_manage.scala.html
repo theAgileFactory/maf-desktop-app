@@ -76,21 +76,23 @@
 
                         <div class="form-group">
                             <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            <input type="hidden" name="allocationStatus" value="@allocatedOrgUnitForm("allocationStatus").value" />
                             @display_allocation_status(allocationStatus)
                             @if(lastStatusTypeUpdateActor != null) { <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value)</span> }
                         </div>
 
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             allocatedOrgUnitForm("orgUnit"), 
                             parts.Msg.asString("object.allocated_resource.org_unit.label"),
-                            controllers.routes.PickerController.deliveryUnits().url
+                            dao.pmo.OrgUnitDao.getOrgUnitActiveCanDeliverAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             allocatedOrgUnitForm("portfolioEntryPlanningPackage"),
                             parts.Msg.asString("object.allocated_resource.package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                            dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         @if(_budgetTrackingService.isActive) {

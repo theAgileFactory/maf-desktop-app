@@ -93,11 +93,12 @@
                             @parts.dropdownlist(agreementLinkAcceptNewPEForm("portfolioEntryTypeId"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH())
                 
                             @parts.dropdownlist(agreementLinkAcceptNewPEForm("lifeCycleProcessId"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH)
-                
-                            @parts.singlevalue_picker(
-                                agreementLinkAcceptNewPEForm("managerId"), 
+
+                            @parts.dropdownlist(
+                                agreementLinkAcceptNewPEForm("managerId"),
                                 parts.Msg.asString("object.portfolio_entry.manager.label"),
-                                controllers.routes.PickerController.manager().url
+                                dao.pmo.ActorDao.getActorActiveAsVH,
+                                null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                             )
 
                             <input class="btn btn-success" type="submit" value="@parts.Msg("button.approve")">

@@ -75,8 +75,13 @@
 
                         <div class="form-group">
                             <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            <input type="hidden" name="allocationStatus" value="@allocatedCompetencyForm("allocationStatus").value" />
                             @display_allocation_status(allocationStatus)
-                            @if(lastStatusTypeUpdateActor != null) { <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedCompetencyForm("lastStatusTypeUpdateTime").value)</span> }
+                            @if(lastStatusTypeUpdateActor != null) {
+                                <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedCompetencyForm("lastStatusTypeUpdateTime").value)</span>
+                                <input type="hidden" name="lastStatusTypeUpdateActor" value="@allocatedCompetencyForm("lastStatusTypeUpdateActor").value" />
+                                <input type="hidden" name="lastStatusTypeUpdateTime" value="@allocatedCompetencyForm("lastStatusTypeUpdateTime").value" />
+                            }
                         </div>
 
                         @parts.dropdownlist(
@@ -102,11 +107,11 @@
                             <input type="hidden" name="dailyRate" value="0" />
                         }
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             allocatedCompetencyForm("portfolioEntryPlanningPackage"), 
                             parts.Msg.asString("object.allocated_resource.package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                            dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                         
                         @parts.checkbox(
