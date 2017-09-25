@@ -71,6 +71,7 @@
 
                         <div class="form-group">
                             <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            <input type="hidden" name="allocationStatus" value="@allocatedActorForm("allocationStatus").value" />
                             @display_allocation_status(allocationStatus)
                         </div>
 
@@ -88,11 +89,11 @@
                             dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id)
                         )
 
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             allocatedActorForm("portfolioEntryPlanningPackage"),
                             parts.Msg.asString("object.allocated_resource.package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                            dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         @if(_budgetTrackingService.isActive()) {

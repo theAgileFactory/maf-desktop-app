@@ -130,11 +130,11 @@
                             dao.finance.PortfolioEntryBudgetDAO.getPortfolioEntryBudgetLineSelectableAsVHByPE(portfolioEntry.id)
                         )
                         @if(!fromResource) {
-                            @parts.singlevalue_picker(
+                            @parts.dropdownlist(
                                 workOrderForm("portfolioEntryPlanningPackage"), 
                                 parts.Msg.asString("object.work_order.portfolio_entry_planning_package.label"),
-                                controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                                Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                                dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
+                                null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                             )
                             
                             @parts.checkbox(

@@ -75,16 +75,18 @@
                         
                         @parts.dropdownlist(orgUnitForm("orgUnitType"), parts.Msg.asString("object.org_unit.type.label"), orgUnitTypes)
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             orgUnitForm("manager"), 
                             parts.Msg.asString("object.org_unit.manager.label"),
-                            controllers.routes.PickerController.manager().url
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             orgUnitForm("parent"), 
                             parts.Msg.asString("object.org_unit.parent.label"),
-                            controllers.routes.PickerController.orgUnit().url
+                            dao.pmo.OrgUnitDao.getOrgUnitActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />

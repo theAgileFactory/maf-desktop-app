@@ -52,10 +52,11 @@
                     <input type="hidden" name="stakeholderId" value="@stakeholderForm("stakeholderId").value"/>
                 }
                 
-                @parts.singlevalue_picker(
+                @parts.dropdownlist(
                     stakeholderForm("actor"), 
                     parts.Msg.asString("object.stakeholder.actor.label"),
-                    controllers.routes.PickerController.actor().url
+                    dao.pmo.ActorDao.getActorActiveAsVH,
+                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                 )
                 
                 @parts.dropdownlist(
