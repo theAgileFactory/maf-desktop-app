@@ -135,7 +135,7 @@
             exportLink.attr('disabled','disabled');
             $.ajax({
                 type: "GET",
-                url: '@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReportAsExcel(portfolioEntry.id)'
+                url: '@controllers.core.routes.PortfolioEntryStatusReportingController.exportStatusReport(portfolioEntry.id)'
             })
             .done(function(){
                 exportLink.removeAttr('disabled');
