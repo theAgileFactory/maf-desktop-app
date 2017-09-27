@@ -76,6 +76,19 @@ public class RequestMilestoneFormData implements Serializable {
     public RequestMilestoneFormData(Long portfolioEntryId, Long milestoneId) {
         this.id = portfolioEntryId;
         this.milestoneId = milestoneId;
+        LifeCycleInstancePlanning planning = LifeCyclePlanningDao.getLCInstancePlanningAsLastByPE(id);
+        PlannedLifeCycleMilestoneInstance  plannedLifeCycleMilestoneInstance = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id,
+                milestoneId);
+        if (Strings.isNullOrEmpty(this.passedDate))
+        {
+        	try
+        	{
+        		this.passedDate = Utilities.getDateFormat(null).format(plannedLifeCycleMilestoneInstance.plannedDate);
+        	}
+        	catch (Exception e) {
+                this.passedDate = null;
+            }
+        }
     }
 
     /**
