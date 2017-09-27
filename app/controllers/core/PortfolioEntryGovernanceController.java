@@ -341,7 +341,7 @@ public class PortfolioEntryGovernanceController extends Controller {
         PlannedLifeCycleMilestoneInstance plannedDate = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id,
                 milestoneId);
 
-        Form<RequestMilestoneFormData> form = requestMilestoneFormTemplate.fill(new RequestMilestoneFormData());
+        Form<RequestMilestoneFormData> form = requestMilestoneFormTemplate.fill(new RequestMilestoneFormData(id, milestoneId));
 
         return ok(views.html.core.portfolioentrygovernance.milestone_request.render(portfolioEntry, lifeCycleMilestone, form, status, plannedDate));
     }

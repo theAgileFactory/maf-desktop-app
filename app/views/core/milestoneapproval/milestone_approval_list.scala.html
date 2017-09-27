@@ -16,8 +16,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
+	page: Integer,
     table: framework.utils.Table[utils.table.MilestoneApprovalListView],
-    pagination: framework.utils.Pagination[models.governance.LifeCycleMilestoneInstance]
+    pagination: framework.utils.Pagination[models.governance.LifeCycleMilestoneInstance],
+	filterConfig: framework.utils.FilterConfig[utils.table.MilestoneApprovalListView]
 )
 
 @import framework_views.parts
@@ -31,5 +33,11 @@
 }{
     <blockquote>@parts.Msg("core.milestone.approval.list.header")</blockquote>
     
-    @parts.table.tableview_with_pagination(table, pagination)
+    @parts.table.filtered_tableview(
+                table, 
+                pagination, 
+                filterConfig, 
+                controllers.core.routes.MilestoneApprovalController.listFilter(page).url,
+                null
+            )
 }
