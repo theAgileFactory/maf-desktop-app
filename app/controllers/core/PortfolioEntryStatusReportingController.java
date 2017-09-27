@@ -207,8 +207,9 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
                 getReportingUtils().generate(ctx(), report, getI18nMessagesPlugin().getCurrentLanguage().getCode(), reportNameAndFormat.getRight(), reportParameters);
 
-                Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
             }
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.reporting.generate.request.success"));
 
             return ok(Json.newObject());
        });
