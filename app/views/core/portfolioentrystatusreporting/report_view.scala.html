@@ -81,13 +81,8 @@
                 </div>
 
             </div>
-            @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryReport], report.id, portfolioEntryReportFormData)
-
-        </div>
-        
-        <div class="col-md-6">
-        
-            <div class="panel panel-default">
+			
+			<div class="panel panel-default">
                 
                 <div class="panel-heading">
                     @parts.Msg("object.portfolio_entry_report.comments.label")
@@ -97,6 +92,13 @@
                 </div>
                 
             </div>
+            @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryReport], report.id, portfolioEntryReportFormData)
+
+        </div>
+        
+        <div class="col-md-6">
+        
+            
             
             <div class="panel panel-default">
                 <div class="panel-heading">
