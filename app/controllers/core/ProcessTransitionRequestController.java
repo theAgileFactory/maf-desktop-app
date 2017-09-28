@@ -242,7 +242,7 @@ public class ProcessTransitionRequestController extends Controller {
 
             // create LifeCycleMilestoneInstance
             lifeCycleMilestoneInstance = new LifeCycleMilestoneInstance();
-            processMilestoneRequestFormData.fill(lifeCycleMilestoneInstance, descriptionDocument != null);
+            processMilestoneRequestFormData.fill(lifeCycleMilestoneInstance, descriptionDocument != null, request.comments);
             lifeCycleMilestoneInstance.save();
 
             // if there are approvers
