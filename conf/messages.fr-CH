@@ -1148,6 +1148,7 @@ object.portfolio_entry.default_is_opex.help=Type de dépense par défaut. Utilis
 object.portfolio_entry.description.label=Description
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Responsable
+object.portfolio_entry.manager_org_unit.label=Unité du Responsable
 object.portfolio_entry.sponsoring_unit.label=Client interne
 object.portfolio_entry.delivery_units.label=Fournisseur(s) interne(s)
 object.portfolio_entry.portfolio.label=Portefeuille

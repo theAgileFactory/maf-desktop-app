@@ -1148,6 +1148,7 @@ object.portfolio_entry.name.label=Name
 object.portfolio_entry.description.label=Beschreibung
 object.portfolio_entry.type.label=Typ
 object.portfolio_entry.manager.label=Verantwortlich
+object.portfolio_entry.manager_org_unit.label=Verantwortlich Organisationseinheit
 object.portfolio_entry.sponsoring_unit.label=Auftraggeber
 object.portfolio_entry.delivery_units.label=Interne Zulieferer
 object.portfolio_entry.portfolio.label=Portfolio

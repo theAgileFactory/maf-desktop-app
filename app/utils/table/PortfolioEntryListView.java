@@ -103,6 +103,16 @@ public class PortfolioEntryListView {
                     addColumnConfiguration("manager", "manager.id", "object.portfolio_entry.manager.label",
                             new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
 
+                    ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
+                    if (orgUnits.getValues().size() > 0) {
+                        addColumnConfiguration("managerOrgUnit", "manager.orgUnit.id", "object.portfolio_entry.manager_org_unit.label",
+                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), false, false,
+                                SortStatusType.NONE);
+                    } else {
+                        addColumnConfiguration("managerOrgUnit", "manager.orgUnit.id", "object.portfolio_entry.manager_org_unit.label",
+                                new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                    }
+
                     ISelectableValueHolderCollection<Long> sponsoringUnits = OrgUnitDao.getOrgUnitActiveCanSponsorAsVH();
                     if (sponsoringUnits.getValues().size() > 0) {
                         addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label",
@@ -240,6 +250,10 @@ public class PortfolioEntryListView {
                     addColumn("manager", "manager", "object.portfolio_entry.manager.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("manager", (portfolioEntryListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryListView.manager).body());
                     this.setColumnValueCssClass("manager", "rowlink-skip");
+
+                    addColumn("managerOrgUnit", "managerOrgUnit", "object.portfolio_entry.manager_org_unit.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("managerOrgUnit", (portfolioEntryListView, value) -> views.html.modelsparts.display_org_unit.render(portfolioEntryListView.manager.orgUnit).body());
+                    this.setColumnValueCssClass("managerOrgUnit", "rowlink-skip");
 
                     addColumn("sponsoringUnit", "sponsoringUnit", "object.portfolio_entry.sponsoring_unit.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("sponsoringUnit", (portfolioEntryListView, value) -> views.html.modelsparts.display_org_unit.render(portfolioEntryListView.sponsoringUnit).body());

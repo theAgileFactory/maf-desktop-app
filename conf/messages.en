@@ -1136,6 +1136,7 @@ object.portfolio_entry.default_is_opex.help=Default expenditure type. Used when 
 object.portfolio_entry.description.label=Description
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Manager
+object.portfolio_entry.manager_org_unit.label=Manager's Org Unit
 object.portfolio_entry.sponsoring_unit.label=Sponsoring unit
 object.portfolio_entry.delivery_units.label=Delivery unit(s)
 object.portfolio_entry.portfolio.label=Portfolio
