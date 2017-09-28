@@ -1480,6 +1480,17 @@ public class PortfolioEntryPlanningController extends Controller {
                     controllers.core.routes.OrgUnitController.cancelDeliveryUnitsAllocations().url(), "orgunit-result");
 
             allocatedOrgUnitTable.setAllIdsUrl(routes.PortfolioEntryPlanningController.getDeliveryUnitAllocationIds(resourcePlan.id).url());
+        } else {
+            notDisplayedColumns.add("editActionLink");
+            notDisplayedColumns.add("removeActionLink");
+            notDisplayedColumns.add("reallocate");
+        }
+
+        if (!getBudgetTrackingService().isActive()) {
+            notDisplayedColumns.add("currency");
+            notDisplayedColumns.add("dailyRate");
+            notDisplayedColumns.add("forecastDays");
+            notDisplayedColumns.add("forecastDailyRate");
         }
 
         return Pair.of(allocatedOrgUnitTable, pagination);

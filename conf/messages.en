@@ -1136,6 +1136,7 @@ object.portfolio_entry.default_is_opex.help=Default expenditure type. Used when 
 object.portfolio_entry.description.label=Description
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Manager
+object.portfolio_entry.manager_org_unit.label=Manager's Org Unit
 object.portfolio_entry.sponsoring_unit.label=Sponsoring unit
 object.portfolio_entry.delivery_units.label=Delivery unit(s)
 object.portfolio_entry.portfolio.label=Portfolio
@@ -1145,6 +1146,7 @@ object.portfolio_entry.dependencies.label=Dependencies
 object.portfolio_entry.life_cycle_process.label=Life cycle process
 object.portfolio_entry.status.label=Status
 object.portfolio_entry.last_milestone.label=Last milestone passed
+object.portfolio_entry.next_milestone.label=Next planned milestone
 object.portfolio_entry.archived.label=Archived
 object.portfolio_entry.is_concept.label=Concept
 object.portfolio_entry.stakeholder_types.label=Stakeholder type(s)
@@ -1162,6 +1164,7 @@ object.portfolio_entry.table.empty=There is no initiative.
 object.portfolio_entry.start_date.label=Start date
 object.portfolio_entry.end_date.label=End date
 object.portfolio_entry.last_milestone_date.label=Last milestone date
+object.portfolio_entry.next_milestone_date.label=Next milestone date
 
 #----------------------
 # portfolio
@@ -1341,6 +1344,7 @@ object.life_cycle_milestone_instance.passed_date.label=Passed date
 object.life_cycle_milestone_instance.approver.label=Decision maker
 object.life_cycle_milestone_instance.gate_comments.label=Comments
 object.life_cycle_milestone_instance.gate_comments.placeholder=provide a comment
+object.life_cycle_milestone_instance.request_comments.label=Request comments
 object.life_cycle_milestone_instance.document.label=Download the description document
 object.life_cycle_milestone_instance.table.approval.empty=There is no milestone to approve.
 

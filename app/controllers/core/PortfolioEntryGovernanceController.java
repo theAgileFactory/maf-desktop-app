@@ -660,6 +660,7 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             portfolioEntry.activeLifeCycleInstance = lifeCycleInstance;
             portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
+            portfolioEntry.nextPlannedLifeCycleMilestoneInstance = null;
             portfolioEntry.startDate = portfolioEntry.endDate = null;
 
             /*
@@ -673,6 +674,9 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             for (LifeCycleMilestone milestone : lifeCycleProcess.lifeCycleMilestones) {
                 PlannedLifeCycleMilestoneInstance plannedInstance = new PlannedLifeCycleMilestoneInstance(lifeCycleInstancePlanning, milestone);
+                if (portfolioEntry.nextPlannedLifeCycleMilestoneInstance == null) {
+                    portfolioEntry.nextPlannedLifeCycleMilestoneInstance = plannedInstance;
+                }
                 plannedInstance.save();
             }
 
