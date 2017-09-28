@@ -26,12 +26,19 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.reporting.ReportingDao;
+import framework.services.configuration.II18nMessagesPlugin;
+import framework.taftree.EntityTafTreeNodeWrapper;
+import framework.utils.DefaultSelectableValueHolder;
+import framework.utils.DefaultSelectableValueHolderCollection;
+import framework.utils.ISelectableValueHolder;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.reporting.Reporting;
 import models.reporting.ReportingCategory;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.tableprovider.ITableProvider;
@@ -146,6 +153,37 @@ public class ReportingController extends Controller {
         return redirect(controllers.admin.routes.ReportingController.indexForCategory(report.reportingCategory.id));
     }
 
+    /**
+     * Search reporting Format
+     */
+    public Result searchFormats(Long id) {
+
+        String query = request().queryString().get("query") != null ? request().queryString().get("query")[0] : null;
+        String value = request().queryString().get("value") != null ? request().queryString().get("value")[0] : null;
+
+        if (query != null) {
+            ISelectableValueHolderCollection<String> reportingFormats = new DefaultSelectableValueHolderCollection<String>();
+                      
+            String str = ReportingDao.getReportingById(id).getFormats();
+            String[] listFormats = str.split(",");
+            
+            for (String s:listFormats)
+            {
+            	reportingFormats.add(new DefaultSelectableValueHolder<String>(s,s));
+            }
+            return ok(Utilities.marshallAsJson(reportingFormats.getValues()));
+        }
+        
+        if (value != null) {
+           
+            ISelectableValueHolder<String> v = new DefaultSelectableValueHolder<String>(value, value);
+            return ok(Utilities.marshallAsJson(v, 0));
+        }
+
+        return ok(Json.newObject());
+
+    }
+    
     /**
      * Get the table provider.
      */

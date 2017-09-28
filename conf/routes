@@ -693,6 +693,7 @@ GET    /admin/reporting/category                                    controllers.
 GET    /admin/reporting/list                                        controllers.admin.ReportingController.listFragment()
 GET    /admin/reporting/edit                                        controllers.admin.ReportingController.edit(id: Long)
 POST   /admin/reporting/save                                        controllers.admin.ReportingController.save()
+GET   /admin/reporting/searchFormats/:id                         		controllers.admin.ReportingController.searchFormats(id: Long)
 
 POST   /admin/reporting/category/manage           controllers.admin.ReportingCategoryController.manage()
 POST   /admin/reporting/category/children         controllers.admin.ReportingCategoryController.loadChildren()
