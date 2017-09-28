@@ -84,7 +84,6 @@ import models.pmo.Actor;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryDependency;
-import models.pmo.PortfolioEntryType;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -343,6 +342,9 @@ public class PortfolioEntryController extends Controller {
             plannedLifeCycleMilestoneInstance.lifeCycleMilestone = milestone;
             plannedLifeCycleMilestoneInstance.lifeCycleInstancePlanning = planning;
             plannedLifeCycleMilestoneInstance.save();
+            if (portfolioEntry.nextPlannedLifeCycleMilestoneInstance == null) {
+                portfolioEntry.nextPlannedLifeCycleMilestoneInstance = plannedLifeCycleMilestoneInstance;
+            }
         }
 
         // Assign the planning to the life cycle process instance

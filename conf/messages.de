@@ -1157,6 +1157,7 @@ object.portfolio_entry.dependencies.label=Abhängigkeiten
 object.portfolio_entry.life_cycle_process.label=Lieferzyklus
 object.portfolio_entry.status.label=Status
 object.portfolio_entry.last_milestone.label=Zuletzt erreichter Meilenstein
+object.portfolio_entry.next_milestone.label=Nächste Meilenstein
 object.portfolio_entry.archived.label=Archiviert
 object.portfolio_entry.is_concept.label=Konzept
 object.portfolio_entry.stakeholder_types.label=Funktion
@@ -1174,6 +1175,7 @@ object.portfolio_entry.table.empty=Keine Initiativen eingetragen
 object.portfolio_entry.start_date.label=Startdatum
 object.portfolio_entry.end_date.label=Enddatum
 object.portfolio_entry.last_milestone_date.label=Letztes Meilensteindatum
+object.portfolio_entry.next_milestone_date.label=Nächste Meilensteindatum
 
 #----------------------
 # portfolio

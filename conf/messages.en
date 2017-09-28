@@ -1145,6 +1145,7 @@ object.portfolio_entry.dependencies.label=Dependencies
 object.portfolio_entry.life_cycle_process.label=Life cycle process
 object.portfolio_entry.status.label=Status
 object.portfolio_entry.last_milestone.label=Last milestone passed
+object.portfolio_entry.next_milestone.label=Next planned milestone
 object.portfolio_entry.archived.label=Archived
 object.portfolio_entry.is_concept.label=Concept
 object.portfolio_entry.stakeholder_types.label=Stakeholder type(s)
@@ -1162,6 +1163,7 @@ object.portfolio_entry.table.empty=There is no initiative.
 object.portfolio_entry.start_date.label=Start date
 object.portfolio_entry.end_date.label=End date
 object.portfolio_entry.last_milestone_date.label=Last milestone date
+object.portfolio_entry.next_milestone_date.label=Next milestone date
 
 #----------------------
 # portfolio

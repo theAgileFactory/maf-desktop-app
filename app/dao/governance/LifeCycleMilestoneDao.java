@@ -243,7 +243,7 @@ public abstract class LifeCycleMilestoneDao {
             lifeCycleMilestoneInstance.lifeCycleInstance.isConcept = true;
         }
 
-        // update the portfolio entry
+        // Update the last approved lifecycle milestone instance
         if (lifeCycleMilestoneInstance.id.equals(portfolioEntry.lastApprovedLifeCycleMilestoneInstance.id)) {
             if (approvedLifecycleMilestoneInstances.isEmpty()) {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
@@ -254,8 +254,11 @@ public abstract class LifeCycleMilestoneDao {
                         .findFirst()
                         .get();
             }
-            portfolioEntry.save();
         }
+
+        updatePortfolioEntryWithNextMilestone(portfolioEntry, approvedLifecycleMilestoneInstances);
+
+        portfolioEntry.save();
 
         lifeCycleMilestoneInstance.lifeCycleInstance.save();
 
@@ -263,7 +266,25 @@ public abstract class LifeCycleMilestoneDao {
         lifeCycleMilestoneInstance.doDelete();
         createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
 
+    }
 
+    private static void updatePortfolioEntryWithNextMilestone(PortfolioEntry portfolioEntry, List<LifeCycleMilestoneInstance> approvedLifecycleMilestoneInstances) {
+        // Update the next lifecycle milestone instance
+        // Get the list of planned lifecycle milestone instances
+        List<PlannedLifeCycleMilestoneInstance> plannedLifeCycleMilestoneInstances = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(portfolioEntry.id);
+
+        Optional<PlannedLifeCycleMilestoneInstance> nextMilestone = plannedLifeCycleMilestoneInstances
+                .stream()
+                // Filter the milestones already approved
+                .filter(plannedMilestone -> approvedLifecycleMilestoneInstances
+                        .stream()
+                        .map(instance -> instance.lifeCycleMilestone.id)
+                        .noneMatch(id -> id.equals(plannedMilestone.lifeCycleMilestone.id))
+                )
+                // Get the first not approved one
+                .findFirst();
+
+        portfolioEntry.nextPlannedLifeCycleMilestoneInstance = nextMilestone.isPresent() ? nextMilestone.get() : null;
     }
 
     /**
@@ -327,8 +348,10 @@ public abstract class LifeCycleMilestoneDao {
             if (portfolioEntry.lastApprovedLifeCycleMilestoneInstance == null
                     || !portfolioEntry.lastApprovedLifeCycleMilestoneInstance.passedDate.after(lifeCycleMilestoneInstance.passedDate)) {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = lifeCycleMilestoneInstance;
-                portfolioEntry.save();
             }
+
+            updatePortfolioEntryWithNextMilestone(portfolioEntry, lifeCycleMilestoneInstance.lifeCycleInstance.getApprovedLifecycleMilestoneInstances());
+            portfolioEntry.save();
 
             lifeCycleMilestoneInstance.lifeCycleInstance.save();
 

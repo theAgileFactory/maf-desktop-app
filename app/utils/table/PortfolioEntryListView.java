@@ -31,9 +31,11 @@ import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
 import framework.utils.formats.ObjectFormatter;
 import models.governance.LifeCycleMilestoneInstance;
+import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A portfolio entry list view is used to display an portfolio entry row in a
@@ -89,7 +91,7 @@ public class PortfolioEntryListView {
                             SortStatusType.UNSORTED);
 
                     ISelectableValueHolderCollection<Long> portfolioEntryTypes = PortfolioEntryDao.getPETypeActiveAsVH();
-                    if (portfolioEntryTypes != null && portfolioEntryTypes.getValues().size() > 0) {
+                    if (portfolioEntryTypes.getValues().size() > 0) {
                         addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label",
                                 new SelectFilterComponent(portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes), true, false,
                                 SortStatusType.UNSORTED);
@@ -102,7 +104,7 @@ public class PortfolioEntryListView {
                             new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), false, false, SortStatusType.NONE);
 
                     ISelectableValueHolderCollection<Long> sponsoringUnits = OrgUnitDao.getOrgUnitActiveCanSponsorAsVH();
-                    if (sponsoringUnits != null && sponsoringUnits.getValues().size() > 0) {
+                    if (sponsoringUnits.getValues().size() > 0) {
                         addColumnConfiguration("sponsoringUnit", "sponsoringUnit.id", "object.portfolio_entry.sponsoring_unit.label",
                                 new SelectFilterComponent(sponsoringUnits.getValues().iterator().next().getValue(), sponsoringUnits), false, false,
                                 SortStatusType.NONE);
@@ -112,7 +114,7 @@ public class PortfolioEntryListView {
                     }
 
                     ISelectableValueHolderCollection<Long> deliveryUnits = OrgUnitDao.getOrgUnitActiveCanDeliverAsVH();
-                    if (deliveryUnits != null && deliveryUnits.getValues().size() > 0) {
+                    if (deliveryUnits.getValues().size() > 0) {
                         addColumnConfiguration("deliveryUnits", "deliveryUnits.id", "object.portfolio_entry.delivery_units.label",
                                 new SelectFilterComponent(deliveryUnits.getValues().iterator().next().getValue(), deliveryUnits), false, false,
                                 SortStatusType.NONE);
@@ -122,7 +124,7 @@ public class PortfolioEntryListView {
                     }
 
                     ISelectableValueHolderCollection<Long> portfolios = PortfolioDao.getPortfolioActiveAsVH();
-                    if (portfolios != null && portfolios.getValues().size() > 0) {
+                    if (portfolios.getValues().size() > 0) {
                         addColumnConfiguration("portfolios", "portfolios.id", "object.portfolio_entry.portfolios.label",
                                 new SelectFilterComponent(portfolios.getValues().iterator().next().getValue(), portfolios), false, false,
                                 SortStatusType.NONE);
@@ -138,7 +140,7 @@ public class PortfolioEntryListView {
                             false, SortStatusType.NONE);
 
                     ISelectableValueHolderCollection<Long> lifeCycleProcesses = LifeCycleProcessDao.getLCProcessActiveAsVH();
-                    if (lifeCycleProcesses != null && lifeCycleProcesses.getValues().size() > 0) {
+                    if (lifeCycleProcesses.getValues().size() > 0) {
                         addColumnConfiguration("lifeCycleProcess", "activeLifeCycleInstance.lifeCycleProcess.id",
                                 "object.portfolio_entry.life_cycle_process.label",
                                 new SelectFilterComponent(lifeCycleProcesses.getValues().iterator().next().getValue(), lifeCycleProcesses), false, false,
@@ -149,7 +151,7 @@ public class PortfolioEntryListView {
                     }
 
                     ISelectableValueHolderCollection<Long> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeActiveAsVH();
-                    if (portfolioEntryReportStatusTypes != null && portfolioEntryReportStatusTypes.getValues().size() > 0) {
+                    if (portfolioEntryReportStatusTypes.getValues().size() > 0) {
                         addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
                                 "object.portfolio_entry.status.label",
                                 new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next().getValue(),
@@ -169,9 +171,25 @@ public class PortfolioEntryListView {
                                 "object.portfolio_entry.last_milestone.label",
                                 new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false,
                                 SortStatusType.NONE);
+                        addColumnConfiguration("lastMilestoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label",
+                                new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
+                                false, false, SortStatusType.UNSORTED);
+                        addColumnConfiguration("nextMilestone", "nextPlannedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
+                                "object.portfolio_entry.next_milestone.label",
+                                new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false,
+                                SortStatusType.NONE);
+                        addColumnConfiguration("nextMilestoneDate", "nextPlannedLifeCycleMilestoneInstance.plannedDate", "object.portfolio_entry.next_milestone_date.label",
+                                new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
+                                false, false, SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("lastMilestone", "lastApprovedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
                                 "object.portfolio_entry.last_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                        addColumnConfiguration("lastMilestoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label",
+                                new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                        addColumnConfiguration("nextMilestone", "nextPlannedLifeCycleMilestoneInstance.lifeCycleMilestone.id",
+                                "object.portfolio_entry.next_milestone.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
+                        addColumnConfiguration("nextMilestoneDate", "nextPlannedLifeCycleMilestoneInstance.plannedDate", "object.portfolio_entry.next_milestone_date.label",
+                                new NoneFilterComponent(), false, false, SortStatusType.NONE);
                     }
 
                     addColumnConfiguration("archived", "archived", "object.portfolio_entry.archived.label", new CheckboxFilterComponent(false), false, true,
@@ -183,9 +201,6 @@ public class PortfolioEntryListView {
                     addKpis(kpiService, "id", PortfolioEntry.class);
 
                     addCustomAttributesColumns("id", PortfolioEntry.class);
-                    addColumnConfiguration("lastMileStoneDate", "lastApprovedLifeCycleMilestoneInstance.passedDate", "object.portfolio_entry.last_milestone_date.label", 
-                    		 new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), 
-                     		false, false, SortStatusType.UNSORTED);
                     addColumnConfiguration("startDate", "startDate" ,"object.portfolio_entry.start_date.label",
                     		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
                     		false, false, SortStatusType.UNSORTED);
@@ -211,93 +226,74 @@ public class PortfolioEntryListView {
                     setIdFieldName("id");
 
                     addColumn("governanceId", "governanceId", "object.portfolio_entry.governance_id.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("governanceId", new ObjectFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("governanceId", new ObjectFormatter<>());
 
                     addColumn("creationDate", "creationDate", "object.portfolio_entry.creation_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("creationDate", new DateFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("creationDate", new DateFormatter<>());
 
                     addColumn("name", "name", "object.portfolio_entry.name.label", Table.ColumnDef.SorterType.NONE);
 
                     addColumn("portfolioEntryType", "portfolioEntryType", "object.portfolio_entry.type.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryType", new IColumnFormatter<PortfolioEntryListView>() {
-                        @Override
-                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                            return views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryListView.portfolioEntryType, true)
-                                    .body();
-                        }
-                    });
+                    setJavaColumnFormatter("portfolioEntryType", (portfolioEntryListView, value) -> views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryListView.portfolioEntryType, true)
+                            .body());
 
                     addColumn("manager", "manager", "object.portfolio_entry.manager.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("manager", new IColumnFormatter<PortfolioEntryListView>() {
-                        @Override
-                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                            return views.html.modelsparts.display_actor.render(portfolioEntryListView.manager).body();
-                        }
-                    });
+                    setJavaColumnFormatter("manager", (portfolioEntryListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryListView.manager).body());
                     this.setColumnValueCssClass("manager", "rowlink-skip");
 
                     addColumn("sponsoringUnit", "sponsoringUnit", "object.portfolio_entry.sponsoring_unit.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("sponsoringUnit", new IColumnFormatter<PortfolioEntryListView>() {
-                        @Override
-                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                            return views.html.modelsparts.display_org_unit.render(portfolioEntryListView.sponsoringUnit).body();
-                        }
-                    });
+                    setJavaColumnFormatter("sponsoringUnit", (portfolioEntryListView, value) -> views.html.modelsparts.display_org_unit.render(portfolioEntryListView.sponsoringUnit).body());
                     this.setColumnValueCssClass("sponsoringUnit", "rowlink-skip");
 
                     addColumn("deliveryUnits", "deliveryUnits", "object.portfolio_entry.delivery_units.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("deliveryUnits", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("deliveryUnits", new ListOfValuesFormatter<>());
                     this.setColumnValueCssClass("deliveryUnits", "rowlink-skip");
 
                     addColumn("portfolios", "portfolios", "object.portfolio_entry.portfolios.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolios", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("portfolios", new ListOfValuesFormatter<>());
                     this.setColumnValueCssClass("portfolios", "rowlink-skip");
 
                     addColumn("stakeholders", "stakeholders", "object.portfolio_entry.stakeholders.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("stakeholders", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("stakeholders", new ListOfValuesFormatter<>());
                     this.setColumnValueCssClass("stakeholders", "rowlink-skip");
 
                     addColumn("dependencies", "dependencies", "object.portfolio_entry.dependencies.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dependencies", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("dependencies", new ListOfValuesFormatter<>());
                     this.setColumnValueCssClass("dependencies", "rowlink-skip");
 
                     addColumn("lifeCycleProcess", "lifeCycleProcess", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lifeCycleProcess", new ObjectFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("lifeCycleProcess", new ObjectFormatter<>());
 
                     addColumn("portfolioEntryStatus", "portfolioEntryStatus", "object.portfolio_entry.status.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryStatus", new IColumnFormatter<PortfolioEntryListView>() {
-                        @Override
-                        public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
-                            return views.html.modelsparts.display_portfolio_entry_report.render(portfolioEntryView.portfolioEntryStatus).body();
-                        }
-                    });
+                    setJavaColumnFormatter("portfolioEntryStatus", (portfolioEntryView, value) -> views.html.modelsparts.display_portfolio_entry_report.render(portfolioEntryView.portfolioEntryStatus).body());
                     this.setColumnValueCssClass("portfolioEntryStatus", "rowlink-skip");
 
                     addColumn("lastPEReportDate", "lastPEReportDate", "object.portfolio_entry_report.report_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lastPEReportDate", new DateFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("lastPEReportDate", new DateFormatter<>());
 
                     addColumn("archived", "archived", "object.portfolio_entry.archived.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("archived", new BooleanFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("archived", new BooleanFormatter<>());
 
                     addColumn("isConcept", "isConcept", "object.portfolio_entry.is_concept.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isConcept", new BooleanFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("isConcept", new BooleanFormatter<>());
 
                     addColumn("lastMilestone", "lastMilestone", "object.portfolio_entry.last_milestone.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lastMilestone", new IColumnFormatter<PortfolioEntryListView>() {
-                        @Override
-                        public String apply(PortfolioEntryListView portfolioEntryView, Object value) {
-                            return views.html.modelsparts.display_milestone_instance.render(portfolioEntryView.lastMilestone).body();
-                        }
-                    });
+                    setJavaColumnFormatter("lastMilestone", (portfolioEntryView, value) -> views.html.modelsparts.display_milestone_instance.render(portfolioEntryView.lastMilestone).body());
                     this.setColumnValueCssClass("lastMilestone", "rowlink-skip");
+                    addColumn("lastMilestoneDate", "lastMilestoneDate", "object.portfolio_entry.last_milestone_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastMilestoneDate", new DateFormatter<>());
+
+                    addColumn("nextMilestone", "nextMilestone", "object.portfolio_entry.next_milestone.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("nextMilestone", (portfolioEntryView, value) -> views.html.modelsparts.display_milestone.render(portfolioEntryView.nextMilestone == null ? null : portfolioEntryView.nextMilestone.lifeCycleMilestone).body());
+                    this.setColumnValueCssClass("nextMilestone", "rowlink-skip");
+                    addColumn("nextMilestoneDate", "nextMilestoneDate", "object.portfolio_entry.next_milestone_date.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("nextMilestoneDate", new DateFormatter<>());
 
                     addColumn("stakeholderTypes", "stakeholderTypes", "object.portfolio_entry.stakeholder_types.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("stakeholderTypes", new ListOfValuesFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("stakeholderTypes", new ListOfValuesFormatter<>());
 
                     addColumn("isPublic", "isPublic", "object.portfolio_entry.is_public.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isPublic", new BooleanFormatter<PortfolioEntryListView>());
-                    addColumn("lastMileStoneDate", "lastMileStoneDate", "object.portfolio_entry.last_milestone_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lastMileStoneDate", new DateFormatter<PortfolioEntryListView>());
+                    setJavaColumnFormatter("isPublic", new BooleanFormatter<>());
                     addColumn("startDate", "startDate", "object.portfolio_entry.start_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("startDate", new DateFormatter<>());
                     addColumn("endDate", "endDate", "object.portfolio_entry.end_date.label", Table.ColumnDef.SorterType.NONE);
@@ -307,12 +303,7 @@ public class PortfolioEntryListView {
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntry.class);
 
-                    this.setLineAction(new IColumnFormatter<PortfolioEntryListView>() {
-                        @Override
-                        public String apply(PortfolioEntryListView portfolioEntryListView, Object value) {
-                            return controllers.core.routes.PortfolioEntryController.overview(portfolioEntryListView.id).url();
-                        }
-                    });
+                    this.setLineAction((portfolioEntryListView, value) -> controllers.core.routes.PortfolioEntryController.overview(portfolioEntryListView.id).url());
 
                     setEmptyMessageKey("object.portfolio_entry.table.empty");
                 }
@@ -332,7 +323,7 @@ public class PortfolioEntryListView {
      * @return a set of columns name
      */
     public static Set<String> getHideNonDefaultColumns(boolean hideStakeholderTypesColumn, boolean hideManagerColumn) {
-        Set<String> columns = new HashSet<String>();
+        Set<String> columns = new HashSet<>();
 
         if (hideStakeholderTypesColumn) {
             columns.add("stakeholderTypes");
@@ -352,8 +343,10 @@ public class PortfolioEntryListView {
         columns.add("dependencies");
         columns.add("lifeCycleProcess");
         columns.add("archived");
-        columns.add("lastMileStoneDate");
-        columns.add("startDate"); 
+        columns.add("lastMilestoneDate");
+        columns.add("nextMilestone");
+        columns.add("nextMilestoneDate");
+        columns.add("startDate");
         columns.add("endDate"); 
 
         return columns;
@@ -379,17 +372,19 @@ public class PortfolioEntryListView {
     public PortfolioEntryReport portfolioEntryStatus;
     public Date lastPEReportDate;
     public LifeCycleMilestoneInstance lastMilestone;
+    public PlannedLifeCycleMilestoneInstance nextMilestone;
+    public Date lastMilestoneDate;
+    public Date nextMilestoneDate;
     public boolean isConcept;
     public boolean archived;
     public List<Actor> stakeholders;
     public List<PortfolioEntry> dependencies;
-    public Date lastMileStoneDate; 
     public Date startDate;
     public Date endDate;
 
 
     // contextual attributes
-    public List<String> stakeholderTypes = new ArrayList<String>();
+    public List<String> stakeholderTypes = new ArrayList<>();
 
     /**
      * Construct a portfolio entry list view with a DB entry.
@@ -413,23 +408,29 @@ public class PortfolioEntryListView {
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
         this.lastMilestone = portfolioEntry.lastApprovedLifeCycleMilestoneInstance;
+        this.nextMilestone = portfolioEntry.nextPlannedLifeCycleMilestoneInstance;
         this.startDate = portfolioEntry.startDate;
         this.endDate = portfolioEntry.endDate;
         this.isConcept = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.isConcept : true;
         this.archived = portfolioEntry.archived;
         if (  this.lastMilestone!= null && this.lastMilestone.passedDate != null)
         {
-        	this.lastMileStoneDate = this.lastMilestone.passedDate;
+            this.lastMilestoneDate = this.lastMilestone.passedDate;
+        }
+        if (  this.nextMilestone!= null && this.nextMilestone.plannedDate != null)
+        {
+            this.nextMilestoneDate = this.nextMilestone.plannedDate;
         }
 
         this.stakeholders = new ArrayList<>();
         Set<Long> actorIds = new HashSet<>();
-        for (Stakeholder stakehoder : portfolioEntry.stakeholders) {
-            if (!stakehoder.actor.deleted && !actorIds.contains(stakehoder.actor.id)) {
-                actorIds.add(stakehoder.actor.id);
-                this.stakeholders.add(stakehoder.actor);
-            }
-        }
+        portfolioEntry.stakeholders
+                .stream()
+                .filter(stakeholder -> !stakeholder.actor.deleted && !actorIds.contains(stakeholder.actor.id))
+                .forEach(stakeholder -> {
+                    actorIds.add(stakeholder.actor.id);
+                    this.stakeholders.add(stakeholder.actor);
+                });
 
         this.dependencies = new ArrayList<>();
         Set<Long> dependencyIds = new HashSet<>();
@@ -466,9 +467,7 @@ public class PortfolioEntryListView {
     public PortfolioEntryListView(PortfolioEntry portfolioEntry, List<Stakeholder> stakeholders) {
 
         this(portfolioEntry);
-        for (Stakeholder stakeholder : stakeholders) {
-            this.stakeholderTypes.add(stakeholder.stakeholderType.getName());
-        }
+        this.stakeholderTypes.addAll(stakeholders.stream().map(stakeholder -> stakeholder.stakeholderType.getName()).collect(Collectors.toList()));
 
     }
 

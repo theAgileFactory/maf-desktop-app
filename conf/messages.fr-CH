@@ -1157,6 +1157,7 @@ object.portfolio_entry.dependencies.label=Dépendances
 object.portfolio_entry.life_cycle_process.label=Processus de gouvernance
 object.portfolio_entry.status.label=Statut
 object.portfolio_entry.last_milestone.label=Dernier jalon passé
+object.portfolio_entry.next_milestone.label=Prochain jalon planifié
 object.portfolio_entry.archived.label=Archivé
 object.portfolio_entry.is_concept.label=Concept
 object.portfolio_entry.stakeholder_types.label=Rôle(s) de l''intervenant
@@ -1174,6 +1175,7 @@ object.portfolio_entry.table.empty=Il n''existe aucune initiative.
 object.portfolio_entry.start_date.label=Date de début
 object.portfolio_entry.end_date.label=Date de fin
 object.portfolio_entry.last_milestone_date.label=Date dernier jalon
+object.portfolio_entry.next_milestone_date.label=Date prochain jalon
 
 #----------------------
 # portfolio
