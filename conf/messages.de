@@ -1355,6 +1355,7 @@ object.life_cycle_milestone_instance.passed_date.label=Genehmigt
 object.life_cycle_milestone_instance.approver.label=Entscheidungsträger
 object.life_cycle_milestone_instance.gate_comments.label=Anmerkungen
 object.life_cycle_milestone_instance.gate_comments.placeholder=Kommentar
+object.life_cycle_milestone_instance.request_comments.label=Anfrage Anmerkungen
 object.life_cycle_milestone_instance.document.label=Beschrieb herunterladen
 object.life_cycle_milestone_instance.table.approval.empty=Es gibt keine Meilenstein Genehmigung
 

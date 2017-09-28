@@ -1343,6 +1343,7 @@ object.life_cycle_milestone_instance.passed_date.label=Passed date
 object.life_cycle_milestone_instance.approver.label=Decision maker
 object.life_cycle_milestone_instance.gate_comments.label=Comments
 object.life_cycle_milestone_instance.gate_comments.placeholder=provide a comment
+object.life_cycle_milestone_instance.request_comments.label=Request comments
 object.life_cycle_milestone_instance.document.label=Download the description document
 object.life_cycle_milestone_instance.table.approval.empty=There is no milestone to approve.
 

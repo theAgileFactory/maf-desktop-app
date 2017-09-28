@@ -1355,6 +1355,7 @@ object.life_cycle_milestone_instance.passed_date.label=Date de passage
 object.life_cycle_milestone_instance.approver.label=Décideur
 object.life_cycle_milestone_instance.gate_comments.label=Commentaire
 object.life_cycle_milestone_instance.gate_comments.placeholder=Soumettre un commentaire
+object.life_cycle_milestone_instance.request_comments.label=Commentaires de la requête
 object.life_cycle_milestone_instance.document.label=Télécharger le document de description
 object.life_cycle_milestone_instance.table.approval.empty=Il n''existe aucun jalon à approuver.
 
