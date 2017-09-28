@@ -359,14 +359,16 @@ public class RoadmapController extends Controller {
                                     }
 
                                     String name = "";
+                                    String str = "";
                                     if (isFirstLoop) {
                                         if (portfolioEntry.getGovernanceId() != null) {
                                             name += portfolioEntry.getGovernanceId() + " - ";
                                         }
                                         name += portfolioEntry.getName();
+                                        str = String.format("<a href= %s > %s </a>" , controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url() , name ) ;
                                     }
 
-                                    SourceItem item = new SourceItem(name, "");
+                                    SourceItem item = new SourceItem(str, "");
 
                                     item.values.add(new SourceValue(from, to, "", phase.getName(), cssClass, sourceDataValue));
 

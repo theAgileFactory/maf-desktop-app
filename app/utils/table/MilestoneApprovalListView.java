@@ -20,13 +20,24 @@ package utils.table;
 import java.util.Calendar;
 import java.util.Date;
 
+import dao.governance.LifeCycleMilestoneDao;
+import dao.pmo.PortfolioEntryEventDao;
+import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
+import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Table;
+import framework.utils.Utilities;
+import framework.utils.FilterConfig.AutocompleteFilterComponent;
+import framework.utils.FilterConfig.DateRangeFilterComponent;
+import framework.utils.FilterConfig.SelectFilterComponent;
+import framework.utils.FilterConfig.SortStatusType;
+import framework.utils.FilterConfig.TextFieldFilterComponent;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ObjectFormatter;
 import models.governance.LifeCycleMilestoneInstance;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryEvent;
 
 /**
  * An milestone approval list view is used to display a milestone approval row
@@ -44,9 +55,30 @@ public class MilestoneApprovalListView {
     public static class TableDefinition {
 
         public Table<MilestoneApprovalListView> templateTable;
+        public FilterConfig<MilestoneApprovalListView> filterConfig;
 
         public TableDefinition() {
+        	this.filterConfig = getFilterConfig();
             this.templateTable = getTable();
+        }
+        public FilterConfig<MilestoneApprovalListView> getFilterConfig() {
+            return new FilterConfig<MilestoneApprovalListView>() {
+                {
+                 	addColumnConfiguration("portfolioEntryGovernanceId", "lifeCycleInstance.portfolioEntry.governanceId", "object.portfolio_entry.governance_id.label",
+                 			new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);          	               	
+                    addColumnConfiguration("portfolioEntry", "lifeCycleInstance.portfolioEntry.name", "object.life_cycle_milestone_instance.portfolio_entry.label",
+                    		 new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                 	addColumnConfiguration("portfolioEntryManager", "lifeCycleInstance.portfolioEntry.manager.id", "object.portfolio_entry.manager.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.UNSORTED);
+                 	addColumnConfiguration("lifeCycleName", "lifeCycleInstance.lifeCycleProcess.shortName", "object.portfolio_entry.life_cycle_process.label",
+                   		 new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+                 	ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
+                 	addColumnConfiguration("milestoneInstance", "lifeCycleMilestone.id", "object.life_cycle_milestone_instance.milestone.label",
+                 			 new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false, SortStatusType.UNSORTED);
+                 	addColumnConfiguration("dueDate", "passedDate", "object.life_cycle_milestone_instance.due_date.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
+                }
+            };
         }
 
         public Table<MilestoneApprovalListView> getTable() {

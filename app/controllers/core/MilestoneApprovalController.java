@@ -25,17 +25,23 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.OrderBy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
+import dao.pmo.PortfolioEntryEventDao;
 import framework.security.ISecurityService;
 import framework.services.account.IAccountManagerPlugin;
 import framework.services.account.IPreferenceManagerPlugin;
@@ -47,6 +53,7 @@ import framework.services.storage.IAttachmentManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.FileAttachmentHelper;
+import framework.utils.FilterConfig;
 import framework.utils.Msg;
 import framework.utils.Pagination;
 import framework.utils.Table;
@@ -61,17 +68,22 @@ import models.governance.LifeCycleMilestoneInstanceApprover;
 import models.governance.LifeCycleMilestoneInstanceStatusType;
 import models.pmo.Actor;
 import models.pmo.PortfolioEntry;
+import models.pmo.PortfolioEntryEvent;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
+import security.CheckPortfolioEntryExists;
+import security.dynamic.PortfolioEntryDynamicHelper;
 import services.budgettracking.IBudgetTrackingService;
 import services.tableprovider.ITableProvider;
 import utils.form.ProcessMilestoneApprovalFormData;
 import utils.form.ProcessMilestoneDecisionFormData;
 import utils.table.MilestoneApprovalListView;
 import utils.table.MilestoneApproverListView;
+import utils.table.PortfolioEntryEventListView;
 
 /**
  * The controller which allows to approve / decide a milestone instance.
@@ -175,6 +187,73 @@ public class MilestoneApprovalController extends Controller {
         return ok(views.html.core.milestoneapproval.overview_modal.render(milestoneInstance, filledTable));
     }
 
+    
+    private Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> getMilestoneApprovalListTable(FilterConfig<MilestoneApprovalListView> filterConfig, Long approverId) 
+    {
+    	OrderBy<LifeCycleMilestoneInstance> orderBy = filterConfig.getSortExpression();
+
+
+    	ExpressionList<LifeCycleMilestoneInstance> expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
+                .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
+        
+        Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
+        
+        Pagination<LifeCycleMilestoneInstance> pagination = new Pagination<LifeCycleMilestoneInstance>(this.getPreferenceManagerPlugin(), expressionList.findList().size(), expressionList);
+        pagination.setCurrentPage(filterConfig.getCurrentPage());
+
+        List<MilestoneApprovalListView> milestoneApprovalListView = new ArrayList<MilestoneApprovalListView>();
+        for (LifeCycleMilestoneInstance elem : pagination.getListOfObjects()) {
+        	milestoneApprovalListView.add(new MilestoneApprovalListView(elem));
+        }
+
+        Set<String> hideColumns = filterConfig.getColumnsToHide();
+        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        	hideColumns.add("editActionLink");
+        	hideColumns.add("deleteActionLink");
+        }
+
+        Table<MilestoneApprovalListView> table = this.getTableProvider().get().milestoneApproval.templateTable
+                .fillForFilterConfig(milestoneApprovalListView, hideColumns);
+
+        return Pair.of(table, pagination);
+
+    }
+    
+    /**
+
+     */
+    @Restrict({ @Group(IMafConstants.MILESTONE_APPROVAL_PERMISSION), @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
+    public Result listFilter(Integer page) {
+
+        try {
+
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            
+            // get the current user
+            IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
+          
+            // get the current actor
+            Actor actor = ActorDao.getActorByUid(userAccount.getUid());
+            
+            FilterConfig<MilestoneApprovalListView> filterConfig = this.getTableProvider().get().milestoneApproval.filterConfig.persistCurrentInDefault(uid, request());
+
+            if (filterConfig == null) {
+                return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
+            } else {
+
+                // get the table
+                Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, actor.id);
+
+                return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
+
+            }
+
+        } catch (Exception e) {
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+        }
+    }
+    
     /**
      * Display the list of life cycle milestone instance for which an
      * vote/decision is needed.
@@ -216,10 +295,27 @@ public class MilestoneApprovalController extends Controller {
         for (LifeCycleMilestoneInstance lifeCycleMilestoneInstance : pagination.getListOfObjects()) {
             milestoneApprovalListView.add(new MilestoneApprovalListView(lifeCycleMilestoneInstance));
         }
+        
+        try {
 
-        Table<MilestoneApprovalListView> filledTable = this.getTableProvider().get().milestoneApproval.templateTable.fill(milestoneApprovalListView);
+            // get the filter config
+            String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+            FilterConfig<MilestoneApprovalListView> filterConfig = this.getTableProvider().get().milestoneApproval.filterConfig.getCurrent(uid, request());
 
-        return ok(views.html.core.milestoneapproval.milestone_approval_list.render(filledTable, pagination));
+            // get the table
+            Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, actor.id);
+
+            return ok(views.html.core.milestoneapproval.milestone_approval_list.render(page, t.getLeft(), t.getRight(), filterConfig));
+
+        } catch (Exception e) {
+
+            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+
+        }
+
+        
+
+        
     }
 
     /**

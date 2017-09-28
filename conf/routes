@@ -430,6 +430,7 @@ GET    /purchase-order/line-item/work-order/save  controllers.core.PurchaseOrder
 GET    /milestone/overview                  controllers.core.MilestoneApprovalController.overview()
 GET    /milestone/overview/modal            controllers.core.MilestoneApprovalController.overviewModal(milestoneInstanceId: Long)
 GET    /milestone/approval/list             controllers.core.MilestoneApprovalController.list(page: Integer ?= 0)
+POST   /milestone/approval/list/filter      controllers.core.MilestoneApprovalController.listFilter(page: Integer ?= 0)
 GET    /milestone/approval/process          controllers.core.MilestoneApprovalController.process(milestoneInstanceId: Long)
 POST   /milestone/approval/vote             controllers.core.MilestoneApprovalController.vote()
 POST   /milestone/approval/decide           controllers.core.MilestoneApprovalController.decide()
