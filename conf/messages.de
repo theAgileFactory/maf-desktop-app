@@ -1695,6 +1695,7 @@ object.reporting.format.label=Format
 object.reporting.type.label=Typ
 object.reporting.is_active.label=Aktiv
 object.reporting.is_active.help=Falls der Bericht kein Häkchen enthält, steht dieser nicht zum Herunterladen bereit.
+object.reporting.default_format.label=Standardformat
 object.reporting.category.label=Kategorie
 object.reporting.principals.label=Anwender mit Leseberechtigung
 object.reporting.table.empty=Kein Bericht eingetragen

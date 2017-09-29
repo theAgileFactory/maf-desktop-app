@@ -1695,6 +1695,7 @@ object.reporting.format.label=Format
 object.reporting.type.label=Type
 object.reporting.is_active.label=Actif
 object.reporting.is_active.help=Si non coché alors le rapport ne peut pas être téléchargé.
+object.reporting.default_format.label=Format par défault
 object.reporting.category.label=Catégorie
 object.reporting.principals.label=Utilisateurs qui ont accès au rapport
 object.reporting.table.empty=Il n''existe aucun rapport.

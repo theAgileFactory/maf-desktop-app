@@ -1683,6 +1683,7 @@ object.reporting.format.label=Format
 object.reporting.type.label=Type
 object.reporting.is_active.label=Active
 object.reporting.is_active.help=If not checked then the report is not available for downloading.
+object.reporting.default_format.label=Default format
 object.reporting.category.label=Category
 object.reporting.principals.label=Users who have access to the report
 object.reporting.table.empty=There is no report
