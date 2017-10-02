@@ -188,13 +188,19 @@ public class MilestoneApprovalController extends Controller {
     }
 
     
-    private Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> getMilestoneApprovalListTable(FilterConfig<MilestoneApprovalListView> filterConfig, Long approverId) 
+    private Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> getMilestoneApprovalListTable(FilterConfig<MilestoneApprovalListView> filterConfig, IUserAccount userAccount) 
     {
     	OrderBy<LifeCycleMilestoneInstance> orderBy = filterConfig.getSortExpression();
 
-
-    	ExpressionList<LifeCycleMilestoneInstance> expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
+    	ExpressionList<LifeCycleMilestoneInstance> expressionList;
+    	 if (getSecurityService().restrict(IMafConstants.MILESTONE_DECIDE_PERMISSION, userAccount)) {
+    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExpr().isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
+    	 }
+    	 else
+    	 {
+    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", ActorDao.getActorByUid(userAccount.getUid()).id)
                 .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
+    	 }
         
         Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         
@@ -243,7 +249,7 @@ public class MilestoneApprovalController extends Controller {
             } else {
 
                 // get the table
-                Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, actor.id);
+                Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, userAccount);
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
 
@@ -291,10 +297,6 @@ public class MilestoneApprovalController extends Controller {
 
         pagination.setCurrentPage(page);
 
-        List<MilestoneApprovalListView> milestoneApprovalListView = new ArrayList<MilestoneApprovalListView>();
-        for (LifeCycleMilestoneInstance lifeCycleMilestoneInstance : pagination.getListOfObjects()) {
-            milestoneApprovalListView.add(new MilestoneApprovalListView(lifeCycleMilestoneInstance));
-        }
         
         try {
 
@@ -303,7 +305,7 @@ public class MilestoneApprovalController extends Controller {
             FilterConfig<MilestoneApprovalListView> filterConfig = this.getTableProvider().get().milestoneApproval.filterConfig.getCurrent(uid, request());
 
             // get the table
-            Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, actor.id);
+            Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, userAccount);
 
             return ok(views.html.core.milestoneapproval.milestone_approval_list.render(page, t.getLeft(), t.getRight(), filterConfig));
 
