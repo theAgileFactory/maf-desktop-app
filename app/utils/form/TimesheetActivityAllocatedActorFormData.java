@@ -17,11 +17,14 @@
  */
 package utils.form;
 
+import constants.IMafConstants;
 import dao.pmo.ActorDao;
 import dao.timesheet.TimesheetDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Utilities;
 import models.timesheet.TimesheetActivityAllocatedActor;
 import models.timesheet.TimesheetActivityAllocatedActorDetail;
+import play.Play;
 import play.data.validation.Constraints.Required;
 
 import java.text.ParseException;
@@ -35,6 +38,8 @@ import java.util.stream.Collectors;
  * @author Johann Kohler
  */
 public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationFormData {
+
+    IPreferenceManagerPlugin preferenceManager;
 
     @Required
     public Long actorId;
@@ -50,6 +55,7 @@ public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationF
      */
     public TimesheetActivityAllocatedActorFormData() {
         super();
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
     }
 
     /**
@@ -151,7 +157,7 @@ public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationF
             allocatedActivity.endDate = c.getTime();
 
         } else if (allocatedActivity.startDate != null && allocatedActivity.endDate != null) { // If start and end dates are provided, distribute evenly the days across the months
-            allocatedActivity.computeAllocationDetails(false);
+            allocatedActivity.computeAllocationDetails(false, preferenceManager.getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
         } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
             allocatedActivity.clearAllocations();
         }

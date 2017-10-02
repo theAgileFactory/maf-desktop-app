@@ -635,7 +635,7 @@ public class RoadmapController extends Controller {
 
             // Add planned
             if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive());
+                allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive(), getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
             }
             allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
                     .stream()
@@ -680,6 +680,8 @@ public class RoadmapController extends Controller {
 
         // Org unit: the org unit is simply the one of the allocated org
         // unit.
+        Boolean workingDaysOnly = getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE);
+
         for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : allocatedOrgUnits) {
 
             OrgUnitCapacity orgUnitCapacity;
@@ -691,7 +693,7 @@ public class RoadmapController extends Controller {
 
             // Add planned
             if (allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.isEmpty()) {
-                allocatedOrgUnit.computeAllocationDetails(getBudgetTrackingService().isActive());
+                allocatedOrgUnit.computeAllocationDetails(getBudgetTrackingService().isActive(), workingDaysOnly);
             }
             allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails
                     .stream()
@@ -715,7 +717,7 @@ public class RoadmapController extends Controller {
                 }
 
                 if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                    allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive());
+                    allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive(), workingDaysOnly);
                 }
                 allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
                         .stream()
@@ -742,7 +744,7 @@ public class RoadmapController extends Controller {
             // Compute the activity allocations.
             for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
                 if (allocatedActivity.timesheetActivityAllocatedActorDetails.isEmpty()) {
-                    allocatedActivity.computeAllocationDetails(false);
+                    allocatedActivity.computeAllocationDetails(false, workingDaysOnly);
                 }
                 allocatedActivity.timesheetActivityAllocatedActorDetails
                         .stream()
@@ -1179,7 +1181,7 @@ public class RoadmapController extends Controller {
 
         allocations.stream().forEach(allocation -> {
             if (allocation.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                allocation.computeAllocationDetails(budgetTrackingService.isActive());
+                allocation.computeAllocationDetails(budgetTrackingService.isActive(), getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
             }
             ResourceAllocationDetail allocationDetail = allocation.getDetail(year, month);
             if (allocationDetail != null && allocationDetail.getDays() != 0.0) {

@@ -729,6 +729,8 @@ preference.timesheet_hours_per_day.description=Erwartete Anzahl Stunden pro Tag.
 preference.timesheet_hours_per_day.name=Stunden pro Tag
 preference.package_status_on_going_fulfillment_percentage.name=Erfüllungsprozent wenn Paket "Im Gange"
 preference.package_status_on_going_fulfillment_percentage.description=Prozent des Paketwertes wenn der Status "Im Gange" ist (Packet gestartet wurde)
+preference.resources_week_days_allocation_preference.name=
+preference.resources_week_days_allocation_preference.description=
 preference.api_authz_mode_preference.name=Authentifizierung
 preference.api_authz_mode_preference.description=API Authentifizierungmodus.\
 BizDock kann digitalen Signaturen benutzen oder etwas weniger sicher mit Anwendungsschlüssel authentifizieren
