@@ -78,7 +78,11 @@
                             <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
                             <input type="hidden" name="allocationStatus" value="@allocatedOrgUnitForm("allocationStatus").value" />
                             @display_allocation_status(allocationStatus)
-                            @if(lastStatusTypeUpdateActor != null) { <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value)</span> }
+                            @if(lastStatusTypeUpdateActor != null) {
+                                <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value)</span>
+                                <input type="hidden" name="lastStatusTypeUpdateActor" value="@allocatedOrgUnitForm("lastStatusTypeUpdateActor").value" />
+                                <input type="hidden" name="lastStatusTypeUpdateTime" value="@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value" />
+                            }
                         </div>
 
                         @parts.dropdownlist(
