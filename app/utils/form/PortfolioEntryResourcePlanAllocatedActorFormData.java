@@ -17,10 +17,12 @@
  */
 package utils.form;
 
+import constants.IMafConstants;
 import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Utilities;
 import models.finance.*;
 import org.apache.commons.lang3.tuple.Pair;
@@ -43,6 +45,8 @@ import java.util.stream.Collectors;
 public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAllocationFormData {
 
     IBudgetTrackingService budgetTrackingService;
+
+    IPreferenceManagerPlugin preferenceManager;
 
     // used only when reallocate an allocated org unit to an actor
     public Long allocatedOrgUnitId;
@@ -75,6 +79,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
         super();
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
     }
 
     /**
@@ -201,17 +206,20 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
 
         this.monthAllocations = new ArrayList<>();
 
-        Map<Pair<Integer, Integer>, Double> allocationDistribution = PortfolioEntryResourcePlanAllocatedActor.getAllocationDistribution(allocatedCompetency.startDate, allocatedCompetency.endDate, budgetTrackingService.isActive() ? this.forecastDays : this.days);
-        allocationDistribution.forEach((key, days) -> {
-            Integer year = key.getLeft();
-            Integer month = key.getRight();
-            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
-            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
-            monthAllocation.addValue(month, days);
-            if (!optionalMonthlyAllocation.isPresent()) {
-                monthAllocations.add(monthAllocation);
-            }
-        });
+        Boolean workingDaysOnly = preferenceManager.getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE);
+        Map<Pair<Integer, Integer>, Double> allocationDistribution = PortfolioEntryResourcePlanAllocatedActor.getAllocationDistribution(allocatedCompetency.startDate, allocatedCompetency.endDate, budgetTrackingService.isActive() ? this.forecastDays : this.days, workingDaysOnly);
+        if (allocationDistribution != null) {
+            allocationDistribution.forEach((key, days) -> {
+                Integer year = key.getLeft();
+                Integer month = key.getRight();
+                Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
+                MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
+                monthAllocation.addValue(month, days);
+                if (!optionalMonthlyAllocation.isPresent()) {
+                    monthAllocations.add(monthAllocation);
+                }
+            });
+        }
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
 
@@ -301,7 +309,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
             allocatedActor.endDate = c.getTime();
 
         } else if (allocatedActor.startDate != null && allocatedActor.endDate != null) { // If start and end dates are provided, distribute evenly the days across the months
-            allocatedActor.computeAllocationDetails(budgetTrackingService.isActive());
+            allocatedActor.computeAllocationDetails(budgetTrackingService.isActive(), preferenceManager.getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
         } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
             allocatedActor.clearAllocations();
         }

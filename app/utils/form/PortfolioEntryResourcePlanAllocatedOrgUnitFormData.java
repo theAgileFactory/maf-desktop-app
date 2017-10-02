@@ -17,10 +17,12 @@
  */
 package utils.form;
 
+import constants.IMafConstants;
 import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Utilities;
 import models.finance.*;
 import play.Play;
@@ -44,6 +46,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
 
     IBudgetTrackingService budgetTrackingService;
 
+    IPreferenceManagerPlugin preferenceManager;
+
     @Required
     public Long orgUnit;
 
@@ -66,6 +70,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
     public PortfolioEntryResourcePlanAllocatedOrgUnitFormData() {
         super();
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
     }
 
     /**
@@ -196,7 +201,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
             allocatedOrgUnit.endDate = c.getTime();
 
         } else if (allocatedOrgUnit.startDate != null && allocatedOrgUnit.endDate != null) { // If start and end dates are provided, distribute evenly the days across the months
-            allocatedOrgUnit.computeAllocationDetails(budgetTrackingService.isActive());
+            allocatedOrgUnit.computeAllocationDetails(budgetTrackingService.isActive(), preferenceManager.getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
         } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
             allocatedOrgUnit.clearAllocations();
         }

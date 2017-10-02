@@ -11,6 +11,8 @@ import play.i18n.Messages;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ResourceAllocationFormData {
@@ -127,9 +129,24 @@ public class ResourceAllocationFormData {
                     errors.add(new ValidationError("startDate", Messages.get("object.allocated_resource.start_date.invalid")));
                 }
 
+                Date startDateAsDate = Utilities.getDateFormat(null).parse(this.startDate);
+                Date endDateAsDate = Utilities.getDateFormat(null).parse(this.endDate);
+
                 if (!this.startDate.equals("") && !this.endDate.equals("")
-                        && Utilities.getDateFormat(null).parse(this.startDate).after(Utilities.getDateFormat(null).parse(this.endDate))) {
+                        && startDateAsDate.after(endDateAsDate)) {
                     // the end date should be after the start date
+                    errors.add(new ValidationError("endDate", Messages.get("object.allocated_resource.end_date.invalid")));
+                }
+
+                Calendar startCal = Calendar.getInstance();
+                Calendar endCal = Calendar.getInstance();
+                startCal.setTime(startDateAsDate);
+                endCal.setTime(endDateAsDate);
+
+                int duration = Utilities.getDuration(startDateAsDate, endDateAsDate);
+
+                if (    startCal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY && duration == 2
+                    ||  startCal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && duration == 1) {
                     errors.add(new ValidationError("endDate", Messages.get("object.allocated_resource.end_date.invalid")));
                 }
 
