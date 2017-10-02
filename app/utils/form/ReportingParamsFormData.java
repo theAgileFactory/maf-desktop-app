@@ -54,7 +54,7 @@ public class ReportingParamsFormData {
     public ReportingParamsFormData(Reporting report, String language) {
         this.id = report.id;
         this.language = language;
-        this.format = Format.EXCEL.name();
+        this.format = report.defaultFormat;
 
     }
 
