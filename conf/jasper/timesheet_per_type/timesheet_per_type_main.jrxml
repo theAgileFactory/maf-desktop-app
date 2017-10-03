@@ -12,10 +12,10 @@
 	<parameter name="format" class="java.lang.String">
 		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="TS_TYPE_START_DATE" class="java.sql.Date">
+	<parameter name="TS_TYPE_START_DATE" class="java.util.Date">
 		<defaultValueExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-01")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="TS_TYPE_END_DATE" class="java.sql.Date">
+	<parameter name="TS_TYPE_END_DATE" class="java.util.Date">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-31")]]></defaultValueExpression>
 	</parameter>

@@ -23,8 +23,8 @@
 	<parameter name="SUBREPORT_TITLE_PORTFOLIO_ENTRY" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[3L]]></defaultValueExpression>
 	</parameter>
-	<parameter name="TS_ACTOR_START_DATE" class="java.sql.Date" isForPrompting="false"/>
-	<parameter name="TS_ACTOR_END_DATE" class="java.sql.Date" isForPrompting="false"/>
+	<parameter name="TS_ACTOR_START_DATE" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="TS_ACTOR_END_DATE" class="java.util.Date" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT pe.name AS portfolio_entry_name,
 pe.governance_id AS portfolio_entry_governance_id
