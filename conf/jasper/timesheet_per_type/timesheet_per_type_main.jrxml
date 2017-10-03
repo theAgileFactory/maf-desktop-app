@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-10-03T15:27:48 -->
+<!-- 2017-10-03T16:21:54 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_per_type_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="64422b26-af1a-4a0f-bd76-a140a87f9624">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles.jrtx"]]></template>
-	<parameter name="lang" class="java.lang.String">
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
 	</parameter>

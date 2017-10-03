@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-10-03T15:15:45 -->
+<!-- 2017-10-03T16:21:31 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_per_project_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="64422b26-af1a-4a0f-bd76-a140a87f9624">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CI.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles.jrtx"]]></template>
-	<parameter name="lang" class="java.lang.String">
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
 	</parameter>
@@ -71,7 +71,7 @@ a.last_name,
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement style="row-header" x="30" y="0" width="130" height="20" uuid="f9d1aae9-1989-4a0b-8d7a-1f255d4dc696">
+				<reportElement style="row-header" x="0" y="0" width="140" height="20" uuid="f9d1aae9-1989-4a0b-8d7a-1f255d4dc696">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -80,7 +80,7 @@ a.last_name,
 				<textFieldExpression><![CDATA[str("label.projectname")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row-header" x="160" y="0" width="80" height="20" uuid="66957991-184f-4636-820b-59fb384e0a6f">
+				<reportElement style="row-header" x="140" y="0" width="90" height="20" uuid="66957991-184f-4636-820b-59fb384e0a6f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -93,11 +93,12 @@ a.last_name,
 				<textFieldExpression><![CDATA[str("label.firstname")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row-header" x="240" y="0" width="80" height="20" uuid="4269f01b-d19f-4392-a687-adf0f9f8d171">
+				<reportElement style="row-header" x="230" y="0" width="90" height="20" uuid="4269f01b-d19f-4392-a687-adf0f9f8d171">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left"/>
@@ -140,16 +141,6 @@ a.last_name,
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[str("label.hours")]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement style="row-header" x="0" y="0" width="30" height="20" uuid="adf53993-18b7-4fd5-b233-95cfdf62a18c">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box leftPadding="5"/>
-				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[str("label.id")]]></textFieldExpression>
-			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -158,7 +149,7 @@ a.last_name,
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[new Boolean($F{hours}.compareTo(BigDecimal.ZERO) > 0)]]></printWhenExpression>
 			<textField>
-				<reportElement style="row" x="30" y="0" width="130" height="20" uuid="eacb4aaa-d854-4463-a230-eb159f46add8">
+				<reportElement style="row" x="0" y="0" width="140" height="20" uuid="eacb4aaa-d854-4463-a230-eb159f46add8">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -171,7 +162,7 @@ a.last_name,
 				<textFieldExpression><![CDATA[$F{project_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" x="160" y="0" width="80" height="20" uuid="bab95f3b-2322-42f7-b000-5d4890b09098">
+				<reportElement style="row" x="140" y="0" width="90" height="20" uuid="bab95f3b-2322-42f7-b000-5d4890b09098">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
@@ -185,7 +176,7 @@ a.last_name,
 				<textFieldExpression><![CDATA[$F{first_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" x="240" y="0" width="80" height="20" uuid="48f42e4d-bf54-482a-abed-86bb614ebe9c">
+				<reportElement style="row" x="230" y="0" width="90" height="20" uuid="48f42e4d-bf54-482a-abed-86bb614ebe9c">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
@@ -238,19 +229,6 @@ a.last_name,
 				<box rightPadding="6"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="row" x="0" y="0" width="30" height="20" uuid="6d5a00c9-1e04-49f4-86b6-804bfd71a73d">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box leftPadding="5"/>
-				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
