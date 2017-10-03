@@ -1463,7 +1463,6 @@ public class PortfolioEntryPlanningController extends Controller {
         listView.addAll(allocatedOrgUnitList.stream().map(PortfolioEntryResourcePlanAllocatedOrgUnitListView::new).collect(Collectors.toList()));
 
         Set<String> notDisplayedColumns = filterConfig.getColumnsToHide();
-        notDisplayedColumns.add("portfolioEntryName");
 
         Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> allocatedOrgUnitTable =
                 getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable.fillForFilterConfig(listView, notDisplayedColumns);
