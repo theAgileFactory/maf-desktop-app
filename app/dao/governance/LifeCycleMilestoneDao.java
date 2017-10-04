@@ -244,7 +244,7 @@ public abstract class LifeCycleMilestoneDao {
         }
 
         // Update the last approved lifecycle milestone instance
-        if (lifeCycleMilestoneInstance.id.equals(portfolioEntry.lastApprovedLifeCycleMilestoneInstance.id)) {
+        if (portfolioEntry.lastApprovedLifeCycleMilestoneInstance != null && lifeCycleMilestoneInstance.id.equals(portfolioEntry.lastApprovedLifeCycleMilestoneInstance.id)) {
             if (approvedLifecycleMilestoneInstances.isEmpty()) {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
             } else {
