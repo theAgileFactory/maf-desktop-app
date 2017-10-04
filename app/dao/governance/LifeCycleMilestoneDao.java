@@ -256,16 +256,16 @@ public abstract class LifeCycleMilestoneDao {
             }
         }
 
-        updatePortfolioEntryWithNextMilestone(portfolioEntry, approvedLifecycleMilestoneInstances);
-
-        portfolioEntry.save();
-
         lifeCycleMilestoneInstance.lifeCycleInstance.save();
 
         // Delete the lifecycle milestone instance
         lifeCycleMilestoneInstance.doDelete();
         createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
 
+        approvedLifecycleMilestoneInstances.remove(lifeCycleMilestoneInstance);
+        updatePortfolioEntryWithNextMilestone(portfolioEntry, approvedLifecycleMilestoneInstances);
+
+        portfolioEntry.save();
     }
 
     private static void updatePortfolioEntryWithNextMilestone(PortfolioEntry portfolioEntry, List<LifeCycleMilestoneInstance> approvedLifecycleMilestoneInstances) {
