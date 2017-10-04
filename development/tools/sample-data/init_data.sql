@@ -113,22 +113,22 @@ INSERT INTO `competency`(`id`,`deleted`,`last_update`,`is_active`,`name`,`descri
 INSERT INTO `competency`(`id`,`deleted`,`last_update`,`is_active`,`name`,`description`) VALUES (2,0,CURRENT_TIMESTAMP,1,'business.analysis.name','business.analysis.desc');
 INSERT INTO `competency`(`id`,`deleted`,`last_update`,`is_active`,`name`,`description`) VALUES (3,0,CURRENT_TIMESTAMP,1,'test.name','test.desc');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.name', 'en', 'Java');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.name', 'fr-CH', 'Java');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.name', 'fr', 'Java');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.name', 'de', 'Java');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.name', 'en', 'Business Analysis');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.name', 'fr-CH', 'Business Analysis');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.name', 'fr', 'Business Analysis');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.name', 'de', 'Business Analysis');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.name', 'en', 'Test');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.name', 'fr-CH', 'Test');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.name', 'fr', 'Test');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.name', 'de', 'Test');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.desc', 'en', 'Java');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.desc', 'fr-CH', 'Java');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.desc', 'fr', 'Java');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('java.desc', 'de', 'Java');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.desc', 'en', 'Business Analysis');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.desc', 'fr-CH', 'Business Analysis');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.desc', 'fr', 'Business Analysis');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('business.analysis.desc', 'de', 'Business Analysis');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.desc', 'en', 'Test');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.desc', 'fr-CH', 'Test');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.desc', 'fr', 'Test');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('test.desc', 'de', 'Test');
 
 -- Table credential
