@@ -16,7 +16,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-	page: Integer,
     table: framework.utils.Table[utils.table.MilestoneApprovalListView],
     pagination: framework.utils.Pagination[models.governance.LifeCycleMilestoneInstance],
 	filterConfig: framework.utils.FilterConfig[utils.table.MilestoneApprovalListView]
@@ -37,7 +36,7 @@
                 table, 
                 pagination, 
                 filterConfig, 
-                controllers.core.routes.MilestoneApprovalController.listFilter(page).url,
+                controllers.core.routes.MilestoneApprovalController.listFilter().url,
                 null
             )
 }

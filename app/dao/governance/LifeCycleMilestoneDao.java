@@ -484,16 +484,12 @@ public abstract class LifeCycleMilestoneDao {
     /**
      * Get all milestone instances as pagination object for which a user (here
      * called an approver) should vote.
-     * 
-     * @param preferenceManagerPlugin
-     *            the preference manager service
      * @param approverId
-     *            the approver id
      */
-    public static Pagination<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsPaginationByApprover(IPreferenceManagerPlugin preferenceManagerPlugin,
-            Long approverId) {
-        return new Pagination<>(preferenceManagerPlugin, getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
-                .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
+    public static ExpressionList<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsExprByApprover(Long approverId) {
+        return getLCMilestoneInstanceAsExpr()
+                .eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
+                .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved");
     }
 
     /**
