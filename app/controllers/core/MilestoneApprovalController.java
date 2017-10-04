@@ -22,9 +22,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import framework.services.account.AccountManagementException;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.avaje.ebean.Ebean;
@@ -188,38 +190,34 @@ public class MilestoneApprovalController extends Controller {
     }
 
     
-    private Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> getMilestoneApprovalListTable(FilterConfig<MilestoneApprovalListView> filterConfig, IUserAccount userAccount) 
-    {
-    	OrderBy<LifeCycleMilestoneInstance> orderBy = filterConfig.getSortExpression();
+    private Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> getMilestoneApprovalListTable(FilterConfig<MilestoneApprovalListView> filterConfig) throws AccountManagementException {
+        // get the current user
+        IUserAccount userAccount;
+        userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
+
+        // get the current actor
+        Actor actor = ActorDao.getActorByUid(userAccount.getUid());
+
+        OrderBy<LifeCycleMilestoneInstance> orderBy = filterConfig.getSortExpression();
 
     	ExpressionList<LifeCycleMilestoneInstance> expressionList;
     	 if (getSecurityService().restrict(IMafConstants.MILESTONE_DECIDE_PERMISSION, userAccount)) {
-    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExpr().isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
+    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExpr());
     	 }
     	 else
     	 {
-    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", ActorDao.getActorByUid(userAccount.getUid()).id)
-                .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
+    		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExprByApprover(actor.id));
     	 }
         
         Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
         
-        Pagination<LifeCycleMilestoneInstance> pagination = new Pagination<LifeCycleMilestoneInstance>(this.getPreferenceManagerPlugin(), expressionList.findList().size(), expressionList);
+        Pagination<LifeCycleMilestoneInstance> pagination = new Pagination<>(this.getPreferenceManagerPlugin(), expressionList.findList().size(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-        List<MilestoneApprovalListView> milestoneApprovalListView = new ArrayList<MilestoneApprovalListView>();
-        for (LifeCycleMilestoneInstance elem : pagination.getListOfObjects()) {
-        	milestoneApprovalListView.add(new MilestoneApprovalListView(elem));
-        }
-
-        Set<String> hideColumns = filterConfig.getColumnsToHide();
-        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
-        	hideColumns.add("editActionLink");
-        	hideColumns.add("deleteActionLink");
-        }
+        List<MilestoneApprovalListView> milestoneApprovalListView = pagination.getListOfObjects().stream().map(MilestoneApprovalListView::new).collect(Collectors.toList());
 
         Table<MilestoneApprovalListView> table = this.getTableProvider().get().milestoneApproval.templateTable
-                .fillForFilterConfig(milestoneApprovalListView, hideColumns);
+                .fillForFilterConfig(milestoneApprovalListView, filterConfig.getColumnsToHide());
 
         return Pair.of(table, pagination);
 
@@ -229,30 +227,21 @@ public class MilestoneApprovalController extends Controller {
 
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_APPROVAL_PERMISSION), @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
-    public Result listFilter(Integer page) {
+    public Result listFilter() {
 
         try {
-
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            
-            // get the current user
-            IUserAccount userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
-          
-            // get the current actor
-            Actor actor = ActorDao.getActorByUid(userAccount.getUid());
             
             FilterConfig<MilestoneApprovalListView> filterConfig = this.getTableProvider().get().milestoneApproval.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
             } else {
-
                 // get the table
-                Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, userAccount);
+                Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig);
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
-
             }
 
         } catch (Exception e) {
@@ -268,36 +257,7 @@ public class MilestoneApprovalController extends Controller {
      *            the current page
      */
     @Restrict({ @Group(IMafConstants.MILESTONE_APPROVAL_PERMISSION), @Group(IMafConstants.MILESTONE_DECIDE_PERMISSION) })
-    public Result list(Integer page) {
-
-        // get the current user
-        IUserAccount userAccount;
-        try {
-            userAccount = getAccountManagerPlugin().getUserAccountFromUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
-        } catch (Exception e) {
-            return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-        }
-
-        // get the current actor
-        Actor actor = ActorDao.getActorByUid(userAccount.getUid());
-
-        // get the milestone instances required for a vote/decision
-        Pagination<LifeCycleMilestoneInstance> pagination;
-        if (getSecurityService().restrict(IMafConstants.MILESTONE_DECIDE_PERMISSION, userAccount)) {
-            pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPagination(this.getPreferenceManagerPlugin());
-        } else {
-            // if the sign in user hasn't the permission
-            // MILESTONE_DECIDE_PERMISSION and is not related to an actor, then
-            // the list of milestone to approve doesn't make sense
-            if (actor == null) {
-                return redirect(controllers.dashboard.routes.DashboardController.index(0, false));
-            }
-            pagination = LifeCycleMilestoneDao.getLCMilestoneInstanceAsPaginationByApprover(this.getPreferenceManagerPlugin(), actor.id);
-        }
-
-        pagination.setCurrentPage(page);
-
-        
+    public Result list() {
         try {
 
             // get the filter config
@@ -305,19 +265,13 @@ public class MilestoneApprovalController extends Controller {
             FilterConfig<MilestoneApprovalListView> filterConfig = this.getTableProvider().get().milestoneApproval.filterConfig.getCurrent(uid, request());
 
             // get the table
-            Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig, userAccount);
+            Pair<Table<MilestoneApprovalListView>, Pagination<LifeCycleMilestoneInstance>> t = getMilestoneApprovalListTable(filterConfig);
 
-            return ok(views.html.core.milestoneapproval.milestone_approval_list.render(page, t.getLeft(), t.getRight(), filterConfig));
+            return ok(views.html.core.milestoneapproval.milestone_approval_list.render(t.getLeft(), t.getRight(), filterConfig));
 
         } catch (Exception e) {
-
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-
         }
-
-        
-
-        
     }
 
     /**
@@ -336,9 +290,9 @@ public class MilestoneApprovalController extends Controller {
         LifeCycleMilestoneInstance milestoneInstance = LifeCycleMilestoneDao.getLCMilestoneInstanceById(milestoneInstanceId);
 
         // check the milestone instance is not already passed (decided)
-        if (milestoneInstance.isPassed == true) {
+        if (milestoneInstance.isPassed) {
             Utilities.sendInfoFlashMessage(Msg.get("core.milestone.approval.process.alreadydecided"));
-            return redirect(controllers.core.routes.MilestoneApprovalController.list(0));
+            return redirect(controllers.core.routes.MilestoneApprovalController.list());
         }
 
         // get the current user
@@ -367,7 +321,7 @@ public class MilestoneApprovalController extends Controller {
                 // check the approver has not already vote
                 if (approverInstance.hasApproved != null) {
                     Utilities.sendInfoFlashMessage(Msg.get("core.milestone.approval.process.alreadyvoted"));
-                    return redirect(controllers.core.routes.MilestoneApprovalController.list(0));
+                    return redirect(controllers.core.routes.MilestoneApprovalController.list());
                 }
             }
         }
@@ -478,7 +432,7 @@ public class MilestoneApprovalController extends Controller {
         // success message
         Utilities.sendSuccessFlashMessage(Msg.get("core.milestone.approval.process.panel.vote.successfull"));
 
-        return redirect(controllers.core.routes.MilestoneApprovalController.list(0));
+        return redirect(controllers.core.routes.MilestoneApprovalController.list());
     }
 
     /**
@@ -545,7 +499,7 @@ public class MilestoneApprovalController extends Controller {
         // success message
         Utilities.sendSuccessFlashMessage(Msg.get("core.milestone.approval.process.panel.decide.successfull"));
 
-        return redirect(controllers.core.routes.MilestoneApprovalController.list(0));
+        return redirect(controllers.core.routes.MilestoneApprovalController.list());
     }
 
     /**
@@ -563,7 +517,7 @@ public class MilestoneApprovalController extends Controller {
 
         Utilities.sendSuccessFlashMessage(Msg.get("core.milestone.approval.process.panel.decide.delete.successful"));
 
-        return redirect(controllers.core.routes.MilestoneApprovalController.list(0));
+        return redirect(controllers.core.routes.MilestoneApprovalController.list());
     }
 
     /**

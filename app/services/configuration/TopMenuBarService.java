@@ -242,7 +242,7 @@ public class TopMenuBarService extends AbstractTopMenuBarService {
         governanceMenuItem.addSubMenuItem(milestonePlanningMenuItem);
 
         ClickableMenuItem provideApprovalMenuItem = new ClickableMenuItem(TopMenus.GOVERNANCE.name(2), "topmenubar.governance.provide_approval.menu.label",
-                controllers.core.routes.MilestoneApprovalController.list(0), "fa fa-thumbs-up", false);
+                controllers.core.routes.MilestoneApprovalController.list(), "fa fa-thumbs-up", false);
         provideApprovalMenuItem
                 .setAuthorizedPermissions(Utilities.getListOfArray(IMafConstants.MILESTONE_APPROVAL_PERMISSION, IMafConstants.MILESTONE_DECIDE_PERMISSION));
         governanceMenuItem.addSubMenuItem(provideApprovalMenuItem);

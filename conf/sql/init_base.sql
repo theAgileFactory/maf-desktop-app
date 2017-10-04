@@ -1415,16 +1415,16 @@ INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.developer
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.project_manager_role.description', 'en', 'The actor is a project manager');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.financial_officer_role.description', 'en', 'The actor is a financial officer');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.viewer_role.description', 'en', 'Read only');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.super_user_role.description', 'fr-CH', 'L\'acteur est un administrateur du système');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.pmo_role.description', 'fr-CH', 'L\'acteur est membre du bureau de gestion des projets');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.portfolio_manager_role.description', 'fr-CH', 'L\'acteur est un gestionnaire de portefeuille');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.delivery_manager_role.description', 'fr-CH', 'L\'acteur est un responsable des livraisons');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.approver_role.description', 'fr-CH', 'L\'acteur participe au processus de gouvernance des projets');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.architecture_role.description', 'fr-CH', 'L\'acteur est un membre de l\'équipe d\'urbanisation ');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.developer_role.description', 'fr-CH', 'L\'acteur est un développeur');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.project_manager_role.description', 'fr-CH', 'L\'acteur est un chef de projet');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.financial_officer_role.description', 'fr-CH', 'L\'acteur est un responsable financier');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.viewer_role.description', 'fr-CH', 'Lecture seule');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.super_user_role.description', 'fr', 'L\'acteur est un administrateur du système');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.pmo_role.description', 'fr', 'L\'acteur est membre du bureau de gestion des projets');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.portfolio_manager_role.description', 'fr', 'L\'acteur est un gestionnaire de portefeuille');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.delivery_manager_role.description', 'fr', 'L\'acteur est un responsable des livraisons');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.approver_role.description', 'fr', 'L\'acteur participe au processus de gouvernance des projets');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.architecture_role.description', 'fr', 'L\'acteur est un membre de l\'équipe d\'urbanisation ');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.developer_role.description', 'fr', 'L\'acteur est un développeur');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.project_manager_role.description', 'fr', 'L\'acteur est un chef de projet');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.financial_officer_role.description', 'fr', 'L\'acteur est un responsable financier');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.viewer_role.description', 'fr', 'Lecture seule');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.super_user_role.description', 'de', 'Rolleninhaber ist Poweruser des Systems');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.pmo_role.description', 'de', 'Rolleninhaber kontrolliert den Lieferprozess ein Teil des Project Management Offices.');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.portfolio_manager_role.description', 'de', 'Rolleninhaber kontrolliert ein Portfolio von Aktivitäten');
@@ -1444,10 +1444,10 @@ INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('role.viewer_ro
 insert into `actor_type`(id, deleted, name, description, ref_id, selectable, last_update) values (1, 0, 'actor_type.name.regular', null, 'REGULAR', 1, CURRENT_TIMESTAMP);
 insert into `actor_type`(id, deleted, name, description, ref_id, selectable, last_update) values (3, 0, 'actor_type.name.external', null, 'EXTERNAL', 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.regular', 'en', 'Regular');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.regular', 'fr-CH', 'Interne');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.regular', 'fr', 'Interne');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.regular', 'de', 'Intern');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.external', 'en', 'External');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.external', 'fr-CH', 'Externe');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.external', 'fr', 'Externe');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('actor_type.name.external', 'de', 'Extern');
 
 -- Table `org_unit_type`
@@ -1456,28 +1456,28 @@ insert into org_unit_type(id, ref_id, name, description, deleted, selectable, la
 insert into org_unit_type(id, ref_id, name, description, deleted, selectable, last_update) values (3,'DEPARTMENT','org_unit_type.name.department', 'org_unit_type.description.department', 0, 1, CURRENT_TIMESTAMP);
 insert into org_unit_type(id, ref_id, name, description, deleted, selectable, last_update) values (4,'TEAM','org_unit_type.name.team', 'org_unit_type.description.team', 0, 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.country','en','Country');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.country','fr-CH','Pays');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.country','fr','Pays');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.country','de','Land');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.division','en','Division');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.division','fr-CH','Division');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.division','fr','Division');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.division','de','Geschäftsbereich');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.department','en','Department');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.department','fr-CH','Département');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.department','fr','Département');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.department','de','Abteilung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.team','en','Team');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.team','fr-CH','Equipe');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.team','fr','Equipe');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.name.team','de','Team');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.country','en','A country branch');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.country','fr-CH','Une filiale d\'un pays');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.country','fr','Une filiale d\'un pays');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.country','de','Landesniederlassung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.division','en','The top level organizatonal unit which is headed by a VP attending the executive committee.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.division','fr-CH','Une division gérée par un VP qui participe au commité éxécutif.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.division','fr','Une division gérée par un VP qui participe au commité éxécutif.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.division','de','Geschäftsbereich, Leiter ist Mitglied der Konzernleitung.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.department','en','Organizational unit child of the division level.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.department','fr-CH','Unité organisationelle enfant d\'une division');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.department','fr','Unité organisationelle enfant d\'une division');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.department','de','Untergruppe des Geschäftsbreich');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.team','en','Organizational unit child of the department level or the team level');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.team','fr-CH','Unité organisationelle enfant d\'un département');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.team','fr','Unité organisationelle enfant d\'un département');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('org_unit_type.description.team','de','Untergruppe der Abteilung');
 
 -- Table portfolio_entry_type
@@ -1486,57 +1486,57 @@ insert into portfolio_entry_type(id, deleted, name,  description, selectable, la
 insert into portfolio_entry_type(id, deleted, name,  description, selectable, last_update) values (3, 0, 'portfolio_entry_type.name.upgrade', 'portfolio_entry_type.description.upgrade', 1, CURRENT_TIMESTAMP);
 insert into portfolio_entry_type(id, deleted, name,  description, selectable, is_release, last_update) values (10, 0, 'portfolio_entry_type.name.release', 'portfolio_entry_type.description.release', 1, 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.project', 'en', 'Project');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.project', 'fr-CH', 'Projet');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.project', 'fr', 'Projet');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.project', 'de', 'Projekt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.enhancement', 'en', 'Enhancement');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.enhancement', 'fr-CH', 'Evolution');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.enhancement', 'fr', 'Evolution');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.enhancement', 'de', 'Verbesserung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'en', 'Upgrade');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'fr-CH', 'Mise à jour');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'fr', 'Mise à jour');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.upgrade', 'de', 'Aktualisieren');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.release', 'en', 'Release');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.release', 'fr-CH', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.release', 'fr', 'Release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.name.release', 'de', 'Release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'en', 'A company project');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'fr-CH', 'Un projet d''entreprise');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'fr', 'Un projet d''entreprise');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.project', 'de', 'Ein Unternehmensprojekt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.enhancement', 'en', 'Enhancement of an existing IT platform');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.enhancement', 'fr-CH', 'Evolution d''une plateforme existante');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.enhancement', 'fr', 'Evolution d''une plateforme existante');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.enhancement', 'de', 'Verbesserung einer IT-Plattform');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.upgrade', 'en', 'Upgrade of an IT system');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.upgrade', 'fr-CH', 'Mise à jour d''un système informatique');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.upgrade', 'fr', 'Mise à jour d''un système informatique');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.upgrade', 'de', 'Aktualisieren eines IT-Systems');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.release', 'en', 'Distribution of a new or upgraded version of software');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.release', 'fr-CH', 'Distribution d\'une version nouvelle ou améliorée d\'un logiciel');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.release', 'fr', 'Distribution d\'une version nouvelle ou améliorée d\'un logiciel');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_type.description.release', 'de', 'Verteilung eines neuen oder aktualisierten Version der Software');
 
 -- Table portfolio_entry_dependency_type
 
 INSERT INTO `portfolio_entry_dependency_type` (`deleted`, `last_update`, `name`, `contrary`, `description`, `is_active`) VALUES ('0', NOW(), 'portfolio_entry.dependency_type.precedes.name', 'portfolio_entry.dependency_type.precedes.contrary', 'portfolio_entry.dependency_type.precedes.description', '1');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.name', 'en', 'Precedes');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.name', 'fr-CH', 'Précède');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.name', 'fr', 'Précède');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.name', 'de', 'Vorausgeht');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.contrary', 'en', 'Follows');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.contrary', 'fr-CH', 'Suit');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.contrary', 'fr', 'Suit');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.contrary', 'de', 'Folgt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.description', 'en', 'Define the precedence of initiatives.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.description', 'fr-CH', 'Définit la précédence des initiatives.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.description', 'fr', 'Définit la précédence des initiatives.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry.dependency_type.precedes.description', 'de', 'Definieren Sie den Vorrang von Initiativen.');
 
 -- Table portfolio_type
 insert into portfolio_type(id, name, description, last_update, selectable, deleted) values (1, 'portfolio_type.name.program', 'portfolio_type.description.program', CURRENT_TIMESTAMP, 1, 0);
 insert into portfolio_type(id, name, description, last_update, selectable, deleted) values (2, 'portfolio_type.name.portfolio', 'portfolio_type.description.portfolio', CURRENT_TIMESTAMP, 1, 0);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.program', 'en', 'Program');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.program', 'fr-CH', 'Programme');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.program', 'fr', 'Programme');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.program', 'de', 'Program');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.portfolio', 'en', 'Portfolio');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.portfolio', 'fr-CH', 'Portefeuille');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.portfolio', 'fr', 'Portefeuille');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.name.portfolio', 'de', 'Portfolio');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.program', 'en', 'A group of projects which aims at a common goal.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.program', 'fr-CH', 'Ensemble de projets qui ont un objectif commun.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.program', 'fr', 'Ensemble de projets qui ont un objectif commun.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.program', 'de', 'Eine Gruppe von Projekten mit dem gleichen Ziel.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.portfolio', 'en', 'A group of projects');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.portfolio', 'fr-CH', 'Ensemble de projets');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.portfolio', 'fr', 'Ensemble de projets');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_type.description.portfolio', 'de', 'Eine Gruppe von Projekten ');
 
 -- Table portfolio_entry_report_status_type
@@ -1544,22 +1544,22 @@ insert into portfolio_entry_report_status_type(id, name, description, selectable
 insert into portfolio_entry_report_status_type(id, name, description, selectable, deleted, css_class, last_update) values(2, 'portfolio_entry_report_status_type.name.amber', 'portfolio_entry_report_status_type.description.amber', 1, 0, 'warning', CURRENT_TIMESTAMP);
 insert into portfolio_entry_report_status_type(id, name, description, selectable, deleted, css_class, last_update) values(3, 'portfolio_entry_report_status_type.name.green', 'portfolio_entry_report_status_type.description.green', 1, 0, 'success', CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.red', 'en', 'Red');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.red', 'fr-CH', 'Rouge');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.red', 'fr', 'Rouge');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.red', 'de', 'Rot');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.green', 'en', 'Green');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.green', 'fr-CH', 'Vert');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.green', 'fr', 'Vert');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.green', 'de', 'Grün');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.amber', 'en', 'Amber');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.amber', 'fr-CH', 'Orange');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.amber', 'fr', 'Orange');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.name.amber', 'de', 'Orange');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.red', 'en', 'The project is associated with issues or risks which are not solved nor mitigated.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.red', 'fr-CH', 'Le projet est associé à des incidents ou risques qui ne sont pas résolus ou modérés.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.red', 'fr', 'Le projet est associé à des incidents ou risques qui ne sont pas résolus ou modérés.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.red', 'de', 'Risiken und Probleme des Projektes werden weder gelöst noch berücksichtigt.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.green', 'en', 'The project is not associated with any risks or issues.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.green', 'fr-CH', 'Le projet n\'est pas associé à des incidents ou risques.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.green', 'fr', 'Le projet n\'est pas associé à des incidents ou risques.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.green', 'de', 'Projekt hat weder Risiken noch Probleme.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.amber', 'en', 'The project is associated with issues or risks which are known and mitigated.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.amber', 'fr-CH', 'Le projet est associé à des incidents ou risques qui sont connus et modérés.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.amber', 'fr', 'Le projet est associé à des incidents ou risques qui sont connus et modérés.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_report_status_type.description.amber', 'de', 'Projekt hat bekannte Risiken und/oder Probleme welche berücksichtig werden.');
 
 -- Table portfolio_entry_planning_package_type
@@ -1570,22 +1570,22 @@ INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `
 INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.warning', '1', 'warning');
 INSERT INTO `portfolio_entry_planning_package_type` (`last_update`, `deleted`, `name`, `is_active`, `css_class`) VALUES (NOW(), '0', 'portfolio_entry_planning_package_type.name.danger', '1', 'danger');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.default', 'en', 'Gray');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.default', 'fr-CH', 'Gris');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.default', 'fr', 'Gris');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.default', 'de', 'Grau');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.info', 'en', 'Cyan');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.info', 'fr-CH', 'Cyan');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.info', 'fr', 'Cyan');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.info', 'de', 'Türkis');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.primary', 'en', 'Blue');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.primary', 'fr-CH', 'Bleu');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.primary', 'fr', 'Bleu');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.primary', 'de', 'Blau');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.success', 'en', 'Green');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.success', 'fr-CH', 'Vert');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.success', 'fr', 'Vert');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.success', 'de', 'Grün');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.warning', 'en', 'Amber');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.warning', 'fr-CH', 'Orange');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.warning', 'fr', 'Orange');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.warning', 'de', 'Orange');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.danger', 'en', 'Red');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.danger', 'fr-CH', 'Rouge');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.danger', 'fr', 'Rouge');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_planning_package_type.name.danger', 'de', 'Rot');
 
 -- Table portfolio_entry_risk_type
@@ -1593,22 +1593,22 @@ insert into portfolio_entry_risk_type(id, name, description, deleted, selectable
 insert into portfolio_entry_risk_type(id, name, description, deleted, selectable, last_update) values(2, 'portfolio_entry_risk_type.name.resource', 'portfolio_entry_risk_type.description.resource', 0, 1, CURRENT_TIMESTAMP);
 insert into portfolio_entry_risk_type(id, name, description, deleted, selectable, last_update) values(3, 'portfolio_entry_risk_type.name.planning', 'portfolio_entry_risk_type.description.planning', 0, 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.resource', 'en', 'Resource');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.resource', 'fr-CH', 'Ressource');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.resource', 'fr', 'Ressource');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.resource', 'de', 'Ressource');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.planning', 'en', 'Planning');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.planning', 'fr-CH', 'Planning');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.planning', 'fr', 'Planning');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.planning', 'de', 'Planung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.budget', 'en', 'Budget');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.budget', 'fr-CH', 'Budget');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.budget', 'fr', 'Budget');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.name.budget', 'de', 'Budget');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.resource', 'en', 'The risk is associated with a resource availability.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.resource', 'fr-CH', 'Le risque est lié à la disponibilité d\'une ressource.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.resource', 'fr', 'Le risque est lié à la disponibilité d\'une ressource.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.resource', 'de', 'Risiko - Ressourcenverfügbarkeit.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.planning', 'en', 'The risk is associated with the planning.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.planning', 'fr-CH', 'Le risque est lié au planning.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.planning', 'fr', 'Le risque est lié au planning.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.planning', 'de', 'Risiko - Planung.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.budget', 'en', 'The risk is associated with the budget.');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.budget', 'fr-CH', 'Le risque est lié au budget.');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.budget', 'fr', 'Le risque est lié au budget.');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('portfolio_entry_risk_type.description.budget', 'de', 'Risiko - Budget.');
 
 -- Table life_cycle_process
@@ -1616,23 +1616,23 @@ insert into life_cycle_process(id, deleted, short_name, name, description, is_ac
 insert into life_cycle_process(id, deleted, short_name, name, description, is_active, is_release, last_update) values (6, 0, 'life_cycle_process.short_name.release', 'life_cycle_process.name.release', 'life_cycle_process.description.release', 1, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'en', 'Default');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'fr-CH', 'Standard');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'fr', 'Standard');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.default', 'de', 'Grundeinstellung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.default', 'en', 'Default');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.default', 'fr-CH', 'Standard');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.default', 'fr', 'Standard');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.default', 'de', 'Grundeinstellung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.default', 'en', 'Default life cycle process when you do not know what to choose');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.default', 'fr-CH', 'Processus de gouvernance standard');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.default', 'fr', 'Processus de gouvernance standard');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.default', 'de', 'Grundeinstellung Lieferzyklus');
 
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.release', 'en', 'Release');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.release', 'fr-CH', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.release', 'fr', 'Release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.short_name.release', 'de', 'Release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.release', 'en', 'Release');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.release', 'fr-CH', 'Release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.release', 'fr', 'Release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.name.release', 'de', 'Release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.release', 'en', 'Default life cycle process for a release');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.release', 'fr-CH', 'Processus de gouvernance standard pour une release');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.release', 'fr', 'Processus de gouvernance standard pour une release');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_process.description.release', 'de', 'Grundeinstellung Lieferzyklus');
 
 -- Table life_cycle_milestone_instance_status_type
@@ -1641,28 +1641,28 @@ insert into life_cycle_milestone_instance_status_type(id, deleted, name, descrip
 insert into life_cycle_milestone_instance_status_type(id, deleted, name, description, is_approved, selectable, last_update) values (3, 0, 'life_cycle_milestone_instance_status_type.name.approved_remark', 'life_cycle_milestone_instance_status_type.description.approved_remark', 1, 1, CURRENT_TIMESTAMP);
 insert into life_cycle_milestone_instance_status_type(id, deleted, name, description, is_approved, selectable, last_update) values (4, 0, 'life_cycle_milestone_instance_status_type.name.delayed', 'life_cycle_milestone_instance_status_type.description.delayed', 0, 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved', 'en', 'Approved');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved', 'fr-CH', 'Approuvé');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved', 'fr', 'Approuvé');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved', 'de', 'Genehmigt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.rejected', 'en', 'Rejected');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.rejected', 'fr-CH', 'Rejeté');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.rejected', 'fr', 'Rejeté');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.rejected', 'de', 'Abgelehnt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved_remark', 'en', 'Approved with remarks');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved_remark', 'fr-CH', 'Approuvé avec commentaires');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved_remark', 'fr', 'Approuvé avec commentaires');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.approved_remark', 'de', 'Genehmigt mit Kommentaren');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.delayed', 'en', 'Delayed');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.delayed', 'fr-CH', 'Retardé');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.delayed', 'fr', 'Retardé');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.name.delayed', 'de', 'Verschoben');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved', 'en', 'The review committe has given its approval');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved', 'fr-CH', 'Le commité de pilotage a donné son approbation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved', 'fr', 'Le commité de pilotage a donné son approbation');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved', 'de', 'Der Prüfungsausschuss hat das Projekt genehmigt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.rejected', 'en', 'The  review committe has rejected the milestone');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.rejected', 'fr-CH', 'Le commité de pilotage a rejeté le passage du jalon');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.rejected', 'fr', 'Le commité de pilotage a rejeté le passage du jalon');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.rejected', 'de', 'Der Prüfungsausschuss den Meilenstein abgelehnt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved_remark', 'en', 'The  review committe has approved but with some comments');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved_remark', 'fr-CH', 'Le commité de pilotage a approuvé le passage du jalon avec certains commentaires');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved_remark', 'fr', 'Le commité de pilotage a approuvé le passage du jalon avec certains commentaires');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.approved_remark', 'de', 'Der Prüfungsausschuss hat das Projekt mit Kommentaren genehmigt');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.delayed', 'en', 'The review committe was not able to evaluate the project');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.delayed', 'fr-CH', 'Le commité de pilotage n\'a pas été capable d\'évaluer l\'approbation du jalon');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.delayed', 'fr', 'Le commité de pilotage n\'a pas été capable d\'évaluer l\'approbation du jalon');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone_instance_status_type.description.delayed', 'de', 'Der Prüfungsausschuss war nicht in der Lage das Projekt zu evaluieren');
 
 -- Table life_cycle_milestone
@@ -1671,43 +1671,43 @@ insert into life_cycle_milestone(id, deleted, short_name, name, description, `or
 insert into life_cycle_milestone(id, deleted, short_name, name, description, `order`, life_cycle_process_id, last_update, is_review_required, default_life_cycle_milestone_instance_status_type_id) values (22, 0, 'life_cycle_milestone.short_name.launch', 'life_cycle_milestone.name.launch', null, 3, 5, CURRENT_TIMESTAMP, 1, 1);
 insert into life_cycle_milestone(id, deleted, short_name, name, description, `order`, life_cycle_process_id, last_update, is_review_required, default_life_cycle_milestone_instance_status_type_id) values (23, 0, 'life_cycle_milestone.short_name.closure', 'life_cycle_milestone.name.closure', null, 4, 5, CURRENT_TIMESTAMP, 0, 1);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.init', 'en', 'Initialisation');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.init', 'fr-CH', 'Initialisation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.init', 'fr', 'Initialisation');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.init', 'de', 'Initialisierung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.start', 'en', 'Start');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.start', 'fr-CH', 'Démarrage');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.start', 'fr', 'Démarrage');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.start', 'de', 'Start');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.launch', 'en', 'Launch');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.launch', 'fr-CH', 'Lancement');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.launch', 'fr', 'Lancement');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.launch', 'de', 'Neu');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.closure', 'en', 'Closure');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.closure', 'fr-CH', 'Terminé');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.closure', 'fr', 'Terminé');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.closure', 'de', 'Schließung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.init', 'en', 'Initialisation');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.init', 'fr-CH', 'Initialisation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.init', 'fr', 'Initialisation');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.init', 'de', 'Initialisierung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.start', 'en', 'Start');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.start', 'fr-CH', 'Démarrage');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.start', 'fr', 'Démarrage');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.start', 'de', 'Start');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.launch', 'en', 'Launch');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.launch', 'fr-CH', 'Lancement');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.launch', 'fr', 'Lancement');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.launch', 'de', 'Lancierung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.closure', 'en', 'Closure');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.closure', 'fr-CH', 'Terminé');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.closure', 'fr', 'Terminé');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.closure', 'de', 'Abgeschlossen');
 
 insert into life_cycle_milestone(id, deleted, short_name, name, description, `order`, life_cycle_process_id, last_update, is_review_required, default_life_cycle_milestone_instance_status_type_id, type) values (24, 0, 'life_cycle_milestone.short_name.release_start_implementation', 'life_cycle_milestone.name.release_start_implementation', null, 1, 6, CURRENT_TIMESTAMP, 0, 1, 'IMPLEMENTATION_START_DATE');
 insert into life_cycle_milestone(id, deleted, short_name, name, description, `order`, life_cycle_process_id, last_update, is_review_required, default_life_cycle_milestone_instance_status_type_id, type) values (25, 0, 'life_cycle_milestone.short_name.release_end_implementation', 'life_cycle_milestone.name.release_end_implementation', null, 2, 6, CURRENT_TIMESTAMP, 0, 1, 'IMPLEMENTATION_END_DATE');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_start_implementation', 'en', 'Start');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_start_implementation', 'fr-CH', 'Début');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_start_implementation', 'fr', 'Début');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_start_implementation', 'de', 'Anfang');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_end_implementation', 'en', 'End');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_end_implementation', 'fr-CH', 'Fin');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_end_implementation', 'fr', 'Fin');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.short_name.release_end_implementation', 'de', 'Ende');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_start_implementation', 'en', 'Implementation start');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_start_implementation', 'fr-CH', 'Début de l\'implémentation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_start_implementation', 'fr', 'Début de l\'implémentation');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_start_implementation', 'de', 'Umsetzung Anfang');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_end_implementation', 'en', 'Implementation end');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_end_implementation', 'fr-CH', 'Fin de l\'implémentation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_end_implementation', 'fr', 'Fin de l\'implémentation');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('life_cycle_milestone.name.release_end_implementation', 'de', 'Umsetzung Ende');
 
 -- Table stakeholder_type
@@ -1716,16 +1716,16 @@ insert into stakeholder_type(id, deleted, name, description, selectable, last_up
 insert into stakeholder_type(id, deleted, name, description, selectable, last_update) values (7, 0, 'stakeholder_type.name.developer', null, 1, CURRENT_TIMESTAMP);
 insert into stakeholder_type(id, deleted, name, description, selectable, last_update) values (8, 0, 'stakeholder_type.name.architect', null, 1, CURRENT_TIMESTAMP);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.product_manager', 'en', 'Product manager');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.product_manager', 'fr-CH', 'Responsable de produit');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.product_manager', 'fr', 'Responsable de produit');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.product_manager', 'de', 'Produktmanager');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.business_analyst', 'en', 'Business analyst');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.business_analyst', 'fr-CH', 'Analyste Business');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.business_analyst', 'fr', 'Analyste Business');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.business_analyst', 'de', 'Business Analyst');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.developer', 'en', 'Developer');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.developer', 'fr-CH', 'Développeur');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.developer', 'fr', 'Développeur');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.developer', 'de', 'Entwickler');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.architect', 'en', 'Architect');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.architect', 'fr-CH', 'Architecte');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.architect', 'fr', 'Architecte');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('stakeholder_type.name.architect', 'de', 'Architekt');
 
 -- Table portfolio_type_has_stakeholder_type
@@ -1757,18 +1757,18 @@ INSERT INTO life_cycle_phase (`name`,`life_cycle_process_id`,`order`,`start_life
 INSERT INTO life_cycle_phase (`name`,`life_cycle_process_id`,`order`,`start_life_cycle_milestone_id`,`end_life_cycle_milestone_id`,`last_update`,`gap_days_start`,`gap_days_end`) VALUES ('phase.execution', 5, 2, 21, 22, CURRENT_TIMESTAMP, 1, 0);
 INSERT INTO life_cycle_phase (`name`,`life_cycle_process_id`,`order`,`start_life_cycle_milestone_id`,`end_life_cycle_milestone_id`,`last_update`,`gap_days_start`,`gap_days_end`) VALUES ('phase.closure', 5, 3, 22, 23, CURRENT_TIMESTAMP, 1, 0);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.initiation', 'en', 'Initiation');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.initiation', 'fr-CH', 'Initiation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.initiation', 'fr', 'Initiation');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.initiation', 'de', 'Initiierung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.execution', 'en', 'Execution');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.execution', 'fr-CH', 'Exécution');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.execution', 'fr', 'Exécution');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.execution', 'de', 'Ausführung');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.closure', 'en', 'Closure');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.closure', 'fr-CH', 'Fermeture');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.closure', 'fr', 'Fermeture');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.closure', 'de', 'Abschluss');
 
 INSERT INTO life_cycle_phase (`name`,`life_cycle_process_id`,`order`,`start_life_cycle_milestone_id`,`end_life_cycle_milestone_id`,`last_update`,`gap_days_start`,`gap_days_end`) VALUES ('phase.implementation', 6, 1,  24, 25, CURRENT_TIMESTAMP, 0, 0);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.implementation', 'en', 'Implementation');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.implementation', 'fr-CH', 'Implémentation');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.implementation', 'fr', 'Implémentation');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('phase.implementation', 'de', 'Umsetzung');
 
 -- Table requirement_status
@@ -1778,19 +1778,19 @@ INSERT INTO `requirement_status`(`id`,`deleted`,`last_update`,`type`,`name`,`des
 INSERT INTO `requirement_status`(`id`,`deleted`,`last_update`,`type`,`name`,`description`) VALUES (4, 0, CURRENT_TIMESTAMP, 'CLOSED', 'requirement.status.name.closed','');
 INSERT INTO `requirement_status`(`id`,`deleted`,`last_update`,`type`,`name`,`description`) VALUES (5, 0, CURRENT_TIMESTAMP, 'CLOSED', 'requirement.status.name.rejected','');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.new', 'en', 'New');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.new', 'fr-CH', 'Nouveau');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.new', 'fr', 'Nouveau');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.new', 'de', 'Neu');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.in_progress', 'en', 'In progress');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.in_progress', 'fr-CH', 'En cours');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.in_progress', 'fr', 'En cours');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.in_progress', 'de', 'in Arbeit');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.ready_to_test', 'en', 'Ready to test');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.ready_to_test', 'fr-CH', 'Prêt à tester');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.ready_to_test', 'fr', 'Prêt à tester');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.ready_to_test', 'de', 'Bereit zum Testen');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.closed', 'en', 'Closed');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.closed', 'fr-CH', 'Fermé');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.closed', 'fr', 'Fermé');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.closed', 'de', 'Geschlossen');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.rejected', 'en', 'Rejected');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.rejected', 'fr-CH', 'Rejeté');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.rejected', 'fr', 'Rejeté');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.status.name.rejected', 'de', 'Abgelehnt');
 
 -- Table requirement_priority
@@ -1799,16 +1799,16 @@ INSERT INTO `requirement_priority`(`id`,`deleted`,`last_update`,`name`,`descript
 INSERT INTO `requirement_priority`(`id`,`deleted`,`last_update`,`name`,`description`,`is_must`) VALUES (3, 0, CURRENT_TIMESTAMP, 'requirement.priority.must','', 1);
 INSERT INTO `requirement_priority`(`id`,`deleted`,`last_update`,`name`,`description`,`is_must`) VALUES (4, 0, CURRENT_TIMESTAMP, 'requirement.priority.wont','', 0);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.could', 'en', 'Could');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.could', 'fr-CH', 'Pourrait');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.could', 'fr', 'Pourrait');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.could', 'de', 'Kann');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.should', 'en', 'Should');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.should', 'fr-CH', 'Devrait');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.should', 'fr', 'Devrait');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.should', 'de', 'Soll');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.must', 'en', 'Must');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.must', 'fr-CH', 'Doit');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.must', 'fr', 'Doit');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.must', 'de', 'Muss');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.wont', 'en', 'Won\'t');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.wont', 'fr-CH', 'Ne sera pas');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.wont', 'fr', 'Ne sera pas');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.priority.wont', 'de', 'Geht nicht');
 
 -- Table requirement_severity
@@ -1818,19 +1818,19 @@ INSERT INTO `requirement_severity`(`id`,`deleted`,`last_update`,`name`,`descript
 INSERT INTO `requirement_severity`(`id`,`deleted`,`last_update`,`name`,`description`,`is_blocker`) VALUES (4, 0, CURRENT_TIMESTAMP, 'requirement.severity.critical','',1);
 INSERT INTO `requirement_severity`(`id`,`deleted`,`last_update`,`name`,`description`,`is_blocker`) VALUES (5, 0, CURRENT_TIMESTAMP, 'requirement.severity.blocker','',1);
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.trivial', 'en', 'Trivial');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.trivial', 'fr-CH', 'Trivial');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.trivial', 'fr', 'Trivial');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.trivial', 'de', 'Trivial');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.minor', 'en', 'Minor');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.minor', 'fr-CH', 'Mineur');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.minor', 'fr', 'Mineur');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.minor', 'de', 'Gering');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.major', 'en', 'Major');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.major', 'fr-CH', 'Majeur');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.major', 'fr', 'Majeur');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.major', 'de', 'Bedeutend');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.critical', 'en', 'Critical');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.critical', 'fr-CH', 'Critique');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.critical', 'fr', 'Critique');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.critical', 'de', 'Kritisch');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.blocker', 'en', 'Blocker');
-INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.blocker', 'fr-CH', 'Bloquant');
+INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.blocker', 'fr', 'Bloquant');
 INSERT INTO `i18n_messages`(`key`,`language`,`value`) VALUES ('requirement.severity.blocker', 'de', 'Blocker');
 
 -- Table reporting_category
@@ -1839,16 +1839,16 @@ INSERT INTO `reporting_category` (`deleted`, `last_update`, `name`, `manageable`
 INSERT INTO `reporting_category` (`deleted`, `last_update`, `name`, `manageable`, `order`) VALUES ('0', CURRENT_TIMESTAMP, 'reporting_category.finance.name', '1', '7');
 INSERT INTO `reporting_category` (`deleted`, `last_update`, `name`, `manageable`, `order`) VALUES ('0', CURRENT_TIMESTAMP, 'reporting_category.release.name', '1', '9');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.allocation.name', 'en', 'Allocation');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.allocation.name', 'fr-CH', 'Ressources');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.allocation.name', 'fr', 'Ressources');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.allocation.name', 'de', 'Zuteilung');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.project.name', 'en', 'Project');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.project.name', 'fr-CH', 'Projet');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.project.name', 'fr', 'Projet');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.project.name', 'de', 'Projekt');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.finance.name', 'en', 'Finance');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.finance.name', 'fr-CH', 'Finance');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.finance.name', 'fr', 'Finance');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.finance.name', 'de', 'Finanzwesen');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.release.name', 'en', 'Release');
-INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.release.name', 'fr-CH', 'Release');
+INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.release.name', 'fr', 'Release');
 INSERT INTO `i18n_messages` (`key`, `language`, `value`) VALUES ('reporting_category.release.name', 'de', 'Release');
 
 -- Update standard report category

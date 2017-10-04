@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl"><name>CI</name><driver>com.mysql.jdbc.Driver</driver><username>root</username><password>root</password><savePassword>true</savePassword><url>jdbc:mysql://localhost/vdl_v15</url><database></database><serverAddress></serverAddress><classpath>C:\Program Files\mariadb-10.1.16-winx64\mysql-connector-java-5.1.36.jar</classpath></jdbcDataAdapter>

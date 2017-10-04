@@ -442,13 +442,13 @@ public class OrgUnitController extends Controller {
          * Filter
          * */
 
-        FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> orgUnitsPortfolioEntryFilter =
-        		this.getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.getCurrent(uid, request());
+        FilterConfig<OrgUnitAllocationRequestListView> orgUnitsPortfolioEntryFilter =
+                this.getTableProvider().get().orgUnitAllocationRequest.filterConfig.getCurrent(uid, request());
 
         /**
          * Table 
          * */
-        Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> orgUnitsPortfolioEntryTable=
+        Pair<Table<OrgUnitAllocationRequestListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> orgUnitsPortfolioEntryTable=
         		getOrgUnitPEAllocTable(id, orgUnitsPortfolioEntryFilter, this.getSecurityService());
   
         // -----------------------------------------------------------------------------------------------------------------------
@@ -511,15 +511,15 @@ public class OrgUnitController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig = this.getTableProvider()
-                    .get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<OrgUnitAllocationRequestListView> filterConfig = this.getTableProvider()
+                    .get().orgUnitAllocationRequest.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
             } else {
 
                 // get the table
-                Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> t = getOrgUnitPEAllocTable(
+                Pair<Table<OrgUnitAllocationRequestListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> t = getOrgUnitPEAllocTable(
                         id, filterConfig, this.getSecurityService());
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
@@ -583,8 +583,8 @@ public class OrgUnitController extends Controller {
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
             // fill the filter config
-            FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig = this.getTableProvider()
-                    .get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<OrgUnitAllocationRequestListView> filterConfig = this.getTableProvider()
+                    .get().orgUnitAllocationRequest.filterConfig.persistCurrentInDefault(uid, request());
 
             ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(id, true, true));
 
@@ -1030,8 +1030,8 @@ public class OrgUnitController extends Controller {
 
     }
 
-    private Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> getOrgUnitPEAllocTable(
-            Long orgUnitId, FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig, ISecurityService securityService) {
+    private Pair<Table<OrgUnitAllocationRequestListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> getOrgUnitPEAllocTable(
+            Long orgUnitId, FilterConfig<OrgUnitAllocationRequestListView> filterConfig, ISecurityService securityService) {
 
     	ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, true, true));
 
@@ -1039,18 +1039,14 @@ public class OrgUnitController extends Controller {
         expressionList = expressionList.setOrderBy("").having();
     	
     	filterConfig.updateWithSortExpression(expressionList);
-        Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> pagination = new Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>(
+        Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> pagination = new Pagination<>(
                 this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-        List<PortfolioEntryResourcePlanAllocatedOrgUnitListView> listView = pagination.getListOfObjects().stream().map(PortfolioEntryResourcePlanAllocatedOrgUnitListView::new).collect(Collectors.toList());
+        List<OrgUnitAllocationRequestListView> listView = pagination.getListOfObjects().stream().map(OrgUnitAllocationRequestListView::new).collect(Collectors.toList());
 
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
-        columnsToHide.add("editActionLink");
-        columnsToHide.add("removeActionLink");
-        columnsToHide.add("reallocate");
         columnsToHide.add("followPackageDates");
-        columnsToHide.add("orgUnit");
         if (!getBudgetTrackingService().isActive()) {
             columnsToHide.add("currency");
             columnsToHide.add("dailyRate");
@@ -1058,7 +1054,7 @@ public class OrgUnitController extends Controller {
             columnsToHide.add("forecastDailyRate");
         }
 
-        Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable
+        Table<OrgUnitAllocationRequestListView> table = this.getTableProvider().get().orgUnitAllocationRequest.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
         if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
@@ -1073,8 +1069,8 @@ public class OrgUnitController extends Controller {
         }
 
         table.setLineAction(
-                (portfolioEntryResourcePlanAllocatedOrgUnitListView, value)
-                    -> controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId).url()
+                (orgUnitAllocationRequestListView, value)
+                    -> controllers.core.routes.PortfolioEntryPlanningController.resources(orgUnitAllocationRequestListView.portfolioEntryId).url()
         );
 
         return Pair.of(table, pagination);

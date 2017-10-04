@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-10-03T14:37:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="title" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" resourceBundle="ApplicationResources" uuid="29fdf87b-04f4-4c55-83d6-7077a58b9854">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="lang" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="format" class="java.lang.String">
+		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_TITLE_PORTFOLIO_ENTRY" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[3L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TS_ACTOR_START_DATE" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="TS_ACTOR_END_DATE" class="java.util.Date" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT pe.name AS portfolio_entry_name,
+pe.governance_id AS portfolio_entry_governance_id
+
+FROM
+portfolio_entry pe
+
+WHERE pe.id =   $P{SUBREPORT_TITLE_PORTFOLIO_ENTRY}
+AND pe.deleted = 0]]>
+	</queryString>
+	<field name="portfolio_entry_name" class="java.lang.String"/>
+	<field name="portfolio_entry_governance_id" class="java.lang.String"/>
+	<detail>
+		<band height="63" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement style="title" x="0" y="0" width="555" height="60" uuid="0f702d93-07d1-4e4a-b237-ef2ec2525cfd">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $P{format}.equals("EXCEL")]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[msg(str("title"),$F{portfolio_entry_name} + IF($F{portfolio_entry_governance_id} != null, " (" + $F{portfolio_entry_governance_id} + ")",""),DATEFORMAT($P{TS_ACTOR_START_DATE},"dd.MM.yyyy"), DATEFORMAT($P{TS_ACTOR_END_DATE},"dd.MM.yyyy"))]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

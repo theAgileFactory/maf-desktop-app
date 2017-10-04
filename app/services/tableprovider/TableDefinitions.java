@@ -48,6 +48,7 @@ public class TableDefinitions {
     public NotificationListView.TableDefinition notification;
     public OrgUnitListView.TableDefinition orgUnit;
     public OrgUnitTypeListView.TableDefinition orgUnitType;
+    public OrgUnitAllocationRequestListView.OrgUnitAllocationRequestTableDefinition orgUnitAllocationRequest;
     public PortfolioEntryBudgetLineListView.TableDefinition portfolioEntryBudgetLine;
     public PortfolioEntryBudgetLineTypeListView.TableDefinition portfolioEntryBudgetLineType;
     public PortfolioEntryDependencyListView.TableDefinition portfolioEntryDependency;
@@ -62,7 +63,7 @@ public class TableDefinitions {
     public PortfolioEntryReportListView.TableDefinition portfolioEntryReport;
     public PortfolioEntryReportStatusTypeListView.TableDefinition portfolioEntryReportStatusType;
     public PortfolioEntryResourcePlanAllocatedActorListView.TableDefinition portfolioEntryResourcePlanAllocatedActor;
-    public PortfolioEntryResourcePlanAllocatedOrgUnitListView.TableDefinition portfolioEntryResourcePlanAllocatedOrgUnit;
+    public PortfolioEntryResourcePlanAllocatedOrgUnitListView.PortfolioEntryResourcePlanTableDefinition portfolioEntryResourcePlanAllocatedOrgUnit;
     public PortfolioEntryResourcePlanAllocatedCompetencyListView.TableDefinition portfolioEntryResourcePlanAllocatedCompetency;
     public PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition portfolioEntryResourcePlanAllocatedResource;
     public PortfolioEntryRiskListView.TableDefinition portfolioEntryRisk;
@@ -137,6 +138,7 @@ public class TableDefinitions {
         this.notification = new NotificationListView.TableDefinition();
         this.orgUnit = new OrgUnitListView.TableDefinition(i18nMessagesService);
         this.orgUnitType = new OrgUnitTypeListView.TableDefinition();
+        this.orgUnitAllocationRequest = new OrgUnitAllocationRequestListView.OrgUnitAllocationRequestTableDefinition(i18nMessagesService);
         this.portfolioEntryBudgetLine = new PortfolioEntryBudgetLineListView.TableDefinition(i18nMessagesService, iPreferenceManagerPlugin);
         this.portfolioEntryBudgetLineType = new PortfolioEntryBudgetLineTypeListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryDependency = new PortfolioEntryDependencyListView.TableDefinition();
@@ -151,7 +153,7 @@ public class TableDefinitions {
         this.portfolioEntryReport = new PortfolioEntryReportListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryReportStatusType = new PortfolioEntryReportStatusTypeListView.TableDefinition();
         this.portfolioEntryResourcePlanAllocatedActor = new PortfolioEntryResourcePlanAllocatedActorListView.TableDefinition(i18nMessagesService);
-        this.portfolioEntryResourcePlanAllocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnitListView.TableDefinition(i18nMessagesService);
+        this.portfolioEntryResourcePlanAllocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnitListView.PortfolioEntryResourcePlanTableDefinition(i18nMessagesService);
         this.portfolioEntryResourcePlanAllocatedCompetency = new PortfolioEntryResourcePlanAllocatedCompetencyListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryResourcePlanAllocatedResource = new PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryRisk = new PortfolioEntryRiskListView.TableDefinition(i18nMessagesService);

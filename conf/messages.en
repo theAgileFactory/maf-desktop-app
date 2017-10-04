@@ -718,8 +718,8 @@ preference.timesheet_hours_per_day.description=Defines the expected number of ho
 preference.timesheet_hours_per_day.name=Number of hours per day
 preference.package_status_on_going_fulfillment_percentage.name=Completion percentage for "On-going" status of packages
 preference.package_status_on_going_fulfillment_percentage.description=The percentage value of a package''s completion when its status is "On-going".
-preference.resources_week_days_allocation_preference.name=Allocate on weekdays only
-preference.resources_week_days_allocation_preference.description=If true, the system will automatically distribute allocation days on weekdays only
+preference.resources_week_days_allocation_preference.name=Allocate on business days only
+preference.resources_week_days_allocation_preference.description=If true, the system will distribute allocation days on business days only
 preference.api_authz_mode_preference.name=API authenticaton mode
 preference.api_authz_mode_preference.description=The level of authentication for the APIs.\
 BizDock can use a secured signature mechanism or a lower security model based on a unique application key.
