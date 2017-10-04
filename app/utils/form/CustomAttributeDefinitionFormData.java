@@ -74,7 +74,12 @@ public class CustomAttributeDefinitionFormData {
 
     public CustomAttributeDefinitionFormData(String objectType) {
         this.objectType = objectType;
-        this.customAttributeGroup = CustomAttributeGroup.getOrderedCustomAttributeGroupsByObjectType(objectType).get(0).id;
+        List<CustomAttributeGroup> customAttributeGroups = CustomAttributeGroup.getOrderedCustomAttributeGroupsByObjectType(objectType);
+        if (customAttributeGroups.isEmpty()) {
+            this.customAttributeGroup = CustomAttributeGroup.getOrCreateDefaultGroup(objectType).id;
+        } else {
+            this.customAttributeGroup = customAttributeGroups.get(0).id;
+        }
     }
 
     /**
