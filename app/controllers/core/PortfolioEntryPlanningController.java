@@ -2233,7 +2233,7 @@ public class PortfolioEntryPlanningController extends Controller {
                         ResourceAllocationDetail actorDetail = allocatedActor.getDetail(detail.year, detail.month);
                         // If the corresponding month exists in the actor allocation, substract (minimum 0)
                         if (actorDetail != null) {
-                            days = actorDetail.getDays() > days ? 0 : actorDetail.getDays() - days;
+                            days = actorDetail.getDays() > days ? 0 : days - actorDetail.getDays();
                         }
                         return days;
                     })
