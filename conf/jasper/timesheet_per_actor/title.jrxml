@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-10-03T14:37:55 -->
+<!-- 2017-10-05T14:24:10 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="title" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" resourceBundle="ApplicationResources" uuid="29fdf87b-04f4-4c55-83d6-7077a58b9854">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -52,7 +52,7 @@ AND pe.deleted = 0]]>
 					<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $P{format}.equals("EXCEL")]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="none"/>
-				<textFieldExpression><![CDATA[msg(str("title"),$F{portfolio_entry_name} + IF($F{portfolio_entry_governance_id} != null, " (" + $F{portfolio_entry_governance_id} + ")",""),DATEFORMAT($P{TS_ACTOR_START_DATE},"dd.MM.yyyy"), DATEFORMAT($P{TS_ACTOR_END_DATE},"dd.MM.yyyy"))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[msg(str("title"),$F{portfolio_entry_name} + IF($F{portfolio_entry_governance_id} != null, " (" + $F{portfolio_entry_governance_id} + ")",""),new SimpleDateFormat("dd.MM.yyyy").format($P{TS_ACTOR_START_DATE}), new SimpleDateFormat("dd.MM.yyyy").format($P{TS_ACTOR_END_DATE}))]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
