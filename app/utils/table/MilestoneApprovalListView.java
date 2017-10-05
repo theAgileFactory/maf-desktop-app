@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.LifeCycleProcessDao;
 import dao.pmo.PortfolioEntryEventDao;
 import framework.utils.FilterConfig;
 import framework.utils.IColumnFormatter;
@@ -66,15 +67,21 @@ public class MilestoneApprovalListView {
                 {
                  	addColumnConfiguration("portfolioEntryGovernanceId", "lifeCycleInstance.portfolioEntry.governanceId", "object.portfolio_entry.governance_id.label",
                  			new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);          	               	
+
                     addColumnConfiguration("portfolioEntry", "lifeCycleInstance.portfolioEntry.name", "object.life_cycle_milestone_instance.portfolio_entry.label",
                     		 new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+
                  	addColumnConfiguration("portfolioEntryManager", "lifeCycleInstance.portfolioEntry.manager.id", "object.portfolio_entry.manager.label",
                             new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.UNSORTED);
-                 	addColumnConfiguration("lifeCycleName", "lifeCycleInstance.lifeCycleProcess.shortName", "object.portfolio_entry.life_cycle_process.label",
-                   		 new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
+
+                    ISelectableValueHolderCollection<Long> lcProcessActiveAsVH = LifeCycleProcessDao.getLCProcessActiveAsVH();
+                    addColumnConfiguration("lifeCycleName", "lifeCycleInstance.lifeCycleProcess.id", "object.portfolio_entry.life_cycle_process.label",
+                   		 new SelectFilterComponent(null, lcProcessActiveAsVH), true, false, SortStatusType.UNSORTED);
+
                  	ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
                  	addColumnConfiguration("milestoneInstance", "lifeCycleMilestone.id", "object.life_cycle_milestone_instance.milestone.label",
-                 			 new SelectFilterComponent(lifeCycleMilestones.getValues().iterator().next().getValue(), lifeCycleMilestones), true, false, SortStatusType.UNSORTED);
+                 			 new SelectFilterComponent(null, lifeCycleMilestones), true, false, SortStatusType.UNSORTED);
+
                  	addColumnConfiguration("dueDate", "passedDate", "object.life_cycle_milestone_instance.due_date.label",
                             new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
                 }
@@ -88,60 +95,37 @@ public class MilestoneApprovalListView {
 
                     addColumn("portfolioEntryGovernanceId", "portfolioEntryGovernanceId", "object.portfolio_entry.governance_id.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryGovernanceId", new ObjectFormatter<MilestoneApprovalListView>());
+                    setJavaColumnFormatter("portfolioEntryGovernanceId", new ObjectFormatter<>());
 
                     addColumn("portfolioEntry", "portfolioEntry", "object.life_cycle_milestone_instance.portfolio_entry.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntry", new IColumnFormatter<MilestoneApprovalListView>() {
-                        @Override
-                        public String apply(MilestoneApprovalListView milestoneApprovalListView, Object value) {
-                            return views.html.modelsparts.display_portfolio_entry.render(milestoneApprovalListView.portfolioEntry, true).body();
-                        }
-                    });
+                    setJavaColumnFormatter("portfolioEntry", (milestoneApprovalListView, value) -> views.html.modelsparts.display_portfolio_entry.render(milestoneApprovalListView.portfolioEntry, true).body());
                     this.setColumnValueCssClass("portfolioEntry", "rowlink-skip");
 
                     addColumn("portfolioEntryManager", "portfolioEntryManager", "object.portfolio_entry.manager.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryManager", new IColumnFormatter<MilestoneApprovalListView>() {
-                        @Override
-                        public String apply(MilestoneApprovalListView milestoneApprovalListView, Object value) {
-                            return views.html.modelsparts.display_actor.render(milestoneApprovalListView.portfolioEntryManager).body();
-                        }
-                    });
+                    setJavaColumnFormatter("portfolioEntryManager", (milestoneApprovalListView, value) -> views.html.modelsparts.display_actor.render(milestoneApprovalListView.portfolioEntryManager).body());
                     this.setColumnValueCssClass("portfolioEntryManager", "rowlink-skip");
 
                     addColumn("lifeCycleName", "lifeCycleName", "object.portfolio_entry.life_cycle_process.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lifeCycleName", new ObjectFormatter<MilestoneApprovalListView>());
+                    setJavaColumnFormatter("lifeCycleName", new ObjectFormatter<>());
 
                     addColumn("milestoneInstance", "milestoneInstance", "object.life_cycle_milestone_instance.milestone.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("milestoneInstance", new IColumnFormatter<MilestoneApprovalListView>() {
-                        @Override
-                        public String apply(MilestoneApprovalListView milestoneApprovalListView, Object value) {
-                            return views.html.modelsparts.display_milestone.render(milestoneApprovalListView.milestoneInstance.lifeCycleMilestone).body();
-                        }
-                    });
+                    setJavaColumnFormatter("milestoneInstance", (milestoneApprovalListView, value) -> views.html.modelsparts.display_milestone.render(milestoneApprovalListView.milestoneInstance.lifeCycleMilestone).body());
 
                     addColumn("dueDate", "dueDate", "object.life_cycle_milestone_instance.due_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dueDate", new IColumnFormatter<MilestoneApprovalListView>() {
-                        @Override
-                        public String apply(MilestoneApprovalListView milestoneApprovalListView, Object value) {
-                            DateFormatter<MilestoneApprovalListView> df = new DateFormatter<MilestoneApprovalListView>();
-                            if (milestoneApprovalListView.dueDate != null) {
-                                Calendar c = Calendar.getInstance();
-                                c.setTime(new Date());
-                                c.add(Calendar.DATE, 3);
-                                df.setAlert(milestoneApprovalListView.dueDate.before(c.getTime()));
-                            }
-                            return df.apply(milestoneApprovalListView, value);
+                    setJavaColumnFormatter("dueDate", (milestoneApprovalListView, value) -> {
+                        DateFormatter<MilestoneApprovalListView> df = new DateFormatter<>();
+                        if (milestoneApprovalListView.dueDate != null) {
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(new Date());
+                            c.add(Calendar.DATE, 3);
+                            df.setAlert(milestoneApprovalListView.dueDate.before(c.getTime()));
                         }
+                        return df.apply(milestoneApprovalListView, value);
                     });
 
-                    this.setLineAction(new IColumnFormatter<MilestoneApprovalListView>() {
-                        @Override
-                        public String apply(MilestoneApprovalListView milestoneApprovalListView, Object value) {
-                            return controllers.core.routes.MilestoneApprovalController.process(milestoneApprovalListView.id).url();
-                        }
-                    });
+                    this.setLineAction((milestoneApprovalListView, value) -> controllers.core.routes.MilestoneApprovalController.process(milestoneApprovalListView.id).url());
 
                     setEmptyMessageKey("object.life_cycle_milestone_instance.table.approval.empty");
                 }
@@ -174,7 +158,7 @@ public class MilestoneApprovalListView {
         this.portfolioEntryGovernanceId = portfolioEntry.governanceId;
         this.portfolioEntry = portfolioEntry;
         this.portfolioEntryManager = portfolioEntry.manager;
-        this.lifeCycleName = portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.getShortName();
+        this.lifeCycleName = portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.getName();
 
         this.milestoneInstance = milestoneInstance;
 

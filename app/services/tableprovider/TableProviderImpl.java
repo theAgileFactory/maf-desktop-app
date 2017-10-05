@@ -104,16 +104,22 @@ public class TableProviderImpl implements ITableProvider {
     public void flushFilterConfig() {
 
         this.get().applicationBlock.filterConfig = this.get().applicationBlock.getFilterConfig();
+        this.get().attachmentManagement.filterConfig = this.get().attachmentManagement.getFilterConfig();
         this.get().deliverable.filterConfig = this.get().deliverable.getFilterConfig();
         this.get().iteration.filterConfig = this.get().iteration.getFilterConfig();
-        this.get().portfolioEntryEvent.filterConfig = this.get().portfolioEntryEvent.getFilterConfig();
+        this.get().milestoneApproval.filterConfig = this.get().milestoneApproval.getFilterConfig();
+        this.get().orgUnitAllocationRequest.filterConfig = this.get().orgUnitAllocationRequest.getFilterConfig();
+        this.get().docsTableDefinition.filterConfig = this.get().docsTableDefinition.getFilterConfig();
         this.get().portfolioEntry.filterConfig = this.get().portfolioEntry.getFilterConfig(this.getKpiService());
+        this.get().portfolioEntryEvent.filterConfig = this.get().portfolioEntryEvent.getFilterConfig();
         this.get().portfolioEntryPlanningPackage.filterConfig = this.get().portfolioEntryPlanningPackage.getFilterConfig();
         this.get().portfolioEntryResourcePlanAllocatedActor.filterConfig = this.get().portfolioEntryResourcePlanAllocatedActor.getFilterConfig();
+        this.get().portfolioEntryResourcePlanAllocatedCompetency.filterConfig = this.get().portfolioEntryResourcePlanAllocatedCompetency.getFilterConfig();
+        this.get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig = this.get().portfolioEntryResourcePlanAllocatedOrgUnit.getFilterConfig();
+        this.get().portfolioEntryResourcePlanAllocatedResource.filterConfig = this.get().portfolioEntryResourcePlanAllocatedResource.getFilterConfig();
         this.get().requirement.filterConfig = this.get().requirement.getFilterConfig();
         this.get().timesheetActivityAllocatedActor.filterConfig = this.get().timesheetActivityAllocatedActor.getFilterConfig();
         this.get().timesheetLog.filterConfig = this.get().timesheetLog.getFilterConfig();
-        this.get().attachmentManagement.filterConfig = this.get().attachmentManagement.getFilterConfig();
 
     }
 
