@@ -332,6 +332,8 @@ public abstract class LifeCycleMilestoneDao {
             budgetTrackingService.recomputeAllBugdetAndForecastFromResource(currentPlanning);
         }
 
+        createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
+
         /*
          * update the life cycle instance
          */
@@ -356,8 +358,6 @@ public abstract class LifeCycleMilestoneDao {
             lifeCycleMilestoneInstance.lifeCycleInstance.save();
 
         }
-
-        createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
 
         return lifeCycleMilestoneInstance;
 
