@@ -43,7 +43,7 @@ public class PortfolioEntryReportFormData {
     public Long status;
 
     @Required
-    @MaxLength(value = IModelConstants.XLARGE_STRING)
+    @MaxLength(value = IModelConstants.XXLARGE_STRING)
     public String comments;
 
     @ValidateWith(value = FileFieldOptionalValidator.class, message = "form.input.file_field.error")
