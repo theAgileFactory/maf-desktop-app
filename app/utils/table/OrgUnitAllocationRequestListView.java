@@ -43,7 +43,7 @@ public class OrgUnitAllocationRequestListView extends AllocatedOrgUnitListView {
         public Table<OrgUnitAllocationRequestListView> templateTable;
 
         public OrgUnitAllocationRequestTableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
-            super(i18nMessagesPlugin);
+            super();
             this.templateTable = getTable(i18nMessagesPlugin);
             this.filterConfig = getFilterConfig();
         }

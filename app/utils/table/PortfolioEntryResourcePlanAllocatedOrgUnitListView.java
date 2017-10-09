@@ -56,7 +56,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView extends Allocate
         public Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> templateTable;
 
         public PortfolioEntryResourcePlanTableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
-            super(i18nMessagesPlugin);
+            super();
             this.templateTable = getTable(i18nMessagesPlugin);
             this.filterConfig = getFilterConfig();
         }

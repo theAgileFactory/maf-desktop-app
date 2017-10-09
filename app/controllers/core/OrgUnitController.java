@@ -457,13 +457,13 @@ public class OrgUnitController extends Controller {
          * Filter
          * */
 
-        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> actorsPortfolioEntryFilter;
-        actorsPortfolioEntryFilter = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.filterConfig.getCurrent(uid, request());
+        FilterConfig<OrgUnitAllocatedActorListView> actorsPortfolioEntryFilter;
+        actorsPortfolioEntryFilter = this.getTableProvider().get().orgUnitAllocatedActor.filterConfig.getCurrent(uid, request());
 
         /**
          * Table 
          * */
-        Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> actorsPortfolioEntryTable;
+        Pair<Table<OrgUnitAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> actorsPortfolioEntryTable;
         actorsPortfolioEntryTable = getActorsPEAllocTable(id, actorsPortfolioEntryFilter, this.getSecurityService());
 
         // -----------------------------------------------------------------------------------------------------------------------
@@ -546,15 +546,15 @@ public class OrgUnitController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = this.getTableProvider()
-                    .get().portfolioEntryResourcePlanAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<OrgUnitAllocatedActorListView> filterConfig = this.getTableProvider()
+                    .get().orgUnitAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
             } else {
 
                 // get the table
-                Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getActorsPEAllocTable(
+                Pair<Table<OrgUnitAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getActorsPEAllocTable(
                         id, filterConfig, this.getSecurityService());
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
@@ -944,8 +944,8 @@ public class OrgUnitController extends Controller {
      * @param securityService
      *            the security service
      */
-    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getActorsPEAllocTable(
-            Long orgUnitId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig, ISecurityService securityService) {
+    private Pair<Table<OrgUnitAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getActorsPEAllocTable(
+            Long orgUnitId, FilterConfig<OrgUnitAllocatedActorListView> filterConfig, ISecurityService securityService) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig
                 .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByOrgUnitAndActive(orgUnitId, true, true));
@@ -955,17 +955,15 @@ public class OrgUnitController extends Controller {
                 this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-        List<PortfolioEntryResourcePlanAllocatedActorListView> listView = pagination.getListOfObjects().stream().map(PortfolioEntryResourcePlanAllocatedActorListView::new).collect(Collectors.toList());
+        List<OrgUnitAllocatedActorListView> listView = pagination.getListOfObjects().stream().map(OrgUnitAllocatedActorListView::new).collect(Collectors.toList());
 
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
-        columnsToHide.add("editActionLink");
-        columnsToHide.add("removeActionLink");
         columnsToHide.add("currency");
         columnsToHide.add("dailyRate");
         columnsToHide.add("forecastDays");
         columnsToHide.add("forecastDailyRate");
 
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.templateTable
+        Table<OrgUnitAllocatedActorListView> table = this.getTableProvider().get().orgUnitAllocatedActor.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
         if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
@@ -986,7 +984,7 @@ public class OrgUnitController extends Controller {
 
         }
 
-        table.setLineAction((portfolioEntryResourcePlanAllocatedActorListView, value) -> routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId)
+        table.setLineAction((portfolioEntryResourcePlanAllocatedActorListView, value) -> routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntry.id)
                 .url());
 
         return Pair.of(table, pagination);

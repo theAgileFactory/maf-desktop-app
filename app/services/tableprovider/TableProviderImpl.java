@@ -103,6 +103,7 @@ public class TableProviderImpl implements ITableProvider {
     @Override
     public void flushFilterConfig() {
 
+        this.get().actorAllocatedPortfolioEntry.filterConfig = this.get().actorAllocatedPortfolioEntry.getFilterConfig();
         this.get().applicationBlock.filterConfig = this.get().applicationBlock.getFilterConfig();
         this.get().attachmentManagement.filterConfig = this.get().attachmentManagement.getFilterConfig();
         this.get().deliverable.filterConfig = this.get().deliverable.getFilterConfig();
@@ -110,6 +111,7 @@ public class TableProviderImpl implements ITableProvider {
         this.get().milestoneApproval.filterConfig = this.get().milestoneApproval.getFilterConfig();
         this.get().orgUnitAllocationRequest.filterConfig = this.get().orgUnitAllocationRequest.getFilterConfig();
         this.get().docsTableDefinition.filterConfig = this.get().docsTableDefinition.getFilterConfig();
+        this.get().orgUnitAllocatedActor.filterConfig = this.get().orgUnitAllocatedActor.getFilterConfig();
         this.get().portfolioEntry.filterConfig = this.get().portfolioEntry.getFilterConfig(this.getKpiService());
         this.get().portfolioEntryEvent.filterConfig = this.get().portfolioEntryEvent.getFilterConfig();
         this.get().portfolioEntryPlanningPackage.filterConfig = this.get().portfolioEntryPlanningPackage.getFilterConfig();

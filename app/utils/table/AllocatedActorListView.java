@@ -17,30 +17,28 @@
  */
 package utils.table;
 
-import controllers.routes;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.FilterConfig;
 import framework.utils.Table;
 import framework.utils.Utilities;
+import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.NumberFormatter;
 import framework.utils.formats.ObjectFormatter;
 import models.finance.Currency;
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.pmo.Actor;
+import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryPlanningPackage;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Generic class for allocated org unit table (used both in portfolio entry resources page and org unit allocations
- * page
- *
- * @author Guillaume Petit <guillaume.petit@sword-group.com>
+ * @author Guillaume Petit
  */
-public class AllocatedOrgUnitListView {
+public class AllocatedActorListView {
 
     public static class TableDefinition {
 
@@ -51,27 +49,9 @@ public class AllocatedOrgUnitListView {
         public TableDefinition() {
         }
 
-        public static void initFilterConfig(FilterConfig<? extends AllocatedOrgUnitListView> filterConfig) {
-
-            String[] actorFieldsSort = { "lastStatusTypeUpdateActor.lastName", "lastStatusTypeUpdateActor.firstName" };
-            filterConfig.addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
-                    new FilterConfig.AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, FilterConfig.SortStatusType.UNSORTED);
-
-            filterConfig.addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new FilterConfig.NoneFilterComponent(),
-                    true, false, FilterConfig.SortStatusType.UNSORTED);
-
-            filterConfig.addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",
-                    new FilterConfig.AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), actorFieldsSort), false, false,
-                    FilterConfig.SortStatusType.UNSORTED);
-
-            filterConfig.addColumnConfiguration("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label",
-                    new FilterConfig.DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, FilterConfig.SortStatusType.UNSORTED);
-
-            filterConfig.addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new FilterConfig.NumericFieldFilterComponent("0", "="), true, false,
-                    FilterConfig.SortStatusType.UNSORTED);
-
-            filterConfig.addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
-                    new FilterConfig.TextFieldFilterComponent("*"), true, false, FilterConfig.SortStatusType.UNSORTED);
+        public static void initFilterConfig(FilterConfig<? extends AllocatedActorListView> filterConfig) {
+            filterConfig.addColumnConfiguration("currency", "currency.id", "object.allocated_resource.currency.label",
+                    new FilterConfig.AutocompleteFilterComponent(controllers.routes.JsonController.currency().url()), false, false, FilterConfig.SortStatusType.UNSORTED);
 
             filterConfig.addColumnConfiguration("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label",
                     new FilterConfig.NumericFieldFilterComponent("0", "="), false, false, FilterConfig.SortStatusType.UNSORTED);
@@ -82,17 +62,37 @@ public class AllocatedOrgUnitListView {
             filterConfig.addColumnConfiguration("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
                     new FilterConfig.NumericFieldFilterComponent("0", "="), false, false, FilterConfig.SortStatusType.UNSORTED);
 
+            filterConfig.addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new FilterConfig.NumericFieldFilterComponent("0", "="), true, false,
+                    FilterConfig.SortStatusType.UNSORTED);
+
+            filterConfig.addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
+                    new FilterConfig.TextFieldFilterComponent("*"), true, false, FilterConfig.SortStatusType.UNSORTED);
+
+            filterConfig.addColumnConfiguration("followPackageDates", "followPackageDates", "object.allocated_resource.follow_package_dates.label",
+                    new FilterConfig.CheckboxFilterComponent(true), false, false, FilterConfig.SortStatusType.UNSORTED);
+
             filterConfig.addColumnConfiguration("startDate", "startDate", "object.allocated_resource.start_date.label",
                     new FilterConfig.DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, FilterConfig.SortStatusType.UNSORTED);
 
             filterConfig.addColumnConfiguration("endDate", "endDate", "object.allocated_resource.end_date.label",
                     new FilterConfig.DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, FilterConfig.SortStatusType.ASC);
 
-            filterConfig.addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedOrgUnit.class);
+            filterConfig.addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new FilterConfig.NoneFilterComponent(),
+                    true, false, FilterConfig.SortStatusType.UNSORTED);
+
+            filterConfig.addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",
+                    new FilterConfig.AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), new String[]{"lastStatusTypeUpdateActor.lastName", "lastStatusTypeUpdateActor.firstName"}), false, false,
+                    FilterConfig.SortStatusType.UNSORTED);
+
+            filterConfig.addColumnConfiguration("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label",
+                    new FilterConfig.DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, FilterConfig.SortStatusType.UNSORTED);
+
+            filterConfig.addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedActor.class);
         }
     }
 
-    public static void initTable(Table<? extends AllocatedOrgUnitListView> table, II18nMessagesPlugin i18nMessagesPlugin) {
+    public static void initTable(Table<? extends AllocatedActorListView> table, II18nMessagesPlugin i18nMessagesPlugin) {
+
         table.setIdFieldName("id");
 
         table.addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
@@ -116,14 +116,13 @@ public class AllocatedOrgUnitListView {
         table.setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<>());
 
         table.addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
-        table.setJavaColumnFormatter(
-                "planningPackage",
-                (allocatedOrgUnitListView, value) ->
-                        views.html.modelsparts.display_portfolio_entry_planning_package
-                                .render(allocatedOrgUnitListView.planningPackage)
-                                .body()
-        );
+        table.setJavaColumnFormatter("planningPackage", (portfolioEntryResourcePlanAllocatedActorListView, value) -> views.html.modelsparts.display_portfolio_entry_planning_package
+                .render(portfolioEntryResourcePlanAllocatedActorListView.planningPackage).body());
         table.setColumnValueCssClass("planningPackage", "rowlink-skip");
+
+        table.addColumn("followPackageDates", "followPackageDates", "object.allocated_resource.follow_package_dates.label",
+                Table.ColumnDef.SorterType.NONE);
+        table.setJavaColumnFormatter("followPackageDates", new BooleanFormatter<>());
 
         table.addColumn("startDate", "startDate", "object.allocated_resource.start_date.label", Table.ColumnDef.SorterType.NONE);
         table.setJavaColumnFormatter("startDate", new DateFormatter<>());
@@ -132,23 +131,53 @@ public class AllocatedOrgUnitListView {
         table.setJavaColumnFormatter("endDate", new DateFormatter<>());
 
         table.addColumn("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.status", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", Table.ColumnDef.SorterType.NONE);
-        table.setJavaColumnFormatter("portfolioEntryResourcePlanAllocationStatusType", (allocatedOrgUnitListView, cellValue) -> views.html.modelsparts.display_allocation_status.render(allocatedOrgUnitListView.portfolioEntryResourcePlanAllocationStatusType).body());
+        table.setJavaColumnFormatter("portfolioEntryResourcePlanAllocationStatusType", (value, cellValue) -> views.html.modelsparts.display_allocation_status.render(value.portfolioEntryResourcePlanAllocationStatusType).body());
 
         table.addColumn("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor", "object.allocated_resource.last_update_status_type_actor.label", Table.ColumnDef.SorterType.NONE);
-        table.setJavaColumnFormatter("lastStatusTypeUpdateActor", (allocatedOrgUnitListView, value) -> views.html.modelsparts.display_actor.render(allocatedOrgUnitListView.lastStatusTypeUpdateActor).body());
+        table.setJavaColumnFormatter("lastStatusTypeUpdateActor", (portfolioEntryResourcePlanAllocatedActorListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryResourcePlanAllocatedActorListView.lastStatusTypeUpdateActor).body());
         table.setColumnValueCssClass("lastStatusTypeUpdateActor", "rowlink-skip");
 
         table.addColumn("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label", Table.ColumnDef.SorterType.NONE);
         table.setJavaColumnFormatter("lastStatusTypeUpdateTime", new DateFormatter<>());
 
-        table.addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
+        table.addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedActor.class);
 
-        table.setEmptyMessageKey("object.allocated_resource.org_unit.table.empty");
+        table.setEmptyMessageKey("object.allocated_resource.actor.table.empty");
+    }
+
+    public AllocatedActorListView() {
+    }
+
+    /**
+     * Construct a list view with a DB entry.
+     *
+     * @param allocatedActor
+     *            the allocated org unit in the DB
+     */
+    public AllocatedActorListView(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
+        this.id = allocatedActor.id;
+        this.portfolioEntry = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry;
+        this.actor = allocatedActor.actor;
+        this.startDate = allocatedActor.startDate;
+        this.endDate = allocatedActor.endDate;
+        this.planningPackage = allocatedActor.portfolioEntryPlanningPackage;
+        this.portfolioEntryResourcePlanAllocationStatusType = allocatedActor.portfolioEntryResourcePlanAllocationStatusType;
+        this.lastStatusTypeUpdateActor = allocatedActor.lastStatusTypeUpdateActor;
+        this.lastStatusTypeUpdateTime = allocatedActor.lastStatusTypeUpdateTime;
+        this.followPackageDates = allocatedActor.followPackageDates;
+
+        this.currency = allocatedActor.currency;
+        this.days = allocatedActor.days;
+        this.dailyRate = allocatedActor.dailyRate;
+        this.forecastDays = allocatedActor.forecastDays;
+        this.forecastDailyRate = allocatedActor.forecastDailyRate != null ? allocatedActor.forecastDailyRate : allocatedActor.dailyRate;
     }
 
     public Long id;
 
-    public Long portfolioEntryId;
+    public PortfolioEntry portfolioEntry;
+
+    public Actor actor;
 
     public Currency currency;
 
@@ -173,32 +202,5 @@ public class AllocatedOrgUnitListView {
     public Date lastStatusTypeUpdateTime;
 
     public Boolean followPackageDates;
-
-    public AllocatedOrgUnitListView() {
-    }
-
-    /**
-     * Construct a list view with a DB entry.
-     *
-     * @param allocatedOrgUnit
-     *            the allocated org unit in the DB
-     */
-    public AllocatedOrgUnitListView(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
-        this.id = allocatedOrgUnit.id;
-        this.portfolioEntryId = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
-        this.startDate = allocatedOrgUnit.startDate;
-        this.endDate = allocatedOrgUnit.endDate;
-        this.planningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage;
-        this.portfolioEntryResourcePlanAllocationStatusType = allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType;
-        this.lastStatusTypeUpdateActor = allocatedOrgUnit.lastStatusTypeUpdateActor;
-        this.lastStatusTypeUpdateTime = allocatedOrgUnit.lastStatusTypeUpdateTime;
-        this.followPackageDates = allocatedOrgUnit.followPackageDates;
-
-        this.currency = allocatedOrgUnit.currency;
-        this.days = allocatedOrgUnit.days;
-        this.dailyRate = allocatedOrgUnit.dailyRate;
-        this.forecastDays = allocatedOrgUnit.forecastDays != null ? allocatedOrgUnit.forecastDays : allocatedOrgUnit.days;
-        this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate != null ? allocatedOrgUnit.forecastDailyRate : allocatedOrgUnit.dailyRate;
-    }
 
 }

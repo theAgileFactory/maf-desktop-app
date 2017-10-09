@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -84,12 +85,7 @@ import utils.form.TimesheetReportApprovalFormData;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
-import utils.table.ActorListView;
-import utils.table.CompetencyListView;
-import utils.table.PortfolioEntryListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
-import utils.table.PortfolioListView;
-import utils.table.TimesheetActivityAllocatedActorListView;
+import utils.table.*;
 
 /**
  * The controller which displays / allows to edit an actor.
@@ -612,16 +608,10 @@ public class ActorController extends Controller {
         portfolioEntryPagination.setCurrentPage(pagePortfolioEntry);
         portfolioEntryPagination.setPageQueryName("pagePortfolioEntry");
 
-        List<PortfolioEntryResourcePlanAllocatedActorListView> allocationListView = new ArrayList<PortfolioEntryResourcePlanAllocatedActorListView>();
-        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : portfolioEntryPagination.getListOfObjects()) {
-            allocationListView.add(new PortfolioEntryResourcePlanAllocatedActorListView(allocatedActor));
-        }
+        List<ActorAllocatedPortfolioEntryListView> allocationListView = portfolioEntryPagination.getListOfObjects().stream().map(ActorAllocatedPortfolioEntryListView::new).collect(Collectors.toList());
 
         Set<String> columnsToHide = new HashSet<String>();
-        columnsToHide.add("editActionLink");
-        columnsToHide.add("removeActionLink");
         columnsToHide.add("followPackageDates");
-        columnsToHide.add("actor");
         if (!getBudgetTrackingService().isActive()) {
             columnsToHide.add("currency");
             columnsToHide.add("dailyRate");
@@ -629,16 +619,11 @@ public class ActorController extends Controller {
             columnsToHide.add("forecastDailyRate");
         }
 
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> portfolioEntryTable = this.getTableProvider()
-                .get().portfolioEntryResourcePlanAllocatedActor.templateTable.fill(allocationListView, columnsToHide);
+        Table<ActorAllocatedPortfolioEntryListView> portfolioEntryTable = this.getTableProvider()
+                .get().actorAllocatedPortfolioEntry.templateTable.fill(allocationListView, columnsToHide);
 
-        portfolioEntryTable.setLineAction(new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
-            @Override
-            public String apply(PortfolioEntryResourcePlanAllocatedActorListView portfolioEntryResourcePlanAllocatedActorListView, Object value) {
-                return controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId)
-                        .url();
-            }
-        });
+        portfolioEntryTable.setLineAction((actorAllocatedPortfolioEntryListView, value) -> routes.PortfolioEntryPlanningController.resources(actorAllocatedPortfolioEntryListView.portfolioEntry.id)
+                .url());
 
         // construct the "activity" allocations tables
 
@@ -647,10 +632,7 @@ public class ActorController extends Controller {
         activityPagination.setCurrentPage(pageActivity);
         activityPagination.setPageQueryName("pageActivity");
 
-        List<TimesheetActivityAllocatedActorListView> activityAllocationListView = new ArrayList<TimesheetActivityAllocatedActorListView>();
-        for (TimesheetActivityAllocatedActor allocatedActor : activityPagination.getListOfObjects()) {
-            activityAllocationListView.add(new TimesheetActivityAllocatedActorListView(allocatedActor));
-        }
+        List<TimesheetActivityAllocatedActorListView> activityAllocationListView = activityPagination.getListOfObjects().stream().map(TimesheetActivityAllocatedActorListView::new).collect(Collectors.toList());
 
         Set<String> columnsToHideForActivity = new HashSet<String>();
         columnsToHideForActivity.add("actor");

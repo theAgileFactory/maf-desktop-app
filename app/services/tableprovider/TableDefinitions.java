@@ -15,6 +15,7 @@ import utils.table.*;
 public class TableDefinitions {
 
     public ActorListView.TableDefinition actor;
+    public ActorAllocatedPortfolioEntryListView.ActorAllocatedPortfolioEntryTableDefinition actorAllocatedPortfolioEntry;
     public ActorTypeListView.TableDefinition actorType;
     public ApplicationBlockListView.TableDefinition applicationBlock;
     public AttachmentListView.TableDefinition attachment;
@@ -47,6 +48,7 @@ public class TableDefinitions {
     public MilestoneRequestListView.TableDefinition milestoneRequest;
     public NotificationListView.TableDefinition notification;
     public OrgUnitListView.TableDefinition orgUnit;
+    public OrgUnitAllocatedActorListView.OrgUnitAllocatedActorTableDefinition orgUnitAllocatedActor;
     public OrgUnitTypeListView.TableDefinition orgUnitType;
     public OrgUnitAllocationRequestListView.OrgUnitAllocationRequestTableDefinition orgUnitAllocationRequest;
     public PortfolioEntryBudgetLineListView.TableDefinition portfolioEntryBudgetLine;
@@ -62,7 +64,7 @@ public class TableDefinitions {
     public PortfolioEntryPlanningPackageTypeListView.TableDefinition portfolioEntryPlanningPackageType;
     public PortfolioEntryReportListView.TableDefinition portfolioEntryReport;
     public PortfolioEntryReportStatusTypeListView.TableDefinition portfolioEntryReportStatusType;
-    public PortfolioEntryResourcePlanAllocatedActorListView.TableDefinition portfolioEntryResourcePlanAllocatedActor;
+    public PortfolioEntryResourcePlanAllocatedActorListView.PortfolioEntryResourcePlanAllocatedActorTableDefinition portfolioEntryResourcePlanAllocatedActor;
     public PortfolioEntryResourcePlanAllocatedOrgUnitListView.PortfolioEntryResourcePlanTableDefinition portfolioEntryResourcePlanAllocatedOrgUnit;
     public PortfolioEntryResourcePlanAllocatedCompetencyListView.TableDefinition portfolioEntryResourcePlanAllocatedCompetency;
     public PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition portfolioEntryResourcePlanAllocatedResource;
@@ -105,6 +107,7 @@ public class TableDefinitions {
      */
     public TableDefinitions(IKpiService kpiService, II18nMessagesPlugin i18nMessagesService, IAttachmentManagerPlugin attachmentManagerPlugin, IPreferenceManagerPlugin iPreferenceManagerPlugin) {
         this.actor = new ActorListView.TableDefinition(i18nMessagesService);
+        this.actorAllocatedPortfolioEntry = new ActorAllocatedPortfolioEntryListView.ActorAllocatedPortfolioEntryTableDefinition(i18nMessagesService);
         this.actorType = new ActorTypeListView.TableDefinition();
         this.applicationBlock = new ApplicationBlockListView.TableDefinition(i18nMessagesService);
         this.attachment = new AttachmentListView.TableDefinition(i18nMessagesService, attachmentManagerPlugin);
@@ -137,6 +140,7 @@ public class TableDefinitions {
         this.milestoneRequest = new MilestoneRequestListView.TableDefinition();
         this.notification = new NotificationListView.TableDefinition();
         this.orgUnit = new OrgUnitListView.TableDefinition(i18nMessagesService);
+        this.orgUnitAllocatedActor = new OrgUnitAllocatedActorListView.OrgUnitAllocatedActorTableDefinition(i18nMessagesService);
         this.orgUnitType = new OrgUnitTypeListView.TableDefinition();
         this.orgUnitAllocationRequest = new OrgUnitAllocationRequestListView.OrgUnitAllocationRequestTableDefinition(i18nMessagesService);
         this.portfolioEntryBudgetLine = new PortfolioEntryBudgetLineListView.TableDefinition(i18nMessagesService, iPreferenceManagerPlugin);
@@ -152,7 +156,7 @@ public class TableDefinitions {
         this.portfolioEntryPlanningPackageType = new PortfolioEntryPlanningPackageTypeListView.TableDefinition();
         this.portfolioEntryReport = new PortfolioEntryReportListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryReportStatusType = new PortfolioEntryReportStatusTypeListView.TableDefinition();
-        this.portfolioEntryResourcePlanAllocatedActor = new PortfolioEntryResourcePlanAllocatedActorListView.TableDefinition(i18nMessagesService);
+        this.portfolioEntryResourcePlanAllocatedActor = new PortfolioEntryResourcePlanAllocatedActorListView.PortfolioEntryResourcePlanAllocatedActorTableDefinition(i18nMessagesService);
         this.portfolioEntryResourcePlanAllocatedOrgUnit = new PortfolioEntryResourcePlanAllocatedOrgUnitListView.PortfolioEntryResourcePlanTableDefinition(i18nMessagesService);
         this.portfolioEntryResourcePlanAllocatedCompetency = new PortfolioEntryResourcePlanAllocatedCompetencyListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryResourcePlanAllocatedResource = new PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition(i18nMessagesService);
