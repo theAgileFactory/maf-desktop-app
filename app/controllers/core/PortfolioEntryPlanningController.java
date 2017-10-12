@@ -36,6 +36,7 @@ import dao.pmo.PortfolioEntryPlanningPackageDao;
 import dao.pmo.StakeholderDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
+import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.custom_attribute.ICustomAttributeManagerService;
@@ -1200,7 +1201,7 @@ public class PortfolioEntryPlanningController extends Controller {
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result resources(Long id) {
+    public Result resources(Long id) throws AccountManagementException {
 
         // Get user session id
         String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
@@ -1291,7 +1292,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
-    public Result resourcesAllocatedActorFilter(Long id) {
+    public Result resourcesAllocatedActorFilter(Long id) throws AccountManagementException {
 
         String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
         FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
@@ -1363,7 +1364,7 @@ public class PortfolioEntryPlanningController extends Controller {
     private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getAllocatedActorTable(
             PortfolioEntryResourcePlan resourcePlan,
             FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig
-    ) {
+    ) throws AccountManagementException {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = PortfolioEntryResourcePlanDAO.findPEResourcePlanAllocatedActor
                 .where()
@@ -1384,7 +1385,7 @@ public class PortfolioEntryPlanningController extends Controller {
 
         Set<String> notDisplayedColumns = filterConfig.getColumnsToHide();
         notDisplayedColumns.add("portfolioEntryName");
-        if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
+        if (!getSecurityService().dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "")) {
             notDisplayedColumns.add("editActionLink");
             notDisplayedColumns.add("removeActionLink");
         }
@@ -1393,13 +1394,15 @@ public class PortfolioEntryPlanningController extends Controller {
                 .get().portfolioEntryResourcePlanAllocatedActor.templateTable.fillForFilterConfig(portfolioEntryResourcePlanAllocatedActorListView,
                         notDisplayedColumns);
 
-        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "")) {
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_CONFIRM_ALLOCATIONS_DYNAMIC_PERMISSION, "")) {
+            allocatedActorsTable.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
+                    controllers.core.routes.OrgUnitController.confirmActorsPortfolioEntryAllocations().url(), "actor-result");
+        }
+
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION, "")) {
 
             allocatedActorsTable.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.submit"),
                     controllers.core.routes.OrgUnitController.submitActorsPortfolioEntryAllocations().url(), "actor-result");
-
-            allocatedActorsTable.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
-                    controllers.core.routes.OrgUnitController.confirmActorsPortfolioEntryAllocations().url(), "actor-result");
 
             allocatedActorsTable.addAjaxRowAction(Msg.get("button.cancel"),
                     controllers.core.routes.OrgUnitController.cancelActorsPortfolioEntryAllocations().url(), "actor-result");
@@ -1467,13 +1470,15 @@ public class PortfolioEntryPlanningController extends Controller {
         Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> allocatedOrgUnitTable =
                 getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable.fillForFilterConfig(listView, notDisplayedColumns);
 
+        if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_CONFIRM_ALLOCATIONS_DYNAMIC_PERMISSION, "")) {
+            allocatedOrgUnitTable.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
+                    controllers.core.routes.OrgUnitController.confirmDeliveryUnitsAllocations().url(), "orgunit-result");
+        }
+
         if (securityService.dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "")) {
 
             allocatedOrgUnitTable.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.submit"),
                     controllers.core.routes.OrgUnitController.submitDeliveryUnitsAllocations().url(), "orgunit-result");
-
-            allocatedOrgUnitTable.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
-                    controllers.core.routes.OrgUnitController.confirmDeliveryUnitsAllocations().url(), "orgunit-result");
 
             allocatedOrgUnitTable.addAjaxRowAction(Msg.get("button.cancel"),
                     controllers.core.routes.OrgUnitController.cancelDeliveryUnitsAllocations().url(), "orgunit-result");

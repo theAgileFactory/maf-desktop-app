@@ -480,6 +480,40 @@ public class PortfolioEntryDynamicHelper {
 
     }
 
+    public static boolean isPortfolioEntryConfirmAllocationsAllowed(PortfolioEntry portfolioEntry, ISecurityService securityService) {
+
+        IUserAccount userAccount;
+
+        try {
+            userAccount = securityService.getCurrentUser();
+
+            // user has permission PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION OR
+            if (securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION, userAccount)) {
+                Logger.debug("has PORTFOLIO_ENTRY_EDIT_ALL_PERMISSION");
+                return true;
+            }
+
+            Actor actor = ActorDao.getActorByUid(userAccount.getIdentifier());
+            if (actor != null) {
+
+                // user has permission
+                // PORTFOLIO_ENTRY_CONFIRM_ALLOCATIONS_AS_MANAGER_PERMISSION
+                // AND is
+                // manager of the portfolioEntry
+                if (securityService.restrict(IMafConstants.PORTFOLIO_ENTRY_CONFIRM_ALLOCATIONS_AS_MANAGER_PERMISSION, userAccount)
+                        && actor.id.equals(portfolioEntry.manager.id)) {
+                    Logger.debug("has PORTFOLIO_ENTRY_CONFIRM_ALLOCATIONS_AS_MANAGER_PERMISSION and is manager");
+                    return true;
+                }
+            }
+
+        } catch (AccountManagementException e) {
+            Logger.error("impossible to get the user account", e);
+        }
+
+        return false;
+    }
+
     /**
      * Define if a user can display and review a request for a portfolio entry.
      * 

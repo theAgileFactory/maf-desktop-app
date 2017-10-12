@@ -181,6 +181,19 @@ public class SecurityServiceImpl extends AbstractSecurityServiceImpl {
             }
         });
 
+        dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_CONFIRM_ALLOCATIONS_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
+            public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
+                return Promise.promise(() -> {
+                    PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(Utilities.getId(context));
+                    if (portfolioEntry == null) {
+                        return true;
+                    } else {
+                        return PortfolioEntryDynamicHelper.isPortfolioEntryConfirmAllocationsAllowed(portfolioEntry, securityService);
+                    }
+                });
+            }
+        });
+
         dynamicAuthenticationHandlers.put(IMafConstants.PORTFOLIO_ENTRY_REVIEW_REQUEST_DYNAMIC_PERMISSION, new AbstractDynamicResourceHandler() {
             public Promise<Boolean> isAllowed(String name, String meta, DeadboltHandler deadboltHandler, Http.Context context) {
                 return Promise.promise(() -> {
