@@ -40,7 +40,7 @@
 @templates.main_bc_nosidebar(
     parts.Msg.asString("topmenubar.governance.provide_approval.menu.label"),
     Seq(
-        ("core.milestone_approval.breadcrumb", controllers.core.routes.MilestoneApprovalController.list(0).url),
+        ("core.milestone_approval.breadcrumb", controllers.core.routes.MilestoneApprovalController.list().url),
         (portfolioEntry.getName, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
         (milestoneInstance.lifeCycleMilestone.getShortName, null)
     )
@@ -75,7 +75,11 @@
                             </tr>
                             <tr>
                                 <th>@parts.Msg("object.life_cycle_milestone_instance.gate_comments.label")</th>
-                                <td>@display_object(milestoneInstance.gateComments)</td>
+                                <td>@display_object(milestoneInstance.gateComments, nl2br = true)</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("object.life_cycle_milestone_instance.request_comments.label")</th>
+                                <td>@display_object(milestoneInstance.requestComments, nl2br = true)</td>
                             </tr>
 
                         </tbody>

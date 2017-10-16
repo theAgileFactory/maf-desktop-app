@@ -73,7 +73,7 @@ public class MyPersonalStorage extends Controller {
         {
             this.addColumn("name", "name", "my.personalstorage.file.name.label", SorterType.NONE, true);
 
-            this.addColumn("lastModified", "lastModified", "my.personalstorage.file.lastmodified.label", SorterType.NONE, true);
+            this.addColumn("lastModified", "lastModified", "my.personalstorage.file.lastmodified.label", SorterType.DATE_TIME_SORTER, true);
             this.setJavaColumnFormatter("lastModified", new DateFormatter<PersonalStorageFile>("dd/MM/yyyy HH:mm"));
 
             this.addColumn("length", "size", "my.personalstorage.file.size.label", SorterType.NONE, true);

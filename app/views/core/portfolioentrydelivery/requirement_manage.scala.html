@@ -125,10 +125,11 @@
                             
                             @parts.dropdownlist(requirementForm("requirementSeverity"),parts.Msg.asString("object.requirement.severity.label"), dao.delivery.RequirementDAO.getRequirementSeverityAsVH())
                             
-                            @parts.singlevalue_picker(
+                            @parts.dropdownlist(
                                 requirementForm("author"), 
                                 parts.Msg.asString("object.requirement.author.label"),
-                                controllers.routes.PickerController.actor().url
+                                dao.pmo.ActorDao.getActorActiveAsVH,
+                                null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                             )
                             
                             @parts.input_text(requirementForm("storyPoints"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.requirement.story_points.label"))

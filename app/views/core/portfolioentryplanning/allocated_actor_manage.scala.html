@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     allocatedActorForm: Form[utils.form.PortfolioEntryResourcePlanAllocatedActorFormData]
@@ -32,6 +33,12 @@
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor])
 }
+
+@allocationStatus=@{
+    dao.finance.PortfolioEntryResourcePlanDAO.getAllocationStatusByName(allocatedActorForm("allocationStatus").value)
+}
+
+@lastStatusTypeUpdateActor=@{dao.pmo.ActorDao.getActorById(java.lang.Long.valueOf(allocatedActorForm("lastStatusTypeUpdateActor").value))}
 
 @breadcrump=@{
     Seq(
@@ -64,22 +71,29 @@
                     
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
                         
-                        @if(allocatedActorForm("allocatedActorId").value!=null) {
-                            <input type="hidden" name="allocatedActorId" value="@allocatedActorForm("allocatedActorId").value"/>
+                        @if(allocatedActorForm("allocationId").value!=null) {
+                            <input type="hidden" name="allocationId" value="@allocatedActorForm("allocationId").value"/>
                         }
-                        
-                        @parts.checkbox(
-                            allocatedActorForm("isConfirmed"), 
-                            parts.Msg.asString("object.allocated_resource.is_confirmed.label")
-                        )
-                        
-                        @parts.singlevalue_picker(
+
+                        <div class="form-group">
+                            <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            <input type="hidden" name="allocationStatus" value="@allocatedActorForm("allocationStatus").value" />
+                            @display_allocation_status(allocationStatus)
+                            @if(lastStatusTypeUpdateActor != null) {
+                                <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedActorForm("lastStatusTypeUpdateTime").value)</span>
+                                <input type="hidden" name="lastStatusTypeUpdateActor" value="@allocatedActorForm("lastStatusTypeUpdateActor").value" />
+                                <input type="hidden" name="lastStatusTypeUpdateTime" value="@allocatedActorForm("lastStatusTypeUpdateTime").value" />
+                            }
+                        </div>
+
+                        @parts.dropdownlist(
                             allocatedActorForm("actor"), 
                             parts.Msg.asString("object.allocated_resource.actor.label"),
-                            controllers.routes.PickerController.actor().url
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                         
-                        @if(allocatedActorForm("allocatedActorId").value!=null) {
+                        @if(allocatedActorForm("allocationId").value!=null) {
                             <input type="hidden" name="stakeholderType" value="0"/>
                         } else {
                             @parts.dropdownlist(
@@ -89,11 +103,11 @@
                             )
                         }
 
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             allocatedActorForm("portfolioEntryPlanningPackage"),
                             parts.Msg.asString("object.allocated_resource.package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                            dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         @if(_budgetTrackingService.isActive) {
@@ -172,7 +186,6 @@
                             <input type="hidden" name="dailyRate" value="0" />
                         }
                         
-
                         @allocated_resource_manage_js()
                         
                         <script>
@@ -229,8 +242,8 @@
                 </div>
 
                 <div class="col-md-6">
-                    @if(allocatedActorForm("allocatedActorId").value!=null) {
-                        @parts.extended_attributes_input(allocatedActorForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor], Long.parseLong(allocatedActorForm("allocatedActorId").value))
+                    @if(allocatedActorForm("allocationId").value!=null) {
+                        @parts.extended_attributes_input(allocatedActorForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor], Long.parseLong(allocatedActorForm("allocationId").value))
                     } else {
                         @parts.extended_attributes_input(allocatedActorForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor], null)
                     }

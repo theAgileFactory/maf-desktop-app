@@ -44,10 +44,9 @@ import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IPersonalStoragePlugin;
 import framework.services.system.ISysAdminUtils;
 import framework.utils.*;
-import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
-import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.common.ResourceAllocation;
+import models.common.ResourceAllocationDetail;
+import models.finance.*;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.governance.LifeCycleInstance;
@@ -66,8 +65,6 @@ import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import scala.Char;
-import scala.collection.JavaConverters;
 import scala.concurrent.duration.Duration;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import services.budgettracking.IBudgetTrackingService;
@@ -76,6 +73,7 @@ import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
 import utils.table.PortfolioEntryListView;
+import views.html.core.roadmap.roadmap_capacity_forecast_cell_details_fragment;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
@@ -361,14 +359,16 @@ public class RoadmapController extends Controller {
                                     }
 
                                     String name = "";
+                                    String str = "";
                                     if (isFirstLoop) {
                                         if (portfolioEntry.getGovernanceId() != null) {
                                             name += portfolioEntry.getGovernanceId() + " - ";
                                         }
                                         name += portfolioEntry.getName();
+                                        str = String.format("<a href= %s > %s </a>" , controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url() , name ) ;
                                     }
 
-                                    SourceItem item = new SourceItem(name, "");
+                                    SourceItem item = new SourceItem(str, "");
 
                                     item.values.add(new SourceValue(from, to, "", phase.getName(), cssClass, sourceDataValue));
 
@@ -635,7 +635,7 @@ public class RoadmapController extends Controller {
 
             // Add planned
             if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive());
+                allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive(), getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
             }
             allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
                     .stream()
@@ -680,6 +680,8 @@ public class RoadmapController extends Controller {
 
         // Org unit: the org unit is simply the one of the allocated org
         // unit.
+        Boolean workingDaysOnly = getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE);
+
         for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : allocatedOrgUnits) {
 
             OrgUnitCapacity orgUnitCapacity;
@@ -687,11 +689,18 @@ public class RoadmapController extends Controller {
                 orgUnitCapacity = orgUnitCapacities.get(allocatedOrgUnit.orgUnit.id);
             } else {
                 orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedOrgUnit.orgUnit);
-                orgUnitCapacities.put(allocatedOrgUnit.orgUnit.id, orgUnitCapacity);
             }
 
-            computeCapacity(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays),
-                    year, orgUnitCapacity);
+            // Add planned
+            if (allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.isEmpty()) {
+                allocatedOrgUnit.computeAllocationDetails(getBudgetTrackingService().isActive(), workingDaysOnly);
+            }
+            allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails
+                    .stream()
+                    .filter(detail -> detail.year.equals(year))
+                    .forEach(detail -> orgUnitCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+
+            orgUnitCapacities.put(allocatedOrgUnit.orgUnit.id, orgUnitCapacity);
         }
 
         // Actor: the org unit is the one of the actor of the allocated
@@ -705,12 +714,17 @@ public class RoadmapController extends Controller {
                     orgUnitCapacity = orgUnitCapacities.get(allocatedActor.actor.orgUnit.id);
                 } else {
                     orgUnitCapacity = new OrgUnitCapacity(warningLimitPercent, allocatedActor.actor.orgUnit);
-                    orgUnitCapacities.put(allocatedActor.actor.orgUnit.id, orgUnitCapacity);
                 }
 
-                computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
-                        year, orgUnitCapacity);
+                if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
+                    allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive(), workingDaysOnly);
+                }
+                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
+                        .stream()
+                        .filter(detail -> detail.year.equals(year))
+                        .forEach(detail -> orgUnitCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
 
+                orgUnitCapacities.put(allocatedActor.actor.orgUnit.id, orgUnitCapacity);
             }
         }
 
@@ -729,7 +743,15 @@ public class RoadmapController extends Controller {
 
             // Compute the activity allocations.
             for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
-                computeCapacity(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, year, orgUnitCapacity);
+                if (allocatedActivity.timesheetActivityAllocatedActorDetails.isEmpty()) {
+                    allocatedActivity.computeAllocationDetails(false, workingDaysOnly);
+                }
+                allocatedActivity.timesheetActivityAllocatedActorDetails
+                        .stream()
+                        .filter(detail -> detail.year.equals(year))
+                        .forEach(detail -> orgUnitCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+
+                orgUnitCapacities.put(allocatedActivity.actor.orgUnit.id, orgUnitCapacity);
             }
 
             // Get the available actor capacities.
@@ -883,8 +905,8 @@ public class RoadmapController extends Controller {
              * Compute the period according to the selected year.
              */
             Calendar monthStartDay = Calendar.getInstance();
-            monthStartDay.set(Calendar.YEAR, year.intValue());
-            monthStartDay.set(Calendar.MONTH, month.intValue());
+            monthStartDay.set(Calendar.YEAR, year);
+            monthStartDay.set(Calendar.MONTH, month);
             monthStartDay.set(Calendar.DAY_OF_MONTH, 1);
             monthStartDay.set(Calendar.HOUR_OF_DAY, 0);
             monthStartDay.set(Calendar.MINUTE, 0);
@@ -892,8 +914,8 @@ public class RoadmapController extends Controller {
             monthStartDay.set(Calendar.MILLISECOND, 0);
 
             Calendar monthEndDay = Calendar.getInstance();
-            monthEndDay.set(Calendar.YEAR, year.intValue());
-            monthEndDay.set(Calendar.MONTH, month.intValue());
+            monthEndDay.set(Calendar.YEAR, year);
+            monthEndDay.set(Calendar.MONTH, month);
             monthEndDay.set(Calendar.DAY_OF_MONTH, monthEndDay.getActualMaximum(Calendar.DAY_OF_MONTH));
             monthEndDay.set(Calendar.HOUR_OF_DAY, 23);
             monthEndDay.set(Calendar.MINUTE, 59);
@@ -933,16 +955,38 @@ public class RoadmapController extends Controller {
              */
 
             Map<Long, CapacityDetails> capacityDetailsRows = new HashMap<>();
+            Map<Long, CapacityDetailsByInitiative> capacityDetailsByInitiativeRows = new HashMap<>();
 
             if (orgUnit != null) {
                 // There is exactly one org unit.
                 CapacityDetails capacityDetailsOrgUnit = new CapacityDetails(orgUnit);
+                capacityDetailsOrgUnit.addPlannedPortfolioEntryConfirmed(allocatedOrgUnits.stream().filter(ResourceAllocation::isConfirmed).mapToDouble(allocatedOrgUnit -> allocatedOrgUnit.getDetail(year, month).getDays()).sum());
+                capacityDetailsOrgUnit.addPlannedPortfolioEntryNotConfirmed(allocatedOrgUnits.stream().filter(allocatedOrgUnit -> !allocatedOrgUnit.isConfirmed()).mapToDouble(allocatedOrgUnit -> allocatedOrgUnit.getDetail(year, month).getDays()).sum());
                 capacityDetailsRows.put(0L, capacityDetailsOrgUnit);
-                for (PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit : allocatedOrgUnits) {
-                    computeCapacityDetails(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate,
-                            getAllocatedDays(allocatedOrgUnit.days, allocatedOrgUnit.forecastDays), year, month, false, allocatedOrgUnit.isConfirmed,
-                            capacityDetailsOrgUnit);
-                }
+
+                // Compute allocation by initiative
+                allocatedOrgUnits.stream()
+                        .forEach(orgUnitAllocation -> {
+                            PortfolioEntry portfolioEntry = orgUnitAllocation.getAssociatedPortfolioEntry();
+
+                            CapacityDetailsByInitiative capacityDetailsByInitiative;
+                            if (capacityDetailsByInitiativeRows.containsKey(portfolioEntry.id)) {
+                                capacityDetailsByInitiative = capacityDetailsByInitiativeRows.get(portfolioEntry.id);
+                            } else {
+                                capacityDetailsByInitiative = new CapacityDetailsByInitiative(portfolioEntry);
+                            }
+
+                            ResourceAllocationDetail orgUnitAllocationDetail = orgUnitAllocation.getDetail(year, month);
+                            if (orgUnitAllocationDetail != null) {
+                                if (orgUnitAllocation.isConfirmed()) {
+                                    capacityDetailsByInitiative.addGenericConfirmed(orgUnitAllocationDetail.getDays());
+                                } else {
+                                    capacityDetailsByInitiative.addGenericNotConfirmed(orgUnitAllocationDetail.getDays());
+                                }
+                            }
+
+                            capacityDetailsByInitiativeRows.put(portfolioEntry.id, capacityDetailsByInitiative);
+                        });
             }
 
             if (competency != null) {
@@ -951,91 +995,153 @@ public class RoadmapController extends Controller {
                 capacityDetailsRows.put(0L, capacityDetailsCompetency);
                 for (PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency : allocatedCompetencies) {
                     computeCapacityDetails(allocatedCompetency.startDate, allocatedCompetency.endDate, allocatedCompetency.days, year, month, false,
-                            allocatedCompetency.isConfirmed, capacityDetailsCompetency);
+                            allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType.status.equals(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED), capacityDetailsCompetency);
                 }
             }
 
             // Actor
             if (orgUnit != null) {
-                for (Actor actor : orgUnit.actors.stream().filter(a -> a.isActive).collect(Collectors.toList())) {
-                    capacityDetailsRows.put(actor.id, new CapacityDetails(actor));
-                }
+                orgUnit.actors
+                        .stream()
+                        .filter(a -> a.isActive)
+                        .forEach(
+                                actor -> capacityDetailsRows.put(actor.id, new CapacityDetails(actor))
+                        );
             }
+
             if (competency != null) {
                 for (Actor actor : competency.actorsWithDefault) {
                     capacityDetailsRows.put(actor.id, new CapacityDetails(actor));
                 }
             }
-            for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : allocatedActors) {
+
+            // Add project allocations
+            allocatedActors.stream().forEach(allocatedActor -> {
+
                 CapacityDetails capacityDetailsActor = capacityDetailsRows.get(allocatedActor.actor.id);
-                computeCapacityDetails(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
-                        year, month, false, allocatedActor.isConfirmed, capacityDetailsActor);
-            }
+                ResourceAllocationDetail allocatedActorDetail = allocatedActor.getDetail(year, month);
+                if (allocatedActorDetail != null) {
 
-            /**
-             * Get and compute the activity capacities and the actor available
-             * capacities.
-             */
-
-            for (Entry<Long, CapacityDetails> entry : capacityDetailsRows.entrySet()) {
-
-                if (!entry.getKey().equals(0L)) {
-
-                    CapacityDetails capacityDetails = entry.getValue();
-
-                    // Get the activity allocations.
-                    List<TimesheetActivityAllocatedActor> allocatedActivities = TimesheetDao.getTimesheetActivityAllocatedActorAsListByActorAndPeriod(
-                            capacityDetails.getActor().id, monthStartDay.getTime(), monthEndDay.getTime());
-
-                    // Compute the activity allocations.
-                    for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
-                        computeCapacityDetails(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, year, month, true, true,
-                                capacityDetails);
+                    if (allocatedActor.isConfirmed()) {
+                        capacityDetailsActor.addPlannedPortfolioEntryConfirmed(allocatedActorDetail.getDays());
+                    } else {
+                        capacityDetailsActor.addPlannedPortfolioEntryNotConfirmed(allocatedActorDetail.getDays());
                     }
 
-                    // Get the available actor capacity
-                    models.pmo.ActorCapacity actorCapacity = ActorDao.getActorCapacityByActorAndPeriod(capacityDetails.getActor().id, year, month + 1);
-                    if (actorCapacity != null) {
-                        capacityDetails.addAvailable(actorCapacity.value);
+                    // Compute allocation by initiative
+                    PortfolioEntry portfolioEntry = allocatedActor.getAssociatedPortfolioEntry();
+
+                    CapacityDetailsByInitiative capacityDetailsByInitiative;
+                    if (capacityDetailsByInitiativeRows.containsKey(portfolioEntry.id)) {
+                        capacityDetailsByInitiative = capacityDetailsByInitiativeRows.get(portfolioEntry.id);
+                    } else {
+                        capacityDetailsByInitiative = new CapacityDetailsByInitiative(portfolioEntry);
                     }
 
+                    if (allocatedActor.isConfirmed()) {
+                        capacityDetailsByInitiative.addNominativeConfirmed(allocatedActorDetail.getDays());
+                    } else {
+                        capacityDetailsByInitiative.addNominativeNotConfirmed(allocatedActorDetail.getDays());
+                    }
+
+                    capacityDetailsByInitiativeRows.put(portfolioEntry.id, capacityDetailsByInitiative);
                 }
-            }
+            });
+
+            // Add activities and available
+
+            capacityDetailsRows.entrySet().stream().filter(entry -> !entry.getKey().equals(0L)).forEach(entry -> {
+
+                CapacityDetails capacityDetails = entry.getValue();
+
+                // Get the activity allocations.
+                capacityDetails.addPlannedActivity(
+                    capacityDetails
+                            .actor
+                            .timesheetActivityAllocatedActors
+                            .stream()
+                            // Get detail for the given month and year
+                            .map(allocatedActivity -> allocatedActivity.getDetail(year, month))
+                            .filter(detail -> detail != null && detail.getDays() != null)
+                            // Sum the days of the allocations
+                            .mapToDouble(ResourceAllocationDetail::getDays)
+                            .sum()
+                );
+
+                // Get the available actor capacity
+                models.pmo.ActorCapacity actorCapacity = ActorDao.getActorCapacityByActorAndPeriod(capacityDetails.getActor().id, year, month + 1);
+                if (actorCapacity != null) {
+                    capacityDetails.addAvailable(actorCapacity.value);
+                }
+            });
 
             // get the month name
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.MONTH, month);
 
-            // compute the chart
-            BasicBar basicBarChart = new BasicBar();
+            // compute the resource chart
+            BasicBar resourceBarChart = new BasicBar();
 
-            for (Entry<Long, CapacityDetails> entry : capacityDetailsRows.entrySet()) {
-                if (!entry.getKey().equals(0L)) {
-                    basicBarChart.addCategory(entry.getValue().getActor().getName());
-                }
-            }
+            capacityDetailsRows.entrySet()
+                    .stream()
+                    .filter(entry -> !entry.getKey().equals(0L))
+                    .forEach(entry -> resourceBarChart.addCategory(entry.getValue().getActor().getName()));
 
             BasicBar.Elem elem1 = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_forecast.planned.label"));
             BasicBar.Elem elem2 = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_forecast.available.label"));
 
-            for (Entry<Long, CapacityDetails> entry : capacityDetailsRows.entrySet()) {
-                if (!entry.getKey().equals(0L)) {
+            capacityDetailsRows.entrySet()
+                    .stream()
+                    .filter(entry -> !entry.getKey().equals(0L))
+                    .forEach(entry -> {
+                        CapacityDetails capacityDetails = entry.getValue();
+                        elem1.addValue(
+                                capacityDetails.getPlannedActivity()
+                              + capacityDetails.getPlannedPortfolioEntryConfirmed()
+                              + capacityDetails.getPlannedPortfolioEntryNotConfirmed()
+                        );
+                        elem2.addValue(capacityDetails.getAvailable());
 
-                    CapacityDetails capacityDetails = entry.getValue();
+            });
 
-                    elem1.addValue(capacityDetails.getPlannedActivity() + capacityDetails.getPlannedPortfolioEntryConfirmed()
-                            + capacityDetails.getPlannedPortfolioEntryNotConfirmed());
+            resourceBarChart.addElem(elem1);
+            resourceBarChart.addElem(elem2);
 
-                    elem2.addValue(capacityDetails.getAvailable());
+            // Compute initiative chart
+            BasicBar initiativeBarChart = new BasicBar();
 
-                }
-            }
+            capacityDetailsByInitiativeRows.entrySet()
+                    .stream()
+                    .filter(entry -> !entry.getKey().equals(0L))
+                    .forEach(entry -> {
+                        String category = entry.getValue().portfolioEntry.governanceId != null ? entry.getValue().portfolioEntry.governanceId : entry.getValue().portfolioEntry.name;
+                        initiativeBarChart.addCategory(category);
+                    });
 
-            basicBarChart.addElem(elem1);
-            basicBarChart.addElem(elem2);
+            BasicBar.Elem confirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_forecast.confirmed.label"));
+            BasicBar.Elem notConfirmedElem = new BasicBar.Elem(Msg.get("core.roadmap.simulator.capacity_kpis.allocation.additional2"));
 
-            return ok(views.html.core.roadmap.roadmap_capacity_forecast_cell_details_fragment.render(orgUnit, competency,
-                    new SimpleDateFormat("MMMM").format(cal.getTime()), new ArrayList<CapacityDetails>(capacityDetailsRows.values()), basicBarChart));
+            capacityDetailsByInitiativeRows.entrySet()
+                    .stream()
+                    .filter(entry -> !entry.getKey().equals(0L))
+                    .forEach(entry -> {
+                        CapacityDetailsByInitiative capacityDetails = entry.getValue();
+                        confirmedElem.addValue(capacityDetails.genericConfirmed + capacityDetails.nominativeConfirmed);
+                        notConfirmedElem.addValue(capacityDetails.genericNotConfirmed + capacityDetails.nominativeNotConfirmed);
+                    });
+
+            initiativeBarChart.addElem(confirmedElem);
+            initiativeBarChart.addElem(notConfirmedElem);
+
+            return ok(roadmap_capacity_forecast_cell_details_fragment.render(
+                    orgUnit,
+                    competency,
+                    new SimpleDateFormat("MMMM").format(cal.getTime()),
+                    new ArrayList<>(capacityDetailsRows.values()),
+                    new ArrayList<>(capacityDetailsByInitiativeRows.values()),
+                    resourceBarChart,
+                    initiativeBarChart
+            ));
 
         } catch (Exception e) {
             return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
@@ -1075,10 +1181,10 @@ public class RoadmapController extends Controller {
 
         allocations.stream().forEach(allocation -> {
             if (allocation.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
-                allocation.computeAllocationDetails(budgetTrackingService.isActive());
+                allocation.computeAllocationDetails(budgetTrackingService.isActive(), getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
             }
-            PortfolioEntryResourcePlanAllocatedActorDetail allocationDetail = allocation.getDetail(year, month);
-            if (allocationDetail != null && allocationDetail.days != 0.0) {
+            ResourceAllocationDetail allocationDetail = allocation.getDetail(year, month);
+            if (allocationDetail != null && allocationDetail.getDays() != 0.0) {
                 PortfolioEntry pe = allocation.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry;
                 ActorCapacityDetails detail = null;
                 if (capacityDetailsRows.containsKey(allocation.id)) {
@@ -1086,10 +1192,10 @@ public class RoadmapController extends Controller {
                 } else {
                     detail = new ActorCapacityDetails(allocation.id, pe);
                 }
-                if (allocation.isConfirmed) {
-                    detail.confirmedAllocation += allocationDetail.days;
+                if (allocation.portfolioEntryResourcePlanAllocationStatusType.status.equals(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED)) {
+                    detail.confirmedAllocation += allocationDetail.getDays();
                 } else {
-                    detail.notConfirmedAllocation += allocationDetail.days;
+                    detail.notConfirmedAllocation += allocationDetail.getDays();
                 }
                 capacityDetailsRows.put(allocation.id, detail);
             }
@@ -1568,6 +1674,63 @@ public class RoadmapController extends Controller {
             super();
             this.id = id;
             this.portfolioEntry = portfolioEntry;
+        }
+    }
+
+    public static class CapacityDetailsByInitiative {
+
+        private PortfolioEntry portfolioEntry;
+        private double genericConfirmed;
+        private double genericNotConfirmed;
+        private double nominativeConfirmed;
+        private double nominativeNotConfirmed;
+
+        public CapacityDetailsByInitiative() {
+            this.genericConfirmed = 0.0;
+            this.genericNotConfirmed = 0.0;
+            this.nominativeConfirmed = 0.0;
+            this.nominativeNotConfirmed = 0.0;
+        }
+
+        public CapacityDetailsByInitiative(PortfolioEntry portfolioEntry) {
+            this();
+            this.portfolioEntry = portfolioEntry;
+        }
+
+        public void addGenericConfirmed(Double days) {
+            this.genericConfirmed += days;
+        }
+
+        public void addGenericNotConfirmed(Double days) {
+            this.genericNotConfirmed += days;
+        }
+
+        public void addNominativeConfirmed(Double days) {
+            this.nominativeConfirmed += days;
+        }
+
+        public void addNominativeNotConfirmed(Double days) {
+            this.nominativeNotConfirmed += days;
+        }
+
+        public PortfolioEntry getPortfolioEntry() {
+            return portfolioEntry;
+        }
+
+        public double getGenericConfirmed() {
+            return genericConfirmed;
+        }
+
+        public double getGenericNotConfirmed() {
+            return genericNotConfirmed;
+        }
+
+        public double getNominativeConfirmed() {
+            return nominativeConfirmed;
+        }
+
+        public double getNominativeNotConfirmed() {
+            return nominativeNotConfirmed;
         }
     }
 

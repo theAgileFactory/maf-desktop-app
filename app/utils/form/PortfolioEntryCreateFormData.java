@@ -25,6 +25,9 @@ import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A portfolio entry create form data is used to manage the fields when creating
  * an portfolio entry.
@@ -68,7 +71,7 @@ public class PortfolioEntryCreateFormData {
     @Required
     public Long manager;
 
-    public Long portfolio;
+    public Long[] portfolios;
 
     @Required
     public Long portfolioEntryType;
@@ -82,7 +85,7 @@ public class PortfolioEntryCreateFormData {
     @Override
     public String toString() {
         return "PortfolioEntryCreateFormData [isConfidential=" + isConfidential + ", name=" + name + ", description=" + description + ", portfolio="
-                + portfolio + ", portfolioEntryType=" + portfolioEntryType + ", requestedLifeCycleProcess=" + requestedLifeCycleProcess
+                + Arrays.toString(portfolios) + ", portfolioEntryType=" + portfolioEntryType + ", requestedLifeCycleProcess=" + requestedLifeCycleProcess
                 + ", scopeDescription=" + scopeDescription + "]";
     }
 }

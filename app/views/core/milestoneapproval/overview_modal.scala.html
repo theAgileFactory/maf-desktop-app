@@ -34,5 +34,5 @@
 
 @if(milestoneInstance.isPassed && milestoneInstance.gateComments != null && !milestoneInstance.gateComments.equals("")) {
     <strong>@parts.Msg("object.life_cycle_milestone_instance.gate_comments.label")</strong><br/>
-    @milestoneInstance.gateComments
+    @parts.formats.display_object(milestoneInstance.gateComments, nl2br = true)
 }

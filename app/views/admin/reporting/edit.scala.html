@@ -75,6 +75,14 @@
                     parts.Msg.asString("object.reporting.is_public.help")
                 )
 
+				<div style='width:100px'>
+				@parts.dropdownlist(
+                    reportingForm("defaultFormat"),
+                    parts.Msg.asString("object.reporting.default_format.label"),
+                    reporting.getFormatsAsVHC(), 
+					null, 
+					false)
+				 </div>
                 @parts.autocomplete(
                     reportingForm("category"),
                     parts.Msg.asString("object.reporting.category.label"),

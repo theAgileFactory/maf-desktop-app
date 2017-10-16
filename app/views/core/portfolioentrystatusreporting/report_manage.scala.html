@@ -67,11 +67,8 @@
                         
                         @parts.radiobuttongroup(portfolioEntryReportForm("status"), parts.Msg.asString("object.portfolio_entry_report.status.label"), selectablePortfolioEntryReportStatusTypes)
         
-                        @helper.textarea(portfolioEntryReportForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_report.comments.label"), 'rows -> "5")
+                        @helper.textarea(portfolioEntryReportForm("comments"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry_report.comments.label"), 'rows -> "20")
                         
-                        @if(portfolioEntryReportForm("reportId").value==null) {
-                            @parts.file_field(portfolioEntryReportForm("document"),Messages("object.attachment.document.label"))
-                        }
 
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.cancel")</a>
@@ -105,6 +102,9 @@
             </div>
 						</div>
             }
+			@if(portfolioEntryReportForm("reportId").value==null) {
+                            @parts.file_field(portfolioEntryReportForm("document"),Messages("object.attachment.document.label"))
+                        }
 					</div>	
 				</div>	
 			</div>     			

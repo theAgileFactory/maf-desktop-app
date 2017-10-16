@@ -40,6 +40,7 @@ public class ReportingFormData {
     public Long category;
 
     public List<String> principals = new ArrayList<String>();
+    public String defaultFormat; 
 
     /**
      * Default constructor.
@@ -64,7 +65,7 @@ public class ReportingFormData {
                 this.principals.add(principal.uid);
             }
         }
-
+        this.defaultFormat = report.defaultFormat;
     }
 
     /**
@@ -83,6 +84,7 @@ public class ReportingFormData {
             report.reportingAuthorization.principals.add(Principal.getPrincipalFromUid(principal));
         }
 
+        report.defaultFormat = this.defaultFormat;
     }
 
 }

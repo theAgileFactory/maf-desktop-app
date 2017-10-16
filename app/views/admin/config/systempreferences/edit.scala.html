@@ -56,10 +56,11 @@
                 <legend>@parts.Msg("admin.configuration.system_preferences.category.financial")</legend>
                 @parts.preference_input(objectForm, constants.IMafConstants.FINANCIAL_USE_PURCHASE_ORDER_PREFERENCE)
                 @parts.preference_input(objectForm, constants.IMafConstants.BUDGET_TRACKING_EFFORT_BASED_PREFERENCE)
-                
+
                 <legend>@parts.Msg("admin.configuration.system_preferences.category.planning")</legend>
                 @parts.preference_input(objectForm, constants.IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE)
-                
+                @parts.preference_input(objectForm, constants.IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE)
+
                 <legend>@parts.Msg("admin.configuration.system_preferences.category.timesheet")</legend>
                 @parts.preference_input(objectForm, constants.IMafConstants.TIMESHEET_MUST_APPROVE_PREFERENCE)
                 @parts.preference_input(objectForm, constants.IMafConstants.TIMESHEET_REMINDER_LIMIT_PREFERENCE)

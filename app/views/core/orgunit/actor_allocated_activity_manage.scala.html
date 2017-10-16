@@ -25,6 +25,8 @@
 @import framework_views.parts
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import java.time.Year
+@import views.html.core.portfolioentryplanning.allocated_resource_manage_js
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.timesheet.TimesheetActivityAllocatedActor])
@@ -96,11 +98,91 @@
                         </script>
         
                         @parts.input_text(allocatedActivityForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
-                        
+
+                        @parts.checkbox(
+                            allocatedActivityForm("monthlyAllocated"),
+                            parts.Msg.asString("object.allocated_resource.monthly_allocated.label")
+                        )
+
                         @parts.dateinput(allocatedActivityForm("startDate"), "object.allocated_resource.start_date.label")
                         
                         @parts.dateinput(allocatedActivityForm("endDate"), "object.allocated_resource.end_date.label")
-        
+
+                        <div class="form-group">
+                            <div class="btn-group" id="year-picker-block">
+                                <a class="btn btn-default" role="button" id="previous-year">&laquo;</a>
+                                <a class="btn btn-default" role="button" id="year-picker"></a>
+                                <a class="btn btn-default" role="button" id="next-year">&raquo;</a>
+                            </div>
+                        </div>
+
+                        <div id="monthAllocations">
+                        @repeat(allocatedActivityForm("monthAllocations")) { monthAllocationField =>
+                            <div class="monthAllocation">
+                                @if(monthAllocationField("year").value.isEmpty) {
+                                    <div class="row" id="monthAllocations_@Year.now().getValue">
+                                    } else {
+                                    <div class="row" id="monthAllocations_@monthAllocationField("year").value">
+                                    }
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".januaryAllocationValue"), '_label -> parts.Msg("month.january.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".februaryAllocationValue"), '_label -> parts.Msg("month.february.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".marchAllocationValue"), '_label -> parts.Msg("month.march.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".aprilAllocationValue"), '_label -> parts.Msg("month.april.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".mayAllocationValue"), '_label -> parts.Msg("month.may.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".juneAllocationValue"), '_label -> parts.Msg("month.june.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".julyAllocationValue"), '_label -> parts.Msg("month.july.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".augustAllocationValue"), '_label -> parts.Msg("month.august.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".septemberAllocationValue"), '_label -> parts.Msg("month.september.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".octoberAllocationValue"), '_label -> parts.Msg("month.october.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".novemberAllocationValue"), '_label -> parts.Msg("month.november.abbreviated"))</div>
+                            <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedActivityForm(monthAllocationField.name.toString + ".decemberAllocationValue"), '_label -> parts.Msg("month.december.abbreviated"))</div>
+                            </div>
+                                @if(monthAllocationField("year").value.isEmpty) {
+                                    <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@Year.now().getValue" />
+                                } else {
+                                    <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@monthAllocationField("year").value" />
+                                }
+                            </div>
+                        }
+                        </div>
+
+                        @allocated_resource_manage_js()
+
+                        <script>
+
+                                $('#@allocatedActivityForm("monthlyAllocated").id').change(function() {
+                                    toggleMonthyAllocationFields('@allocatedActivityForm("monthlyAllocated").id', '@allocatedActivityForm("days").id', '', '@allocatedActivityForm("startDate").id', '@allocatedActivityForm("endDate").id')
+                                });
+
+                                $('[id$=AllocationValue]').change(function() {
+                                    recomputeDays('@allocatedActivityForm("days").id');
+                                });
+
+                                $('#previous-year').click(function() {
+                                    previousYearAction('@allocatedActivityForm("days").id')
+                                });
+
+                                $('#next-year').click(function() {
+                                    nextYearAction('@allocatedActivityForm("days").id')
+                                });
+
+                                // Initialization
+                                currentYear = new Date().getFullYear();
+                                $('#year-picker').html(currentYear);
+                                $('#monthAllocations').children().hide();
+                                showOrCreateMonthAllocation(currentYear, '@allocatedActivityForm("days").id');
+
+                                if (!$('#@allocatedActivityForm("monthlyAllocated").id').prop('checked')) {
+                                    $('#year-picker-block').hide();
+                                    $('#monthAllocations').hide();
+                                } else {
+                                    $('#@allocatedActivityForm("days").id').prop('readonly', true);
+                                    $('#@allocatedActivityForm("startDate").id').parent().parent().hide();
+                                    $('#@allocatedActivityForm("endDate").id').parent().parent().hide();
+                                }
+
+                        </script>
+
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                         <a class="btn btn-default" href='@controllers.core.routes.OrgUnitController.allocationDetails(orgUnit.id)'>@parts.Msg("button.cancel")</a>
                         
@@ -110,8 +192,8 @@
                 </div>
                 
                 <div class="col-md-6">
-                    @if(allocatedActivityForm("allocatedActivityId").value!=null) {
-                        @parts.extended_attributes_input(allocatedActivityForm, classOf[models.timesheet.TimesheetActivityAllocatedActor], Long.parseLong(allocatedActivityForm("allocatedActivityId").value))
+                    @if(allocatedActivityForm("allocationId").value!=null) {
+                        @parts.extended_attributes_input(allocatedActivityForm, classOf[models.timesheet.TimesheetActivityAllocatedActor], Long.parseLong(allocatedActivityForm("allocationId").value))
                     } else {
                         @parts.extended_attributes_input(allocatedActivityForm, classOf[models.timesheet.TimesheetActivityAllocatedActor], null)
                     }

@@ -17,38 +17,20 @@
  */
 package dao.governance;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.SqlUpdate;
 import com.avaje.ebean.Model.Finder;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlRow;
-
 import dao.pmo.PortfolioEntryDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
 import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Pagination;
-import models.finance.WorkOrder;
-import models.framework_models.common.MultiItemCustomAttributeValue;
-import models.governance.LifeCycleInstancePlanning;
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstance;
-import models.governance.LifeCycleMilestoneInstanceApprover;
-import models.governance.LifeCycleMilestoneInstanceStatusType;
-import models.governance.LifeCyclePhase;
-import models.governance.PlannedLifeCycleMilestoneInstance;
+import models.governance.*;
 import models.pmo.PortfolioEntry;
-import play.Logger;
 import services.budgettracking.IBudgetTrackingService;
+
+import java.util.*;
 
 /**
  * DAO for the {@link LifeCycleMilestone} and {@link LifeCycleMilestoneInstance}
@@ -60,7 +42,7 @@ import services.budgettracking.IBudgetTrackingService;
  */
 public abstract class LifeCycleMilestoneDao {
 
-    public static Finder<Long, LifeCycleMilestone> findLifeCycleMilestone = new Finder<Long, LifeCycleMilestone>(LifeCycleMilestone.class);
+    public static Finder<Long, LifeCycleMilestone> findLifeCycleMilestone = new Finder<>(LifeCycleMilestone.class);
 
     public static Finder<Long, LifeCycleMilestoneInstance> findLifeCycleMilestoneInstance = new Finder<>(LifeCycleMilestoneInstance.class);
 
@@ -72,8 +54,6 @@ public abstract class LifeCycleMilestoneDao {
 
     public static Finder<Long, LifeCyclePhase> findLifeCyclePhase = new Finder<>(LifeCyclePhase.class);
     
-    private static Logger.ALogger log = Logger.of(LifeCycleMilestoneDao.class);
-
     /**
      * Default constructor.
      */
@@ -233,12 +213,87 @@ public abstract class LifeCycleMilestoneDao {
     }
 
     /**
+     * delete a life cycle milestone instance and rollback the planning
+     *
+     * @param lifecycleMilestoneInstanceId the life cycle milestone instance to be deleted
+     * @param budgetTrackingService the budget tracking service
+     */
+    public static void doDelete(Long lifecycleMilestoneInstanceId, IBudgetTrackingService budgetTrackingService) {
+
+        LifeCycleMilestoneInstance lifeCycleMilestoneInstance = getLCMilestoneInstanceById(lifecycleMilestoneInstanceId);
+
+        PortfolioEntry portfolioEntry = lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry;
+
+        /*
+         * update the plannings
+         */
+
+        LifeCycleInstancePlanning currentPlanning = lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.activeLifeCycleInstance
+                .getCurrentLifeCycleInstancePlanning();
+
+        // recompute the budget tracking for resources
+        if (budgetTrackingService.isActive()) {
+            budgetTrackingService.recomputeAllBugdetAndForecastFromResource(currentPlanning);
+        }
+
+        List<LifeCycleMilestoneInstance> approvedLifecycleMilestoneInstances = lifeCycleMilestoneInstance.lifeCycleInstance.getApprovedLifecycleMilestoneInstances();
+
+        // update the lifecycle instance
+        if (!lifeCycleMilestoneInstance.lifeCycleInstance.isConcept && approvedLifecycleMilestoneInstances.isEmpty()) {
+            lifeCycleMilestoneInstance.lifeCycleInstance.isConcept = true;
+        }
+
+        // Update the last approved lifecycle milestone instance
+        if (portfolioEntry.lastApprovedLifeCycleMilestoneInstance != null && lifeCycleMilestoneInstance.id.equals(portfolioEntry.lastApprovedLifeCycleMilestoneInstance.id)) {
+            if (approvedLifecycleMilestoneInstances.isEmpty()) {
+                portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
+            } else {
+                portfolioEntry.lastApprovedLifeCycleMilestoneInstance = approvedLifecycleMilestoneInstances
+                        .stream()
+                        .sorted((m1, m2) -> m2.passedDate.compareTo(m1.passedDate))
+                        .findFirst()
+                        .get();
+            }
+        }
+
+        lifeCycleMilestoneInstance.lifeCycleInstance.save();
+
+        // Delete the lifecycle milestone instance
+        lifeCycleMilestoneInstance.doDelete();
+        createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
+
+        approvedLifecycleMilestoneInstances.remove(lifeCycleMilestoneInstance);
+        updatePortfolioEntryWithNextMilestone(portfolioEntry, approvedLifecycleMilestoneInstances);
+
+        portfolioEntry.save();
+    }
+
+    private static void updatePortfolioEntryWithNextMilestone(PortfolioEntry portfolioEntry, List<LifeCycleMilestoneInstance> approvedLifecycleMilestoneInstances) {
+        // Update the next lifecycle milestone instance
+        // Get the list of planned lifecycle milestone instances
+        List<PlannedLifeCycleMilestoneInstance> plannedLifeCycleMilestoneInstances = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(portfolioEntry.id);
+
+        Optional<PlannedLifeCycleMilestoneInstance> nextMilestone = plannedLifeCycleMilestoneInstances
+                .stream()
+                // Filter the milestones already approved
+                .filter(plannedMilestone -> approvedLifecycleMilestoneInstances
+                        .stream()
+                        .map(instance -> instance.lifeCycleMilestone.id)
+                        .noneMatch(id -> id.equals(plannedMilestone.lifeCycleMilestone.id))
+                )
+                // Get the first not approved one
+                .findFirst();
+
+        portfolioEntry.nextPlannedLifeCycleMilestoneInstance = nextMilestone.isPresent() ? nextMilestone.get() : null;
+    }
+
+    /**
      * Process the life cycle milestone instance to pass it.<br/>
      * -set the isPassed attribute to true and assign the status type<br/>
      * -assign the current portfolio entry budget and create a new one<br/>
      * -freeze all plannings and create a new one<br/>
      * -if the milestone is approved, set the is concept flag to false<br/>
-     * 
+     *
      * @param lifeCycleMilestoneInstanceId
      *            the milestone instance to pass
      * @param lifeCycleMilestoneInstanceStatusType
@@ -277,6 +332,8 @@ public abstract class LifeCycleMilestoneDao {
             budgetTrackingService.recomputeAllBugdetAndForecastFromResource(currentPlanning);
         }
 
+        createNextPlanningFromPreviousOne(lifeCycleMilestoneInstance, currentPlanning);
+
         /*
          * update the life cycle instance
          */
@@ -293,39 +350,39 @@ public abstract class LifeCycleMilestoneDao {
             if (portfolioEntry.lastApprovedLifeCycleMilestoneInstance == null
                     || !portfolioEntry.lastApprovedLifeCycleMilestoneInstance.passedDate.after(lifeCycleMilestoneInstance.passedDate)) {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = lifeCycleMilestoneInstance;
-                portfolioEntry.save();
             }
+
+            updatePortfolioEntryWithNextMilestone(portfolioEntry, lifeCycleMilestoneInstance.lifeCycleInstance.getApprovedLifecycleMilestoneInstances());
+            portfolioEntry.save();
 
             lifeCycleMilestoneInstance.lifeCycleInstance.save();
 
         }
 
-        /*
-         * update the plannings
-         */
+        return lifeCycleMilestoneInstance;
 
+    }
+
+    private static void createNextPlanningFromPreviousOne(LifeCycleMilestoneInstance lifeCycleMilestoneInstance, LifeCycleInstancePlanning oldPlanning) {
         // set all plannings to frozen
-        for (LifeCycleInstancePlanning planning : lifeCycleMilestoneInstance.lifeCycleInstance.lifeCycleInstancePlannings) {
-            planning.doFrozen();
-        }
+        lifeCycleMilestoneInstance.lifeCycleInstance.lifeCycleInstancePlannings.forEach(LifeCycleInstancePlanning::doFrozen);
 
         // create the new planning
         LifeCycleInstancePlanning planning = new LifeCycleInstancePlanning(lifeCycleMilestoneInstance.lifeCycleInstance);
-        if (currentPlanning.portfolioEntryBudget != null && currentPlanning.portfolioEntryResourcePlan != null) {
+        if (oldPlanning.portfolioEntryBudget != null && oldPlanning.portfolioEntryResourcePlan != null) {
             Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew = new HashMap<>();
-            planning.portfolioEntryResourcePlan = currentPlanning.portfolioEntryResourcePlan.cloneInDB(allocatedResourcesMapOldToNew);
-            planning.portfolioEntryBudget = currentPlanning.portfolioEntryBudget.cloneInDB(allocatedResourcesMapOldToNew);
+            planning.portfolioEntryResourcePlan = oldPlanning.portfolioEntryResourcePlan.cloneInDB(allocatedResourcesMapOldToNew);
+            planning.portfolioEntryBudget = oldPlanning.portfolioEntryBudget.cloneInDB(allocatedResourcesMapOldToNew);
 
             // reassign the new allocated resources to existing work order
-            for (WorkOrder workOrder : lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.workOrders) {
-                if (workOrder.resourceObjectType != null) {
-                    workOrder.resourceObjectId = allocatedResourcesMapOldToNew.get(workOrder.resourceObjectType).get(workOrder.resourceObjectId);
-                    workOrder.save();
-                }
-            }
-           
-            // reassign the new allocated resources in custom attribute tables
-            update_custom_attribute_tables(allocatedResourcesMapOldToNew);
+            lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.workOrders
+                    .stream()
+                    .filter(workOrder -> workOrder.resourceObjectType != null)
+                    .forEach(workOrder -> {
+                        workOrder.resourceObjectId = allocatedResourcesMapOldToNew.get(workOrder.resourceObjectType).get(workOrder.resourceObjectId);
+                        workOrder.save();
+            });
+
         }
         planning.save();
 
@@ -343,8 +400,10 @@ public abstract class LifeCycleMilestoneDao {
              * Check if the milestone for the portfolio entry has an approved
              * milestone instance, meaning the milestone is passed and approved.
              */
-            boolean hasApprovedInstancesForMilestoneOfPortfolioEntry = Ebean.find(LifeCycleMilestoneInstance.class).where().eq("deleted", false)
-                    .eq("lifeCycleMilestone.id", milestone.id).eq("isPassed", true)
+            boolean hasApprovedInstancesForMilestoneOfPortfolioEntry = Ebean.find(LifeCycleMilestoneInstance.class).where()
+                    .eq("deleted", false)
+                    .eq("lifeCycleMilestone.id", milestone.id)
+                    .eq("isPassed", true)
                     .eq("lifeCycleInstance.portfolioEntry.id", lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.id)
                     .eq("lifeCycleInstance.isActive", true).eq("lifeCycleMilestoneInstanceStatusType.isApproved", true).findRowCount() > 0;
 
@@ -356,135 +415,8 @@ public abstract class LifeCycleMilestoneDao {
                 plannedInstance.save();
             }
         }
-
-        return lifeCycleMilestoneInstance;
-
-    }
-    
-    private static void update_custom_attribute_tables(Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew)
-    {
-    	List<String> list = Arrays.asList(
-    			"boolean_custom_attribute_value",
-    			"integer_custom_attribute_value",
-    			"date_custom_attribute_value",
-    			"decimal_custom_attribute_value",
-    			"string_custom_attribute_value",
-    			"text_custom_attribute_value",
-    			"dynamic_single_item_custom_attribute_value"
-    			);
-    	
-    	 for (String t :list)
-    	 {
-    		 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdate(k,v,t));
-    	 }
-    	 
-    	 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdateSingleItemCustomAttribute(k,v));    	 
-    	 allocatedResourcesMapOldToNew.forEach((k,v) -> doUpdateMultiItemCustomAttribute(k,v));
-    }
-    
-    private static void doUpdate( String objectType, Map<Long, Long> mapOldToNew, String tableName)
-    {
-    	
-    	mapOldToNew.forEach((k,v) -> {         
-            String str = String.format("insert into  %s ( object_type, object_id, value, deleted, last_update, custom_attribute_definition_id)" 
-            		+ " select object_type, %s, value, deleted, Now() , custom_attribute_definition_id from %s where object_id = %s " 
-            		+ " and object_type = '%s' ", tableName, v, tableName, k,  objectType);
-
-            SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
-            int rowModified = insertQuery.execute();
-            
-            if (rowModified>0 )
-            {
-            	log.info("updating " + objectType + "in " + tableName );
-            	log.info(str);
-            	log.info("Nbr of row inserted: "  + rowModified) ;
-            }
-    	});         	
     }
 
-    private static void doUpdateSingleItemCustomAttribute( String objectType, Map<Long, Long> mapOldToNew)
-    {
-    	String tableName = "single_item_custom_attribute_value";
-    	mapOldToNew.forEach((k,v) -> {         
-            String str = String.format("insert into  %s ( object_type, object_id, deleted, last_update, custom_attribute_definition_id, value_id)" 
-            		+ " select object_type, %s, deleted, Now() , custom_attribute_definition_id, value_id from %s where object_id = %s " 
-            		+ " and object_type = '%s' ", tableName, v, tableName, k,  objectType);
-
-            SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
-            int rowModified = insertQuery.execute();
-            
-            if (rowModified>0 )
-            {
-            	log.info("updating " + objectType + "in " + tableName );
-            	log.info(str);
-            	log.info("Nbr of row inserted: "  + rowModified) ;
-            }
-    	}
-        );         	
-    }
-    
-    private static void doUpdateMultiItemCustomAttribute( String objectType, Map<Long, Long> mapOldToNew)
-    {
-    	String tableName = "multi_item_custom_attribute_value";
-    	mapOldToNew.forEach((k,v) -> {   
-    		
-    		MultiItemCustomAttributeValue obj = Ebean.find(MultiItemCustomAttributeValue.class)
-                    .where()
-                    .eq("object_id", k)
-                    .eq("object_type", objectType)
-                    .findUnique();
-   		
-    		if (obj == null) return;
-    		    		
-    		Long oldItem = obj.id;
-
-            Long newItem =getCurrentAutoIncrementValue()  + 5; // +5 just be sure that there's no concurrent thread using this value.
-
-            String str = String.format("insert into  %s ( id, object_type, object_id, deleted, last_update, custom_attribute_definition_id)" 
-            		+ " select %d, object_type, %s, deleted, Now(), custom_attribute_definition_id from %s where object_id = %s " 
-            		+ " and object_type = '%s' ", tableName, newItem, v, tableName, k,  objectType);
-
-            SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
-            int rowModified = insertQuery.execute();
-            
-            if (rowModified>0 )
-            {
-            	log.info("updating " + objectType + "in " + tableName );
-            	log.info(str);
-            	log.info("Nbr of row inserted: "  + rowModified) ;
-            	
-            	 //Long newItem = Ebean.find(MultiItemCustomAttributeValue.class).where().eq("object_id", k).findUnique().getId();
-            	 doUpdateMultiItemValues(newItem, oldItem);
-            } 
-    	}
-        );         	
-    }
-    
-    private static Long getCurrentAutoIncrementValue()
-    {
-    	 SqlQuery query = Ebean.createSqlQuery("SELECT max(id) as MAXID from multi_item_custom_attribute_value");
-         List<SqlRow> rows = query.findList();
-
-        Long maxId = rows.get(0).getLong("MAXID");
-
-        return maxId != null ? maxId : 0L;
-    }
-    
-    private static void doUpdateMultiItemValues(Long new_id, Long old_id)
-    {       
-        String str = String.format("INSERT INTO multi_item_ca_value_has_ca_multi_item_option (multi_item_custom_attribute_value_id, custom_attribute_multi_item_option_id)" 
-        		+ " select %d, custom_attribute_multi_item_option_id from multi_item_ca_value_has_ca_multi_item_option where multi_item_custom_attribute_value_id =  %d" , new_id, old_id);
-
-        SqlUpdate insertQuery = Ebean.createSqlUpdate(str);
-        int rowModified = insertQuery.execute();
-        
-        if (rowModified>0 )
-        {
-        	log.info(str);
-        	log.info("Nbr of row inserted: "  + rowModified) ;
-        }
-    }
-    
     /**
      * Get all active milestone instances of portfolio entry for a specific
      * milestone.
@@ -523,7 +455,7 @@ public abstract class LifeCycleMilestoneDao {
      *            the milestone id
      */
     public static List<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsListByPEAndLCMilestone(Long portfolioEntryId, Long lifeCycleMilestoneId) {
-        return getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntryId, lifeCycleMilestoneId, "");
+        return getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntryId, lifeCycleMilestoneId, "DESC");
     }
 
     /**
@@ -537,7 +469,7 @@ public abstract class LifeCycleMilestoneDao {
                 .eq("lifeCycleMilestoneInstance.id", lifeCycleMilestonInstanceId).findRowCount();
         Integer nOfVotingApprovers = findLifeCycleMilestoneInstanceApprover.where().eq("deleted", false)
                 .eq("lifeCycleMilestoneInstance.id", lifeCycleMilestonInstanceId).isNotNull("approvalDate").findRowCount();
-        return nOfApprovers == nOfVotingApprovers;
+        return nOfApprovers.equals(nOfVotingApprovers);
     }
 
     /**
@@ -545,23 +477,19 @@ public abstract class LifeCycleMilestoneDao {
      * all milestone instances for which a vote/decision is required.
      */
     public static ExpressionList<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsExpr() {
-        return findLifeCycleMilestoneInstance.orderBy("passedDate DESC").where().eq("deleted", false).eq("isPassed", false)
+        return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("isPassed", false)
                 .eq("lifeCycleInstance.isActive", true).eq("lifeCycleInstance.portfolioEntry.deleted", false);
     }
 
     /**
      * Get all milestone instances as pagination object for which a user (here
      * called an approver) should vote.
-     * 
-     * @param preferenceManagerPlugin
-     *            the preference manager service
      * @param approverId
-     *            the approver id
      */
-    public static Pagination<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsPaginationByApprover(IPreferenceManagerPlugin preferenceManagerPlugin,
-            Long approverId) {
-        return new Pagination<>(preferenceManagerPlugin, getLCMilestoneInstanceAsExpr().eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
-                .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved"));
+    public static ExpressionList<LifeCycleMilestoneInstance> getLCMilestoneInstanceAsExprByApprover(Long approverId) {
+        return getLCMilestoneInstanceAsExpr()
+                .eq("lifeCycleMilestoneInstanceApprovers.actor.id", approverId)
+                .isNull("lifeCycleMilestoneInstanceApprovers.hasApproved");
     }
 
     /**

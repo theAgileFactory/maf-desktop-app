@@ -52,7 +52,7 @@ public class ProcessMilestoneRequestFormData {
     @MaxLength(value = IModelConstants.XLARGE_STRING)
     public String gateComments;
 
-    public List<Long> approvers = new ArrayList<Long>();;
+    public List<Long> approvers = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -84,15 +84,17 @@ public class ProcessMilestoneRequestFormData {
 
     /**
      * Fill the DB entry with the form values.
-     * 
-     * @param lifeCycleMilestoneInstance
+     *  @param lifeCycleMilestoneInstance
      *            the life cycle milestone instance in the DB
      * @param hasAttachment
-     *            set to true if the request has an attachment
+     *             true if milestone request has attached document
+     * @param requestComments
+     *            the comment in the initial milestone request
      */
-    public void fill(LifeCycleMilestoneInstance lifeCycleMilestoneInstance, boolean hasAttachment) {
+    public void fill(LifeCycleMilestoneInstance lifeCycleMilestoneInstance, boolean hasAttachment, String requestComments) {
 
         lifeCycleMilestoneInstance.gateComments = gateComments;
+        lifeCycleMilestoneInstance.requestComments = requestComments;
         lifeCycleMilestoneInstance.isPassed = false;
         lifeCycleMilestoneInstance.lifeCycleInstance = PortfolioEntryDao.getPEById(id).activeLifeCycleInstance;
         lifeCycleMilestoneInstance.lifeCycleMilestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);

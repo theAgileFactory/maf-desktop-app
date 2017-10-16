@@ -23,6 +23,7 @@ import com.avaje.ebean.Model.Finder;
 
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Pagination;
+import models.governance.LifeCycleMilestoneReviewRequest;
 import models.governance.ProcessTransitionRequest;
 import models.governance.ProcessTransitionRequest.RequestType;
 
@@ -34,6 +35,8 @@ import models.governance.ProcessTransitionRequest.RequestType;
 public abstract class ProcessTransitionRequestDao {
 
     public static Finder<Long, ProcessTransitionRequest> findProcessTransitionRequest = new Finder<>(ProcessTransitionRequest.class);
+
+    public static Finder<Long, LifeCycleMilestoneReviewRequest> findLifeCycleMilestoneReviewRequest = new Finder<>(LifeCycleMilestoneReviewRequest.class);
 
     /**
      * Default constructor.
@@ -68,6 +71,23 @@ public abstract class ProcessTransitionRequestDao {
             IPreferenceManagerPlugin preferenceManagerPlugin) {
         return new Pagination<>(preferenceManagerPlugin, findProcessTransitionRequest.orderBy("creationDate DESC").where().eq("deleted", false)
                 .eq("requestType", RequestType.MILESTONE_APPROVAL.name()).isNull("reviewDate"));
+    }
+
+    /**
+     * Get a milestone approval request by portfolio entry and milestone
+     *
+     * @param portfolioEntryId the portfolio entry
+     * @param milestoneId the milestone
+     *
+     * @return the process transition request
+     */
+    public static LifeCycleMilestoneReviewRequest getProcessTransitionRequestMilestoneApprovalToReviewByPortfolioEntryAndMilestoneId(Long portfolioEntryId, Long milestoneId) {
+        return findLifeCycleMilestoneReviewRequest.where()
+                        .eq("portfolioEntry.id", portfolioEntryId)
+                        .eq("lifeCycleMilestone.id", milestoneId)
+                        .isNull("processTransitionRequest.accepted")
+                        .eq("processTransitionRequest.deleted", false)
+                        .findUnique();
     }
 
 }

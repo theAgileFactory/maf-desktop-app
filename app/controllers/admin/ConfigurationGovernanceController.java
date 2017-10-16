@@ -151,13 +151,15 @@ public class ConfigurationGovernanceController extends Controller {
         Form<LifeCycleProcessFormData> lifeCycleProcessForm = lifeCycleProcessFormTemplate;
 
         // edit case: inject values
-        if (!lifeCycleProcessId.equals(Long.valueOf(0))) {
+        if (!lifeCycleProcessId.equals(0L)) {
 
             LifeCycleProcess lifeCycleProcess = LifeCycleProcessDao.getLCProcessById(lifeCycleProcessId);
 
             lifeCycleProcessForm = lifeCycleProcessFormTemplate.fill(new LifeCycleProcessFormData(lifeCycleProcess, getI18nMessagesPlugin()));
 
         }
+
+        this.getTableProvider().flushFilterConfig();
 
         return ok(views.html.admin.config.datareference.governance.life_cycle_process_manage.render(lifeCycleProcessForm));
 
@@ -411,7 +413,7 @@ public class ConfigurationGovernanceController extends Controller {
         Form<LifeCycleMilestoneFormData> milestoneTypeForm = lifeCycleMilestoneFormTemplate;
 
         // edit case: inject values
-        if (!milestoneId.equals(Long.valueOf(0))) {
+        if (!milestoneId.equals(0L)) {
 
             LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
 
@@ -536,7 +538,7 @@ public class ConfigurationGovernanceController extends Controller {
         Form<LifeCyclePhaseFormData> phaseTypeForm = lifeCyclePhaseFormTemplate;
 
         // edit case: inject values
-        if (!phaseId.equals(Long.valueOf(0))) {
+        if (!phaseId.equals(0L)) {
 
             LifeCyclePhase phase = LifeCycleMilestoneDao.getLCPhaseById(phaseId);
 

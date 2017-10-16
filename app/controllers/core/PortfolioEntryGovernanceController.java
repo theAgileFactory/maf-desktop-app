@@ -17,6 +17,7 @@
  */
 package controllers.core;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,14 +53,7 @@ import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
-import models.governance.LifeCycleInstance;
-import models.governance.LifeCycleInstancePlanning;
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstance;
-import models.governance.LifeCycleMilestoneInstanceApprover;
-import models.governance.LifeCycleProcess;
-import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.governance.ProcessTransitionRequest;
+import models.governance.*;
 import models.pmo.Actor;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
@@ -138,7 +132,7 @@ public class PortfolioEntryGovernanceController extends Controller {
 
         Set<String> hideColumnsForGovernance = new HashSet<String>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
-            hideColumnsForGovernance.add("requestActionLink");
+            hideColumnsForGovernance.add("actionLink");
         }
 
         Table<GovernanceListView> filledTable = this.getTableProvider().get().governance.templateTable.fill(governanceListView, hideColumnsForGovernance);
@@ -298,6 +292,19 @@ public class PortfolioEntryGovernanceController extends Controller {
     }
 
     /**
+     * Delete a milestone instance
+     *
+     * @param id the portfolio entry id
+     * @param milestoneId the milestone id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteMilestone(Long id, Long milestoneId) {
+        LifeCycleMilestoneDao.doDelete(milestoneId, getBudgetTrackingService());
+        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.index(id));
+    }
+
+    /**
      * Form to request a milestone approval for a milestone.
      * 
      * @param id
@@ -334,7 +341,7 @@ public class PortfolioEntryGovernanceController extends Controller {
         PlannedLifeCycleMilestoneInstance plannedDate = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id,
                 milestoneId);
 
-        Form<RequestMilestoneFormData> form = requestMilestoneFormTemplate.fill(new RequestMilestoneFormData());
+        Form<RequestMilestoneFormData> form = requestMilestoneFormTemplate.fill(new RequestMilestoneFormData(id, milestoneId));
 
         return ok(views.html.core.portfolioentrygovernance.milestone_request.render(portfolioEntry, lifeCycleMilestone, form, status, plannedDate));
     }
@@ -403,6 +410,14 @@ public class PortfolioEntryGovernanceController extends Controller {
             ProcessTransitionRequest processTransitionRequest = new ProcessTransitionRequest();
             requestMilestoneFormData.create(processTransitionRequest, actor);
             processTransitionRequest.save();
+
+            LifeCycleMilestoneReviewRequest reviewRequest = null;
+            try {
+                reviewRequest = new LifeCycleMilestoneReviewRequest(portfolioEntry, lifeCycleMilestone, processTransitionRequest, Utilities.getDateFormat(null).parse(requestMilestoneFormData.passedDate));
+            } catch (ParseException e) {
+                return badRequest();
+            }
+            reviewRequest.save();
 
             // store the request details
             try {
@@ -645,6 +660,7 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             portfolioEntry.activeLifeCycleInstance = lifeCycleInstance;
             portfolioEntry.lastApprovedLifeCycleMilestoneInstance = null;
+            portfolioEntry.nextPlannedLifeCycleMilestoneInstance = null;
             portfolioEntry.startDate = portfolioEntry.endDate = null;
 
             /*
@@ -658,6 +674,9 @@ public class PortfolioEntryGovernanceController extends Controller {
              */
             for (LifeCycleMilestone milestone : lifeCycleProcess.lifeCycleMilestones) {
                 PlannedLifeCycleMilestoneInstance plannedInstance = new PlannedLifeCycleMilestoneInstance(lifeCycleInstancePlanning, milestone);
+                if (portfolioEntry.nextPlannedLifeCycleMilestoneInstance == null) {
+                    portfolioEntry.nextPlannedLifeCycleMilestoneInstance = plannedInstance;
+                }
                 plannedInstance.save();
             }
 

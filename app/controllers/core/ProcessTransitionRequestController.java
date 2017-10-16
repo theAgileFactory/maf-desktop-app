@@ -242,7 +242,7 @@ public class ProcessTransitionRequestController extends Controller {
 
             // create LifeCycleMilestoneInstance
             lifeCycleMilestoneInstance = new LifeCycleMilestoneInstance();
-            processMilestoneRequestFormData.fill(lifeCycleMilestoneInstance, descriptionDocument != null);
+            processMilestoneRequestFormData.fill(lifeCycleMilestoneInstance, descriptionDocument != null, request.comments);
             lifeCycleMilestoneInstance.save();
 
             // if there are approvers
@@ -364,6 +364,23 @@ public class ProcessTransitionRequestController extends Controller {
 
         return redirect(controllers.core.routes.ProcessTransitionRequestController.reviewMilestoneRequestList(0));
 
+    }
+
+    /**
+     * Cancels a milestone request
+     *
+     * @param id the portfolio id
+     * @param requestId the process request id
+     *
+     * @return a redirection to the initiative governance page
+     */
+    public Result cancelMilestoneRequest(Long id, Long requestId) {
+
+        ProcessTransitionRequestDao.getProcessTransitionRequestById(requestId).doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.process_transition_request.cancel_milestone_request.notification.message.success"));
+
+        return redirect(routes.PortfolioEntryGovernanceController.index(id));
     }
 
     /**

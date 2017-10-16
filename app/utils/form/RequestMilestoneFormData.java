@@ -21,8 +21,11 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
+import com.google.common.base.Strings;
 import models.framework_models.parent.IModelConstants;
+import models.governance.LifeCycleInstancePlanning;
 import models.governance.LifeCycleMilestoneInstance;
+import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.governance.ProcessTransitionRequest;
 import models.governance.ProcessTransitionRequest.RequestType;
 import models.pmo.Actor;
@@ -30,6 +33,7 @@ import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 import dao.governance.LifeCycleMilestoneDao;
+import dao.governance.LifeCyclePlanningDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.utils.FileField;
 import framework.utils.FileFieldOptionalValidator;
@@ -76,6 +80,19 @@ public class RequestMilestoneFormData implements Serializable {
     public RequestMilestoneFormData(Long portfolioEntryId, Long milestoneId) {
         this.id = portfolioEntryId;
         this.milestoneId = milestoneId;
+        LifeCycleInstancePlanning planning = LifeCyclePlanningDao.getLCInstancePlanningAsLastByPE(id);
+        PlannedLifeCycleMilestoneInstance  plannedLifeCycleMilestoneInstance = LifeCyclePlanningDao.getPlannedLCMilestoneInstanceByLCInstancePlanningAndLCMilestone(planning.id,
+                milestoneId);
+        if (Strings.isNullOrEmpty(this.passedDate))
+        {
+        	try
+        	{
+        		this.passedDate = Utilities.getDateFormat(null).format(plannedLifeCycleMilestoneInstance.plannedDate);
+        	}
+        	catch (Exception e) {
+                this.passedDate = null;
+            }
+        }
     }
 
     /**

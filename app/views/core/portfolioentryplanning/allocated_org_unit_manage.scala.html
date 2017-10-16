@@ -27,10 +27,17 @@
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
 @import views.html.modelsparts._
 @import commons._
+@import java.time.Year
 
 @hasExtendedAttributes=@{
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit])
 }
+
+@allocationStatus=@{
+    dao.finance.PortfolioEntryResourcePlanDAO.getAllocationStatusByName(allocatedOrgUnitForm("allocationStatus").value)
+}
+
+@lastStatusTypeUpdateActor=@{dao.pmo.ActorDao.getActorById(java.lang.Long.valueOf(allocatedOrgUnitForm("lastStatusTypeUpdateActor").value))}
 
 @breadcrump=@{
     Seq(
@@ -63,22 +70,36 @@
                     
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
                         
-                        @if(allocatedOrgUnitForm("allocatedOrgUnitId").value!=null) {
-                            <input type="hidden" name="allocatedOrgUnitId" value="@allocatedOrgUnitForm("allocatedOrgUnitId").value"/>
+                        @if(allocatedOrgUnitForm("allocationId").value!=null) {
+                            <input type="hidden" name="allocationId" value="@allocatedOrgUnitForm("allocationId").value"/>
                         }
-                        
-                         @parts.checkbox(
-                            allocatedOrgUnitForm("isConfirmed"), 
-                            parts.Msg.asString("object.allocated_resource.is_confirmed.label")
-                        )
-                        
-                        @parts.singlevalue_picker(
+
+                        <div class="form-group">
+                            <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            <input type="hidden" name="allocationStatus" value="@allocatedOrgUnitForm("allocationStatus").value" />
+                            @display_allocation_status(allocationStatus)
+                            @if(lastStatusTypeUpdateActor != null) {
+                                <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value)</span>
+                                <input type="hidden" name="lastStatusTypeUpdateActor" value="@allocatedOrgUnitForm("lastStatusTypeUpdateActor").value" />
+                                <input type="hidden" name="lastStatusTypeUpdateTime" value="@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value" />
+                            }
+                        </div>
+
+                        @parts.dropdownlist(
                             allocatedOrgUnitForm("orgUnit"), 
                             parts.Msg.asString("object.allocated_resource.org_unit.label"),
-                            controllers.routes.PickerController.deliveryUnits().url
+                            dao.pmo.OrgUnitDao.getOrgUnitActiveCanDeliverAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
-                        
-                        @if(_budgetTrackingService.isActive()) {
+
+                        @parts.dropdownlist(
+                            allocatedOrgUnitForm("portfolioEntryPlanningPackage"),
+                            parts.Msg.asString("object.allocated_resource.package.label"),
+                            dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
+                        )
+
+                        @if(_budgetTrackingService.isActive) {
                             @currency_field(allocatedOrgUnitForm("currencyCode"), allocatedOrgUnitForm("currencyRate"), "object.allocated_resource.currency.label", null)
                         } else {
                             <input type="hidden" name="@allocatedOrgUnitForm("currencyCode").name" value="@dao.finance.CurrencyDAO.getCurrencyDefaultAsCode()"/>
@@ -87,21 +108,15 @@
                         
                         @parts.input_text(allocatedOrgUnitForm("days"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.days.label"), 'autofocus -> "autofocus")
                         
-                        @if(_budgetTrackingService.isActive()) {
-                            @parts.input_text(allocatedOrgUnitForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
+                        @if(_budgetTrackingService.isActive) {
                             @parts.input_text(allocatedOrgUnitForm("forecastDays"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_days.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_days.help"))
-                            @parts.input_text(allocatedOrgUnitForm("forecastDailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.help"))
-                        } else {
-                            <input type="hidden" name="dailyRate" value="0" />
                         }
-                        
-                        @parts.singlevalue_picker(
-                            allocatedOrgUnitForm("portfolioEntryPlanningPackage"), 
-                            parts.Msg.asString("object.allocated_resource.package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+
+                        @parts.checkbox(
+                            allocatedOrgUnitForm("monthlyAllocated"),
+                            parts.Msg.asString("object.allocated_resource.monthly_allocated.label")
                         )
-                        
+
                         @parts.checkbox(
                             allocatedOrgUnitForm("followPackageDates"), 
                             parts.Msg.asString("object.allocated_resource.follow_package_dates.label")
@@ -110,20 +125,100 @@
                         @parts.dateinput(allocatedOrgUnitForm("startDate"), "object.allocated_resource.start_date.label")
                         
                         @parts.dateinput(allocatedOrgUnitForm("endDate"), "object.allocated_resource.end_date.label")
-                        
-                        @allocated_resource_manage_js()
+
+                        <div class="form-group">
+                            <div class="btn-group" id="year-picker-block">
+                                <a class="btn btn-default" role="button" id="previous-year">&laquo;</a>
+                                <a class="btn btn-default" role="button" id="year-picker"></a>
+                                <a class="btn btn-default" role="button" id="next-year">&raquo;</a>
+                            </div>
+                        </div>
+
+                        <div id="monthAllocations">
+                        @repeat(allocatedOrgUnitForm("monthAllocations")) { monthAllocationField =>
+                            <div class="monthAllocation">
+                                @if(monthAllocationField("year").value.isEmpty) {
+                                    <div class="row" id="monthAllocations_@Year.now().getValue">
+                                } else {
+                                    <div class="row" id="monthAllocations_@monthAllocationField("year").value">
+                                }
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".januaryAllocationValue"), '_label -> parts.Msg("month.january.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".februaryAllocationValue"), '_label -> parts.Msg("month.february.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".marchAllocationValue"), '_label -> parts.Msg("month.march.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".aprilAllocationValue"), '_label -> parts.Msg("month.april.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".mayAllocationValue"), '_label -> parts.Msg("month.may.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".juneAllocationValue"), '_label -> parts.Msg("month.june.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".julyAllocationValue"), '_label -> parts.Msg("month.july.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".augustAllocationValue"), '_label -> parts.Msg("month.august.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".septemberAllocationValue"), '_label -> parts.Msg("month.september.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".octoberAllocationValue"), '_label -> parts.Msg("month.october.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".novemberAllocationValue"), '_label -> parts.Msg("month.november.abbreviated"))</div>
+                                <div class="col-md-1 text-center" style="padding-left: 5px; padding-right: 5px;">@parts.input_text(allocatedOrgUnitForm(monthAllocationField.name.toString + ".decemberAllocationValue"), '_label -> parts.Msg("month.december.abbreviated"))</div>
+                            </div>
+                            @if(monthAllocationField("year").value.isEmpty) {
+                                <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@Year.now().getValue" />
+                            } else {
+                                <input type="hidden" id="@monthAllocationField("year").id" name="@monthAllocationField("year").name" value="@monthAllocationField("year").value" />
+                            }
+                        </div>
+                    }
+                    </div>
+
+                    <div><small>@parts.Msg("core.actor.capacity.footer")</small></div>
+
+                    <br />
+
+                    @if(_budgetTrackingService.isActive) {
+                        @parts.input_text(allocatedOrgUnitForm("dailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.daily_rate.help"))
+                        @parts.input_text(allocatedOrgUnitForm("forecastDailyRate"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.label"), '_help -> parts.Msg.asString("object.allocated_resource.forecast_daily_rate.help"))
+                    } else {
+                        <input type="hidden" name="dailyRate" value="0" />
+                    }
+
+                    @allocated_resource_manage_js()
                         
                         <script>
         
-                        $('#@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id').change(function() { 
+                            $('#@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id').change(function() {
+                                maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id');
+                            });
+                            $('#@allocatedOrgUnitForm("followPackageDates").id').change(function() {
+                                maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id')
+                            });
+
+                            $('#@allocatedOrgUnitForm("monthlyAllocated").id').change(function() {
+                                toggleMonthyAllocationFields('@allocatedOrgUnitForm("monthlyAllocated").id', '@if(_budgetTrackingService.isActive) {@allocatedOrgUnitForm("forecastDays").id} else {@allocatedOrgUnitForm("days").id}', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id')
+                            });
+
+                            $('[id$=AllocationValue]').change(function() {
+                                recomputeDays('@if(_budgetTrackingService.isActive) {@allocatedOrgUnitForm("forecastDays").id} else {@allocatedOrgUnitForm("days").id}');
+                            });
+
+                            $('#previous-year').click(function() {
+                                previousYearAction('@if(_budgetTrackingService.isActive) {@allocatedOrgUnitForm("forecastDays").id} else {@allocatedOrgUnitForm("days").id}')
+                            });
+
+                            $('#next-year').click(function() {
+                                nextYearAction('@if(_budgetTrackingService.isActive) {@allocatedOrgUnitForm("forecastDays").id} else {@allocatedOrgUnitForm("days").id}')
+                            });
+
                             maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id');
-                        });
-                        $('#@allocatedOrgUnitForm("followPackageDates").id').change(function() { 
-                            maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id') 
-                        });
-        
-                        maf_recomputeFields('@allocatedOrgUnitForm("portfolioEntryPlanningPackage").id', '@allocatedOrgUnitForm("followPackageDates").id', '@allocatedOrgUnitForm("startDate").id', '@allocatedOrgUnitForm("endDate").id');
-                        
+
+                            // Initialization
+                            currentYear = new Date().getFullYear();
+                            $('#year-picker').html(currentYear);
+                            $('#monthAllocations').children().hide();
+                            showOrCreateMonthAllocation(currentYear, '@if(_budgetTrackingService.isActive) {@allocatedOrgUnitForm("forecastDays").id} else {@allocatedOrgUnitForm("days").id}');
+
+                            if (!$('#@allocatedOrgUnitForm("monthlyAllocated").id').prop('checked')) {
+                                $('#year-picker-block').hide();
+                                $('#monthAllocations').hide();
+                            } else {
+                                $('#@if(_budgetTrackingService.isActive) {@allocatedOrgUnitForm("forecastDays").id} else {@allocatedOrgUnitForm("days").id}').prop('readonly', true);
+                                $('#@allocatedOrgUnitForm("followPackageDates").id').parent().parent().hide();
+                                $('#@allocatedOrgUnitForm("startDate").id').parent().parent().hide();
+                                $('#@allocatedOrgUnitForm("endDate").id').parent().parent().hide();
+                            }
                         </script>
                         
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
@@ -135,8 +230,8 @@
                 </div>
                 
                 <div class="col-md-6">
-                    @if(allocatedOrgUnitForm("allocatedOrgUnitId").value!=null) {
-                        @parts.extended_attributes_input(allocatedOrgUnitForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit], Long.parseLong(allocatedOrgUnitForm("allocatedOrgUnitId").value))
+                    @if(allocatedOrgUnitForm("allocationId").value!=null) {
+                        @parts.extended_attributes_input(allocatedOrgUnitForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit], Long.parseLong(allocatedOrgUnitForm("allocationId").value))
                     } else {
                         @parts.extended_attributes_input(allocatedOrgUnitForm, classOf[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit], null)
                     }

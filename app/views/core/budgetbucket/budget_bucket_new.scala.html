@@ -66,10 +66,11 @@
         
                         @parts.input_text(budgetBucketForm("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.budget_bucket.name.label"))
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             budgetBucketForm("owner"), 
                             parts.Msg.asString("object.budget_bucket.owner.label"),
-                            controllers.routes.PickerController.actor().url
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.create")" />

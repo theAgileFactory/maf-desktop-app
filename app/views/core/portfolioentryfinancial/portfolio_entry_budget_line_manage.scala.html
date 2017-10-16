@@ -104,10 +104,11 @@
                             dao.finance.PortfolioEntryBudgetDAO.getPEBudgetLineTypeActiveAsVH()
                         )
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             budgetLineForm("budgetBucket"), 
                             parts.Msg.asString("object.portfolio_entry_budget_line.budget_bucket.label"),
-                            controllers.routes.PickerController.budgetBucket().url
+                            dao.finance.BudgetBucketDAO.getActiveBudgetBucketSelectableAsList,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

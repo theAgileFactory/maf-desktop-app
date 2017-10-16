@@ -17,21 +17,25 @@
  */
 package utils.table;
 
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.Date;
-
 import constants.IMafConstants;
-import controllers.routes;
 import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.*;
-import framework.utils.formats.*;
+import framework.utils.FilterConfig;
+import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Msg;
+import framework.utils.Table;
+import framework.utils.formats.StringFormatFormatter;
 import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
+import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntryPlanningPackage;
+
+import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.Date;
 
 /**
  * A portfolio entry resource plan allocated org unit list view is used to
@@ -39,81 +43,47 @@ import models.pmo.PortfolioEntryPlanningPackage;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
+public class PortfolioEntryResourcePlanAllocatedOrgUnitListView extends AllocatedOrgUnitListView {
 
     /**
      * The definition of the table.
      * 
      * @author Johann Kohler
      */
-    public static class TableDefinition {
+    public static class PortfolioEntryResourcePlanTableDefinition extends TableDefinition {
 
-    	public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig;
+        public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig;
         public Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> templateTable;
 
-        /**
-         * Default constructor.
-         * 
-         * @param i18nMessagesPlugin
-         *            the i18n messages service
-         */
-        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
-        	this.filterConfig = getFilterConfig();
+        public PortfolioEntryResourcePlanTableDefinition(II18nMessagesPlugin i18nMessagesPlugin) {
+            super();
             this.templateTable = getTable(i18nMessagesPlugin);
+            this.filterConfig = getFilterConfig();
         }
 
         public FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> getFilterConfig() {
+
             return new FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                 {
+                    initFilterConfig(this);
+
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
                     addColumnConfiguration("orgUnit", "orgUnit.id", "object.allocated_resource.org_unit.label",
-                            new SelectFilterComponent(orgUnits.getValues().isEmpty() ? null : orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[] {"name"}), true, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
-                            new AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", new CheckboxFilterComponent(true),
-                            true, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
-                            SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("planningPackage", "portfolioEntryPlanningPackage.name", "object.allocated_resource.package.label",
-                            new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("portfolioEntryName", "portfolioEntryResourcePlan.lifeCycleInstancePlannings.lifeCycleInstance.portfolioEntry.name", "object.allocated_resource.portfolio_entry.label",
-                    		new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label",
-                            new NumericFieldFilterComponent("0", "="), false, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label",
-                            new NumericFieldFilterComponent("0", "="), false, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
-                            new NumericFieldFilterComponent("0", "="), false, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("startDate", "startDate", "object.allocated_resource.start_date.label",
-                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);
-
-                    addColumnConfiguration("endDate", "endDate", "object.allocated_resource.end_date.label",
-                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
-
-                    addCustomAttributesColumns("id", PortfolioEntryResourcePlanAllocatedOrgUnit.class);
+                            new FilterConfig.SelectFilterComponent(orgUnits.getValues().isEmpty() ? null : orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[]{"name"}), true, false, FilterConfig.SortStatusType.UNSORTED);
                 }
             };
         }
+
+
         /**
          * Get the table.
-         * 
+         *
          * @param i18nMessagesPlugin
          *            the i18n messages service
          */
         public Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> getTable(II18nMessagesPlugin i18nMessagesPlugin) {
             return new Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
                 {
-                    setIdFieldName("id");
-
                     addColumn("orgUnit", "orgUnit", "object.allocated_resource.org_unit.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter(
                             "orgUnit",
@@ -122,54 +92,16 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     );
                     setColumnValueCssClass("orgUnit", "rowlink-skip");
 
-                    addColumn("portfolioEntryName", "portfolioEntryName", "object.allocated_resource.portfolio_entry.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<>());
-
-                    addColumn("currency", "currency", "object.allocated_resource.currency.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("currency", new ObjectFormatter<>());
-
-                    addColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("days", new NumberFormatter<>());
-
-                    addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dailyRate", new NumberFormatter<>());
-
-                    addColumn("forecastDays", "forecastDays", "object.allocated_resource.forecast_days.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("forecastDays", new NumberFormatter<>());
-
-                    addColumn("forecastDailyRate", "forecastDailyRate", "object.allocated_resource.forecast_daily_rate.label",
-                            Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("forecastDailyRate", new NumberFormatter<>());
-
-                    addColumn("planningPackage", "planningPackage", "object.allocated_resource.package.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter(
-                            "planningPackage",
-                            (portfolioEntryResourcePlanAllocatedOrgUnitListView, value) ->
-                                    views.html.modelsparts.display_portfolio_entry_planning_package
-                                            .render(portfolioEntryResourcePlanAllocatedOrgUnitListView.planningPackage)
-                                            .body()
-                    );
-                    setColumnValueCssClass("planningPackage", "rowlink-skip");
-
-                    addColumn("startDate", "startDate", "object.allocated_resource.start_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("startDate", new DateFormatter<>());
-
-                    addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("endDate", new DateFormatter<>());
-
-                    addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isConfirmed", new BooleanFormatter<>());
-
-                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedOrgUnit.class);
+                    initTable(this, i18nMessagesPlugin);
 
                     addColumn("reallocate", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("reallocate",
                             new StringFormatFormatter<>(
                                     "<a href=\"%s\"><span class=\"fa fa-user\"></span></a>",
-                                    allocatedOrgUnitListView -> controllers.core.routes.PortfolioEntryPlanningController
+                                    portfolioEntryResourcePlanAllocatedOrgUnitListView -> controllers.core.routes.PortfolioEntryPlanningController
                                             .reallocateOrgUnit(
-                                                    allocatedOrgUnitListView.portfolioEntryId,
-                                                    allocatedOrgUnitListView.id
+                                                    portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId,
+                                                    portfolioEntryResourcePlanAllocatedOrgUnitListView.id
                                             ).url()
                             )
                     );
@@ -180,11 +112,11 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     setJavaColumnFormatter(
                             "editActionLink",
                             new StringFormatFormatter<>(
-                                IMafConstants.EDIT_URL_FORMAT,
-                                (StringFormatFormatter.Hook<PortfolioEntryResourcePlanAllocatedOrgUnitListView>) portfolioEntryResourcePlanAllocatedOrgUnitListView ->
-                                        controllers.core.routes.PortfolioEntryPlanningController
-                                            .manageAllocatedOrgUnit(portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId, portfolioEntryResourcePlanAllocatedOrgUnitListView.id)
-                                            .url()
+                                    IMafConstants.EDIT_URL_FORMAT,
+                                    (StringFormatFormatter.Hook<PortfolioEntryResourcePlanAllocatedOrgUnitListView>) portfolioEntryResourcePlanAllocatedOrgUnitListView ->
+                                            controllers.core.routes.PortfolioEntryPlanningController
+                                                    .manageAllocatedOrgUnit(portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId, portfolioEntryResourcePlanAllocatedOrgUnitListView.id)
+                                                    .url()
                             )
                     );
                     setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
@@ -202,48 +134,22 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
                     });
                     setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                    setEmptyMessageKey("object.allocated_resource.org_unit.table.empty");
                 }
             };
 
         }
 
+
     }
+
+    public OrgUnit orgUnit;
 
     /**
      * Default constructor.
      */
     public PortfolioEntryResourcePlanAllocatedOrgUnitListView() {
+        super();
     }
-
-    public Long id;
-
-    public Long portfolioEntryId;
-
-    public String portfolioEntryName;
-
-    public OrgUnit orgUnit;
-
-    public Currency currency;
-
-    public BigDecimal days;
-
-    public BigDecimal dailyRate;
-
-    public BigDecimal forecastDays;
-
-    public BigDecimal forecastDailyRate;
-
-    public Date startDate;
-
-    public Date endDate;
-
-    public PortfolioEntryPlanningPackage planningPackage;
-
-    public boolean isConfirmed;
-
-    public Boolean followPackageDates;
 
     /**
      * Construct a list view with a DB entry.
@@ -252,22 +158,8 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView {
      *            the allocated org unit in the DB
      */
     public PortfolioEntryResourcePlanAllocatedOrgUnitListView(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
-        this.id = allocatedOrgUnit.id;
-        this.portfolioEntryId = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
-        this.portfolioEntryName = PortfolioEntryDao.getPEById(this.portfolioEntryId).getName();
+        super(allocatedOrgUnit);
         this.orgUnit = allocatedOrgUnit.orgUnit;
-        this.startDate = allocatedOrgUnit.startDate;
-        this.endDate = allocatedOrgUnit.endDate;
-        this.planningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage;
-        this.isConfirmed = allocatedOrgUnit.isConfirmed;
-        this.followPackageDates = allocatedOrgUnit.followPackageDates;
-
-        this.currency = allocatedOrgUnit.currency;
-        this.days = allocatedOrgUnit.days;
-        this.dailyRate = allocatedOrgUnit.dailyRate;
-        this.forecastDays = allocatedOrgUnit.forecastDays != null ? allocatedOrgUnit.forecastDays : allocatedOrgUnit.days;
-        this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate != null ? allocatedOrgUnit.forecastDailyRate : allocatedOrgUnit.dailyRate;
-
     }
 
 }

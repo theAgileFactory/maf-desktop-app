@@ -23,11 +23,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
@@ -84,7 +84,6 @@ import models.pmo.Actor;
 import models.pmo.Portfolio;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryDependency;
-import models.pmo.PortfolioEntryType;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -211,7 +210,7 @@ public class PortfolioEntryController extends Controller {
             return badRequest(views.html.core.portfolioentry.portfolio_entry_create.render(boundForm, isRelease));
         }
 
-        String keyPrefix = null;
+        String keyPrefix;
         if (isRelease) {
             keyPrefix = "core.portfolio_entry.create.release.";
         } else {
@@ -222,7 +221,7 @@ public class PortfolioEntryController extends Controller {
 
         PortfolioEntry portfolioEntry = new PortfolioEntry();
         Long attachmentId = null;
-        Portfolio portfolio = null;
+        List<Portfolio> portfolios;
 
         Ebean.beginTransaction();
         try {
@@ -238,11 +237,10 @@ public class PortfolioEntryController extends Controller {
             portfolioEntry.description = portfolioEntryCreateFormData.description;
             portfolioEntry.creationDate = new Date();
             portfolioEntry.manager = ActorDao.getActorById(portfolioEntryCreateFormData.manager);
-            portfolio = PortfolioDao.getPortfolioById(portfolioEntryCreateFormData.portfolio);
-            portfolioEntry.portfolios = portfolio != null ? Arrays.asList(portfolio) : new ArrayList<Portfolio>();
+            portfolios = portfolioEntryCreateFormData.portfolios == null ? null : Arrays.asList(portfolioEntryCreateFormData.portfolios).stream().map(PortfolioDao::getPortfolioById).collect(Collectors.toList());
+            portfolioEntry.portfolios = portfolios;
             portfolioEntry.isPublic = !portfolioEntryCreateFormData.isConfidential;
-            PortfolioEntryType portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryCreateFormData.portfolioEntryType);
-            portfolioEntry.portfolioEntryType = portfolioEntryType;
+            portfolioEntry.portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryCreateFormData.portfolioEntryType);
             portfolioEntry.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
             portfolioEntry.erpRefId = "";
             portfolioEntry.save();
@@ -279,11 +277,20 @@ public class PortfolioEntryController extends Controller {
 
         getLicensesManagementService().updateConsumedPortfolioEntries();
 
-        // send a notification to the portfolio manager (if it exists)
-        if (portfolio != null) {
-            ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), portfolio.manager,
-                    NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY), controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
-                    keyPrefix + "notification.title", keyPrefix + "notification.message", portfolio.name);
+        // send a notification to the portfolio managers (if it exists)
+        if (portfolios != null) {
+            portfolios.stream().forEach(portfolio -> {
+                ActorDao.sendNotification(
+                        this.getNotificationManagerService(),
+                        this.getI18nMessagesPlugin(),
+                        portfolio.manager,
+                        NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
+                        controllers.core.routes.PortfolioEntryController.view(portfolioEntry.id, 0).url(),
+                        keyPrefix + "notification.title",
+                        keyPrefix + "notification.message",
+                        portfolio.name
+                );
+            });
         }
 
         // send a notification to the initiative manager (if he is not the
@@ -335,6 +342,9 @@ public class PortfolioEntryController extends Controller {
             plannedLifeCycleMilestoneInstance.lifeCycleMilestone = milestone;
             plannedLifeCycleMilestoneInstance.lifeCycleInstancePlanning = planning;
             plannedLifeCycleMilestoneInstance.save();
+            if (portfolioEntry.nextPlannedLifeCycleMilestoneInstance == null) {
+                portfolioEntry.nextPlannedLifeCycleMilestoneInstance = plannedLifeCycleMilestoneInstance;
+            }
         }
 
         // Assign the planning to the life cycle process instance
@@ -375,7 +385,7 @@ public class PortfolioEntryController extends Controller {
             governanceListView.add(new GovernanceListView(lastPlannedMilestoneInstance));
         }
         Set<String> hideColumnsForGovernance = new HashSet<String>();
-        hideColumnsForGovernance.add("requestActionLink");
+        hideColumnsForGovernance.add("actionLink");
         Table<GovernanceListView> milestonesTable = this.getTableProvider().get().governance.templateTable.fill(governanceListView, hideColumnsForGovernance);
 
         // Milestones trend

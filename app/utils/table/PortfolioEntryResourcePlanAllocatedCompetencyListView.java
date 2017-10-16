@@ -25,9 +25,14 @@ import framework.utils.FilterConfig;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
-import framework.utils.formats.*;
+import framework.utils.formats.DateFormatter;
+import framework.utils.formats.NumberFormatter;
+import framework.utils.formats.ObjectFormatter;
+import framework.utils.formats.StringFormatFormatter;
 import models.finance.Currency;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
+import models.pmo.Actor;
 import models.pmo.Competency;
 import models.pmo.PortfolioEntryPlanningPackage;
 
@@ -67,14 +72,23 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
         public FilterConfig<PortfolioEntryResourcePlanAllocatedCompetencyListView> getFilterConfig() {
             return new FilterConfig<PortfolioEntryResourcePlanAllocatedCompetencyListView>() {
                 {
+                    String[] actorFieldsSort = { "lastStatusTypeUpdateActor.lastName", "lastStatusTypeUpdateActor.firstName" };
+
                     addColumnConfiguration("competency", "competency", "object.allocated_resource.competency.label",
                             new AutocompleteFilterComponent(routes.JsonController.sponsoringUnit().url()), true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("currency", "currency", "object.allocated_resource.currency.label",
                             new AutocompleteFilterComponent(routes.JsonController.currency().url()), false, false, SortStatusType.UNSORTED);
 
-                    addColumnConfiguration("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", new CheckboxFilterComponent(true),
+                    addColumnConfiguration("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", new NoneFilterComponent(),
                             true, false, SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor.id", "object.allocated_resource.last_update_status_type_actor.label",
+                            new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url(), actorFieldsSort), false, false,
+                            SortStatusType.UNSORTED);
+
+                    addColumnConfiguration("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label",
+                            new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), false, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("days", "days", "object.allocated_resource.days.label", new NumericFieldFilterComponent("0", "="), true, false,
                             SortStatusType.UNSORTED);
@@ -123,8 +137,10 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
                     addColumn("currency", "currency", "object.allocated_resource.currency.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("currency", new ObjectFormatter<>());
 
-                    addColumn("days", "days", "object.allocated_resource.days.label", ColumnDef.SorterType.NONE);
+                    addSummableColumn("days", "days", "object.allocated_resource.days.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("days", new NumberFormatter<>());
+                    setColumnHeaderCssClass("days", "text-right");
+                    setColumnValueCssClass("days", "text-right");
 
                     addColumn("dailyRate", "dailyRate", "object.allocated_resource.daily_rate.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("dailyRate", new NumberFormatter<>());
@@ -145,8 +161,15 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
                     addColumn("endDate", "endDate", "object.allocated_resource.end_date.label", ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("endDate", new DateFormatter<>());
 
-                    addColumn("isConfirmed", "isConfirmed", "object.allocated_resource.is_confirmed.label", ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isConfirmed", new BooleanFormatter<>());
+                    addColumn("portfolioEntryResourcePlanAllocationStatusType", "portfolioEntryResourcePlanAllocationStatusType.status", "object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label", ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("portfolioEntryResourcePlanAllocationStatusType", (value, cellValue) -> views.html.modelsparts.display_allocation_status.render(value.portfolioEntryResourcePlanAllocationStatusType).body());
+
+                    addColumn("lastStatusTypeUpdateActor", "lastStatusTypeUpdateActor", "object.allocated_resource.last_update_status_type_actor.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastStatusTypeUpdateActor", (portfolioEntryResourcePlanAllocatedActorListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryResourcePlanAllocatedActorListView.lastStatusTypeUpdateActor).body());
+                    setColumnValueCssClass("lastStatusTypeUpdateActor", "rowlink-skip");
+
+                    addColumn("lastStatusTypeUpdateTime", "lastStatusTypeUpdateTime", "object.allocated_resource.last_update_status_type_time.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lastStatusTypeUpdateTime", new DateFormatter<>());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryResourcePlanAllocatedCompetency.class);
 
@@ -225,7 +248,11 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
 
     public PortfolioEntryPlanningPackage planningPackage;
 
-    public boolean isConfirmed;
+    public PortfolioEntryResourcePlanAllocationStatusType portfolioEntryResourcePlanAllocationStatusType;
+
+    public Actor lastStatusTypeUpdateActor;
+
+    public Date lastStatusTypeUpdateTime;
 
     public Boolean followPackageDates;
 
@@ -243,7 +270,9 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
         this.startDate = allocatedCompetency.startDate;
         this.endDate = allocatedCompetency.endDate;
         this.planningPackage = allocatedCompetency.portfolioEntryPlanningPackage;
-        this.isConfirmed = allocatedCompetency.isConfirmed;
+        this.portfolioEntryResourcePlanAllocationStatusType = allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType;
+        this.lastStatusTypeUpdateActor = allocatedCompetency.lastStatusTypeUpdateActor;
+        this.lastStatusTypeUpdateTime = allocatedCompetency.lastStatusTypeUpdateTime;
         this.followPackageDates = allocatedCompetency.followPackageDates;
 
         this.currency = allocatedCompetency.currency;

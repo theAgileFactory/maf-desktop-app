@@ -242,6 +242,7 @@ object.filter_configuration.name.error=Name ist ein Pflichtfeld
 object.filter_configuration.delete.confirmation=Diesen Filter löschen?
 object.filter_configuration.stored_filters=Gespeicherte Filter
 
+object.filter_configuration.action.clear=Leeren
 object.filter_configuration.action.reload=Nachladen
 object.filter_configuration.action.save=Speichern
 object.filter_configuration.action.save_as=Speichern als
@@ -649,6 +650,7 @@ permission.portfolio_entry_view_financial_info_as_portfolio_manager_permission.d
 permission.portfolio_entry_edit_financial_info_all_permission.description=Ändern und Löschen der Finanzdaten sämtlicher Initiativen.
 permission.portfolio_entry_edit_financial_info_as_manager_permission.description=Verantwortlicher kann Finanzdaten seiner Initiativen ändern und löschen.
 permission.portfolio_entry_edit_financial_info_as_portfolio_stakeholder_permission.description=Ändern und Löschen der Finanzdaten von Initiativen in denen der Benutzer mindesten für ein Portfolio eine Funktion inne hat (ausgenommen Finanzdaten).
+permission.portfolio_entry_confirm_allocations_as_manager_permission.description=Permission which allows the manager of an initiative to confirm allocation requests himself.
 permission.portfolio_entry_delete_all_permission.description=Kann alle Initiativen löschen.
 permission.portfolio_entry_review_request_all_permission.description=Anfragen einsehen und bearbeiten aller Initiativen.
 permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Anfragen einsehen und bearbeiten von Initiativen in denen der Benutzer mindesten für ein Portfolio verantwortlich ist.
@@ -728,6 +730,8 @@ preference.timesheet_hours_per_day.description=Erwartete Anzahl Stunden pro Tag.
 preference.timesheet_hours_per_day.name=Stunden pro Tag
 preference.package_status_on_going_fulfillment_percentage.name=Erfüllungsprozent wenn Paket "Im Gange"
 preference.package_status_on_going_fulfillment_percentage.description=Prozent des Paketwertes wenn der Status "Im Gange" ist (Packet gestartet wurde)
+preference.resources_week_days_allocation_preference.name=Zuweisung nur an Wochentagen (Montag bis Freitag)
+preference.resources_week_days_allocation_preference.description=Wenn aktiviert, wird das system die Zuweisungen nur an den Wochentagen verteilen.
 preference.api_authz_mode_preference.name=Authentifizierung
 preference.api_authz_mode_preference.description=API Authentifizierungmodus.\
 BizDock kann digitalen Signaturen benutzen oder etwas weniger sicher mit Anwendungsschlüssel authentifizieren
@@ -1147,6 +1151,7 @@ object.portfolio_entry.name.label=Name
 object.portfolio_entry.description.label=Beschreibung
 object.portfolio_entry.type.label=Typ
 object.portfolio_entry.manager.label=Verantwortlich
+object.portfolio_entry.manager_org_unit.label=Verantwortlich Organisationseinheit
 object.portfolio_entry.sponsoring_unit.label=Auftraggeber
 object.portfolio_entry.delivery_units.label=Interne Zulieferer
 object.portfolio_entry.portfolio.label=Portfolio
@@ -1156,6 +1161,7 @@ object.portfolio_entry.dependencies.label=Abhängigkeiten
 object.portfolio_entry.life_cycle_process.label=Lieferzyklus
 object.portfolio_entry.status.label=Status
 object.portfolio_entry.last_milestone.label=Zuletzt erreichter Meilenstein
+object.portfolio_entry.next_milestone.label=Nächste Meilenstein
 object.portfolio_entry.archived.label=Archiviert
 object.portfolio_entry.is_concept.label=Konzept
 object.portfolio_entry.stakeholder_types.label=Funktion
@@ -1173,6 +1179,7 @@ object.portfolio_entry.table.empty=Keine Initiativen eingetragen
 object.portfolio_entry.start_date.label=Startdatum
 object.portfolio_entry.end_date.label=Enddatum
 object.portfolio_entry.last_milestone_date.label=Letztes Meilensteindatum
+object.portfolio_entry.next_milestone_date.label=Nächste Meilensteindatum
 
 #----------------------
 # portfolio
@@ -1352,6 +1359,7 @@ object.life_cycle_milestone_instance.passed_date.label=Genehmigt
 object.life_cycle_milestone_instance.approver.label=Entscheidungsträger
 object.life_cycle_milestone_instance.gate_comments.label=Anmerkungen
 object.life_cycle_milestone_instance.gate_comments.placeholder=Kommentar
+object.life_cycle_milestone_instance.request_comments.label=Anfrage Anmerkungen
 object.life_cycle_milestone_instance.document.label=Beschrieb herunterladen
 object.life_cycle_milestone_instance.table.approval.empty=Es gibt keine Meilenstein Genehmigung
 
@@ -1362,6 +1370,7 @@ object.life_cycle_milestone_instance.table.approval.empty=Es gibt keine Meilenst
 object.planned_life_cycle_milestone_instance.planned_date.label=Geplantes Datum
 object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Bereit
 object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Datum hinzufügen
+object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label=Anstehenden Genehmigung
 
 #----------------------
 # lifeCycleMilestoneInstanceApprover
@@ -1492,10 +1501,12 @@ object.allocated_resource.date.period=von {0} bis {1}
 object.allocated_resource.start_date.label=Startdatum
 object.allocated_resource.start_date.invalid=Wenn Sie nur ein Datum eingeben möchten, bitte Enddatum eingeben.
 object.allocated_resource.end_date.label=Enddatum
-object.allocated_resource.end_date.invalid=Enddatum muss nach Startdatum liegen.
+object.allocated_resource.end_date.invalid=Das Enddatum sollte mach dem Startdatum liegen und muss mehr als das Wochenende abdecken
 object.allocated_resource.package.label=Planungspaket
 object.allocated_resource.follow_package_dates.label=Folgt Packetdatum
-object.allocated_resource.is_confirmed.label=Bestätigt
+object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label=Status
+object.allocated_resource.last_update_status_type_actor.label=Status aktualisiert
+object.allocated_resource.last_update_status_type_time.label=Status aktualisiert Datum
 object.allocated_resource.daily_rate.label=Tagessatz
 object.allocated_resource.daily_rate.help=Kosten pro Tag der zugewiesenen Resourcen.
 object.allocated_resource.forecast_days.label=Prognose (in Tagen)
@@ -1507,6 +1518,15 @@ object.allocated_resource.org_unit.table.empty=Keine Einträge
 object.allocated_resource.competency.table.empty=Keine Einträge
 object.allocated_resource.table.empty=Keine Einträge
 object.allocated_resource.monthly_allocated.label=Monatliche Zuwendung
+
+#----------------------
+# allocation status
+#----------------------
+
+object.allocated_resource.status_type.DRAFT.label=Entwurf
+object.allocated_resource.status_type.PENDING.label=Anstehend
+object.allocated_resource.status_type.CONFIRMED.label=Bestätigt
+object.allocated_resource.status_type.REFUSED.label=Abgelehnt
 
 #----------------------
 # deliverable
@@ -1678,6 +1698,7 @@ object.reporting.format.label=Format
 object.reporting.type.label=Typ
 object.reporting.is_active.label=Aktiv
 object.reporting.is_active.help=Falls der Bericht kein Häkchen enthält, steht dieser nicht zum Herunterladen bereit.
+object.reporting.default_format.label=Standardformat
 object.reporting.category.label=Kategorie
 object.reporting.principals.label=Anwender mit Leseberechtigung
 object.reporting.table.empty=Kein Bericht eingetragen
@@ -1989,6 +2010,10 @@ core.roadmap.simulator.capacity_forecast.available.label=Verfügbar
 core.roadmap.simulator.capacity_forecast.planned.label=Geplant
 core.roadmap.simulator.capacity_forecast.days.label=Arbeitsaufgabe
 core.roadmap.simulator.capacity_forecast.confirmed.label=Bestätigte
+core.roadmap.simulator.capacity_forecast.generic_confirmed.label=Bestätigte Organisationseinheiten
+core.roadmap.simulator.capacity_forecast.generic_not_confirmed.label=Unbestätigte Organisationseinheiten
+core.roadmap.simulator.capacity_forecast.nominative_confirmed.label=Bestätigte Ressourcen
+core.roadmap.simulator.capacity_forecast.nominative_not_confirmed.label=Unbestätigte Ressourcen
 
 #----------------------
 # search
@@ -2181,6 +2206,7 @@ core.process_transition_request.process_milestone_request.panel.form.vote_requir
 core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message=Bitte genehmigen Sie den Meilenstein Initiative von "{0}"
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title=Meilenstein akzeptiert
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message=Meilenstein Initiative von "{0}" wurde akzeptiert. Keine weitere Genehmigung nötig: Meilenstein ist genehmigt.
+core.process_transition_request.cancel_milestone_request.notification.message.success=Meilenstein Initiative gelöscht.
 
 #----------------------
 # portfolio
@@ -2425,6 +2451,7 @@ core.portfolio_entry_governance.milestone.view.status.rejected=Abgelehnt Aufsich
 core.portfolio_entry_governance.milestone.view.status.pending=Ausstehend Aufsichtsratsbeschluss
 core.portfolio_entry_governance.milestone.view.empty=Kein Details
 core.portfolio_entry_governance.milestone.view.panel.details.title=Details
+core.portfolio_entry_governance.milestone.view.panel.details.delete.confirmation.message=Aufsichtsratsbeschluss löschen ?
 core.portfolio_entry_governance.milestone.view.panel.approvers.title=Genehmiger
 core.portfolio_entry_governance.milestone.view.panel.budget.title=Budgetstatus am {0}
 core.portfolio_entry_governance.milestone.view.panel.resources.title=Ressourcenstatus am {0}
@@ -2571,6 +2598,9 @@ core.portfolio_entry_planning.resources.competency.title=Kompetenz Zuweisungsanf
 core.portfolio_entry_planning.resources.new.org_unit=Organisationseinheit
 core.portfolio_entry_planning.resources.new.competency=Kompetenz
 core.portfolio_entry_planning.resources.no_competency=Keine Kompetenz vorhanden
+
+#allocation status
+core.portfolio_entry_planning.resources.allocation.status.last_update.label=Aktualisiert:
 
 #manage allocated actor
 core.portfolio_entry_planning.allocated_actor.manage.title=Mitarbeiter Zuweisungen bearbeiten
@@ -2788,6 +2818,11 @@ core.org_unit.allocation.details.actors.portfolio_entry.title=Initiativen Mitarb
 core.org_unit.allocation.details.actors.activity.title=Aktivitäten Mitarbeiterzuweisungen
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Bestätigen
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=Die Zuweisungen haben erfolgreich bestätigt.
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse=Ablehnen
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful=Die Zuweisungen haben erfolgreich abgelehnt.
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit=Einreichen
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful=Die Zuweisungen haben eingereicht.
+core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful=Die Zuweisungen haben gelöscht.
 
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Verwalten einer zugewiesenen Tätigkeit für einen Mitarbeiter

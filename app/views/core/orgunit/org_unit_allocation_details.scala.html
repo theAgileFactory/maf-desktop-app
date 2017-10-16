@@ -17,12 +17,12 @@
  *@
 @(
     orgUnit: models.pmo.OrgUnit,
-    portfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView], 
+    portfolioEntryTable: framework.utils.Table[utils.table.OrgUnitAllocationRequestListView],
     portfolioEntryPagination: framework.utils.Pagination[models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit],
-	portfolioEntryFilter: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView], 
-    actorPortfolioEntryTable: framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
+	portfolioEntryFilter: framework.utils.FilterConfig[utils.table.OrgUnitAllocationRequestListView],
+    actorPortfolioEntryTable: framework.utils.Table[utils.table.OrgUnitAllocatedActorListView],
     actorPortfolioEntryPagination: framework.utils.Pagination[models.finance.PortfolioEntryResourcePlanAllocatedActor],
-    actorPortfolioEntryFilter: framework.utils.FilterConfig[utils.table.PortfolioEntryResourcePlanAllocatedActorListView],
+    actorPortfolioEntryFilter: framework.utils.FilterConfig[utils.table.OrgUnitAllocatedActorListView],
     actorActivityTable: framework.utils.Table[utils.table.TimesheetActivityAllocatedActorListView],
     actorActivityPagination: framework.utils.Pagination[models.timesheet.TimesheetActivityAllocatedActor],
     actorActivityFilter: framework.utils.FilterConfig[utils.table.TimesheetActivityAllocatedActorListView]
@@ -39,7 +39,7 @@
             @parts.Msg("core.org_unit.allocation.details.requests.title")
         </div>
         <div class="panel-body">
-			<div id="confirm-result"></div>
+            <div id="orgunit-result"></div>
 				@parts.table.filtered_tableview(
 					portfolioEntryTable, 
 					portfolioEntryPagination, 
@@ -55,7 +55,7 @@
             @parts.Msg("core.org_unit.allocation.details.actors.portfolio_entry.title")
         </div>
         <div class="panel-body">
-            <div id="confirm-result"></div>
+            <div id="actor-result"></div>
             @parts.table.filtered_tableview(
                 actorPortfolioEntryTable, 
                 actorPortfolioEntryPagination, 
@@ -85,7 +85,4 @@
             )
         </div>
     </div>
-    
-
-
 }

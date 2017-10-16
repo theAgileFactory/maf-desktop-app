@@ -442,19 +442,6 @@ public class AuditableController extends Controller {
      --------------------------------------------------------------------------------*/
 
     /**
-     * Return a JSON representation of the picker values.
-     */
-    public Result singleValuePickerObjectClassValues() {
-        PickerHandler<String> singleValuePickerObjectClass = new PickerHandler<String>(this.getAttachmentManagerPlugin(), String.class, new Handle<String>() {
-            @Override
-            public ISelectableValueHolderCollection<String> getInitialValueHolders(List<String> values, Map<String, String> context) {
-                return AuditableController.getSelectableValuesListForObjectClass(context.get("currentObjectClass"), getAuditLoggerService());
-            }
-        });
-        return singleValuePickerObjectClass.handle(request());
-    }
-
-    /**
      * Return the values which can be "selected" in the picker for the field
      * objectClass.
      * 
@@ -463,23 +450,30 @@ public class AuditableController extends Controller {
      * @param auditLoggerService
      *            the audit logger service
      */
-    private static ISelectableValueHolderCollection<String> getSelectableValuesListForObjectClass(String currentObjectClass,
+    public static ISelectableValueHolderCollection<String> getSelectableValuesListForObjectClass(String currentObjectClass,
             IAuditLoggerService auditLoggerService) {
+
         // Get all the selectable entities from the configuration
         ISelectableValueHolderCollection<String> selectableObjects = new DefaultSelectableValueHolderCollection<String>();
-        for (DataType dataType : DataType.getAllAuditableDataTypes()) {
-            selectableObjects.add(new DefaultSelectableValueHolder<String>(dataType.getDataTypeClassName(), Msg.get(dataType.getLabel())));
-        }
-        // Remove the previously selected entities
-        List<Auditable> auditables = auditLoggerService.getAllActiveAuditable();
-        for (Auditable auditable : auditables) {
-            selectableObjects.remove(auditable.objectClass);
-        }
+
+        DataType.getAllAuditableDataTypes()
+                .stream()
+                .filter(
+                        // Filter out the previously selected entities
+                        dataType -> auditLoggerService.getAllActiveAuditable()
+                                .stream()
+                                .map(auditable -> auditable.objectClass)
+                                .anyMatch(auditable -> auditable.equals(dataType.getDataTypeClassName()))
+                )
+                .map(dataType -> new DefaultSelectableValueHolder<>(dataType.getDataTypeClassName(), Msg.get(dataType.getLabel())))
+                .forEach(selectableObjects::add);
+
         // Add the current value if any (so that it could be displayed and
         // selected again)
-        if (!StringUtils.isBlank(currentObjectClass)) {
+        if (currentObjectClass != null && !StringUtils.isBlank(currentObjectClass)) {
+            DataType dataTypeFromClassName = DataType.getDataTypeFromClassName(currentObjectClass);
             selectableObjects.add(
-                    new DefaultSelectableValueHolder<String>(currentObjectClass, Msg.get(DataType.getDataTypeFromClassName(currentObjectClass).getLabel())));
+                    new DefaultSelectableValueHolder<>(currentObjectClass, Msg.get(dataTypeFromClassName != null ? dataTypeFromClassName.getLabel() : "")));
         }
         return selectableObjects;
     }

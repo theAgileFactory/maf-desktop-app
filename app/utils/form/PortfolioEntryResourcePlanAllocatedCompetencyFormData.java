@@ -17,20 +17,18 @@
  */
 package utils.form;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import dao.finance.CurrencyDAO;
+import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
-import play.Logger;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
+import play.data.validation.Constraints;
 import play.data.validation.Constraints.Required;
-import play.data.validation.ValidationError;
-import play.i18n.Messages;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
 
 /**
  * A portfolio entry resource plan allocated competency form data is used to
@@ -39,72 +37,25 @@ import play.i18n.Messages;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
-
-    // the portfolioEntry id
-    public Long id;
-
-    public Long allocatedCompetencyId;
+public class PortfolioEntryResourcePlanAllocatedCompetencyFormData extends ResourceAllocationFormData {
 
     @Required
     public Long competency;
 
-    public String startDate;
-
-    public String endDate;
-
-    public Long portfolioEntryPlanningPackage;
-
-    public boolean isConfirmed;
-
-    public boolean followPackageDates;
-
-    @Required
+    @Constraints.Required
     public String currencyCode;
 
-    @Required
+    @Constraints.Required
     public BigDecimal currencyRate;
 
-    @Required
-    public BigDecimal days;
-
-    @Required
+    @Constraints.Required
     public BigDecimal dailyRate;
-
-    /**
-     * Validate the dates.
-     */
-    public List<ValidationError> validate() {
-
-        List<ValidationError> errors = new ArrayList<>();
-
-        if (this.startDate != null && this.endDate != null) {
-
-            try {
-
-                if (!this.startDate.equals("") && this.endDate.equals("")) {
-                    // the start date cannot be filled alone
-                    errors.add(new ValidationError("startDate", Messages.get("object.allocated_resource.start_date.invalid")));
-                }
-
-                if (!this.startDate.equals("") && !this.endDate.equals("")
-                        && Utilities.getDateFormat(null).parse(this.startDate).after(Utilities.getDateFormat(null).parse(this.endDate))) {
-                    // the end date should be after the start date
-                    errors.add(new ValidationError("endDate", Messages.get("object.allocated_resource.end_date.invalid")));
-                }
-
-            } catch (Exception e) {
-                Logger.warn("impossible to parse the allocation dates when testing the formats");
-            }
-        }
-
-        return errors.isEmpty() ? null : errors;
-    }
 
     /**
      * Default constructor.
      */
     public PortfolioEntryResourcePlanAllocatedCompetencyFormData() {
+        super();
     }
 
     /**
@@ -116,15 +67,16 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
     public PortfolioEntryResourcePlanAllocatedCompetencyFormData(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency) {
 
         this.id = allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
-        this.allocatedCompetencyId = allocatedCompetency.id;
+        this.allocationId = allocatedCompetency.id;
 
         this.competency = allocatedCompetency.competency.id;
         this.startDate = allocatedCompetency.startDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.startDate) : null;
         this.endDate = allocatedCompetency.endDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id
                 : null;
-
-        this.isConfirmed = allocatedCompetency.isConfirmed;
+        this.allocationStatus = allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType.status.name();
+        this.lastStatusTypeUpdateActor = allocatedCompetency.lastStatusTypeUpdateActor != null ? allocatedCompetency.lastStatusTypeUpdateActor.id : 0L;
+        this.lastStatusTypeUpdateTime = allocatedCompetency.lastStatusTypeUpdateTime != null ? Utilities.getDateFormat(null).format(allocatedCompetency.lastStatusTypeUpdateTime) : null;
 
         this.currencyCode = allocatedCompetency.currency != null ? allocatedCompetency.currency.code : null;
         this.currencyRate = allocatedCompetency.currencyRate;
@@ -151,7 +103,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
 
         allocatedCompetency.followPackageDates = allocatedCompetency.portfolioEntryPlanningPackage != null ? this.followPackageDates : null;
 
-        if (allocatedCompetency.followPackageDates == null || allocatedCompetency.followPackageDates == false) {
+        if (allocatedCompetency.followPackageDates == null || !allocatedCompetency.followPackageDates) {
             try {
                 allocatedCompetency.startDate = Utilities.getDateFormat(null).parse(this.startDate);
             } catch (ParseException e) {
@@ -168,7 +120,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData {
             allocatedCompetency.endDate = allocatedCompetency.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedCompetency.isConfirmed = this.isConfirmed;
+        allocatedCompetency.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
 
         allocatedCompetency.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedCompetency.currencyRate = this.currencyRate;

@@ -17,26 +17,15 @@
  */
 package controllers.core;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.tuple.Pair;
-
+import be.objectify.deadbolt.java.actions.Dynamic;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-
-import be.objectify.deadbolt.java.actions.Dynamic;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.finance.PortfolioEntryResourcePlanDAO;
@@ -45,27 +34,21 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
-import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.custom_attribute.ICustomAttributeManagerService;
 import framework.services.session.IUserSessionManagerPlugin;
-import framework.utils.FilterConfig;
-import framework.utils.IColumnFormatter;
-import framework.utils.JqueryGantt;
+import framework.utils.*;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.SideBar;
-import framework.utils.Table;
-import framework.utils.Utilities;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.PortfolioEntry;
 import models.timesheet.TimesheetActivityAllocatedActor;
+import org.apache.commons.lang3.tuple.Pair;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -83,12 +66,11 @@ import utils.form.TimesheetActivityAllocatedActorFormData;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
-import utils.table.ActorListView;
-import utils.table.OrgUnitListView;
-import utils.table.PortfolioEntryListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedActorListView;
-import utils.table.PortfolioEntryResourcePlanAllocatedOrgUnitListView;
-import utils.table.TimesheetActivityAllocatedActorListView;
+import utils.table.*;
+
+import javax.inject.Inject;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The controller which displays / allows to edit an org unit.
@@ -319,17 +301,19 @@ public class OrgUnitController extends Controller {
 
         // prepare the data (to order them)
         SortableCollection<DateSortableObject> sortableCollection = new SortableCollection<>();
-        for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByOrgUnitAndActive(id,
-                true)) {
-            if (allocatedActor.endDate != null) {
-                sortableCollection.addObject(new DateSortableObject(allocatedActor.endDate, allocatedActor));
-            }
-        }
-        for (TimesheetActivityAllocatedActor allocatedActivity : TimesheetDao.getTimesheetActivityAllocatedActorAsListByOrgUnit(id, true)) {
-            if (allocatedActivity.endDate != null) {
-                sortableCollection.addObject(new DateSortableObject(allocatedActivity.endDate, allocatedActivity));
-            }
-        }
+        PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByOrgUnitAndActive(id, true, true)
+                .stream()
+                .filter(allocatedActor -> allocatedActor.endDate != null)
+                .forEach(allocatedActor
+                        -> sortableCollection.addObject(new DateSortableObject(allocatedActor.endDate, allocatedActor))
+                );
+
+        TimesheetDao.getTimesheetActivityAllocatedActorAsListByOrgUnit(id, true)
+                .stream()
+                .filter(allocatedActivity -> allocatedActivity.endDate != null)
+                .forEach(allocatedActivity
+                        -> sortableCollection.addObject(new DateSortableObject(allocatedActivity.endDate, allocatedActivity))
+                );
 
         // construct the gantt
 
@@ -370,11 +354,7 @@ public class OrgUnitController extends Controller {
 
                 }
 
-                if (allocatedActor.isConfirmed) {
-                    cssClass += "success";
-                } else {
-                    cssClass += "warning";
-                }
+                cssClass += allocatedActor.portfolioEntryResourcePlanAllocationStatusType.getCssClass();
 
                 SourceDataValue dataValue = new SourceDataValue(controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntry.id).url(),
                         null, null, null, null);
@@ -462,13 +442,13 @@ public class OrgUnitController extends Controller {
          * Filter
          * */
 
-        FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> orgUnitsPortfolioEntryFilter =
-        		this.getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.getCurrent(uid, request());
+        FilterConfig<OrgUnitAllocationRequestListView> orgUnitsPortfolioEntryFilter =
+                this.getTableProvider().get().orgUnitAllocationRequest.filterConfig.getCurrent(uid, request());
 
         /**
          * Table 
          * */
-        Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> orgUnitsPortfolioEntryTable=
+        Pair<Table<OrgUnitAllocationRequestListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> orgUnitsPortfolioEntryTable=
         		getOrgUnitPEAllocTable(id, orgUnitsPortfolioEntryFilter, this.getSecurityService());
   
         // -----------------------------------------------------------------------------------------------------------------------
@@ -477,13 +457,13 @@ public class OrgUnitController extends Controller {
          * Filter
          * */
 
-        FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> actorsPortfolioEntryFilter;
-        actorsPortfolioEntryFilter = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.filterConfig.getCurrent(uid, request());
+        FilterConfig<OrgUnitAllocatedActorListView> actorsPortfolioEntryFilter;
+        actorsPortfolioEntryFilter = this.getTableProvider().get().orgUnitAllocatedActor.filterConfig.getCurrent(uid, request());
 
         /**
          * Table 
          * */
-        Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> actorsPortfolioEntryTable;
+        Pair<Table<OrgUnitAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> actorsPortfolioEntryTable;
         actorsPortfolioEntryTable = getActorsPEAllocTable(id, actorsPortfolioEntryFilter, this.getSecurityService());
 
         // -----------------------------------------------------------------------------------------------------------------------
@@ -502,9 +482,18 @@ public class OrgUnitController extends Controller {
         
      // -----------------------------------------------------------------------------------------------------------------------
 
-        return ok(views.html.core.orgunit.org_unit_allocation_details.render(orgUnit, orgUnitsPortfolioEntryTable.getLeft(), orgUnitsPortfolioEntryTable.getRight(), orgUnitsPortfolioEntryFilter,
-                actorsPortfolioEntryTable.getLeft(), actorsPortfolioEntryTable.getRight(), actorsPortfolioEntryFilter, actorsActivityTable.getLeft(),
-                actorsActivityTable.getRight(), actorsActivityFilter));
+        return ok(views.html.core.orgunit.org_unit_allocation_details.render(
+                orgUnit,
+                orgUnitsPortfolioEntryTable.getLeft(),
+                orgUnitsPortfolioEntryTable.getRight(),
+                orgUnitsPortfolioEntryFilter,
+                actorsPortfolioEntryTable.getLeft(),
+                actorsPortfolioEntryTable.getRight(),
+                actorsPortfolioEntryFilter,
+                actorsActivityTable.getLeft(),
+                actorsActivityTable.getRight(),
+                actorsActivityFilter
+        ));
         
     }
 
@@ -522,15 +511,15 @@ public class OrgUnitController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig = this.getTableProvider()
-                    .get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<OrgUnitAllocationRequestListView> filterConfig = this.getTableProvider()
+                    .get().orgUnitAllocationRequest.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
             } else {
 
                 // get the table
-                Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> t = getOrgUnitPEAllocTable(
+                Pair<Table<OrgUnitAllocationRequestListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> t = getOrgUnitPEAllocTable(
                         id, filterConfig, this.getSecurityService());
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
@@ -557,15 +546,15 @@ public class OrgUnitController extends Controller {
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
-            FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig = this.getTableProvider()
-                    .get().portfolioEntryResourcePlanAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<OrgUnitAllocatedActorListView> filterConfig = this.getTableProvider()
+                    .get().orgUnitAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
 
             if (filterConfig == null) {
                 return ok(views.html.framework_views.parts.table.dynamic_tableview_no_more_compatible.render());
             } else {
 
                 // get the table
-                Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getActorsPEAllocTable(
+                Pair<Table<OrgUnitAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> t = getActorsPEAllocTable(
                         id, filterConfig, this.getSecurityService());
 
                 return ok(views.html.framework_views.parts.table.dynamic_tableview.render(t.getLeft(), t.getRight()));
@@ -585,7 +574,7 @@ public class OrgUnitController extends Controller {
      * @param id
      *            the org unit id
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result getDeliveryUnitAllocationIds(Long id) {
 
         try {
@@ -594,15 +583,12 @@ public class OrgUnitController extends Controller {
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
             // fill the filter config
-            FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig = this.getTableProvider()
-                    .get().portfolioEntryResourcePlanAllocatedOrgUnit.filterConfig.persistCurrentInDefault(uid, request());
+            FilterConfig<OrgUnitAllocationRequestListView> filterConfig = this.getTableProvider()
+                    .get().orgUnitAllocationRequest.filterConfig.persistCurrentInDefault(uid, request());
 
-            ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(id, true)); 
+            ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(id, true, true));
 
-            List<String> ids = new ArrayList<>();
-            for (PortfolioEntryResourcePlanAllocatedOrgUnit list : expressionList.findList()) {
-                ids.add(String.valueOf(list.id));
-            }
+            List<String> ids = expressionList.findList().stream().map(list -> String.valueOf(list.id)).collect(Collectors.toList());
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.valueToTree(ids);
@@ -621,7 +607,7 @@ public class OrgUnitController extends Controller {
      * @param id
      *            the org unit id
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result getAllActorsPortfolioEntryAllocationIds(Long id) {
 
         try {
@@ -634,7 +620,7 @@ public class OrgUnitController extends Controller {
                     .get().portfolioEntryResourcePlanAllocatedActor.filterConfig.persistCurrentInDefault(uid, request());
 
             ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig
-                    .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByOrgUnitAndActive(id, true));
+                    .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByOrgUnitAndActive(id, true, true));
 
             List<String> ids = new ArrayList<>();
             for (PortfolioEntryResourcePlanAllocatedActor allocatedActor : expressionList.findList()) {
@@ -650,26 +636,18 @@ public class OrgUnitController extends Controller {
             return internalServerError();
         }
     }
-    
+
     /**
      * Confirm the selected actors portfolio entry allocations.
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result confirmDeliveryUnitsAllocations() {
 
         try {
 
             List<String> ids = FilterConfig.getIdsFromRequest(request());
 
-            for (String idString : ids) {
-
-                Long id = Long.parseLong(idString);
-
-                PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitById(id);
-                allocatedOrgUnit.isConfirmed = true;
-                allocatedOrgUnit.update();
-
-            }
+            updateDeliveryUnitsAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
 
             return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful")
                     + "</div>");
@@ -679,26 +657,78 @@ public class OrgUnitController extends Controller {
         }
     }
 
+    /**
+     * Cancel the selected actors portfolio entry allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result cancelDeliveryUnitsAllocations() {
+
+        try {
+
+            List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+            updateDeliveryUnitsAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+
+            return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful")
+                    + "</div>");
+
+        } catch (Exception e) {
+            return internalServerError();
+        }
+    }
+
+    /**
+     * Refuse the selected delivery units allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result refuseDeliveryUnitsAllocations() {
+
+        List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+        updateDeliveryUnitsAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.REFUSED);
+
+        return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful")
+                + "</div>");
+    }
+
+    /**
+     * Refuse the selected delivery units allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result submitDeliveryUnitsAllocations() {
+
+        List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+        updateDeliveryUnitsAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.PENDING);
+
+        return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful")
+                + "</div>");
+    }
+
+    private void updateDeliveryUnitsAllocationsStatus(List<String> ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus status) {
+        if (ids != null) {
+            ids.forEach(idAsString -> {
+                Long id = Long.parseLong(idAsString);
+                PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit = PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitById(id);
+                allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(status);
+                allocatedOrgUnit.lastStatusTypeUpdateTime = new Date();
+                allocatedOrgUnit.lastStatusTypeUpdateActor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
+                allocatedOrgUnit.update();
+            });
+        }
+    }
 
     /**
      * Confirm the selected actors portfolio entry allocations.
      */
-    @Restrict({ @Group(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION) })
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
     public Result confirmActorsPortfolioEntryAllocations() {
 
         try {
 
             List<String> ids = FilterConfig.getIdsFromRequest(request());
 
-            for (String idString : ids) {
-
-                Long id = Long.parseLong(idString);
-
-                PortfolioEntryResourcePlanAllocatedActor allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(id);
-                allocatedActor.isConfirmed = true;
-                allocatedActor.update();
-
-            }
+            updateActorsPortfolioEntryAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.CONFIRMED);
 
             return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful")
                     + "</div>");
@@ -709,8 +739,75 @@ public class OrgUnitController extends Controller {
     }
 
     /**
+     * Cancel the selected actors portfolio entry allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result cancelActorsPortfolioEntryAllocations() {
+
+        try {
+
+            List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+            updateActorsPortfolioEntryAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+
+            return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful")
+                    + "</div>");
+
+        } catch (Exception e) {
+            return internalServerError();
+        }
+    }
+
+    /**
+     * Refuse the selected actors portfolio entry allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result refuseActorsPortfolioEntryAllocations() {
+
+        List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+        updateActorsPortfolioEntryAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.REFUSED);
+
+        return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful")
+                + "</div>");
+    }
+
+    /**
+     * Submit the selected actors portfolio entry allocations.
+     */
+    @Dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION)
+    public Result submitActorsPortfolioEntryAllocations() {
+
+        List<String> ids = FilterConfig.getIdsFromRequest(request());
+
+        updateActorsPortfolioEntryAllocationsStatus(ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.PENDING);
+
+        return ok("<div class=\"alert alert-success\">" + Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful")
+                + "</div>");
+    }
+
+    /**
+     * Update the given actors portfolio entry allocations status
+     *
+     * @param ids the list of allocations ids
+     * @param status the status to update
+     */
+    private void updateActorsPortfolioEntryAllocationsStatus(List<String> ids, PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus status) {
+        if (ids != null) {
+            ids.forEach(idAsString -> {
+                Long id = Long.parseLong(idAsString);
+                PortfolioEntryResourcePlanAllocatedActor allocatedActor = PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorById(id);
+                allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(status);
+                allocatedActor.lastStatusTypeUpdateTime = new Date();
+                allocatedActor.lastStatusTypeUpdateActor = ActorDao.getActorByUid(getUserSessionManagerPlugin().getUserSessionId(ctx()));
+                allocatedActor.update();
+            });
+        }
+    }
+
+    /**
      * Filter the activity allocations for actors.
-     * 
+     *
      * @param id
      *            the actor id
      */
@@ -847,55 +944,48 @@ public class OrgUnitController extends Controller {
      * @param securityService
      *            the security service
      */
-    private Pair<Table<PortfolioEntryResourcePlanAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getActorsPEAllocTable(
-            Long orgUnitId, FilterConfig<PortfolioEntryResourcePlanAllocatedActorListView> filterConfig, ISecurityService securityService) {
+    private Pair<Table<OrgUnitAllocatedActorListView>, Pagination<PortfolioEntryResourcePlanAllocatedActor>> getActorsPEAllocTable(
+            Long orgUnitId, FilterConfig<OrgUnitAllocatedActorListView> filterConfig, ISecurityService securityService) {
 
         ExpressionList<PortfolioEntryResourcePlanAllocatedActor> expressionList = filterConfig
-                .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByOrgUnitAndActive(orgUnitId, true));
+                .updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsExprByOrgUnitAndActive(orgUnitId, true, true));
         filterConfig.updateWithSortExpression(expressionList);
 
-        Pagination<PortfolioEntryResourcePlanAllocatedActor> pagination = new Pagination<PortfolioEntryResourcePlanAllocatedActor>(
+        Pagination<PortfolioEntryResourcePlanAllocatedActor> pagination = new Pagination<>(
                 this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-        List<PortfolioEntryResourcePlanAllocatedActorListView> listView = new ArrayList<PortfolioEntryResourcePlanAllocatedActorListView>();
-        for (PortfolioEntryResourcePlanAllocatedActor portfolioEntryResourcePlanAllocatedActor : pagination.getListOfObjects()) {
-            listView.add(new PortfolioEntryResourcePlanAllocatedActorListView(portfolioEntryResourcePlanAllocatedActor));
-        }
+        List<OrgUnitAllocatedActorListView> listView = pagination.getListOfObjects().stream().map(OrgUnitAllocatedActorListView::new).collect(Collectors.toList());
 
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
-        columnsToHide.add("editActionLink");
-        columnsToHide.add("removeActionLink");
         columnsToHide.add("currency");
         columnsToHide.add("dailyRate");
         columnsToHide.add("forecastDays");
         columnsToHide.add("forecastDailyRate");
 
-        Table<PortfolioEntryResourcePlanAllocatedActorListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedActor.templateTable
+        Table<OrgUnitAllocatedActorListView> table = this.getTableProvider().get().orgUnitAllocatedActor.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
-        try {
+        if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
 
-            if (securityService.restrict(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)) {
+            table.addAjaxRowAction(
+                    Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
+                    routes.OrgUnitController.confirmActorsPortfolioEntryAllocations().url(),
+                    "actor-result"
+            );
 
-                table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
-                        controllers.core.routes.OrgUnitController.confirmActorsPortfolioEntryAllocations().url(), "confirm-result");
+            table.addAjaxRowAction(
+                    Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse"),
+                    routes.OrgUnitController.refuseActorsPortfolioEntryAllocations().url(),
+                    "actor-result"
+            );
 
-                table.setAllIdsUrl(controllers.core.routes.OrgUnitController.getAllActorsPortfolioEntryAllocationIds(orgUnitId).url());
+            table.setAllIdsUrl(routes.OrgUnitController.getAllActorsPortfolioEntryAllocationIds(orgUnitId).url());
 
-            }
-
-        } catch (AccountManagementException e) {
-            Logger.error("OrgUnit / Allocated actors for PE / Error when compute restric: the actions are not added", e);
         }
 
-        table.setLineAction(new IColumnFormatter<PortfolioEntryResourcePlanAllocatedActorListView>() {
-            @Override
-            public String apply(PortfolioEntryResourcePlanAllocatedActorListView portfolioEntryResourcePlanAllocatedActorListView, Object value) {
-                return controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntryId)
-                        .url();
-            }
-        });
+        table.setLineAction((portfolioEntryResourcePlanAllocatedActorListView, value) -> routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedActorListView.portfolioEntry.id)
+                .url());
 
         return Pair.of(table, pagination);
 
@@ -932,38 +1022,29 @@ public class OrgUnitController extends Controller {
         Table<TimesheetActivityAllocatedActorListView> table = this.getTableProvider().get().timesheetActivityAllocatedActor.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
-        table.setLineAction(new IColumnFormatter<TimesheetActivityAllocatedActorListView>() {
-            @Override
-            public String apply(TimesheetActivityAllocatedActorListView timesheetActivityAllocatedActorListView, Object value) {
-                return controllers.core.routes.ActorController.allocationDetails(timesheetActivityAllocatedActorListView.actor.id, 0, 0, false).url();
-            }
-        });
+        table.setLineAction((timesheetActivityAllocatedActorListView, value) -> routes.ActorController.allocationDetails(timesheetActivityAllocatedActorListView.actor.id, 0, 0, false).url());
 
         return Pair.of(table, pagination);
 
     }
 
-    private Pair<Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> getOrgUnitPEAllocTable(
-            Long orgUnitId, FilterConfig<PortfolioEntryResourcePlanAllocatedOrgUnitListView> filterConfig, ISecurityService securityService) {
+    private Pair<Table<OrgUnitAllocationRequestListView>, Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>> getOrgUnitPEAllocTable(
+            Long orgUnitId, FilterConfig<OrgUnitAllocationRequestListView> filterConfig, ISecurityService securityService) {
 
-    	ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, true));
-    	expressionList = expressionList.setOrderBy("").having();
+    	ExpressionList<PortfolioEntryResourcePlanAllocatedOrgUnit> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsExprByOrgUnit(orgUnitId, true, true));
+
+        // Filter out draft requests
+        expressionList = expressionList.setOrderBy("").having();
     	
     	filterConfig.updateWithSortExpression(expressionList);
-        Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> pagination = new Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit>(
+        Pagination<PortfolioEntryResourcePlanAllocatedOrgUnit> pagination = new Pagination<>(
                 this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-        List<PortfolioEntryResourcePlanAllocatedOrgUnitListView> listView = new ArrayList<PortfolioEntryResourcePlanAllocatedOrgUnitListView>();
-        for (PortfolioEntryResourcePlanAllocatedOrgUnit portfolioEntryResourcePlanAllocatedOrgUnit : pagination.getListOfObjects()) {
-            listView.add(new PortfolioEntryResourcePlanAllocatedOrgUnitListView(portfolioEntryResourcePlanAllocatedOrgUnit));
-        }
+        List<OrgUnitAllocationRequestListView> listView = pagination.getListOfObjects().stream().map(OrgUnitAllocationRequestListView::new).collect(Collectors.toList());
 
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
-        columnsToHide.add("editActionLink");
-        columnsToHide.add("removeActionLink");
         columnsToHide.add("followPackageDates");
-        columnsToHide.add("orgUnit");
         if (!getBudgetTrackingService().isActive()) {
             columnsToHide.add("currency");
             columnsToHide.add("dailyRate");
@@ -971,30 +1052,24 @@ public class OrgUnitController extends Controller {
             columnsToHide.add("forecastDailyRate");
         }
 
-        Table<PortfolioEntryResourcePlanAllocatedOrgUnitListView> table = this.getTableProvider().get().portfolioEntryResourcePlanAllocatedOrgUnit.templateTable
+        Table<OrgUnitAllocationRequestListView> table = this.getTableProvider().get().orgUnitAllocationRequest.templateTable
                 .fillForFilterConfig(listView, columnsToHide);
 
-        try {
+        if (securityService.dynamic(IMafConstants.ORG_UNIT_VIEW_DYNAMIC_PERMISSION, "")) {
 
-            if (securityService.restrict(IMafConstants.ORG_UNIT_EDIT_ALL_PERMISSION)) {
+            table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
+                    routes.OrgUnitController.confirmDeliveryUnitsAllocations().url(), "orgunit-result");
 
-                table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.confirm"),
-                        controllers.core.routes.OrgUnitController.confirmDeliveryUnitsAllocations().url(), "confirm-result");
+            table.addAjaxRowAction(Msg.get("core.org_unit.allocation.details.actors.portfolio_entry.action.refuse"),
+                    routes.OrgUnitController.refuseDeliveryUnitsAllocations().url(), "orgunit-result");
 
-                table.setAllIdsUrl(controllers.core.routes.OrgUnitController.getDeliveryUnitAllocationIds(orgUnitId).url());
-            }
-
-        } catch (AccountManagementException e) {
-            Logger.error("OrgUnit / Allocated actors for PE / Error when compute restric: the actions are not added", e);
+            table.setAllIdsUrl(routes.OrgUnitController.getDeliveryUnitAllocationIds(orgUnitId).url());
         }
 
-        table.setLineAction(new IColumnFormatter<PortfolioEntryResourcePlanAllocatedOrgUnitListView>() {
-            @Override
-            public String apply(PortfolioEntryResourcePlanAllocatedOrgUnitListView portfolioEntryResourcePlanAllocatedOrgUnitListView, Object value) {
-                return controllers.core.routes.PortfolioEntryPlanningController.resources(portfolioEntryResourcePlanAllocatedOrgUnitListView.portfolioEntryId)
-                        .url();
-            }
-        });
+        table.setLineAction(
+                (orgUnitAllocationRequestListView, value)
+                    -> controllers.core.routes.PortfolioEntryPlanningController.resources(orgUnitAllocationRequestListView.portfolioEntryId).url()
+        );
 
         return Pair.of(table, pagination);
 

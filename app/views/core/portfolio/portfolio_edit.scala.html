@@ -72,10 +72,11 @@
                         
                         @parts.dropdownlist(portfolioForm("portfolioType"), parts.Msg.asString("object.portfolio.type.label"), portfolioTypes)
                         
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             portfolioForm("manager"), 
                             parts.Msg.asString("object.portfolio.manager.label"),
-                            controllers.routes.PickerController.manager().url
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

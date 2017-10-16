@@ -34,6 +34,10 @@
     models.framework_models.common.CustomAttributeDefinition.hasCustomAttributes(classOf[models.finance.PortfolioEntryResourcePlanAllocatedActor])
 }
 
+@allocationStatus=@{
+    dao.finance.PortfolioEntryResourcePlanDAO.getAllocationStatusByName(allocatedActorForm("allocationStatus").value)
+}
+
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -64,15 +68,16 @@
                         <input type="hidden" name="id" value="@portfolioEntry.id"/>
         
                         <input type="hidden" name="allocatedOrgUnitId" value="@allocatedActorForm("allocatedOrgUnitId").value"/>
-        
-                        @parts.checkbox(
-                            allocatedActorForm("isConfirmed"), 
-                            parts.Msg.asString("object.allocated_resource.is_confirmed.label")
-                        )
-                        
+
+                        <div class="form-group">
+                            <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
+                            <input type="hidden" name="allocationStatus" value="@allocatedActorForm("allocationStatus").value" />
+                            @display_allocation_status(allocationStatus)
+                        </div>
+
                         @parts.dropdownlist(
-                            allocatedActorForm("actor"), 
-                            parts.Msg.asString("object.allocated_resource.actor.label"), 
+                            allocatedActorForm("actor"),
+                            parts.Msg.asString("object.allocated_resource.actor.label"),
                             dao.pmo.ActorDao.getActorActiveAsVHByOrgUnit(orgUnit.id),
                             null,
                             false
@@ -84,11 +89,11 @@
                             dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id)
                         )
 
-                        @parts.singlevalue_picker(
+                        @parts.dropdownlist(
                             allocatedActorForm("portfolioEntryPlanningPackage"),
                             parts.Msg.asString("object.allocated_resource.package.label"),
-                            controllers.routes.PickerController.planningPackageOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString, "displayExpenditureType" -> _budgetTrackingService.isActive().toString)
+                            dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
 
                         @if(_budgetTrackingService.isActive()) {
@@ -194,9 +199,18 @@
 
                         currentYear = new Date().getFullYear();
                         $('#year-picker').html(currentYear);
-                        showOrCreateMonthAllocation(currentYear);
-                        $('#year-picker-block').hide();
-                        $('#monthAllocations').hide();
+                        $('#monthAllocations').children().hide();
+                        showOrCreateMonthAllocation(currentYear, '@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}');
+
+                        if (!$('#@allocatedActorForm("monthlyAllocated").id').prop('checked')) {
+                            $('#year-picker-block').hide();
+                            $('#monthAllocations').hide();
+                        } else {
+                            $('#@if(_budgetTrackingService.isActive) {@allocatedActorForm("forecastDays").id} else {@allocatedActorForm("days").id}').prop('readonly', true);
+                            $('#@allocatedActorForm("followPackageDates").id').parent().parent().hide();
+                            $('#@allocatedActorForm("startDate").id').parent().parent().hide();
+                            $('#@allocatedActorForm("endDate").id').parent().parent().hide();
+                        }
 
                         </script>
         

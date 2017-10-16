@@ -230,6 +230,7 @@ object.filter_configuration.name.error=The name should not be empty
 object.filter_configuration.delete.confirmation=Are you sure you want to delete this filter?
 object.filter_configuration.stored_filters=Stored filters
 
+object.filter_configuration.action.clear=Clear
 object.filter_configuration.action.reload=Reload
 object.filter_configuration.action.save=Save
 object.filter_configuration.action.save_as=Save as
@@ -638,6 +639,7 @@ permission.portfolio_entry_view_financial_info_as_portfolio_manager_permission.d
 permission.portfolio_entry_edit_financial_info_all_permission.description=Permission which allows a user to edit and remove the financial details of any initiatives.
 permission.portfolio_entry_edit_financial_info_as_manager_permission.description=Permission which allows a user to edit and remove the financial details of an initiative for which he is the manager.
 permission.portfolio_entry_edit_financial_info_as_portfolio_stakeholder_permission.description=Permission which allows a user to edit and remove the financial details of an initiative for which he is a stakeholder of at least one portfolio.
+permission.portfolio_entry_confirm_allocations_as_manager_permission.description=Permission which allows the manager of an initiative to confirm allocation requests himself.
 permission.portfolio_entry_delete_all_permission.description=Permission which allows a user to delete any initiatives.
 permission.portfolio_entry_review_request_all_permission.description=Permission which allows a user to display and process all the review requests of any initiatives.
 permission.portfolio_entry_review_request_as_portfolio_manager_permission.description=Permission which allows a user to display and process all the review requests of any initiatives for which he is a manager of at least one portfolio.
@@ -717,6 +719,8 @@ preference.timesheet_hours_per_day.description=Defines the expected number of ho
 preference.timesheet_hours_per_day.name=Number of hours per day
 preference.package_status_on_going_fulfillment_percentage.name=Completion percentage for "On-going" status of packages
 preference.package_status_on_going_fulfillment_percentage.description=The percentage value of a package''s completion when its status is "On-going".
+preference.resources_week_days_allocation_preference.name=Allocate on business days only
+preference.resources_week_days_allocation_preference.description=If true, the system will distribute allocation days on business days only
 preference.api_authz_mode_preference.name=API authenticaton mode
 preference.api_authz_mode_preference.description=The level of authentication for the APIs.\
 BizDock can use a secured signature mechanism or a lower security model based on a unique application key.
@@ -1135,6 +1139,7 @@ object.portfolio_entry.default_is_opex.help=Default expenditure type. Used when 
 object.portfolio_entry.description.label=Description
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Manager
+object.portfolio_entry.manager_org_unit.label=Manager's Org Unit
 object.portfolio_entry.sponsoring_unit.label=Sponsoring unit
 object.portfolio_entry.delivery_units.label=Delivery unit(s)
 object.portfolio_entry.portfolio.label=Portfolio
@@ -1144,6 +1149,7 @@ object.portfolio_entry.dependencies.label=Dependencies
 object.portfolio_entry.life_cycle_process.label=Life cycle process
 object.portfolio_entry.status.label=Status
 object.portfolio_entry.last_milestone.label=Last milestone passed
+object.portfolio_entry.next_milestone.label=Next planned milestone
 object.portfolio_entry.archived.label=Archived
 object.portfolio_entry.is_concept.label=Concept
 object.portfolio_entry.stakeholder_types.label=Stakeholder type(s)
@@ -1161,6 +1167,7 @@ object.portfolio_entry.table.empty=There is no initiative.
 object.portfolio_entry.start_date.label=Start date
 object.portfolio_entry.end_date.label=End date
 object.portfolio_entry.last_milestone_date.label=Last milestone date
+object.portfolio_entry.next_milestone_date.label=Next milestone date
 
 #----------------------
 # portfolio
@@ -1340,6 +1347,7 @@ object.life_cycle_milestone_instance.passed_date.label=Passed date
 object.life_cycle_milestone_instance.approver.label=Decision maker
 object.life_cycle_milestone_instance.gate_comments.label=Comments
 object.life_cycle_milestone_instance.gate_comments.placeholder=provide a comment
+object.life_cycle_milestone_instance.request_comments.label=Request comments
 object.life_cycle_milestone_instance.document.label=Download the description document
 object.life_cycle_milestone_instance.table.approval.empty=There is no milestone to approve.
 
@@ -1350,6 +1358,7 @@ object.life_cycle_milestone_instance.table.approval.empty=There is no milestone 
 object.planned_life_cycle_milestone_instance.planned_date.label=Planned date
 object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Available
 object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Not planned
+object.planned_life_cycle_milestone_instance.status.PENDING_REVIEW.label=Pending review
 
 #----------------------
 # lifeCycleMilestoneInstanceApprover
@@ -1480,10 +1489,12 @@ object.allocated_resource.date.period=from {0} to {1}
 object.allocated_resource.start_date.label=Start date
 object.allocated_resource.start_date.invalid=The start date cannot be filled alone: to enter a single date, just fill the field "End date" and let "Start date" empty. For a period, just fill both date fields.
 object.allocated_resource.end_date.label=End date
-object.allocated_resource.end_date.invalid=The end date should be after the start date.
+object.allocated_resource.end_date.invalid=The end date should be after the start date and must cover more than a weekend.
 object.allocated_resource.package.label=Package
 object.allocated_resource.follow_package_dates.label=Follow package dates
-object.allocated_resource.is_confirmed.label=Confirmed
+object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label=Status
+object.allocated_resource.last_update_status_type_actor.label=Status updated by
+object.allocated_resource.last_update_status_type_time.label=Last status update
 object.allocated_resource.daily_rate.label=Daily rate
 object.allocated_resource.daily_rate.help=The budgeted cost per day for the allocated resource.
 object.allocated_resource.forecast_days.label=Forecast in days
@@ -1495,6 +1506,15 @@ object.allocated_resource.org_unit.table.empty=There is no allocation.
 object.allocated_resource.competency.table.empty=There is no allocation.
 object.allocated_resource.table.empty=There is no allocation.
 object.allocated_resource.monthly_allocated.label=Monthly allocation
+
+#----------------------
+# allocation status
+#----------------------
+
+object.allocated_resource.status_type.DRAFT.label=Draft
+object.allocated_resource.status_type.PENDING.label=Pending
+object.allocated_resource.status_type.CONFIRMED.label=Confirmed
+object.allocated_resource.status_type.REFUSED.label=Refused
 
 #----------------------
 # deliverable
@@ -1666,6 +1686,7 @@ object.reporting.format.label=Format
 object.reporting.type.label=Type
 object.reporting.is_active.label=Active
 object.reporting.is_active.help=If not checked then the report is not available for downloading.
+object.reporting.default_format.label=Default format
 object.reporting.category.label=Category
 object.reporting.principals.label=Users who have access to the report
 object.reporting.table.empty=There is no report
@@ -1977,7 +1998,10 @@ core.roadmap.simulator.capacity_forecast.available.label=Available
 core.roadmap.simulator.capacity_forecast.planned.label=Planned
 core.roadmap.simulator.capacity_forecast.days.label=Allocated days
 core.roadmap.simulator.capacity_forecast.confirmed.label=Confirmed
-
+core.roadmap.simulator.capacity_forecast.generic_confirmed.label=Generic confirmed
+core.roadmap.simulator.capacity_forecast.generic_not_confirmed.label=Generic not confirmed
+core.roadmap.simulator.capacity_forecast.nominative_confirmed.label=Nominative confirmed
+core.roadmap.simulator.capacity_forecast.nominative_not_confirmed.label=Nominative not confirmed
 #----------------------
 # search
 #----------------------
@@ -2170,6 +2194,7 @@ core.process_transition_request.process_milestone_request.panel.form.vote_requir
 core.process_transition_request.process_milestone_request.panel.form.vote_required.notification.message=You are required to vote for a milestone approval of the Initiative "{0}"
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.title=Milestone approved
 core.process_transition_request.process_milestone_request.panel.form.accept.approved.notification.message=The milestone approval request for the Initiative "{0}" has been accepted and no further approval required: the milestone is approved.
+core.process_transition_request.cancel_milestone_request.notification.message.success=The milestone approval request has been canceled
 
 #----------------------
 # portfolio
@@ -2414,6 +2439,7 @@ core.portfolio_entry_governance.milestone.view.status.rejected=Rejected gate
 core.portfolio_entry_governance.milestone.view.status.pending=Pending gate
 core.portfolio_entry_governance.milestone.view.empty=There is no details for this milestone.
 core.portfolio_entry_governance.milestone.view.panel.details.title=Details
+core.portfolio_entry_governance.milestone.view.panel.details.delete.confirmation.message=Are you sure you want to delete this gate?
 core.portfolio_entry_governance.milestone.view.panel.approvers.title=Approvers
 core.portfolio_entry_governance.milestone.view.panel.budget.title=Budget status at {0}
 core.portfolio_entry_governance.milestone.view.panel.resources.title=Resources status at {0}
@@ -2559,6 +2585,9 @@ core.portfolio_entry_planning.resources.competency.title=Competency allocation r
 core.portfolio_entry_planning.resources.new.org_unit=Delivery unit
 core.portfolio_entry_planning.resources.new.competency=Competency
 core.portfolio_entry_planning.resources.no_competency=There is no competency available
+
+#allocation status
+core.portfolio_entry_planning.resources.allocation.status.last_update.label=Last update by:
 
 #manage allocated actor
 core.portfolio_entry_planning.allocated_actor.manage.title=Manage an allocated employee
@@ -2776,6 +2805,11 @@ core.org_unit.allocation.details.actors.portfolio_entry.title=Initiative''s allo
 core.org_unit.allocation.details.actors.activity.title=Activity''s allocations for the employees
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm=Confirm
 core.org_unit.allocation.details.actors.portfolio_entry.action.confirm.successful=The allocations have been confirmed successfully.
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse=Refuse
+core.org_unit.allocation.details.actors.portfolio_entry.action.refuse.successful=The allocations have been refused successfully.
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit=Submit
+core.org_unit.allocation.details.actors.portfolio_entry.action.submit.successful=The allocations have been submitted successfully.
+core.org_unit.allocation.details.actors.portfolio_entry.action.cancel.successful=The allocations have been canceled successfully.
 
 #manage allocated activity
 core.org_unit.actor_allocated_activity.manage.breadcrumb=Manage an allocated activity for an employee

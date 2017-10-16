@@ -307,13 +307,13 @@ public class ApplicationServicesModule extends FrameworkModule {
                 ImmutableMap.<String, String> builder().put("status", "object.portfolio_entry_report.status.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedActor, "models.finance.PortfolioEntryResourcePlanAllocatedActor", false, true,
                 ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label")
-                        .put("isConfirmed", "object.allocated_resource.is_confirmed.label").build());
+                        .put("portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolioEntryResourcePlanAllocationStatusType.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedOrgUnit, "models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit", false, true,
                 ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label")
-                        .put("isConfirmed", "object.allocated_resource.is_confirmed.label").build());
+                        .put("portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolioEntryResourcePlanAllocationStatusType.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryResourcePlanAllocatedCompetency, "models.finance.PortfolioEntryResourcePlanAllocatedCompetency", false,
                 true, ImmutableMap.<String, String> builder().put("days", "object.allocated_resource.days.label")
-                        .put("isConfirmed", "object.allocated_resource.is_confirmed.label").build());
+                        .put("portfolioEntryResourcePlanAllocationStatusType", "object.allocated_resource.portfolioEntryResourcePlanAllocationStatusType.label").build());
         MafDataType.add(IMafConstants.PortfolioEntryRisk, "models.pmo.PortfolioEntryRisk", false, true,
                 ImmutableMap.<String, String> builder().put("isActive", "object.portfolio_entry_risk.is_active.label")
                         .put("name", "object.portfolio_entry_risk.name.label").put("riskType", "object.portfolio_entry_risk.type.label").build());

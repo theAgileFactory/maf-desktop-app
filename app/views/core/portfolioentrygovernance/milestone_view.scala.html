@@ -77,6 +77,18 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     @parts.Msg("core.portfolio_entry_governance.milestone.view.panel.details.title")
+
+                                    <div class="pull-right">
+                                        @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
+                                                &nbsp;&nbsp;
+                                            <a id="milestone-instance-delete" onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryGovernanceController.deleteMilestone(portfolioEntry.id, lifeCycleMilestoneInstance.id)"><span class="fa fa-trash fa-lg"></span></a>
+                                            <script type="text/javascript">
+                                                    function maf_confirmDelete(){
+                                                        return window.confirm("@parts.Msg("core.portfolio_entry_governance.milestone.view.panel.details.delete.confirmation.message", portfolioEntry.portfolioEntryType.getName.toLowerCase)");
+                                                    }
+                                            </script>
+                                        }
+                                    </div>
                                 </div>
                                 <div class="panel-body">
 
@@ -117,7 +129,11 @@
                                             }
                                             <tr>
                                                 <th>@parts.Msg("object.life_cycle_milestone_instance.gate_comments.label")</th>
-                                                <td>@display_object(lifeCycleMilestoneInstance.gateComments)</td>
+                                                <td>@display_object(lifeCycleMilestoneInstance.gateComments, nl2br = true)</td>
+                                            </tr>
+                                            <tr>
+                                                <th>@parts.Msg("object.life_cycle_milestone_instance.request_comments.label")</th>
+                                                <td>@display_object(lifeCycleMilestoneInstance.requestComments, nl2br = true)</td>
                                             </tr>
                                         </tbody>
                                     </table>

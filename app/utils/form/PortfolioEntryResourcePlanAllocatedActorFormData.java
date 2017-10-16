@@ -17,21 +17,18 @@
  */
 package utils.form;
 
+import constants.IMafConstants;
 import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
+import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Utilities;
-import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.finance.PortfolioEntryResourcePlanAllocatedActorDetail;
-import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.*;
 import org.apache.commons.lang3.tuple.Pair;
-import play.Logger;
 import play.Play;
+import play.data.validation.Constraints;
 import play.data.validation.Constraints.Required;
-import play.data.validation.ValidationError;
-import play.i18n.Messages;
 import services.budgettracking.IBudgetTrackingService;
 
 import java.math.BigDecimal;
@@ -45,14 +42,11 @@ import java.util.stream.Collectors;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryResourcePlanAllocatedActorFormData {
+public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAllocationFormData {
 
     IBudgetTrackingService budgetTrackingService;
 
-    // the portfolioEntry id
-    public Long id;
-
-    public Long allocatedActorId;
+    IPreferenceManagerPlugin preferenceManager;
 
     // used only when reallocate an allocated org unit to an actor
     public Long allocatedOrgUnitId;
@@ -66,136 +60,26 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
     @Required
     public Long stakeholderType;
 
-    public String startDate;
-
-    public String endDate;
-
-    public Long portfolioEntryPlanningPackage;
-
-    public boolean isConfirmed;
-
-    public boolean followPackageDates;
-
-    @Required
-    public String currencyCode;
-
-    @Required
-    public BigDecimal currencyRate;
-
-    @Required
-    public BigDecimal days;
-
-    @Required
-    public BigDecimal dailyRate;
-
     public BigDecimal forecastDays;
 
     public BigDecimal forecastDailyRate;
 
-    public boolean monthlyAllocated;
+    @Constraints.Required
+    public String currencyCode;
 
-    public List<MonthAllocation> monthAllocations;
+    @Constraints.Required
+    public BigDecimal currencyRate;
 
-    public static class MonthAllocation {
-        public Integer year;
-        public Double januaryAllocationValue;
-        public Double februaryAllocationValue;
-        public Double marchAllocationValue;
-        public Double aprilAllocationValue;
-        public Double mayAllocationValue;
-        public Double juneAllocationValue;
-        public Double julyAllocationValue;
-        public Double augustAllocationValue;
-        public Double septemberAllocationValue;
-        public Double octoberAllocationValue;
-        public Double novemberAllocationValue;
-        public Double decemberAllocationValue;
-
-        public MonthAllocation() {
-        }
-
-        public MonthAllocation(Integer year) {
-            this.year = year;
-        }
-
-        public void addValue(Integer month, Double days) {
-            switch (month) {
-                case 0:
-                    this.januaryAllocationValue = days;
-                    break;
-                case 1:
-                    this.februaryAllocationValue = days;
-                    break;
-                case 2:
-                    this.marchAllocationValue = days;
-                    break;
-                case 3:
-                    this.aprilAllocationValue = days;
-                    break;
-                case 4:
-                    this.mayAllocationValue = days;
-                    break;
-                case 5:
-                    this.juneAllocationValue = days;
-                    break;
-                case 6:
-                    this.julyAllocationValue = days;
-                    break;
-                case 7:
-                    this.augustAllocationValue = days;
-                    break;
-                case 8:
-                    this.septemberAllocationValue = days;
-                    break;
-                case 9:
-                    this.octoberAllocationValue = days;
-                    break;
-                case 10:
-                    this.novemberAllocationValue = days;
-                    break;
-                case 11:
-                default:
-                    this.decemberAllocationValue = days;
-            }
-        }
-    }
-
-    /**
-     * Validate the dates.
-     */
-    public List<ValidationError> validate() {
-
-        List<ValidationError> errors = new ArrayList<>();
-
-        if (this.startDate != null && this.endDate != null) {
-
-            try {
-
-                if (!this.startDate.equals("") && this.endDate.equals("")) {
-                    // the start date cannot be filled alone
-                    errors.add(new ValidationError("startDate", Messages.get("object.allocated_resource.start_date.invalid")));
-                }
-
-                if (!this.startDate.equals("") && !this.endDate.equals("")
-                        && Utilities.getDateFormat(null).parse(this.startDate).after(Utilities.getDateFormat(null).parse(this.endDate))) {
-                    // the end date should be after the start date
-                    errors.add(new ValidationError("endDate", Messages.get("object.allocated_resource.end_date.invalid")));
-                }
-
-            } catch (Exception e) {
-                Logger.warn("impossible to parse the allocation dates when testing the formats");
-            }
-        }
-
-        return errors.isEmpty() ? null : errors;
-    }
+    @Constraints.Required
+    public BigDecimal dailyRate;
 
     /**
      * Default constructor.
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
-        this.monthAllocations = new ArrayList<>();
+        super();
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
     }
 
     /**
@@ -209,13 +93,15 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
 
         this.id = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
-        this.allocatedActorId = allocatedActor.id;
+        this.allocationId = allocatedActor.id;
 
         this.actor = allocatedActor.actor.id;
         this.startDate = allocatedActor.startDate != null ? Utilities.getDateFormat(null).format(allocatedActor.startDate) : null;
         this.endDate = allocatedActor.endDate != null ? Utilities.getDateFormat(null).format(allocatedActor.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
-        this.isConfirmed = allocatedActor.isConfirmed;
+        this.allocationStatus = allocatedActor.portfolioEntryResourcePlanAllocationStatusType.status.name();
+        this.lastStatusTypeUpdateActor = allocatedActor.lastStatusTypeUpdateActor != null ? allocatedActor.lastStatusTypeUpdateActor.id : 0L;
+        this.lastStatusTypeUpdateTime = allocatedActor.lastStatusTypeUpdateTime != null ? Utilities.getDateFormat(null).format(allocatedActor.lastStatusTypeUpdateTime) : null;
 
         this.currencyCode = allocatedActor.currency != null ? allocatedActor.currency.code : null;
         this.currencyRate = allocatedActor.currencyRate;
@@ -260,7 +146,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.endDate = allocatedOrgUnit.endDate != null ? Utilities.getDateFormat(null).format(allocatedOrgUnit.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? allocatedOrgUnit.portfolioEntryPlanningPackage.id
                 : null;
-        this.isConfirmed = true;
+
+        this.allocationStatus = PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT.name();
 
         this.currencyCode = allocatedOrgUnit.currency != null ? allocatedOrgUnit.currency.code : null;
         this.currencyRate = allocatedOrgUnit.currencyRate;
@@ -270,19 +157,18 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.forecastDays = allocatedOrgUnit.forecastDays;
         this.forecastDailyRate = allocatedOrgUnit.forecastDailyRate;
 
-        this.monthAllocations = new ArrayList<>();
+        this.monthlyAllocated = allocatedOrgUnit.monthlyAllocated;
 
-        Map<Pair<Integer, Integer>, Double> allocationDistribution = PortfolioEntryResourcePlanAllocatedActor.getAllocationDistribution(allocatedOrgUnit.startDate, allocatedOrgUnit.endDate, budgetTrackingService.isActive() ? this.forecastDays : this.days);
-        allocationDistribution.forEach((key, days) -> {
-            Integer year = key.getLeft();
-            Integer month = key.getRight();
-            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
-            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
-            monthAllocation.addValue(month, days);
+        this.monthAllocations = new ArrayList<>();
+        List<PortfolioEntryResourcePlanAllocatedOrgUnitDetail> details = allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails;
+        for(PortfolioEntryResourcePlanAllocatedOrgUnitDetail detail : details) {
+            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(detail.year)).findFirst();
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(detail.year);
+            monthAllocation.addValue(detail.month, detail.days);
             if (!optionalMonthlyAllocation.isPresent()) {
                 monthAllocations.add(monthAllocation);
             }
-        });
+        }
 
         this.followPackageDates = allocatedOrgUnit.followPackageDates != null ? allocatedOrgUnit.followPackageDates : false;
 
@@ -307,7 +193,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         this.endDate = allocatedCompetency.endDate != null ? Utilities.getDateFormat(null).format(allocatedCompetency.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedCompetency.portfolioEntryPlanningPackage != null ? allocatedCompetency.portfolioEntryPlanningPackage.id
                 : null;
-        this.isConfirmed = true;
+
+        this.allocationStatus = PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT.name();
 
         this.currencyCode = allocatedCompetency.currency != null ? allocatedCompetency.currency.code : null;
         this.currencyRate = allocatedCompetency.currencyRate;
@@ -319,17 +206,20 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
 
         this.monthAllocations = new ArrayList<>();
 
-        Map<Pair<Integer, Integer>, Double> allocationDistribution = PortfolioEntryResourcePlanAllocatedActor.getAllocationDistribution(allocatedCompetency.startDate, allocatedCompetency.endDate, budgetTrackingService.isActive() ? this.forecastDays : this.days);
-        allocationDistribution.forEach((key, days) -> {
-            Integer year = key.getLeft();
-            Integer month = key.getRight();
-            Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
-            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
-            monthAllocation.addValue(month, days);
-            if (!optionalMonthlyAllocation.isPresent()) {
-                monthAllocations.add(monthAllocation);
-            }
-        });
+        Boolean workingDaysOnly = preferenceManager.getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE);
+        Map<Pair<Integer, Integer>, Double> allocationDistribution = PortfolioEntryResourcePlanAllocatedActor.getAllocationDistribution(allocatedCompetency.startDate, allocatedCompetency.endDate, budgetTrackingService.isActive() ? this.forecastDays : this.days, workingDaysOnly);
+        if (allocationDistribution != null) {
+            allocationDistribution.forEach((key, days) -> {
+                Integer year = key.getLeft();
+                Integer month = key.getRight();
+                Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
+                MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
+                monthAllocation.addValue(month, days);
+                if (!optionalMonthlyAllocation.isPresent()) {
+                    monthAllocations.add(monthAllocation);
+                }
+            });
+        }
 
         this.followPackageDates = allocatedCompetency.followPackageDates != null ? allocatedCompetency.followPackageDates : false;
 
@@ -367,7 +257,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
             allocatedActor.endDate = allocatedActor.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedActor.isConfirmed = this.isConfirmed;
+        allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
 
         allocatedActor.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedActor.currencyRate = this.currencyRate;
@@ -382,22 +272,22 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
         if (this.monthlyAllocated) {
 
             // Set allocations by month
-
             List<PortfolioEntryResourcePlanAllocatedActorDetail> details = new ArrayList<>();
             for (MonthAllocation monthAllocation : monthAllocations) {
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 0, monthAllocation.januaryAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 1, monthAllocation.februaryAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 2, monthAllocation.marchAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 3, monthAllocation.aprilAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 4, monthAllocation.mayAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 5, monthAllocation.juneAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 6, monthAllocation.julyAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 7, monthAllocation.augustAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 8, monthAllocation.septemberAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 9, monthAllocation.octoberAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 10, monthAllocation.novemberAllocationValue));
-                details.add(processMonthAllocation(allocatedActor, monthAllocation.year, 11, monthAllocation.decemberAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 0, monthAllocation.januaryAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 1, monthAllocation.februaryAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 2, monthAllocation.marchAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 3, monthAllocation.aprilAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 4, monthAllocation.mayAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 5, monthAllocation.juneAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 6, monthAllocation.julyAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 7, monthAllocation.augustAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 8, monthAllocation.septemberAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 9, monthAllocation.octoberAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 10, monthAllocation.novemberAllocationValue));
+                details.add((PortfolioEntryResourcePlanAllocatedActorDetail) processMonthAllocation(allocatedActor, monthAllocation.year, 11, monthAllocation.decemberAllocationValue));
             }
+
             allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.clear();
             allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.addAll(details.stream().filter(detail -> detail != null).collect(Collectors.toList()));
 
@@ -419,22 +309,10 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData {
             allocatedActor.endDate = c.getTime();
 
         } else if (allocatedActor.startDate != null && allocatedActor.endDate != null) { // If start and end dates are provided, distribute evenly the days across the months
-            allocatedActor.computeAllocationDetails(budgetTrackingService.isActive());
+            allocatedActor.computeAllocationDetails(budgetTrackingService.isActive(), preferenceManager.getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
         } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
             allocatedActor.clearAllocations();
         }
     }
 
-    private PortfolioEntryResourcePlanAllocatedActorDetail processMonthAllocation(PortfolioEntryResourcePlanAllocatedActor allocatedActor, Integer year, Integer month, Double days) {
-        if (days != null && days != 0) {
-            return allocatedActor.createOrUpdateAllocationDetail(year, month, days);
-        } else {
-            PortfolioEntryResourcePlanAllocatedActorDetail detail = allocatedActor.getDetail(year, month);
-            if (detail != null) {
-                allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.remove(detail);
-                detail.doDelete();
-            }
-            return null;
-        }
-    }
 }
