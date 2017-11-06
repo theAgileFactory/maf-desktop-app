@@ -69,7 +69,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitListView extends Allocate
 
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
                     addColumnConfiguration("orgUnit", "orgUnit.id", "object.allocated_resource.org_unit.label",
-                            new FilterConfig.SelectFilterComponent(orgUnits.getValues().isEmpty() ? null : orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[]{"name"}), true, false, FilterConfig.SortStatusType.UNSORTED);
+                            new FilterConfig.SelectFilterComponent(orgUnits.getValues().isEmpty() ? null : orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[]{"orgUnit.name"}), true, false, FilterConfig.SortStatusType.UNSORTED);
                 }
             };
         }
