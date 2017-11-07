@@ -93,10 +93,12 @@
             cache : false
         }).fail(function(xhr) {
             $('#planning-packages-container').html(xhr.responseText);
+            $('select').selectpicker();
         }).done(function(result) {
             $('#planning-packages-container').html(result);
             $("#planning-packages-process").html("<span class='text-success'><strong>@parts.Msg("core.portfolio_entry_planning.packages.manage.successful")</strong></span>");
             saveSerializeForm();
+            $('select').selectpicker();
         });
     });
 </script>

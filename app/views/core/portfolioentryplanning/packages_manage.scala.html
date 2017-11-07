@@ -84,6 +84,7 @@
             result = result.replace(/planningPackagesFormData\[0\]/g, 'planningPackagesFormData[' + countPackages + ']');
             countPackages++;
             $('#planning-packages-table-body').append(result);
+            $('select').selectpicker();
         });
     });
     
