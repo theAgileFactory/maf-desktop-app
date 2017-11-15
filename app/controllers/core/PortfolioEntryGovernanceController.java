@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -76,6 +77,7 @@ import utils.table.GovernanceListView;
 import utils.table.MilestoneApproverListView;
 import utils.table.PortfolioEntryBudgetLineListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
+import views.html.core.portfolioentrygovernance.life_cycle_process_change;
 
 /**
  * The controller which allows to manage the governance of a portfolio entry.
@@ -629,7 +631,7 @@ public class PortfolioEntryGovernanceController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.core.portfolioentrygovernance.life_cycle_process_change.render(portfolioEntry, boundForm,
+            return ok(life_cycle_process_change.render(portfolioEntry, boundForm,
                     LifeCycleProcessDao.getLCProcessActiveAsVH()));
         }
 
@@ -640,13 +642,13 @@ public class PortfolioEntryGovernanceController extends Controller {
         Ebean.beginTransaction();
 
         try {
+            // Keep the current planning
+            LifeCycleInstancePlanning oldPlanning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
             /*
              * set all processes of the portfolio entry to inactive
              */
-            for (LifeCycleInstance process : portfolioEntry.lifeCycleInstances) {
-                process.doInactive();
-            }
+            portfolioEntry.lifeCycleInstances.forEach(LifeCycleInstance::doInactive);
 
             /*
              * create the life cycle instance
@@ -664,9 +666,21 @@ public class PortfolioEntryGovernanceController extends Controller {
             portfolioEntry.startDate = portfolioEntry.endDate = null;
 
             /*
-             * create the planning
+             * create the first planning from the previous one
              */
             LifeCycleInstancePlanning lifeCycleInstancePlanning = new LifeCycleInstancePlanning(lifeCycleInstance);
+            Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew = new HashMap<>();
+            lifeCycleInstancePlanning.portfolioEntryResourcePlan = oldPlanning.portfolioEntryResourcePlan.cloneInDB(allocatedResourcesMapOldToNew);
+            lifeCycleInstancePlanning.portfolioEntryBudget = oldPlanning.portfolioEntryBudget.cloneInDB(allocatedResourcesMapOldToNew);
+
+            // reassign the new allocated resources to existing work order
+            portfolioEntry.workOrders
+                    .stream()
+                    .filter(workOrder -> workOrder.resourceObjectType != null)
+                    .forEach(workOrder -> {
+                        workOrder.resourceObjectId = allocatedResourcesMapOldToNew.get(workOrder.resourceObjectType).get(workOrder.resourceObjectId);
+                        workOrder.save();
+                    });
             lifeCycleInstancePlanning.save();
 
             /*
@@ -691,21 +705,26 @@ public class PortfolioEntryGovernanceController extends Controller {
          * send notifications
          */
 
-        List<Actor> actors = new ArrayList<Actor>();
+        List<Actor> actors = new ArrayList<>();
         actors.add(portfolioEntry.manager);
-        for (Portfolio portfolio : portfolioEntry.portfolios) {
-            actors.add(portfolio.manager);
-        }
-        ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
+        actors.addAll(portfolioEntry.portfolios.stream().map(portfolio -> portfolio.manager).collect(Collectors.toList()));
+
+        ActorDao.sendNotification(
+                this.getNotificationManagerService(),
+                this.getI18nMessagesPlugin(),
+                actors,
                 NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
-                "core.portfolio_entry_governance.process.change.notification.title", "core.portfolio_entry_governance.process.change.notification.message",
-                portfolioEntry.getName(), lifeCycleProcess.getName());
+                routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
+                "core.portfolio_entry_governance.process.change.notification.title",
+                "core.portfolio_entry_governance.process.change.notification.message",
+                portfolioEntry.getName(),
+                lifeCycleProcess.getName()
+        );
 
         // success message
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.process.change.successful"));
 
-        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id));
+        return redirect(routes.PortfolioEntryGovernanceController.index(portfolioEntry.id));
     }
 
     /**
