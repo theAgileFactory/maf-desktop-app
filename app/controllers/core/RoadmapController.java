@@ -960,8 +960,26 @@ public class RoadmapController extends Controller {
             if (orgUnit != null) {
                 // There is exactly one org unit.
                 CapacityDetails capacityDetailsOrgUnit = new CapacityDetails(orgUnit);
-                capacityDetailsOrgUnit.addPlannedPortfolioEntryConfirmed(allocatedOrgUnits.stream().filter(ResourceAllocation::isConfirmed).mapToDouble(allocatedOrgUnit -> allocatedOrgUnit.getDetail(year, month).getDays()).sum());
-                capacityDetailsOrgUnit.addPlannedPortfolioEntryNotConfirmed(allocatedOrgUnits.stream().filter(allocatedOrgUnit -> !allocatedOrgUnit.isConfirmed()).mapToDouble(allocatedOrgUnit -> allocatedOrgUnit.getDetail(year, month).getDays()).sum());
+                capacityDetailsOrgUnit.addPlannedPortfolioEntryConfirmed(
+                        allocatedOrgUnits
+                                .stream()
+                                .filter(ResourceAllocation::isConfirmed)
+                                .mapToDouble(allocatedOrgUnit -> {
+                                    ResourceAllocationDetail detail = allocatedOrgUnit.getDetail(year, month);
+                                    return detail == null ? 0 : detail.getDays();
+                                })
+                                .sum()
+                );
+                capacityDetailsOrgUnit.addPlannedPortfolioEntryNotConfirmed(
+                        allocatedOrgUnits
+                                .stream()
+                                .filter(allocatedOrgUnit -> !allocatedOrgUnit.isConfirmed())
+                                .mapToDouble(allocatedOrgUnit -> {
+                                    ResourceAllocationDetail detail = allocatedOrgUnit.getDetail(year, month);
+                                    return detail == null ? 0 : detail.getDays();
+                                })
+                                .sum()
+                );
                 capacityDetailsRows.put(0L, capacityDetailsOrgUnit);
 
                 // Compute allocation by initiative
