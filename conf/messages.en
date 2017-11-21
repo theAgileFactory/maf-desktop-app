@@ -2576,7 +2576,7 @@ core.portfolio_entry_planning.package.delete.successful=The package has been rem
 
 #manage all packages
 core.portfolio_entry_planning.packages.manage.title=Manage all packages
-core.portfolio_entry_planning.packages.manage.successful=The packages has been updated.
+core.portfolio_entry_planning.packages.manage.successful=The packages have been updated.
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Allocated employees

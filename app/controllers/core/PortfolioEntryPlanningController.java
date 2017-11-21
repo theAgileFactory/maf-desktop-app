@@ -993,8 +993,9 @@ public class PortfolioEntryPlanningController extends Controller {
         this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryPlanningPackage.class, null, "planningPackagesFormData",
                 objectIds, true);
 
-        return ok(views.html.core.portfolioentryplanning.packages_manage_form_fragment.render(portfolioEntry, getPortfolioEntryPlanningPackagesForm(id),
-                PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH(), getPackageStatusAsValueHolderCollection()));
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_planning.packages.manage.successful"));
+
+        return redirect(controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id));
     }
 
     /**

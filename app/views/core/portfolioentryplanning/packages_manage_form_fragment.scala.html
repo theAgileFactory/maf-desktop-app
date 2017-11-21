@@ -79,26 +79,7 @@
 </form>
 
 <script>
-    $( "#planning-packages-form").submit(function( event ) {
-        
-        $("#planning-packages-process").html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
-
-        event.preventDefault();
-        event.stopPropagation();
-        
-        $.ajax({
-            type: 'POST',
-            url: '@controllers.core.routes.PortfolioEntryPlanningController.processManageAllPackages().url',
-            data: $(this).serializeArray(),
-            cache : false
-        }).fail(function(xhr) {
-            $('#planning-packages-container').html(xhr.responseText);
-            $('select').selectpicker();
-        }).done(function(result) {
-            $('#planning-packages-container').html(result);
-            $("#planning-packages-process").html("<span class='text-success'><strong>@parts.Msg("core.portfolio_entry_planning.packages.manage.successful")</strong></span>");
-            saveSerializeForm();
-            $('select').selectpicker();
-        });
+    $( "#planning-packages-form").submit(function() {
+        $(window).unbind('beforeunload');
     });
 </script>

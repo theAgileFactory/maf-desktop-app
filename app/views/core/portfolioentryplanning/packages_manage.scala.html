@@ -88,19 +88,9 @@
         });
     });
     
-    saveSerializeForm();
-    $(window).bind('beforeunload', function(e){
-        if($('#planning-packages-form').serialize()!=$('#planning-packages-form').data('serialize')) {
-            return true;
-        }
-        else {
-            e=null;
-        }
+    $(window).bind('beforeunload', function(){
+        return true;
     });
-    
-    function saveSerializeForm() {
-        $('#planning-packages-form').data('serialize', $('#planning-packages-form').serialize());
-    }
     
     </script>
    
