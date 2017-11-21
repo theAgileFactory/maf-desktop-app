@@ -22,9 +22,11 @@ import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
+import dao.pmo.StakeholderDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Utilities;
 import models.finance.*;
+import models.pmo.Stakeholder;
 import org.apache.commons.lang3.tuple.Pair;
 import play.Play;
 import play.data.validation.Constraints;
@@ -96,6 +98,8 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
         this.allocationId = allocatedActor.id;
 
         this.actor = allocatedActor.actor.id;
+        List<Stakeholder> stakeholderTypes = StakeholderDao.getStakeholderAsListByActorAndPE(this.actor, allocatedActor.getAssociatedPortfolioEntry().id);
+        this.stakeholderType = stakeholderTypes.isEmpty() ? null : stakeholderTypes.get(0).stakeholderType.id;
         this.startDate = allocatedActor.startDate != null ? Utilities.getDateFormat(null).format(allocatedActor.startDate) : null;
         this.endDate = allocatedActor.endDate != null ? Utilities.getDateFormat(null).format(allocatedActor.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;

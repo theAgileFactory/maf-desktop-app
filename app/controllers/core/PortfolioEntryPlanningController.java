@@ -1777,6 +1777,18 @@ public class PortfolioEntryPlanningController extends Controller {
                             "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.title",
                             "core.portfolio_entry_planning.allocated_actor.edit_confirmed.notification.message", allocatedActor.actor.getNameHumanReadable());
                 }
+
+                // create or update the stakeholder if not already
+                Stakeholder stakeholder = StakeholderDao.getStakeholderByActorAndTypeAndPE(allocatedActor.actor.id,
+                        portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType, portfolioEntry.id);
+                if (stakeholder == null) {
+                    stakeholder = new Stakeholder();
+                    stakeholder.actor = allocatedActor.actor;
+                    stakeholder.portfolioEntry = portfolioEntry;
+                    stakeholder.stakeholderType = StakeholderDao.getStakeholderTypeById(portfolioEntryResourcePlanAllocatedActorFormData.stakeholderType);
+                    stakeholder.save();
+                }
+
             }
 
             // save the custom attributes
