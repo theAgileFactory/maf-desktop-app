@@ -20,7 +20,6 @@ package controllers.core;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.OrderBy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +45,10 @@ import framework.services.system.ISysAdminUtils;
 import framework.utils.*;
 import models.common.ResourceAllocation;
 import models.common.ResourceAllocationDetail;
-import models.finance.*;
+import models.finance.PortfolioEntryResourcePlanAllocatedActor;
+import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
+import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
+import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.governance.LifeCycleInstance;
@@ -60,7 +62,6 @@ import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.data.validation.Constraints.Required;
-import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -192,60 +193,53 @@ public class RoadmapController extends Controller {
      * Export the content of the current table as Excel.
      */
     public Promise<Result> exportAsExcel() {
-        return Promise.promise(new Function0<Result>() {
-            @Override
-            public Result apply() throws Throwable {
+        return Promise.promise(() -> {
 
-                try {
+            try {
 
-                    // Get the current user
-                    final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+                // Get the current user
+                final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-                    // construct the table
-                    FilterConfig<PortfolioEntryListView> filterConfig = getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
+                // construct the table
+                FilterConfig<PortfolioEntryListView> filterConfig = getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
-                    OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
-                    ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
-                            .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
+                ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
+                filterConfig.updateWithSortExpression(expressionList);
 
-                    List<PortfolioEntryListView> portfolioEntryListView = new ArrayList<PortfolioEntryListView>();
-                    for (PortfolioEntry portfolioEntry : expressionList.findList()) {
-                        portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
-                    }
+                List<PortfolioEntryListView> portfolioEntryListView = expressionList.findList().stream().map(PortfolioEntryListView::new).collect(Collectors.toList());
 
-                    Table<PortfolioEntryListView> table = getTableProvider().get().portfolioEntry.templateTable.fillForFilterConfig(portfolioEntryListView,
-                            getColumnsToHide(filterConfig));
+                Table<PortfolioEntryListView> table = getTableProvider().get().portfolioEntry.templateTable.fillForFilterConfig(portfolioEntryListView,
+                        getColumnsToHide(filterConfig));
 
-                    final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
+                final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
 
-                    final String fileName = String.format("roadmapExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
-                    final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName);
-                    final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message");
+                final String fileName = String.format("roadmapExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
+                final String successTitle = Msg.get("excel.export.success.title");
+                final String successMessage = Msg.get("excel.export.success.message", fileName);
+                final String failureTitle = Msg.get("excel.export.failure.title");
+                final String failureMessage = Msg.get("excel.export.failure.message");
 
-                    // Execute asynchronously
-                    getSysAdminUtils().scheduleOnce(false, "Roadmap Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
-                                IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
-                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
-                            } catch (IOException e) {
-                                log.error("Unable to export the excel file", e);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
-                                        controllers.core.routes.RoadmapController.index().url());
-                            }
+                // Execute asynchronously
+                getSysAdminUtils().scheduleOnce(false, "Roadmap Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
+                            IOUtils.copy(new ByteArrayInputStream(excelFile), out);
+                            getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                    successMessage, controllers.my.routes.MyPersonalStorage.index().url());
+                        } catch (IOException e) {
+                            log.error("Unable to export the excel file", e);
+                            getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                    routes.RoadmapController.index().url());
                         }
-                    });
+                    }
+                });
 
-                    return ok(Json.newObject());
+                return ok(Json.newObject());
 
-                } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
-                }
+            } catch (Exception e) {
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         });
 
@@ -273,12 +267,11 @@ public class RoadmapController extends Controller {
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
             FilterConfig<PortfolioEntryListView> filterConfig = this.getTableProvider().get().portfolioEntry.filterConfig.getCurrent(uid, request());
 
-            OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
-            ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
-                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
+            ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
+            filterConfig.updateWithSortExpression(expressionList);
 
             // initiate the source items (gantt)
-            List<SourceItem> items = new ArrayList<SourceItem>();
+            List<SourceItem> items = new ArrayList<>();
 
             // compute the items (for each portfolio entry)
             for (PortfolioEntry portfolioEntry : expressionList.findList()) {
@@ -343,7 +336,7 @@ public class RoadmapController extends Controller {
                                     to = JqueryGantt.cleanToDate(from, to);
 
                                     // add gap for the from date
-                                    if (phase.gapDaysStart != null && phase.gapDaysStart.intValue() > 0) {
+                                    if (phase.gapDaysStart != null && phase.gapDaysStart > 0) {
                                         Calendar c = Calendar.getInstance();
                                         c.setTime(from);
                                         c.add(Calendar.DATE, phase.gapDaysStart);
@@ -351,7 +344,7 @@ public class RoadmapController extends Controller {
                                     }
 
                                     // remove gap for the to date
-                                    if (phase.gapDaysEnd != null && phase.gapDaysEnd.intValue() > 0) {
+                                    if (phase.gapDaysEnd != null && phase.gapDaysEnd > 0) {
                                         Calendar c = Calendar.getInstance();
                                         c.setTime(to);
                                         c.add(Calendar.DATE, -1 * phase.gapDaysEnd);
@@ -361,8 +354,8 @@ public class RoadmapController extends Controller {
                                     String name = "";
                                     String str = "";
                                     if (isFirstLoop) {
-                                        if (portfolioEntry.getGovernanceId() != null) {
-                                            name += portfolioEntry.getGovernanceId() + " - ";
+                                        if (portfolioEntry.governanceId != null) {
+                                            name += portfolioEntry.governanceId + " - ";
                                         }
                                         name += portfolioEntry.getName();
                                         str = String.format("<a href= %s > %s </a>" , controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url() , name ) ;
@@ -433,13 +426,10 @@ public class RoadmapController extends Controller {
             ObjectMapper mapper = new ObjectMapper();
             List<String> ids = new ArrayList<>();
 
-            OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
-            ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
-                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
+            ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
+            filterConfig.updateWithSortExpression(expressionList);
 
-            for (PortfolioEntry portfolioEntry : expressionList.findList()) {
-                ids.add(String.valueOf(portfolioEntry.id));
-            }
+            ids.addAll(expressionList.findList().stream().map(portfolioEntry -> String.valueOf(portfolioEntry.id)).collect(Collectors.toList()));
 
             JsonNode node = mapper.valueToTree(ids);
 
@@ -960,8 +950,26 @@ public class RoadmapController extends Controller {
             if (orgUnit != null) {
                 // There is exactly one org unit.
                 CapacityDetails capacityDetailsOrgUnit = new CapacityDetails(orgUnit);
-                capacityDetailsOrgUnit.addPlannedPortfolioEntryConfirmed(allocatedOrgUnits.stream().filter(ResourceAllocation::isConfirmed).mapToDouble(allocatedOrgUnit -> allocatedOrgUnit.getDetail(year, month).getDays()).sum());
-                capacityDetailsOrgUnit.addPlannedPortfolioEntryNotConfirmed(allocatedOrgUnits.stream().filter(allocatedOrgUnit -> !allocatedOrgUnit.isConfirmed()).mapToDouble(allocatedOrgUnit -> allocatedOrgUnit.getDetail(year, month).getDays()).sum());
+                capacityDetailsOrgUnit.addPlannedPortfolioEntryConfirmed(
+                        allocatedOrgUnits
+                                .stream()
+                                .filter(ResourceAllocation::isConfirmed)
+                                .mapToDouble(allocatedOrgUnit -> {
+                                    ResourceAllocationDetail detail = allocatedOrgUnit.getDetail(year, month);
+                                    return detail == null ? 0 : detail.getDays();
+                                })
+                                .sum()
+                );
+                capacityDetailsOrgUnit.addPlannedPortfolioEntryNotConfirmed(
+                        allocatedOrgUnits
+                                .stream()
+                                .filter(allocatedOrgUnit -> !allocatedOrgUnit.isConfirmed())
+                                .mapToDouble(allocatedOrgUnit -> {
+                                    ResourceAllocationDetail detail = allocatedOrgUnit.getDetail(year, month);
+                                    return detail == null ? 0 : detail.getDays();
+                                })
+                                .sum()
+                );
                 capacityDetailsRows.put(0L, capacityDetailsOrgUnit);
 
                 // Compute allocation by initiative
@@ -1249,20 +1257,15 @@ public class RoadmapController extends Controller {
 
         try {
 
-            OrderBy<PortfolioEntry> orderBy = filterConfig.getSortExpression();
+            ExpressionList<PortfolioEntry> expressionList = filterConfig.updateWithSearchExpression(PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()));
+            filterConfig.updateWithSortExpression(expressionList);
 
-            ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDynamicHelper
-                    .getPortfolioEntriesViewAllowedAsQuery(filterConfig.getSearchExpression(), orderBy, getSecurityService());
-
-            Pagination<PortfolioEntry> pagination = new Pagination<PortfolioEntry>(this.getPreferenceManagerPlugin(), expressionList.findList().size(),
+            Pagination<PortfolioEntry> pagination = new Pagination<>(this.getPreferenceManagerPlugin(), expressionList.findList().size(),
                     expressionList);
 
             pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-            List<PortfolioEntryListView> portfolioEntryListView = new ArrayList<PortfolioEntryListView>();
-            for (PortfolioEntry portfolioEntry : pagination.getListOfObjects()) {
-                portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
-            }
+            List<PortfolioEntryListView> portfolioEntryListView = pagination.getListOfObjects().stream().map(PortfolioEntryListView::new).collect(Collectors.toList());
 
             Table<PortfolioEntryListView> table = this.getTableProvider().get().portfolioEntry.templateTable.fillForFilterConfig(portfolioEntryListView,
                     getColumnsToHide(filterConfig));

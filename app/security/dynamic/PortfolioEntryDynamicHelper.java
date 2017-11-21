@@ -44,56 +44,14 @@ public class PortfolioEntryDynamicHelper {
 
     /**
      * Get the ebean expression list for all authorized portfolio entries of the
-     * sign-in user.
-     * 
-     * @param securityService
-     *            the security service
-     */
-    public static ExpressionList<PortfolioEntry> getPortfolioEntriesViewAllowedAsQuery(ISecurityService securityService) throws AccountManagementException {
-        return getPortfolioEntriesViewAllowedAsQuery(null, null, securityService);
-    }
-
-    /**
-     * Get the ebean expression list for all authorized portfolio entries of the
-     * sign-in user. It's possible to filter the list with an ebean expression.
-     * 
-     * @param expression
-     *            the ebean filter expression
-     * @param securityService
-     *            the security service
-     */
-    public static ExpressionList<PortfolioEntry> getPortfolioEntriesViewAllowedAsQuery(Expression expression, ISecurityService securityService)
-            throws AccountManagementException {
-        return getPortfolioEntriesViewAllowedAsQuery(expression, null, securityService);
-    }
-
-    /**
-     * Get the ebean expression list for all authorized portfolio entries of the
-     * sign-in user. It's possible to sort the list with an ebean order by.
-     * 
-     * @param orderBy
-     *            the ebean order by
-     * @param securityService
-     *            the security service
-     */
-    public static ExpressionList<PortfolioEntry> getPortfolioEntriesViewAllowedAsQuery(OrderBy<PortfolioEntry> orderBy, ISecurityService securityService)
-            throws AccountManagementException {
-        return getPortfolioEntriesViewAllowedAsQuery(null, orderBy, securityService);
-    }
-
-    /**
-     * Get the ebean expression list for all authorized portfolio entries of the
      * sign-in user. It's possible to filter and sort the list.
      * 
      * @param expression
      *            the ebean filter expression
-     * @param orderBy
-     *            the ebean order by
      * @param securityService
      *            the security service
      */
-    public static ExpressionList<PortfolioEntry> getPortfolioEntriesViewAllowedAsQuery(Expression expression, OrderBy<PortfolioEntry> orderBy,
-            ISecurityService securityService) throws AccountManagementException {
+    public static ExpressionList<PortfolioEntry> getPortfolioEntriesViewAllowedAsQuery(ISecurityService securityService) throws AccountManagementException {
 
         IUserAccount userAccount = securityService.getCurrentUser();
 
@@ -149,23 +107,11 @@ public class PortfolioEntryDynamicHelper {
 
         raw += "1 = '0')";
 
-        ExpressionList<PortfolioEntry> expressionList;
-
-        if (orderBy != null) {
-            expressionList = PortfolioEntryDao.findPortfolioEntry.where();
-            Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
-        } else {
-            expressionList = PortfolioEntryDao.findPortfolioEntry.where();
-        }
+        ExpressionList<PortfolioEntry> expressionList = PortfolioEntryDao.findPortfolioEntry.where();
 
         expressionList = expressionList.eq("deleted", false);
 
-        if (expression != null) {
-            return expressionList.add(expression).raw(raw);
-        } else {
-            return expressionList.raw(raw);
-        }
-
+        return expressionList.raw(raw);
     }
 
     /**
@@ -178,7 +124,7 @@ public class PortfolioEntryDynamicHelper {
      */
     public static boolean isPortfolioEntryViewAllowed(Long portfolioEntryId, ISecurityService securityService) {
         try {
-            return getPortfolioEntriesViewAllowedAsQuery(Expr.eq("id", portfolioEntryId), securityService).findRowCount() > 0 ? true : false;
+            return getPortfolioEntriesViewAllowedAsQuery(securityService).add(Expr.eq("id", portfolioEntryId)).findRowCount() > 0;
         } catch (AccountManagementException e) {
             Logger.error("DefaultDynamicResourceHandler.isPortfolioEntryViewAllowed: impossible to get the user account");
             Logger.error(e.getMessage());

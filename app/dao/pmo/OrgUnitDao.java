@@ -131,7 +131,7 @@ public abstract class OrgUnitDao {
      * Get all active delivery units.
      */
     public static List<OrgUnit> getOrgUnitActiveCanDeliverAsList() {
-        return findOrgUnit.where().eq("deleted", false).eq("isActive", true).eq("canDeliver", true).findList();
+        return findOrgUnit.where().eq("deleted", false).eq("isActive", true).eq("canDeliver", true).orderBy("name").findList();
     }
 
     /**
