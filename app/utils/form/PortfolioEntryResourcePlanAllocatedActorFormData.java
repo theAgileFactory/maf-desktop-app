@@ -261,7 +261,9 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
             allocatedActor.endDate = allocatedActor.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        if (!this.days.equals(allocatedActor.days)) {
+            allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        }
 
         allocatedActor.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedActor.currencyRate = this.currencyRate;
