@@ -419,6 +419,7 @@ public class PortfolioEntryListView {
         this.deliveryUnits = portfolioEntry.deliveryUnits;
         this.deliveryUnits.sort((du1, du2) -> du1.name.compareTo(du2.name));
         this.portfolios = portfolioEntry.portfolios;
+        this.portfolios.sort((p1,p2) -> p1.name.compareTo(p2.name));
         this.lifeCycleProcess = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.getName() : null;
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
@@ -446,6 +447,7 @@ public class PortfolioEntryListView {
                     actorIds.add(stakeholder.actor.id);
                     this.stakeholders.add(stakeholder.actor);
                 });
+        this.stakeholders.sort((s1, s2) -> s1.getName().compareTo(s1.getName()));
 
         this.dependencies = new ArrayList<>();
         Set<Long> dependencyIds = new HashSet<>();
