@@ -730,4 +730,24 @@ public abstract class LifeCycleMilestoneDao {
 
     }
 
+    public static ISelectableValueHolderCollection<Long> getLCMilestoneAsVHByPe(Long portfolioEntryId) {
+
+        DefaultSelectableValueHolderCollection<Long> valueHolderCollection = new DefaultSelectableValueHolderCollection<>();
+
+        LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(portfolioEntryId)
+                .stream()
+                .map(plannedMilestone -> plannedMilestone.lifeCycleMilestone)
+                .forEach(lifeCycleMilestone -> {
+                    DefaultSelectableValueHolder<Long> valueHolder = new DefaultSelectableValueHolder<>(
+                            lifeCycleMilestone.id,
+                            lifeCycleMilestone.getName()
+                    );
+                    // Assuming there is less than 100 additional milestones between 2 standard milestones
+                    valueHolder.setOrder(lifeCycleMilestone.order * 100 + lifeCycleMilestone.subOrder);
+                    valueHolderCollection.add(valueHolder);
+                });
+
+        return valueHolderCollection;
+    }
+
 }

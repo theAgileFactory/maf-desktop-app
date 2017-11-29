@@ -229,7 +229,7 @@ public abstract class LifeCyclePlanningDao {
         String sql =
                 "SELECT plcmi.id " + getSelectSqlForGetLasts("", portfolioEntryId) + " AND lcip.creation_date=(SELECT MAX(ilcip.creation_date) "
                         + getSelectSqlForGetLasts("i", portfolioEntryId)
-                        + " GROUP BY iplcmi.life_cycle_milestone_id HAVING iplcmi.life_cycle_milestone_id=plcmi.life_cycle_milestone_id) ORDER BY lcm.order";
+                        + " GROUP BY iplcmi.life_cycle_milestone_id HAVING iplcmi.life_cycle_milestone_id=plcmi.life_cycle_milestone_id) ORDER BY lcm.order, lcm.sub_order";
 
         RawSql rawSql = RawSqlBuilder.parse(sql).columnMapping("plcmi.id", "id").create();
 

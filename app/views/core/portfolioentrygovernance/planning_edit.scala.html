@@ -44,6 +44,12 @@
         
         <div class="panel-heading">
             @parts.Msg("core.portfolio_entry_governance.planning.edit.title")
+
+            @if(lastPlanning.lifeCycleInstance.lifeCycleProcess.isFlexible) {
+                <div class="pull-right">
+                    <a href="@controllers.core.routes.PortfolioEntryGovernanceController.manageAdditionalMilestone(portfolioEntry.id)"><span class="fa fa-plus fa-lg"></span></a>
+                </div>
+            }
         </div>
 
         <div class="panel-body">
@@ -76,7 +82,7 @@
                             <tbody>
                                 @repeat(plannedDatesForm("plannedDates")) { plannedDateField =>
                         
-                                    @defining(governanceListViewsAsMap.get(Long.parseLong(plannedDateField("plannedDateId").value.get))) { governanceListView =>
+                                    @defining(governanceListViewsAsMap.get(java.lang.Long.parseLong(plannedDateField("plannedDateId").value.get))) { governanceListView =>
                                         <tr>
                                             <td>
                                                 @display_milestone(governanceListView.milestone)

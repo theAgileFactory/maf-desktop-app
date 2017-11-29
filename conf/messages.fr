@@ -1299,6 +1299,8 @@ object.life_cycle_process.name.label=Nom
 object.life_cycle_process.description.label=Description
 object.life_cycle_process.is_active.label=Actif
 object.life_cycle_process.is_release.label=Release
+object.life_cycle_process.is_flexible.label=Flexible
+object.life_cycle_process.is_flexible.help=Permet de rajouter des jalons personnalisés dans chaque projet
 object.life_cycle_process.table.empty=Il n''existe aucun processus de gouvernance.
 
 #----------------------
@@ -2477,6 +2479,9 @@ core.portfolio_entry_governance.milestone.request.approved.notification.message=
 #edit planning
 core.portfolio_entry_governance.planning.edit.title=Mettre à jour l''agenda
 core.portfolio_entry_governance.planning.edit.successful=L''agenda a été mis à jour.
+core.portfolio_entry_governance.planning.edit.milestone.manage.title=Gérer un jalon supplémentaire
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.label=Insérer après le jalon suivant
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insérer en première position
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Changer le processus de gouvernance

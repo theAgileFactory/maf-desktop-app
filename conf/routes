@@ -280,6 +280,8 @@ GET    /portfolio-entry/governance/milestone/request       controllers.core.Port
 POST   /portfolio-entry/governance/milestone/request       controllers.core.PortfolioEntryGovernanceController.processRequestMilestone()
 GET    /portfolio-entry/governance/planning/edit           controllers.core.PortfolioEntryGovernanceController.editPlanning(id: Long)
 POST   /portfolio-entry/governance/planning/edit           controllers.core.PortfolioEntryGovernanceController.processEditPlanning()
+GET    /portfolio-entry/governance/planning/edit/milestone controllers.core.PortfolioEntryGovernanceController.manageAdditionalMilestone(id: Long, milestoneId: Long ?= 0, previousMilestoneId: Long ?= 0)
+POST   /portfolio-entry/governance/planning/edit/milestone controllers.core.PortfolioEntryGovernanceController.processManageAdditionalMilestone()
 GET    /portfolio-entry/governance/process/change          controllers.core.PortfolioEntryGovernanceController.changeLifeCycleProcess(id: Long)
 GET    /portfolio-entry/governance/process/change/process  controllers.core.PortfolioEntryGovernanceController.processChangeLifeCycleProcess()
 

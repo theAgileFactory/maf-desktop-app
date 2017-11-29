@@ -43,10 +43,7 @@ import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.FileAttachmentHelper;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
+import framework.utils.*;
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
@@ -72,6 +69,7 @@ import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.PlannedDateFormData;
 import utils.form.PlannedDatesFormData;
+import utils.form.PortfolioEntryAdditionalMilestoneFormData;
 import utils.form.RequestMilestoneFormData;
 import utils.table.GovernanceListView;
 import utils.table.MilestoneApproverListView;
@@ -107,6 +105,7 @@ public class PortfolioEntryGovernanceController extends Controller {
     private static Form<PlannedDatesFormData> plannedDatesFormTemplate = Form.form(PlannedDatesFormData.class);
     private static Form<ChangeLifeCycleProcessFormData> changeProcessFormTemplate = Form.form(ChangeLifeCycleProcessFormData.class);
     private static Form<RequestMilestoneFormData> requestMilestoneFormTemplate = Form.form(RequestMilestoneFormData.class);
+    private static Form<PortfolioEntryAdditionalMilestoneFormData> portfolioEntryAdditionalMilestoneFormTemplate = Form.form(PortfolioEntryAdditionalMilestoneFormData.class);
 
     /**
      * Display the list of milestones with their instances for a portfolio
@@ -725,6 +724,48 @@ public class PortfolioEntryGovernanceController extends Controller {
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.process.change.successful"));
 
         return redirect(routes.PortfolioEntryGovernanceController.index(portfolioEntry.id));
+    }
+
+    /**
+     * Manage an additional milestone in the portfolio entry governance process
+     * @param portfolioEntryId the portfolio entry id
+     * @param milestoneId the milestone id (set 0 for creation)
+     *
+     * @return the additional milestone form
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result manageAdditionalMilestone(Long id, Long milestoneId, Long previousMilestoneId) {
+
+        Form<PortfolioEntryAdditionalMilestoneFormData> portfolioEntryAdditionalMilestoneForm = portfolioEntryAdditionalMilestoneFormTemplate;
+
+        // edit case
+        if (!milestoneId.equals(0L)) {
+            LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
+            portfolioEntryAdditionalMilestoneForm = portfolioEntryAdditionalMilestoneFormTemplate.fill(new PortfolioEntryAdditionalMilestoneFormData(milestone, previousMilestoneId, getI18nMessagesPlugin()));
+        }
+
+        ISelectableValueHolderCollection<Long> milestones = new DefaultSelectableValueHolderCollection<>();
+        DefaultSelectableValueHolder<Long> firstValue = new DefaultSelectableValueHolder<>(0L, Msg.get("core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label"));
+        firstValue.setOrder(0);
+        milestones.add(firstValue);
+        milestones.addAll(LifeCycleMilestoneDao.getLCMilestoneAsVHByPe(id));
+
+        return ok(views.html.core.portfolioentrygovernance.planning_edit_additional_milestone_manage.render(
+                PortfolioEntryDao.getPEAllById(id),
+                portfolioEntryAdditionalMilestoneForm,
+                LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeActiveAsVH(),
+                milestones)
+        );
+    }
+
+    /**
+     * Processes the form to manage an additional milestone
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result processManageAdditionalMilestone() {
+        return ok();
     }
 
     /**

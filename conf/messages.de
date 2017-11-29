@@ -1299,6 +1299,8 @@ object.life_cycle_process.name.label=Name
 object.life_cycle_process.description.label=Beschreibung
 object.life_cycle_process.is_active.label=Aktiv
 object.life_cycle_process.is_release.label=Release
+object.life_cycle_process.is_flexible.label=Flexibel
+object.life_cycle_process.is_flexible.help=Allows to add custom milestones to project governance.
 object.life_cycle_process.table.empty=Kein Prozess.
 
 #----------------------
@@ -2472,6 +2474,9 @@ core.portfolio_entry_governance.milestone.request.approved.notification.message=
 #edit planning
 core.portfolio_entry_governance.planning.edit.title=Planung bearbeiten
 core.portfolio_entry_governance.planning.edit.successful=Die Plannung wurde aktualisiert.
+core.portfolio_entry_governance.planning.edit.milestone.manage.title=Manage an additional milestone
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.label=Insert after the following milestone
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insert in first position
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Lieferzyklus bearbeiten
