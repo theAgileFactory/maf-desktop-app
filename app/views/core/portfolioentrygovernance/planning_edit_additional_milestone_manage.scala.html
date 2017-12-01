@@ -17,6 +17,7 @@
  *@
 @import framework.utils.ISelectableValueHolderCollection
 @import models.pmo.PortfolioEntry
+@import dao.pmo.ActorDao
 @(
     portfolioEntry: PortfolioEntry,
     lifeCycleMilestoneForm: Form[utils.form.PortfolioEntryAdditionalMilestoneFormData],
@@ -57,6 +58,8 @@
                     <input type="hidden" name="id" value="@lifeCycleMilestoneForm("id").value"/>
                 }
 
+                <input type="hidden" name="portfolioEntryId" value="@portfolioEntry.id"/>
+
                 @parts.dropdownlist(
                     lifeCycleMilestoneForm("previousMilestone"),
                     parts.Msg.asString("core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.label"),
@@ -77,12 +80,23 @@
 
                 @parts.dropdownlist(lifeCycleMilestoneForm("defaultStatusType"), parts.Msg.asString("object.life_cycle_milestone.default_status_type.label"), statusTypes)
 
-                @parts.multivalue_picker(
+                @parts.dropdownlist(
+                    lifeCycleMilestoneForm("approvers"),
+                    parts.Msg.asString("object.life_cycle_milestone.approvers.label"),
+                    ActorDao.getActorActiveAsVH,
+                    null,
+                    isDescriptionVisible = false,
+                    forceRequired = false,
+                    liveSearch = true,
+                    multiple = true
+                )
+
+@*                @parts.multivalue_picker(
                     lifeCycleMilestoneForm("approvers"),
                     parts.Msg.asString("object.life_cycle_milestone.approvers.label"),
                     controllers.routes.PickerController.actor().url
                 )
-
+*@
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
                 <a class="btn btn-default" href='@controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(portfolioEntry.id).url'>@parts.Msg("button.cancel")</a>
 

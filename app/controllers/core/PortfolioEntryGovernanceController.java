@@ -17,20 +17,8 @@
  */
 package controllers.core;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import com.avaje.ebean.Ebean;
-
 import be.objectify.deadbolt.java.actions.Dynamic;
+import com.avaje.ebean.Ebean;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
@@ -76,6 +64,12 @@ import utils.table.MilestoneApproverListView;
 import utils.table.PortfolioEntryBudgetLineListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
 import views.html.core.portfolioentrygovernance.life_cycle_process_change;
+import views.html.core.portfolioentrygovernance.planning_edit_additional_milestone_manage;
+
+import javax.inject.Inject;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The controller which allows to manage the governance of a portfolio entry.
@@ -728,8 +722,9 @@ public class PortfolioEntryGovernanceController extends Controller {
 
     /**
      * Manage an additional milestone in the portfolio entry governance process
-     * @param portfolioEntryId the portfolio entry id
+     * @param id the portfolio entry id
      * @param milestoneId the milestone id (set 0 for creation)
+     * @param previousMilestoneId the previous milestone id in the list (0 for first place)
      *
      * @return the additional milestone form
      */
@@ -745,26 +740,134 @@ public class PortfolioEntryGovernanceController extends Controller {
             portfolioEntryAdditionalMilestoneForm = portfolioEntryAdditionalMilestoneFormTemplate.fill(new PortfolioEntryAdditionalMilestoneFormData(milestone, previousMilestoneId, getI18nMessagesPlugin()));
         }
 
-        ISelectableValueHolderCollection<Long> milestones = new DefaultSelectableValueHolderCollection<>();
-        DefaultSelectableValueHolder<Long> firstValue = new DefaultSelectableValueHolder<>(0L, Msg.get("core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label"));
-        firstValue.setOrder(0);
-        milestones.add(firstValue);
-        milestones.addAll(LifeCycleMilestoneDao.getLCMilestoneAsVHByPe(id));
-
         return ok(views.html.core.portfolioentrygovernance.planning_edit_additional_milestone_manage.render(
                 PortfolioEntryDao.getPEAllById(id),
                 portfolioEntryAdditionalMilestoneForm,
                 LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeActiveAsVH(),
-                milestones)
-        );
+                getMilestonesAsVH(LifeCycleMilestoneDao.getLCMilestoneAsListByPe(id))
+        ));
     }
 
     /**
      * Processes the form to manage an additional milestone
      */
-    @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result processManageAdditionalMilestone() {
+
+        // bind the form
+        Form<PortfolioEntryAdditionalMilestoneFormData> boundForm = portfolioEntryAdditionalMilestoneFormTemplate.bindFromRequest();
+
+        // get portfolio entry id
+        Long portfolioEntryId = Long.valueOf(request().body().asFormUrlEncoded().get("portfolioEntryId")[0]);
+
+        // Get portfolio entry milestones
+        List<LifeCycleMilestone> milestones = LifeCycleMilestoneDao.getLCMilestoneAsListByPe(portfolioEntryId);
+
+        if (boundForm.hasErrors()) {
+            return ok(planning_edit_additional_milestone_manage.render(
+                    PortfolioEntryDao.getPEAllById(portfolioEntryId),
+                    boundForm,
+                    LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeActiveAsVH(),
+                    getMilestonesAsVH(milestones)
+            ));
+        }
+
+        PortfolioEntryAdditionalMilestoneFormData formData = boundForm.get();
+
+        LifeCycleMilestone milestone;
+        LifeCycleMilestone previousMilestone = null;
+        if (!formData.previousMilestone.equals(0L)) {
+            previousMilestone = LifeCycleMilestoneDao.getLCMilestoneById(formData.previousMilestone);
+        }
+
+        if (formData.id == null) { // create case
+
+            // Create the milestone
+            milestone = new LifeCycleMilestone();
+            milestone.order = previousMilestone == null ? -1 : previousMilestone.order;
+            milestone.subOrder = previousMilestone == null ? 0 : previousMilestone.subOrder + 1;
+            // Offset +1 subsequent milestones suborder
+            milestones.stream()
+                .filter(m -> m.order == milestone.order && m.subOrder >= milestone.subOrder)
+                .forEach(m -> {
+                    m.subOrder++;
+                    m.update();
+                });
+            formData.fill(milestone);
+            milestone.save();
+
+            // Create the planning entry
+            PlannedLifeCycleMilestoneInstance plannedMilestone = new PlannedLifeCycleMilestoneInstance();
+            plannedMilestone.lifeCycleInstancePlanning = LifeCyclePlanningDao.getLCInstancePlanningAsLastByPE(portfolioEntryId);
+            plannedMilestone.lifeCycleMilestone = milestone;
+            plannedMilestone.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.planning.edit.milestone.add.successful"));
+        } else { // edit case
+
+            milestone = LifeCycleMilestoneDao.getLCMilestoneById(formData.id);
+            // Offset -1 subsequent milestones suborder in old position
+            milestones.stream()
+                    .filter(m -> m.order == milestone.order && m.subOrder > milestone.subOrder)
+                    .forEach(m -> {
+                        m.subOrder--;
+                        m.update();
+                    });
+            milestone.order = previousMilestone == null ? -1 : previousMilestone.order;
+            milestone.subOrder = previousMilestone == null ? 0 : previousMilestone.subOrder + 1;
+            // Offset +1 subsequent milestones suborder in new position
+            milestones.stream()
+                    .filter(m -> m.order == milestone.order && m.subOrder >= milestone.subOrder)
+                    .forEach(m -> {
+                        m.subOrder++;
+                        m.update();
+                    });
+            formData.fill(milestone);
+            milestone.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.planning.edit.milestone.edit.successful"));
+        }
+
+        formData.description.persist(getI18nMessagesPlugin());
+        formData.name.persist(getI18nMessagesPlugin());
+        formData.shortName.persist(getI18nMessagesPlugin());
+
+        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(portfolioEntryId));
+    }
+
+    /**
+     * Construct a value holder list with available milestones
+     *
+     * @param milestones the milestones as list
+     */
+    private ISelectableValueHolderCollection<Long> getMilestonesAsVH(List<LifeCycleMilestone> milestones) {
+        ISelectableValueHolderCollection<Long> milestonesAsVH = new DefaultSelectableValueHolderCollection<>();
+        DefaultSelectableValueHolder<Long> firstValue = new DefaultSelectableValueHolder<>(0L, Msg.get("core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label"));
+        // Order -200: "Place in first position" text
+        // Order -100: Additional milestones that come before the first milestone of the process
+        // Order 0: First milestone of the governing process
+        // Order 100: etc...
+        firstValue.setOrder(-200);
+        milestonesAsVH.add(firstValue);
+        milestones
+            .forEach(lifeCycleMilestone -> {
+                DefaultSelectableValueHolder<Long> valueHolder = new DefaultSelectableValueHolder<>(
+                        lifeCycleMilestone.id,
+                        lifeCycleMilestone.getName()
+                );
+                // Assuming there is less than 100 additional milestones between 2 standard milestones
+                valueHolder.setOrder(lifeCycleMilestone.order * 100 + lifeCycleMilestone.subOrder);
+                milestonesAsVH.add(valueHolder);
+            });
+
+        return milestonesAsVH;
+    }
+
+    /**
+     * Deletes an additional milestone
+     */
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteAdditionalMilestone(Long id, Long milestoneId) {
         return ok();
     }
 

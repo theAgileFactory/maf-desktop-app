@@ -95,6 +95,7 @@ public class PortfolioEntryAdditionalMilestoneFormData {
      */
     public void fill(LifeCycleMilestone lifeCycleMilestone) {
         lifeCycleMilestone.isActive = true;
+        lifeCycleMilestone.isAdditional = true;
         lifeCycleMilestone.shortName = this.shortName.getKeyIfValue();
         lifeCycleMilestone.name = this.name.getKeyIfValue();
         lifeCycleMilestone.description = this.description.getKeyIfValue();

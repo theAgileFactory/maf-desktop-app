@@ -2482,6 +2482,8 @@ core.portfolio_entry_governance.planning.edit.successful=L''agenda a été mis �
 core.portfolio_entry_governance.planning.edit.milestone.manage.title=Gérer un jalon supplémentaire
 core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.label=Insérer après le jalon suivant
 core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insérer en première position
+core.portfolio_entry_governance.planning.edit.milestone.add.successful=Le jalon supplémentaire a été créé.
+core.portfolio_entry_governance.planning.edit.milestone.edit.successful=Le jalon supplémentaire a été mis à jour.
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Changer le processus de gouvernance

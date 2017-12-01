@@ -2464,6 +2464,8 @@ core.portfolio_entry_governance.planning.edit.successful=The planning has been u
 core.portfolio_entry_governance.planning.edit.milestone.manage.title=Manage an additional milestone
 core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.label=Insert after the following milestone
 core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insert in first position
+core.portfolio_entry_governance.planning.edit.milestone.add.successful=The additional milestone has been created successfully.
+core.portfolio_entry_governance.planning.edit.milestone.edit.successful=The additional milestone has been updated successfully.
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Change the life cycle process
