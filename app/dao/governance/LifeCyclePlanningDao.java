@@ -251,9 +251,11 @@ public abstract class LifeCyclePlanningDao {
                 "FROM planned_life_cycle_milestone_instance {p}plcmi"
                         + " JOIN life_cycle_instance_planning {p}lcip ON {p}plcmi.life_cycle_instance_planning_id = {p}lcip.id"
                         + " JOIN life_cycle_instance {p}lci ON {p}lcip.life_cycle_instance_id = {p}lci.id"
-                        + " JOIN life_cycle_milestone {p}lcm ON {p}plcmi.life_cycle_milestone_id = {p}lcm.id" + " WHERE {p}lci.portfolio_entry_id="
-                        + portfolioEntryId
+                        + " JOIN life_cycle_process {p}lcp ON {p}lci.life_cycle_process_id = {p}lcp.id"
+                        + " JOIN life_cycle_milestone {p}lcm ON {p}plcmi.life_cycle_milestone_id = {p}lcm.id"
+                        + " WHERE {p}lci.portfolio_entry_id=" + portfolioEntryId
                         + " AND {p}plcmi.deleted=false AND {p}lcip.deleted=false AND {p}lci.deleted=false AND {p}lci.is_active=true AND {p}lcm.deleted=false"
+                        + " AND ({p}lcp.is_flexible=true OR {p}lcm.is_additional=false)"
                         + " AND ({p}lcm.is_active=true OR (SELECT COUNT(*) FROM life_cycle_milestone_instance {p}lcmi"
                         + " WHERE {p}lcmi.deleted=false AND {p}lcmi.life_cycle_instance_id = {p}lci.id AND {p}lcmi.life_cycle_milestone_id = {p}lcm.id) > 0)";
         return s.replaceAll("\\{p\\}", prefix);
