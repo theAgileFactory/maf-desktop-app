@@ -188,6 +188,13 @@ button.upload=Télécharger
 button.open=Ouvrir
 
 #----------------------
+# Selector
+#----------------------
+select.select_all=Tout sélectionner
+select.deselect_all=Tout désélectionner
+select.none_selected=Aucune sélection
+
+#----------------------
 # captcha
 #----------------------
 
@@ -2484,6 +2491,9 @@ core.portfolio_entry_governance.planning.edit.milestone.manage.previous_mileston
 core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insérer en première position
 core.portfolio_entry_governance.planning.edit.milestone.add.successful=Le jalon supplémentaire a été créé.
 core.portfolio_entry_governance.planning.edit.milestone.edit.successful=Le jalon supplémentaire a été mis à jour.
+core.portfolio_entry_governance.planning.edit.milestone.delete.confirmation.message=Êtes-vous sûr(e) de vouloir supprimer ce jalon supplémentaire?
+core.portfolio_entry_governance.planning.edit.milestone.delete.error=Ce jalon ne peut pas être supprimé.
+core.portfolio_entry_governance.planning.edit.milestone.delete.successful=Le jalon supplémentaire a été supprimé.
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Changer le processus de gouvernance

@@ -550,16 +550,14 @@ public abstract class LifeCycleMilestoneDao {
      */
     public static List<String> getLCMilestoneAsStatusByPEAndLCMilestone(Long portfolioEntryId, Long lifeCycleMilestoneId) {
 
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryId);
-
         List<String> status = new ArrayList<>();
-        for (LifeCycleMilestone milestone : portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.lifeCycleMilestones) {
+        for (LifeCycleMilestone milestone : LifeCycleMilestoneDao.getLCMilestoneAsListByPe(portfolioEntryId)) {
 
             if (milestone.isActive) {
 
                 String cssClass = null;
 
-                List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntry.id,
+                List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntryId,
                         milestone.id, "DESC");
                 if (milestoneInstances.size() > 0) {
                     LifeCycleMilestoneInstance lastMilestoneInstance = milestoneInstances.get(0);

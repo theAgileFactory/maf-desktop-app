@@ -111,7 +111,7 @@
                                             <td class="text-right rowlink-skip">
                                                 @if(governanceListView.milestone.isAdditional) {
                                                     <a
-                                                        onclick="return maf_confirmAction('@parts.Msg("default.delete.confirmation.message")');"
+                                                        onclick="return maf_confirmAction('@parts.Msg("core.portfolio_entry_governance.planning.edit.milestone.delete.confirmation.message")');"
                                                         href="@controllers.core.routes.PortfolioEntryGovernanceController.deleteAdditionalMilestone(portfolioEntry.id, governanceListView.milestone.id).url"
                                                     ><span class="fa fa-trash"></span></a>
                                                 }

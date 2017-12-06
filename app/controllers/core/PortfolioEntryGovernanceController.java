@@ -749,6 +749,41 @@ public class PortfolioEntryGovernanceController extends Controller {
     }
 
     /**
+     * Deletes an additional milestone
+     */
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteAdditionalMilestone(Long id, Long milestoneId) {
+
+        LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
+
+        if (!milestone.isAdditional) {
+
+            Utilities.sendErrorFlashMessage("core.portfolio_entry_governance.planning.edit.milestone.delete.error");
+
+        } else {
+
+            // Delete milestone instances
+            LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(id, milestone.id).forEach(LifeCycleMilestoneInstance::doDelete);
+
+            // Update planning
+            LifeCyclePlanningDao.getPlannedLCMilestoneInstanceAsListByLCMilestoneAndPE(milestone.id, id).forEach(PlannedLifeCycleMilestoneInstance::doDelete);
+            LifeCycleMilestoneDao.getLCMilestoneAsListByPe(id).stream()
+                    .filter(m -> m.order == milestone.order && m.subOrder > milestone.subOrder)
+                    .forEach(m -> {
+                        m.subOrder--;
+                        m.update();
+                    });
+
+            // Delete milestone definition
+            milestone.doDelete();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.planning.edit.milestone.delete.successful"));
+        }
+
+        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(id));
+    }
+
+    /**
      * Processes the form to manage an additional milestone
      */
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
@@ -806,6 +841,7 @@ public class PortfolioEntryGovernanceController extends Controller {
         } else { // edit case
 
             milestone = LifeCycleMilestoneDao.getLCMilestoneById(formData.id);
+            milestones.remove(milestone);
             // Offset -1 subsequent milestones suborder in old position
             milestones.stream()
                     .filter(m -> m.order == milestone.order && m.subOrder > milestone.subOrder)
@@ -814,7 +850,13 @@ public class PortfolioEntryGovernanceController extends Controller {
                         m.update();
                     });
             milestone.order = previousMilestone == null ? -1 : previousMilestone.order;
-            milestone.subOrder = previousMilestone == null ? 0 : previousMilestone.subOrder + 1;
+            if (previousMilestone == null) {
+                milestone.subOrder = 0;
+            } else if (milestone.order == previousMilestone.order && milestone.subOrder < previousMilestone.subOrder) {
+                milestone.subOrder = previousMilestone.subOrder;
+            } else {
+                milestone.subOrder = previousMilestone.subOrder + 1;
+            }
             // Offset +1 subsequent milestones suborder in new position
             milestones.stream()
                     .filter(m -> m.order == milestone.order && m.subOrder >= milestone.subOrder)
@@ -822,6 +864,7 @@ public class PortfolioEntryGovernanceController extends Controller {
                         m.subOrder++;
                         m.update();
                     });
+            milestones.add(milestone);
             formData.fill(milestone);
             milestone.update();
 
@@ -861,14 +904,6 @@ public class PortfolioEntryGovernanceController extends Controller {
             });
 
         return milestonesAsVH;
-    }
-
-    /**
-     * Deletes an additional milestone
-     */
-    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result deleteAdditionalMilestone(Long id, Long milestoneId) {
-        return ok();
     }
 
     /**

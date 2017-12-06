@@ -176,6 +176,13 @@ button.upload=Upload
 button.open=Open
 
 #----------------------
+# Selector
+#----------------------
+select.select_all=Select all
+select.deselect_all=Deselect all
+select.none_selected=Nothing selected
+
+#----------------------
 # captcha
 #----------------------
 
@@ -2466,6 +2473,9 @@ core.portfolio_entry_governance.planning.edit.milestone.manage.previous_mileston
 core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insert in first position
 core.portfolio_entry_governance.planning.edit.milestone.add.successful=The additional milestone has been created successfully.
 core.portfolio_entry_governance.planning.edit.milestone.edit.successful=The additional milestone has been updated successfully.
+core.portfolio_entry_governance.planning.edit.milestone.delete.confirmation.message=Are you sure you want to delete this additional milestone?
+core.portfolio_entry_governance.planning.edit.milestone.delete.error=The selected milestone cannot be removed.
+core.portfolio_entry_governance.planning.edit.milestone.delete.successful=The additional milestone has been deleted.
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Change the life cycle process

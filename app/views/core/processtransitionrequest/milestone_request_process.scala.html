@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import dao.pmo.ActorDao
 @(
     request: models.governance.ProcessTransitionRequest,
     descriptionDocument: models.framework_models.common.Attachment,
@@ -159,10 +160,11 @@
 
                                 @parts.dateinput(requestForm("passedDate"), "core.process_transition_request.process_milestone_request.panel.form.passed_date.label")
 
-                                @parts.multivalue_picker(
+                                @parts.dropdownlist(
                                     requestForm("approvers"), 
                                     parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.approvers.label"),
-                                    controllers.routes.PickerController.actor().url
+                                    ActorDao.getActorActiveAsVH,
+                                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true
                                 )
 
                                 @helper.textarea(requestForm("gateComments"), '_showConstraints -> false, '_label -> "", 'placeholder -> parts.Msg.asString("core.process_transition_request.process_milestone_request.panel.form.comments.label"), 'rows -> "5")

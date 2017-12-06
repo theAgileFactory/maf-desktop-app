@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import dao.pmo.PortfolioDao
+@import dao.pmo.PortfolioEntryDao
 @(
     stakeholderTypeForm: Form[utils.form.StakeholderTypeFormData]
 )
@@ -59,16 +61,18 @@
 
                 @parts.multi_languages_input_text(stakeholderTypeForm("description"), parts.Msg.asString("object.stakeholder_type.description.label"))
                 
-                @parts.multivalue_picker(
+                @parts.dropdownlist(
                     stakeholderTypeForm("portfolioTypes"), 
                     parts.Msg.asString("object.stakeholder_type.portolio_types.label"),
-                    controllers.routes.PickerController.portfolioType().url
+                    PortfolioDao.getPortfolioTypeActiveAsVH,
+                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = false, multiple = true
                 )
                 
-                @parts.multivalue_picker(
+                @parts.dropdownlist(
                     stakeholderTypeForm("portfolioEntryTypes"), 
                     parts.Msg.asString("object.stakeholder_type.portolio_entry_types.label"),
-                    controllers.routes.PickerController.portfolioEntryType().url
+                    PortfolioEntryDao.getPETypeActiveAsVH,
+                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = false, multiple = true
                 )
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />
