@@ -762,7 +762,12 @@ preference.budget_tracking_effort_based_preference.name=Budget/Kostenprognose na
 preference.budget_tracking_effort_based_preference.description=Budget/Kostenprognose der Initiativen beinhalten automatisch den Aufwand der Ressourcen. Sobald eine Ressource zugeteilt wurde, erscheint sie im Budget.
 preference.read_only_governance_id_preference.name=Schreibgeschützte Initiative ID
 preference.read_only_governance_id_preference.description=Schreibgeschützte Initiative ID kann nicht gespeichert werden
-
+preference.governance_milestone_display_preference.name=Milestone label display style
+preference.governance_milestone_display_preference.description=Choose between different display types for the milestone labels.
+preference.governance_milestone_display_preference.short.name=Short display
+preference.governance_milestone_display_preference.short.description="Short name"
+preference.governance_milestone_display_preference.long.name=Long display
+preference.governance_milestone_display_preference.long.description="Short name" ("Name")
 
 #----------------------
 # authentication
@@ -2968,6 +2973,7 @@ admin.configuration.system_preferences.category.planning=Planung
 admin.configuration.system_preferences.category.financial=Finanzen
 admin.configuration.system_preferences.category.timesheet=Zeiterfassung
 admin.configuration.system_preferences.category.security=Sicherheit
+admin.configuration.system_preferences.category.governance=Unternehmensführung
 
 #edit
 admin.configuration.system_preferences.edit.success=Systemeinstellungen wurden aktualisiert.

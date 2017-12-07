@@ -80,8 +80,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
         super();
-        this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
-        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
     }
 
     /**
@@ -93,6 +91,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
 
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
 
         this.id = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocationId = allocatedActor.id;
@@ -142,6 +141,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
 
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
 
         this.id = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedOrgUnitId = allocatedOrgUnit.id;
@@ -189,6 +189,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency) {
 
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
 
         this.id = allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedCompetencyId = allocatedCompetency.id;

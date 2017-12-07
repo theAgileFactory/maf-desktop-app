@@ -763,6 +763,12 @@ preference.budget_tracking_effort_based_preference.name=Budget/prévison basé s
 preference.budget_tracking_effort_based_preference.description=Défini si la partie financière (budget et prévision) d''une initiative inclut automatiquement l''effort des ressources. Si actif, en ajoutant une affectation alors une ligne de budget et de prévision sont également ajoutées.
 preference.read_only_governance_id_preference.name=Numéro de gouvernance d''initiative en lecture seule
 preference.read_only_governance_id_preference.description=Empêche la modification d''un numéro de gouvernance d'initiative une fois que celle-ci est créée
+preference.governance_milestone_display_preference.name=Affichage du label des jalons
+preference.governance_milestone_display_preference.description=Permet de choisir entre différents styles d'affichage pour les labels de jalon.
+preference.governance_milestone_display_preference.short.name=Affichage court
+preference.governance_milestone_display_preference.short.description="Nom court"
+preference.governance_milestone_display_preference.long.name=Affichage long
+preference.governance_milestone_display_preference.long.description="Nom court" ("Nom")
 
 #----------------------
 # authentication
@@ -2971,6 +2977,7 @@ admin.configuration.system_preferences.category.planning=Planification
 admin.configuration.system_preferences.category.financial=Finances
 admin.configuration.system_preferences.category.timesheet=Feuille de temps
 admin.configuration.system_preferences.category.security=Sécurité
+admin.configuration.system_preferences.category.governance=Gouvernance
 
 #edit
 admin.configuration.system_preferences.edit.success=Les préférences systèmes ont été mises à jour.

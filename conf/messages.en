@@ -751,6 +751,12 @@ preference.budget_tracking_effort_based_preference.name=Effort-based budget/fore
 preference.budget_tracking_effort_based_preference.description=Define if the financial part (budget and forecast) of an initiative automatically includes the effort of the resources. If true, by adding an allocation then a budget and forecast lines are also added.
 preference.read_only_governance_id_preference.name=Read-only initiative governance id
 preference.read_only_governance_id_preference.description=Prevent the edition of the governance id once the initiative is created
+preference.governance_milestone_display_preference.name=Milestone label display style
+preference.governance_milestone_display_preference.description=Choose between different display types for the milestone labels.
+preference.governance_milestone_display_preference.short.name=Short display
+preference.governance_milestone_display_preference.short.description="Short name"
+preference.governance_milestone_display_preference.long.name=Long display
+preference.governance_milestone_display_preference.long.description="Short name" ("Name")
 
 #----------------------
 # authentication
@@ -2957,6 +2963,7 @@ admin.configuration.system_preferences.category.planning=Planning
 admin.configuration.system_preferences.category.financial=Financials
 admin.configuration.system_preferences.category.timesheet=Timesheet
 admin.configuration.system_preferences.category.security=Security
+admin.configuration.system_preferences.category.governance=Governance
 
 #edit
 admin.configuration.system_preferences.edit.success=The system preferences have been updated.
