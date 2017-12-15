@@ -353,6 +353,7 @@ custom_attribute.type.DYNAMIC_SINGLE_ITEM.label=Autocomplete
 custom_attribute.type.IMAGE.label=Image
 custom_attribute.type.MULTI_ITEM.label=Multi dropdown
 custom_attribute.type.URL.label=URL
+custom_attribute.type.SCRIPT.label=Script
 
 #----------------------
 # Notification
@@ -905,6 +906,7 @@ object.custom_attribute_definition.group.label=Group
 object.custom_attribute_definition.name.label=Name
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
+object.custom_attribute_definition.configuration.script.invalid=Error in script configuration: {0}
 object.custom_attribute_definition.is_displayed.label=Displayed
 object.custom_attribute_definition.is_displayed.help=Check this box to display the custom attribute in the corresponding tables.
 object.custom_attribute_definition.conditional_rule.label=Conditional rule

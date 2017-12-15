@@ -364,6 +364,7 @@ custom_attribute.type.DYNAMIC_SINGLE_ITEM.label=Automatisch vervollständigen
 custom_attribute.type.IMAGE.label=Bild
 custom_attribute.type.MULTI_ITEM.label=Dropdown mehrfach
 custom_attribute.type.URL.label=URL
+custom_attribute.type.SCRIPT.label=Script
 
 #----------------------
 # Notification
@@ -915,6 +916,7 @@ object.custom_attribute_definition.attribute_type.label=Typ
 object.custom_attribute_definition.name.label=Name
 object.custom_attribute_definition.description.label=Beschreibung
 object.custom_attribute_definition.configuration.label=Konfiguration
+object.custom_attribute_definition.configuration.script.invalid=Error in script configuration: {0}
 object.custom_attribute_definition.is_displayed.label=Anzeigen
 object.custom_attribute_definition.is_displayed.help=Die Zusatzfelder werden in den entsprechenden Tabellen angezeigt.
 object.custom_attribute_definition.conditional_rule.label=Bedingung

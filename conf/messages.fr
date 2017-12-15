@@ -365,6 +365,7 @@ custom_attribute.type.DYNAMIC_SINGLE_ITEM.label=Autocomplétion
 custom_attribute.type.IMAGE.label=Image
 custom_attribute.type.MULTI_ITEM.label=Menu déroulant à choix multiple
 custom_attribute.type.URL.label=URL
+custom_attribute.type.SCRIPT.label=Script
 
 #----------------------
 # Notification
@@ -917,6 +918,7 @@ object.custom_attribute_definition.group.label=Groupe
 object.custom_attribute_definition.name.label=Nom
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
+object.custom_attribute_definition.configuration.script.invalid=Erreur dans la configuration du script: {0}
 object.custom_attribute_definition.is_displayed.label=Affiché
 object.custom_attribute_definition.is_displayed.help=Cocher cette case pour afficher l''attribut personnalisé dans les tables.
 object.custom_attribute_definition.conditional_rule.label=Règle conditionnelle
