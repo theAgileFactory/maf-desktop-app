@@ -17,17 +17,17 @@
  */
 package utils.form;
 
-import java.text.ParseException;
-
-import models.governance.PlannedLifeCycleMilestoneInstance;
 import framework.utils.Utilities;
+import models.governance.PlannedLifeCycleMilestoneInstance;
+
+import java.text.ParseException;
 
 /**
  * An planned date form data is used to update a planned date.
  * 
  * @author Johann Kohler
  */
-public class PlannedDateFormData {
+public class PlannedDateFormData extends AbstractFormData<PlannedLifeCycleMilestoneInstance> {
 
     public Long plannedDateId;
 
@@ -59,14 +59,12 @@ public class PlannedDateFormData {
      * @param plannedLifeCycleMilestoneInstance
      *            the planned milestone instance in the DB
      */
-    public void fill(PlannedLifeCycleMilestoneInstance plannedLifeCycleMilestoneInstance) {
-
+    public void fillEntity(PlannedLifeCycleMilestoneInstance plannedLifeCycleMilestoneInstance) {
         try {
             plannedLifeCycleMilestoneInstance.plannedDate = Utilities.getDateFormat(null).parse(plannedDate);
         } catch (ParseException e) {
             plannedLifeCycleMilestoneInstance.plannedDate = null;
         }
-
     }
 
 }
