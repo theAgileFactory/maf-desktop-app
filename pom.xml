@@ -102,12 +102,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.agifac.lib</groupId>
+			<groupId>com.sword-group.bizdock.lib</groupId>
 			<artifactId>app-framework</artifactId>
 			<version>${lib.app-framework.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>com.agifac.maf.desktop</groupId>
+            <groupId>com.sword-group.bizdock.desktop</groupId>
             <artifactId>maf-desktop-datamodel</artifactId>
             <version>${maf.maf-desktop-datamodel.version}</version>
         </dependency>
