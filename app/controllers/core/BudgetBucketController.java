@@ -107,25 +107,6 @@ public class BudgetBucketController extends Controller {
         }
         Table<BudgetBucketLineListView> budgetBucketLinesTable = this.getTableProvider().get().budgetBucketLine.templateTable.fill(budgetBucketLineListView);
 
-        // create the portfolio entry budget table (call initiative budget)
-        Set<String> hideColumnsForInitiativeBudgetTable = new HashSet<String>();
-        hideColumnsForInitiativeBudgetTable.add("refId");
-        hideColumnsForInitiativeBudgetTable.add("editActionLink");
-        hideColumnsForInitiativeBudgetTable.add("removeActionLink");
-        hideColumnsForInitiativeBudgetTable.add("budgetBucket");
-
-        Pagination<PortfolioEntryBudgetLine> initiativeBudgetLinesPagination = PortfolioEntryBudgetDAO
-                .getPEBudgetLineActiveAsPaginationByBucket(this.getPreferenceManagerPlugin(), id);
-        initiativeBudgetLinesPagination.setCurrentPage(initiativeBudgetTablePage);
-        initiativeBudgetLinesPagination.setPageQueryName("initiativeBudgetTablePage");
-
-        List<PortfolioEntryBudgetLineListView> initiativeBudgetLineListView = new ArrayList<PortfolioEntryBudgetLineListView>();
-        for (PortfolioEntryBudgetLine budgetLine : initiativeBudgetLinesPagination.getListOfObjects()) {
-            initiativeBudgetLineListView.add(new PortfolioEntryBudgetLineListView(budgetLine));
-        }
-        Table<PortfolioEntryBudgetLineListView> initiativeBudgetLinesTable = this.getTableProvider().get().portfolioEntryBudgetLine.templateTable
-                .fill(initiativeBudgetLineListView, hideColumnsForInitiativeBudgetTable);
-
         // compute the total budgets
         opexTotalBudget = BudgetBucketDAO.getBudgetAsAmountByBucketAndOpex(id, true);
         capexTotalBudget = BudgetBucketDAO.getBudgetAsAmountByBucketAndOpex(id, false);
@@ -149,7 +130,7 @@ public class BudgetBucketController extends Controller {
         basicBar.addElem(opexElem);
 
         return ok(views.html.core.budgetbucket.budget_bucket_view.render(budgetBucket, budgetBucketFormData, budgetBucketLinesTable,
-                budgetBucketLinesPagination, initiativeBudgetLinesTable, initiativeBudgetLinesPagination, basicBar));
+                budgetBucketLinesPagination, basicBar));
     }
 
     /**

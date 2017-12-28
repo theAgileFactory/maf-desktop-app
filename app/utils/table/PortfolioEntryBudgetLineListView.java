@@ -17,167 +17,67 @@
  */
 package utils.table;
 
-import constants.IMafConstants;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import controllers.core.routes;
-import framework.services.account.IPreferenceManagerPlugin;
-import framework.services.configuration.II18nMessagesPlugin;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.formats.NumberFormatter;
-import framework.utils.formats.ObjectFormatter;
-import framework.utils.formats.StringFormatFormatter;
-import models.finance.BudgetBucket;
-import models.finance.Currency;
+import dao.finance.PortfolioEntryBudgetDAO;
+import dao.pmo.PortfolioEntryDao;
 import models.finance.PortfolioEntryBudgetLine;
-import models.finance.PortfolioEntryBudgetLineType;
-import models.pmo.PortfolioEntry;
+import utils.table.common.BudgetBucketLink;
+import utils.table.common.FinancialNumber;
+import utils.table.serializer.FinancialSerializer;
 
 import java.math.BigDecimal;
-import java.text.MessageFormat;
 
 /**
  * A portfolio entry budget line list view is used to display an portfolio entry
  * budget line in a table.
- * 
- * @author Johann Kohler
+ *
+ * @author Guillaume petit
  */
+@JsonAutoDetect()
+@JsonRootName("data")
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class PortfolioEntryBudgetLineListView {
 
-    /**
-     * The definition of the table.
-     * 
-     * @author Johann Kohler
-     */
-    public static class TableDefinition {
-
-        public Table<PortfolioEntryBudgetLineListView> templateTable;
-
-        public TableDefinition(II18nMessagesPlugin i18nMessagesPlugin, IPreferenceManagerPlugin iPreferenceManagerPlugin) {
-            this.templateTable = getTable(i18nMessagesPlugin, iPreferenceManagerPlugin);
-        }
-
-        /**
-         * Get the table.
-         */
-        public Table<PortfolioEntryBudgetLineListView> getTable(II18nMessagesPlugin i18nMessagesPlugin, IPreferenceManagerPlugin preferenceManagerPlugin) {
-            return new Table<PortfolioEntryBudgetLineListView>() {
-                {
-                    setIdFieldName("id");
-
-                    addColumn("refId", "refId", "object.portfolio_entry_budget_line.ref_id.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("refId", new ObjectFormatter<>());
-
-                    addColumn("name", "name", "object.portfolio_entry_budget_line.name.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("name", new ObjectFormatter<>());
-
-                    addColumn("portfolioEntryName", "portfolioEntryName", "object.portfolio_entry_budget_line.portfolio_entry.label",
-                            Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryName", new ObjectFormatter<>());
-
-                    addColumn("isOpex", "isOpex", "object.portfolio_entry_budget_line.expenditure_type.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isOpex", (portfolioEntryBudgetLineListView, value) -> views.html.modelsparts.display_is_opex.render(portfolioEntryBudgetLineListView.isOpex).body());
-
-                    addColumn("currency", "currency", "object.portfolio_entry_budget_line.currency.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("currency", new ObjectFormatter<>());
-
-                    addSummableColumn("amount", "amount", "object.portfolio_entry_budget_line.amount.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("amount", new NumberFormatter<>(NumberFormatter.CURRENCY_PATTERN));
-                    setColumnValueCssClass("amount", "text-right");
-                    setColumnHeaderCssClass("amount", "text-right");
-
-                    addColumn("portfolioEntryBudgetLineType", "portfolioEntryBudgetLineType", "object.portfolio_entry_budget_line.type.label",
-                            Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("portfolioEntryBudgetLineType", (portfolioEntryBudgetLineListView, value) -> views.html.modelsparts.display_portfolio_entry_budget_line_type
-                            .render(portfolioEntryBudgetLineListView.portfolioEntryBudgetLineType).body());
-
-                    addColumn("budgetBucket", "budgetBucket", "object.portfolio_entry_budget_line.budget_bucket.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("budgetBucket", (portfolioEntryBudgetLineListView, value) -> views.html.modelsparts.display_budget_bucket.render(portfolioEntryBudgetLineListView.budgetBucket).body());
-                    setColumnValueCssClass("budgetBucket", "rowlink-skip");
-
-                    addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryBudgetLine.class);
-
-                    addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<>(IMafConstants.EDIT_URL_FORMAT,
-                            (StringFormatFormatter.Hook<PortfolioEntryBudgetLineListView>) portfolioEntryBudgetLineListView -> routes.PortfolioEntryFinancialController
-                                    .manageBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId, portfolioEntryBudgetLineListView.id).url()));
-                    setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                    setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                    addColumn("removeActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("removeActionLink", (portfolioEntryBudgetLineListView, value) -> {
-                        if (!portfolioEntryBudgetLineListView.fromResource) {
-                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                    Msg.get("default.delete.confirmation.message"));
-                            String url = routes.PortfolioEntryFinancialController
-                                    .deleteBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId, portfolioEntryBudgetLineListView.id).url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                        } else {
-                            return null;
-                        }
-                    });
-                    setColumnCssClass("removeActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
-                    setColumnValueCssClass("removeActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
-
-                    this.setLineAction((portfolioEntryBudgetLineListView, value) -> routes.PortfolioEntryFinancialController
-                            .viewBudgetLine(portfolioEntryBudgetLineListView.portfolioEntryId, portfolioEntryBudgetLineListView.id).url());
-
-                    setEmptyMessageKey("object.portfolio_entry_budget_line.table.empty");
-
-                }
-            };
-
-        }
-
-    }
-
-    /**
-     * Default constructor.
-     */
     public PortfolioEntryBudgetLineListView() {
     }
 
     public Long id;
 
-    public Long portfolioEntryId;
+    public String link;
 
     public String name;
 
-    public String portfolioEntryName;
-
     public String refId;
 
-    public Boolean isOpex;
+    public String expenditureType;
 
-    public Currency currency;
+    public String currency;
 
-    public BigDecimal amount;
+    public FinancialNumber amount;
 
-    public BudgetBucket budgetBucket;
+    public BudgetBucketLink budgetBucket;
 
-    public boolean fromResource;
-
-    public PortfolioEntryBudgetLineType portfolioEntryBudgetLineType;
+    public String portfolioEntryBudgetLineType;
 
     /**
      * Construct a list view with a DB entry.
-     * 
+     *
      * @param budgetLine
      *            the portfolio entry budget line in the DB
      */
     public PortfolioEntryBudgetLineListView(PortfolioEntryBudgetLine budgetLine) {
-
-        PortfolioEntry portfolioEntry = budgetLine.portfolioEntryBudget.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry;
-
         this.id = budgetLine.id;
-        this.portfolioEntryId = portfolioEntry.id;
+        this.link = routes.PortfolioEntryFinancialController.viewBudgetLine(budgetLine.portfolioEntryBudget.lifeCycleInstancePlannings.stream().filter(planning -> !planning.isFrozen).findFirst().get().lifeCycleInstance.portfolioEntry.id, budgetLine.id).url();
         this.name = budgetLine.name;
-        this.portfolioEntryName = portfolioEntry.getName();
         this.refId = budgetLine.refId;
-        this.isOpex = budgetLine.isOpex;
-        this.currency = budgetLine.currency;
-        this.amount = budgetLine.amount;
-        this.budgetBucket = budgetLine.budgetBucket;
-        this.fromResource = budgetLine.resourceObjectType != null;
-        this.portfolioEntryBudgetLineType = budgetLine.portfolioEntryBudgetLineType;
+        this.expenditureType = budgetLine.isOpex ? "OPEX" : "CAPEX";
+        this.currency = budgetLine.currency == null ? "" : budgetLine.currency.code;
+        this.amount = new FinancialNumber(budgetLine.amount.doubleValue());
+        this.budgetBucket = new BudgetBucketLink(budgetLine.budgetBucket);
+        this.portfolioEntryBudgetLineType = budgetLine.portfolioEntryBudgetLineType == null ? "" : budgetLine.portfolioEntryBudgetLineType.name;
     }
 }

@@ -224,10 +224,6 @@ public class PortfolioEntryGovernanceController extends Controller {
                     portfolioEntryBudgetLineListView.add(new PortfolioEntryBudgetLineListView(budgetLine));
                 }
 
-                // add the table
-                budgetLinesTables.add(this.getTableProvider().get().portfolioEntryBudgetLine.templateTable.fill(portfolioEntryBudgetLineListView,
-                        columnsToHideForBudgetLine));
-
             } else {
                 budgetLinesTables.add(null);
             }

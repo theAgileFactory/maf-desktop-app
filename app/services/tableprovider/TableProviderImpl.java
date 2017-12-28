@@ -65,7 +65,7 @@ public class TableProviderImpl implements ITableProvider {
     @Override
     public TableDefinitions get() {
         if (this.tableDefinitions == null) {
-            this.tableDefinitions = new TableDefinitions(this.getKpiService(), this.getI18nMessagesPlugin(), this.getAttachmentManagerPlugin(), this.getPreferenceManagerPlugin());
+            this.tableDefinitions = new TableDefinitions(this.getKpiService(), this.getI18nMessagesPlugin(), this.getAttachmentManagerPlugin());
         }
         return this.tableDefinitions;
     }
@@ -86,7 +86,6 @@ public class TableProviderImpl implements ITableProvider {
         this.get().portfolioEntryEvent.templateTable = this.get().portfolioEntryEvent.getTable(this.getI18nMessagesPlugin());
         this.get().deliverable.templateTable = this.get().deliverable.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntry.templateTable = this.get().portfolioEntry.getTable(this.getKpiService(), this.getI18nMessagesPlugin());
-        this.get().portfolioEntryBudgetLine.templateTable = this.get().portfolioEntryBudgetLine.getTable(this.getI18nMessagesPlugin(), this.getPreferenceManagerPlugin());
         this.get().portfolioEntryBudgetLineType.templateTable = this.get().portfolioEntryBudgetLineType.getTable(this.getI18nMessagesPlugin());
         this.get().portfolioEntryReport.templateTable = this.get().portfolioEntryReport.getTable(this.getI18nMessagesPlugin());
         this.get().iteration.templateTable = this.get().iteration.getTable(this.getI18nMessagesPlugin());
