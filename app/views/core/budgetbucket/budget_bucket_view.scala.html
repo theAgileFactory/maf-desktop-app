@@ -20,8 +20,6 @@
     budgetBucketFormData: utils.form.BudgetBucketFormData,
     budgetBucketLineTable: framework.utils.Table[utils.table.BudgetBucketLineListView],
     budgetBucketLinePagination: framework.utils.Pagination[models.finance.BudgetBucketLine],
-    initiativeBudgetLineTable: framework.utils.Table[utils.table.PortfolioEntryBudgetLineListView],
-    initiativeBudgetLinePagination: framework.utils.Pagination[models.finance.PortfolioEntryBudgetLine],
     basicBar: framework.highcharts.pattern.BasicBar
 )
 
@@ -137,7 +135,6 @@
                 </div>
     
                 <div class="panel-body">
-                    @parts.table.tableview_with_pagination_and_queryparams(initiativeBudgetLineTable, initiativeBudgetLinePagination, null, null, "id=" + budgetBucket.id)
                 </div>
                 
             </div>

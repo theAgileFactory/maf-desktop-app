@@ -147,12 +147,6 @@ public class PortfolioEntryFinancialController extends Controller {
 
         // construct the table and compute the totals for the default currency
         List<PortfolioEntryBudgetLine> budgetLines = budget.portfolioEntryBudgetLines;
-        List<PortfolioEntryBudgetLineListView> portfolioEntryBudgetLineListView = new ArrayList<PortfolioEntryBudgetLineListView>();
-        for (PortfolioEntryBudgetLine budgetLine : budgetLines) {
-            portfolioEntryBudgetLineListView.add(new PortfolioEntryBudgetLineListView(budgetLine));
-        }
-        Table<PortfolioEntryBudgetLineListView> budgetLinesTable = this.getTableProvider().get().portfolioEntryBudgetLine.templateTable
-                .fill(portfolioEntryBudgetLineListView, hideColumnsForBudgetTable);
 
         /*
          * create the work orders tables
@@ -246,8 +240,7 @@ public class PortfolioEntryFinancialController extends Controller {
 
         }
 
-        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_financial_details.render(portfolioEntry, budgetLinesTable,
-                costToCompleteWorkOrderTable, engagedWorkOrderTable, lineItemsTable));
+        return ok(views.html.core.portfolioentryfinancial.portfolio_entry_financial_details.render(portfolioEntry, costToCompleteWorkOrderTable, engagedWorkOrderTable, lineItemsTable));
     }
 
     /**

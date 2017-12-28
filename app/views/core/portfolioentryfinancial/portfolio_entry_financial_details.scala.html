@@ -17,7 +17,6 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    budgetLineTable: framework.utils.Table[utils.table.PortfolioEntryBudgetLineListView],
     costToCompleteWorkOrderTable: framework.utils.Table[utils.table.WorkOrderListView],
     engagedWorkOrderTable: framework.utils.Table[utils.table.WorkOrderListView],
     lineItemTable: framework.utils.Table[utils.table.PurchaseOrderLineItemListView]
@@ -68,7 +67,18 @@
         </div>
 
         <div class="panel-body">
-            @parts.table.tableview(budgetLineTable)
+            <table id="budgetLineTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.ref_id.label")</th>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.name.label")</th>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.expenditure_type.label")</th>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.currency.label")</th>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.amount.label")</th>
+                        <th>@parts.Msg("object.portfolio_entry_budget_line.budget_bucket.label")</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
     
@@ -140,6 +150,43 @@
     
     <script>
         $('.run-budget-tracking-link').tooltip();
+
+        $(document).ready(function () {
+            var budgetLineTableElement = $('#budgetLineTable');
+            var budgetLineTable = budgetLineTableElement.DataTable({
+                ajax: {
+                    url: '@controllers.api.table.routes.PortfolioEntryTableController.getPortfolioEntryBudgetLineListView(portfolioEntry.id).url',
+                    dataSrc: ''
+                },
+                deferRender: true,
+                searchable: false,
+                columns: [
+                    { data: 'refId' },
+                    { data: 'name' },
+                    { data: 'expenditureType' },
+                    { data: 'currency' },
+                    { data: 'amount', render: { _: 'amount', display: 'display' } },
+                    { data: 'budgetBucket', render: { _: 'text', display: 'display' } }
+                ],
+                columnDefs: [
+                    { targets: '_all', searchable: true }
+                ]
+            });
+
+            yadcf.init(budgetLineTable, [
+                { column_number: 0, filter_type: 'text' },
+                { column_number: 1, filter_type: 'text' },
+                { column_number: 2, filter_type: 'multi_select' },
+                { column_number: 3, filter_type: 'multi_select' },
+                { column_number: 4, filter_type: 'range_number_slider' },
+                { column_number: 5, filter_type: 'text' }
+            ]);
+
+            budgetLineTableElement.find('tbody').on('click', 'tr', function() {
+                window.location.href = budgetLineTable.row(this).data()['link'];
+            });
+        })
+
     </script>
 
 

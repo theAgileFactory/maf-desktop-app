@@ -1004,6 +1004,10 @@ PUT     /api/core/user/:maf_id/                                         controll
 PUT     /api/core/user/:uid/roles/:role_id/add                          controllers.api.core.UserApiController.addRole(uid: String, role_id: Long)
 PUT     /api/core/user/:uid/roles/:role_id/remove                       controllers.api.core.UserApiController.removeRole(uid: String, role_id: Long)
 
+#-----------#
+# Table API #
+#-----------#
+GET     /api/table/portfolio-entry/:portfolioEntryId/budget-lines       controllers.api.table.PortfolioEntryTableController.getPortfolioEntryBudgetLineListView(portfolioEntryId: Long)
 
 # Doc
 GET     /api-docs                                                         framework.services.api.doc.ApiHelpController.getResources
