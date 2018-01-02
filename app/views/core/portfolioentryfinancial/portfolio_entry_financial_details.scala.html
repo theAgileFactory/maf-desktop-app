@@ -50,11 +50,12 @@
     
     <h4>@parts.Msg("core.portfolio_entry_financial.view.budget.title")</h4>
 
+
     <div class="panel panel-default">
-    
+
         <div class="panel-heading">
             @parts.Msg("core.portfolio_entry_financial.view.budget.panel.budget.title")
-            
+
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
                     @if(_budgetTrackingService.isActive()) {
@@ -67,6 +68,29 @@
         </div>
 
         <div class="panel-body">
+            <div class="row">
+                <div id="budget-line-table-filters" class="col-md-7">
+                    <a id="budgetLineTable_filterContainerCollapse" data-toggle="button" href="#"><i class="fa fa-minus-circle"></i>&nbsp;<small>@parts.Msg("filter.togglebutton.label")</small></a>
+                    <ul id="budgetLineTable_filterContainer" class="list-inline">
+                    </ul>
+                </div>
+                <div class="col-md-5">
+
+                    <div class="row">
+
+                        <div class="col-md-6 text-right" id="budgetLineTable_filterConfiguration">
+                        </div>
+
+                        <div class="col-md-4 text-right" id="budgetLineTable_currentFilterConfiguration">
+                            <a href="#" class="btn btn-primary" id="budgetLineTable_columnsSelector"><i class="fa fa-cog"></i></a>
+                        </div>
+
+                        <div class="col-md-2 text-right">
+                            <a href="#" class="btn btn-primary" id="budgetLineTable_exportAsExcel"><i class="fa fa-download"></i></a>
+                        </div>
+
+                    </div>
+            </div>
             <table id="budgetLineTable" class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -153,13 +177,16 @@
 
         $(document).ready(function () {
             var budgetLineTableElement = $('#budgetLineTable');
+            var filterContainerElement = $('#budgetLineTable_filterContainer');
+            var filterContainerCollapseElement = $('#budgetLineTable_filterContainerCollapse');
+
             var budgetLineTable = budgetLineTableElement.DataTable({
                 ajax: {
                     url: '@controllers.api.table.routes.PortfolioEntryTableController.getPortfolioEntryBudgetLineListView(portfolioEntry.id).url',
                     dataSrc: ''
                 },
                 deferRender: true,
-                searchable: false,
+                stateSave: true,
                 columns: [
                     { data: 'refId' },
                     { data: 'name' },
@@ -167,23 +194,34 @@
                     { data: 'currency' },
                     { data: 'amount', render: { _: 'amount', display: 'display' } },
                     { data: 'budgetBucket', render: { _: 'text', display: 'display' } }
-                ],
-                columnDefs: [
-                    { targets: '_all', searchable: true }
                 ]
             });
 
-            yadcf.init(budgetLineTable, [
-                { column_number: 0, filter_type: 'text' },
-                { column_number: 1, filter_type: 'text' },
-                { column_number: 2, filter_type: 'multi_select' },
-                { column_number: 3, filter_type: 'multi_select' },
-                { column_number: 4, filter_type: 'range_number_slider' },
-                { column_number: 5, filter_type: 'text' }
-            ]);
-
             budgetLineTableElement.find('tbody').on('click', 'tr', function() {
                 window.location.href = budgetLineTable.row(this).data()['link'];
+            });
+
+            budgetLineTableElement.find('thead th').each(function(index) {
+                var title = $(this).text();
+                var filterId = 'budgetLineTable_filterContainer_'+index;
+
+                filterContainerElement.append('<li class="filter-input"><div><strong>'+title+'</strong></div><input id="'+filterId+'" class="form-control input-sm" type="text" />');
+
+                $('#'+filterId).on('keyup change', function() {
+                    var column = budgetLineTable.column(index);
+                    if (column.search() !== this.value){
+                        column.search(this.value).draw();
+                    }
+                })
+            });
+
+            filterContainerCollapseElement.click(function(){
+                filterContainerCollapseElement.find('i').toggleClass('fa-minus-circle').toggleClass('fa-plus-circle');
+                if(filterContainerCollapseElement.find('i').hasClass('fa-minus-circle')){
+                    filterContainerElement.show();
+                }else{
+                    filterContainerElement.hide();
+                }
             });
         })
 
