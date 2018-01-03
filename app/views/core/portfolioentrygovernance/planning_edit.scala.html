@@ -29,6 +29,7 @@
 @import framework_views.parts
 @import framework_views.parts.formats._
 @import views.html.modelsparts._
+@import java.lang.Long; var previousMilestoneId=0L
 
 @breadcrump=@{
     Seq(
@@ -44,6 +45,12 @@
         
         <div class="panel-heading">
             @parts.Msg("core.portfolio_entry_governance.planning.edit.title")
+
+            @if(lastPlanning.lifeCycleInstance.lifeCycleProcess.isFlexible) {
+                <div class="pull-right">
+                    <a href="@controllers.core.routes.PortfolioEntryGovernanceController.manageAdditionalMilestone(portfolioEntry.id)"><span class="fa fa-plus fa-lg"></span></a>
+                </div>
+            }
         </div>
 
         <div class="panel-body">
@@ -63,20 +70,23 @@
                         <table class="table table-condensed table-hover">
                             <colgroup>
                                 <col class="col-md-4">
-                                <col class="col-md-4">
-                                <col class="col-md-4">
+                                <col class="col-md-3">
+                                <col class="col-md-3">
+                                <col class="col-md-1">
+                                <col class="col-md-1">
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th>@parts.Msg("object.life_cycle_milestone_instance.milestone.label")</th>
                                     <th>@parts.Msg("object.planned_life_cycle_milestone_instance.planned_date.label")</th>
                                     <th>@parts.Msg("object.life_cycle_milestone_instance.status.label")</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @repeat(plannedDatesForm("plannedDates")) { plannedDateField =>
-                        
-                                    @defining(governanceListViewsAsMap.get(Long.parseLong(plannedDateField("plannedDateId").value.get))) { governanceListView =>
+                                    @defining(governanceListViewsAsMap.get(java.lang.Long.parseLong(plannedDateField("plannedDateId").value.get))) { governanceListView =>
                                         <tr>
                                             <td>
                                                 @display_milestone(governanceListView.milestone)
@@ -92,11 +102,25 @@
                                             <td>
                                                 @display_list_of_values(governanceListView.status)
                                             </td>
+                                            <td class="text-right rowlink-skip">
+                                                @if(governanceListView.milestone.isAdditional) {
+                                                    <a href="@controllers.core.routes.PortfolioEntryGovernanceController.manageAdditionalMilestone(portfolioEntry.id, governanceListView.milestone.id, previousMilestoneId).url"
+                                                    ><span class="fa fa-pencil-square-o"></span></a>
+                                                }
+                                            </td>
+                                            <td class="text-right rowlink-skip">
+                                                @if(governanceListView.milestone.isAdditional) {
+                                                    <a
+                                                        onclick="return maf_confirmAction('@parts.Msg("core.portfolio_entry_governance.planning.edit.milestone.delete.confirmation.message")');"
+                                                        href="@controllers.core.routes.PortfolioEntryGovernanceController.deleteAdditionalMilestone(portfolioEntry.id, governanceListView.milestone.id).url"
+                                                    ><span class="fa fa-trash"></span></a>
+                                                }
+                                            </td>
                                         </tr>
-        
+                                        @{previousMilestoneId=governanceListView.milestone.id}
                                     }
                                 }
-                                
+
                             </tbody>
                         </table>
         

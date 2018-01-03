@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import framework.utils.ISelectableValueHolderCollection
 @(
     reporting: models.reporting.Reporting,
-    reportingForm: Form[utils.form.ReportingFormData]
+    reportingForm: Form[utils.form.ReportingFormData],
+    userAccounts: ISelectableValueHolderCollection[String]
 )
 
 @import helper._
@@ -79,7 +81,7 @@
 				@parts.dropdownlist(
                     reportingForm("defaultFormat"),
                     parts.Msg.asString("object.reporting.default_format.label"),
-                    reporting.getFormatsAsVHC(), 
+                    reporting.getFormatsAsVHC,
 					null, 
 					false)
 				 </div>
@@ -90,10 +92,11 @@
                     controllers.admin.routes.ReportingCategoryController.search().url
                 )
                 
-                @parts.multivalue_picker(
+                @parts.dropdownlist(
                     reportingForm("principals"), 
                     parts.Msg.asString("object.reporting.principals.label"),
-                    controllers.routes.PickerController.principalsUid().url
+                    userAccounts,
+                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true
                 )
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

@@ -508,9 +508,7 @@ public class ConfigurationGovernanceController extends Controller {
             milestone.doDelete();
 
             // remove the planned date
-            for (PlannedLifeCycleMilestoneInstance plannedDate : LifeCyclePlanningDao.getPlannedLCMilestoneInstanceAsListByLCMilestone(milestone.id)) {
-                plannedDate.doDelete();
-            }
+            LifeCyclePlanningDao.getPlannedLCMilestoneInstanceAsListByLCMilestone(milestone.id).forEach(PlannedLifeCycleMilestoneInstance::doDelete);
 
             Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.life_cycle_milestone.delete.successful"));
 

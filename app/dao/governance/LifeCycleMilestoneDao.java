@@ -31,6 +31,7 @@ import models.pmo.PortfolioEntry;
 import services.budgettracking.IBudgetTrackingService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * DAO for the {@link LifeCycleMilestone} and {@link LifeCycleMilestoneInstance}
@@ -549,16 +550,14 @@ public abstract class LifeCycleMilestoneDao {
      */
     public static List<String> getLCMilestoneAsStatusByPEAndLCMilestone(Long portfolioEntryId, Long lifeCycleMilestoneId) {
 
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(portfolioEntryId);
-
         List<String> status = new ArrayList<>();
-        for (LifeCycleMilestone milestone : portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.lifeCycleMilestones) {
+        for (LifeCycleMilestone milestone : LifeCycleMilestoneDao.getLCMilestoneAsListByPe(portfolioEntryId)) {
 
             if (milestone.isActive) {
 
                 String cssClass = null;
 
-                List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntry.id,
+                List<LifeCycleMilestoneInstance> milestoneInstances = LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(portfolioEntryId,
                         milestone.id, "DESC");
                 if (milestoneInstances.size() > 0) {
                     LifeCycleMilestoneInstance lastMilestoneInstance = milestoneInstances.get(0);
@@ -730,4 +729,16 @@ public abstract class LifeCycleMilestoneDao {
 
     }
 
+    /**
+     * Get available milestones for a portfolio entry (including additional milestones defined in the planning) as list
+     *
+     * @param portfolioEntryId the portfolio entry id
+     */
+    public static List<LifeCycleMilestone> getLCMilestoneAsListByPe(Long portfolioEntryId) {
+
+        return LifeCyclePlanningDao.getPlannedLCMilestoneInstanceLastAsListByPE(portfolioEntryId)
+                .stream()
+                .map(plannedMilestone -> plannedMilestone.lifeCycleMilestone)
+                .collect(Collectors.toList());
+    }
 }

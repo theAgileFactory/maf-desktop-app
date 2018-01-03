@@ -110,6 +110,7 @@ public class ConfigurationController extends Controller {
             add(IMafConstants.READONLY_GOVERNANCE_ID_PREFERENCE);
             add(IFrameworkConstants.API_AUTHZ_MODE_PREFERENCE);
             add(IFrameworkConstants.NOTIFICATION_SENDING_SYSTEM_PREFERENCE);
+            add(IFrameworkConstants.GOVERNANCE_MILESTONE_DISPLAY_PREFERENCE);
         }
     };
 

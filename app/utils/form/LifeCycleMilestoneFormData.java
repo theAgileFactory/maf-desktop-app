@@ -19,6 +19,7 @@ package utils.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dao.governance.LifeCycleMilestoneDao;
 import dao.pmo.ActorDao;
@@ -121,9 +122,7 @@ public class LifeCycleMilestoneFormData {
         this.isActive = lifeCycleMilestone.isActive;
         this.type = lifeCycleMilestone.type != null ? lifeCycleMilestone.type.name() : null;
         if (lifeCycleMilestone.approvers != null) {
-            for (Actor approver : lifeCycleMilestone.approvers) {
-                this.approvers.add(approver.id);
-            }
+            this.approvers.addAll(lifeCycleMilestone.approvers.stream().map(approver -> approver.id).collect(Collectors.toList()));
         }
 
     }

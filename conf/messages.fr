@@ -188,6 +188,13 @@ button.upload=Télécharger
 button.open=Ouvrir
 
 #----------------------
+# Selector
+#----------------------
+select.select_all=Tout sélectionner
+select.deselect_all=Tout désélectionner
+select.none_selected=Aucune sélection
+
+#----------------------
 # captcha
 #----------------------
 
@@ -358,6 +365,7 @@ custom_attribute.type.DYNAMIC_SINGLE_ITEM.label=Autocomplétion
 custom_attribute.type.IMAGE.label=Image
 custom_attribute.type.MULTI_ITEM.label=Menu déroulant à choix multiple
 custom_attribute.type.URL.label=URL
+custom_attribute.type.SCRIPT.label=Script
 
 #----------------------
 # Notification
@@ -756,6 +764,12 @@ preference.budget_tracking_effort_based_preference.name=Budget/prévison basé s
 preference.budget_tracking_effort_based_preference.description=Défini si la partie financière (budget et prévision) d''une initiative inclut automatiquement l''effort des ressources. Si actif, en ajoutant une affectation alors une ligne de budget et de prévision sont également ajoutées.
 preference.read_only_governance_id_preference.name=Numéro de gouvernance d''initiative en lecture seule
 preference.read_only_governance_id_preference.description=Empêche la modification d''un numéro de gouvernance d'initiative une fois que celle-ci est créée
+preference.governance_milestone_display_preference.name=Affichage du label des jalons
+preference.governance_milestone_display_preference.description=Permet de choisir entre différents styles d'affichage pour les labels de jalon.
+preference.governance_milestone_display_preference.short.name=Affichage court
+preference.governance_milestone_display_preference.short.description="Nom court"
+preference.governance_milestone_display_preference.long.name=Affichage long
+preference.governance_milestone_display_preference.long.description="Nom court" ("Nom")
 
 #----------------------
 # authentication
@@ -904,6 +918,7 @@ object.custom_attribute_definition.group.label=Groupe
 object.custom_attribute_definition.name.label=Nom
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
+object.custom_attribute_definition.configuration.script.invalid=Erreur dans la configuration du script: {0}
 object.custom_attribute_definition.is_displayed.label=Affiché
 object.custom_attribute_definition.is_displayed.help=Cocher cette case pour afficher l''attribut personnalisé dans les tables.
 object.custom_attribute_definition.conditional_rule.label=Règle conditionnelle
@@ -1299,6 +1314,8 @@ object.life_cycle_process.name.label=Nom
 object.life_cycle_process.description.label=Description
 object.life_cycle_process.is_active.label=Actif
 object.life_cycle_process.is_release.label=Release
+object.life_cycle_process.is_flexible.label=Flexible
+object.life_cycle_process.is_flexible.help=Permet de rajouter des jalons personnalisés dans chaque projet
 object.life_cycle_process.table.empty=Il n''existe aucun processus de gouvernance.
 
 #----------------------
@@ -2477,6 +2494,14 @@ core.portfolio_entry_governance.milestone.request.approved.notification.message=
 #edit planning
 core.portfolio_entry_governance.planning.edit.title=Mettre à jour l''agenda
 core.portfolio_entry_governance.planning.edit.successful=L''agenda a été mis à jour.
+core.portfolio_entry_governance.planning.edit.milestone.manage.title=Gérer un jalon supplémentaire
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.label=Insérer après le jalon suivant
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insérer en première position
+core.portfolio_entry_governance.planning.edit.milestone.add.successful=Le jalon supplémentaire a été créé.
+core.portfolio_entry_governance.planning.edit.milestone.edit.successful=Le jalon supplémentaire a été mis à jour.
+core.portfolio_entry_governance.planning.edit.milestone.delete.confirmation.message=Êtes-vous sûr(e) de vouloir supprimer ce jalon supplémentaire?
+core.portfolio_entry_governance.planning.edit.milestone.delete.error=Ce jalon ne peut pas être supprimé.
+core.portfolio_entry_governance.planning.edit.milestone.delete.successful=Le jalon supplémentaire a été supprimé.
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Changer le processus de gouvernance
@@ -2954,6 +2979,7 @@ admin.configuration.system_preferences.category.planning=Planification
 admin.configuration.system_preferences.category.financial=Finances
 admin.configuration.system_preferences.category.timesheet=Feuille de temps
 admin.configuration.system_preferences.category.security=Sécurité
+admin.configuration.system_preferences.category.governance=Gouvernance
 
 #edit
 admin.configuration.system_preferences.edit.success=Les préférences systèmes ont été mises à jour.

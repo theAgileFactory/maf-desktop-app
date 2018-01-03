@@ -23,11 +23,15 @@ import framework.utils.CustomConstraints.MultiLanguagesStringRequired;
 import framework.utils.MultiLanguagesString;
 import models.framework_models.common.CustomAttributeDefinition;
 import models.framework_models.common.CustomAttributeGroup;
+import models.framework_models.common.ICustomAttributeValue;
+import models.framework_models.common.ScriptCustomAttributeValue;
 import models.framework_models.parent.IModelConstants;
 import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
 
+import javax.script.ScriptException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +96,14 @@ public class CustomAttributeDefinitionFormData {
         if ((conditionalRuleFieldId.equals("") && !conditionalRuleFieldValue.equals(""))
                 || (!conditionalRuleFieldId.equals("") && conditionalRuleFieldValue.equals(""))) {
             errors.add(new ValidationError("conditionalRuleFieldId", Messages.get("object.custom_attribute_definition.conditional_rule.invalid")));
+        }
+
+        if (attributeType.equals(ICustomAttributeValue.AttributeType.SCRIPT.name())) {
+            try {
+                ScriptCustomAttributeValue.validateScriptConfiguration(configuration);
+            } catch (Exception e) {
+                errors.add(new ValidationError("configuration", Messages.get("object.custom_attribute_definition.configuration.script.invalid", e.getMessage())));
+            }
         }
 
         return errors.isEmpty() ? null : errors;

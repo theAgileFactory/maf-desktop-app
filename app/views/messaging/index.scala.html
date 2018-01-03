@@ -15,7 +15,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(messagesTable: framework.utils.Table[utils.table.MessageListView], objectForm: Form[controllers.MessagingController.NotificationMessage])
+@import framework.utils.ISelectableValueHolderCollection
+@(
+        messagesTable: framework.utils.Table[utils.table.MessageListView],
+        objectForm: Form[controllers.MessagingController.NotificationMessage],
+        userAccounts: ISelectableValueHolderCollection[String]
+)
 
 @import helper._
 @import bootstrap3._
@@ -56,7 +61,12 @@
                             <fieldset>
                                 @parts.input_text(objectForm("title"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.message.title.label"))
                                 @helper.textarea(objectForm("message"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.message.message.label"), 'rows -> "5")
-                                @parts.multivalue_picker(objectForm("principalUids"),parts.Msg.asString("object.message.principaluids.label"),controllers.routes.PickerController.principalsUid().url)
+                                @parts.dropdownlist(
+                                    objectForm("principalUids"),
+                                    parts.Msg.asString("object.message.principaluids.label"),
+                                    userAccounts,
+                                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true
+                                )
                                 <input type="submit" value="@parts.Msg("button.send")" class="btn btn-primary">
                             </fieldset>
                             

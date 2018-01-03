@@ -177,7 +177,7 @@ public class ConfigurationCustomAttributeController extends Controller {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
 
-        Form<CustomAttributeDefinitionFormData> customAttributeForm = customAttributeFormTemplate;
+        Form<CustomAttributeDefinitionFormData> customAttributeForm;
 
         String uuid = null;
         boolean canAddConditionalRule = true;
@@ -276,6 +276,7 @@ public class ConfigurationCustomAttributeController extends Controller {
 
         this.getTableProvider().flushFilterConfig();
         this.getTableProvider().flushTables();
+        ScriptCustomAttributeValue.flushCache(customAttributeDefinitionFormData.uuid);
 
         if (customAttributeDefinitionFormData.id == null && itemizableAttributeTypes.contains(customAttributeDefinitionFormData.attributeType)) {
             return redirect(controllers.admin.routes.ConfigurationCustomAttributeController.items(customAttribute.id));

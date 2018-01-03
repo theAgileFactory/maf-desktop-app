@@ -19,6 +19,7 @@ package controllers.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -195,20 +196,17 @@ public class SearchController extends Controller {
             	ExpressionList<PortfolioEntry> expressionList; 
             	
             	if (is_active) {
-            		expressionList =  PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService()).eq("archived", false);
+            		expressionList =  PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()).add(expression).eq("archived", false);
             	}
             	else {
-            		expressionList =  PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(expression, getSecurityService());
+            		expressionList =  PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService()).add(expression);
             	}
                 portfolioEntries = expressionList.findList();
             } catch (AccountManagementException e) {
                 return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
 
-            List<PortfolioEntryListView> portfolioEntryListView = new ArrayList<PortfolioEntryListView>();
-            for (PortfolioEntry portfolioEntry : portfolioEntries) {
-                portfolioEntryListView.add(new PortfolioEntryListView(portfolioEntry));
-            }
+            List<PortfolioEntryListView> portfolioEntryListView = portfolioEntries.stream().map(PortfolioEntryListView::new).collect(Collectors.toList());
 
             if (portfolioEntryListView.size() > 0) {
 

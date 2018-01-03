@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import dao.delivery.DeliverableDAO
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
     requirement: models.delivery.Requirement,
@@ -150,11 +151,11 @@
                             
                         }
 
-                        @parts.multivalue_picker(
+                        @parts.dropdownlist(
                             requirementForm("deliverables"), 
                             parts.Msg.asString("object.requirement.deliverables.label"),
-                            controllers.routes.PickerController.deliverableOfPortfolioEntry().url,
-                            Seq("portfolioEntryId" -> portfolioEntry.id.toString)
+                            DeliverableDAO.getDeliverableOwnerAsVHByPE(portfolioEntry.id),
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = false, multiple = true
                         )
                         
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

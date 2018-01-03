@@ -49,6 +49,8 @@ public class LifeCycleProcessFormData {
 
     public boolean isRelease;
 
+    public boolean isFlexible;
+
     /**
      * Default constructor.
      */
@@ -71,6 +73,7 @@ public class LifeCycleProcessFormData {
         this.description = MultiLanguagesString.getByKey(lifeCycleProcess.description, i18nMessagesPlugin);
         this.isActive = lifeCycleProcess.isActive;
         this.isRelease = lifeCycleProcess.isRelease;
+        this.isFlexible = lifeCycleProcess.isFlexible;
 
     }
 
@@ -87,6 +90,7 @@ public class LifeCycleProcessFormData {
         lifeCycleProcess.shortName = this.shortName.getKeyIfValue();
         lifeCycleProcess.name = this.name.getKeyIfValue();
         lifeCycleProcess.description = this.description.getKeyIfValue();
+        lifeCycleProcess.isFlexible = this.isFlexible;
 
     }
 

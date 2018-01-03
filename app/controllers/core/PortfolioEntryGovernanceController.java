@@ -17,19 +17,8 @@
  */
 package controllers.core;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import com.avaje.ebean.Ebean;
-
 import be.objectify.deadbolt.java.actions.Dynamic;
+import com.avaje.ebean.Ebean;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
@@ -42,10 +31,7 @@ import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.notification.INotificationManagerPlugin;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.FileAttachmentHelper;
-import framework.utils.Msg;
-import framework.utils.Table;
-import framework.utils.Utilities;
+import framework.utils.*;
 import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
 import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
@@ -71,11 +57,19 @@ import utils.SortableCollection;
 import utils.SortableCollection.DateSortableObject;
 import utils.form.PlannedDateFormData;
 import utils.form.PlannedDatesFormData;
+import utils.form.PortfolioEntryAdditionalMilestoneFormData;
 import utils.form.RequestMilestoneFormData;
 import utils.table.GovernanceListView;
 import utils.table.MilestoneApproverListView;
 import utils.table.PortfolioEntryBudgetLineListView;
 import utils.table.PortfolioEntryResourcePlanAllocatedResourceListView;
+import views.html.core.portfolioentrygovernance.life_cycle_process_change;
+import views.html.core.portfolioentrygovernance.planning_edit_additional_milestone_manage;
+
+import javax.inject.Inject;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The controller which allows to manage the governance of a portfolio entry.
@@ -105,6 +99,7 @@ public class PortfolioEntryGovernanceController extends Controller {
     private static Form<PlannedDatesFormData> plannedDatesFormTemplate = Form.form(PlannedDatesFormData.class);
     private static Form<ChangeLifeCycleProcessFormData> changeProcessFormTemplate = Form.form(ChangeLifeCycleProcessFormData.class);
     private static Form<RequestMilestoneFormData> requestMilestoneFormTemplate = Form.form(RequestMilestoneFormData.class);
+    private static Form<PortfolioEntryAdditionalMilestoneFormData> portfolioEntryAdditionalMilestoneFormTemplate = Form.form(PortfolioEntryAdditionalMilestoneFormData.class);
 
     /**
      * Display the list of milestones with their instances for a portfolio
@@ -629,7 +624,7 @@ public class PortfolioEntryGovernanceController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.core.portfolioentrygovernance.life_cycle_process_change.render(portfolioEntry, boundForm,
+            return ok(life_cycle_process_change.render(portfolioEntry, boundForm,
                     LifeCycleProcessDao.getLCProcessActiveAsVH()));
         }
 
@@ -640,13 +635,13 @@ public class PortfolioEntryGovernanceController extends Controller {
         Ebean.beginTransaction();
 
         try {
+            // Keep the current planning
+            LifeCycleInstancePlanning oldPlanning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
             /*
              * set all processes of the portfolio entry to inactive
              */
-            for (LifeCycleInstance process : portfolioEntry.lifeCycleInstances) {
-                process.doInactive();
-            }
+            portfolioEntry.lifeCycleInstances.forEach(LifeCycleInstance::doInactive);
 
             /*
              * create the life cycle instance
@@ -664,9 +659,21 @@ public class PortfolioEntryGovernanceController extends Controller {
             portfolioEntry.startDate = portfolioEntry.endDate = null;
 
             /*
-             * create the planning
+             * create the first planning from the previous one
              */
             LifeCycleInstancePlanning lifeCycleInstancePlanning = new LifeCycleInstancePlanning(lifeCycleInstance);
+            Map<String, Map<Long, Long>> allocatedResourcesMapOldToNew = new HashMap<>();
+            lifeCycleInstancePlanning.portfolioEntryResourcePlan = oldPlanning.portfolioEntryResourcePlan.cloneInDB(allocatedResourcesMapOldToNew);
+            lifeCycleInstancePlanning.portfolioEntryBudget = oldPlanning.portfolioEntryBudget.cloneInDB(allocatedResourcesMapOldToNew);
+
+            // reassign the new allocated resources to existing work order
+            portfolioEntry.workOrders
+                    .stream()
+                    .filter(workOrder -> workOrder.resourceObjectType != null)
+                    .forEach(workOrder -> {
+                        workOrder.resourceObjectId = allocatedResourcesMapOldToNew.get(workOrder.resourceObjectType).get(workOrder.resourceObjectId);
+                        workOrder.save();
+                    });
             lifeCycleInstancePlanning.save();
 
             /*
@@ -691,21 +698,212 @@ public class PortfolioEntryGovernanceController extends Controller {
          * send notifications
          */
 
-        List<Actor> actors = new ArrayList<Actor>();
+        List<Actor> actors = new ArrayList<>();
         actors.add(portfolioEntry.manager);
-        for (Portfolio portfolio : portfolioEntry.portfolios) {
-            actors.add(portfolio.manager);
-        }
-        ActorDao.sendNotification(this.getNotificationManagerService(), this.getI18nMessagesPlugin(), actors,
+        actors.addAll(portfolioEntry.portfolios.stream().map(portfolio -> portfolio.manager).collect(Collectors.toList()));
+
+        ActorDao.sendNotification(
+                this.getNotificationManagerService(),
+                this.getI18nMessagesPlugin(),
+                actors,
                 NotificationCategory.getByCode(Code.PORTFOLIO_ENTRY),
-                controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
-                "core.portfolio_entry_governance.process.change.notification.title", "core.portfolio_entry_governance.process.change.notification.message",
-                portfolioEntry.getName(), lifeCycleProcess.getName());
+                routes.PortfolioEntryGovernanceController.index(portfolioEntry.id).url(),
+                "core.portfolio_entry_governance.process.change.notification.title",
+                "core.portfolio_entry_governance.process.change.notification.message",
+                portfolioEntry.getName(),
+                lifeCycleProcess.getName()
+        );
 
         // success message
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.process.change.successful"));
 
-        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.index(portfolioEntry.id));
+        return redirect(routes.PortfolioEntryGovernanceController.index(portfolioEntry.id));
+    }
+
+    /**
+     * Manage an additional milestone in the portfolio entry governance process
+     * @param id the portfolio entry id
+     * @param milestoneId the milestone id (set 0 for creation)
+     * @param previousMilestoneId the previous milestone id in the list (0 for first place)
+     *
+     * @return the additional milestone form
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result manageAdditionalMilestone(Long id, Long milestoneId, Long previousMilestoneId) {
+
+        Form<PortfolioEntryAdditionalMilestoneFormData> portfolioEntryAdditionalMilestoneForm = portfolioEntryAdditionalMilestoneFormTemplate;
+
+        // edit case
+        if (!milestoneId.equals(0L)) {
+            LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
+            portfolioEntryAdditionalMilestoneForm = portfolioEntryAdditionalMilestoneFormTemplate.fill(new PortfolioEntryAdditionalMilestoneFormData(milestone, previousMilestoneId, getI18nMessagesPlugin()));
+        }
+
+        return ok(views.html.core.portfolioentrygovernance.planning_edit_additional_milestone_manage.render(
+                PortfolioEntryDao.getPEAllById(id),
+                portfolioEntryAdditionalMilestoneForm,
+                LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeActiveAsVH(),
+                getMilestonesAsVH(LifeCycleMilestoneDao.getLCMilestoneAsListByPe(id))
+        ));
+    }
+
+    /**
+     * Deletes an additional milestone
+     */
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteAdditionalMilestone(Long id, Long milestoneId) {
+
+        LifeCycleMilestone milestone = LifeCycleMilestoneDao.getLCMilestoneById(milestoneId);
+
+        if (!milestone.isAdditional) {
+
+            Utilities.sendErrorFlashMessage("core.portfolio_entry_governance.planning.edit.milestone.delete.error");
+
+        } else {
+
+            // Delete milestone instances
+            LifeCycleMilestoneDao.getLCMilestoneInstanceAsListByPEAndLCMilestone(id, milestone.id).forEach(LifeCycleMilestoneInstance::doDelete);
+
+            // Update planning
+            LifeCyclePlanningDao.getPlannedLCMilestoneInstanceAsListByLCMilestoneAndPE(milestone.id, id).forEach(PlannedLifeCycleMilestoneInstance::doDelete);
+            LifeCycleMilestoneDao.getLCMilestoneAsListByPe(id).stream()
+                    .filter(m -> m.order == milestone.order && m.subOrder > milestone.subOrder)
+                    .forEach(m -> {
+                        m.subOrder--;
+                        m.update();
+                    });
+
+            // Delete milestone definition
+            milestone.doDelete();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.planning.edit.milestone.delete.successful"));
+        }
+
+        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(id));
+    }
+
+    /**
+     * Processes the form to manage an additional milestone
+     */
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result processManageAdditionalMilestone() {
+
+        // bind the form
+        Form<PortfolioEntryAdditionalMilestoneFormData> boundForm = portfolioEntryAdditionalMilestoneFormTemplate.bindFromRequest();
+
+        // get portfolio entry id
+        Long portfolioEntryId = Long.valueOf(request().body().asFormUrlEncoded().get("portfolioEntryId")[0]);
+
+        // Get portfolio entry milestones
+        List<LifeCycleMilestone> milestones = LifeCycleMilestoneDao.getLCMilestoneAsListByPe(portfolioEntryId);
+
+        if (boundForm.hasErrors()) {
+            return ok(planning_edit_additional_milestone_manage.render(
+                    PortfolioEntryDao.getPEAllById(portfolioEntryId),
+                    boundForm,
+                    LifeCycleMilestoneDao.getLCMilestoneInstanceStatusTypeActiveAsVH(),
+                    getMilestonesAsVH(milestones)
+            ));
+        }
+
+        PortfolioEntryAdditionalMilestoneFormData formData = boundForm.get();
+
+        LifeCycleMilestone milestone;
+        LifeCycleMilestone previousMilestone = null;
+        if (!formData.previousMilestone.equals(0L)) {
+            previousMilestone = LifeCycleMilestoneDao.getLCMilestoneById(formData.previousMilestone);
+        }
+
+        if (formData.id == null) { // create case
+
+            // Create the milestone
+            milestone = new LifeCycleMilestone();
+            milestone.order = previousMilestone == null ? -1 : previousMilestone.order;
+            milestone.subOrder = previousMilestone == null ? 0 : previousMilestone.subOrder + 1;
+            // Offset +1 subsequent milestones suborder
+            milestones.stream()
+                .filter(m -> m.order == milestone.order && m.subOrder >= milestone.subOrder)
+                .forEach(m -> {
+                    m.subOrder++;
+                    m.update();
+                });
+            formData.fill(milestone);
+            milestone.save();
+
+            // Create the planning entry
+            PlannedLifeCycleMilestoneInstance plannedMilestone = new PlannedLifeCycleMilestoneInstance();
+            plannedMilestone.lifeCycleInstancePlanning = LifeCyclePlanningDao.getLCInstancePlanningAsLastByPE(portfolioEntryId);
+            plannedMilestone.lifeCycleMilestone = milestone;
+            plannedMilestone.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.planning.edit.milestone.add.successful"));
+        } else { // edit case
+
+            milestone = LifeCycleMilestoneDao.getLCMilestoneById(formData.id);
+            milestones.remove(milestone);
+            // Offset -1 subsequent milestones suborder in old position
+            milestones.stream()
+                    .filter(m -> m.order == milestone.order && m.subOrder > milestone.subOrder)
+                    .forEach(m -> {
+                        m.subOrder--;
+                        m.update();
+                    });
+            milestone.order = previousMilestone == null ? -1 : previousMilestone.order;
+            if (previousMilestone == null) {
+                milestone.subOrder = 0;
+            } else if (milestone.order == previousMilestone.order && milestone.subOrder < previousMilestone.subOrder) {
+                milestone.subOrder = previousMilestone.subOrder;
+            } else {
+                milestone.subOrder = previousMilestone.subOrder + 1;
+            }
+            // Offset +1 subsequent milestones suborder in new position
+            milestones.stream()
+                    .filter(m -> m.order == milestone.order && m.subOrder >= milestone.subOrder)
+                    .forEach(m -> {
+                        m.subOrder++;
+                        m.update();
+                    });
+            milestones.add(milestone);
+            formData.fill(milestone);
+            milestone.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_governance.planning.edit.milestone.edit.successful"));
+        }
+
+        formData.description.persist(getI18nMessagesPlugin());
+        formData.name.persist(getI18nMessagesPlugin());
+        formData.shortName.persist(getI18nMessagesPlugin());
+
+        return redirect(controllers.core.routes.PortfolioEntryGovernanceController.editPlanning(portfolioEntryId));
+    }
+
+    /**
+     * Construct a value holder list with available milestones
+     *
+     * @param milestones the milestones as list
+     */
+    private ISelectableValueHolderCollection<Long> getMilestonesAsVH(List<LifeCycleMilestone> milestones) {
+        ISelectableValueHolderCollection<Long> milestonesAsVH = new DefaultSelectableValueHolderCollection<>();
+        DefaultSelectableValueHolder<Long> firstValue = new DefaultSelectableValueHolder<>(0L, Msg.get("core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label"));
+        // Order -200: "Place in first position" text
+        // Order -100: Additional milestones that come before the first milestone of the process
+        // Order 0: First milestone of the governing process
+        // Order 100: etc...
+        firstValue.setOrder(-200);
+        milestonesAsVH.add(firstValue);
+        milestones
+            .forEach(lifeCycleMilestone -> {
+                DefaultSelectableValueHolder<Long> valueHolder = new DefaultSelectableValueHolder<>(
+                        lifeCycleMilestone.id,
+                        lifeCycleMilestone.getName()
+                );
+                // Assuming there is less than 100 additional milestones between 2 standard milestones
+                valueHolder.setOrder(lifeCycleMilestone.order * 100 + lifeCycleMilestone.subOrder);
+                milestonesAsVH.add(valueHolder);
+            });
+
+        return milestonesAsVH;
     }
 
     /**

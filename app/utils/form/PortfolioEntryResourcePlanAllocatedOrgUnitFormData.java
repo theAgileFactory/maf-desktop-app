@@ -149,7 +149,9 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
             allocatedOrgUnit.endDate = allocatedOrgUnit.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        if (!this.days.equals(allocatedOrgUnit.days)) {
+            allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        }
 
         allocatedOrgUnit.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedOrgUnit.currencyRate = this.currencyRate;

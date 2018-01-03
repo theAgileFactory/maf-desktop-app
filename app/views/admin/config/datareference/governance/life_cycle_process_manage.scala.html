@@ -64,6 +64,12 @@
                     parts.Msg.asString("object.life_cycle_process.is_active.label"),
                     ""
                 )
+
+                @parts.checkbox(
+                    lifeCycleProcessForm("isFlexible"),
+                    parts.Msg.asString("object.life_cycle_process.is_flexible.label"),
+                    parts.Msg.asString("object.life_cycle_process.is_flexible.help")
+                )
                 
                 @parts.multi_languages_input_text(lifeCycleProcessForm("shortName"), parts.Msg.asString("object.life_cycle_process.short_name.label"))
 

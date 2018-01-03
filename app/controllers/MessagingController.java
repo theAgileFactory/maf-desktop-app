@@ -82,7 +82,7 @@ public class MessagingController extends Controller {
 
         NotificationMessage notificationMessage = createEmptyNotificationMessage();
 
-        return ok(views.html.messaging.index.render(messagesTables, notificationMessageForm.fill(notificationMessage)));
+        return ok(views.html.messaging.index.render(messagesTables, notificationMessageForm.fill(notificationMessage), getAccountManagerPlugin().getUserAccountsFromNameAsVH("*")));
     }
 
     /**
@@ -103,7 +103,7 @@ public class MessagingController extends Controller {
                 }
                 Table<MessageListView> messagesTables = this.getTableProvider().get().message.templateTable.fill(messageListViewRows);
 
-                return ok(views.html.messaging.index.render(messagesTables, boundForm));
+                return ok(views.html.messaging.index.render(messagesTables, boundForm, getAccountManagerPlugin().getUserAccountsFromNameAsVH("*")));
             }
             NotificationMessage notificationMessage = boundForm.get();
             getNotificationManagerPlugin().sendMessage(getUserSessionManagerPlugin().getUserSessionId(ctx()), notificationMessage.principalUids,

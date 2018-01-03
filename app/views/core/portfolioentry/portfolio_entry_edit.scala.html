@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import dao.pmo.OrgUnitDao
 @(
     portfolioEntry: models.pmo.PortfolioEntry, 
     portfolioEntryForm: Form[utils.form.PortfolioEntryEditFormData],
@@ -117,10 +118,11 @@
                             null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
                         
-                        @parts.multivalue_picker(
+                        @parts.dropdownlist(
                             portfolioEntryForm("deliveryUnits"), 
                             parts.Msg.asString("object.portfolio_entry.delivery_units.label"),
-                            controllers.routes.PickerController.deliveryUnits().url
+                            OrgUnitDao.getOrgUnitActiveCanDeliverAsVH,
+                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true
                         )
                         
                         <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

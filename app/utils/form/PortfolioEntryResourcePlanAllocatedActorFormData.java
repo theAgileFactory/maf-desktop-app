@@ -22,9 +22,11 @@ import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.pmo.ActorDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
+import dao.pmo.StakeholderDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Utilities;
 import models.finance.*;
+import models.pmo.Stakeholder;
 import org.apache.commons.lang3.tuple.Pair;
 import play.Play;
 import play.data.validation.Constraints;
@@ -78,8 +80,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
         super();
-        this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
-        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
     }
 
     /**
@@ -91,11 +91,14 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
 
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
 
         this.id = allocatedActor.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocationId = allocatedActor.id;
 
         this.actor = allocatedActor.actor.id;
+        List<Stakeholder> stakeholderTypes = StakeholderDao.getStakeholderAsListByActorAndPE(this.actor, allocatedActor.getAssociatedPortfolioEntry().id);
+        this.stakeholderType = stakeholderTypes.isEmpty() ? null : stakeholderTypes.get(0).stakeholderType.id;
         this.startDate = allocatedActor.startDate != null ? Utilities.getDateFormat(null).format(allocatedActor.startDate) : null;
         this.endDate = allocatedActor.endDate != null ? Utilities.getDateFormat(null).format(allocatedActor.endDate) : null;
         this.portfolioEntryPlanningPackage = allocatedActor.portfolioEntryPlanningPackage != null ? allocatedActor.portfolioEntryPlanningPackage.id : null;
@@ -138,6 +141,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
 
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
 
         this.id = allocatedOrgUnit.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedOrgUnitId = allocatedOrgUnit.id;
@@ -185,6 +189,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
     public PortfolioEntryResourcePlanAllocatedActorFormData(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency) {
 
         this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
 
         this.id = allocatedCompetency.portfolioEntryResourcePlan.lifeCycleInstancePlannings.get(0).lifeCycleInstance.portfolioEntry.id;
         this.allocatedCompetencyId = allocatedCompetency.id;
@@ -257,7 +262,9 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
             allocatedActor.endDate = allocatedActor.portfolioEntryPlanningPackage.endDate;
         }
 
-        allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        if (!this.days.equals(allocatedActor.days)) {
+            allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        }
 
         allocatedActor.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
         allocatedActor.currencyRate = this.currencyRate;

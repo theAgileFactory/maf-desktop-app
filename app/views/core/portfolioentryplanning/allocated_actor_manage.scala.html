@@ -92,22 +92,19 @@
                             dao.pmo.ActorDao.getActorActiveAsVH,
                             null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
                         )
-                        
-                        @if(allocatedActorForm("allocationId").value!=null) {
-                            <input type="hidden" name="stakeholderType" value="0"/>
-                        } else {
-                            @parts.dropdownlist(
-                                allocatedActorForm("stakeholderType"), 
-                                parts.Msg.asString("object.stakeholder.role.label"), 
-                                dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id)
-                            )
-                        }
+
+                        @parts.dropdownlist(
+                            allocatedActorForm("stakeholderType"),
+                            parts.Msg.asString("object.stakeholder.role.label"),
+                            dao.pmo.StakeholderDao.getStakeholderTypeActiveAsVHByPEType(portfolioEntry.portfolioEntryType.id),
+                            null, isDescriptionVisible = false, forceRequired = false, liveSearch = false
+                        )
 
                         @parts.dropdownlist(
                             allocatedActorForm("portfolioEntryPlanningPackage"),
                             parts.Msg.asString("object.allocated_resource.package.label"),
                             dao.pmo.PortfolioEntryPlanningPackageDao.getPEPlanningPackageAsVHByPE(portfolioEntry.id, _budgetTrackingService.isActive),
-                            null, isDescriptionVisible = true, forceRequired = false, liveSearch = true
+                            null, isDescriptionVisible = false, forceRequired = false, liveSearch = false
                         )
 
                         @if(_budgetTrackingService.isActive) {

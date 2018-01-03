@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import dao.pmo.ActorDao
 @(
     lifeCycleProcess: models.governance.LifeCycleProcess,
     lifeCycleMilestoneForm: Form[utils.form.LifeCycleMilestoneFormData],
@@ -87,10 +88,11 @@
                 
                 @parts.dropdownlist(lifeCycleMilestoneForm("defaultStatusType"), parts.Msg.asString("object.life_cycle_milestone.default_status_type.label"), statusTypes)
 
-                @parts.multivalue_picker(
+                @parts.dropdownlist(
                     lifeCycleMilestoneForm("approvers"), 
                     parts.Msg.asString("object.life_cycle_milestone.approvers.label"),
-                    controllers.routes.PickerController.actor().url
+                    ActorDao.getActorActiveAsVH,
+                    null, isDescriptionVisible = true, forceRequired = false, liveSearch = true, multiple = true
                 )
 
                 <input class="btn btn-primary" type="submit" value="@parts.Msg("button.save")" />

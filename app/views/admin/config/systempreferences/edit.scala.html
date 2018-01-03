@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import framework.commons.IFrameworkConstants
 @(objectForm: Form[_])
 
 @import helper._
@@ -56,6 +57,9 @@
                 <legend>@parts.Msg("admin.configuration.system_preferences.category.financial")</legend>
                 @parts.preference_input(objectForm, constants.IMafConstants.FINANCIAL_USE_PURCHASE_ORDER_PREFERENCE)
                 @parts.preference_input(objectForm, constants.IMafConstants.BUDGET_TRACKING_EFFORT_BASED_PREFERENCE)
+
+                <legend>@parts.Msg("admin.configuration.system_preferences.category.governance")</legend>
+                @parts.preference_input(objectForm, IFrameworkConstants.GOVERNANCE_MILESTONE_DISPLAY_PREFERENCE)
 
                 <legend>@parts.Msg("admin.configuration.system_preferences.category.planning")</legend>
                 @parts.preference_input(objectForm, constants.IMafConstants.PACKAGE_STATUS_ON_GOING_FULFILLMENT_PERCENTAGE_PREFERENCE)

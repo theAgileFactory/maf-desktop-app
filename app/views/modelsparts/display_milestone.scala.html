@@ -15,14 +15,21 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import framework.commons.IFrameworkConstants
+@import models.governance.LifeCycleMilestone.DisplayType
 @(milestone: models.governance.LifeCycleMilestone)
+
+@import views.html.commons._preferenceManagerPlugin;
 
 @if(milestone!= null && !milestone.deleted) {
     @if(!milestone.isActive) {
         <span style="text-decoration: line-through">
     }
     @milestone.getShortName
-    
+    @if(_preferenceManagerPlugin.getPreferenceValueAsString(IFrameworkConstants.GOVERNANCE_MILESTONE_DISPLAY_PREFERENCE).equals(DisplayType.LONG_DISPLAY.key) && milestone.getName != null && !milestone.getName.isEmpty) {
+        (@milestone.getName)
+    }
+
     @if(!milestone.isActive) {
         </span>
     }

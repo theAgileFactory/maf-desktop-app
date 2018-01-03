@@ -26,6 +26,7 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.reporting.ReportingDao;
+import framework.services.account.IAccountManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.taftree.EntityTafTreeNodeWrapper;
 import framework.utils.DefaultSelectableValueHolder;
@@ -55,6 +56,9 @@ public class ReportingController extends Controller {
 
     @Inject
     private ITableProvider tableProvider;
+
+    @Inject
+    private IAccountManagerPlugin accountManagerPlugin;
 
     public static Form<ReportingFormData> formTemplate = Form.form(ReportingFormData.class);
 
@@ -123,7 +127,7 @@ public class ReportingController extends Controller {
 
         Form<ReportingFormData> reportForm = formTemplate.fill(new ReportingFormData(report));
 
-        return ok(views.html.admin.reporting.edit.render(report, reportForm));
+        return ok(views.html.admin.reporting.edit.render(report, reportForm, getAccountManagerPlugin().getUserAccountsFromNameAsVH("*")));
     }
 
     /**
@@ -139,7 +143,7 @@ public class ReportingController extends Controller {
         Reporting report = ReportingDao.getReportingById(id);
 
         if (boundForm.hasErrors()) {
-            return ok(views.html.admin.reporting.edit.render(report, boundForm));
+            return ok(views.html.admin.reporting.edit.render(report, boundForm, getAccountManagerPlugin().getUserAccountsFromNameAsVH("*")));
         }
 
         ReportingFormData reportingFormData = boundForm.get();
@@ -189,5 +193,9 @@ public class ReportingController extends Controller {
      */
     private ITableProvider getTableProvider() {
         return this.tableProvider;
+    }
+
+    private IAccountManagerPlugin getAccountManagerPlugin() {
+        return accountManagerPlugin;
     }
 }

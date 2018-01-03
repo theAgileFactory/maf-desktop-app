@@ -176,6 +176,13 @@ button.upload=Upload
 button.open=Open
 
 #----------------------
+# Selector
+#----------------------
+select.select_all=Select all
+select.deselect_all=Deselect all
+select.none_selected=Nothing selected
+
+#----------------------
 # captcha
 #----------------------
 
@@ -346,6 +353,7 @@ custom_attribute.type.DYNAMIC_SINGLE_ITEM.label=Autocomplete
 custom_attribute.type.IMAGE.label=Image
 custom_attribute.type.MULTI_ITEM.label=Multi dropdown
 custom_attribute.type.URL.label=URL
+custom_attribute.type.SCRIPT.label=Script
 
 #----------------------
 # Notification
@@ -744,6 +752,12 @@ preference.budget_tracking_effort_based_preference.name=Effort-based budget/fore
 preference.budget_tracking_effort_based_preference.description=Define if the financial part (budget and forecast) of an initiative automatically includes the effort of the resources. If true, by adding an allocation then a budget and forecast lines are also added.
 preference.read_only_governance_id_preference.name=Read-only initiative governance id
 preference.read_only_governance_id_preference.description=Prevent the edition of the governance id once the initiative is created
+preference.governance_milestone_display_preference.name=Milestone label display style
+preference.governance_milestone_display_preference.description=Choose between different display types for the milestone labels.
+preference.governance_milestone_display_preference.short.name=Short display
+preference.governance_milestone_display_preference.short.description="Short name"
+preference.governance_milestone_display_preference.long.name=Long display
+preference.governance_milestone_display_preference.long.description="Short name" ("Name")
 
 #----------------------
 # authentication
@@ -892,6 +906,7 @@ object.custom_attribute_definition.group.label=Group
 object.custom_attribute_definition.name.label=Name
 object.custom_attribute_definition.description.label=Description
 object.custom_attribute_definition.configuration.label=Configuration
+object.custom_attribute_definition.configuration.script.invalid=Error in script configuration: {0}
 object.custom_attribute_definition.is_displayed.label=Displayed
 object.custom_attribute_definition.is_displayed.help=Check this box to display the custom attribute in the corresponding tables.
 object.custom_attribute_definition.conditional_rule.label=Conditional rule
@@ -1297,6 +1312,8 @@ object.life_cycle_milestone_instance_status_type.name.label=Name
 object.life_cycle_milestone_instance_status_type.description.label=Description
 object.life_cycle_milestone_instance_status_type.selectable.label=Active
 object.life_cycle_milestone_instance_status_type.is_approved.label=Approved
+object.life_cycle_process.is_flexible.label=Flexible
+object.life_cycle_process.is_flexible.help=Allows to add custom milestones to project governance.
 object.life_cycle_milestone_instance_status_type.table.empty=There is no status type.
 
 #----------------------
@@ -2459,6 +2476,14 @@ core.portfolio_entry_governance.milestone.request.approved.notification.message=
 #edit planning
 core.portfolio_entry_governance.planning.edit.title=Update the planning
 core.portfolio_entry_governance.planning.edit.successful=The planning has been updated.
+core.portfolio_entry_governance.planning.edit.milestone.manage.title=Manage an additional milestone
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.label=Insert after the following milestone
+core.portfolio_entry_governance.planning.edit.milestone.manage.previous_milestone.first_place.label=Insert in first position
+core.portfolio_entry_governance.planning.edit.milestone.add.successful=The additional milestone has been created successfully.
+core.portfolio_entry_governance.planning.edit.milestone.edit.successful=The additional milestone has been updated successfully.
+core.portfolio_entry_governance.planning.edit.milestone.delete.confirmation.message=Are you sure you want to delete this additional milestone?
+core.portfolio_entry_governance.planning.edit.milestone.delete.error=The selected milestone cannot be removed.
+core.portfolio_entry_governance.planning.edit.milestone.delete.successful=The additional milestone has been deleted.
 
 #change process
 core.portfolio_entry_governance.process.change.breadcrump=Change the life cycle process
@@ -2576,7 +2601,7 @@ core.portfolio_entry_planning.package.delete.successful=The package has been rem
 
 #manage all packages
 core.portfolio_entry_planning.packages.manage.title=Manage all packages
-core.portfolio_entry_planning.packages.manage.successful=The packages has been updated.
+core.portfolio_entry_planning.packages.manage.successful=The packages have been updated.
 
 #list of resources
 core.portfolio_entry_planning.resources.actor.title=Allocated employees
@@ -2940,6 +2965,7 @@ admin.configuration.system_preferences.category.planning=Planning
 admin.configuration.system_preferences.category.financial=Financials
 admin.configuration.system_preferences.category.timesheet=Timesheet
 admin.configuration.system_preferences.category.security=Security
+admin.configuration.system_preferences.category.governance=Governance
 
 #edit
 admin.configuration.system_preferences.edit.success=The system preferences have been updated.
