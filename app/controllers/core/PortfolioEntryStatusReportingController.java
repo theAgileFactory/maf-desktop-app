@@ -1069,7 +1069,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         }
 
         return ok(views.html.core.portfolioentrystatusreporting.event_manage.render(portfolioEntry, eventForm,
-                PortfolioEntryEventDao.getPEEventTypeActiveAsVH()));
+                PortfolioEntryEventDao.getPEEventTypeActiveAsVH(false)));
     }
 
     /**
@@ -1088,7 +1088,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryEvent.class)) {
             return ok(views.html.core.portfolioentrystatusreporting.event_manage.render(portfolioEntry, boundForm,
-                    PortfolioEntryEventDao.getPEEventTypeActiveAsVH()));
+                    PortfolioEntryEventDao.getPEEventTypeActiveAsVH(false)));
         }
 
         PortfolioEntryEventFormData portfolioEntryEventFormData = boundForm.get();

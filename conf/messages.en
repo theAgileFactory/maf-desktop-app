@@ -1048,6 +1048,7 @@ object.portfolio_entry_report_status_type.table.empty=There is currently no repo
 object.portfolio_entry_event_type.name.label=Name
 object.portfolio_entry_event_type.id.label=Id
 object.portfolio_entry_event_type.selectable.label=Active
+object.portfolio_entry_event_type.read_only.label=Read only
 object.portfolio_entry_event_type.bootstrap_glyphicon.label=Icon
 object.portfolio_entry_event_type.table.empty=There is currently no event type.
 

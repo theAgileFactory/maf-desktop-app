@@ -49,13 +49,19 @@
                 @if(eventTypeForm("id").value!=null) {
                     <input type="hidden" name="id" value="@eventTypeForm("id").value"/>
                 }
-                
+
                 @parts.checkbox(
-                    eventTypeForm("selectable"), 
-                    parts.Msg.asString("object.portfolio_entry_event_type.selectable.label"), 
+                    eventTypeForm("selectable"),
+                    parts.Msg.asString("object.portfolio_entry_event_type.selectable.label"),
                     ""
                 )
-                
+
+                @parts.checkbox(
+                    eventTypeForm("readOnly"),
+                    parts.Msg.asString("object.portfolio_entry_event_type.read_only.label"),
+                    ""
+                )
+
                 @parts.multi_languages_input_text(eventTypeForm("name"), parts.Msg.asString("object.portfolio_entry_event_type.name.label"))
                 
                  @parts.radiobuttongroup(eventTypeForm("bootstrapGlyphicon"), parts.Msg.asString("object.portfolio_entry_event_type.bootstrap_glyphicon.label"), selectableIcons)

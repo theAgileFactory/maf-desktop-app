@@ -17,10 +17,8 @@
  */
 package utils.table;
 
-import java.text.MessageFormat;
-
 import constants.IMafConstants;
-import framework.utils.IColumnFormatter;
+import controllers.admin.routes;
 import framework.utils.Icon;
 import framework.utils.Msg;
 import framework.utils.Table;
@@ -28,6 +26,8 @@ import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.pmo.PortfolioEntryEventType;
+
+import java.text.MessageFormat;
 
 /**
  * A portfolio entry event type list view is used to display a portfolio entry
@@ -64,42 +64,32 @@ public class PortfolioEntryEventTypeListView {
 
                     addColumn("bootstrapGlyphicon", "bootstrapGlyphicon", "object.portfolio_entry_event_type.bootstrap_glyphicon.label",
                             Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("bootstrapGlyphicon", new IColumnFormatter<PortfolioEntryEventTypeListView>() {
-                        @Override
-                        public String apply(PortfolioEntryEventTypeListView portfolioEntryEventTypeListView, Object value) {
-                            return Icon.getLabel(portfolioEntryEventTypeListView.bootstrapGlyphicon);
-                        }
-                    });
+                    setJavaColumnFormatter("bootstrapGlyphicon", (portfolioEntryEventTypeListView, value) -> Icon.getLabel(portfolioEntryEventTypeListView.bootstrapGlyphicon));
 
                     addColumn("id", "id", "object.portfolio_entry_event_type.id.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("id", new ObjectFormatter<PortfolioEntryEventTypeListView>());
+                    setJavaColumnFormatter("id", new ObjectFormatter<>());
 
                     addColumn("name", "name", "object.portfolio_entry_event_type.name.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("name", new ObjectFormatter<PortfolioEntryEventTypeListView>());
+                    setJavaColumnFormatter("name", new ObjectFormatter<>());
 
                     addColumn("selectable", "selectable", "object.portfolio_entry_event_type.selectable.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("selectable", new BooleanFormatter<PortfolioEntryEventTypeListView>());
+                    setJavaColumnFormatter("selectable", new BooleanFormatter<>());
+
+                    addColumn("readOnly", "readOnly", "object.portfolio_entry_event_type.read_only.label", Table.ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("readOnly", new BooleanFormatter<>());
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryEventTypeListView>(IMafConstants.EDIT_URL_FORMAT,
-                            new StringFormatFormatter.Hook<PortfolioEntryEventTypeListView>() {
-                        @Override
-                        public String convert(PortfolioEntryEventTypeListView portfolioEntryEventTypeListView) {
-                            return controllers.admin.routes.ConfigurationRegisterController.manageEventType(portfolioEntryEventTypeListView.id).url();
-                        }
-                    }));
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<>(IMafConstants.EDIT_URL_FORMAT,
+                            (StringFormatFormatter.Hook<PortfolioEntryEventTypeListView>) portfolioEntryEventTypeListView -> routes.ConfigurationRegisterController.manageEventType(portfolioEntryEventTypeListView.id).url()));
                     setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                     addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryEventTypeListView>() {
-                        @Override
-                        public String apply(PortfolioEntryEventTypeListView portfolioEntryEventTypeListView, Object value) {
-                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                    Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.admin.routes.ConfigurationRegisterController.deleteEventType(portfolioEntryEventTypeListView.id).url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                        }
+                    setJavaColumnFormatter("deleteActionLink", (portfolioEntryEventTypeListView, value) -> {
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = routes.ConfigurationRegisterController.deleteEventType(portfolioEntryEventTypeListView.id).url();
+                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     });
                     setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT);
@@ -125,6 +115,8 @@ public class PortfolioEntryEventTypeListView {
 
     public boolean selectable;
 
+    public boolean readOnly;
+
     public String bootstrapGlyphicon;
 
     /**
@@ -138,6 +130,7 @@ public class PortfolioEntryEventTypeListView {
         this.id = eventType.id;
         this.name = eventType.name;
         this.selectable = eventType.selectable;
+        this.readOnly = eventType.readOnly;
         this.bootstrapGlyphicon = eventType.bootstrapGlyphicon;
 
     }
