@@ -124,6 +124,7 @@ form.input.file_field.file.size.invalid=Hochladen fehlgeschlagen, Maximale Datei
 form.input.file_field.no_file=Keine Datei ausgewählt
 form.input.file_field.success=Datei hochgeladen
 form.input.file_field.file.size.warning=Maximale Dateigrösse ist {0}
+form.input.read_only_field.value=Read only field
 
 #----------------------
 # default messages
@@ -929,6 +930,7 @@ object.custom_attribute_definition.table.empty=Die Zusatzfelder definiert
 #----------------------
 
 object.custom_attribute_group.name.label=Name
+object.custom_attribute_group.name.description=A name used to identify the group.
 object.custom_attribute_group.label.label=Label
 object.custom_attribute_group.label.help=Wirdt oben Zusatzfelder Gruppe angezeit.
 object.custom_attribute_group.table.empty=Derzeit keine Zusatzfelder Gruppe.
