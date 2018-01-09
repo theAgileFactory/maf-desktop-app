@@ -124,6 +124,7 @@ form.input.file_field.file.size.invalid=Cannot upload, the file size is limited 
 form.input.file_field.no_file=No file was selected
 form.input.file_field.success=File successfully uploaded
 form.input.file_field.file.size.warning=The file size is limited to {0}
+form.input.read_only_field.value=Read only field
 
 #----------------------
 # default messages
@@ -919,6 +920,7 @@ object.custom_attribute_definition.table.empty=There is currently no custom attr
 #----------------------
 
 object.custom_attribute_group.name.label=Name
+object.custom_attribute_group.name.description=A name used to identify the group.
 object.custom_attribute_group.label.label=Label
 object.custom_attribute_group.label.help=This will be displayed as the header of the custom attributes group.
 object.custom_attribute_group.table.empty=There is currently no custom attribute group.

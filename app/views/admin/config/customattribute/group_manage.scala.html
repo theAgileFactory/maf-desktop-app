@@ -53,7 +53,7 @@
 
                 <input type="hidden" name="objectType" value="@dataType.getDataTypeClassName" />
 
-                @parts.input_text(form("name"), '_showConstraints -> false, '_label -> parts.Msg.asString("object.custom_attribute_group.name.label"))
+                @parts.basic_input_text(form("name"), parts.Msg.asString("object.custom_attribute_group.name.label"), parts.Msg.asString("object.custom_attribute_group.name.description"), forceRequired = true)
 
                 @parts.multi_languages_input_text(form("label"), parts.Msg.asString("object.custom_attribute_group.label.label"), parts.Msg.asString("object.custom_attribute_group.label.help"))
 

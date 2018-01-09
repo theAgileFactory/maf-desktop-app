@@ -124,6 +124,7 @@ form.input.file_field.file.size.invalid=Chargement impossible la taille d''un fi
 form.input.file_field.no_file=Aucun fichier n''a été sélectionné
 form.input.file_field.success=Chargement réussi
 form.input.file_field.file.size.warning=La taille d''un fichier est limitée à {0}
+form.input.read_only_field.value=Champ en lecture seule
 
 #----------------------
 # default messages
@@ -931,6 +932,7 @@ object.custom_attribute_definition.table.empty=Il n''existe aucun attribut perso
 #----------------------
 
 object.custom_attribute_group.name.label=Nom
+object.custom_attribute_group.name.description=Nom permettant d'identifier le groupe
 object.custom_attribute_group.label.label=Label
 object.custom_attribute_group.label.help=Sera affiché en en-tête du groupe d''attributs
 object.custom_attribute_group.table.empty=Il n''existe aucun groupe d'attributs personnalisé pour l''instant.
