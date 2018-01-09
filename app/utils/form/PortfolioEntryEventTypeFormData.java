@@ -37,6 +37,8 @@ public class PortfolioEntryEventTypeFormData {
 
     public boolean selectable;
 
+    public boolean readOnly;
+
     @MultiLanguagesStringRequired
     @MultiLanguagesStringMaxLength(value = IModelConstants.MEDIUM_STRING)
     public MultiLanguagesString name;
@@ -62,6 +64,7 @@ public class PortfolioEntryEventTypeFormData {
 
         this.id = portfolioEntryEventType.id;
         this.selectable = portfolioEntryEventType.selectable;
+        this.readOnly = portfolioEntryEventType.readOnly;
         this.name = MultiLanguagesString.getByKey(portfolioEntryEventType.name, i18nMessagesPlugin);
         this.bootstrapGlyphicon = portfolioEntryEventType.bootstrapGlyphicon;
 
@@ -78,6 +81,7 @@ public class PortfolioEntryEventTypeFormData {
         portfolioEntryEventType.selectable = this.selectable;
         portfolioEntryEventType.name = this.name.getKeyIfValue();
         portfolioEntryEventType.bootstrapGlyphicon = this.bootstrapGlyphicon;
+        portfolioEntryEventType.readOnly = this.readOnly;
 
     }
 }

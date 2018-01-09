@@ -85,16 +85,20 @@ public abstract class PortfolioEntryEventDao {
     /**
      * Get all active portfolio entry event types.
      */
-    public static List<PortfolioEntryEventType> getPEEventTypeActiveAsList() {
-        return findPortfolioEntryEventType.where().eq("deleted", false).eq("selectable", true).findList();
+    public static List<PortfolioEntryEventType> getPEEventTypeActiveAsList(boolean withReadOnly) {
+        ExpressionList<PortfolioEntryEventType> query = findPortfolioEntryEventType.where().eq("deleted", false).eq("selectable", true);
+        if (!withReadOnly) {
+            query.eq("readOnly", false);
+        }
+        return query.findList();
     }
 
     /**
      * Get all selectable portfolio entry event types as a value holder
      * collection.
      */
-    public static ISelectableValueHolderCollection<Long> getPEEventTypeActiveAsVH() {
-        return new DefaultSelectableValueHolderCollection<>(getPEEventTypeActiveAsList());
+    public static ISelectableValueHolderCollection<Long> getPEEventTypeActiveAsVH(boolean withReadOnly) {
+        return new DefaultSelectableValueHolderCollection<>(getPEEventTypeActiveAsList(withReadOnly));
     }
 
     /**
