@@ -80,6 +80,9 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
      */
     public PortfolioEntryResourcePlanAllocatedActorFormData() {
         super();
+
+        this.budgetTrackingService = Play.application().injector().instanceOf(IBudgetTrackingService.class);
+        this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
     }
 
     /**
