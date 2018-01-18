@@ -252,7 +252,7 @@ public class PortfolioEntryListView {
                     this.setColumnValueCssClass("manager", "rowlink-skip");
 
                     addColumn("managerOrgUnit", "managerOrgUnit", "object.portfolio_entry.manager_org_unit.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("managerOrgUnit", (portfolioEntryListView, value) -> views.html.modelsparts.display_org_unit.render(portfolioEntryListView.manager.orgUnit).body());
+                    setJavaColumnFormatter("managerOrgUnit", (portfolioEntryListView, value) -> views.html.modelsparts.display_org_unit.render(portfolioEntryListView.managerOrgUnit).body());
                     this.setColumnValueCssClass("managerOrgUnit", "rowlink-skip");
 
                     addColumn("sponsoringUnit", "sponsoringUnit", "object.portfolio_entry.sponsoring_unit.label", Table.ColumnDef.SorterType.NONE);
@@ -379,6 +379,7 @@ public class PortfolioEntryListView {
     public String name;
     public PortfolioEntryType portfolioEntryType;
     public Actor manager;
+    public OrgUnit managerOrgUnit;
     public OrgUnit sponsoringUnit;
     public List<OrgUnit> deliveryUnits;
     public List<Portfolio> portfolios;
@@ -415,6 +416,7 @@ public class PortfolioEntryListView {
         this.name = portfolioEntry.name;
         this.portfolioEntryType = portfolioEntry.portfolioEntryType;
         this.manager = portfolioEntry.manager;
+        this.managerOrgUnit = portfolioEntry.manager.orgUnit;
         this.sponsoringUnit = portfolioEntry.sponsoringUnit;
         this.deliveryUnits = portfolioEntry.deliveryUnits;
         this.deliveryUnits.sort((du1, du2) -> du1.name.compareTo(du2.name));
