@@ -44,7 +44,7 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_FINANCIAL_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id, budgetLine.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id, budgetLine.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                 }
             </div>
             

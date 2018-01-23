@@ -189,6 +189,25 @@ button.upload=Hochladen
 button.open=Offen
 
 #----------------------
+# Tooltips
+#----------------------
+tooltip.display=Anzeigen
+tooltip.edit=Bearbeiten
+tooltip.request=Auftrag zu schicken
+tooltip.delete=Löschen
+tooltip.download=Herunterladen
+tooltip.config=Konfigurieren
+tooltip.add=Hinzufügen
+tooltip.cancel=Abbrechen
+tooltip.export.excel=Excel-Export
+tooltip.trigger=Jetzt auslösen
+tooltip.expand=Mehr anzeigen
+tooltip.compress=Weniger anzeigen
+tooltip.refresh=Aktualisieren
+tooltip.bookmark=Bookmarken diese Seite
+tooltip.help=Hilfe
+
+#----------------------
 # Selector
 #----------------------
 select.select_all=Alles auswählen
@@ -239,6 +258,8 @@ table.row_action.select_a_value=Bitte mindestens Einen Wert wählen
 table.row_action.actions=Ausführen
 
 filter.togglebutton.label=Filter
+filter.table.column_selector.tooltip=Select columns to display
+filter.table.filter_selector.tooltip=Select columns to filter
 filter.table.excel.success=OK: Sie erhalten eine Benachrichtigung, wenn Ihre Excel-Datei zum Downloaden bereit ist
 filter.table.excel.failure=Fehler: Excel-Export fehlgeschlagen
 filter.table.ajax.error.message=Fehler: Server nicht erreichbar. Bitte aktualisieren Sie die Seite
@@ -1475,6 +1496,9 @@ object.attachment.object_type.label=Objekttyps
 object.attachment.object_id.label=Link
 object.attachment.empty=Keine Dokumente eingetragen
 object.attachment.link_portfolioentry_id.label=Initiative Link
+object.attachment.view_action_link.tooltip=Go to attachment location
+object.attachment.download_action_link.tooltip=Download
+object.attachment.remove_action_link.tooltip=Delete attachment
 
 #----------------------
 # portfolioEntryBudgetLine
@@ -1537,6 +1561,7 @@ object.allocated_resource.org_unit.table.empty=Keine Einträge
 object.allocated_resource.competency.table.empty=Keine Einträge
 object.allocated_resource.table.empty=Keine Einträge
 object.allocated_resource.monthly_allocated.label=Monatliche Zuwendung
+object.allocated_resource.reallocate.tooltip=Mitarbeiter zuweisen
 
 #----------------------
 # allocation status
@@ -2324,6 +2349,8 @@ core.portfolio_entry.overview.milestones_trend.panel.budget.label=Budget
 core.portfolio_entry.overview.milestones_trend.panel.resources.label=Ressourcen
 core.portfolio_entry.overview.milestones_trend.panel.resources.value.label={0} Tag(e)
 core.portfolio_entry.overview.status.panel.title=Letzte Statusbericht
+core.portfolio_entry.overview.status.registers.tooltip=Nach Statusbericht Register
+core.portfolio_entry.overview.status.governance.tooltip=Nach Projekt Unternehmensführung
 core.portfolio_entry.overview.milestones.panel.title=Nächste Meilensteine
 
 #view
@@ -2463,6 +2490,7 @@ core.portfolio_entry_stakeholder.delete=Das Projektbeteiligte wurde entfernt.
 
 #view
 core.portfolio_entry_governance.view.title=Lieferzyklus: {0}
+core.portfolio_entry_governance.lifecycle.change.tooltip=Lieferzyklus bearbeiten
 
 #view milestone
 core.portfolio_entry_governance.milestone.view.status.approved=Akzeptiert Aufsichtsratsbeschluss
@@ -3205,6 +3233,7 @@ admin.configuration.reference_data.timesheetactivity.delete.successful=Aktivitä
 
 #helpers
 admin.configuration.custom_attributes.title=Zusatzfelder
+admin.configuration.custom_attributes.groups.tooltip=Gruppen anzeigen
 
 #manage
 admin.configuration.custom_attribute.manage.title=Zusatzfelder bearbeiten
@@ -3422,6 +3451,7 @@ admin.kpi.view.details.title=Details
 admin.kpi.view.scheduler.title=Planer
 admin.kpi.view.scheduler.delete.comfirm=Sind Sie sicher, dass Sie den Planer löschen wollen?<br/>Achtung: Trend wird entfernt.
 admin.kpi.view.scheduler.no_scheduler=Planer nicht konfiguriert. Bitte auf <span class="fa fa-sliders"></span> klicken.
+admin.kpi.view.scheduler.configure.tooltip=Planer konfigurieren.
 admin.kpi.scheduler.delete=Planer entfernt
 admin.kpi.scheduler.trigger=Planer ausgeführt
 admin.kpi.view.permissions.title=Benutzerrechte

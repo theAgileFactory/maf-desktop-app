@@ -189,6 +189,25 @@ button.upload=Télécharger
 button.open=Ouvrir
 
 #----------------------
+# Tooltips
+#----------------------
+tooltip.display=Voir
+tooltip.edit=Editer
+tooltip.request=Envoyer la requête
+tooltip.delete=Supprimer
+tooltip.download=Télécharger
+tooltip.config=Configurer
+tooltip.add=Ajouter
+tooltip.cancel=Annuler
+tooltip.export.excel=Exporter vers Excel
+tooltip.trigger=Déclencher maintenant
+tooltip.expand=Montrer plus
+tooltip.compress=Montrer moins
+tooltip.refresh=Rafraîchir
+tooltip.bookmark=Marquer cette page
+tooltip.help=Aide
+
+#----------------------
 # Selector
 #----------------------
 select.select_all=Tout sélectionner
@@ -239,6 +258,9 @@ table.row_action.select_a_value=Veuillez sélectionner au moins une valeur
 table.row_action.actions=Actions
 
 filter.togglebutton.label=filtres
+
+filter.table.column_selector.tooltip=Sélectionner les colonnes à afficher
+filter.table.filter_selector.tooltip=Sélectionner les colonnes à filtrer
 filter.table.excel.success=Succès: vous aller recevoir une notification lorsque le fichier Excel sera disponible au téléchargement.
 filter.table.excel.failure=Erreur: impossible de créer le fichier Excel
 filter.table.ajax.error.message=Problème de communication avec le serveur, veuillez rafraichir la page.
@@ -1538,6 +1560,7 @@ object.allocated_resource.org_unit.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.competency.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.table.empty=Il n''existe aucune allocation.
 object.allocated_resource.monthly_allocated.label=Allocation mensuelle
+object.allocated_resource.reallocate.tooltip=Assigner un employé
 
 #----------------------
 # allocation status
@@ -2331,6 +2354,8 @@ core.portfolio_entry.overview.milestones_trend.panel.budget.label=Budget
 core.portfolio_entry.overview.milestones_trend.panel.resources.label=Ressources
 core.portfolio_entry.overview.milestones_trend.panel.resources.value.label={0} jour(s)
 core.portfolio_entry.overview.status.panel.title=Dernier rapport d''état
+core.portfolio_entry.overview.status.registers.tooltip=Aller aux registres d''états
+core.portfolio_entry.overview.status.governance.tooltip=Aller à la gouvernance de projet
 core.portfolio_entry.overview.milestones.panel.title=Prochains jalons
 
 #view
@@ -2470,6 +2495,7 @@ core.portfolio_entry_stakeholder.delete=L''intervenant a été supprimé.
 
 #view
 core.portfolio_entry_governance.view.title=Processus de gouvernance: {0}
+core.portfolio_entry_governance.lifecycle.change.tooltip=Changer le processus de gouvernance
 
 #view milestone
 core.portfolio_entry_governance.milestone.view.status.approved=Etape approuvée
@@ -3208,6 +3234,7 @@ admin.configuration.reference_data.timesheetactivity.delete.successful=L''activi
 
 #helpers
 admin.configuration.custom_attributes.title=Attributs personnalisés
+admin.configuration.custom_attributes.groups.tooltip=Voir les groupes
 
 #manage
 admin.configuration.custom_attribute.manage.title=Gérer un attribut personnalisé
@@ -3427,6 +3454,7 @@ admin.kpi.view.details.title=Détails
 admin.kpi.view.scheduler.title=Planificateur
 admin.kpi.view.scheduler.delete.comfirm=Etes-vous sûr(e) de vouloir supprimer le planificateur de le KPI?
 admin.kpi.view.scheduler.no_scheduler=Aucun planificateur n''est configuré. Veuillez cliquer sur l''icône <span class="fa fa-sliders"></span> pour le configurer.
+admin.kpi.view.scheduler.configure.tooltip=Configurer le planificateur
 admin.kpi.scheduler.delete=Le planificateur a été supprimé.
 admin.kpi.scheduler.trigger=Le planificateur a été déclenché.
 admin.kpi.view.permissions.title=Permissions

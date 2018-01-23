@@ -48,7 +48,7 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryStakeholderController.manage(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStakeholderController.manage(portfolioEntry.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>

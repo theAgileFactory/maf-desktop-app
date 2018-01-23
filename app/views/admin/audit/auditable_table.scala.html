@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import views.html.framework_views.parts.Msg
 @(table: framework.utils.Table[framework.services.audit.Auditable], debugLogEnabled: Boolean)
 
 @import helper._
@@ -44,11 +45,11 @@
 })
 
 @table.setColumnFormatter("deleteActionLink", {(anObject: framework.services.audit.Auditable, objectClass: Option[java.lang.String])   =>  {
-            "<a onclick=\"return maf_confirmDelete('"+anObject.toString()+"');\" href=\""+controllers.admin.routes.AuditableController.deleteAuditable(objectClass.get)+"\" class=\"fa fa-trash\"></a>"
+            "<a onclick=\"return maf_confirmDelete('"+anObject.toString+"');\" href=\""+controllers.admin.routes.AuditableController.deleteAuditable(objectClass.get)+"\" data-toggle=\"tooltip\" title=\""+Msg("tooltip.delete")+"\" class=\"fa fa-trash\"></a>"
         }
 })
 @table.setColumnFormatter("editActionLink", {(anObject: framework.services.audit.Auditable, objectClass: Option[java.lang.String])   =>  {
-            "<a  href=\""+controllers.admin.routes.AuditableController.editAuditable(objectClass.get)+"\" class=\"fa fa-pencil-square-o\"></a>"
+            "<a href=\""+controllers.admin.routes.AuditableController.editAuditable(objectClass.get)+"\" data-toggle=\"tooltip\" title=\""+Msg("tooltip.edit")+"\" class=\"fa fa-pencil-square-o\"></a>"
         }
 })
 
@@ -67,7 +68,7 @@
             <div class="pull-right">
                 <a href="@controllers.admin.routes.AuditableController.createAuditable()"><span class="fa fa-plus fa-lg"></span></a>
                 &nbsp;
-                <a href="#" id="exportAuditLog"><span class="fa fa-download fa-lg"></span></a>
+                <a href="#" id="exportAuditLog" data-toggle="tooltip" title="@Msg("tooltip.download")"><span class="fa fa-download fa-lg"></span></a>
             </div>
         </div>
         <div class="panel-body">
@@ -95,7 +96,7 @@
             }
             </p>
             <p>
-            <a href="@controllers.admin.routes.AuditableController.downloadApplicationLog()" class="btn btn-primary"><i class="fa fa-download"></i>&nbsp;@parts.Msg("admin.auditable.download.label")</a>
+            <a href="@controllers.admin.routes.AuditableController.downloadApplicationLog()" class="btn btn-primary" data-toggle="tooltip" title="@Msg("tooltip.download")"><i class="fa fa-download"></i>&nbsp;@parts.Msg("admin.auditable.download.label")</a>
             </p>
         </div>
     </div>

@@ -32,7 +32,7 @@
 
 @views.html.admin.config.config_template("admin.configuration.system_preferences.title", controllers.admin.ConfigurationController.MenuItemType.SYSTEM_PREFERENCES, breadcrump){
     
-    <a class="btn btn-default" href="@controllers.admin.routes.ConfigurationController.editSystemPreferences().url">
+    <a class="btn btn-default" href="@controllers.admin.routes.ConfigurationController.editSystemPreferences().url" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")">
         <span class="fa fa-pencil-square-o"></span>&nbsp; 
          @parts.Msg("button.update")
     </a>

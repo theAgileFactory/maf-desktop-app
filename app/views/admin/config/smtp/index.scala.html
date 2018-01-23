@@ -32,7 +32,7 @@
 
 @views.html.admin.config.config_template("admin.configuration.smtp.title", controllers.admin.ConfigurationController.MenuItemType.SMTP, breadcrump){
     
-    <a class="btn btn-default" href="@controllers.admin.routes.ConfigurationController.editSmtp().url">
+    <a class="btn btn-default" href="@controllers.admin.routes.ConfigurationController.editSmtp().url" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")">
         <span class="fa fa-pencil-square-o"></span>&nbsp; 
          @parts.Msg("button.update")
     </a>

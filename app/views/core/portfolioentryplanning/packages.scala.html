@@ -48,9 +48,9 @@
             
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllPackages(portfolioEntry.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryPlanningController.manageAllPackages(portfolioEntry.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                     &nbsp; <div class="btn-group">
-                        <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">
+                        <a style="box-shadow: none; cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown" data-toggle="tooltip" title="@parts.Msg("tooltip.add")">
                             <i class="fa fa-plus fa-lg"></i>
                         </a>
                         <ul class="dropdown-menu pull-right text-left">
@@ -82,7 +82,7 @@
         <div class="pull-right small">
             @parts.Msg("core.portfolio_entry_planning.packages.gantt.lastupdate"):
             @parts.formats.display_date(new Date(), framework.utils.Utilities.getDefaultDatePattern() + " HH:mm") &nbsp;
-            <a href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)"><span class="fa fa-refresh"></span></a>
+            <a href="@controllers.core.routes.PortfolioEntryPlanningController.packages(portfolioEntry.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.refresh")"><span class="fa fa-refresh"></span></a>
         </div>&nbsp;
         <div class="gantt" id="packages-gantt" style="margin: 0px auto;"></div>
         <br/><br/>

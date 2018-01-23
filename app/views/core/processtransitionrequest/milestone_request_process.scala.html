@@ -85,7 +85,7 @@
                     @if(descriptionDocument != null) {
                         <br>
                         <p class="text-center">
-                            <a href="@_fattach.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary">
+                            <a href="@_fattach.getAttachmentDownloadUrl(descriptionDocument.id)" class="btn btn-primary" data-toggle="tooltip" title="@parts.Msg("tooltip.download")">
                                 <i class="fa fa-arrow-circle-o-down"></i> @parts.Msg("core.process_transition_request.process_milestone_request.panel.request.download")
                             </a>
                         </p>

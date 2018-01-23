@@ -61,7 +61,7 @@
                     @if(_budgetTrackingService.isActive()) {
                         <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", budgetTrackingLastRun)" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
                     }
-                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageBudgetLine(portfolioEntry.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
 
                 }
             </div>
@@ -89,7 +89,7 @@
                     @if(_budgetTrackingService.isActive()) {
                         <a class="run-budget-tracking-link" title="@parts.Msg("core.portfolio_entry_financial.budget_tracking.run.help", budgetTrackingLastRun)" data-toggle="tooltip" href="@controllers.core.routes.PortfolioEntryFinancialController.budgetTrackingRun(portfolioEntry.id).url"><span class="fa fa-refresh fa-lg"></span></a>
                     }
-                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                    &nbsp; <a href="@controllers.core.routes.PortfolioEntryFinancialController.manageWorkOrder(portfolioEntry.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
         </div>
