@@ -177,6 +177,25 @@ button.upload=Upload
 button.open=Open
 
 #----------------------
+# Tooltips
+#----------------------
+tooltip.display=Display
+tooltip.edit=Edit
+tooltip.request=Send request
+tooltip.delete=Delete
+tooltip.download=Download
+tooltip.config=Configure
+tooltip.add=Add
+tooltip.cancel=Cancel
+tooltip.export.excel=Export to Excel
+tooltip.trigger=Trigger now
+tooltip.expand=Show more
+tooltip.compress=Show less
+tooltip.refresh=Refresh
+tooltip.bookmark=Bookmark this page
+tooltip.help=Help
+
+#----------------------
 # Selector
 #----------------------
 select.select_all=Select all
@@ -227,6 +246,8 @@ table.row_action.select_a_value=Please select at least one value
 table.row_action.actions=Actions
 
 filter.togglebutton.label=filters
+filter.table.column_selector.tooltip=Select columns to display
+filter.table.filter_selector.tooltip=Select columns to filter
 filter.table.excel.success=Success : You will receive a notification when your excel file is ready for download.
 filter.table.excel.failure=Error : Unable to export the Excel file.
 filter.table.ajax.error.message=Failed to communicate with the server, please refresh the page.
@@ -1464,6 +1485,9 @@ object.attachment.object_type.label=Object type
 object.attachment.object_id.label=Object reference
 object.attachment.empty=There is no attachment.
 object.attachment.link_portfolioentry_id.label=Linked initiative
+object.attachment.view_action_link.tooltip=Go to attachment location
+object.attachment.download_action_link.tooltip=Download
+object.attachment.remove_action_link.tooltip=Delete attachment
 
 #----------------------
 # portfolioEntryBudgetLine
@@ -1526,6 +1550,7 @@ object.allocated_resource.org_unit.table.empty=There is no allocation.
 object.allocated_resource.competency.table.empty=There is no allocation.
 object.allocated_resource.table.empty=There is no allocation.
 object.allocated_resource.monthly_allocated.label=Monthly allocation
+object.allocated_resource.reallocate.tooltip=Assign to an employee
 
 #----------------------
 # allocation status
@@ -2313,6 +2338,8 @@ core.portfolio_entry.overview.milestones_trend.panel.budget.label=Budget
 core.portfolio_entry.overview.milestones_trend.panel.resources.label=Resources
 core.portfolio_entry.overview.milestones_trend.panel.resources.value.label={0} day(s)
 core.portfolio_entry.overview.status.panel.title=Latest status report
+core.portfolio_entry.overview.status.registers.tooltip=Go to status registers
+core.portfolio_entry.overview.status.governance.tooltip=Go to project governance
 core.portfolio_entry.overview.milestones.panel.title=Next milestones
 
 #view
@@ -2452,6 +2479,7 @@ core.portfolio_entry_stakeholder.delete=The stakeholder has been removed.
 
 #view
 core.portfolio_entry_governance.view.title=Life cycle process: {0}
+core.portfolio_entry_governance.lifecycle.change.tooltip=Change life cycle process
 
 #view milestone
 core.portfolio_entry_governance.milestone.view.status.approved=Approved gate
@@ -3194,6 +3222,7 @@ admin.configuration.reference_data.timesheetactivity.delete.successful=The times
 
 #helpers
 admin.configuration.custom_attributes.title=Custom attributes
+admin.configuration.custom_attributes.groups.tooltip=Display groups
 
 #manage
 admin.configuration.custom_attribute.manage.title=Manage a custom attribute
@@ -3413,6 +3442,7 @@ admin.kpi.view.details.title=Details
 admin.kpi.view.scheduler.title=Scheduler
 admin.kpi.view.scheduler.delete.comfirm=Are you sure you want to delete the scheduler of this KPI?
 admin.kpi.view.scheduler.no_scheduler=There is no scheduler configured. Please click on the icon <span class="fa fa-sliders"></span> to configure it.
+admin.kpi.view.scheduler.configure.tooltip=Configure scheduler
 admin.kpi.scheduler.delete=The scheduler has been correctly removed
 admin.kpi.scheduler.trigger=The scheduler has been correctly triggered
 admin.kpi.view.permissions.title=Permissions

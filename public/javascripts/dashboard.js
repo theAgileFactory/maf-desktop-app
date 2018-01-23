@@ -491,7 +491,7 @@ function _maf_widget_toggleEdition(isEditionMode, widgetAreaElement, widgetCatal
 					});
 		});
 	}else if(hasEditMode){
-		widgetAreaElement.find("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_display fa fa-square-o fa-lg"></i>&nbsp;&nbsp;<i class="_maf_widget_widget_command_configure fa fa-cog fa-lg"></i>');
+		widgetAreaElement.find("._maf_widget_widget_commands").html('<i class="_maf_widget_widget_command_display fa fa-refresh fa-lg"></i>&nbsp;&nbsp;<i class="_maf_widget_widget_command_configure fa fa-cog fa-lg"></i>');
 		widgetAreaElement.find("._maf_widget_widget_command_configure").click(function(event){
 			event.preventDefault();
 			var widgetElement=$(this).closest("._maf_widget_widget");

@@ -45,13 +45,13 @@
             
             <div class="pull-right">
                 @if(!viewAllActivities) {
-                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, true).url"><span class="fa fa-expand fa-lg"></span></a>
+                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, viewAllActivities = true).url" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
                 } else {
-                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, false).url"><span class="fa fa-compress fa-lg"></span></a>
+                    <a href="@controllers.core.routes.ActorController.allocationDetails(actor.id, 0, 0, viewAllActivities = false).url" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
                 }
                 &nbsp;
                 @dynamic(constants.IMafConstants.ACTOR_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.ActorController.manageAllocatedActivity(actor.id)"><span class="fa fa-plus fa-lg"></span></a>
+                    <a href="@controllers.core.routes.ActorController.manageAllocatedActivity(actor.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
             

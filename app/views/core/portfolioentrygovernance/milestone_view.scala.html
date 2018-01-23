@@ -81,7 +81,7 @@
                                     <div class="pull-right">
                                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                                                 &nbsp;&nbsp;
-                                            <a id="milestone-instance-delete" onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryGovernanceController.deleteMilestone(portfolioEntry.id, lifeCycleMilestoneInstance.id)"><span class="fa fa-trash fa-lg"></span></a>
+                                            <a id="milestone-instance-delete" onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioEntryGovernanceController.deleteMilestone(portfolioEntry.id, lifeCycleMilestoneInstance.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.delete")"><span class="fa fa-trash fa-lg"></span></a>
                                             <script type="text/javascript">
                                                     function maf_confirmDelete(){
                                                         return window.confirm("@parts.Msg("core.portfolio_entry_governance.milestone.view.panel.details.delete.confirmation.message", portfolioEntry.portfolioEntryType.getName.toLowerCase)");
@@ -141,7 +141,7 @@
                                     @if(descriptionDocuments(index) != null) {
                                         <br>
                                         <p class="text-center">
-                                            <a href="@_fattach.getAttachmentDownloadUrl(descriptionDocuments(index).id)" class="btn btn-primary">
+                                            <a href="@_fattach.getAttachmentDownloadUrl(descriptionDocuments(index).id)" class="btn btn-primary" data-toggle="tooltip" title="@parts.Msg("tooltip.download")">
                                                 <i class="fa fa-arrow-circle-o-down"></i> @parts.Msg("object.life_cycle_milestone_instance.document.label")
                                             </a>
                                         </p>

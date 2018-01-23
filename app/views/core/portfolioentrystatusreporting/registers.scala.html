@@ -50,10 +50,10 @@
         <div class="panel-heading">
             &nbsp;
             <div class="pull-right">
-                <a href="#" id="exportReportsLink" onclick="exportReportsAsExcel()"><span class="fa fa-download fa-lg"></span></a>
+                <a href="#" id="exportReportsLink" data-toggle="tooltip" title="@parts.Msg("tooltip.download")" onclick="exportReportsAsExcel()"><span class="fa fa-download fa-lg"></span></a>
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
                     &nbsp;
-                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageReport(portfolioEntry.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                 }
             </div>
         </div>
@@ -82,13 +82,13 @@
                     
                     <div class="pull-right">
                         @if(!viewAllRisks) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, true, viewAllIssues).url"><span class="fa fa-expand fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, true, viewAllIssues).url" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
                         } else {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, false, viewAllIssues).url"><span class="fa fa-compress fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, false, viewAllIssues).url" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
                         }
                         &nbsp;
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>
@@ -109,13 +109,13 @@
                     
                     <div class="pull-right">
                         @if(!viewAllIssues) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, true).url"><span class="fa fa-expand fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, true).url" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
                         } else {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, false).url"><span class="fa fa-compress fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, false).url" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
                         }
                         &nbsp;
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, 0, false).url"><span class="fa fa-plus fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, 0, false).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>

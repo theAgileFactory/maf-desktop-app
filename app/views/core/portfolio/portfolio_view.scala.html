@@ -50,9 +50,9 @@
                     @parts.Msg("core.portfolio.view.details.title")
                     @dynamic(constants.IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION) {
                         <div class="pull-right">
-                            <a href="@controllers.core.routes.PortfolioController.edit(portfolio.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioController.edit(portfolio.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                             &nbsp;&nbsp;
-                            <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioController.delete(portfolio.id)"><span class="fa fa-trash fa-lg"></span></a>
+                            <a onclick="return maf_confirmDelete();" href="@controllers.core.routes.PortfolioController.delete(portfolio.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.delete")"><span class="fa fa-trash fa-lg"></span></a>
                             <script type="text/javascript">
                                 function maf_confirmDelete(){
                                     return window.confirm("@parts.Msg("core.portfolio.delete.confirmation.message")");
@@ -111,7 +111,7 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioStakeholderController.manage(portfolio.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioStakeholderController.manage(portfolio.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>
@@ -130,9 +130,9 @@
             @parts.Msg("core.portfolio.view.entries.title")
             <div class="pull-right">
                 @if(!viewAllPortfolioEntries) {
-                    <a href="@controllers.core.routes.PortfolioController.view(portfolio.id, 0, 0, true)"><span class="fa fa-expand fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioController.view(portfolio.id, 0, 0, true)" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
                 } else {
-                    <a href="@controllers.core.routes.PortfolioController.view(portfolio.id, 0, 0, false)"><span class="fa fa-compress fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioController.view(portfolio.id, 0, 0, false)" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
                 }
             </div>
         </div>

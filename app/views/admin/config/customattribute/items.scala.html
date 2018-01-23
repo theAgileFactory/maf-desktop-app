@@ -43,7 +43,7 @@
         <div class="panel-heading">
             @parts.Msg("admin.configuration.custom_attribute.items.title")
             <div class="pull-right">
-                <a href="@controllers.admin.routes.ConfigurationCustomAttributeController.manageItem(customAttribute.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                <a href="@controllers.admin.routes.ConfigurationCustomAttributeController.manageItem(customAttribute.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
             </div>
         </div>
     

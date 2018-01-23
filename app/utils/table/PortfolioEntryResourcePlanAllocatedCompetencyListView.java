@@ -176,7 +176,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyListView {
                     addColumn("reallocate", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("reallocate",
                             new StringFormatFormatter<>(
-                                    "<a href=\"%s\"><span class=\"fa fa-user\"></span></a>",
+                                    "<a href=\"%s\" data-toggle=\"tooltip\" title=\""+Msg.get("object.allocated_resource.reallocate.tooltip")+"\"><span class=\"fa fa-user\"></span></a>",
                                     allocatedCompetencyListView -> controllers.core.routes.PortfolioEntryPlanningController
                                             .reallocateCompetency(
                                                     allocatedCompetencyListView.portfolioEntryId,

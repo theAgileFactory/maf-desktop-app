@@ -22,8 +22,8 @@
     <div class="col-md-12">
     
         <div class="pull-right visible-lg visible-md" style="padding-top:5px; padding-right: 5px;">
-            <a id="pinThisPage" class="btn btn-default" href="#"><i class="fa fa-thumb-tack fa-lg"></i></a>
-            <a id="helpTarget" class="btn btn-default" target="_blank" href="@controllers.routes.Application.help(request.path)"><i class="fa fa-question-circle fa-lg"></i></a>
+            <a id="pinThisPage" class="btn btn-default" href="#" data-toggle="tooltip" title="@parts.Msg("tooltip.bookmark")"><i class="fa fa-thumb-tack fa-lg"></i></a>
+            <a id="helpTarget" class="btn btn-default" target="_blank" href="@controllers.routes.Application.help(request.path)" data-toggle="tooltip" title="@parts.Msg("tooltip.help")"><i class="fa fa-question-circle fa-lg"></i></a>
         </div>
 
         <ol class="breadcrumb">

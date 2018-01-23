@@ -48,7 +48,7 @@
 
             @if(lastPlanning.lifeCycleInstance.lifeCycleProcess.isFlexible) {
                 <div class="pull-right">
-                    <a href="@controllers.core.routes.PortfolioEntryGovernanceController.manageAdditionalMilestone(portfolioEntry.id)"><span class="fa fa-plus fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryGovernanceController.manageAdditionalMilestone(portfolioEntry.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                 </div>
             }
         </div>
@@ -104,7 +104,7 @@
                                             </td>
                                             <td class="text-right rowlink-skip">
                                                 @if(governanceListView.milestone.isAdditional) {
-                                                    <a href="@controllers.core.routes.PortfolioEntryGovernanceController.manageAdditionalMilestone(portfolioEntry.id, governanceListView.milestone.id, previousMilestoneId).url"
+                                                    <a href="@controllers.core.routes.PortfolioEntryGovernanceController.manageAdditionalMilestone(portfolioEntry.id, governanceListView.milestone.id, previousMilestoneId).url" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")"
                                                     ><span class="fa fa-pencil-square-o"></span></a>
                                                 }
                                             </td>
@@ -112,7 +112,7 @@
                                                 @if(governanceListView.milestone.isAdditional) {
                                                     <a
                                                         onclick="return maf_confirmAction('@parts.Msg("core.portfolio_entry_governance.planning.edit.milestone.delete.confirmation.message")');"
-                                                        href="@controllers.core.routes.PortfolioEntryGovernanceController.deleteAdditionalMilestone(portfolioEntry.id, governanceListView.milestone.id).url"
+                                                        href="@controllers.core.routes.PortfolioEntryGovernanceController.deleteAdditionalMilestone(portfolioEntry.id, governanceListView.milestone.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.delete")"
                                                     ><span class="fa fa-trash"></span></a>
                                                 }
                                             </td>

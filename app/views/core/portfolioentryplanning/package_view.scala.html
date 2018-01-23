@@ -51,7 +51,7 @@
                     @parts.Msg("core.portfolio_entry_planning.package.view.title")
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id, planningPackage.id)"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.managePackage(portfolioEntry.id, planningPackage.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                             &nbsp;
                         }
                     </div>
@@ -126,7 +126,7 @@
                     
                     <div class="pull-right">
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.createPackageAttachment(portfolioEntry.id, planningPackage.id).url"><span class="fa fa-plus fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryPlanningController.createPackageAttachment(portfolioEntry.id, planningPackage.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>
