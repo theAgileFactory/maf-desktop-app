@@ -16,10 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
-    existPortfolioEntries: Boolean,
-    table: framework.utils.Table[utils.table.PortfolioEntryListView], 
-    pagination: framework.utils.Pagination[models.pmo.PortfolioEntry],
-    filterConfig: framework.utils.FilterConfig[utils.table.PortfolioEntryListView]
+    existPortfolioEntries: Boolean
 )
 
 @import framework_views.parts.formats._
@@ -65,12 +62,35 @@
         
         <div id="simulator-kpis"></div>
     
-        @parts.table.filtered_tableview(
-            table, 
-            pagination, 
-            filterConfig, 
-            controllers.core.routes.RoadmapController.indexFilter().url,
-            controllers.core.routes.RoadmapController.exportAsExcel().url
+        @parts.datatable.tableview(
+            "roadmap-portfolio-entries-table",
+            Array(
+                "object.portfolio_entry.governance_id.label",
+                "object.portfolio_entry.creation_date.label",
+                "object.portfolio_entry.name.label",
+                "object.portfolio_entry.type.label",
+                "object.portfolio_entry.manager.label",
+                "object.portfolio_entry.manager_org_unit.label",
+                "object.portfolio_entry.sponsoring_unit.label",
+                "object.portfolio_entry.delivery_units.label",
+                "object.portfolio_entry.portfolios.label",
+                "object.portfolio_entry.stakeholders.label",
+                "object.portfolio_entry.dependencies.label",
+                "object.portfolio_entry.life_cycle_process.label",
+                "object.portfolio_entry.status.label",
+                "object.portfolio_entry.report_date.label",
+                "object.portfolio_entry.archived.label",
+                "object.portfolio_entry.is_concept.label",
+                "object.portfolio_entry.last_milestone.label",
+                "object.portfolio_entry.last_milestone_date.label",
+                "object.portfolio_entry.next_milestone.label",
+                "object.portfolio_entry.next_milestone_date.label",
+                "object.portfolio_entry.stakeholder_types.label",
+                "object.portfolio_entry.is_public.label",
+                "object.portfolio_entry.start_date.label",
+                "object.portfolio_entry.end_date.label"
+            ),
+            controllers.api.table.routes.PortfolioEntryTableController.getPortfolioEntryListView().url
         )
     
     } else {

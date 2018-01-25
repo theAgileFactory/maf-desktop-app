@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package utils.table.common;
+package utils.datatable.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import models.finance.BudgetBucket;
+import models.governance.LifeCycleMilestoneInstance;
+import views.html.modelsparts.display_milestone_instance;
 
 /**
- * Orthogonal representation of a @link{BudgetBucket}
+ * Orthogonal representation of a @link{LifeCycleMilestoneInstance}
  * <ul>
  *     <li>display: display</li>
  *     <li>other: text</li>
@@ -29,14 +30,14 @@ import models.finance.BudgetBucket;
  * @author Guillaume Petit
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
-public class BudgetBucketLink {
+public class LifeCycleMilestoneInstanceLink {
 
     public String display;
 
     public String text;
 
-    public BudgetBucketLink(BudgetBucket budgetBucket) {
-        this.display = views.html.modelsparts.display_budget_bucket.render(budgetBucket).body();
-        this.text = budgetBucket == null ? "" : budgetBucket.name;
+    public LifeCycleMilestoneInstanceLink(LifeCycleMilestoneInstance lifeCycleMilestoneInstance) {
+        this.display = display_milestone_instance.render(lifeCycleMilestoneInstance).body();
+        this.text = lifeCycleMilestoneInstance == null ? "" : lifeCycleMilestoneInstance.lifeCycleMilestone.getName();
     }
 }

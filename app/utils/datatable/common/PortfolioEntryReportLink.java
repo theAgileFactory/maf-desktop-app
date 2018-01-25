@@ -15,14 +15,29 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package utils.table.common;
+package utils.datatable.common;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioEntryReport;
 
 /**
+ * Orthogonal representation of a @link{PortfolioEntryReport}
+ * <ul>
+ *     <li>display: display</li>
+ *     <li>other: text</li>
+ * </ul>
  * @author Guillaume Petit
  */
-public class Date {
+@JsonInclude(JsonInclude.Include.ALWAYS)
+public class PortfolioEntryReportLink {
 
     public String display;
 
-    public Long timestamp;
+    public String text;
+
+    public PortfolioEntryReportLink(PortfolioEntryReport portfolioEntryReport) {
+        this.display = views.html.modelsparts.display_portfolio_entry_report.render(portfolioEntryReport).body();
+        this.text = portfolioEntryReport == null ? "" : portfolioEntryReport.portfolioEntryReportStatusType.getName();
+    }
 }

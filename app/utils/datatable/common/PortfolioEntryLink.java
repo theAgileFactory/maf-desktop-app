@@ -15,30 +15,29 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package utils.table.common;
+package utils.datatable.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import play.mvc.Http;
-
-import java.text.NumberFormat;
+import models.pmo.Portfolio;
+import models.pmo.PortfolioEntry;
 
 /**
- * Orthogonal representation of a financial number
+ * Orthogonal representation of a @link{PortfolioEntry}
  * <ul>
  *     <li>display: display</li>
- *     <li>other: amount</li>
+ *     <li>other: text</li>
  * </ul>
  * @author Guillaume Petit
  */
 @JsonInclude(JsonInclude.Include.ALWAYS)
-public class FinancialNumber {
-
-    public Double amount;
+public class PortfolioEntryLink {
 
     public String display;
 
-    public FinancialNumber(Double amount) {
-        this.amount = amount;
-        this.display = NumberFormat.getInstance(Http.Context.current().lang().toLocale()).format(amount);
+    public String text;
+
+    public PortfolioEntryLink(PortfolioEntry portfolioEntry) {
+        this.display = views.html.modelsparts.display_portfolio_entry.render(portfolioEntry, true).body();
+        this.text = portfolioEntry == null ? "" : portfolioEntry.name;
     }
 }

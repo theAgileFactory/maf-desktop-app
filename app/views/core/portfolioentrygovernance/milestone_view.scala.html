@@ -1,3 +1,4 @@
+@import utils.table.PortfolioEntryBudgetLineListView
 @* LICENSE
  *
  * Copyright (c) 2015, The Agile Factory SA and/or its affiliates. All rights
@@ -20,7 +21,7 @@
     lifeCycleMilestone: models.governance.LifeCycleMilestone,
     lifeCycleMilestoneInstances: List[models.governance.LifeCycleMilestoneInstance],
     approversTables: List[framework.utils.Table[utils.table.MilestoneApproverListView]],
-    budgetLinesTables: List[framework.utils.Table[utils.table.PortfolioEntryBudgetLineListView]],
+    budgetLinesTables: List[framework.utils.Table[PortfolioEntryBudgetLineListView]],
     resourcesTables: List[framework.utils.Table[utils.table.PortfolioEntryResourcePlanAllocatedResourceListView]],
     descriptionDocuments: List[models.framework_models.common.Attachment]
 )

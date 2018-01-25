@@ -18,9 +18,7 @@
 package controllers.core;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -39,7 +37,6 @@ import framework.utils.Table;
 import framework.utils.Utilities;
 import models.finance.BudgetBucket;
 import models.finance.BudgetBucketLine;
-import models.finance.PortfolioEntryBudgetLine;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -49,7 +46,6 @@ import services.tableprovider.ITableProvider;
 import utils.form.BudgetBucketFormData;
 import utils.form.BudgetBucketLineFormData;
 import utils.table.BudgetBucketLineListView;
-import utils.table.PortfolioEntryBudgetLineListView;
 
 /**
  * The controller which manage the budget buckets.

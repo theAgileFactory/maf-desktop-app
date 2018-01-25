@@ -41,7 +41,19 @@ import java.util.List;
 public class PortfolioEntryTableController extends ApiController {
 
     @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
-    @ApiOperation(value = "get Portfolio Entry budget lines", notes = "Return a view of Portfolio Entry budget lines", response = PortfolioEntryBudgetLineListView.class, httpMethod = "GET")
+    @ApiOperation(value = "Get Portfolio Entries", notes = "Return a view of Portfolio Entries", response = PortfolioEntryListView.class, httpMethod = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
+            @ApiResponse(code = 404, message = "not found", response = ApiError.class),
+            @ApiResponse(code = 500, message = "error", response = ApiError.class),
+    })
+    public Result getPortfolioEntryListView() {
+
+    }
+
+    @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
+    @ApiOperation(value = "Get Portfolio Entry budget lines", notes = "Return a view of Portfolio Entry budget lines", response = PortfolioEntryBudgetLineListView.class, httpMethod = "GET")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
             @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
