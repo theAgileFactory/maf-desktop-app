@@ -17,20 +17,29 @@
  */
 package controllers.api.table;
 
+import com.avaje.ebean.ExpressionList;
 import com.wordnik.swagger.annotations.*;
 import controllers.api.ApiAuthenticationBizdockCheck;
 import controllers.api.ApiController;
 import dao.finance.PortfolioEntryBudgetDAO;
 import dao.pmo.PortfolioEntryDao;
+import framework.security.ISecurityService;
+import framework.services.account.AccountManagementException;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
 import models.finance.PortfolioEntryBudgetLine;
+import models.pmo.PortfolioEntry;
 import play.mvc.Result;
+import security.dynamic.PortfolioEntryDynamicHelper;
+import utils.datatable.PortfolioEntryDTO;
 import utils.table.PortfolioEntryBudgetLineListView;
+import utils.table.PortfolioEntryListView;
 
+import javax.inject.Inject;
 import javax.ws.rs.PathParam;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The API controller for Portfolio entry related tables
@@ -40,27 +49,36 @@ import java.util.List;
 @Api(value = "/api/table/portfolio-entry", description = "Data source for portfolio entries tables")
 public class PortfolioEntryTableController extends ApiController {
 
+    @Inject
+    private ISecurityService securityService;
+
     @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
-    @ApiOperation(value = "Get Portfolio Entries", notes = "Return a view of Portfolio Entries", response = PortfolioEntryListView.class, httpMethod = "GET")
+    @ApiOperation(value = "Get Portfolio Entries", notes = "Return a view of Portfolio Entries", response = PortfolioEntryDTO.class, httpMethod = "GET")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
-            @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
-            @ApiResponse(code = 404, message = "not found", response = ApiError.class),
-            @ApiResponse(code = 500, message = "error", response = ApiError.class),
+            @ApiResponse(code = 403, message = "unauthorized"),
+            @ApiResponse(code = 500, message = "error", response = ApiError.class)
     })
-    public Result getPortfolioEntryListView() {
-
+    public Result getPortfolioEntries() {
+        try {
+            ExpressionList<PortfolioEntry> portfolioEntryExpressionList = PortfolioEntryDynamicHelper.getPortfolioEntriesViewAllowedAsQuery(getSecurityService());
+            List<PortfolioEntryDTO> portfolioEntryListView = portfolioEntryExpressionList.findList().stream().map(PortfolioEntryDTO::new).collect(Collectors.toList());
+            return getJsonSuccessResponse(portfolioEntryListView);
+        } catch (AccountManagementException e) {
+            return getJsonErrorResponse(new ApiError(403, "You are not authorized to query portfolio entries"));
+        } catch (Exception e) {
+            return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
+        }
     }
 
     @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
     @ApiOperation(value = "Get Portfolio Entry budget lines", notes = "Return a view of Portfolio Entry budget lines", response = PortfolioEntryBudgetLineListView.class, httpMethod = "GET")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
-            @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
-            @ApiResponse(code = 500, message = "error", response = ApiError.class),
+            @ApiResponse(code = 500, message = "error", response = ApiError.class)
     })
-    public Result getPortfolioEntryBudgetLineListView(
+    public Result getPortfolioEntryBudgetLines(
             @ApiParam(value = "portfolio entry id", required = true) @PathParam("portfolioEntryId") Long portfolioEntryId
     ) {
         try {
@@ -68,8 +86,7 @@ public class PortfolioEntryTableController extends ApiController {
                 return getJsonErrorResponse(new ApiError(404, "The portfolio entry with the specified id is not found"));
             }
             List<PortfolioEntryBudgetLine> budgetLines = PortfolioEntryBudgetDAO.getPEBudgetLineAsListByPE(portfolioEntryId);
-            List<PortfolioEntryBudgetLineListView> listView = new ArrayList<>();
-            budgetLines.forEach(budgetLine -> listView.add(new PortfolioEntryBudgetLineListView(budgetLine)));
+            List<PortfolioEntryBudgetLineListView> listView = budgetLines.stream().map(PortfolioEntryBudgetLineListView::new).collect(Collectors.toList());
             return getJsonSuccessResponse(listView);
 
         } catch (Exception e) {
@@ -77,4 +94,7 @@ public class PortfolioEntryTableController extends ApiController {
         }
     }
 
+    public ISecurityService getSecurityService() {
+        return securityService;
+    }
 }

@@ -17,12 +17,20 @@
  */
 package utils.datatable;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonRootName;
+
 /**
- * @author maf
+ * @author Guillaume Petit
  */
+@JsonAutoDetect()
+@JsonRootName("data")
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class AbstractBizDockDTO {
 
     public Long id;
 
     public String link;
+
 }

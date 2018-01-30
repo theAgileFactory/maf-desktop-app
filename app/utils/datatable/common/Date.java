@@ -25,4 +25,11 @@ public class Date {
     public String display;
 
     public Long timestamp;
+
+    public Date(java.util.Date date) {
+        if (date != null) {
+            this.timestamp = date.getTime();
+            this.display = date.toString();
+        }
+    }
 }

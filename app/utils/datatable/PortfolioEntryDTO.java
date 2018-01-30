@@ -17,24 +17,25 @@
  */
 package utils.datatable;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import controllers.core.routes;
 import models.pmo.PortfolioEntry;
 import utils.datatable.common.*;
+import utils.datatable.common.Date;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Guillaume Petit
  */
-@JsonAutoDetect()
-@JsonRootName("data")
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class PortfolioEntryDTO extends AbstractBizDockDTO {
 
     public PortfolioEntryDTO() {
+        this.deliveryUnits = new ArrayList<>();
+        this.dependencies = new ArrayList<>();
+        this.portfolios = new ArrayList<>();
+        this.stakeholders = new ArrayList<>();
     }
 
     public String governanceId;
@@ -81,29 +82,49 @@ public class PortfolioEntryDTO extends AbstractBizDockDTO {
 
     public Date endDate;
 
-    //TODO: Attention aux null
     public PortfolioEntryDTO(PortfolioEntry portfolioEntry) {
+        this.deliveryUnits = new ArrayList<>();
+        this.dependencies = new ArrayList<>();
+        this.portfolios = new ArrayList<>();
+        this.stakeholders = new ArrayList<>();
+
+        this.id = portfolioEntry.id;
+        this.link = routes.PortfolioEntryController.overview(this.id).url();
         this.governanceId = portfolioEntry.governanceId;
-        this.creationDate = portfolioEntry.creationDate;
+        this.creationDate = new Date(portfolioEntry.creationDate);
         this.isPublic = portfolioEntry.isPublic;
         this.name = portfolioEntry.name;
-        this.portfolioEntryType = portfolioEntry.portfolioEntryType.getName();
+        this.portfolioEntryType = portfolioEntry.portfolioEntryType != null ? portfolioEntry.portfolioEntryType.getName() : "";
         this.manager = new ActorLink(portfolioEntry.manager);
         this.sponsoringUnit = new OrgUnitLink(portfolioEntry.sponsoringUnit);
-        portfolioEntry.deliveryUnits.forEach(deliveryUnit -> this.deliveryUnits.add(new OrgUnitLink(deliveryUnit)));
-        portfolioEntry.portfolios.forEach(portfolio -> this.portfolios.add(new PortfolioLink(portfolio)));
-        this.lifeCycleProcess = portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.name;
+        if (portfolioEntry.deliveryUnits != null) {
+            portfolioEntry.deliveryUnits.forEach(deliveryUnit -> this.deliveryUnits.add(new OrgUnitLink(deliveryUnit)));
+        }
+        if (portfolioEntry.portfolios != null) {
+            portfolioEntry.portfolios.forEach(portfolio -> this.portfolios.add(new PortfolioLink(portfolio)));
+        }
+        this.lifeCycleProcess = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.name : "";
         this.portfolioEntryStatus = new PortfolioEntryReportLink(portfolioEntry.lastPortfolioEntryReport);
-        this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport.creationDate;
+        if (portfolioEntry.lastPortfolioEntryReport != null) {
+            this.lastPEReportDate = new Date(portfolioEntry.lastPortfolioEntryReport.creationDate);
+        }
         this.lastMilestone = new LifeCycleMilestoneInstanceLink(portfolioEntry.lastApprovedLifeCycleMilestoneInstance);
         this.nextMilestone = new PlannedLifeCycleMilestoneInstanceLink(portfolioEntry.nextPlannedLifeCycleMilestoneInstance);
-        this.lastMilestoneDate = portfolioEntry.lastApprovedLifeCycleMilestoneInstance.passedDate;
-        this.nextMilestoneDate = portfolioEntry.nextPlannedLifeCycleMilestoneInstance.plannedDate;
+        if (portfolioEntry.lastApprovedLifeCycleMilestoneInstance != null) {
+            this.lastMilestoneDate =  new Date(portfolioEntry.lastApprovedLifeCycleMilestoneInstance.passedDate);
+        }
+        if (portfolioEntry.nextPlannedLifeCycleMilestoneInstance != null) {
+            this.nextMilestoneDate = new Date(portfolioEntry.nextPlannedLifeCycleMilestoneInstance.plannedDate);
+        }
         this.isConcept = portfolioEntry.activeLifeCycleInstance.isConcept;
         this.archived = portfolioEntry.archived;
-        portfolioEntry.stakeholders.forEach(stakeholder -> this.stakeholders.add(new ActorLink(stakeholder.actor)));
-        portfolioEntry.destinationDependencies.forEach(dependency -> this.dependencies.add(new PortfolioEntryLink(dependency.getSourcePortfolioEntry())));
-        this.startDate = portfolioEntry.startDate;
-        this.endDate = portfolioEntry.endDate;
+        if (portfolioEntry.stakeholders != null) {
+            portfolioEntry.stakeholders.forEach(stakeholder -> this.stakeholders.add(new ActorLink(stakeholder.actor)));
+        }
+        if (portfolioEntry.destinationDependencies != null) {
+            portfolioEntry.destinationDependencies.forEach(dependency -> this.dependencies.add(new PortfolioEntryLink(dependency.getSourcePortfolioEntry())));
+        }
+        this.startDate = new Date(portfolioEntry.startDate);
+        this.endDate = new Date(portfolioEntry.endDate);
     }
 }

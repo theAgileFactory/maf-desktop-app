@@ -1007,7 +1007,8 @@ PUT     /api/core/user/:uid/roles/:role_id/remove                       controll
 #-----------#
 # Table API #
 #-----------#
-GET     /api/table/portfolio-entry/:portfolioEntryId/budget-lines       controllers.api.table.PortfolioEntryTableController.getPortfolioEntryBudgetLineListView(portfolioEntryId: Long)
+GET     /api/table/portfolio-entries                                    controllers.api.table.PortfolioEntryTableController.getPortfolioEntries
+GET     /api/table/portfolio-entry/:portfolioEntryId/budget-lines       controllers.api.table.PortfolioEntryTableController.getPortfolioEntryBudgetLines(portfolioEntryId: Long)
 
 # Doc
 GET     /api-docs                                                         framework.services.api.doc.ApiHelpController.getResources

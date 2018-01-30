@@ -182,7 +182,7 @@
 
             var budgetLineTable = budgetLineTableElement.DataTable({
                 ajax: {
-                    url: '@controllers.api.table.routes.PortfolioEntryTableController.getPortfolioEntryBudgetLineListView(portfolioEntry.id).url',
+                    url: '@controllers.api.table.routes.PortfolioEntryTableController.getPortfolioEntryBudgetLines(portfolioEntry.id).url',
                     dataSrc: ''
                 },
                 deferRender: true,

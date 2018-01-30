@@ -70,6 +70,7 @@ import scala.concurrent.duration.Duration;
 import security.dynamic.PortfolioEntryDynamicHelper;
 import services.budgettracking.IBudgetTrackingService;
 import services.tableprovider.ITableProvider;
+import framework.datatable.TableDefinition;
 import utils.gantt.SourceDataValue;
 import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
@@ -141,7 +142,7 @@ public class RoadmapController extends Controller {
 
         try {
 
-            boolean existPortfolioEntries = PortfolioEntryDao.getPEAsExpr(true).findRowCount() > 0 ? true : false;
+            boolean existPortfolioEntries = PortfolioEntryDao.getPEAsExpr(true).findRowCount() > 0;
 
             // get the filter config
             String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
@@ -150,7 +151,33 @@ public class RoadmapController extends Controller {
             // get the table
             Pair<Table<PortfolioEntryListView>, Pagination<PortfolioEntry>> t = getTable(filterConfig);
 
-            return ok(views.html.core.roadmap.roadmap_index.render(existPortfolioEntries, t.getLeft(), t.getRight(), filterConfig));
+            TableDefinition table = new TableDefinition() {
+                {
+                    setId("roadmap-portfolio-entries");
+
+                    setAjax(controllers.api.table.routes.PortfolioEntryTableController.getPortfolioEntries().url(), "");
+
+                    setDeferRender(true);
+
+                    setStateSave(true);
+
+                    addColumn("governanceId", "object.portfolio_entry.governance_id.label");
+
+                    TableConfiguration.Column creationDate = addColumn("creationDate", "object.portfolio_entry.creation_date.label");
+                    creationDate.addRender(TableConfiguration.Column.RenderType.ALL, "timestamp");
+                    creationDate.addRender(TableConfiguration.Column.RenderType.DISPLAY, "display");
+
+                    addColumn("name", "object.portfolio_entry.name.label");
+
+                    addColumn("portfolioEntryType", "object.portfolio_entry.type.label");
+
+                    TableConfiguration.Column manager = addColumn("manager", "object.portfolio_entry.manager.label");
+                    manager.addRender(TableConfiguration.Column.RenderType.ALL, "text");
+                    manager.addRender(TableConfiguration.Column.RenderType.DISPLAY, "display");
+                }
+            };
+
+            return ok(views.html.core.roadmap.roadmap_index.render(existPortfolioEntries, table));
 
         } catch (Exception e) {
 

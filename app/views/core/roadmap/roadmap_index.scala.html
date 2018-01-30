@@ -15,17 +15,17 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
+@import framework.datatable.TableDefinition
+@import play.libs.Json
+
 @(
-    existPortfolioEntries: Boolean
+    existPortfolioEntries: Boolean,
+    table: TableDefinition
 )
 
-@import framework_views.parts.formats._
-@import be.objectify.deadbolt.java.views.html._
-@import be.objectify.deadbolt.core.utils.TemplateUtils._
-@import framework_views.parts
-@import views.html.modelsparts._
-@import framework.utils.SideBar
 @import framework.utils.Menu.ClickableMenuItem
+@import framework.utils.SideBar
+@import framework_views.parts
 
 @sidebarInstance=@{
     val sidebarInstance=new SideBar()
@@ -61,38 +61,25 @@
         <span id="roadmap"></span>
         
         <div id="simulator-kpis"></div>
-    
-        @parts.datatable.tableview(
-            "roadmap-portfolio-entries-table",
-            Array(
-                "object.portfolio_entry.governance_id.label",
-                "object.portfolio_entry.creation_date.label",
-                "object.portfolio_entry.name.label",
-                "object.portfolio_entry.type.label",
-                "object.portfolio_entry.manager.label",
-                "object.portfolio_entry.manager_org_unit.label",
-                "object.portfolio_entry.sponsoring_unit.label",
-                "object.portfolio_entry.delivery_units.label",
-                "object.portfolio_entry.portfolios.label",
-                "object.portfolio_entry.stakeholders.label",
-                "object.portfolio_entry.dependencies.label",
-                "object.portfolio_entry.life_cycle_process.label",
-                "object.portfolio_entry.status.label",
-                "object.portfolio_entry.report_date.label",
-                "object.portfolio_entry.archived.label",
-                "object.portfolio_entry.is_concept.label",
-                "object.portfolio_entry.last_milestone.label",
-                "object.portfolio_entry.last_milestone_date.label",
-                "object.portfolio_entry.next_milestone.label",
-                "object.portfolio_entry.next_milestone_date.label",
-                "object.portfolio_entry.stakeholder_types.label",
-                "object.portfolio_entry.is_public.label",
-                "object.portfolio_entry.start_date.label",
-                "object.portfolio_entry.end_date.label"
-            ),
-            controllers.api.table.routes.PortfolioEntryTableController.getPortfolioEntryListView().url
-        )
-    
+
+        <table id="@(table.id)" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                @for(column <- table.configuration.columns) {
+                    <th>@parts.Msg(column.header)</th>
+                }
+                </tr>
+            </thead>
+        </table>
+
+        <script type="application/javascript">
+                $(document).ready(function() {
+                    var tableElement = $('#@(table.id)');
+
+                    var dataTable = tableElement.DataTable(@Html(Json.stringify(Json.toJson(table.configuration))));
+                })
+        </script>
+
     } else {
     
         <div class="alert alert-info">

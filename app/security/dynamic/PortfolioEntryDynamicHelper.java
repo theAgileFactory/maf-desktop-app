@@ -46,8 +46,6 @@ public class PortfolioEntryDynamicHelper {
      * Get the ebean expression list for all authorized portfolio entries of the
      * sign-in user. It's possible to filter and sort the list.
      * 
-     * @param expression
-     *            the ebean filter expression
      * @param securityService
      *            the security service
      */
