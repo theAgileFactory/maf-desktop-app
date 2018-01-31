@@ -179,21 +179,21 @@ button.open=Open
 #----------------------
 # Tooltips
 #----------------------
-tooltip.display=Display
-tooltip.edit=Edit
-tooltip.request=Send request
-tooltip.delete=Delete
-tooltip.download=Download
-tooltip.config=Configure
 tooltip.add=Add
-tooltip.cancel=Cancel
-tooltip.export.excel=Export to Excel
-tooltip.trigger=Trigger now
-tooltip.expand=Show more
-tooltip.compress=Show less
-tooltip.refresh=Refresh
 tooltip.bookmark=Bookmark this page
+tooltip.cancel=Cancel
+tooltip.compress=Show less
+tooltip.config=Configure
+tooltip.delete=Delete
+tooltip.display=Display
+tooltip.download=Download
+tooltip.edit=Edit
+tooltip.expand=Show more
+tooltip.export.excel=Export to Excel
 tooltip.help=Help
+tooltip.refresh=Refresh
+tooltip.request=Send request
+tooltip.trigger=Trigger now
 
 #----------------------
 # Selector
