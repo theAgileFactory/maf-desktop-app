@@ -191,21 +191,21 @@ button.open=Offen
 #----------------------
 # Tooltips
 #----------------------
-tooltip.display=Anzeigen
-tooltip.edit=Bearbeiten
-tooltip.request=Auftrag zu schicken
-tooltip.delete=Löschen
-tooltip.download=Herunterladen
-tooltip.config=Konfigurieren
 tooltip.add=Hinzufügen
-tooltip.cancel=Abbrechen
-tooltip.export.excel=Excel-Export
-tooltip.trigger=Jetzt auslösen
-tooltip.expand=Mehr anzeigen
-tooltip.compress=Weniger anzeigen
-tooltip.refresh=Aktualisieren
 tooltip.bookmark=Bookmarken diese Seite
+tooltip.cancel=Abbrechen
+tooltip.compress=Weniger anzeigen
+tooltip.config=Konfigurieren
+tooltip.delete=Löschen
+tooltip.display=Anzeigen
+tooltip.download=Herunterladen
+tooltip.edit=Bearbeiten
+tooltip.expand=Mehr anzeigen
+tooltip.export.excel=Excel-Export
 tooltip.help=Hilfe
+tooltip.refresh=Aktualisieren
+tooltip.request=Auftrag zu schicken
+tooltip.trigger=Jetzt auslösen
 
 #----------------------
 # Selector
