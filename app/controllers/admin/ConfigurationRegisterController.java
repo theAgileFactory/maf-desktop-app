@@ -19,6 +19,7 @@ package controllers.admin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -27,7 +28,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import constants.IMafConstants;
 import dao.pmo.PortfolioEntryEventDao;
 import dao.pmo.PortfolioEntryReportDao;
-import dao.pmo.PortfolioEntryRiskDao;
+import dao.pmo.PortfolioEntryRiskAndIssueDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.utils.Color;
 import framework.utils.Icon;
@@ -35,6 +36,7 @@ import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.Utilities;
 import models.pmo.PortfolioEntryEventType;
+import models.pmo.PortfolioEntryIssueType;
 import models.pmo.PortfolioEntryReportStatusType;
 import models.pmo.PortfolioEntryRiskType;
 import play.data.Form;
@@ -42,9 +44,11 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.tableprovider.ITableProvider;
 import utils.form.PortfolioEntryEventTypeFormData;
+import utils.form.PortfolioEntryIssueTypeFormData;
 import utils.form.PortfolioEntryReportStatusTypeFormData;
 import utils.form.PortfolioEntryRiskTypeFormData;
 import utils.table.PortfolioEntryEventTypeListView;
+import utils.table.PortfolioEntryIssueTypeListView;
 import utils.table.PortfolioEntryReportStatusTypeListView;
 import utils.table.PortfolioEntryRiskTypeListView;
 
@@ -57,6 +61,7 @@ import utils.table.PortfolioEntryRiskTypeListView;
 @Restrict({ @Group(IMafConstants.ADMIN_CONFIGURATION_PERMISSION) })
 public class ConfigurationRegisterController extends Controller {
 
+    private static Form<PortfolioEntryIssueTypeFormData> issueTypeFormTemplate = Form.form(PortfolioEntryIssueTypeFormData.class);
     private static Form<PortfolioEntryRiskTypeFormData> riskTypeFormTemplate = Form.form(PortfolioEntryRiskTypeFormData.class);
     private static Form<PortfolioEntryReportStatusTypeFormData> reportStatusTypeFormTemplate = Form.form(PortfolioEntryReportStatusTypeFormData.class);
     private static Form<PortfolioEntryEventTypeFormData> eventTypeFormTemplate = Form.form(PortfolioEntryEventTypeFormData.class);
@@ -72,13 +77,18 @@ public class ConfigurationRegisterController extends Controller {
      */
     public Result list() {
 
-        // risk types
-        List<PortfolioEntryRiskType> portfolioEntryRiskTypes = PortfolioEntryRiskDao.getPERiskTypeAsList();
+        // issue types
+        List<PortfolioEntryIssueType> portfolioEntryIssueTypes = PortfolioEntryRiskAndIssueDao.getPEIssueTypeAsList();
 
-        List<PortfolioEntryRiskTypeListView> portfolioEntryRiskTypesListView = new ArrayList<PortfolioEntryRiskTypeListView>();
-        for (PortfolioEntryRiskType portfolioEntryRiskType : portfolioEntryRiskTypes) {
-            portfolioEntryRiskTypesListView.add(new PortfolioEntryRiskTypeListView(portfolioEntryRiskType));
-        }
+        List<PortfolioEntryIssueTypeListView> portfolioEntryIssueTypeListViews = portfolioEntryIssueTypes.stream().map(PortfolioEntryIssueTypeListView::new).collect(Collectors.toList());
+
+        Table<PortfolioEntryIssueTypeListView> portfolioEntryIssueTypesTable = this.getTableProvider().get().portfolioEntryIssueType.templateTable
+                .fill(portfolioEntryIssueTypeListViews);
+
+        // risk types
+        List<PortfolioEntryRiskType> portfolioEntryRiskTypes = PortfolioEntryRiskAndIssueDao.getPERiskTypeAsList();
+
+        List<PortfolioEntryRiskTypeListView> portfolioEntryRiskTypesListView = portfolioEntryRiskTypes.stream().map(PortfolioEntryRiskTypeListView::new).collect(Collectors.toList());
 
         Table<PortfolioEntryRiskTypeListView> portfolioEntryRiskTypesTable = this.getTableProvider().get().portfolioEntryRiskType.templateTable
                 .fill(portfolioEntryRiskTypesListView);
@@ -86,10 +96,7 @@ public class ConfigurationRegisterController extends Controller {
         // report status types
         List<PortfolioEntryReportStatusType> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeAsList();
 
-        List<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypeListView = new ArrayList<PortfolioEntryReportStatusTypeListView>();
-        for (PortfolioEntryReportStatusType portfolioEntryReportStatusType : portfolioEntryReportStatusTypes) {
-            portfolioEntryReportStatusTypeListView.add(new PortfolioEntryReportStatusTypeListView(portfolioEntryReportStatusType, getI18nMessagesPlugin()));
-        }
+        List<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypeListView = portfolioEntryReportStatusTypes.stream().map(portfolioEntryReportStatusType -> new PortfolioEntryReportStatusTypeListView(portfolioEntryReportStatusType, getI18nMessagesPlugin())).collect(Collectors.toList());
 
         Table<PortfolioEntryReportStatusTypeListView> portfolioEntryReportStatusTypesTable = this.getTableProvider()
                 .get().portfolioEntryReportStatusType.templateTable.fill(portfolioEntryReportStatusTypeListView);
@@ -97,21 +104,18 @@ public class ConfigurationRegisterController extends Controller {
         // event types
         List<PortfolioEntryEventType> portfolioEntryEventTypes = PortfolioEntryEventDao.getPEEventTypeAsList();
 
-        List<PortfolioEntryEventTypeListView> portfolioEntryEventTypeListView = new ArrayList<PortfolioEntryEventTypeListView>();
-        for (PortfolioEntryEventType portfolioEntryEventType : portfolioEntryEventTypes) {
-            portfolioEntryEventTypeListView.add(new PortfolioEntryEventTypeListView(portfolioEntryEventType));
-        }
+        List<PortfolioEntryEventTypeListView> portfolioEntryEventTypeListView = portfolioEntryEventTypes.stream().map(PortfolioEntryEventTypeListView::new).collect(Collectors.toList());
 
         Table<PortfolioEntryEventTypeListView> portfolioEntryEventTypesTable = this.getTableProvider().get().portfolioEntryEventType.templateTable
                 .fill(portfolioEntryEventTypeListView);
 
-        return ok(views.html.admin.config.datareference.register.list.render(portfolioEntryRiskTypesTable, portfolioEntryReportStatusTypesTable,
+        return ok(views.html.admin.config.datareference.register.list.render(portfolioEntryIssueTypesTable, portfolioEntryRiskTypesTable, portfolioEntryReportStatusTypesTable,
                 portfolioEntryEventTypesTable));
     }
 
     /**
      * Edit or create a risk type.
-     * 
+     *
      * @param riskTypeId
      *            the risk type id (set 0 for create case)
      */
@@ -121,15 +125,39 @@ public class ConfigurationRegisterController extends Controller {
         Form<PortfolioEntryRiskTypeFormData> riskTypeForm = riskTypeFormTemplate;
 
         // edit case: inject values
-        if (!riskTypeId.equals(Long.valueOf(0))) {
+        if (!riskTypeId.equals(0L)) {
 
-            PortfolioEntryRiskType riskType = PortfolioEntryRiskDao.getPERiskTypeById(riskTypeId);
+            PortfolioEntryRiskType riskType = PortfolioEntryRiskAndIssueDao.getPERiskTypeById(riskTypeId);
 
             riskTypeForm = riskTypeFormTemplate.fill(new PortfolioEntryRiskTypeFormData(riskType, getI18nMessagesPlugin()));
 
         }
 
         return ok(views.html.admin.config.datareference.register.risk_type_manage.render(riskTypeForm));
+
+    }
+
+    /**
+     * Edit or create a issue type.
+     *
+     * @param issueTypeId
+     *            the issue type id (set 0 for create case)
+     */
+    public Result manageIssueType(Long issueTypeId) {
+
+        // initiate the form with the template
+        Form<PortfolioEntryIssueTypeFormData> issueTypeForm = issueTypeFormTemplate;
+
+        // edit case: inject values
+        if (!issueTypeId.equals(0L)) {
+
+            PortfolioEntryIssueType issueType = PortfolioEntryRiskAndIssueDao.getPEIssueTypeById(issueTypeId);
+
+            issueTypeForm = issueTypeFormTemplate.fill(new PortfolioEntryIssueTypeFormData(issueType, getI18nMessagesPlugin()));
+
+        }
+
+        return ok(views.html.admin.config.datareference.register.issue_type_manage.render(issueTypeForm));
 
     }
 
@@ -160,7 +188,7 @@ public class ConfigurationRegisterController extends Controller {
 
         } else { // edit case
 
-            riskType = PortfolioEntryRiskDao.getPERiskTypeById(riskTypeFormData.id);
+            riskType = PortfolioEntryRiskAndIssueDao.getPERiskTypeById(riskTypeFormData.id);
 
             riskTypeFormData.fill(riskType);
             riskType.update();
@@ -177,18 +205,81 @@ public class ConfigurationRegisterController extends Controller {
     }
 
     /**
+     * Process the edit/create form of a issue type.
+     */
+    public Result processManageIssueType() {
+
+        // bind the form
+        Form<PortfolioEntryIssueTypeFormData> boundForm = issueTypeFormTemplate.bindFromRequest();
+
+        if (boundForm.hasErrors()) {
+            return ok(views.html.admin.config.datareference.register.issue_type_manage.render(boundForm));
+        }
+
+        PortfolioEntryIssueTypeFormData issueTypeFormData = boundForm.get();
+
+        PortfolioEntryIssueType issueType = null;
+
+        if (issueTypeFormData.id == null) { // create case
+
+            issueType = new PortfolioEntryIssueType();
+
+            issueTypeFormData.fill(issueType);
+            issueType.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.issuetype.add.successful"));
+
+        } else { // edit case
+
+            issueType = PortfolioEntryRiskAndIssueDao.getPEIssueTypeById(issueTypeFormData.id);
+
+            issueTypeFormData.fill(issueType);
+            issueType.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.issuetype.edit.successful"));
+        }
+
+        issueTypeFormData.description.persist(getI18nMessagesPlugin());
+        issueTypeFormData.name.persist(getI18nMessagesPlugin());
+
+        this.getTableProvider().flushFilterConfig();
+
+        return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
+    }
+
+    /**
      * Delete a risk type.
-     * 
+     *
      * @param riskTypeId
      *            the risk type id
      */
     public Result deleteRiskType(Long riskTypeId) {
 
-        PortfolioEntryRiskType riskType = PortfolioEntryRiskDao.getPERiskTypeById(riskTypeId);
+        PortfolioEntryRiskType riskType = PortfolioEntryRiskAndIssueDao.getPERiskTypeById(riskTypeId);
 
         riskType.doDelete();
 
         Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.risktype.delete.successful"));
+
+        this.getTableProvider().flushFilterConfig();
+
+        return redirect(controllers.admin.routes.ConfigurationRegisterController.list());
+
+    }
+
+    /**
+     * Delete a issue type.
+     *
+     * @param issueTypeId
+     *            the issue type id
+     */
+    public Result deleteIssueType(Long issueTypeId) {
+
+        PortfolioEntryIssueType issueType = PortfolioEntryRiskAndIssueDao.getPEIssueTypeById(issueTypeId);
+
+        issueType.doDelete();
+
+        Utilities.sendSuccessFlashMessage(Msg.get("admin.configuration.reference_data.issuetype.delete.successful"));
 
         this.getTableProvider().flushFilterConfig();
 

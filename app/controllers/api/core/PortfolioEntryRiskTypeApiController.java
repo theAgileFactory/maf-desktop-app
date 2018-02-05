@@ -35,7 +35,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import controllers.api.ApiAuthenticationBizdockCheck;
 import controllers.api.ApiController;
 import controllers.api.request.post.PortfolioEntryRiskTypeRequest;
-import dao.pmo.PortfolioEntryRiskDao;
+import dao.pmo.PortfolioEntryRiskAndIssueDao;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
 import models.pmo.PortfolioEntryRiskType;
@@ -67,7 +67,7 @@ public class PortfolioEntryRiskTypeApiController extends ApiController {
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     public Result getPortfolioEntryRiskTypesList(@ApiParam(value = "selectable", required = false) @QueryParam("selectable") Boolean selectable) {
         try {
-            return getJsonSuccessResponse(PortfolioEntryRiskDao.getPERiskTypeAsListByFilter(selectable));
+            return getJsonSuccessResponse(PortfolioEntryRiskAndIssueDao.getPERiskTypeAsListByFilter(selectable));
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
         }
@@ -87,10 +87,10 @@ public class PortfolioEntryRiskTypeApiController extends ApiController {
     public Result getPortfolioEntryRiskTypeById(@ApiParam(value = "portfolio entry risk type id", required = true) @PathParam("id") Long id) {
 
         try {
-            if (PortfolioEntryRiskDao.getPERiskTypeById(id) == null) {
+            if (PortfolioEntryRiskAndIssueDao.getPERiskTypeById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The Portfolio Entry Risk Type with the specified id is not found"));
             }
-            return getJsonSuccessResponse(PortfolioEntryRiskDao.getPERiskTypeById(id));
+            return getJsonSuccessResponse(PortfolioEntryRiskAndIssueDao.getPERiskTypeById(id));
 
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
@@ -167,7 +167,7 @@ public class PortfolioEntryRiskTypeApiController extends ApiController {
     public Result udpatePortfolioEntryRiskType(@ApiParam(value = "A PE Risk type id", required = true) @PathParam("id") Long id) {
         try {
 
-            PortfolioEntryRiskType portfolioEntryRiskType = PortfolioEntryRiskDao.getPERiskTypeById(id);
+            PortfolioEntryRiskType portfolioEntryRiskType = PortfolioEntryRiskAndIssueDao.getPERiskTypeById(id);
             if (portfolioEntryRiskType == null) {
                 return getJsonErrorResponse(new ApiError(404, "The PE Risk Type with the specified id is not found"));
             }

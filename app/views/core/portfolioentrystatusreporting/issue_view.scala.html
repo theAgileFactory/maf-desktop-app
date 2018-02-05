@@ -17,8 +17,8 @@
  *@
 @(
     portfolioEntry: models.pmo.PortfolioEntry,
-    portfolioEntryRisk: models.pmo.PortfolioEntryRisk,
-    portfolioEntryRiskFormData: utils.form.PortfolioEntryRiskFormData
+    portfolioEntryIssue: models.pmo.PortfolioEntryIssue,
+    portfolioEntryIssueFormData: utils.form.PortfolioEntryIssueFormData
 )
 
 @import framework_views.parts
@@ -31,7 +31,7 @@
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString,controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
         ("core.portfolio_entry.sidebar.status_reporting.registers.label", controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id).url),
-        (portfolioEntryRisk.name, null)
+        (portfolioEntryIssue.name, null)
     )
 }
 
@@ -40,11 +40,11 @@
     <div class="panel panel-default">
         
         <div class="panel-heading">
-            @parts.Msg("core.portfolio_entry_status_reporting.risk.view.title")
+            @parts.Msg("core.portfolio_entry_status_reporting.issue.view.title")
 
             <div class="pull-right">
                 @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, portfolioEntryRisk.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+                    <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageIssue(portfolioEntry.id, portfolioEntryIssue.id)" data-toggle="tooltip" title="@parts.Msg("tooltip.edit")"><span class="fa fa-pencil-square-o fa-lg"></span></a>
                     &nbsp;
                 }
             </div>
@@ -60,43 +60,31 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.name.label")</th>
-                        <td>@display_object(portfolioEntryRisk.name)</td>
+                        <th>@parts.Msg("object.portfolio_entry_issue.name.label")</th>
+                        <td>@display_object(portfolioEntryIssue.name)</td>
                     </tr>
                     <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.description.label")</th>
-                        <td>@display_object(portfolioEntryRisk.description)</td>
+                        <th>@parts.Msg("object.portfolio_entry_issue.description.label")</th>
+                        <td>@display_object(portfolioEntryIssue.description)</td>
                     </tr>
                     <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.creation_date.label")</th>
-                        <td>@display_date(portfolioEntryRisk.creationDate)</td>
+                        <th>@parts.Msg("object.portfolio_entry_issue.creation_date.label")</th>
+                        <td>@display_date(portfolioEntryIssue.creationDate)</td>
                     </tr>
                     <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.target_date.label")</th>
-                        <td>@display_date(portfolioEntryRisk.targetDate)</td>
+                        <th>@parts.Msg("object.portfolio_entry_issue.due_date.label")</th>
+                        <td>@display_date(portfolioEntryIssue.dueDate)</td>
                     </tr>
                     <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.type.label")</th>
-                        <td>@display_value_holder(portfolioEntryRisk.portfolioEntryRiskType)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.is_mitigated.label")</th>
-                        <td>@display_boolean(portfolioEntryRisk.isMitigated)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.mitigation_comment.label")</th>
-                        <td>@display_object(portfolioEntryRisk.mitigationComment)</td>
-                    </tr>
-                    <tr>
-                        <th>@parts.Msg("object.portfolio_entry_risk.owner.label")</th>
-                        <td >@display_actor(portfolioEntryRisk.owner)</td>
+                        <th>@parts.Msg("object.portfolio_entry_issue.owner.label")</th>
+                        <td >@display_actor(portfolioEntryIssue.owner)</td>
                     </tr>
                 </tbody>
             </table>
             
         </div>
     </div>
-    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryRisk], portfolioEntryRisk.id, portfolioEntryRiskFormData)
+    @parts.formats.display_extended_attributes(classOf[models.pmo.PortfolioEntryIssue], portfolioEntryIssue.id, portfolioEntryIssueFormData)
 
     <a class="btn btn-default" href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id)">@parts.Msg("button.back")</a>
 }
