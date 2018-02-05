@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-28T11:05:11 -->
+<!-- 2018-02-05T16:09:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="status_report_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="503f3ea5-4cfd-40cf-9138-2328fb03b992">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CompenswissDS.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\VDLDS.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -17,7 +18,7 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT
-	per.has_occured AS has_occured,
+	0 as has_occured,
 	per.name AS name,
 	per.target_date AS target_date,
 	IFNULL(i18n_type.value, '') AS type,
@@ -34,7 +35,27 @@
 
 	WHERE per.deleted = 0 AND per.portfolio_entry_id = $P{REPORT_STATUS_REPORT_PORTFOLIO_ENTRY} AND per.is_active = 1
 	
-	ORDER BY target_date]]>
+UNION
+
+SELECT
+	1 as has_occured,
+	pei.name AS name,
+	pei.due_date AS target_date,
+	IFNULL(i18n_type.value, '') AS type,
+	0 AS is_mitigated,
+	pei.is_active AS is_active,
+	CONCAT(a.first_name, ' ', a.last_name) AS owner
+	
+	FROM portfolio_entry_issue pei
+
+	LEFT OUTER JOIN portfolio_entry_issue_type peit ON pei.portfolio_entry_issue_type_id = peit.id AND peit.deleted = 0
+	LEFT OUTER JOIN i18n_messages i18n_type ON peit.name = i18n_type.key AND i18n_type.language = $P{lang}
+
+	LEFT OUTER JOIN actor a ON pei.owner_id = a.id AND a.deleted = 0
+
+	WHERE pei.deleted = 0 AND pei.portfolio_entry_id = $P{REPORT_STATUS_REPORT_PORTFOLIO_ENTRY} AND pei.is_active = 1
+
+ORDER BY target_date]]>
 	</queryString>
 	<field name="has_occured" class="java.lang.Boolean">
 		<fieldDescription><![CDATA[]]></fieldDescription>
