@@ -68,83 +68,44 @@ public class PortfolioEntryRiskListView {
                     addColumn("name", "name", "object.portfolio_entry_risk.name.label", Table.ColumnDef.SorterType.NONE);
 
                     addColumn("targetDate", "targetDate", "object.portfolio_entry_risk.target_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("targetDate", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                        @Override
-                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                            DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<PortfolioEntryRiskListView>();
-                            if (portfolioEntryRiskListView.targetDate != null) {
-                                df.setAlert(portfolioEntryRiskListView.isActive && portfolioEntryRiskListView.targetDate.before(new Date()));
-                            }
-                            return df.apply(portfolioEntryRiskListView, value);
+                    setJavaColumnFormatter("targetDate", (portfolioEntryRiskListView, value) -> {
+                        DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<>();
+                        if (portfolioEntryRiskListView.targetDate != null) {
+                            df.setAlert(portfolioEntryRiskListView.isActive && portfolioEntryRiskListView.targetDate.before(new Date()));
                         }
-                    });
-
-                    addColumn("dueDate", "dueDate", "object.portfolio_entry_risk.due_date.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("dueDate", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                        @Override
-                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                            DateFormatter<PortfolioEntryRiskListView> df = new DateFormatter<PortfolioEntryRiskListView>();
-                            if (portfolioEntryRiskListView.dueDate != null) {
-                                df.setAlert(portfolioEntryRiskListView.dueDate.before(new Date()));
-                            }
-                            return df.apply(portfolioEntryRiskListView, value);
-                        }
+                        return df.apply(portfolioEntryRiskListView, value);
                     });
 
                     addColumn("type", "type", "object.portfolio_entry_risk.type.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("type", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                        @Override
-                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                            return views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryRiskListView.type, true).body();
-                        }
-                    });
+                    setJavaColumnFormatter("type", (portfolioEntryRiskListView, value) -> views.html.framework_views.parts.formats.display_value_holder.render(portfolioEntryRiskListView.type, true).body());
 
                     addColumn("isMitigated", "isMitigated", "object.portfolio_entry_risk.is_mitigated.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isMitigated", new BooleanFormatter<PortfolioEntryRiskListView>());
+                    setJavaColumnFormatter("isMitigated", new BooleanFormatter<>());
 
                     addColumn("owner", "owner", "object.portfolio_entry_risk.owner.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("owner", new IColumnFormatter<PortfolioEntryRiskListView>() {
-                        @Override
-                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                            return views.html.modelsparts.display_actor.render(portfolioEntryRiskListView.owner).body();
-                        }
-                    });
+                    setJavaColumnFormatter("owner", (portfolioEntryRiskListView, value) -> views.html.modelsparts.display_actor.render(portfolioEntryRiskListView.owner).body());
                     this.setColumnValueCssClass("owner", "rowlink-skip");
 
                     addColumn("isActive", "isActive", "object.portfolio_entry_risk.is_active.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("isActive", new BooleanFormatter<PortfolioEntryRiskListView>());
+                    setJavaColumnFormatter("isActive", new BooleanFormatter<>());
 
                     addCustomAttributeColumns(i18nMessagesPlugin, PortfolioEntryRisk.class);
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryRiskListView>(IMafConstants.EDIT_URL_FORMAT,
-                            new StringFormatFormatter.Hook<PortfolioEntryRiskListView>() {
-                        @Override
-                        public String convert(PortfolioEntryRiskListView portfolioEntryRiskListView) {
-                            return controllers.core.routes.PortfolioEntryStatusReportingController
-                                    .manageRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id, true).url();
-                        }
-                    }));
+                    setJavaColumnFormatter("editActionLink", new StringFormatFormatter<>(IMafConstants.EDIT_URL_FORMAT,
+                            (StringFormatFormatter.Hook<PortfolioEntryRiskListView>) portfolioEntryRiskListView -> controllers.core.routes.PortfolioEntryStatusReportingController
+                                    .manageRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url()));
                     setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-                    this.setLineAction(new IColumnFormatter<PortfolioEntryRiskListView>() {
-                        @Override
-                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                            return controllers.core.routes.PortfolioEntryStatusReportingController
-                                    .viewRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url();
-                        }
-                    });
+                    this.setLineAction((portfolioEntryRiskListView, value) -> controllers.core.routes.PortfolioEntryStatusReportingController
+                            .viewRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url());
                     addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryRiskListView>() 
-                    {
-                        @Override
-                        public String apply(PortfolioEntryRiskListView portfolioEntryRiskListView, Object value) {
-                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.core.routes.PortfolioEntryStatusReportingController.deleteRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                        }
-                    });                   
+                    setJavaColumnFormatter("deleteActionLink", (portfolioEntryRiskListView, value) -> {
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION, Msg.get("default.delete.confirmation.message"));
+                        String url = controllers.core.routes.PortfolioEntryStatusReportingController.deleteRisk(portfolioEntryRiskListView.portfolioEntryId, portfolioEntryRiskListView.id).url();
+                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
+                    });
                     setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
@@ -171,8 +132,6 @@ public class PortfolioEntryRiskListView {
 
     public Date targetDate;
 
-    public Date dueDate;
-
     public PortfolioEntryRiskType type;
 
     public Boolean isMitigated;
@@ -193,7 +152,6 @@ public class PortfolioEntryRiskListView {
         this.portfolioEntryId = portfolioEntryRisk.portfolioEntry.id;
         this.name = portfolioEntryRisk.name;
         this.targetDate = portfolioEntryRisk.targetDate;
-        this.dueDate = portfolioEntryRisk.targetDate;
         this.type = portfolioEntryRisk.portfolioEntryRiskType != null ? portfolioEntryRisk.portfolioEntryRiskType : null;
         this.isMitigated = portfolioEntryRisk.isMitigated;
         this.owner = portfolioEntryRisk.owner;

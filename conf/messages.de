@@ -362,6 +362,7 @@ data_type.PortfolioEntryResourcePlanAllocatedActor.label=Zugeweise Mitarbeiter (
 data_type.PortfolioEntryResourcePlanAllocatedOrgUnit.label=Zugeweisene Organisationseinheit
 data_type.PortfolioEntryResourcePlanAllocatedCompetency.label=Zugeweise Kompetenz
 data_type.PortfolioEntryRisk.label=Risiko
+data_type.PortfolioEntryIssue.label=Probleme
 data_type.Portfolio.label=Portfolio
 data_type.Stakeholder.label=Projektbeteiligter
 data_type.PurchaseOrderLineItem.label=Auftragsposition
@@ -1064,6 +1065,15 @@ object.portfolio_entry_risk_type.selectable.label=Aktiviert
 object.portfolio_entry_risk_type.table.empty=Keine Einträge
 
 #----------------------
+# portfolioEntryIssueType
+#----------------------
+
+object.portfolio_entry_issue_type.name.label=Name
+object.portfolio_entry_issue_type.description.label=Beschreibung
+object.portfolio_entry_issue_type.selectable.label=Aktiviert
+object.portfolio_entry_issue_type.table.empty=Keine Einträge
+
+#----------------------
 # portfolioEntryReportStatusType
 #----------------------
 
@@ -1248,17 +1258,30 @@ object.portfolio_entry_report.table.empty=Keine Berichte eingetragen
 #----------------------
 
 object.portfolio_entry_risk.is_active.label=Aktiv
-object.portfolio_entry_risk.is_active.help=Wenn das Risiko/Problem noch aktiv ist.
+object.portfolio_entry_risk.is_active.help=Wenn das Risiko noch aktiv ist.
 object.portfolio_entry_risk.name.label=Titel
 object.portfolio_entry_risk.description.label=Beschreibung
 object.portfolio_entry_risk.creation_date.label=Erstellungsdatum
 object.portfolio_entry_risk.target_date.label=Zieldatum
-object.portfolio_entry_risk.due_date.label=Fälligkeit
 object.portfolio_entry_risk.type.label=Typ
 object.portfolio_entry_risk.is_mitigated.label=Bearbeitet
 object.portfolio_entry_risk.mitigation_comment.label=Risikominderung
 object.portfolio_entry_risk.owner.label=Besitzer
 object.portfolio_entry_risk.table.empty=Keine Risiken eingetragen
+
+#----------------------
+# portfolioEntryissue
+#----------------------
+
+object.portfolio_entry_issue.is_active.label=Aktiv
+object.portfolio_entry_issue.is_active.help=Wenn das Problem noch aktiv ist.
+object.portfolio_entry_issue.name.label=Titel
+object.portfolio_entry_issue.description.label=Beschreibung
+object.portfolio_entry_issue.creation_date.label=Erstellungsdatum
+object.portfolio_entry_issue.due_date.label=Fälligkeit
+object.portfolio_entry_issue.type.label=Typ
+object.portfolio_entry_issue.owner.label=Besitzer
+object.portfolio_entry_issue.table.empty=Kein Problem eingetragen
 
 #----------------------
 # portfolioEntryEvent

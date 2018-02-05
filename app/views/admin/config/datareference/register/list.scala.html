@@ -16,6 +16,7 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
 @(
+    issueTypesTable: framework.utils.Table[utils.table.PortfolioEntryIssueTypeListView],
     riskTypesTable: framework.utils.Table[utils.table.PortfolioEntryRiskTypeListView],
     reportStatusTypesTable: framework.utils.Table[utils.table.PortfolioEntryReportStatusTypeListView],
     eventTypesTable: framework.utils.Table[utils.table.PortfolioEntryEventTypeListView]
@@ -37,20 +38,35 @@
 @views.html.admin.config.config_template("admin.configuration.reference_data.register.title", controllers.admin.ConfigurationController.MenuItemType.REFERENCE_DATA, breadcrump){
 
     <div class="panel panel-default">
-    
+
+        <div class="panel-heading">
+            @parts.Msg("admin.configuration.reference_data.register.issuetypes.title")
+
+            <div class="pull-right">
+                <a href="@controllers.admin.routes.ConfigurationRegisterController.manageIssueType().url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
+            </div>
+        </div>
+
+        <div class="panel-body">
+        @parts.table.tableview(issueTypesTable)
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+
         <div class="panel-heading">
             @parts.Msg("admin.configuration.reference_data.register.risktypes.title")
-            
+
             <div class="pull-right">
                 <a href="@controllers.admin.routes.ConfigurationRegisterController.manageRiskType().url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
             </div>
         </div>
-    
+
         <div class="panel-body">
-            @parts.table.tableview(riskTypesTable)
+        @parts.table.tableview(riskTypesTable)
         </div>
     </div>
-    
+
     <div class="panel panel-default">
     
         <div class="panel-heading">

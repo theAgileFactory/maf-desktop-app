@@ -48,13 +48,8 @@ import dao.finance.PortfolioEntryResourcePlanDAO;
 import dao.finance.PurchaseOrderDAO;
 import dao.finance.WorkOrderDAO;
 import dao.governance.LifeCycleProcessDao;
-import dao.pmo.ActorDao;
-import dao.pmo.OrgUnitDao;
-import dao.pmo.PortfolioEntryDao;
-import dao.pmo.PortfolioEntryEventDao;
-import dao.pmo.PortfolioEntryPlanningPackageDao;
-import dao.pmo.PortfolioEntryReportDao;
-import dao.pmo.PortfolioEntryRiskDao;
+import dao.pmo.*;
+import dao.pmo.PortfolioEntryRiskAndIssueDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.api.ApiError;
 import framework.services.api.server.ApiAuthentication;
@@ -66,11 +61,7 @@ import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
 import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
 import models.finance.WorkOrder;
 import models.governance.LifeCycleProcess;
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryEvent;
-import models.pmo.PortfolioEntryPlanningPackage;
-import models.pmo.PortfolioEntryReport;
-import models.pmo.PortfolioEntryRisk;
+import models.pmo.*;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import play.mvc.BodyParser;
@@ -408,7 +399,7 @@ public class PortfolioEntryApiController extends ApiController {
 
     /**
      * Get the portfolio entry risks of a portfolio entry with filters.
-     * 
+     *
      * @param isActive
      *            true to return only active risks, false only non-active, null
      *            all.
@@ -422,13 +413,43 @@ public class PortfolioEntryApiController extends ApiController {
             @ApiResponse(code = 404, message = "not found", response = ApiError.class),
             @ApiResponse(code = 500, message = "error", response = ApiError.class) })
     public Result getPortfolioEntryRisksList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive,
-            @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+                                             @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
 
         try {
             if (PortfolioEntryDao.getPEById(id) == null) {
                 return getJsonErrorResponse(new ApiError(404, "The portfolio entry with the specified id is not found"));
             }
-            return getJsonSuccessResponse(PortfolioEntryRiskDao.getPERiskAsListByFilter(isActive, id));
+            return getJsonSuccessResponse(PortfolioEntryRiskAndIssueDao.getPERiskAsListByPE(isActive, id));
+
+        } catch (Exception e) {
+            return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));
+        }
+
+    }
+
+    /**
+     * Get the portfolio entry issues of a portfolio entry with filters.
+     *
+     * @param isActive
+     *            true to return only active risks, false only non-active, null
+     *            all.
+     * @param id
+     *            the portfolio entry
+     */
+    @ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)
+    @ApiOperation(value = "list the issues of the specified Portfolio Entry",
+            notes = "Return the list of the issues of the specified Portfolio Entry in the system", response = PortfolioEntryIssue.class, httpMethod = "GET")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "success"), @ApiResponse(code = 400, message = "bad request", response = ApiError.class),
+            @ApiResponse(code = 404, message = "not found", response = ApiError.class),
+            @ApiResponse(code = 500, message = "error", response = ApiError.class) })
+    public Result getPortfolioEntryIssuesList(@ApiParam(value = "isActive", required = false) @QueryParam("isActive") Boolean isActive,
+                                             @ApiParam(value = "portfolio entry id", required = true) @PathParam("id") Long id) {
+
+        try {
+            if (PortfolioEntryDao.getPEById(id) == null) {
+                return getJsonErrorResponse(new ApiError(404, "The portfolio entry with the specified id is not found"));
+            }
+            return getJsonSuccessResponse(PortfolioEntryRiskAndIssueDao.getPEIssueAsListByPE(isActive, id));
 
         } catch (Exception e) {
             return getJsonErrorResponse(new ApiError(500, "INTERNAL SERVER ERROR", e));

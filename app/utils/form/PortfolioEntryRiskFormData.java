@@ -20,7 +20,7 @@ package utils.form;
 import java.text.ParseException;
 
 import dao.pmo.ActorDao;
-import dao.pmo.PortfolioEntryRiskDao;
+import dao.pmo.PortfolioEntryRiskAndIssueDao;
 import framework.utils.Utilities;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntryRisk;
@@ -39,9 +39,6 @@ public class PortfolioEntryRiskFormData {
     public Long id;
 
     public Long riskId;
-
-    // hidden field
-    public Boolean isRisk;
 
     public Boolean isActive;
 
@@ -79,7 +76,6 @@ public class PortfolioEntryRiskFormData {
     public PortfolioEntryRiskFormData(PortfolioEntryRisk portfolioEntryRisk) {
         this.id = portfolioEntryRisk.portfolioEntry.id;
         this.riskId = portfolioEntryRisk.id;
-        this.isRisk = !portfolioEntryRisk.hasOccured;
         this.isActive = portfolioEntryRisk.isActive;
         this.name = portfolioEntryRisk.name;
         this.description = portfolioEntryRisk.description;
@@ -97,8 +93,7 @@ public class PortfolioEntryRiskFormData {
      * @param portfolioEntryRisk
      *            the portfolio entry risk in the DB
      */
-    private void fill(PortfolioEntryRisk portfolioEntryRisk) {
-        portfolioEntryRisk.hasOccured = !isRisk;
+    public void fill(PortfolioEntryRisk portfolioEntryRisk) {
         try {
             portfolioEntryRisk.targetDate = Utilities.getDateFormat(null).parse(targetDate);
         } catch (ParseException e) {
@@ -107,29 +102,8 @@ public class PortfolioEntryRiskFormData {
         portfolioEntryRisk.name = name;
         portfolioEntryRisk.description = description;
         portfolioEntryRisk.isActive = isActive != null ? isActive : false;
-        portfolioEntryRisk.portfolioEntryRiskType = !riskType.equals("") ? PortfolioEntryRiskDao.getPERiskTypeById(Long.parseLong(riskType)) : null;
+        portfolioEntryRisk.portfolioEntryRiskType = !riskType.equals("") ? PortfolioEntryRiskAndIssueDao.getPERiskTypeById(Long.parseLong(riskType)) : null;
         portfolioEntryRisk.owner = !owner.equals("") ? ActorDao.getActorById(Long.parseLong(owner)) : null;
     }
 
-    /**
-     * Fill a risk.
-     * 
-     * @param portfolioEntryRisk
-     *            the portfolio entry risk in the DB
-     */
-    public void fillRisk(PortfolioEntryRisk portfolioEntryRisk) {
-        fill(portfolioEntryRisk);
-        portfolioEntryRisk.isMitigated = isMitigated != null ? isMitigated : false;
-        portfolioEntryRisk.mitigationComment = mitigationComment;
-    }
-
-    /**
-     * Fill an issue.
-     * 
-     * @param portfolioEntryRisk
-     *            the portfolio entry risk in the DB
-     */
-    public void fillIssue(PortfolioEntryRisk portfolioEntryRisk) {
-        fill(portfolioEntryRisk);
-    }
 }

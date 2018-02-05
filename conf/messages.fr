@@ -363,6 +363,7 @@ data_type.PortfolioEntryResourcePlanAllocatedActor.label=Allocation d''employé 
 data_type.PortfolioEntryResourcePlanAllocatedOrgUnit.label=Allocation d''unité d''organisation
 data_type.PortfolioEntryResourcePlanAllocatedCompetency.label=Allocation de compétence
 data_type.PortfolioEntryRisk.label=Risque
+data_type.PortfolioEntryIssue.label=Incident
 data_type.Portfolio.label=Portefeuille
 data_type.Stakeholder.label=Intervenant
 data_type.PurchaseOrderLineItem.label=Ligne de bon de commande
@@ -1066,6 +1067,15 @@ object.portfolio_entry_risk_type.selectable.label=Actif
 object.portfolio_entry_risk_type.table.empty=Il n''existe aucun type de risque.
 
 #----------------------
+# portfolioEntryIssueType
+#----------------------
+
+object.portfolio_entry_issue_type.name.label=Nom
+object.portfolio_entry_issue_type.description.label=Description
+object.portfolio_entry_issue_type.selectable.label=Actif
+object.portfolio_entry_issue_type.table.empty=Il n''existe aucun type d''incident.
+
+#----------------------
 # portfolioEntryReportStatusType
 #----------------------
 
@@ -1250,17 +1260,30 @@ object.portfolio_entry_report.table.empty=Il n''existe aucun rapport.
 #----------------------
 
 object.portfolio_entry_risk.is_active.label=Actif
-object.portfolio_entry_risk.is_active.help=Décocher cette case si le risque/incident ne s''est pas produit.
+object.portfolio_entry_risk.is_active.help=Décocher cette case si le risque ne s''est pas produit.
 object.portfolio_entry_risk.name.label=Nom
 object.portfolio_entry_risk.description.label=Description
 object.portfolio_entry_risk.creation_date.label=Date de création
 object.portfolio_entry_risk.target_date.label=Date d''échéance
-object.portfolio_entry_risk.due_date.label=Date d''échéance
 object.portfolio_entry_risk.type.label=Type
 object.portfolio_entry_risk.is_mitigated.label=Modéré
 object.portfolio_entry_risk.mitigation_comment.label=Action de modération
 object.portfolio_entry_risk.owner.label=Propriétaire
-object.portfolio_entry_risk.table.empty=Il n''existe aucun risque/incident.
+object.portfolio_entry_risk.table.empty=Il n''existe aucun risque.
+
+#----------------------
+# portfolioEntryissue
+#----------------------
+
+object.portfolio_entry_issue.is_active.label=Actif
+object.portfolio_entry_issue.is_active.help=Décocher cette case si l''incident est clos.
+object.portfolio_entry_issue.name.label=Nom
+object.portfolio_entry_issue.description.label=Description
+object.portfolio_entry_issue.creation_date.label=Date de création
+object.portfolio_entry_issue.due_date.label=Date d''échéance
+object.portfolio_entry_issue.type.label=Type
+object.portfolio_entry_issue.owner.label=Propriétaire
+object.portfolio_entry_issue.table.empty=Il n''existe aucun incident.
 
 #----------------------
 # portfolioEntryEvent

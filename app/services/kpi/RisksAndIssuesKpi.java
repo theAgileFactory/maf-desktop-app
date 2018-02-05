@@ -21,9 +21,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import dao.pmo.PortfolioEntryRiskAndIssueDao;
 import org.apache.commons.lang3.tuple.Pair;
 
-import dao.pmo.PortfolioEntryRiskDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
@@ -39,20 +39,20 @@ public class RisksAndIssuesKpi implements IKpiRunner {
 
     @Override
     public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        int nbActiveRisks = PortfolioEntryRiskDao.getPERiskAsNbActiveByPE(objectId);
-        int nbActiveIssues = PortfolioEntryRiskDao.getPEIssueAsNbActiveByPE(objectId);
+        int nbActiveRisks = PortfolioEntryRiskAndIssueDao.getPERiskAsNbActiveByPE(objectId);
+        int nbActiveIssues = PortfolioEntryRiskAndIssueDao.getPEIssueAsNbActiveByPE(objectId);
         return new BigDecimal(nbActiveRisks + nbActiveIssues);
     }
 
     @Override
     public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        int nbActiveRisks = PortfolioEntryRiskDao.getPERiskAsNbActiveByPE(objectId);
+        int nbActiveRisks = PortfolioEntryRiskAndIssueDao.getPERiskAsNbActiveByPE(objectId);
         return new BigDecimal(nbActiveRisks);
     }
 
     @Override
     public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        int nbActiveIssues = PortfolioEntryRiskDao.getPEIssueAsNbActiveByPE(objectId);
+        int nbActiveIssues = PortfolioEntryRiskAndIssueDao.getPEIssueAsNbActiveByPE(objectId);
         return new BigDecimal(nbActiveIssues);
     }
 

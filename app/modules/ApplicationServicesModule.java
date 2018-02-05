@@ -317,6 +317,9 @@ public class ApplicationServicesModule extends FrameworkModule {
         MafDataType.add(IMafConstants.PortfolioEntryRisk, "models.pmo.PortfolioEntryRisk", false, true,
                 ImmutableMap.<String, String> builder().put("isActive", "object.portfolio_entry_risk.is_active.label")
                         .put("name", "object.portfolio_entry_risk.name.label").put("riskType", "object.portfolio_entry_risk.type.label").build());
+        MafDataType.add(IMafConstants.PortfolioEntryIssue, "models.pmo.PortfolioEntryIssue", false, true,
+                ImmutableMap.<String, String> builder().put("isActive", "object.portfolio_entry_issue.is_active.label")
+                        .put("name", "object.portfolio_entry_issue.name.label").put("issueType", "object.portfolio_entry_issue.type.label").build());
         MafDataType.add(IMafConstants.Portfolio, "models.pmo.Portfolio", true, true,
                 ImmutableMap.<String, String> builder().put("name", "object.portfolio.name.label").put("isActive", "object.portfolio.is_active.label")
                         .put("portfolioType", "object.portfolio.type.label").build());
