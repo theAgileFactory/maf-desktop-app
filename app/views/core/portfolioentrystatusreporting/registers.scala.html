@@ -21,8 +21,8 @@
     reportsPagination: framework.utils.Pagination[models.pmo.PortfolioEntryReport], 
     risksTable: framework.utils.Table[utils.table.PortfolioEntryRiskListView], 
     risksPagination: framework.utils.Pagination[models.pmo.PortfolioEntryRisk], 
-    issuesTable: framework.utils.Table[utils.table.PortfolioEntryRiskListView], 
-    issuesPagination: framework.utils.Pagination[models.pmo.PortfolioEntryRisk], 
+    issuesTable: framework.utils.Table[utils.table.PortfolioEntryIssueListView],
+    issuesPagination: framework.utils.Pagination[models.pmo.PortfolioEntryIssue],
     viewAllRisks: Boolean,
     viewAllIssues: Boolean,
     agreementLinks: List[services.datasyndication.models.DataSyndicationAgreementLink],
@@ -82,9 +82,9 @@
                     
                     <div class="pull-right">
                         @if(!viewAllRisks) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, true, viewAllIssues).url" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks = true, viewAllIssues = viewAllIssues).url" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
                         } else {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, false, viewAllIssues).url" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks = false, viewAllIssues = viewAllIssues).url" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
                         }
                         &nbsp;
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
@@ -109,13 +109,13 @@
                     
                     <div class="pull-right">
                         @if(!viewAllIssues) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, true).url" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, viewAllIssues = true).url" data-toggle="tooltip" title="@parts.Msg("tooltip.expand")"><span class="fa fa-expand fa-lg"></span></a>
                         } else {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, false).url" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntry.id, 0, 0, 0, viewAllRisks, viewAllIssues = false).url" data-toggle="tooltip" title="@parts.Msg("tooltip.compress")"><span class="fa fa-compress fa-lg"></span></a>
                         }
                         &nbsp;
                         @dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION) {
-                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageRisk(portfolioEntry.id, 0, false).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
+                            <a href="@controllers.core.routes.PortfolioEntryStatusReportingController.manageIssue(portfolioEntry.id).url" data-toggle="tooltip" title="@parts.Msg("tooltip.add")"><span class="fa fa-plus fa-lg"></span></a>
                         }
                     </div>
                 </div>

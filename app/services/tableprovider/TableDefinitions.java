@@ -70,6 +70,8 @@ public class TableDefinitions {
     public PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition portfolioEntryResourcePlanAllocatedResource;
     public PortfolioEntryRiskListView.TableDefinition portfolioEntryRisk;
     public PortfolioEntryRiskTypeListView.TableDefinition portfolioEntryRiskType;
+    public PortfolioEntryIssueListView.TableDefinition portfolioEntryIssue;
+    public PortfolioEntryIssueTypeListView.TableDefinition portfolioEntryIssueType;
     public PortfolioEntryStakeholderListView.TableDefinition portfolioEntryStakeholder;
     public PortfolioEntryTypeListView.TableDefinition portfolioEntryType;
     public PortfolioListView.TableDefinition portfolio;
@@ -162,6 +164,8 @@ public class TableDefinitions {
         this.portfolioEntryResourcePlanAllocatedResource = new PortfolioEntryResourcePlanAllocatedResourceListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryRisk = new PortfolioEntryRiskListView.TableDefinition(i18nMessagesService);
         this.portfolioEntryRiskType = new PortfolioEntryRiskTypeListView.TableDefinition();
+        this.portfolioEntryIssue = new PortfolioEntryIssueListView.TableDefinition(i18nMessagesService);
+        this.portfolioEntryIssueType = new PortfolioEntryIssueTypeListView.TableDefinition();
         this.portfolioEntryStakeholder = new PortfolioEntryStakeholderListView.TableDefinition();
         this.portfolioEntryType = new PortfolioEntryTypeListView.TableDefinition();
         this.portfolio = new PortfolioListView.TableDefinition(i18nMessagesService);

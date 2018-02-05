@@ -32,28 +32,21 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import dao.pmo.*;
+import models.pmo.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Model.Finder;
 
 import be.objectify.deadbolt.java.actions.Dynamic;
 import constants.IMafConstants;
 import controllers.ControllersUtils;
 import dao.governance.LifeCycleMilestoneDao;
-import dao.pmo.ActorDao;
-import dao.pmo.PortfolioEntryDao;
-import dao.pmo.PortfolioEntryEventDao;
-import dao.pmo.PortfolioEntryPlanningPackageDao;
-import dao.pmo.PortfolioEntryReportDao;
-import dao.pmo.PortfolioEntryRiskDao;
+import dao.pmo.PortfolioEntryRiskAndIssueDao;
 import dao.reporting.ReportingDao;
 import dao.timesheet.TimesheetDao;
 import framework.security.ISecurityService;
-import framework.services.account.AccountManagementException;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.custom_attribute.ICustomAttributeManagerService;
@@ -71,17 +64,10 @@ import framework.utils.Pagination;
 import framework.utils.Table;
 import framework.utils.TableExcelRenderer;
 import framework.utils.Utilities;
-import framework.utils.FilterConfig.UserColumnConfiguration;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
 import models.governance.LifeCycleMilestoneInstance;
-import models.pmo.Actor;
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryEvent;
-import models.pmo.PortfolioEntryPlanningPackage;
-import models.pmo.PortfolioEntryReport;
-import models.pmo.PortfolioEntryRisk;
 import models.reporting.Reporting;
 import models.reporting.Reporting.Format;
 import models.timesheet.TimesheetLog;
@@ -100,10 +86,7 @@ import services.datasyndication.IDataSyndicationService;
 import services.datasyndication.models.DataSyndicationAgreementItem;
 import services.datasyndication.models.DataSyndicationAgreementLink;
 import services.tableprovider.ITableProvider;
-import utils.form.AttachmentFormData;
-import utils.form.PortfolioEntryEventFormData;
-import utils.form.PortfolioEntryReportFormData;
-import utils.form.PortfolioEntryRiskFormData;
+import utils.form.*;
 import utils.reporting.IReportingUtils;
 import utils.table.*;
 
@@ -145,6 +128,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
     public static Form<PortfolioEntryReportFormData> reportFormTemplate = Form.form(PortfolioEntryReportFormData.class);
     public static Form<PortfolioEntryRiskFormData> riskFormTemplate = Form.form(PortfolioEntryRiskFormData.class);
+    public static Form<PortfolioEntryIssueFormData> issueFormTemplate = Form.form(PortfolioEntryIssueFormData.class);
     public static Form<PortfolioEntryEventFormData> eventFormTemplate = Form.form(PortfolioEntryEventFormData.class);
     private static Form<AttachmentFormData> attachmentFormTemplate = Form.form(AttachmentFormData.class);
 
@@ -251,12 +235,11 @@ public class PortfolioEntryStatusReportingController extends Controller {
         reportsPagination.setPageQueryName("pageReports");
         reportsPagination.setCurrentPage(pageReports);
 
-        List<PortfolioEntryReportListView> portfolioEntryReportsListView = new ArrayList<PortfolioEntryReportListView>();
-        for (PortfolioEntryReport portfolioEntryReport : reportsPagination.getListOfObjects()) {
-            portfolioEntryReportsListView.add(new PortfolioEntryReportListView(portfolioEntryReport));
-        }
+        List<PortfolioEntryReportListView> portfolioEntryReportsListView = reportsPagination.getListOfObjects().stream()
+                .map(PortfolioEntryReportListView::new)
+                .collect(Collectors.toList());
 
-        Set<String> hideColumnsForReport = new HashSet<String>();
+        Set<String> hideColumnsForReport = new HashSet<>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForReport.add("editActionLink");
             hideColumnsForReport.add("deleteActionLink");
@@ -281,14 +264,11 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         // get the portfolioEntry risks
 
-        Pagination<PortfolioEntryRisk> risksPagination = PortfolioEntryRiskDao.getPERiskAsPaginationByPE(id, viewAllRisks);
+        Pagination<PortfolioEntryRisk> risksPagination = PortfolioEntryRiskAndIssueDao.getPERiskAsPaginationByPE(id, viewAllRisks);
         risksPagination.setPageQueryName("pageRisks");
         risksPagination.setCurrentPage(pageRisks);
 
-        List<PortfolioEntryRiskListView> portfolioEntryRisksListView = new ArrayList<PortfolioEntryRiskListView>();
-        for (PortfolioEntryRisk portfolioEntryRisk : risksPagination.getListOfObjects()) {
-            portfolioEntryRisksListView.add(new PortfolioEntryRiskListView(portfolioEntryRisk));
-        }
+        List<PortfolioEntryRiskListView> portfolioEntryRisksListView = risksPagination.getListOfObjects().stream().map(PortfolioEntryRiskListView::new).collect(Collectors.toList());
 
         Set<String> hideColumnsForRisk = new HashSet<String>();
         hideColumnsForRisk.add("isMitigated");
@@ -303,24 +283,19 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         // get the portfolioEntry issues
 
-        Pagination<PortfolioEntryRisk> issuesPagination = PortfolioEntryRiskDao.getPEIssueAsPaginationByPE(id, viewAllIssues);
+        Pagination<PortfolioEntryIssue> issuesPagination = PortfolioEntryRiskAndIssueDao.getPEIssueAsPaginationByPE(id, viewAllIssues);
         issuesPagination.setPageQueryName("pageIssues");
         issuesPagination.setCurrentPage(pageIssues);
 
-        List<PortfolioEntryRiskListView> portfolioEntryIssuesListView = new ArrayList<PortfolioEntryRiskListView>();
-        for (PortfolioEntryRisk portfolioEntryRisk : issuesPagination.getListOfObjects()) {
-            portfolioEntryIssuesListView.add(new PortfolioEntryRiskListView(portfolioEntryRisk));
-        }
+        List<PortfolioEntryIssueListView> portfolioEntryIssuesListView = issuesPagination.getListOfObjects().stream().map(PortfolioEntryIssueListView::new).collect(Collectors.toList());
 
-        Set<String> hideColumnsForIssue = new HashSet<String>();
-        hideColumnsForIssue.add("isMitigated");
-        hideColumnsForIssue.add("targetDate");
+        Set<String> hideColumnsForIssue = new HashSet<>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumnsForIssue.add("editActionLink");
             hideColumnsForIssue.add("deleteActionLink");
         }
 
-        Table<PortfolioEntryRiskListView> filledIssuesTable = this.getTableProvider().get().portfolioEntryRisk.templateTable
+        Table<PortfolioEntryIssueListView> filledIssuesTable = this.getTableProvider().get().portfolioEntryIssue.templateTable
                 .fill(portfolioEntryIssuesListView, hideColumnsForIssue);
 
         return ok(views.html.core.portfolioentrystatusreporting.registers.render(portfolioEntry, filledReportsTable, reportsPagination, filledRisksTable,
@@ -417,10 +392,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
                         .updateWithSearchExpression(PortfolioEntryEventDao.getPEEventAsExprByPE(id));
                 filterConfig.updateWithSortExpression(expressionList);
 
-                List<PortfolioEntryEventListView> portfolioEntryEventListView = new ArrayList<PortfolioEntryEventListView>();
-                for (PortfolioEntryEvent portfolioEntryEvent : expressionList.findList()) {
-                    portfolioEntryEventListView.add(new PortfolioEntryEventListView(portfolioEntryEvent));
-                }
+                List<PortfolioEntryEventListView> portfolioEntryEventListView = expressionList.findList().stream().map(PortfolioEntryEventListView::new).collect(Collectors.toList());
 
                 Table<PortfolioEntryEventListView> table = getTableProvider().get().portfolioEntryEvent.templateTable
                         .fillForFilterConfig(portfolioEntryEventListView, filterConfig.getColumnsToHide());
@@ -478,10 +450,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Pagination<PortfolioEntryEvent> pagination = new Pagination<PortfolioEntryEvent>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-        List<PortfolioEntryEventListView> portfolioEntryEventListView = new ArrayList<PortfolioEntryEventListView>();
-        for (PortfolioEntryEvent event : pagination.getListOfObjects()) {
-            portfolioEntryEventListView.add(new PortfolioEntryEventListView(event));
-        }
+        List<PortfolioEntryEventListView> portfolioEntryEventListView = pagination.getListOfObjects().stream().map(PortfolioEntryEventListView::new).collect(Collectors.toList());
 
         Set<String> hideColumnsForEvent = filterConfig.getColumnsToHide();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
@@ -532,13 +501,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
         // create the table
         List<Attachment> attachments = Attachment.getAttachmentsFromObjectTypeAndObjectId(PortfolioEntryReport.class, reportId);
 
-        List<AttachmentListView> attachmentsListView = new ArrayList<AttachmentListView>();
-        for (Attachment attachment : attachments) {
-            attachmentsListView.add(new AttachmentListView(attachment,
-                    controllers.core.routes.PortfolioEntryStatusReportingController.deleteReportAttachment(id, reportId, attachment.id).url()));
-        }
+        List<AttachmentListView> attachmentsListView = attachments.stream().map(attachment -> new AttachmentListView(attachment,
+                routes.PortfolioEntryStatusReportingController.deleteReportAttachment(id, reportId, attachment.id).url())).collect(Collectors.toList());
 
-        Set<String> hideColumns = new HashSet<String>();
+        Set<String> hideColumns = new HashSet<>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
@@ -568,10 +534,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
         PortfolioEntryReport portfolioEntryReport = new PortfolioEntryReport();
 
         // initiate the form with the template
-        Form<PortfolioEntryReportFormData> reportForm = reportFormTemplate;
+        Form<PortfolioEntryReportFormData> reportForm;
 
         // edit case: inject values
-        if (!reportId.equals(Long.valueOf(0))) {
+        if (!reportId.equals(0L)) {
             portfolioEntryReport = PortfolioEntryReportDao.getPEReportById(reportId);
 
             // security: the portfolioEntry must be related to the object
@@ -606,13 +572,10 @@ public class PortfolioEntryStatusReportingController extends Controller {
         // create the table
         List<Attachment> attachments = Attachment.getAttachmentsFromObjectTypeAndObjectId(PortfolioEntryReport.class, reportId);
 
-        List<AttachmentListView> attachmentsListView = new ArrayList<AttachmentListView>();
-        for (Attachment attachment : attachments) {
-            attachmentsListView.add(new AttachmentListView(attachment,
-                    controllers.core.routes.PortfolioEntryStatusReportingController.deleteReportAttachment(id, reportId, attachment.id).url()));
-        }
+        List<AttachmentListView> attachmentsListView = attachments.stream().map(attachment -> new AttachmentListView(attachment,
+                routes.PortfolioEntryStatusReportingController.deleteReportAttachment(id, reportId, attachment.id).url())).collect(Collectors.toList());
 
-        Set<String> hideColumns = new HashSet<String>();
+        Set<String> hideColumns = new HashSet<>();
         if (!getSecurityService().dynamic("PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION", "")) {
             hideColumns.add("removeActionLink");
         }
@@ -648,7 +611,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         PortfolioEntryReportFormData portfolioEntryReportFormData = boundForm.get();
 
-        PortfolioEntryReport portfolioEntryReport = null;
+        PortfolioEntryReport portfolioEntryReport;
 
         // create case
         if (portfolioEntryReportFormData.reportId == null) {
@@ -745,32 +708,55 @@ public class PortfolioEntryStatusReportingController extends Controller {
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(id, 0, 0, 0, false, false));
 
     }
-    
+
     /**
      * Delete a risk.
-     * 
+     *
      * @param id
      *            the portfolio entry id
-     * @param reportId
-     *            the report id
+     * @param riskId
+     *            the risk id
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
     public Result deleteRisk(Long id, Long riskId) {
 
-    	// get the portfolioEntry
-        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
-
         // get the portfolioEntry risk
-        PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskDao.getPERiskById(riskId);
+        PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskAndIssueDao.getPERiskById(riskId);
 
         // security: the portfolioEntry must be related to the object
         if (!portfolioEntryRisk.portfolioEntry.id.equals(id)) {
             return forbidden(views.html.error.access_forbidden.render(""));
         }
-        
+
         portfolioEntryRisk.doDelete();
-        
+
+        Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.event.delete.successful"));
+        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(id, 0, 0, 0, false, false));
+    }
+
+    /**
+     * Delete an issue.
+     *
+     * @param id
+     *            the portfolio entry id
+     * @param issueId
+     *            the issue id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result deleteIssue(Long id, Long issueId) {
+
+        // get the portfolioEntry issue
+        PortfolioEntryIssue portfolioEntryIssue = PortfolioEntryRiskAndIssueDao.getPEIssueById(issueId);
+
+        // security: the portfolioEntry must be related to the object
+        if (!portfolioEntryIssue.portfolioEntry.id.equals(id)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        portfolioEntryIssue.doDelete();
+
         Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.event.delete.successful"));
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(id, 0, 0, 0, false, false));
     }
@@ -872,8 +858,8 @@ public class PortfolioEntryStatusReportingController extends Controller {
     }
 
     /**
-     * Display the details of a portfolio entry risk/issue.
-     * 
+     * Display the details of a portfolio entry risk.
+     *
      * @param id
      *            the portfolio entry id
      * @param riskId
@@ -887,7 +873,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // get the portfolioEntry risk
-        PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskDao.getPERiskById(riskId);
+        PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskAndIssueDao.getPERiskById(riskId);
 
         // construct the corresponding form data (for the custom attributes)
         PortfolioEntryRiskFormData portfolioEntryRiskFormData = new PortfolioEntryRiskFormData(portfolioEntryRisk);
@@ -901,39 +887,63 @@ public class PortfolioEntryStatusReportingController extends Controller {
     }
 
     /**
-     * Form to create/edit a risk/issue.
-     * 
+     * Display the details of a portfolio entry issue.
+     *
+     * @param id
+     *            the portfolio entry id
+     * @param issueId
+     *            the issue id
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
+    public Result viewIssue(Long id, Long issueId) {
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // get the portfolioEntry issue
+        PortfolioEntryIssue portfolioEntryIssue = PortfolioEntryRiskAndIssueDao.getPEIssueById(issueId);
+
+        // construct the corresponding form data (for the custom attributes)
+        PortfolioEntryIssueFormData portfolioEntryIssueFormData = new PortfolioEntryIssueFormData(portfolioEntryIssue);
+
+        // security: the portfolioEntry must be related to the object
+        if (!portfolioEntryIssue.portfolioEntry.id.equals(id)) {
+            return forbidden(views.html.error.access_forbidden.render(""));
+        }
+
+        return ok(views.html.core.portfolioentrystatusreporting.issue_view.render(portfolioEntry, portfolioEntryIssue, portfolioEntryIssueFormData));
+    }
+
+    /**
+     * Form to create/edit a risk.
+     *
      * @param id
      *            the portfolio entry id
      * @param riskId
-     *            the risk/issue id (set to 0 for create case)
-     * @param isRisk
-     *            set to true if it's a risk, else this is an issue (this flag
-     *            is useful for the create case)
+     *            the risk id (set to 0 for create case)
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
-    public Result manageRisk(Long id, Long riskId, Boolean isRisk) {
+    public Result manageRisk(Long id, Long riskId) {
 
         // get the portfolioEntry
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         // initiate the form with the template
-        Form<PortfolioEntryRiskFormData> riskForm = riskFormTemplate;
+        Form<PortfolioEntryRiskFormData> riskForm;
 
         // initiate the form data
-        PortfolioEntryRiskFormData portfolioEntryRiskFormData = null;
+        PortfolioEntryRiskFormData portfolioEntryRiskFormData;
 
         // edit case: get the portfolioEntry risk instance
-        if (!riskId.equals(Long.valueOf(0))) {
-            PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskDao.getPERiskById(riskId);
+        if (!riskId.equals(0L)) {
+            PortfolioEntryRisk portfolioEntryRisk = PortfolioEntryRiskAndIssueDao.getPERiskById(riskId);
 
             // security: the portfolioEntry must be related to the object
             if (!portfolioEntryRisk.portfolioEntry.id.equals(id)) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             }
-
-            isRisk = !portfolioEntryRisk.hasOccured;
             portfolioEntryRiskFormData = new PortfolioEntryRiskFormData(portfolioEntryRisk);
 
         } else { // create case: set default values
@@ -943,20 +953,57 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         riskForm = riskFormTemplate.fill(portfolioEntryRiskFormData);
 
-        if (!riskId.equals(Long.valueOf(0))) {
-            // add the custom attributes values
-            this.getCustomAttributeManagerService().fillWithValues(riskForm, PortfolioEntryRisk.class, riskId);
-        } else {
-            // add the custom attributes default values
-            this.getCustomAttributeManagerService().fillWithValues(riskForm, PortfolioEntryRisk.class, null);
-        }
+        this.getCustomAttributeManagerService().fillWithValues(riskForm, PortfolioEntryRisk.class, riskId.equals(0L) ? null : riskId);
 
-        return ok(views.html.core.portfolioentrystatusreporting.risk_manage.render(portfolioEntry, riskForm, PortfolioEntryRiskDao.getPERiskTypeActiveAsVH(),
-                isRisk));
+        return ok(views.html.core.portfolioentrystatusreporting.risk_manage.render(portfolioEntry, riskForm, PortfolioEntryRiskAndIssueDao.getPERiskTypeActiveAsVH()));
     }
 
     /**
-     * Perform the save for a new/update risk/issue.
+     * Form to create/edit a issue.
+     *
+     * @param id
+     *            the portfolio entry id
+     * @param issueId
+     *            the issue id (set to 0 for create case)
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result manageIssue(Long id, Long issueId) {
+
+        // get the portfolioEntry
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        // initiate the form with the template
+        Form<PortfolioEntryIssueFormData> issueForm;
+
+        // initiate the form data
+        PortfolioEntryIssueFormData portfolioEntryIssueFormData;
+
+        // edit case: get the portfolioEntry issue instance
+        if (!issueId.equals(0L)) {
+            PortfolioEntryIssue portfolioEntryIssue = PortfolioEntryRiskAndIssueDao.getPEIssueById(issueId);
+
+            // security: the portfolioEntry must be related to the object
+            if (!portfolioEntryIssue.portfolioEntry.id.equals(id)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+
+            portfolioEntryIssueFormData = new PortfolioEntryIssueFormData(portfolioEntryIssue);
+
+        } else { // create case: set default values
+            portfolioEntryIssueFormData = new PortfolioEntryIssueFormData();
+            portfolioEntryIssueFormData.isActive = true;
+        }
+
+        issueForm = issueFormTemplate.fill(portfolioEntryIssueFormData);
+
+        this.getCustomAttributeManagerService().fillWithValues(issueForm, PortfolioEntryRisk.class, issueId.equals(0L) ? null : issueId);
+
+        return ok(views.html.core.portfolioentrystatusreporting.issue_manage.render(portfolioEntry, issueForm, PortfolioEntryRiskAndIssueDao.getPEIssueTypeActiveAsVH()));
+    }
+
+    /**
+     * Perform the save for a new/update risk.
      */
     @With(CheckPortfolioEntryExists.class)
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
@@ -970,14 +1017,13 @@ public class PortfolioEntryStatusReportingController extends Controller {
         PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
 
         if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryRisk.class)) {
-            Boolean isRisk = Boolean.valueOf(request().body().asFormUrlEncoded().get("isRisk")[0]);
             return ok(views.html.core.portfolioentrystatusreporting.risk_manage.render(portfolioEntry, boundForm,
-                    PortfolioEntryRiskDao.getPERiskTypeActiveAsVH(), isRisk));
+                    PortfolioEntryRiskAndIssueDao.getPERiskTypeActiveAsVH()));
         }
 
         PortfolioEntryRiskFormData portfolioEntryRiskFormData = boundForm.get();
 
-        PortfolioEntryRisk portfolioEntryRisk = null;
+        PortfolioEntryRisk portfolioEntryRisk;
 
         // create case
         if (portfolioEntryRiskFormData.riskId == null) {
@@ -986,48 +1032,90 @@ public class PortfolioEntryStatusReportingController extends Controller {
             portfolioEntryRisk.creationDate = new Date();
             portfolioEntryRisk.portfolioEntry = portfolioEntry;
 
-            if (portfolioEntryRiskFormData.isRisk) {
-                portfolioEntryRiskFormData.fillRisk(portfolioEntryRisk);
-            } else {
-                portfolioEntryRiskFormData.fillIssue(portfolioEntryRisk);
-            }
+            portfolioEntryRiskFormData.fill(portfolioEntryRisk);
 
             portfolioEntryRisk.save();
 
-            if (portfolioEntryRiskFormData.isRisk) {
-                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.risk.add.successful"));
-            } else {
-                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.issue.add.successful"));
-            }
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.risk.add.successful"));
 
         } else { // edit case
 
-            portfolioEntryRisk = PortfolioEntryRiskDao.getPERiskById(portfolioEntryRiskFormData.riskId);
+            portfolioEntryRisk = PortfolioEntryRiskAndIssueDao.getPERiskById(portfolioEntryRiskFormData.riskId);
 
             // security: the portfolioEntry must be related to the object
             if (!portfolioEntryRisk.portfolioEntry.id.equals(id)) {
                 return forbidden(views.html.error.access_forbidden.render(""));
             }
 
-            if (portfolioEntryRiskFormData.isRisk) {
-                portfolioEntryRiskFormData.fillRisk(portfolioEntryRisk);
-            } else {
-                portfolioEntryRiskFormData.fillIssue(portfolioEntryRisk);
-            }
+            portfolioEntryRiskFormData.fill(portfolioEntryRisk);
+
             portfolioEntryRisk.update();
 
-            if (portfolioEntryRiskFormData.isRisk) {
-                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.risk.edit.successful"));
-            } else {
-                Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.issue.edit.successful"));
-            }
-
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.risk.edit.successful"));
         }
 
         // save the custom attributes
         this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryRisk.class, portfolioEntryRisk.id);
 
         return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntryRiskFormData.id, 0, 0, 0, false, false));
+    }
+
+    /**
+     * Perform the save for a new/update issue.
+     */
+    @With(CheckPortfolioEntryExists.class)
+    @Dynamic(IMafConstants.PORTFOLIO_ENTRY_EDIT_DYNAMIC_PERMISSION)
+    public Result processManageIssue() {
+
+        // bind the form
+        Form<PortfolioEntryIssueFormData> boundForm = issueFormTemplate.bindFromRequest();
+
+        // get the portfolioEntry
+        Long id = Long.valueOf(request().body().asFormUrlEncoded().get("id")[0]);
+        PortfolioEntry portfolioEntry = PortfolioEntryDao.getPEById(id);
+
+        if (boundForm.hasErrors() || this.getCustomAttributeManagerService().validateValues(boundForm, PortfolioEntryIssue.class)) {
+            return ok(views.html.core.portfolioentrystatusreporting.issue_manage.render(portfolioEntry, boundForm,
+                    PortfolioEntryRiskAndIssueDao.getPEIssueTypeActiveAsVH()));
+        }
+
+        PortfolioEntryIssueFormData portfolioEntryIssueFormData = boundForm.get();
+
+        PortfolioEntryIssue portfolioEntryIssue;
+
+        // create case
+        if (portfolioEntryIssueFormData.issueId == null) {
+
+            portfolioEntryIssue = new PortfolioEntryIssue();
+            portfolioEntryIssue.creationDate = new Date();
+            portfolioEntryIssue.portfolioEntry = portfolioEntry;
+
+            portfolioEntryIssueFormData.fill(portfolioEntryIssue);
+
+            portfolioEntryIssue.save();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.issue.add.successful"));
+
+        } else { // edit case
+
+            portfolioEntryIssue = PortfolioEntryRiskAndIssueDao.getPEIssueById(portfolioEntryIssueFormData.issueId);
+
+            // security: the portfolioEntry must be related to the object
+            if (!portfolioEntryIssue.portfolioEntry.id.equals(id)) {
+                return forbidden(views.html.error.access_forbidden.render(""));
+            }
+
+            portfolioEntryIssueFormData.fill(portfolioEntryIssue);
+            portfolioEntryIssue.update();
+
+            Utilities.sendSuccessFlashMessage(Msg.get("core.portfolio_entry_status_reporting.issue.edit.successful"));
+
+        }
+
+        // save the custom attributes
+        this.getCustomAttributeManagerService().validateAndSaveValues(boundForm, PortfolioEntryIssue.class, portfolioEntryIssue.id);
+
+        return redirect(controllers.core.routes.PortfolioEntryStatusReportingController.registers(portfolioEntryIssueFormData.id, 0, 0, 0, false, false));
     }
 
     /**
@@ -1049,7 +1137,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Form<PortfolioEntryEventFormData> eventForm = eventFormTemplate;
 
         // edit case: get the portfolio entry event instance
-        if (!eventId.equals(Long.valueOf(0))) {
+        if (!eventId.equals(0L)) {
 
             PortfolioEntryEvent portfolioEntryEvent = PortfolioEntryEventDao.getPEEventById(eventId);
 
@@ -1093,7 +1181,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
 
         PortfolioEntryEventFormData portfolioEntryEventFormData = boundForm.get();
 
-        PortfolioEntryEvent portfolioEntryEvent = null;
+        PortfolioEntryEvent portfolioEntryEvent;
 
         // create case
         if (portfolioEntryEventFormData.eventId == null) {
@@ -1408,61 +1496,58 @@ public class PortfolioEntryStatusReportingController extends Controller {
     @Dynamic(IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION)
     public Promise<Result> exportTimesheetsAsExcel(final Long id) {
 
-        return Promise.promise(new Function0<Result>() {
-            @Override
-            public Result apply() throws Throwable {
+        return Promise.promise(() -> {
 
-                try {
+            try {
 
-                    // Get the current user
-                    final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
+                // Get the current user
+                final String uid = getUserSessionManagerPlugin().getUserSessionId(ctx());
 
-                    // construct the table
-                    FilterConfig<TimesheetLogListView> filterConfig = getTableProvider().get().timesheetLog.filterConfig.getCurrent(uid, request());
+                // construct the table
+                FilterConfig<TimesheetLogListView> filterConfig = getTableProvider().get().timesheetLog.filterConfig.getCurrent(uid, request());
 
-                    ExpressionList<TimesheetLog> expressionList = filterConfig
-                            .updateWithSearchExpression(TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(id));
-                    filterConfig.updateWithSortExpression(expressionList);
+                ExpressionList<TimesheetLog> expressionList = filterConfig
+                        .updateWithSearchExpression(TimesheetDao.getTimesheetLogAsExprByPortfolioEntry(id));
+                filterConfig.updateWithSortExpression(expressionList);
 
-                    List<TimesheetLogListView> timesheetLogListView = new ArrayList<TimesheetLogListView>();
-                    for (TimesheetLog timesheetLog : expressionList.findList()) {
-                        timesheetLogListView.add(new TimesheetLogListView(timesheetLog));
-                    }
-
-                    Table<TimesheetLogListView> table = getTableProvider().get().timesheetLog.templateTable.fillForFilterConfig(timesheetLogListView,
-                            filterConfig.getColumnsToHide());
-
-                    final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
-
-                    final String fileName = String.format("timesheetsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
-                    final String successTitle = Msg.get("excel.export.success.title");
-                    final String successMessage = Msg.get("excel.export.success.message", fileName);
-                    final String failureTitle = Msg.get("excel.export.failure.title");
-                    final String failureMessage = Msg.get("excel.export.failure.message");
-
-                    // Execute asynchronously
-                    getSysAdminUtils().scheduleOnce(false, "Timesheets Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
-                                IOUtils.copy(new ByteArrayInputStream(excelFile), out);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
-                                        successMessage, controllers.my.routes.MyPersonalStorage.index().url());
-                            } catch (IOException e) {
-                                log.error("Unable to export the excel file", e);
-                                getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
-                                        controllers.core.routes.PortfolioEntryStatusReportingController.timesheets(id).url());
-                            }
-                        }
-                    });
-
-                    return ok(Json.newObject());
-
-                } catch (Exception e) {
-                    return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
+                List<TimesheetLogListView> timesheetLogListView = new ArrayList<TimesheetLogListView>();
+                for (TimesheetLog timesheetLog : expressionList.findList()) {
+                    timesheetLogListView.add(new TimesheetLogListView(timesheetLog));
                 }
+
+                Table<TimesheetLogListView> table = getTableProvider().get().timesheetLog.templateTable.fillForFilterConfig(timesheetLogListView,
+                        filterConfig.getColumnsToHide());
+
+                final byte[] excelFile = TableExcelRenderer.renderFormatted(table);
+
+                final String fileName = String.format("timesheetsExport_%1$td_%1$tm_%1$ty_%1$tH-%1$tM-%1$tS.xlsx", new Date());
+                final String successTitle = Msg.get("excel.export.success.title");
+                final String successMessage = Msg.get("excel.export.success.message", fileName);
+                final String failureTitle = Msg.get("excel.export.failure.title");
+                final String failureMessage = Msg.get("excel.export.failure.message");
+
+                // Execute asynchronously
+                getSysAdminUtils().scheduleOnce(false, "Timesheets Excel Export", Duration.create(0, TimeUnit.MILLISECONDS), new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            OutputStream out = getPersonalStoragePlugin().createNewFile(uid, fileName);
+                            IOUtils.copy(new ByteArrayInputStream(excelFile), out);
+                            getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.DOCUMENT), successTitle,
+                                    successMessage, controllers.my.routes.MyPersonalStorage.index().url());
+                        } catch (IOException e) {
+                            log.error("Unable to export the excel file", e);
+                            getNotificationManagerPlugin().sendNotification(uid, NotificationCategory.getByCode(Code.ISSUE), failureTitle, failureMessage,
+                                    routes.PortfolioEntryStatusReportingController.timesheets(id).url());
+                        }
+                    }
+                });
+
+                return ok(Json.newObject());
+
+            } catch (Exception e) {
+                return ControllersUtils.logAndReturnUnexpectedError(e, log, getConfiguration(), getI18nMessagesPlugin());
             }
         });
 
@@ -1487,10 +1572,7 @@ public class PortfolioEntryStatusReportingController extends Controller {
         Pagination<TimesheetLog> pagination = new Pagination<TimesheetLog>(this.getPreferenceManagerPlugin(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 
-        List<TimesheetLogListView> timesheetLogListView = new ArrayList<TimesheetLogListView>();
-        for (TimesheetLog timesheetLog : pagination.getListOfObjects()) {
-            timesheetLogListView.add(new TimesheetLogListView(timesheetLog));
-        }
+        List<TimesheetLogListView> timesheetLogListView = pagination.getListOfObjects().stream().map(TimesheetLogListView::new).collect(Collectors.toList());
 
         Set<String> columnsToHide = filterConfig.getColumnsToHide();
 
