@@ -125,6 +125,10 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
      */
     public void fill(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
 
+        if (!this.days.equals(allocatedOrgUnit.days) || !this.orgUnit.equals(allocatedOrgUnit.orgUnit.id)) {
+            allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        }
+
         allocatedOrgUnit.orgUnit = OrgUnitDao.getOrgUnitById(this.orgUnit);
 
         allocatedOrgUnit.portfolioEntryPlanningPackage = this.portfolioEntryPlanningPackage != null
@@ -147,10 +151,6 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
         } else {
             allocatedOrgUnit.startDate = allocatedOrgUnit.portfolioEntryPlanningPackage.startDate;
             allocatedOrgUnit.endDate = allocatedOrgUnit.portfolioEntryPlanningPackage.endDate;
-        }
-
-        if (!this.days.equals(allocatedOrgUnit.days)) {
-            allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
         }
 
         allocatedOrgUnit.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);

@@ -241,6 +241,10 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
      */
     public void fill(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
 
+        if (!this.days.equals(allocatedActor.days) || !this.actor.equals(allocatedActor.actor.id)) {
+            allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        }
+
         allocatedActor.actor = ActorDao.getActorById(this.actor);
 
         allocatedActor.portfolioEntryPlanningPackage = this.portfolioEntryPlanningPackage != null
@@ -263,10 +267,6 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
         } else {
             allocatedActor.startDate = allocatedActor.portfolioEntryPlanningPackage.startDate;
             allocatedActor.endDate = allocatedActor.portfolioEntryPlanningPackage.endDate;
-        }
-
-        if (!this.days.equals(allocatedActor.days)) {
-            allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
         }
 
         allocatedActor.currency = CurrencyDAO.getCurrencyByCode(this.currencyCode);
