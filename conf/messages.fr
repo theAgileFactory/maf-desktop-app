@@ -3092,6 +3092,7 @@ admin.configuration.reference_data.planning_packages.types.title=Types de résul
 admin.configuration.reference_data.planning_packages.patterns.title=Modèles de résultats
 admin.configuration.reference_data.register.title=Registres
 admin.configuration.reference_data.register.risktypes.title=Types de risque
+admin.configuration.reference_data.register.issuetypes.title=Types d''incidents
 admin.configuration.reference_data.register.report_status_types.title=Types de statut de rapport
 admin.configuration.reference_data.register.event_types.title=Types d''événement
 admin.configuration.reference_data.finances.title=Finances
