@@ -104,6 +104,8 @@ public class PortfolioEntryRiskFormData {
         portfolioEntryRisk.isActive = isActive != null ? isActive : false;
         portfolioEntryRisk.portfolioEntryRiskType = !riskType.equals("") ? PortfolioEntryRiskAndIssueDao.getPERiskTypeById(Long.parseLong(riskType)) : null;
         portfolioEntryRisk.owner = !owner.equals("") ? ActorDao.getActorById(Long.parseLong(owner)) : null;
+        portfolioEntryRisk.isMitigated = isMitigated != null ? isMitigated : false;
+        portfolioEntryRisk.mitigationComment = mitigationComment;
     }
 
 }

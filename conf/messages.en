@@ -3080,6 +3080,7 @@ admin.configuration.reference_data.planning_packages.types.title=Package types
 admin.configuration.reference_data.planning_packages.patterns.title=Package patterns
 admin.configuration.reference_data.register.title=Registers
 admin.configuration.reference_data.register.risktypes.title=Risk types
+admin.configuration.reference_data.register.issuetypes.title=Issue types
 admin.configuration.reference_data.register.report_status_types.title=Report status types
 admin.configuration.reference_data.register.event_types.title=Event types
 admin.configuration.reference_data.finances.title=Finances

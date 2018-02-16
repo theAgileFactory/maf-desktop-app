@@ -3091,6 +3091,7 @@ admin.configuration.reference_data.planning_packages.types.title=Pakettypen
 admin.configuration.reference_data.planning_packages.patterns.title=Paket-Muster
 admin.configuration.reference_data.register.title=Berichterstattung
 admin.configuration.reference_data.register.risktypes.title=Risiko Typen
+admin.configuration.reference_data.register.issuetypes.title=Probleme Typen
 admin.configuration.reference_data.register.report_status_types.title=Status Typen
 admin.configuration.reference_data.register.event_types.title=Ereigniss Typen
 admin.configuration.reference_data.finances.title=Finanzen
