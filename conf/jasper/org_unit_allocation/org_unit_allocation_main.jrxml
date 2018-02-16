@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-28T10:25:28 -->
+<!-- 2018-02-16T15:33:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="org_unit_allocation_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="2a0e196b-90ac-410b-b397-f8ce01858593">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PAMDS.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\VDLDS.xml"/>
 	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="false"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
@@ -16,6 +16,7 @@
 	<property name="net.sf.jasperreports.exports.xls.font.size.fix.enabled" value="false"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="columnHeader"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -29,16 +30,24 @@
 		<defaultValueExpression><![CDATA[20L]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT ou.name AS org_unit_name, pe.name AS portfolio_entry_name, perpaou.days AS days,
+		<![CDATA[SELECT 
+	ou.name AS org_unit_name, 
+	pe.name AS portfolio_entry_name, 
+	perpaou.days AS days,
 	perpaou.forecast_days AS forecast_days, 
-	perpaou.start_date AS start_date, perpaou.end_date AS end_date, pepp.name AS package_name, perpaou.is_confirmed AS is_confirmed
+	perpaou.start_date AS start_date, 
+	perpaou.end_date AS end_date, 
+	pepp.name AS package_name, 
+	perpast.`status` AS status_type
 FROM portfolio_entry_resource_plan_allocated_org_unit perpaou
-	JOIN org_unit ou ON perpaou.org_unit_id = ou.id AND ou.deleted = 0
-	LEFT OUTER JOIN portfolio_entry_planning_package pepp ON perpaou.portfolio_entry_planning_package_id = pepp.id AND pepp.deleted = 0
-	JOIN portfolio_entry_resource_plan perp ON perpaou.portfolio_entry_resource_plan_id = perp.id AND perp.deleted = 0
-	JOIN life_cycle_instance_planning lcip ON perp.id = lcip.portfolio_entry_resource_plan_id AND lcip.deleted = 0
-	JOIN life_cycle_instance lci ON lcip.life_cycle_instance_id = lci.id AND lci.deleted = 0 
-	JOIN portfolio_entry pe ON lci.portfolio_entry_id = pe.id AND pe.deleted = 0
+JOIN org_unit ou ON perpaou.org_unit_id = ou.id AND ou.deleted = 0
+LEFT OUTER
+JOIN portfolio_entry_planning_package pepp ON perpaou.portfolio_entry_planning_package_id = pepp.id AND pepp.deleted = 0
+JOIN portfolio_entry_resource_plan perp ON perpaou.portfolio_entry_resource_plan_id = perp.id AND perp.deleted = 0
+JOIN life_cycle_instance_planning lcip ON perp.id = lcip.portfolio_entry_resource_plan_id AND lcip.deleted = 0
+JOIN life_cycle_instance lci ON lcip.life_cycle_instance_id = lci.id AND lci.deleted = 0
+JOIN portfolio_entry pe ON lci.portfolio_entry_id = pe.id AND pe.deleted = 0
+JOIN portfolio_entry_resource_plan_allocation_status_type perpast on perpast.id = perpaou.portfolio_entry_resource_plan_allocation_status_type_id
 WHERE perpaou.deleted = 0 AND perpaou.org_unit_id = $P{REPORT_ORG_UNIT_ALLOCATION_ORG_UNIT} AND lcip.is_frozen = 0 AND lci.is_active = 1 AND pe.archived = 0
 ORDER BY perpaou.end_date]]>
 	</queryString>
@@ -54,7 +63,7 @@ ORDER BY perpaou.end_date]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="package_name" class="java.lang.String"/>
-	<field name="is_confirmed" class="java.lang.Boolean">
+	<field name="status_type" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="forecast_days" class="java.lang.String"/>
@@ -237,7 +246,7 @@ ORDER BY perpaou.end_date]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[IF($F{is_confirmed},str("label.yes"),str("label.no"))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("label." + $F{status_type})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="row" stretchType="RelativeToBandHeight" x="210" y="0" width="60" height="20" uuid="588e3a53-3f99-479d-a939-889ea16f8155">

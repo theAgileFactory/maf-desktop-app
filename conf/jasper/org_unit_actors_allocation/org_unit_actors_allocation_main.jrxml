@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-28T10:16:56 -->
+<!-- 2018-02-16T15:40:19 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="org_unit_actors_allocation_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="2a0e196b-90ac-410b-b397-f8ce01858593">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PAMDS.xml"/>
 	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="false"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
@@ -16,6 +15,8 @@
 	<property name="net.sf.jasperreports.exports.xls.font.size.fix.enabled" value="false"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="columnHeader"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\VDLDS.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -38,7 +39,7 @@
 	perpaa.start_date AS start_date, 
 	perpaa.end_date AS end_date, 
 	pepp.name AS package_name, 
-	perpaa.is_confirmed AS is_confirmed
+	perpast.`status` AS status_type
 FROM portfolio_entry_resource_plan_allocated_actor perpaa
 	JOIN actor a ON perpaa.actor_id = a.id AND a.deleted = 0
 	JOIN org_unit ou ON a.org_unit_id = ou.id AND ou.deleted = 0
@@ -47,6 +48,7 @@ FROM portfolio_entry_resource_plan_allocated_actor perpaa
 	JOIN life_cycle_instance_planning lcip ON perp.id = lcip.portfolio_entry_resource_plan_id AND lcip.deleted = 0
 	JOIN life_cycle_instance lci ON lcip.life_cycle_instance_id = lci.id AND lci.deleted = 0 
 	JOIN portfolio_entry pe ON lci.portfolio_entry_id = pe.id AND pe.deleted = 0
+	JOIN portfolio_entry_resource_plan_allocation_status_type perpast on perpast.id = perpaa.portfolio_entry_resource_plan_allocation_status_type_id
 WHERE perpaa.deleted = 0 AND ou.id = $P{REPORT_ORG_UNIT_ACTORS_ALLOCATION_ORG_UNIT} AND a.is_active = 1 AND lcip.is_frozen = 0 AND lci.is_active = 1 AND pe.archived = 0)
 UNION
 (SELECT 
@@ -57,7 +59,7 @@ UNION
 	taaa.start_date AS start_date, 
 	taaa.end_date AS end_date, 
 	'**' AS package_name, 
-	2 AS is_confirmed
+	'ACTIVITY' AS status_type
 FROM timesheet_activity_allocated_actor taaa
 	JOIN actor a ON taaa.actor_id = a.id AND a.deleted = 0
 	JOIN timesheet_activity ta ON taaa.timesheet_activity_id = ta.id AND ta.deleted = 0
@@ -79,7 +81,7 @@ ORDER BY end_date, actor_name]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="package_name" class="java.lang.String"/>
-	<field name="is_confirmed" class="java.lang.Integer">
+	<field name="status_type" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="forecast_days" class="java.lang.String"/>
@@ -174,7 +176,7 @@ ORDER BY end_date, actor_name]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5"/>
-				<textFieldExpression><![CDATA[str("label.is_confirmed")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("label.status")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="80" height="20" uuid="49ca9f51-0bc9-4843-b6a6-a5bb430667ac">
@@ -276,7 +278,7 @@ ORDER BY end_date, actor_name]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[IF($F{is_confirmed}.equals(2), "-", IF($F{is_confirmed}.equals(1), str("label.yes"), str("label.no")))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("label." + $F{status_type})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="80" height="20" uuid="dbe68245-c520-46cb-8569-80eb65cd70d9">
