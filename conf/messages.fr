@@ -3212,6 +3212,12 @@ admin.configuration.reference_data.risktype.add.successful=Le type de risque a �
 admin.configuration.reference_data.risktype.edit.successful=Le type de risque a été mis à jour.
 admin.configuration.reference_data.risktype.delete.successful=Le type de risque a été supprimé.
 
+#manage risk type
+admin.configuration.reference_data.issuetype.manage.title=Gérer un type d''incident
+admin.configuration.reference_data.issuetype.add.successful=Le type d''incident a été ajouté.
+admin.configuration.reference_data.issuetype.edit.successful=Le type d''incident a été mis à jour.
+admin.configuration.reference_data.issuetype.delete.successful=Le type d''incident a été supprimé.
+
 #manage report status type
 admin.configuration.reference_data.report_status_type.manage.title=Gérer un type de statut de rapport
 admin.configuration.reference_data.report_status_type.add.successful=Le type de statut de rapport a été ajouté.

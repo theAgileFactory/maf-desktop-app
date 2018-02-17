@@ -76,6 +76,10 @@
                         <td>@display_date(portfolioEntryIssue.dueDate)</td>
                     </tr>
                     <tr>
+                        <th>@parts.Msg("object.portfolio_entry_issue.type.label")</th>
+                        <td>@display_value_holder(portfolioEntryIssue.portfolioEntryIssueType)</td>
+                    </tr>
+                    <tr>
                         <th>@parts.Msg("object.portfolio_entry_issue.owner.label")</th>
                         <td >@display_actor(portfolioEntryIssue.owner)</td>
                     </tr>

@@ -3211,6 +3211,12 @@ admin.configuration.reference_data.risktype.add.successful=Typ hinzugefügt.
 admin.configuration.reference_data.risktype.edit.successful=Typ aktualisiert.
 admin.configuration.reference_data.risktype.delete.successful=Typ entfernt.
 
+#manage risk type
+admin.configuration.reference_data.issuetype.manage.title=Problem Typ bearbeiten
+admin.configuration.reference_data.issuetype.add.successful=Typ hinzugefügt.
+admin.configuration.reference_data.issuetype.edit.successful=Typ aktualisiert.
+admin.configuration.reference_data.issuetype.delete.successful=Typ entfernt.
+
 #manage report status type
 admin.configuration.reference_data.report_status_type.manage.title=Status Typ berarbeiten
 admin.configuration.reference_data.report_status_type.add.successful=Typ hinzugefügt.

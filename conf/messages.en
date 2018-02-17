@@ -3200,6 +3200,12 @@ admin.configuration.reference_data.risktype.add.successful=The risk type has bee
 admin.configuration.reference_data.risktype.edit.successful=The risk type has been updated.
 admin.configuration.reference_data.risktype.delete.successful=The risk type has been removed.
 
+#manage issue type
+admin.configuration.reference_data.issuetype.manage.title=Manage an issue type
+admin.configuration.reference_data.issuetype.add.successful=The issue type has been added successfully.
+admin.configuration.reference_data.issuetype.edit.successful=The issue type has been updated.
+admin.configuration.reference_data.issuetype.delete.successful=The issue type has been removed.
+
 #manage report status type
 admin.configuration.reference_data.report_status_type.manage.title=Manage a report status type
 admin.configuration.reference_data.report_status_type.add.successful=The report status type has been added successfully.
