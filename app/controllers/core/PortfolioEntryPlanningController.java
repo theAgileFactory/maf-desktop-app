@@ -1046,6 +1046,7 @@ public class PortfolioEntryPlanningController extends Controller {
             if (a.followPackageDates != null && a.followPackageDates) {
                 a.startDate = planningPackage.startDate;
                 a.endDate = planningPackage.endDate;
+                a.computeAllocationDetails(getBudgetTrackingService().isActive(), getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
                 a.save();
             }
         }
@@ -1053,6 +1054,7 @@ public class PortfolioEntryPlanningController extends Controller {
             if (oo.followPackageDates != null && oo.followPackageDates) {
                 oo.startDate = planningPackage.startDate;
                 oo.endDate = planningPackage.endDate;
+                oo.computeAllocationDetails(getBudgetTrackingService().isActive(), getPreferenceManagerPlugin().getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
                 oo.save();
             }
         }
