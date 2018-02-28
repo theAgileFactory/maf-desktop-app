@@ -209,8 +209,9 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
             allocatedOrgUnit.clearAllocations();
         }
 
-        backToDraft |= originalStartDate.compareTo(allocatedOrgUnit.startDate) != 0 ||
-                originalEndDate.compareTo(allocatedOrgUnit.endDate) != 0;
+        backToDraft |=
+                !Utilities.datesAreEqualsOrNull(allocatedOrgUnit.startDate, originalStartDate) ||
+                !Utilities.datesAreEqualsOrNull(allocatedOrgUnit.endDate, originalEndDate);
 
         if (backToDraft) {
             allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
