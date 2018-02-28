@@ -170,7 +170,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
         List<PortfolioEntryResourcePlanAllocatedOrgUnitDetail> details = allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails;
         for(PortfolioEntryResourcePlanAllocatedOrgUnitDetail detail : details) {
             Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(detail.year)).findFirst();
-            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(detail.year);
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.orElseGet(() -> new MonthAllocation(detail.year));
             monthAllocation.addValue(detail.month, detail.days);
             if (!optionalMonthlyAllocation.isPresent()) {
                 monthAllocations.add(monthAllocation);
@@ -221,7 +221,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
                 Integer year = key.getLeft();
                 Integer month = key.getRight();
                 Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(year)).findFirst();
-                MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(year);
+                MonthAllocation monthAllocation = optionalMonthlyAllocation.orElseGet(() -> new MonthAllocation(year));
                 monthAllocation.addValue(month, days);
                 if (!optionalMonthlyAllocation.isPresent()) {
                     monthAllocations.add(monthAllocation);
@@ -241,9 +241,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
      */
     public void fill(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
 
-        if (!this.days.equals(allocatedActor.days) || !this.actor.equals(allocatedActor.actor.id)) {
-            allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
-        }
+        boolean backToDraft = !this.days.equals(allocatedActor.days) || !this.actor.equals(allocatedActor.actor.id);
 
         allocatedActor.actor = ActorDao.getActorById(this.actor);
 
@@ -251,6 +249,9 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
                 ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(this.portfolioEntryPlanningPackage) : null;
 
         allocatedActor.followPackageDates = allocatedActor.portfolioEntryPlanningPackage != null ? this.followPackageDates : null;
+
+        Date originalStartDate = allocatedActor.startDate;
+        Date originalEndDate   = allocatedActor.endDate;
 
         if (allocatedActor.followPackageDates == null || !allocatedActor.followPackageDates) {
             try {
@@ -299,13 +300,12 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
             }
 
             allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.clear();
-            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.addAll(details.stream().filter(detail -> detail != null).collect(Collectors.toList()));
+            allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.addAll(details.stream().filter(Objects::nonNull).collect(Collectors.toList()));
 
             // Set start date and end date
-            Comparator<? super PortfolioEntryResourcePlanAllocatedActorDetail> comp = (d1, d2) -> {
-                int c = Integer.compare(d1.year, d2.year);
-                return c == 0 ? Integer.compare(d1.month, d2.month) : c;
-            };
+            Comparator<? super PortfolioEntryResourcePlanAllocatedActorDetail> comp = Comparator
+                    .comparingInt((PortfolioEntryResourcePlanAllocatedActorDetail d) -> d.year)
+                    .thenComparingInt(d -> d.month);
 
             PortfolioEntryResourcePlanAllocatedActorDetail startMonth = allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.stream().min(comp).get();
             PortfolioEntryResourcePlanAllocatedActorDetail endMonth = allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.stream().max(comp).get();
@@ -323,6 +323,14 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
         } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
             allocatedActor.clearAllocations();
         }
+
+        backToDraft |= originalStartDate.compareTo(allocatedActor.startDate) != 0 ||
+                       originalEndDate.compareTo(allocatedActor.endDate) != 0;
+
+        if (backToDraft) {
+            allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
+        }
+
     }
 
 }

@@ -158,6 +158,18 @@ public class ResourceAllocationFormData {
         return errors.isEmpty() ? null : errors;
     }
 
+    /**
+     * Process an allocation detail.
+     * If a positive number of days is provided, the corresponding allocation detail will be created or updated and returned.
+     * Else, the allocation detail will be deleted and null will be returned.
+     *
+     * @param allocation the parent resource allocation
+     * @param year the year of the allocation
+     * @param month the month of the allocation
+     * @param days the number of allocated days for the resource
+     *
+     * @return the created/updated allocation or null in case of deletion
+     */
     protected ResourceAllocationDetail processMonthAllocation(ResourceAllocation allocation, Integer year, Integer month, Double days) {
         if (days != null && days != 0) {
             return allocation.createOrUpdateAllocationDetail(year, month, days);

@@ -24,6 +24,7 @@ import dao.pmo.OrgUnitDao;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.Utilities;
+import models.common.ResourceAllocationDetail;
 import models.finance.*;
 import play.Play;
 import play.data.validation.Constraints;
@@ -106,7 +107,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
         List<PortfolioEntryResourcePlanAllocatedOrgUnitDetail> details = allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails;
         for(PortfolioEntryResourcePlanAllocatedOrgUnitDetail detail : details) {
             Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(detail.year)).findFirst();
-            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(detail.year);
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.orElseGet(() -> new MonthAllocation(detail.year));
             monthAllocation.addValue(detail.month, detail.days);
             if (!optionalMonthlyAllocation.isPresent()) {
                 monthAllocations.add(monthAllocation);
@@ -125,9 +126,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
      */
     public void fill(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
 
-        if (!this.days.equals(allocatedOrgUnit.days) || !this.orgUnit.equals(allocatedOrgUnit.orgUnit.id)) {
-            allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
-        }
+        boolean backToDraft = !this.days.equals(allocatedOrgUnit.days) || !this.orgUnit.equals(allocatedOrgUnit.orgUnit.id);
 
         allocatedOrgUnit.orgUnit = OrgUnitDao.getOrgUnitById(this.orgUnit);
 
@@ -135,6 +134,9 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
                 ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(this.portfolioEntryPlanningPackage) : null;
 
         allocatedOrgUnit.followPackageDates = allocatedOrgUnit.portfolioEntryPlanningPackage != null ? this.followPackageDates : null;
+
+        Date originalStartDate = allocatedOrgUnit.startDate;
+        Date originalEndDate = allocatedOrgUnit.endDate;
 
         if (allocatedOrgUnit.followPackageDates == null || !allocatedOrgUnit.followPackageDates) {
             try {
@@ -183,13 +185,12 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
             }
 
             allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.clear();
-            allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.addAll(details.stream().filter(detail -> detail != null).collect(Collectors.toList()));
+            allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.addAll(details.stream().filter(Objects::nonNull).collect(Collectors.toList()));
 
             // Set start date and end date
-            Comparator<? super PortfolioEntryResourcePlanAllocatedOrgUnitDetail> comp = (d1, d2) -> {
-                int c = Integer.compare(d1.year, d2.year);
-                return c == 0 ? Integer.compare(d1.month, d2.month) : c;
-            };
+            Comparator<? super PortfolioEntryResourcePlanAllocatedOrgUnitDetail> comp = Comparator
+                    .comparingInt((PortfolioEntryResourcePlanAllocatedOrgUnitDetail d) -> d.year)
+                    .thenComparingInt(d -> d.month);
 
             PortfolioEntryResourcePlanAllocatedOrgUnitDetail startMonth = allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.stream().min(comp).get();
             PortfolioEntryResourcePlanAllocatedOrgUnitDetail endMonth = allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.stream().max(comp).get();
@@ -206,6 +207,13 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
             allocatedOrgUnit.computeAllocationDetails(budgetTrackingService.isActive(), preferenceManager.getPreferenceValueAsBoolean(IMafConstants.RESOURCES_WEEK_DAYS_ALLOCATION_PREFERENCE));
         } else { // If no manual allocation and no start date and end date are provided, just remove the monthly distribution
             allocatedOrgUnit.clearAllocations();
+        }
+
+        backToDraft |= originalStartDate.compareTo(allocatedOrgUnit.startDate) != 0 ||
+                originalEndDate.compareTo(allocatedOrgUnit.endDate) != 0;
+
+        if (backToDraft) {
+            allocatedOrgUnit.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
         }
     }
 
