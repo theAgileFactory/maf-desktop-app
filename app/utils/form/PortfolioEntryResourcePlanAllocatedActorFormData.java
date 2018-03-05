@@ -324,8 +324,10 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
             allocatedActor.clearAllocations();
         }
 
-        backToDraft |= originalStartDate.compareTo(allocatedActor.startDate) != 0 ||
-                       originalEndDate.compareTo(allocatedActor.endDate) != 0;
+
+        backToDraft |=
+                !Utilities.datesAreEqualsOrNull(allocatedActor.startDate, originalStartDate) ||
+                !Utilities.datesAreEqualsOrNull(allocatedActor.endDate, originalEndDate);
 
         if (backToDraft) {
             allocatedActor.portfolioEntryResourcePlanAllocationStatusType = PortfolioEntryResourcePlanDAO.getAllocationStatusByType(PortfolioEntryResourcePlanAllocationStatusType.AllocationStatus.DRAFT);
