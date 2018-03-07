@@ -88,18 +88,18 @@ public class PortfolioEntryPlanningPackageListView {
                             new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.ASC);
 
                     ISelectableValueHolderCollection<Long> groups = PortfolioEntryPlanningPackageDao.getPEPlanningPackageGroupActiveAsVH();
-                    if (groups != null && groups.getValues().size() > 0) {
+                    if (groups.getValues().size() > 0) {
                         addColumnConfiguration("group", "portfolioEntryPlanningPackageGroup.id", "object.portfolio_entry_planning_package.group.label",
-                                new SelectFilterComponent(groups.getValues().iterator().next().getValue(), groups), false, false, SortStatusType.NONE);
+                                new SelectFilterComponent(groups.getValues().iterator().next().getValue(), groups, new String[]{"portfolioEntryPlanningPackageGroup.name"}), false, false, SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("group", "portfolioEntryPlanningPackageGroup.id", "object.portfolio_entry_planning_package.group.label",
                                 new NoneFilterComponent(), false, false, SortStatusType.NONE);
                     }
 
                     ISelectableValueHolderCollection<Long> types = PortfolioEntryPlanningPackageDao.getPEPlanningPackageTypeActiveAsVH();
-                    if (types != null && types.getValues().size() > 0) {
+                    if (types.getValues().size() > 0) {
                         addColumnConfiguration("type", "portfolioEntryPlanningPackageType.id", "object.portfolio_entry_planning_package.type.label",
-                                new SelectFilterComponent(types.getValues().iterator().next().getValue(), types), false, false, SortStatusType.NONE);
+                                new SelectFilterComponent(types.getValues().iterator().next().getValue(), types, new String[]{"portfolioEntryPlanningPackageType.name"}), false, false, SortStatusType.NONE);
                     } else {
                         addColumnConfiguration("type", "portfolioEntryPlanningPackageType.id", "object.portfolio_entry_planning_package.type.label",
                                 new NoneFilterComponent(), false, false, SortStatusType.NONE);
@@ -108,7 +108,7 @@ public class PortfolioEntryPlanningPackageListView {
                     ISelectableValueHolderCollection<String> status = PortfolioEntryPlanningController.getPackageStatusAsValueHolderCollection();
                     if (status != null && status.getValues().size() > 0) {
                         addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label",
-                                new SelectFilterComponent(status.getValues().iterator().next().getValue(), status), true, false, SortStatusType.NONE);
+                                new SelectFilterComponent(status.getValues().iterator().next().getValue(), status), true, false, SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label", new NoneFilterComponent(), true,
                                 false, SortStatusType.NONE);

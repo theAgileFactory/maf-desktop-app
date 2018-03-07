@@ -53,8 +53,8 @@ public class ActorAllocatedPortfolioEntryListView extends  AllocatedActorListVie
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
                     if (orgUnits.getValues().size() > 0) {
                         addColumnConfiguration("orgUnit", "actor.orgUnit.id", "object.allocated_resource.org_unit.label",
-                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), false, false,
-                                SortStatusType.NONE);
+                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[] {"actor.orgUnit.name"}), false, false,
+                                SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("orgUnit", "actor.orgUnit.id", "object.allocated_resource.org_unit.label",
                                 new NoneFilterComponent(), false, false, SortStatusType.NONE);
