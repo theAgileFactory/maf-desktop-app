@@ -43,10 +43,11 @@
         activeTab.html('<img src="@_fattach.getAjaxWaitImageUrl()"/>');
         $('#capacity-forecast-cell-details').hide();
 
+        var pickedDate = $('#month-datepicker').datepicker('getUTCDate');
         $.ajax({
             url: getUrl(activeTab.attr('id')),
             type: "GET",
-            data: {"year" : $('#year').val(), "onlyConfirmed" : $('#only-confirmed').is(':checked')},
+            data: {"year" : pickedDate.getFullYear(), "month" : pickedDate.getMonth(), "onlyConfirmed" : $('#only-confirmed').is(':checked')},
             success: function (data) {
                 activeTab.html(data);
             }

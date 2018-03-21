@@ -19,6 +19,7 @@
     orgUnit: models.pmo.OrgUnit,
     competency: models.pmo.Competency,
     monthName: String,
+    year: Integer,
     capacityDetailsRows: List[controllers.core.RoadmapController.CapacityDetails],
     capacityDetailsByInitiativeRows: List[controllers.core.RoadmapController.CapacityDetailsByInitiative],
     resourceBarChart: framework.highcharts.pattern.BasicBar,
@@ -31,8 +32,8 @@
 
 <hr/>
 <h4>
-    @if(orgUnit != null) { @orgUnit.getName / @parts.Msg("month." + monthName.toLowerCase) }
-    @if(competency != null) { @competency.getName / @parts.Msg("month." + monthName.toLowerCase) }
+    @if(orgUnit != null) { @orgUnit.getName / @parts.Msg("month." + monthName.toLowerCase) @year }
+    @if(competency != null) { @competency.getName / @parts.Msg("month." + monthName.toLowerCase) @year }
 </h4>
 
 <div class="row">

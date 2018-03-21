@@ -15,9 +15,11 @@
 * You should have received a copy of the GNU General Public License along with
 * this program. If not, see <http://www.gnu.org/licenses/>.
 *@
+@import controllers.core.RoadmapController
 @(
     actorCapacities: List[controllers.core.RoadmapController.ActorCapacity],
-    year: Integer
+    year: Integer,
+    month: Integer
 )
 
 @import framework_views.parts.formats._
@@ -45,18 +47,24 @@
         <thead>
             <tr>
                 <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.actor.label")</th>
-                <th class="text-center">@parts.Msg("month.january")</th>
-                <th class="text-center">@parts.Msg("month.february")</th>
-                <th class="text-center">@parts.Msg("month.march")</th>
-                <th class="text-center">@parts.Msg("month.april")</th>
-                <th class="text-center">@parts.Msg("month.may")</th>
-                <th class="text-center">@parts.Msg("month.june")</th>
-                <th class="text-center">@parts.Msg("month.july")</th>
-                <th class="text-center">@parts.Msg("month.august")</th>
-                <th class="text-center">@parts.Msg("month.september")</th>
-                <th class="text-center">@parts.Msg("month.october")</th>
-                <th class="text-center">@parts.Msg("month.november")</th>
-                <th class="text-center">@parts.Msg("month.december")</th>
+                @defining(Array(
+                    parts.Msg("month.january"),
+                    parts.Msg("month.february"),
+                    parts.Msg("month.march"),
+                    parts.Msg("month.april"),
+                    parts.Msg("month.may"),
+                    parts.Msg("month.june"),
+                    parts.Msg("month.july"),
+                    parts.Msg("month.august"),
+                    parts.Msg("month.september"),
+                    parts.Msg("month.october"),
+                    parts.Msg("month.november"),
+                    parts.Msg("month.december")
+                )) { months =>
+                    @for(i <- 0 to 11) {
+                        <th class="text-center">@months(RoadmapController.getColumnIndex(-month, i))</th>
+                    }
+                }
             </tr>
         </thead>
 
@@ -64,9 +72,9 @@
         @for(actorCapacity <- actorCapacities) {
             <tr>
                 <td>@display_actor(actorCapacity.getActor)</td>
-                @for((key, actorCapacityMonth) <- actorCapacity.getResourceCapacityMonths) {
+                @for((key, actorCapacityMonth) <- actorCapacity.getResourceCapacityColumns) {
                     <td class="bg-@actorCapacityMonth.getBootstrapBackground text-center cell">
-                        <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastActorsCellDetailsFragment(actorCapacity.getActor.id, year, key)');">
+                        <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastActorsCellDetailsFragment(actorCapacity.getActor.id, if (12 - key > month) year else year + 1, RoadmapController.getColumnIndex(-month, key))');">
                             @display_number(actorCapacityMonth.getPlanned) / @display_number(actorCapacityMonth.getAvailable)
                         </a>
                     </td>

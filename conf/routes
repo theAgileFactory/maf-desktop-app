@@ -208,9 +208,9 @@ POST   /roadmap/export                                                      cont
 POST   /roadmap/simulator/all-ids                                           controllers.core.RoadmapController.getAllIds()
 POST   /roadmap/simulator/kpis/fragment                                     controllers.core.RoadmapController.simulatorKpisFragment()
 POST   /roadmap/simulator/capacity-forecast                                 controllers.core.RoadmapController.simulatorCapacityForecast()
-GET    /roadmap/simulator/capacity-forecast/table/actors/fragment           controllers.core.RoadmapController.simulatorCapacityForecastTableActorsFragment(year: Integer ?= -1, onlyConfirmed: Boolean ?= false)
-GET    /roadmap/simulator/capacity-forecast/table/orgunits/fragment         controllers.core.RoadmapController.simulatorCapacityForecastTableOrgUnitsFragment(year: Integer ?= -1, onlyConfirmed: Boolean ?= false)
-GET    /roadmap/simulator/capacity-forecast/table/competencies/fragment     controllers.core.RoadmapController.simulatorCapacityForecastTableCompetenciesFragment(year: Integer ?= -1, onlyConfirmed: Boolean ?= false)
+GET    /roadmap/simulator/capacity-forecast/table/actors/fragment           controllers.core.RoadmapController.simulatorCapacityForecastTableActorsFragment(year: Integer ?= -1, month: Integer ?= -1, onlyConfirmed: Boolean ?= false)
+GET    /roadmap/simulator/capacity-forecast/table/orgunits/fragment         controllers.core.RoadmapController.simulatorCapacityForecastTableOrgUnitsFragment(year: Integer ?= -1, month: Integer ?= -1, onlyConfirmed: Boolean ?= false)
+GET    /roadmap/simulator/capacity-forecast/table/competencies/fragment     controllers.core.RoadmapController.simulatorCapacityForecastTableCompetenciesFragment(year: Integer ?= -1, month: Integer ?= -1, onlyConfirmed: Boolean ?= false)
 GET    /roadmap/simulator/capacity-forecast/cell/details/fragment           controllers.core.RoadmapController.simulatorCapacityForecastCellDetailsFragment(objectType: String, objectId: Long, year: Integer, month: Integer)
 GET    /roadmap/simulator/capacity-forecast/actors/cell/details/fragment    controllers.core.RoadmapController.simulatorCapacityForecastActorsCellDetailsFragment(actorId: Long, year: Integer, month: Integer)
 

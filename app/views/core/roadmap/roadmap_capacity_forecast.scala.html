@@ -57,12 +57,8 @@
 
 <form class="form-inline pull-right">
     <div class="form-group">
-        <label class="control-label" for="year">@parts.Msg.asString("core.roadmap.simulator.capacity_forecast.year.label")</label>
-        <select class="form-control" id="year" name="year">
-            @for((item, index) <- controllers.core.RoadmapController.CapacityForecastForm.getYears.getSortedValues.zipWithIndex) {
-                <option value="@item.getValue" @if(index == 1) { selected="selected" }>@item.getName</option>
-            }
-        </select>
+        <label class="control-label" for="month">@parts.Msg.asString("core.roadmap.simulator.capacity_forecast.month.label")</label>
+        <input type="text" id="month-datepicker" style="width: 90px" class="form-control"/>
     </div>
 
     &nbsp; &nbsp; &nbsp;
@@ -72,6 +68,10 @@
             <input type="checkbox" id="only-confirmed" name="only-confirmed" value="true" />
             <strong>@parts.Msg.asString("core.roadmap.simulator.capacity_forecast.only_confirmed.label")</strong></label>
     </div>
+
+    &nbsp; &nbsp; &nbsp;
+
+    <div class="form-group"><a href="#" id="roadmap-capacity-table-refresh"><span class="fa fa-refresh fa-lg"></span></a></div>
 </form>
 
 <div class="clearfix"></div>
@@ -119,6 +119,23 @@
     });
 
     $('#only-confirmed').on('change', function (e) {
+        reloadActiveTable();
+    });
+
+    $('#roadmap-capacity-table-refresh').on('click', function (e) {
+        reloadActiveTable();
+    });
+
+    var datepicker = $('#month-datepicker');
+
+    datepicker.datepicker({
+        autoclose: true,
+        language: "@Http.Context.current().lang().code()",
+        format: "M yyyy",
+        minViewMode: 'months'
+    })
+    .datepicker('setUTCDate', new Date())
+    .on('changeDate', function(e) {
         reloadActiveTable();
     });
 

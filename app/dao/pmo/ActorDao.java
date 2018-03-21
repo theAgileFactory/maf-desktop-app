@@ -23,14 +23,10 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
+import com.avaje.ebean.*;
 import org.apache.commons.lang3.StringUtils;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
-import com.avaje.ebean.RawSql;
-import com.avaje.ebean.RawSqlBuilder;
-import com.avaje.ebean.SqlUpdate;
 
 import framework.services.account.AccountManagementException;
 import framework.services.account.IAccountManagerPlugin;
@@ -702,36 +698,23 @@ public abstract class ActorDao {
      * 
      * The capacities are returned with a month order: the first entry (index =
      * 0) is for January and the last (index = 11) for December.
-     * 
-     * @param actor
+     *  @param actor
      *            the actor
      * @param year
-     *            the year
      */
-    public static ActorCapacity[] getActorCapacityAsArrayByActorAndYear(Actor actor, Integer year) {
+    public static List<ActorCapacity> getActorCapacityAsArrayByActorAndYear(Actor actor, Integer year, Integer month) {
 
         ActorCapacity[] r = new ActorCapacity[12];
 
-        for (ActorCapacity actorCapacity : findActorCapacity.where().eq("deleted", false).eq("actor.id", actor.id).eq("year", year).findList()) {
-            if (actorCapacity.month >= 1 && actorCapacity.month <= 12) {
-                r[actorCapacity.month - 1] = actorCapacity;
-            }
-        }
-
-        for (int i = 0; i < r.length; i++) {
-            if (r[i] == null) {
-                ActorCapacity newActorCapacity = new ActorCapacity();
-                newActorCapacity.actor = actor;
-                newActorCapacity.month = i + 1;
-                newActorCapacity.value = 0.0;
-                newActorCapacity.year = year;
-                newActorCapacity.save();
-                r[i] = newActorCapacity;
-            }
-        }
-
-        return r;
-
+        return findActorCapacity
+                .where()
+                .eq("deleted", false)
+                .eq("actor.id", actor.id)
+                .or(
+                        Expr.and(Expr.eq("year", year), Expr.gt("month", month)),
+                        Expr.and(Expr.eq("year", year + 1), Expr.le("month", month))
+                )
+                .findList();
     }
 
     /**
@@ -742,8 +725,16 @@ public abstract class ActorDao {
      * @param year
      *            the year
      */
-    public static List<ActorCapacity> getActorCapacityAsListByOrgUnitAndYear(Long orgUnitId, Integer year) {
-        return findActorCapacity.where().eq("deleted", false).eq("actor.deleted", false).eq("actor.orgUnit.id", orgUnitId).eq("year", year).findList();
+    public static List<ActorCapacity> getActorCapacityAsListByOrgUnitAndYear(Long orgUnitId, Integer year, Integer month) {
+        return findActorCapacity.where()
+                .eq("deleted", false)
+                .eq("actor.deleted", false)
+                .eq("actor.orgUnit.id", orgUnitId)
+                .or(
+                        Expr.and(Expr.eq("year", year), Expr.gt("month", month)),
+                        Expr.and(Expr.eq("year", year + 1), Expr.le("month", month))
+                )
+                .findList();
     }
 
     /**

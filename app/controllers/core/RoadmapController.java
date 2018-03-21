@@ -45,10 +45,7 @@ import framework.services.system.ISysAdminUtils;
 import framework.utils.*;
 import models.common.ResourceAllocation;
 import models.common.ResourceAllocationDetail;
-import models.finance.PortfolioEntryResourcePlanAllocatedActor;
-import models.finance.PortfolioEntryResourcePlanAllocatedCompetency;
-import models.finance.PortfolioEntryResourcePlanAllocatedOrgUnit;
-import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
+import models.finance.*;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.governance.LifeCycleInstance;
@@ -56,6 +53,7 @@ import models.governance.LifeCyclePhase;
 import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.*;
 import models.timesheet.TimesheetActivityAllocatedActor;
+import models.timesheet.TimesheetActivityAllocatedActorDetail;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import play.Configuration;
@@ -75,6 +73,7 @@ import utils.gantt.SourceItem;
 import utils.gantt.SourceValue;
 import utils.table.PortfolioEntryListView;
 import views.html.core.roadmap.roadmap_capacity_forecast_cell_details_fragment;
+import views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
@@ -561,10 +560,10 @@ public class RoadmapController extends Controller {
 
     }
 
-    private Date getYearEndTime(Integer year) {
+    private Date getEndTime(Integer year, Integer month) {
         Calendar yearEndDay = Calendar.getInstance();
-        yearEndDay.set(Calendar.YEAR, year);
-        yearEndDay.set(Calendar.MONTH, 11);
+        yearEndDay.set(Calendar.YEAR, year + 1);
+        yearEndDay.set(Calendar.MONTH, month - 1);
         yearEndDay.set(Calendar.DAY_OF_MONTH, 31);
         yearEndDay.set(Calendar.HOUR_OF_DAY, 23);
         yearEndDay.set(Calendar.MINUTE, 59);
@@ -573,10 +572,10 @@ public class RoadmapController extends Controller {
         return yearEndDay.getTime();
     }
 
-    private Date getYearStartTime(Integer year) {
+    private Date getStartTime(Integer year, Integer month) {
         Calendar yearStartDay = Calendar.getInstance();
         yearStartDay.set(Calendar.YEAR, year);
-        yearStartDay.set(Calendar.MONTH, 0);
+        yearStartDay.set(Calendar.MONTH, month);
         yearStartDay.set(Calendar.DAY_OF_MONTH, 1);
         yearStartDay.set(Calendar.HOUR_OF_DAY, 0);
         yearStartDay.set(Calendar.MINUTE, 0);
@@ -588,7 +587,7 @@ public class RoadmapController extends Controller {
     /**
      * Get capacity table by employee
      */
-    public Result simulatorCapacityForecastTableActorsFragment(Integer year, Boolean onlyConfirmed) {
+    public Result simulatorCapacityForecastTableActorsFragment(Integer year, Integer month, Boolean onlyConfirmed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
@@ -601,8 +600,8 @@ public class RoadmapController extends Controller {
 
         List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
 
-        ids.stream().forEach(
-            id -> allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id,getYearStartTime(year), getYearEndTime(year), onlyConfirmed, null, null))
+        ids.forEach(
+            id -> allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id, getStartTime(year, month), getEndTime(year, month), onlyConfirmed, null, null))
         );
 
         // Add actor capacities group by actor
@@ -616,9 +615,9 @@ public class RoadmapController extends Controller {
                 actorCapacity = new ActorCapacity(warningLimitPercent, allocatedActor.actor);
 
                 // Add availables just once
-                models.pmo.ActorCapacity[] actorAvailables = ActorDao.getActorCapacityAsArrayByActorAndYear(allocatedActor.actor, year);
+                List<models.pmo.ActorCapacity> actorAvailables = ActorDao.getActorCapacityAsArrayByActorAndYear(allocatedActor.actor, year, month);
                 for (models.pmo.ActorCapacity available : actorAvailables) {
-                    actorCapacity.addAvailable(available.month - 1, available.value == null ? 0.0 : available.value);
+                    actorCapacity.addAvailable(getColumnIndex(month, available.month - 1), available.value == null ? 0.0 : available.value);
                 }
 
             }
@@ -629,16 +628,16 @@ public class RoadmapController extends Controller {
             }
             allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
                     .stream()
-                    .filter(detail -> detail.year.equals(year))
-                    .forEach(detail -> actorCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+                    .filter(detail -> (detail.year.equals(year) && detail.month >= month) || (detail.year.equals(year + 1) && detail.month < month))
+                    .forEach(detail -> actorCapacity.addPlanned(getColumnIndex(month, detail.month), detail.days == null ? 0.0 : detail.days));
 
             actorCapacities.put(allocatedActor.actor.id, actorCapacity);
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(actorCapacities.values().stream().sorted((a1, a2) -> a1.getActor().firstName.compareTo(a2.getActor().firstName)).collect(Collectors.toList()), year));
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(actorCapacities.values().stream().sorted(Comparator.comparing(a -> a.getActor().firstName)).collect(Collectors.toList()), year, month));
     }
 
-    public Result simulatorCapacityForecastTableOrgUnitsFragment(Integer year, Boolean onlyConfirmed) {
+    public Result simulatorCapacityForecastTableOrgUnitsFragment(Integer year, Integer month, Boolean onlyConfirmed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
@@ -651,10 +650,10 @@ public class RoadmapController extends Controller {
 
         List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
         List<PortfolioEntryResourcePlanAllocatedOrgUnit> allocatedOrgUnits = new ArrayList<>();
-        Date yearStartTime = getYearStartTime(year);
-        Date yearEndTime = getYearEndTime(year);
+        Date yearStartTime = getStartTime(year, month);
+        Date yearEndTime = getEndTime(year, month);
 
-        ids.stream().forEach(
+        ids.forEach(
                 id -> {
                     allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null, null));
                     allocatedOrgUnits.addAll(PortfolioEntryResourcePlanDAO.getPEResourcePlanAllocatedOrgUnitAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null));
@@ -685,10 +684,11 @@ public class RoadmapController extends Controller {
             if (allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails.isEmpty()) {
                 allocatedOrgUnit.computeAllocationDetails(getBudgetTrackingService().isActive(), workingDaysOnly);
             }
+
             allocatedOrgUnit.portfolioEntryResourcePlanAllocatedOrgUnitDetails
                     .stream()
-                    .filter(detail -> detail.year.equals(year))
-                    .forEach(detail -> orgUnitCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+                    .filter(detail -> (detail.year.equals(year) && detail.month >= month) || (detail.year.equals(year + 1) && detail.month < month))
+                    .forEach(detail -> orgUnitCapacity.addPlanned(getColumnIndex(month, detail.month), detail.days == null ? 0.0 : detail.days));
 
             orgUnitCapacities.put(allocatedOrgUnit.orgUnit.id, orgUnitCapacity);
         }
@@ -709,10 +709,11 @@ public class RoadmapController extends Controller {
                 if (allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails.isEmpty()) {
                     allocatedActor.computeAllocationDetails(getBudgetTrackingService().isActive(), workingDaysOnly);
                 }
+
                 allocatedActor.portfolioEntryResourcePlanAllocatedActorDetails
                         .stream()
-                        .filter(detail -> detail.year.equals(year))
-                        .forEach(detail -> orgUnitCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+                        .filter(detail -> (detail.year.equals(year) && detail.month >= month) || (detail.year.equals(year + 1) && detail.month < month))
+                        .forEach(detail -> orgUnitCapacity.addPlanned(getColumnIndex(month, detail.month), detail.days == null ? 0.0 : detail.days));
 
                 orgUnitCapacities.put(allocatedActor.actor.orgUnit.id, orgUnitCapacity);
             }
@@ -738,22 +739,22 @@ public class RoadmapController extends Controller {
                 }
                 allocatedActivity.timesheetActivityAllocatedActorDetails
                         .stream()
-                        .filter(detail -> detail.year.equals(year))
-                        .forEach(detail -> orgUnitCapacity.addPlanned(detail.month, detail.days == null ? 0.0 : detail.days));
+                        .filter(detail -> (detail.year.equals(year) && detail.month >= month) || (detail.year.equals(year + 1) && detail.month < month))
+                        .forEach(detail -> orgUnitCapacity.addPlanned(getColumnIndex(month, detail.month), detail.days == null ? 0.0 : detail.days));
 
                 orgUnitCapacities.put(allocatedActivity.actor.orgUnit.id, orgUnitCapacity);
             }
 
             // Get the available actor capacities.
-            List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByOrgUnitAndYear(orgUnitCapacity.getOrgUnit().id, year);
+            List<models.pmo.ActorCapacity> actorCapacities = ActorDao.getActorCapacityAsListByOrgUnitAndYear(orgUnitCapacity.getOrgUnit().id, year, month);
 
             // Compute the available actor capacities.
             for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
-                orgUnitCapacity.addAvailable(actorCapacity.month - 1, actorCapacity.value);
+                orgUnitCapacity.addAvailable(getColumnIndex(month, actorCapacity.month - 1), actorCapacity.value);
             }
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_orgunits_fragment.render(
+        return ok(roadmap_capacity_forecast_table_orgunits_fragment.render(
                 orgUnitCapacities
                         .values()
                         .stream()
@@ -765,10 +766,11 @@ public class RoadmapController extends Controller {
                         })
                         .collect(Collectors.toList())
                 , year
+                , month
         ));
     }
 
-    public Result simulatorCapacityForecastTableCompetenciesFragment(Integer year, Boolean onlyConfirmed) {
+    public Result simulatorCapacityForecastTableCompetenciesFragment(Integer year, Integer month, Boolean onlyConfirmed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
@@ -781,10 +783,10 @@ public class RoadmapController extends Controller {
 
         List<PortfolioEntryResourcePlanAllocatedActor> allocatedActors = new ArrayList<>();
         List<PortfolioEntryResourcePlanAllocatedCompetency> allocatedCompetencies = new ArrayList<>();
-        Date yearStartTime = getYearStartTime(year);
-        Date yearEndTime = getYearEndTime(year);
+        Date yearStartTime = getStartTime(year, month);
+        Date yearEndTime = getEndTime(year, month);
 
-        ids.stream().forEach(
+        ids.forEach(
                 id -> {
                     allocatedActors.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedActorAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null, null));
                     allocatedCompetencies.addAll(PortfolioEntryResourcePlanDAO.getPEPlanAllocatedCompetencyAsListByPE(id, yearStartTime, yearEndTime, onlyConfirmed, null));
@@ -810,7 +812,7 @@ public class RoadmapController extends Controller {
                 competencyCapacities.put(allocatedCompetency.competency.id, competencyCapacity);
             }
 
-            computeCapacity(allocatedCompetency.startDate, allocatedCompetency.endDate, allocatedCompetency.days, year,
+            computeCapacity(allocatedCompetency.startDate, allocatedCompetency.endDate, allocatedCompetency.days, year, month,
                     competencyCapacity);
         }
 
@@ -829,7 +831,7 @@ public class RoadmapController extends Controller {
                 }
 
                 computeCapacity(allocatedActor.startDate, allocatedActor.endDate, getAllocatedDays(allocatedActor.days, allocatedActor.forecastDays),
-                        year, competencyCapacity);
+                        year, month, competencyCapacity);
 
             }
         }
@@ -844,7 +846,7 @@ public class RoadmapController extends Controller {
 
             // Compute the activity allocations.
             for (TimesheetActivityAllocatedActor allocatedActivity : allocatedActivities) {
-                computeCapacity(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, year, competencyCapacity);
+                computeCapacity(allocatedActivity.startDate, allocatedActivity.endDate, allocatedActivity.days, year, month, competencyCapacity);
             }
 
             // Get the available actor capacities.
@@ -852,11 +854,11 @@ public class RoadmapController extends Controller {
 
             // Compute the available actor capacities.
             for (models.pmo.ActorCapacity actorCapacity : actorCapacities) {
-                competencyCapacity.addAvailable(actorCapacity.month - 1, actorCapacity.value);
+                competencyCapacity.addAvailable(getColumnIndex(month, actorCapacity.month - 1), actorCapacity.value);
             }
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_competencies_fragment.render(new ArrayList<>(competencyCapacities.values()), year));
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_competencies_fragment.render(new ArrayList<>(competencyCapacities.values()), year, month));
     }
 
     /**
@@ -1145,6 +1147,7 @@ public class RoadmapController extends Controller {
                     orgUnit,
                     competency,
                     new SimpleDateFormat("MMMM").format(cal.getTime()),
+                    year,
                     new ArrayList<>(capacityDetailsRows.values()),
                     new ArrayList<>(capacityDetailsByInitiativeRows.values()),
                     resourceBarChart,
@@ -1314,7 +1317,7 @@ public class RoadmapController extends Controller {
      * @param resourceRequestCapacity
      *            the resrouce request capacity
      */
-    private static void computeCapacity(Date startDate, Date endDate, BigDecimal allocatedDays, Integer year,
+    private static void computeCapacity(Date startDate, Date endDate, BigDecimal allocatedDays, Integer year, Integer month,
             ResourceRequestCapacity resourceRequestCapacity) {
 
         // compute the day rate
@@ -1325,11 +1328,25 @@ public class RoadmapController extends Controller {
 
         Calendar start = removeTime(startDate);
         for (int i = 0; i < days; i++) {
-            if (year.intValue() == start.get(Calendar.YEAR)) {
-                resourceRequestCapacity.addPlanned(start.get(Calendar.MONTH), dayRate);
+            if (year == start.get(Calendar.YEAR)) {
+                resourceRequestCapacity.addPlanned(getColumnIndex(month, start.get(Calendar.MONTH)), dayRate);
             }
             start.add(Calendar.DAY_OF_MONTH, 1);
         }
+    }
+
+    public static Integer getColumnIndex(Integer startMonth, Integer currentMonth) {
+        Integer columnIndex = currentMonth - startMonth;
+
+        if (columnIndex > 11) {
+            columnIndex -= 12;
+        }
+
+        if (columnIndex < 0) {
+            columnIndex += 12;
+        }
+
+        return columnIndex;
     }
 
     /**
@@ -1457,7 +1474,7 @@ public class RoadmapController extends Controller {
      */
     public abstract static class ResourceRequestCapacity {
 
-        private Map<Integer, ResourceCapacityMonth> resourceCapacityMonths;
+        private Map<Integer, ResourceCapacityMonth> resourceCapacityColumns;
 
         /**
          * Default constructor.
@@ -1467,43 +1484,43 @@ public class RoadmapController extends Controller {
          */
         public ResourceRequestCapacity(int warningLimitPercent) {
 
-            this.resourceCapacityMonths = new HashMap<>();
+            this.resourceCapacityColumns = new HashMap<>();
             for (int i = 0; i < 12; i++) {
-                this.resourceCapacityMonths.put(i, new ResourceCapacityMonth(warningLimitPercent));
+                this.resourceCapacityColumns.put(i, new ResourceCapacityMonth(warningLimitPercent));
             }
         }
 
         /**
-         * @return the resourceCapacityMonths
+         * @return the resourceCapacityColumns
          */
-        public Map<Integer, ResourceCapacityMonth> getResourceCapacityMonths() {
-            return resourceCapacityMonths;
+        public Map<Integer, ResourceCapacityMonth> getResourceCapacityColumns() {
+            return resourceCapacityColumns;
         }
 
         /**
-         * Increase the planned value for a month.
+         * Increase the planned value for a column.
          * 
-         * @param month
-         *            the month
+         * @param column
+         *            the column
          * @param planned
          *            the planned value to add
          */
-        public void addPlanned(int month, double planned) {
-            this.resourceCapacityMonths.get(month).addPlanned(planned);
+        public void addPlanned(int column, double planned) {
+            this.resourceCapacityColumns.get(column).addPlanned(planned);
         }
 
 
 
         /**
-         * increase the available value for a month.
+         * increase the available value for a column.
          * 
-         * @param month
-         *            the month
+         * @param column
+         *            the column
          * @param available
          *            the available value to add
          */
-        public void addAvailable(int month, double available) {
-            this.resourceCapacityMonths.get(month).addAvailable(available);
+        public void addAvailable(int column, double available) {
+            this.resourceCapacityColumns.get(column).addAvailable(available);
         }
     }
 
@@ -1947,7 +1964,7 @@ public class RoadmapController extends Controller {
     /**
      * Get the i18n messages service.
      */
-    private II18nMessagesPlugin getI18nMessagesPlugin() {
+    II18nMessagesPlugin getI18nMessagesPlugin() {
         return i18nMessagesPlugin;
     }
 
