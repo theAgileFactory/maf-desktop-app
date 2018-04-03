@@ -93,18 +93,18 @@ public class RequirementListView {
                             SortStatusType.UNSORTED);
 
                     ISelectableValueHolderCollection<Long> status = RequirementDAO.getRequirementStatusAsVH();
-                    if (status != null && status.getValues().size() > 0) {
+                    if (status.getValues().size() > 0) {
                         addColumnConfiguration("requirementStatus", "requirementStatus.id", "object.requirement.status.label",
-                                new SelectFilterComponent(status.getValues().iterator().next().getValue(), status), true, false, SortStatusType.NONE);
+                                new SelectFilterComponent(status.getValues().iterator().next().getValue(), status, new String[]{"requirementStatus.name"}), true, false, SortStatusType.NONE);
                     } else {
                         addColumnConfiguration("requirementStatus", "requirementStatus.id", "object.requirement.status.label", new NoneFilterComponent(),
                                 true, false, SortStatusType.NONE);
                     }
 
                     ISelectableValueHolderCollection<Long> priorities = RequirementDAO.getRequirementPriorityAsVH();
-                    if (priorities != null && priorities.getValues().size() > 0) {
+                    if (priorities.getValues().size() > 0) {
                         addColumnConfiguration("requirementPriority", "requirementPriority.id", "object.requirement.priority.label",
-                                new SelectFilterComponent(priorities.getValues().iterator().next().getValue(), priorities), false, false,
+                                new SelectFilterComponent(priorities.getValues().iterator().next().getValue(), priorities, new String[]{"requirementPriority.name"}), false, false,
                                 SortStatusType.NONE);
                     } else {
                         addColumnConfiguration("requirementPriority", "requirementPriority.id", "object.requirement.priority.label",
@@ -112,9 +112,9 @@ public class RequirementListView {
                     }
 
                     ISelectableValueHolderCollection<Long> severities = RequirementDAO.getRequirementSeverityAsVH();
-                    if (severities != null && severities.getValues().size() > 0) {
+                    if (severities.getValues().size() > 0) {
                         addColumnConfiguration("requirementSeverity", "requirementSeverity.id", "object.requirement.severity.label",
-                                new SelectFilterComponent(severities.getValues().iterator().next().getValue(), severities), false, false,
+                                new SelectFilterComponent(severities.getValues().iterator().next().getValue(), severities, new String[]{"requirementSeverity.name"}), false, false,
                                 SortStatusType.NONE);
                     } else {
                         addColumnConfiguration("requirementSeverity", "requirementSeverity.id", "object.requirement.severity.label",
