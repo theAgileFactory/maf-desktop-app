@@ -704,8 +704,6 @@ public abstract class ActorDao {
      */
     public static List<ActorCapacity> getActorCapacityAsArrayByActorAndYear(Actor actor, Integer year, Integer month) {
 
-        ActorCapacity[] r = new ActorCapacity[12];
-
         return findActorCapacity
                 .where()
                 .eq("deleted", false)

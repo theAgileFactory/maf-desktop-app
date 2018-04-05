@@ -90,7 +90,7 @@ public class ActorCapacityFormData {
         this.id = actor.id;
         this.year = year;
 
-        ActorCapacity[] capacities = (ActorCapacity[]) ActorDao.getActorCapacityAsArrayByActorAndYear(actor, year, 0).toArray();
+        ActorCapacity[] capacities = ActorDao.getActorCapacityAsArrayByActorAndYear(actor, year, 0).toArray(new ActorCapacity[0]);
 
         this.januaryValue = capacities[0].value;
         this.februaryValue = capacities[1].value;
@@ -112,7 +112,7 @@ public class ActorCapacityFormData {
      */
     public ActorCapacity[] getFilledCapacities() {
         Actor actor = ActorDao.getActorById(this.id);
-        ActorCapacity[] capacities = (ActorCapacity[]) ActorDao.getActorCapacityAsArrayByActorAndYear(actor, this.year, 0).toArray();
+        ActorCapacity[] capacities = ActorDao.getActorCapacityAsArrayByActorAndYear(actor, this.year, 0).toArray(new ActorCapacity[0]);
         capacities[0].value = this.januaryValue;
         capacities[1].value = this.februaryValue;
         capacities[2].value = this.marchValue;
