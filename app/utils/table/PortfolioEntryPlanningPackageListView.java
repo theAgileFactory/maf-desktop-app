@@ -108,7 +108,7 @@ public class PortfolioEntryPlanningPackageListView {
                     ISelectableValueHolderCollection<String> status = PortfolioEntryPlanningController.getPackageStatusAsValueHolderCollection();
                     if (status != null && status.getValues().size() > 0) {
                         addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label",
-                                new SelectFilterComponent(status.getValues().iterator().next().getValue(), status), true, false, SortStatusType.UNSORTED);
+                                new SelectFilterComponent(status.getValues().iterator().next().getValue(), status), true, false, SortStatusType.NONE);
                     } else {
                         addColumnConfiguration("status", "status", "object.portfolio_entry_planning_package.status.label", new NoneFilterComponent(), true,
                                 false, SortStatusType.NONE);
@@ -166,7 +166,7 @@ public class PortfolioEntryPlanningPackageListView {
                     });
 
                     addColumn("status", "status", "object.portfolio_entry_planning_package.status.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("status", new ObjectFormatter<PortfolioEntryPlanningPackageListView>());
+                    setJavaColumnFormatter("status", new ObjectFormatter<>());
 
                     addColumn("allocatedResourcesDays", "allocatedResourcesDays", "object.portfolio_entry_planning_package.allocated_resources_days.label",
                             Table.ColumnDef.SorterType.NONE);
@@ -180,37 +180,24 @@ public class PortfolioEntryPlanningPackageListView {
 
                     addColumn("editActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("editActionLink", new StringFormatFormatter<PortfolioEntryPlanningPackageListView>(IMafConstants.EDIT_URL_FORMAT,
-                            new StringFormatFormatter.Hook<PortfolioEntryPlanningPackageListView>() {
-                        @Override
-                        public String convert(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView) {
-                            return controllers.core.routes.PortfolioEntryPlanningController
-                                    .managePackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
-                        }
-                    }));
+                            portfolioEntryPlanningPackageListView -> controllers.core.routes.PortfolioEntryPlanningController
+                                    .managePackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url()));
                     setColumnCssClass("editActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("editActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
                     addColumn("deleteActionLink", "id", "", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("deleteActionLink", new IColumnFormatter<PortfolioEntryPlanningPackageListView>() {
-                        @Override
-                        public String apply(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView, Object value) {
-                            String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
-                                    Msg.get("default.delete.confirmation.message"));
-                            String url = controllers.core.routes.PortfolioEntryPlanningController
-                                    .deletePackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
-                            return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
-                        }
+                    setJavaColumnFormatter("deleteActionLink", (portfolioEntryPlanningPackageListView, value) -> {
+                        String deleteConfirmationMessage = MessageFormat.format(IMafConstants.DELETE_URL_FORMAT_WITH_CONFIRMATION,
+                                Msg.get("default.delete.confirmation.message"));
+                        String url = controllers.core.routes.PortfolioEntryPlanningController
+                                .deletePackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
+                        return views.html.framework_views.parts.formats.display_with_format.render(url, deleteConfirmationMessage).body();
                     });
                     setColumnCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_COLUMN_1);
                     setColumnValueCssClass("deleteActionLink", IMafConstants.BOOTSTRAP_TEXT_ALIGN_RIGHT + " rowlink-skip");
 
-                    this.setLineAction(new IColumnFormatter<PortfolioEntryPlanningPackageListView>() {
-                        @Override
-                        public String apply(PortfolioEntryPlanningPackageListView portfolioEntryPlanningPackageListView, Object value) {
-                            return controllers.core.routes.PortfolioEntryPlanningController
-                                    .viewPackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url();
-                        }
-                    });
+                    this.setLineAction((portfolioEntryPlanningPackageListView, value) -> controllers.core.routes.PortfolioEntryPlanningController
+                            .viewPackage(portfolioEntryPlanningPackageListView.portfolioEntryId, portfolioEntryPlanningPackageListView.id).url());
 
                     setEmptyMessageKey("object.portfolio_entry_planning_package.table.empty");
 
