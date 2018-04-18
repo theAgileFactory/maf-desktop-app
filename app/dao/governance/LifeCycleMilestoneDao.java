@@ -348,8 +348,11 @@ public abstract class LifeCycleMilestoneDao {
              * current one
              */
             PortfolioEntry portfolioEntry = lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry;
-            if (portfolioEntry.lastApprovedLifeCycleMilestoneInstance == null
-                    || !portfolioEntry.lastApprovedLifeCycleMilestoneInstance.passedDate.after(lifeCycleMilestoneInstance.passedDate)) {
+            if (
+                portfolioEntry.lastApprovedLifeCycleMilestoneInstance == null
+                || portfolioEntry.lastApprovedLifeCycleMilestoneInstance.deleted
+                || !portfolioEntry.lastApprovedLifeCycleMilestoneInstance.passedDate.after(lifeCycleMilestoneInstance.passedDate)
+            ) {
                 portfolioEntry.lastApprovedLifeCycleMilestoneInstance = lifeCycleMilestoneInstance;
             }
 
