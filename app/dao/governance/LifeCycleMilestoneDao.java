@@ -392,13 +392,23 @@ public abstract class LifeCycleMilestoneDao {
 
         // get the last planned dates
         Map<Long, Date> lastDates = new HashMap<>();
-        for (PlannedLifeCycleMilestoneInstance lastDate : LifeCyclePlanningDao
-                .getPlannedLCMilestoneInstanceLastAsListByPE(lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.id)) {
+        List<PlannedLifeCycleMilestoneInstance> plannedMilestones = LifeCyclePlanningDao
+                .getPlannedLCMilestoneInstanceLastAsListByPE(lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.id);
+
+        for (PlannedLifeCycleMilestoneInstance lastDate : plannedMilestones) {
             lastDates.put(lastDate.lifeCycleMilestone.id, lastDate.plannedDate);
         }
 
         // add the new plannings
-        for (LifeCycleMilestone milestone : lifeCycleMilestoneInstance.lifeCycleInstance.lifeCycleProcess.lifeCycleMilestones) {
+        List<LifeCycleMilestone> milestones = lifeCycleMilestoneInstance.lifeCycleInstance.lifeCycleProcess.lifeCycleMilestones;
+        milestones.addAll(
+                plannedMilestones.stream()
+                        .map(plannedMilestone -> plannedMilestone.lifeCycleMilestone)
+                        .filter(milestone -> milestone.isAdditional)
+                        .collect(Collectors.toList())
+        );
+
+        for (LifeCycleMilestone milestone : milestones) {
 
             /**
              * Check if the milestone for the portfolio entry has an approved
@@ -409,7 +419,8 @@ public abstract class LifeCycleMilestoneDao {
                     .eq("lifeCycleMilestone.id", milestone.id)
                     .eq("isPassed", true)
                     .eq("lifeCycleInstance.portfolioEntry.id", lifeCycleMilestoneInstance.lifeCycleInstance.portfolioEntry.id)
-                    .eq("lifeCycleInstance.isActive", true).eq("lifeCycleMilestoneInstanceStatusType.isApproved", true).findRowCount() > 0;
+                    .eq("lifeCycleInstance.isActive", true)
+                    .eq("lifeCycleMilestoneInstanceStatusType.isApproved", true).findRowCount() > 0;
 
             if (!hasApprovedInstancesForMilestoneOfPortfolioEntry) {
                 PlannedLifeCycleMilestoneInstance plannedInstance = new PlannedLifeCycleMilestoneInstance(planning, milestone);
