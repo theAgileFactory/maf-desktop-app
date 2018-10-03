@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2018-10-03T15:46:58 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TS_standard" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ApplicationResources" uuid="34b14096-aa36-406f-a8c2-f33934dae5fc">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="compenswiss.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -250,7 +251,7 @@ ORDER BY
 		<band height="27">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="100" height="27" uuid="55374d2c-d2c5-4948-baf1-e467cca979b1">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="27" uuid="55374d2c-d2c5-4948-baf1-e467cca979b1">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -263,7 +264,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{first_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="100" y="0" width="100" height="27" uuid="99f070bf-840c-41a5-b110-53b3f23c5e76">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="100" y="0" width="100" height="27" uuid="99f070bf-840c-41a5-b110-53b3f23c5e76">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -276,7 +277,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{last_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="200" y="0" width="100" height="27" uuid="8ab2a212-1c72-4340-b03c-ad79ae08aba3">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="200" y="0" width="100" height="27" uuid="8ab2a212-1c72-4340-b03c-ad79ae08aba3">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -289,7 +290,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{org_unit_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="500" y="0" width="55" height="27" uuid="27115aef-fee5-4819-bb73-2b4bf82a4882">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="27" uuid="27115aef-fee5-4819-bb73-2b4bf82a4882">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -303,7 +304,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="300" y="0" width="100" height="27" uuid="4d23d986-06dd-42ea-9893-e3b51f0f32f0">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="300" y="0" width="100" height="27" uuid="4d23d986-06dd-42ea-9893-e3b51f0f32f0">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -319,7 +320,7 @@ ORDER BY
 )]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="row" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="400" y="0" width="100" height="27" uuid="5f7d83a2-8761-4e2c-8f16-027adf3d797c">
+				<reportElement style="row" stretchType="RelativeToBandHeight" x="400" y="0" width="100" height="27" uuid="5f7d83a2-8761-4e2c-8f16-027adf3d797c">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
