@@ -1,228 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-10-05T14:28:14 -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheet_period_main" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="ApplicationResources" uuid="29f08652-1b12-42c0-baba-f81392540a08">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="conf\jasper\CompenswissDS.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="compenswiss.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.1" value="columnHeader"/>
-	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.1" value="columnHeader"/>
-	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
-	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.wrap.text" value="false"/>
+	<property name="net.sf.jasperreports.page.break.no.pagination" value="apply"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.all" value="Data/Footnotes"/>
+	<property name="net.sf.jasperreports.export.xls.freeze.row" value="3"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.exports.xls.font.size.fix.enabled" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.TS_grouped.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.TS_grouped.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.2" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.TS_grouped.2" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.TS_grouped.2" value="groupHeader"/>
 	<template><![CDATA["styles.jrtx"]]></template>
 	<parameter name="lang" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.getLanguage()]]></defaultValueExpression>
 	</parameter>
-	<parameter name="format" class="java.lang.String" isForPrompting="false">
+	<parameter name="format" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["PDF"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="REPORT_TIMESHEET_PERIOD_START_DATE" class="java.util.Date" isForPrompting="false">
+	<parameter name="REPORT_TIMESHEET_PERIOD_START_DATE" class="java.util.Date">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2015,01,01)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="REPORT_TIMESHEET_PERIOD_END_DATE" class="java.util.Date" isForPrompting="false">
+	<parameter name="REPORT_TIMESHEET_PERIOD_END_DATE" class="java.util.Date">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2016,12,31)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="GROUP_BY_MONTH" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT
-	a.first_name AS first_name,
-	a.last_name AS last_name,
-	ou.name AS org_unit_name,	
-	pe.governance_id AS governance_id,
-	pe.name AS portfolio_entry_name,
-	pepp.name AS planning_package_name,
-	IF(tar.id, IFNULL(i18n_tar.value, ''), null) AS activity_type_name,
-	IF(ta.id, IFNULL(i18n_ta.value, ''), null) AS activity_name,
-	SUM(tl.hours) AS hours
-	
-FROM timesheet_log tl
-	JOIN timesheet_entry te ON tl.timesheet_entry_id = te.id AND te.deleted = 0
-	JOIN timesheet_report tr ON te.timesheet_report_id = tr.id AND tr.deleted = 0
-	JOIN actor a ON tr.actor_id = a.id AND a.deleted = 0
-	LEFT OUTER JOIN org_unit ou ON a.org_unit_id = ou.id AND ou.deleted = 0
-	LEFT OUTER JOIN portfolio_entry pe ON te.portfolio_entry_id = pe.id AND pe.deleted = 0
-	LEFT OUTER JOIN portfolio_entry_planning_package pepp ON te.portfolio_entry_planning_package_id = pepp.id AND pepp.deleted = 0
-	LEFT OUTER JOIN timesheet_activity ta ON te.timesheet_activity_id = ta.id AND ta.deleted = 0
-	LEFT OUTER JOIN i18n_messages i18n_ta ON ta.name = i18n_ta.key AND i18n_ta.language = $P{lang}
-	LEFT OUTER JOIN timesheet_activity_type tar ON ta.timesheet_activity_type_id = tar.id AND tar.deleted = 0
-	LEFT OUTER JOIN i18n_messages i18n_tar ON tar.name = i18n_tar.key AND i18n_tar.language = $P{lang}
-
-WHERE
-	tl.deleted = 0 AND tl.log_date >= $P{REPORT_TIMESHEET_PERIOD_START_DATE} AND tl.log_date <= $P{REPORT_TIMESHEET_PERIOD_END_DATE} AND 
-	(tr.status = "APPROVED" OR tr.status = "LOCKED")
-
-GROUP BY 
-	a.id, pe.id, pepp.id, tar.id, ta.id]]>
+		<![CDATA[select 1 from dual]]>
 	</queryString>
-	<field name="first_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="last_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="org_unit_name" class="java.lang.String"/>
-	<field name="governance_id" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="portfolio_entry_name" class="java.lang.String"/>
-	<field name="planning_package_name" class="java.lang.String"/>
-	<field name="activity_type_name" class="java.lang.String"/>
-	<field name="activity_name" class="java.lang.String"/>
-	<field name="hours" class="java.math.BigDecimal"/>
 	<title>
-		<band height="65" splitType="Stretch">
-			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $P{format}.equals("EXCEL")]]></printWhenExpression>
+		<band height="60">
 			<textField>
-				<reportElement style="title" x="0" y="0" width="555" height="60" uuid="69977483-006d-4bde-8592-e9df68e22ac6"/>
+				<reportElement style="title" x="0" y="0" width="555" height="60" uuid="40b9ada0-cc7e-4d68-a859-764205dfa78b"/>
 				<textFieldExpression><![CDATA[msg(str("title"),DATEFORMAT($P{REPORT_TIMESHEET_PERIOD_START_DATE},"dd/MM/yyyy"),DATEFORMAT($P{REPORT_TIMESHEET_PERIOD_END_DATE},"dd/MM/yyyy"))]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
-	<columnHeader>
-		<band height="22" splitType="Stretch">
-			<printWhenExpression><![CDATA[$P{format}.equals("PDF") || $V{PAGE_NUMBER}.equals(1)]]></printWhenExpression>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="20" uuid="ace6e462-3aae-4960-ba55-6f756e281977">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[str("label.first_name")]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="100" y="0" width="100" height="20" uuid="dd0083be-70c1-4041-9cdd-4ab71112803d">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[str("label.last_name")]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="200" y="0" width="100" height="20" uuid="7795263d-ad2b-4092-8148-1a7b44317ff9">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[str("label.org_unit")]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="300" y="0" width="100" height="20" uuid="7b10fab4-ed75-453c-81ae-0730c4efd386">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[str("label.concern")]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="400" y="0" width="100" height="20" uuid="b120eaf0-66c2-45c5-8e3d-a65e74764183">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[str("label.task")]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row-header" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="c15fb14d-8579-4d11-b502-52941e0b0665">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[str("label.hours")]]></textFieldExpression>
-			</textField>
-		</band>
-	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="20" uuid="7a34f1cf-3166-4df3-b49d-9c1010e4dbff">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="30" uuid="192af54e-7130-4828-8234-2350702e8c0e">
+					<printWhenExpression><![CDATA[!$P{GROUP_BY_MONTH}]]></printWhenExpression>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{first_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="100" y="0" width="100" height="20" uuid="86fad3a0-3a65-472e-80f4-82255cd3486f">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<subreportParameter name="lang">
+					<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="format">
+					<subreportParameterExpression><![CDATA[$P{format}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TIMESHEET_PERIOD_START_DATE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TIMESHEET_PERIOD_START_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TIMESHEET_PERIOD_END_DATE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TIMESHEET_PERIOD_END_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["TS_standard.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="30" uuid="5c896427-0899-42e5-ac4b-b4b5b88fea11">
+					<printWhenExpression><![CDATA[$P{GROUP_BY_MONTH}]]></printWhenExpression>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{last_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="200" y="0" width="100" height="20" uuid="675583d4-2cdf-497d-89c6-ca20a39a992e">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[$F{org_unit_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="500" y="0" width="55" height="20" uuid="9240b613-391b-4dcd-95eb-3ab4a3ed8635">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="300" y="0" width="100" height="20" uuid="875a6e30-c22a-4fae-96c9-24b0d81e8ac5">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[IF($F{portfolio_entry_name} != null,
-	IF($F{governance_id} != null && !$F{governance_id}.equals(""), $F{governance_id} + " - ", "")+ $F{portfolio_entry_name},
-	$F{activity_type_name}
-)]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement style="row" stretchType="RelativeToBandHeight" x="400" y="0" width="100" height="20" uuid="b4272d9d-f299-446d-bbc5-9301a5cab54b">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[IF($F{planning_package_name} != null,$F{planning_package_name},$F{activity_name})]]></textFieldExpression>
-			</textField>
+				<subreportParameter name="lang">
+					<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="format">
+					<subreportParameterExpression><![CDATA[$P{format}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TIMESHEET_PERIOD_START_DATE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TIMESHEET_PERIOD_START_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TIMESHEET_PERIOD_END_DATE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TIMESHEET_PERIOD_END_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["TS_grouped.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<pageFooter>
