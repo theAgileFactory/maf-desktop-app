@@ -17,47 +17,44 @@
  */
 package services.kpi;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import dao.pmo.PortfolioEntryDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.services.kpi.IKpiRunner;
 import framework.services.kpi.Kpi;
 import framework.services.script.IScriptService;
 import models.framework_models.kpi.KpiData;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Actuals KPI computation class.
  * 
  * @author Pierre-Yves Cloux
  */
-public class PortfolioEntryActualsKpi implements IKpiRunner {
+public class PortfolioEntryActualsInternalExternalKpi implements IKpiRunner {
 
     @Override
     public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        Double entryEngagedCapex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, false);
-        Double entryEngagedOpex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, true);
-        BigDecimal engaged = (new BigDecimal(entryEngagedCapex + entryEngagedOpex)).setScale(2, RoundingMode.HALF_UP);;
+        Double entryEngagedInternal = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, null, true);
+        Double entryEngagedExternal = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, null, false);
+        BigDecimal engaged = (new BigDecimal(entryEngagedInternal + entryEngagedExternal)).setScale(2, RoundingMode.HALF_UP);;
         return engaged;
     }
 
     @Override
     public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        Double entryEngagedCapex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, false);
-        BigDecimal engagedCapex = (new BigDecimal(entryEngagedCapex)).setScale(2, RoundingMode.HALF_UP);
-        return engagedCapex;
+        Double entryEngagedInternal = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, null, true);
+        return (new BigDecimal(entryEngagedInternal)).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
     public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        Double entryEngagedOpex = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, true);
-        BigDecimal engagedOpex = (new BigDecimal(entryEngagedOpex)).setScale(2, RoundingMode.HALF_UP);
-        return engagedOpex;
+        Double entryEngagedExternal = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, null, false);
+        return (new BigDecimal(entryEngagedExternal)).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override

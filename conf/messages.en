@@ -609,17 +609,33 @@ kpi.pe_allocation_progress.main.name=Allocations progress
 kpi.pe_allocation_progress.additional1.name=Effective
 kpi.pe_allocation_progress.additional2.name=Forecast
 
-kpi.pe_actuals.main.name=Actuals
+kpi.pe_actuals.main.name=Actuals (CAPEX/OPEX)
 kpi.pe_actuals.additional1.name=CAPEX
 kpi.pe_actuals.additional2.name=OPEX
 
-kpi.pe_budget.main.name=Budget
+kpi.pe_budget.main.name=Budget (CAPEX/OPEX)
 kpi.pe_budget.additional1.name=CAPEX
 kpi.pe_budget.additional2.name=OPEX
 
 kpi.pe_forecast.main.name=Forecast
 kpi.pe_forecast.additional1.name=CAPEX
 kpi.pe_forecast.additional2.name=OPEX
+
+kpi.pe_actuals_internal.main.name=Actuals (Int/Ext)
+kpi.pe_actuals_internal.additional1.name=Internal
+kpi.pe_actuals_internal.additional2.name=External
+
+kpi.pe_budget_internal.main.name=Budget (Int/Ext)
+kpi.pe_budget_internal.additional1.name=Internal
+kpi.pe_budget_internal.additional2.name=External
+
+kpi.pe_deviation_internal.main.name=Internal Deviation
+kpi.pe_deviation_internal.additional1.name=Budget
+kpi.pe_deviation_internal.additional2.name=Forecast
+
+kpi.pe_deviation_external.main.name=External Deviation
+kpi.pe_deviation_external.additional1.name=Budget
+kpi.pe_deviation_external.additional2.name=Forecast
 
 #----------------------
 # standard reports
