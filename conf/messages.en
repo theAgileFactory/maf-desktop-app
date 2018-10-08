@@ -621,11 +621,11 @@ kpi.pe_forecast.main.name=Forecast
 kpi.pe_forecast.additional1.name=CAPEX
 kpi.pe_forecast.additional2.name=OPEX
 
-kpi.pe_actuals_internal.main.name=Actuals (Int/Ext)
+kpi.pe_actuals_internal.main.name=Actuals
 kpi.pe_actuals_internal.additional1.name=Internal
 kpi.pe_actuals_internal.additional2.name=External
 
-kpi.pe_budget_internal.main.name=Budget (Int/Ext)
+kpi.pe_budget_internal.main.name=Budget
 kpi.pe_budget_internal.additional1.name=Internal
 kpi.pe_budget_internal.additional2.name=External
 
