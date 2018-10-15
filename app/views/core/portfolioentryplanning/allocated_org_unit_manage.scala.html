@@ -37,8 +37,6 @@
     dao.finance.PortfolioEntryResourcePlanDAO.getAllocationStatusByName(allocatedOrgUnitForm("allocationStatus").value)
 }
 
-@lastStatusTypeUpdateActor=@{dao.pmo.ActorDao.getActorById(java.lang.Long.valueOf(allocatedOrgUnitForm("lastStatusTypeUpdateActor").value))}
-
 @breadcrump=@{
     Seq(
         (display_portfolio_entry(portfolioEntry, false).toString, controllers.core.routes.PortfolioEntryController.overview(portfolioEntry.id).url),
@@ -78,10 +76,12 @@
                             <label class="control-label">@parts.Msg("object.allocated_resource.portfolio_entry_resource_plan_allocation_status_type.label")</label>
                             <input type="hidden" name="allocationStatus" value="@allocatedOrgUnitForm("allocationStatus").value" />
                             @display_allocation_status(allocationStatus)
-                            @if(lastStatusTypeUpdateActor != null) {
-                                <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label")&nbsp;@display_actor(lastStatusTypeUpdateActor)&nbsp;(@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value)</span>
-                                <input type="hidden" name="lastStatusTypeUpdateActor" value="@allocatedOrgUnitForm("lastStatusTypeUpdateActor").value" />
-                                <input type="hidden" name="lastStatusTypeUpdateTime" value="@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value" />
+                            @defining(allocatedOrgUnitForm("lastStatusTypeUpdateActor").value) { lastStatusTypeUpdateActor =>
+                                @if(lastStatusTypeUpdateActor != null) {
+                                    <span class="help-block">@parts.Msg("core.portfolio_entry_planning.resources.allocation.status.last_update.label") &nbsp;@display_actor(dao.pmo.ActorDao.getActorById(java.lang.Long.valueOf(allocatedOrgUnitForm("lastStatusTypeUpdateActor").value)))&nbsp;(@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value)</span>
+                                    <input type="hidden" name="lastStatusTypeUpdateActor" value="@allocatedOrgUnitForm("lastStatusTypeUpdateActor").value" />
+                                    <input type="hidden" name="lastStatusTypeUpdateTime" value="@allocatedOrgUnitForm("lastStatusTypeUpdateTime").value" />
+                                }
                             }
                         </div>
 

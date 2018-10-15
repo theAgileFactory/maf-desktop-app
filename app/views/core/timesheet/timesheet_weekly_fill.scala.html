@@ -243,7 +243,7 @@
         var portfolioEntries = new Array();
         var portfolioEntriesSource = new Array();
         @for(portfolioEntry <- portfolioEntries) {
-            var fullName = "@if(portfolioEntry.governanceId != null && !portfolioEntry.governanceId.isEmpty) {@Html(portfolioEntry.governanceId) - }@Html(portfolioEntry.name)";
+            var fullName = '@if(portfolioEntry.governanceId != null && !portfolioEntry.governanceId.isEmpty) {@Html(portfolioEntry.governanceId) - }@Html(portfolioEntry.name.replace("\\", "\\\\"))';
             portfolioEntries[@portfolioEntry.id] = {id: @portfolioEntry.id, name: fullName};
             portfolioEntriesSource.push(fullName);
         }

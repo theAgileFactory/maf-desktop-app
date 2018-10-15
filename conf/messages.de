@@ -620,17 +620,33 @@ kpi.pe_allocation_progress.main.name=Zuweisungen Fortschritt
 kpi.pe_allocation_progress.additional1.name=Effektiv
 kpi.pe_allocation_progress.additional2.name=Prognose
 
-kpi.pe_actuals.main.name=Effektiv
+kpi.pe_actuals.main.name=Effektiv (CAPEX/OPEX)
 kpi.pe_actuals.additional1.name=CAPEX
 kpi.pe_actuals.additional2.name=OPEX
 
-kpi.pe_budget.main.name=Budget
+kpi.pe_budget.main.name=Budget (CAPEX/OPEX)
 kpi.pe_budget.additional1.name=CAPEX
 kpi.pe_budget.additional2.name=OPEX
 
 kpi.pe_forecast.main.name=Prognose
 kpi.pe_forecast.additional1.name=CAPEX
 kpi.pe_forecast.additional2.name=OPEX
+
+kpi.pe_actuals_internal.main.name=Effektiv
+kpi.pe_actuals_internal.additional1.name=Intern
+kpi.pe_actuals_internal.additional2.name=Extern
+
+kpi.pe_budget_internal.main.name=Budget
+kpi.pe_budget_internal.additional1.name=Intern
+kpi.pe_budget_internal.additional2.name=Extern
+
+kpi.pe_deviation_internal.main.name=Intern Abweichung
+kpi.pe_deviation_internal.additional1.name=Budget
+kpi.pe_deviation_internal.additional2.name=Prognose
+
+kpi.pe_deviation_external.main.name=Extern Abweichung
+kpi.pe_deviation_external.additional1.name=Budget
+kpi.pe_deviation_external.additional2.name=Prognose
 
 #----------------------
 # standard reports

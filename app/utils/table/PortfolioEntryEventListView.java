@@ -65,7 +65,7 @@ public class PortfolioEntryEventListView {
 
                     ISelectableValueHolderCollection<Long> eventTypes = PortfolioEntryEventDao.getPEEventTypeActiveAsVH(true);
                     addColumnConfiguration("portfolioEntryEventType", "portfolioEntryEventType.id", "object.portfolio_entry_event.type.label",
-                            new SelectFilterComponent(eventTypes.getValues().iterator().next().getValue(), eventTypes), true, false, SortStatusType.UNSORTED);
+                            new SelectFilterComponent(eventTypes.getValues().iterator().next().getValue(), eventTypes, new String[]{"portfolioEntryEventType.name"}), true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("message", "message", "object.portfolio_entry_event.message.label", new TextFieldFilterComponent("*"), true, false,
                             SortStatusType.UNSORTED);

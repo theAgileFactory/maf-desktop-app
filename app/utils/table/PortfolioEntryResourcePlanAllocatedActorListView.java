@@ -26,8 +26,10 @@ import framework.utils.ISelectableValueHolderCollection;
 import framework.utils.Msg;
 import framework.utils.Table;
 import framework.utils.formats.ListOfValuesFormatter;
+import framework.utils.formats.ObjectFormatter;
 import framework.utils.formats.StringFormatFormatter;
 import models.finance.PortfolioEntryResourcePlanAllocatedActor;
+import models.pmo.OrgUnit;
 
 import java.text.MessageFormat;
 
@@ -75,7 +77,7 @@ public class PortfolioEntryResourcePlanAllocatedActorListView extends AllocatedA
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
                     if (orgUnits.getValues().size() > 0) {
                         addColumnConfiguration("orgUnit", "actor.orgUnit.id", "object.allocated_resource.org_unit.label",
-                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), false, false,
+                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[]{"actor.orgUnit.name"}), false, false,
                                 SortStatusType.NONE);
                     } else {
                         addColumnConfiguration("orgUnit", "actor.orgUnit.id", "object.allocated_resource.org_unit.label",
@@ -103,7 +105,7 @@ public class PortfolioEntryResourcePlanAllocatedActorListView extends AllocatedA
                     setColumnValueCssClass("actor", "rowlink-skip");
 
                     addColumn("orgUnit", "orgUnit", "object.allocated_resource.org_unit.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("orgUnit", new ListOfValuesFormatter<>());
+                    setJavaColumnFormatter("orgUnit", new ObjectFormatter<>());
                     this.setColumnValueCssClass("orgUnit", "rowlink-skip");
 
                     initTable(this, i18nMessagesPlugin);
@@ -136,6 +138,8 @@ public class PortfolioEntryResourcePlanAllocatedActorListView extends AllocatedA
 
     }
 
+    public OrgUnit orgUnit;
+
     /**
      * Default constructor.
      */
@@ -150,6 +154,7 @@ public class PortfolioEntryResourcePlanAllocatedActorListView extends AllocatedA
      */
     public PortfolioEntryResourcePlanAllocatedActorListView(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
         super(allocatedActor);
+        this.orgUnit = allocatedActor.actor.orgUnit;
     }
 
 }

@@ -76,11 +76,11 @@ public class MilestoneApprovalListView {
 
                     ISelectableValueHolderCollection<Long> lcProcessActiveAsVH = LifeCycleProcessDao.getLCProcessActiveAsVH();
                     addColumnConfiguration("lifeCycleName", "lifeCycleInstance.lifeCycleProcess.id", "object.portfolio_entry.life_cycle_process.label",
-                   		 new SelectFilterComponent(null, lcProcessActiveAsVH), true, false, SortStatusType.UNSORTED);
+                   		 new SelectFilterComponent(null, lcProcessActiveAsVH, new String[]{"lifeCycleInstance.lifeCycleProcess.name"}), true, false, SortStatusType.UNSORTED);
 
                  	ISelectableValueHolderCollection<Long> lifeCycleMilestones = LifeCycleMilestoneDao.getLCMilestoneActiveAsVH();
                  	addColumnConfiguration("milestoneInstance", "lifeCycleMilestone.id", "object.life_cycle_milestone_instance.milestone.label",
-                 			 new SelectFilterComponent(null, lifeCycleMilestones), true, false, SortStatusType.UNSORTED);
+                 			 new SelectFilterComponent(null, lifeCycleMilestones, new String[]{"lifeCycleMilestone.name"}), true, false, SortStatusType.UNSORTED);
 
                  	addColumnConfiguration("dueDate", "passedDate", "object.life_cycle_milestone_instance.due_date.label",
                             new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()), true, false, SortStatusType.UNSORTED);

@@ -30,25 +30,33 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
- * The "Budget" KPI computation class.
- *
- * @author Guillaume Petit
+ * The "Deviation CAPEX" KPI computation class.
+ * 
+ * @author Johann Kohler
  */
-public class BudgetKpi implements IKpiRunner {
+public class DeviationInternalKpi implements IKpiRunner {
+
     @Override
     public BigDecimal computeMain(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        return new BigDecimal(PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, true) + PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false));
+        Double budget = PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, null, true);
+        Double actual = PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, null, true);
+        Double toComplete = PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, null, true);
+        if (budget != null && budget > 0) {
+            return new BigDecimal((actual + toComplete - budget) / budget * 100);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public BigDecimal computeAdditional1(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        return new BigDecimal(PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, false));
+        return new BigDecimal(PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, null, true));
     }
 
     @Override
     public BigDecimal computeAdditional2(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
-        return new BigDecimal(PortfolioEntryDao.getPEAsBudgetAmountByOpex(objectId, true));
+        return new BigDecimal(PortfolioEntryDao.getPEAsCostToCompleteAmountByOpex(preferenceManagerPlugin, objectId, null, true)
+                + PortfolioEntryDao.getPEAsEngagedAmountByOpex(preferenceManagerPlugin, objectId, null, true));
     }
 
     @Override
@@ -62,7 +70,9 @@ public class BudgetKpi implements IKpiRunner {
     }
 
     @Override
-    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi, Long objectId) {
+    public Pair<String, List<KpiData>> getStaticTrendLine(IPreferenceManagerPlugin preferenceManagerPlugin, IScriptService scriptService, Kpi kpi,
+            Long objectId) {
         return null;
     }
+
 }

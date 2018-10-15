@@ -198,7 +198,6 @@ public class MilestoneApprovalController extends Controller {
         // get the current actor
         Actor actor = ActorDao.getActorByUid(userAccount.getUid());
 
-        OrderBy<LifeCycleMilestoneInstance> orderBy = filterConfig.getSortExpression();
 
     	ExpressionList<LifeCycleMilestoneInstance> expressionList;
     	 if (getSecurityService().restrict(IMafConstants.MILESTONE_DECIDE_PERMISSION, userAccount)) {
@@ -208,9 +207,9 @@ public class MilestoneApprovalController extends Controller {
     	 {
     		 expressionList = filterConfig.updateWithSearchExpression(LifeCycleMilestoneDao.getLCMilestoneInstanceAsExprByApprover(actor.id));
     	 }
-        
-        Utilities.updateExpressionListWithOrderBy(orderBy, expressionList);
-        
+
+        filterConfig.updateWithSortExpression(expressionList);
+
         Pagination<LifeCycleMilestoneInstance> pagination = new Pagination<>(this.getPreferenceManagerPlugin(), expressionList.findList().size(), expressionList);
         pagination.setCurrentPage(filterConfig.getCurrentPage());
 

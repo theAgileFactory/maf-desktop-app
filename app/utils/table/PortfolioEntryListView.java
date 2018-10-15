@@ -25,7 +25,10 @@ import dao.pmo.PortfolioEntryDao;
 import dao.pmo.PortfolioEntryReportDao;
 import framework.services.configuration.II18nMessagesPlugin;
 import framework.services.kpi.IKpiService;
-import framework.utils.*;
+import framework.utils.FilterConfig;
+import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.Table;
+import framework.utils.Utilities;
 import framework.utils.formats.BooleanFormatter;
 import framework.utils.formats.DateFormatter;
 import framework.utils.formats.ListOfValuesFormatter;
@@ -33,7 +36,6 @@ import framework.utils.formats.ObjectFormatter;
 import models.governance.LifeCycleMilestoneInstance;
 import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.*;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -93,7 +95,7 @@ public class PortfolioEntryListView {
                     ISelectableValueHolderCollection<Long> portfolioEntryTypes = PortfolioEntryDao.getPETypeActiveAsVH();
                     if (portfolioEntryTypes.getValues().size() > 0) {
                         addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label",
-                                new SelectFilterComponent(portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes), true, false,
+                                new SelectFilterComponent(portfolioEntryTypes.getValues().iterator().next().getValue(), portfolioEntryTypes, new String[]{"portfolioEntryType.name"}), true, false,
                                 SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("portfolioEntryType", "portfolioEntryType.id", "object.portfolio_entry.type.label", new NoneFilterComponent(),
@@ -162,11 +164,15 @@ public class PortfolioEntryListView {
 
                     ISelectableValueHolderCollection<Long> portfolioEntryReportStatusTypes = PortfolioEntryReportDao.getPEReportStatusTypeActiveAsVH();
                     if (portfolioEntryReportStatusTypes.getValues().size() > 0) {
-                        addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
+                        addColumnConfiguration(
+                                "portfolioEntryStatus",
+                                "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
                                 "object.portfolio_entry.status.label",
-                                new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next().getValue(),
-                                        portfolioEntryReportStatusTypes),
-                                true, false, SortStatusType.UNSORTED);
+                                new SelectFilterComponent(portfolioEntryReportStatusTypes.getValues().iterator().next().getValue(), portfolioEntryReportStatusTypes, new String[]{"lastPortfolioEntryReport.portfolioEntryReportStatusType.name"}),
+                                true,
+                                false,
+                                SortStatusType.UNSORTED
+                        );
                     } else {
                         addColumnConfiguration("portfolioEntryStatus", "lastPortfolioEntryReport.portfolioEntryReportStatusType.id",
                                 "object.portfolio_entry.status.label", new NoneFilterComponent(), false, false, SortStatusType.NONE);
@@ -211,6 +217,7 @@ public class PortfolioEntryListView {
                     addKpis(kpiService, "id", PortfolioEntry.class);
 
                     addCustomAttributesColumns("id", PortfolioEntry.class);
+
                     addColumnConfiguration("startDate", "startDate" ,"object.portfolio_entry.start_date.label",
                     		new DateRangeFilterComponent(new Date(), new Date(), Utilities.getDefaultDatePattern()),
                     		false, false, SortStatusType.UNSORTED);

@@ -74,9 +74,9 @@ public class TimesheetLogListView {
                             new AutocompleteFilterComponent(controllers.routes.JsonController.manager().url()), true, false, SortStatusType.NONE);
 
                     ISelectableValueHolderCollection<Long> orgUnits = OrgUnitDao.getOrgUnitActiveAsVH();
-                    if (orgUnits != null && orgUnits.getValues().size() > 0) {
+                    if (orgUnits.getValues().size() > 0) {
                         addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
-                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits), true, false, SortStatusType.NONE);
+                                new SelectFilterComponent(orgUnits.getValues().iterator().next().getValue(), orgUnits, new String[]{"timesheetEntry.timesheetReport.orgUnit.name"}), true, false, SortStatusType.UNSORTED);
                     } else {
                         addColumnConfiguration("orgUnit", "timesheetEntry.timesheetReport.orgUnit.id", "object.timesheet_report.org_unit.label",
                                 new NoneFilterComponent(), true, false, SortStatusType.NONE);
@@ -94,7 +94,7 @@ public class TimesheetLogListView {
                                 Msg.get("object.timesheet_report.status." + status.name() + ".label")));
                     }
                     addColumnConfiguration("status", "timesheetEntry.timesheetReport.status", "object.timesheet_report.status.label",
-                            new SelectFilterComponent(TimesheetReport.Status.APPROVED.name(), statusVH), true, false, SortStatusType.NONE);
+                            new SelectFilterComponent(TimesheetReport.Status.APPROVED.name(), statusVH, new String[]{"timesheetEntry.timesheetReport.status"}), true, false, SortStatusType.UNSORTED);
 
                     addColumnConfiguration("planningPackage", "timesheetEntry.portfolioEntryPlanningPackage.name",
                             "object.timesheet_entry.planning_package.label", new TextFieldFilterComponent("*"), true, false, SortStatusType.UNSORTED);
