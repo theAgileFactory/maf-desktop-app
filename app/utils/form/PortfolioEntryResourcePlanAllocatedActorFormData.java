@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAllocationFormData {
+public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAllocationFormData<PortfolioEntryResourcePlanAllocatedActor> {
 
     IBudgetTrackingService budgetTrackingService;
 
@@ -239,7 +239,7 @@ public class PortfolioEntryResourcePlanAllocatedActorFormData extends ResourceAl
      * @param allocatedActor
      *            the allocated actor in the DB
      */
-    public void fill(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
+    public void fillEntity(PortfolioEntryResourcePlanAllocatedActor allocatedActor) {
 
         boolean backToDraft = !this.days.equals(allocatedActor.days) || !this.actor.equals(allocatedActor.actor.id);
 

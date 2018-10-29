@@ -2383,6 +2383,20 @@ core.portfolio_entry.overview.milestones.panel.title=Next milestones
 
 #view
 core.portfolio_entry.view.details.title=Details
+core.portfolio_entry.view.details.creation.label=Creation
+core.portfolio_entry.view.details.creation.value=Created by {0} ({1})
+core.portfolio_entry.view.details.update.label=Update
+core.portfolio_entry.view.details.update.value=Last updated by {0} ({1} - {2})
+core.portfolio_entry.view.details.update.details=Initiative details
+core.portfolio_entry.view.details.update.budget=Budget
+core.portfolio_entry.view.details.update.work_orders=Work orders
+core.portfolio_entry.view.details.update.planning=Planning
+core.portfolio_entry.view.details.update.packages=Packages
+core.portfolio_entry.view.details.update.resources=Resources
+core.portfolio_entry.view.details.update.reports=Reports
+core.portfolio_entry.view.details.update.risks=Risks
+core.portfolio_entry.view.details.update.issues=Issues
+core.portfolio_entry.view.details.update.events=Events
 core.portfolio_entry.view.portfolios.title=Portfolio(s)
 core.portfolio_entry.view.dependencies.title=Dependencies
 core.portfolio_entry.view.attachments.title=Attachment documents

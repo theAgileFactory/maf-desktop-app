@@ -1,6 +1,7 @@
 package utils.form;
 
 import framework.utils.Utilities;
+import models.common.BizDockModel;
 import models.common.ResourceAllocation;
 import models.common.ResourceAllocationDetail;
 import models.finance.PortfolioEntryResourcePlanAllocationStatusType;
@@ -15,7 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class ResourceAllocationFormData {
+public abstract class ResourceAllocationFormData<T extends BizDockModel> extends AbstractFormData<T> {
 
     // the portfolioEntry id
     public Long id;

@@ -2394,6 +2394,10 @@ core.portfolio_entry.overview.milestones.panel.title=Nächste Meilensteine
 
 #view
 core.portfolio_entry.view.details.title=Details
+core.portfolio_entry.view.details.creation.label=Erstellen
+core.portfolio_entry.view.details.creation.value=Von {0} erstellt ({1})
+core.portfolio_entry.view.details.update.label=Aktualisierung
+core.portfolio_entry.view.details.update.value=Letzte Aktualisierung von {0} ({1} - {2})
 core.portfolio_entry.view.portfolios.title=Portfolio(s)
 core.portfolio_entry.view.dependencies.title=Abhängigkeiten
 core.portfolio_entry.view.attachments.title=Dokumente

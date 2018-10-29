@@ -20,8 +20,11 @@ package utils.form;
 import dao.pmo.ActorDao;
 import framework.services.session.IUserSessionManagerPlugin;
 import models.common.BizDockModel;
+import models.pmo.Actor;
 import play.Play;
 import play.mvc.Controller;
+
+import java.util.Date;
 
 /**
  * @author Guillaume Petit
@@ -35,8 +38,21 @@ public abstract class AbstractFormData<T extends BizDockModel> {
 
     public abstract void fillEntity(T entity);
 
+    /**
+     * Populate the createdBy, creationdate and updatedBy fields.
+     *
+     * @param entity the entity to populate
+     */
     public void fill(T entity) {
-        entity.updatedBy = ActorDao.getActorByUid(this.userSessionManagerPlugin.getUserSessionId(Controller.ctx()));
+
+        Actor author = ActorDao.getActorByUid(this.userSessionManagerPlugin.getUserSessionId(Controller.ctx()));
+
+        if (entity.createdBy == null) {
+            entity.createdBy = author;
+            entity.creationDate = new Date();
+        }
+        entity.updatedBy = author;
+        entity.lastUpdate = new Date();
         this.fillEntity(entity);
     }
 

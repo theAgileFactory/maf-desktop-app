@@ -22,7 +22,10 @@
     portfolioTable: framework.utils.Table[utils.table.PortfolioListView],
     dependenciesTable: framework.utils.Table[utils.table.PortfolioEntryDependencyListView],
     attachmentTable: framework.utils.Table[utils.table.AttachmentListView],
-    attachmentPagination: framework.utils.Pagination[models.framework_models.common.Attachment]
+    attachmentPagination: framework.utils.Pagination[models.framework_models.common.Attachment],
+    lastUpdatedBy: String,
+    lastUpdatedDate: Date,
+    lastUpdatedSection: String
 )
 
 @import framework_views.parts.formats._
@@ -84,10 +87,6 @@
                                 <td>@display_value_holder(portfolioEntry.portfolioEntryType)</td>
                             </tr>
                             <tr>
-                                <th>@parts.Msg("object.portfolio_entry.creation_date.label")</th>
-                                <td>@display_date(portfolioEntry.creationDate)</td>
-                            </tr>
-                            <tr>
                                 <th>@parts.Msg("object.portfolio_entry.governance_id.label")</th>
                                 <td>@display_object(portfolioEntry.governanceId)</td>
                             </tr>
@@ -117,6 +116,14 @@
                                     <td>@display_boolean(portfolioEntry.defaultIsOpex)</td>
                                 </tr>
                             }
+                            <tr>
+                                <th>@parts.Msg("core.portfolio_entry.view.details.creation.label")</th>
+                                <td>@if(portfolioEntry.creationDate != null) {@parts.Msg("core.portfolio_entry.view.details.creation.value", portfolioEntry.createdBy.getNameHumanReadable, display_date(portfolioEntry.creationDate))}</td>
+                            </tr>
+                            <tr>
+                                <th>@parts.Msg("core.portfolio_entry.view.details.update.label")</th>
+                                <td>@if(portfolioEntry.lastUpdate != null) {@parts.Msg("core.portfolio_entry.view.details.update.value", lastUpdatedBy, display_date(lastUpdatedDate), lastUpdatedSection)}</td>
+                            </tr>
                         </tbody>
                     </table>
                     

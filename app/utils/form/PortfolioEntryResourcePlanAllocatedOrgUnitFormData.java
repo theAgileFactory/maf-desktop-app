@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends ResourceAllocationFormData {
+public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends ResourceAllocationFormData<PortfolioEntryResourcePlanAllocatedOrgUnit> {
 
     IBudgetTrackingService budgetTrackingService;
 
@@ -124,7 +124,7 @@ public class PortfolioEntryResourcePlanAllocatedOrgUnitFormData extends Resource
      * @param allocatedOrgUnit
      *            the allocated org unit in the DB
      */
-    public void fill(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
+    public void fillEntity(PortfolioEntryResourcePlanAllocatedOrgUnit allocatedOrgUnit) {
 
         boolean backToDraft = !this.days.equals(allocatedOrgUnit.days) || !this.orgUnit.equals(allocatedOrgUnit.orgUnit.id);
 

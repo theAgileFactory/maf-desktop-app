@@ -33,7 +33,7 @@ import play.data.validation.Constraints.Required;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryRiskFormData {
+public class PortfolioEntryRiskFormData extends AbstractFormData<PortfolioEntryRisk> {
 
     // the portfolioEntry id
     public Long id;
@@ -93,7 +93,7 @@ public class PortfolioEntryRiskFormData {
      * @param portfolioEntryRisk
      *            the portfolio entry risk in the DB
      */
-    public void fill(PortfolioEntryRisk portfolioEntryRisk) {
+    public void fillEntity(PortfolioEntryRisk portfolioEntryRisk) {
         try {
             portfolioEntryRisk.targetDate = Utilities.getDateFormat(null).parse(targetDate);
         } catch (ParseException e) {

@@ -45,7 +45,7 @@ import play.data.validation.ValidationError;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryPlanningPackageFormData {
+public class PortfolioEntryPlanningPackageFormData extends AbstractFormData<PortfolioEntryPlanningPackage> {
 
     // the portfolioEntry id
     public Long id;
@@ -151,7 +151,7 @@ public class PortfolioEntryPlanningPackageFormData {
      * @param portfolioEntryPlanningPackage
      *            the portfolio entry planning package in the DB
      */
-    public void fill(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage) {
+    public void fillEntity(PortfolioEntryPlanningPackage portfolioEntryPlanningPackage) {
         portfolioEntryPlanningPackage.refId = this.refId;
         portfolioEntryPlanningPackage.name = this.name;
         portfolioEntryPlanningPackage.description = this.description;

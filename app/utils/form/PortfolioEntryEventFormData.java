@@ -17,11 +17,11 @@
  */
 package utils.form;
 
+import dao.pmo.PortfolioEntryEventDao;
 import models.framework_models.parent.IModelConstants;
 import models.pmo.PortfolioEntryEvent;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
-import dao.pmo.PortfolioEntryEventDao;
 
 /**
  * An portfolio entry event form data is used to manage the fields when
@@ -29,7 +29,7 @@ import dao.pmo.PortfolioEntryEventDao;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryEventFormData {
+public class PortfolioEntryEventFormData extends AbstractFormData<PortfolioEntryEvent> {
 
     // the portfolioEntry id
     public Long id;
@@ -68,7 +68,7 @@ public class PortfolioEntryEventFormData {
      * @param portfolioEntryEvent
      *            the portfolio entry event in the DB
      */
-    public void fill(PortfolioEntryEvent portfolioEntryEvent) {
+    public void fillEntity(PortfolioEntryEvent portfolioEntryEvent) {
         portfolioEntryEvent.portfolioEntryEventType = PortfolioEntryEventDao.getPEEventTypeById(this.type);
         portfolioEntryEvent.message = this.message;
     }

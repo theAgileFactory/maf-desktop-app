@@ -33,7 +33,7 @@ import java.text.ParseException;
  * 
  * @author Guillaume Petit
  */
-public class PortfolioEntryIssueFormData {
+public class PortfolioEntryIssueFormData extends AbstractFormData<PortfolioEntryIssue> {
 
     // the portfolioEntry id
     public Long id;
@@ -86,7 +86,7 @@ public class PortfolioEntryIssueFormData {
      * @param portfolioEntryIssue
      *            the portfolio entry issue in the DB
      */
-    public void fill(PortfolioEntryIssue portfolioEntryIssue) {
+    public void fillEntity(PortfolioEntryIssue portfolioEntryIssue) {
         try {
             portfolioEntryIssue.dueDate = Utilities.getDateFormat(null).parse(dueDate);
         } catch (ParseException e) {

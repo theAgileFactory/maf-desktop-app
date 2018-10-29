@@ -32,7 +32,7 @@ import framework.utils.FileFieldOptionalValidator;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryReportFormData {
+public class PortfolioEntryReportFormData extends AbstractFormData<PortfolioEntryReport> {
 
     // the portfolioEntry id
     public Long id;
@@ -76,7 +76,7 @@ public class PortfolioEntryReportFormData {
      * @param portfolioEntryReport
      *            the portfolio entry report in the DB
      */
-    public void fill(PortfolioEntryReport portfolioEntryReport) {
+    public void fillEntity(PortfolioEntryReport portfolioEntryReport) {
         portfolioEntryReport.portfolioEntryReportStatusType = PortfolioEntryReportDao.getPEReportStatusTypeById(status);
         portfolioEntryReport.comments = this.comments;
     }

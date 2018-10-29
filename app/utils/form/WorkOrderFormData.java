@@ -17,11 +17,6 @@
  */
 package utils.form;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import dao.finance.CurrencyDAO;
 import dao.finance.PortfolioEntryBudgetDAO;
 import dao.pmo.PortfolioEntryPlanningPackageDao;
@@ -34,13 +29,18 @@ import play.data.validation.Constraints.Required;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A work order form data is used to manage the fields when adding/editing a
  * work order for a portfolio entry.
  * 
  * @author Johann Kohler
  */
-public class WorkOrderFormData {
+public class WorkOrderFormData extends AbstractFormData<WorkOrder> {
 
     // the portfolioEntry id
     public Long id;
@@ -144,7 +144,7 @@ public class WorkOrderFormData {
      * @param workOrder
      *            the work order in the DB
      */
-    public void fill(WorkOrder workOrder) {
+    public void fillEntity(WorkOrder workOrder) {
 
         workOrder.name = this.name;
         workOrder.description = this.description;
@@ -153,7 +153,7 @@ public class WorkOrderFormData {
                 ? PortfolioEntryPlanningPackageDao.getPEPlanningPackageById(this.portfolioEntryPlanningPackage) : null;
         workOrder.followPackageDates = workOrder.portfolioEntryPlanningPackage != null ? this.followPackageDates : null;
 
-        if (workOrder.followPackageDates == null || workOrder.followPackageDates == false) {
+        if (workOrder.followPackageDates == null || !workOrder.followPackageDates) {
             try {
                 workOrder.startDate = Utilities.getDateFormat(null).parse(this.startDate);
             } catch (ParseException e) {

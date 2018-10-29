@@ -17,26 +17,13 @@
  */
 package controllers.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.tuple.Triple;
-
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.Expression;
-
 import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
 import constants.IMafConstants;
 import constants.MafDataType;
 import controllers.ControllersUtils;
@@ -57,33 +44,20 @@ import framework.services.plugins.IPluginManagerService;
 import framework.services.plugins.IPluginManagerService.IPluginInfo;
 import framework.services.session.IUserSessionManagerPlugin;
 import framework.services.storage.IAttachmentManagerPlugin;
-import framework.utils.DefaultSelectableValueHolder;
-import framework.utils.DefaultSelectableValueHolderCollection;
-import framework.utils.FileAttachmentHelper;
-import framework.utils.ISelectableValueHolder;
-import framework.utils.ISelectableValueHolderCollection;
+import framework.utils.*;
 import framework.utils.Menu.ClickableMenuItem;
 import framework.utils.Menu.HeaderMenuItem;
-import framework.utils.Msg;
-import framework.utils.Pagination;
-import framework.utils.SideBar;
-import framework.utils.Table;
-import framework.utils.Utilities;
+import models.common.ResourceAllocation;
 import models.finance.PortfolioEntryBudget;
+import models.finance.PortfolioEntryBudgetLine;
 import models.finance.PortfolioEntryResourcePlan;
+import models.finance.WorkOrder;
 import models.framework_models.account.NotificationCategory;
 import models.framework_models.account.NotificationCategory.Code;
 import models.framework_models.common.Attachment;
-import models.governance.LifeCycleInstance;
-import models.governance.LifeCycleInstancePlanning;
-import models.governance.LifeCycleMilestone;
-import models.governance.LifeCycleMilestoneInstance;
-import models.governance.LifeCycleProcess;
-import models.governance.PlannedLifeCycleMilestoneInstance;
-import models.pmo.Actor;
-import models.pmo.Portfolio;
-import models.pmo.PortfolioEntry;
-import models.pmo.PortfolioEntryDependency;
+import models.governance.*;
+import models.pmo.*;
+import org.apache.commons.lang3.tuple.Triple;
 import play.Configuration;
 import play.Logger;
 import play.data.Form;
@@ -97,15 +71,15 @@ import security.dynamic.PortfolioEntryDynamicHelper;
 import services.licensesmanagement.ILicensesManagementService;
 import services.tableprovider.ITableProvider;
 import utils.MilestonesTrend;
-import utils.form.AttachmentFormData;
-import utils.form.PortfolioEntryCreateFormData;
-import utils.form.PortfolioEntryDependencyFormData;
-import utils.form.PortfolioEntryEditFormData;
-import utils.form.PortfolioEntryPortfoliosFormData;
+import utils.form.*;
 import utils.table.AttachmentListView;
 import utils.table.GovernanceListView;
 import utils.table.PortfolioEntryDependencyListView;
 import utils.table.PortfolioListView;
+
+import javax.inject.Inject;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The controller which manages a portfolio entry.
@@ -226,24 +200,12 @@ public class PortfolioEntryController extends Controller {
         Ebean.beginTransaction();
         try {
 
-            // Get the last governance id
-            Integer lastGovernanceId = PortfolioEntryDao.getPEAsLastGovernanceId();
+            portfolioEntryCreateFormData.fill(portfolioEntry);
+            portfolios = portfolioEntryCreateFormData.portfolios == null ? null : Arrays.stream(portfolioEntryCreateFormData.portfolios).map(PortfolioDao::getPortfolioById).collect(Collectors.toList());
+            portfolioEntry.save();
 
             // Get the request life cycle process
             LifeCycleProcess requestedLifeCycleProcess = LifeCycleProcessDao.getLCProcessById(portfolioEntryCreateFormData.requestedLifeCycleProcess);
-
-            // Create the portfolio entry
-            portfolioEntry.name = portfolioEntryCreateFormData.name;
-            portfolioEntry.description = portfolioEntryCreateFormData.description;
-            portfolioEntry.creationDate = new Date();
-            portfolioEntry.manager = ActorDao.getActorById(portfolioEntryCreateFormData.manager);
-            portfolios = portfolioEntryCreateFormData.portfolios == null ? null : Arrays.asList(portfolioEntryCreateFormData.portfolios).stream().map(PortfolioDao::getPortfolioById).collect(Collectors.toList());
-            portfolioEntry.portfolios = portfolios;
-            portfolioEntry.isPublic = !portfolioEntryCreateFormData.isConfidential;
-            portfolioEntry.portfolioEntryType = PortfolioEntryDao.getPETypeById(portfolioEntryCreateFormData.portfolioEntryType);
-            portfolioEntry.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
-            portfolioEntry.erpRefId = "";
-            portfolioEntry.save();
 
             createLifeCycleProcessTree(portfolioEntry, requestedLifeCycleProcess);
 
@@ -473,8 +435,59 @@ public class PortfolioEntryController extends Controller {
 
         Table<AttachmentListView> attachmentFilledTable = this.getTableProvider().get().attachment.templateTable.fill(attachmentsListView, hideColumns);
 
+        Map<Date, String[]> updates = new HashMap<>();
+        updates.put(portfolioEntry.lastUpdate, new String[]{portfolioEntry.updatedBy == null ? "-" : portfolioEntry.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.details")});
+
+        LifeCycleInstancePlanning currentPlanning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
+
+        PortfolioEntryBudgetLine lastUpdatedBudgetLine = currentPlanning.portfolioEntryBudget.getLastUpdatedBudgetLine();
+        if (lastUpdatedBudgetLine != null) {
+            updates.put(lastUpdatedBudgetLine.lastUpdate, new String[] {lastUpdatedBudgetLine.updatedBy == null ? "-" : lastUpdatedBudgetLine.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.budget")});
+        }
+
+        WorkOrder lastUpdatedWorkOrder = portfolioEntry.getLastUpdatedWorkOrder();
+        if (lastUpdatedWorkOrder != null) {
+            updates.put(lastUpdatedWorkOrder.lastUpdate, new String[]{lastUpdatedWorkOrder.updatedBy == null ? "-" : lastUpdatedWorkOrder.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.work_orders")});
+        }
+
+        PlannedLifeCycleMilestoneInstance lastUpdatedMilestoneInstance = currentPlanning.getLastUpdatedMilestoneInstance();
+        if (lastUpdatedMilestoneInstance != null) {
+            updates.put(lastUpdatedMilestoneInstance.lastUpdate, new String[]{lastUpdatedMilestoneInstance.updatedBy == null ? "-" : lastUpdatedMilestoneInstance.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.planning")});
+        }
+
+        PortfolioEntryPlanningPackage lastUpdatedPackage = portfolioEntry.getLastUpdatedPackage();
+        if (lastUpdatedPackage != null) {
+            updates.put(lastUpdatedPackage.lastUpdate, new String[]{lastUpdatedPackage.updatedBy == null ? "-" : lastUpdatedPackage.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.packages")});
+        }
+
+        ResourceAllocation lastUpdatedResource = currentPlanning.portfolioEntryResourcePlan.getLastUpdatedResource();
+        if (lastUpdatedResource != null) {
+            updates.put(lastUpdatedResource.lastUpdate, new String[]{lastUpdatedResource.updatedBy == null ? "-" : lastUpdatedResource.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.resources")});
+        }
+
+        if (portfolioEntry.lastPortfolioEntryReport != null) {
+            updates.put(portfolioEntry.lastPortfolioEntryReport.lastUpdate, new String[]{portfolioEntry.lastPortfolioEntryReport.updatedBy == null ? "-" : portfolioEntry.lastPortfolioEntryReport.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.reports")});
+        }
+
+        PortfolioEntryRisk lastUpdatedRisk = portfolioEntry.getLastUpdatedRisk();
+        if (lastUpdatedRisk != null) {
+            updates.put(lastUpdatedRisk.lastUpdate, new String[]{lastUpdatedRisk.updatedBy == null ? "-" : lastUpdatedRisk.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.risks")});
+        }
+
+        PortfolioEntryIssue lastUpdatedIssue = portfolioEntry.getLastUpdatedIssue();
+        if (lastUpdatedIssue != null) {
+            updates.put(lastUpdatedIssue.lastUpdate, new String[]{lastUpdatedIssue.updatedBy == null ? "-" : lastUpdatedIssue.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.issues")});
+        }
+
+        PortfolioEntryEvent lastUpdatedEvent = portfolioEntry.getLastUpdatedEvent();
+        if (lastUpdatedEvent != null) {
+            updates.put(lastUpdatedEvent.lastUpdate, new String[]{lastUpdatedEvent.updatedBy == null ? "-" : lastUpdatedEvent.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.events")});
+        }
+
+        Date lastUpdatedDate = updates.keySet().stream().max(Date::compareTo).orElse(new Date());
+
         return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, portfolioEntryEditFormData, lastMilestone, portfolioFilledTable,
-                dependenciesFilledTable, attachmentFilledTable, attachmentPagination));
+                dependenciesFilledTable, attachmentFilledTable, attachmentPagination, updates.get(lastUpdatedDate)[0], lastUpdatedDate, updates.get(lastUpdatedDate)[1]));
 
     }
 
@@ -768,7 +781,8 @@ public class PortfolioEntryController extends Controller {
 
         PortfolioEntryDependencyFormData portfolioEntryDependencyFormData = boundForm.get();
 
-        PortfolioEntryDependency portfolioEntryDependency = portfolioEntryDependencyFormData.get();
+        PortfolioEntryDependency portfolioEntryDependency = new PortfolioEntryDependency();
+        portfolioEntryDependencyFormData.fill(portfolioEntryDependency);
 
         // check the depending PE is not the current
         if (portfolioEntryDependency.getSourcePortfolioEntry().id.equals(portfolioEntryDependency.getDestinationPortfolioEntry().id)) {

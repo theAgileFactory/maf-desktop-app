@@ -35,7 +35,7 @@ import play.data.validation.Constraints.Required;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryEditFormData {
+public class PortfolioEntryEditFormData extends AbstractFormData<PortfolioEntry> {
 
     public Long id;
 
@@ -108,7 +108,7 @@ public class PortfolioEntryEditFormData {
      * @param portfolioEntry
      *            the portfolio entry in the DB
      */
-    public void fill(PortfolioEntry portfolioEntry) {
+    public void fillEntity(PortfolioEntry portfolioEntry) {
 
         portfolioEntry.isPublic = !this.isConfidential;
         portfolioEntry.archived = !this.isActive;

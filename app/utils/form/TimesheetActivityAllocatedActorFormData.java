@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * 
  * @author Johann Kohler
  */
-public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationFormData {
+public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationFormData<TimesheetActivityAllocatedActor> {
 
     IPreferenceManagerPlugin preferenceManager;
 
@@ -56,6 +56,11 @@ public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationF
     public TimesheetActivityAllocatedActorFormData() {
         super();
         this.preferenceManager = Play.application().injector().instanceOf(IPreferenceManagerPlugin.class);
+    }
+
+    @Override
+    public void fillEntity(TimesheetActivityAllocatedActor entity) {
+        // NOT IMPLEMENTED
     }
 
     /**
@@ -83,7 +88,7 @@ public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationF
         List<TimesheetActivityAllocatedActorDetail> details = allocatedActivity.timesheetActivityAllocatedActorDetails;
         for(TimesheetActivityAllocatedActorDetail detail : details) {
             Optional<MonthAllocation> optionalMonthlyAllocation = this.monthAllocations.stream().filter(allocation -> allocation.year.equals(detail.year)).findFirst();
-            MonthAllocation monthAllocation = optionalMonthlyAllocation.isPresent() ? optionalMonthlyAllocation.get() : new MonthAllocation(detail.year);
+            MonthAllocation monthAllocation = optionalMonthlyAllocation.orElseGet(() -> new MonthAllocation(detail.year));
             monthAllocation.addValue(detail.month, detail.days);
             if (!optionalMonthlyAllocation.isPresent()) {
                 monthAllocations.add(monthAllocation);
@@ -97,6 +102,7 @@ public class TimesheetActivityAllocatedActorFormData extends ResourceAllocationF
      * @param allocatedActivity
      *            the allocated activity in the DB
      */
+    @Override
     public void fill(TimesheetActivityAllocatedActor allocatedActivity) {
 
         allocatedActivity.timesheetActivity = TimesheetDao.getTimesheetActivityById(this.timesheetActivity);

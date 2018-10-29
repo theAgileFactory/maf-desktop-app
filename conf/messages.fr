@@ -2399,6 +2399,20 @@ core.portfolio_entry.overview.milestones.panel.title=Prochains jalons
 
 #view
 core.portfolio_entry.view.details.title=Détails
+core.portfolio_entry.view.details.creation.label=Création
+core.portfolio_entry.view.details.creation.value=Créé par {0} ({1})
+core.portfolio_entry.view.details.update.label=Mise à jour
+core.portfolio_entry.view.details.update.value=Dernière mise à jour par {0} ({1} - {2})
+core.portfolio_entry.view.details.update.details=Détails de l''initiative
+core.portfolio_entry.view.details.update.budget=Budget
+core.portfolio_entry.view.details.update.work_orders=Ordres de travail
+core.portfolio_entry.view.details.update.planning=Planning
+core.portfolio_entry.view.details.update.packages=Résultats
+core.portfolio_entry.view.details.update.resources=Allocations de ressources
+core.portfolio_entry.view.details.update.reports=Rapports d''état
+core.portfolio_entry.view.details.update.risks=Risques
+core.portfolio_entry.view.details.update.issues=Incidents
+core.portfolio_entry.view.details.update.events=Evènements
 core.portfolio_entry.view.portfolios.title=Portefeuille(s)
 core.portfolio_entry.view.dependencies.title=Dépendances
 core.portfolio_entry.view.attachments.title=Documents

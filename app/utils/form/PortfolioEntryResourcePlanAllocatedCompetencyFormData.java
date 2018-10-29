@@ -37,7 +37,7 @@ import java.text.ParseException;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryResourcePlanAllocatedCompetencyFormData extends ResourceAllocationFormData {
+public class PortfolioEntryResourcePlanAllocatedCompetencyFormData extends ResourceAllocationFormData<PortfolioEntryResourcePlanAllocatedCompetency> {
 
     @Required
     public Long competency;
@@ -94,7 +94,7 @@ public class PortfolioEntryResourcePlanAllocatedCompetencyFormData extends Resou
      * @param allocatedCompetency
      *            the allocated competency in the DB
      */
-    public void fill(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency) {
+    public void fillEntity(PortfolioEntryResourcePlanAllocatedCompetency allocatedCompetency) {
 
         allocatedCompetency.competency = ActorDao.getCompetencyById(this.competency);
 

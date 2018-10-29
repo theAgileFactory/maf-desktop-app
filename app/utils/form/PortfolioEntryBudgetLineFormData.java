@@ -33,7 +33,7 @@ import play.data.validation.Constraints.Required;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryBudgetLineFormData {
+public class PortfolioEntryBudgetLineFormData extends AbstractFormData<PortfolioEntryBudgetLine> {
 
     // the portfolioEntry id
     public Long id;
@@ -99,7 +99,7 @@ public class PortfolioEntryBudgetLineFormData {
      * @param budgetLine
      *            the budget line in the DB
      */
-    public void fill(PortfolioEntryBudgetLine budgetLine) {
+    public void fillEntity(PortfolioEntryBudgetLine budgetLine) {
         budgetLine.refId = this.refId;
         budgetLine.name = this.name;
         budgetLine.isOpex = this.isOpex;

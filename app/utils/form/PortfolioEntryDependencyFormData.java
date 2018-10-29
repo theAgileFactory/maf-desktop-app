@@ -17,18 +17,18 @@
  */
 package utils.form;
 
+import dao.pmo.PortfolioEntryDao;
 import models.pmo.PortfolioEntry;
 import models.pmo.PortfolioEntryDependency;
 import models.pmo.PortfolioEntryDependencyType;
 import play.data.validation.Constraints.Required;
-import dao.pmo.PortfolioEntryDao;
 
 /**
  * Form to add a dependency between 2 portfolio entries.
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryDependencyFormData {
+public class PortfolioEntryDependencyFormData extends AbstractFormData<PortfolioEntryDependency> {
 
     // the portfolio entry id of the current portfolio entry
     public Long id;
@@ -53,29 +53,15 @@ public class PortfolioEntryDependencyFormData {
     public PortfolioEntryDependencyFormData() {
     }
 
-    /**
-     * Construct with a portfolio entry id.
-     * 
-     * @param portfolioEntryId
-     *            the portfolioEntryId
-     */
-    public PortfolioEntryDependencyFormData(Long portfolioEntryId) {
-        super();
-        this.id = portfolioEntryId;
-    }
-
-    /**
-     * Get the corresponding the portfolio entry dependency.
-     */
-    public PortfolioEntryDependency get() {
-
+    @Override
+    public void fillEntity(PortfolioEntryDependency entity) {
         String[] elems = this.directedType.split("#");
 
         Long portfolioEntryDependencyTypeId = Long.valueOf(elems[0]);
         boolean isContrary = Boolean.valueOf(elems[1]);
 
-        PortfolioEntry sourcePortfolioEntry = null;
-        PortfolioEntry destinationPortfolioEntry = null;
+        PortfolioEntry sourcePortfolioEntry;
+        PortfolioEntry destinationPortfolioEntry;
         PortfolioEntryDependencyType portfolioEntryDependencyType = PortfolioEntryDao.getPEDependencyTypeById(portfolioEntryDependencyTypeId);
 
         if (isContrary) {
@@ -86,7 +72,22 @@ public class PortfolioEntryDependencyFormData {
             destinationPortfolioEntry = PortfolioEntryDao.getPEById(this.dependingId);
         }
 
-        return new PortfolioEntryDependency(sourcePortfolioEntry, destinationPortfolioEntry, portfolioEntryDependencyType);
+        entity.sourcePortfolioEntry = sourcePortfolioEntry;
+        entity.destinationPortfolioEntry = destinationPortfolioEntry;
+        entity.portfolioEntryDependencyType = portfolioEntryDependencyType;
+        entity.id.sourcePortfolioEntryId = sourcePortfolioEntry.id;
+        entity.id.destinationPortfolioEntryId = destinationPortfolioEntry.id;
+        entity.id.portfolioEntryDependencyTypeId = portfolioEntryDependencyType.id;
+    }
 
+    /**
+     * Construct with a portfolio entry id.
+     * 
+     * @param portfolioEntryId
+     *            the portfolioEntryId
+     */
+    public PortfolioEntryDependencyFormData(Long portfolioEntryId) {
+        super();
+        this.id = portfolioEntryId;
     }
 }

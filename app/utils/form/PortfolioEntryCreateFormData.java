@@ -17,16 +17,20 @@
  */
 package utils.form;
 
+import dao.pmo.ActorDao;
+import dao.pmo.PortfolioDao;
+import dao.pmo.PortfolioEntryDao;
 import framework.utils.FileField;
 import framework.utils.FileFieldOptionalValidator;
 import models.framework_models.parent.IModelConstants;
+import models.pmo.PortfolioEntry;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A portfolio entry create form data is used to manage the fields when creating
@@ -34,12 +38,28 @@ import java.util.List;
  * 
  * @author Johann Kohler
  */
-public class PortfolioEntryCreateFormData {
+public class PortfolioEntryCreateFormData extends AbstractFormData<PortfolioEntry> {
 
     /**
      * Default constructor.
      */
     public PortfolioEntryCreateFormData() {
+    }
+
+    @Override
+    public void fillEntity(PortfolioEntry entity) {
+        // Get the last governance id
+        Integer lastGovernanceId = PortfolioEntryDao.getPEAsLastGovernanceId();
+
+        // Create the portfolio entry
+        entity.name = this.name;
+        entity.description = this.description;
+        entity.manager = ActorDao.getActorById(this.manager);
+        entity.portfolios = portfolios == null ? null : Arrays.stream(portfolios).map(PortfolioDao::getPortfolioById).collect(Collectors.toList());
+        entity.isPublic = !this.isConfidential;
+        entity.portfolioEntryType = PortfolioEntryDao.getPETypeById(this.portfolioEntryType);
+        entity.governanceId = lastGovernanceId != null ? String.valueOf(lastGovernanceId + 1) : "1";
+        entity.erpRefId = "";
     }
 
     /**
