@@ -28,8 +28,11 @@ import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
+import play.data.validation.ValidationError;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -40,11 +43,7 @@ import java.util.stream.Collectors;
  */
 public class PortfolioEntryCreateFormData extends AbstractFormData<PortfolioEntry> {
 
-    /**
-     * Default constructor.
-     */
-    public PortfolioEntryCreateFormData() {
-    }
+    public PortfolioEntryCreateFormData() {}
 
     @Override
     public void fillEntity(PortfolioEntry entity) {
@@ -91,6 +90,7 @@ public class PortfolioEntryCreateFormData extends AbstractFormData<PortfolioEntr
     @Required
     public Long manager;
 
+    @ConditionalRequired(value = "portfolioEntry.portfolios")
     public Long[] portfolios;
 
     @Required

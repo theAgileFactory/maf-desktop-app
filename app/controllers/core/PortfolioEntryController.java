@@ -62,6 +62,7 @@ import play.Configuration;
 import play.Logger;
 import play.data.Form;
 import play.i18n.Messages;
+import play.libs.F;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -149,7 +150,7 @@ public class PortfolioEntryController extends Controller {
         }
 
         Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(this.getAccountManagerPlugin(), getUserSessionManagerPlugin().getUserSessionId(ctx()));
-        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(isRelease, actor.id));
+        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(isRelease, actor.id, Collections.singletonList("portfolios")));
         return ok(views.html.core.portfolioentry.portfolio_entry_create.render(filledForm, isRelease));
     }
 
