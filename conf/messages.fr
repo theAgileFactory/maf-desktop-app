@@ -1449,6 +1449,7 @@ object.life_cycle_milestone_instance.table.approval.empty=Il n''existe aucun jal
 # plannedLifeCycleMilestoneInstance
 #----------------------
 
+object.planned_life_cycle_milestone_instance.label=Jalons planifiés
 object.planned_life_cycle_milestone_instance.planned_date.label=Date planifiée
 object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Disponible
 object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Non planifié

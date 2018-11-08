@@ -1436,6 +1436,7 @@ object.life_cycle_milestone_instance.table.approval.empty=There is no milestone 
 # plannedLifeCycleMilestoneInstance
 #----------------------
 
+object.planned_life_cycle_milestone_instance.label=Planned milestones
 object.planned_life_cycle_milestone_instance.planned_date.label=Planned date
 object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Available
 object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Not planned

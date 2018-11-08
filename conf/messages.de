@@ -1447,6 +1447,7 @@ object.life_cycle_milestone_instance.table.approval.empty=Es gibt keine Meilenst
 # plannedLifeCycleMilestoneInstance
 #----------------------
 
+object.planned_life_cycle_milestone_instance.label=Geplantes Meilenstein
 object.planned_life_cycle_milestone_instance.planned_date.label=Geplantes Datum
 object.planned_life_cycle_milestone_instance.status.AVAILABLE.label=Bereit
 object.planned_life_cycle_milestone_instance.status.NOT_PLANNED.label=Datum hinzufügen

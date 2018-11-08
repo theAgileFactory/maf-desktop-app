@@ -20,7 +20,6 @@ package dao.governance;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model.Finder;
-import dao.pmo.PortfolioEntryDao;
 import framework.services.account.IPreferenceManagerPlugin;
 import framework.utils.DefaultSelectableValueHolder;
 import framework.utils.DefaultSelectableValueHolderCollection;
@@ -196,6 +195,14 @@ public abstract class LifeCycleMilestoneDao {
      */
     public static LifeCycleMilestoneInstance getLCMilestoneInstanceById(Long id) {
         return findLifeCycleMilestoneInstance.where().eq("deleted", false).eq("id", id).findUnique();
+    }
+
+    public static List<LifeCycleMilestoneInstance> getLCMilestoneInstanceByMilestoneAndLifeCycleInstance(Long milestoneId, Long lifeCycleInstanceId) {
+        return findLifeCycleMilestoneInstance.where()
+                .eq("deleted", false)
+                .eq("life_cycle_milestone_id", milestoneId)
+                .eq("life_cycle_instance_id", lifeCycleInstanceId)
+                .findList();
     }
 
     /**

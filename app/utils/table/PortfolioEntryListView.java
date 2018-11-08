@@ -208,6 +208,9 @@ public class PortfolioEntryListView {
                                 new NoneFilterComponent(), false, false, SortStatusType.NONE);
                     }
 
+                    addColumnConfiguration("plannedLifeCycleMilestoneInstances", "plannedLifeCycleMilestoneInstances.id", "object.planned_life_cycle_milestone_instance.label", new NoneFilterComponent(), false,
+                            false, SortStatusType.NONE);
+
                     addColumnConfiguration("archived", "archived", "object.portfolio_entry.archived.label", new CheckboxFilterComponent(false), false, true,
                             SortStatusType.UNSORTED);
 
@@ -298,6 +301,10 @@ public class PortfolioEntryListView {
                     addColumn("isConcept", "isConcept", "object.portfolio_entry.is_concept.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("isConcept", new BooleanFormatter<>());
 
+                    addColumn("plannedLifeCycleMilestoneInstances", "plannedLifeCycleMilestoneInstances", "object.planned_life_cycle_milestone_instance.label", ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("plannedLifeCycleMilestoneInstances", new ListOfValuesFormatter<>());
+                    this.setColumnValueCssClass("plannedLifeCycleMilestoneInstances", "rowlink-skip");
+
                     addColumn("lastMilestone", "lastMilestone", "object.portfolio_entry.last_milestone.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastMilestone", (portfolioEntryView, value) -> views.html.modelsparts.display_milestone_instance.render(portfolioEntryView.lastMilestone).body());
                     this.setColumnValueCssClass("lastMilestone", "rowlink-skip");
@@ -368,7 +375,8 @@ public class PortfolioEntryListView {
         columns.add("nextMilestone");
         columns.add("nextMilestoneDate");
         columns.add("startDate");
-        columns.add("endDate"); 
+        columns.add("endDate");
+        columns.add("plannedLifeCycleMilestoneInstances");
 
         return columns;
     }
@@ -403,7 +411,7 @@ public class PortfolioEntryListView {
     public List<PortfolioEntry> dependencies;
     public Date startDate;
     public Date endDate;
-
+    public List<PlannedLifeCycleMilestoneInstance> plannedLifeCycleMilestoneInstances;
 
     // contextual attributes
     public List<String> stakeholderTypes = new ArrayList<>();
@@ -426,9 +434,9 @@ public class PortfolioEntryListView {
         this.managerOrgUnit = portfolioEntry.manager.orgUnit;
         this.sponsoringUnit = portfolioEntry.sponsoringUnit;
         this.deliveryUnits = portfolioEntry.deliveryUnits;
-        this.deliveryUnits.sort((du1, du2) -> du1.name.compareTo(du2.name));
+        this.deliveryUnits.sort(Comparator.comparing(du -> du.name));
         this.portfolios = portfolioEntry.portfolios;
-        this.portfolios.sort((p1,p2) -> p1.name.compareTo(p2.name));
+        this.portfolios.sort(Comparator.comparing(p -> p.name));
         this.lifeCycleProcess = portfolioEntry.activeLifeCycleInstance != null ? portfolioEntry.activeLifeCycleInstance.lifeCycleProcess.getName() : null;
         this.portfolioEntryStatus = portfolioEntry.lastPortfolioEntryReport;
         this.lastPEReportDate = portfolioEntry.lastPortfolioEntryReport != null ? portfolioEntry.lastPortfolioEntryReport.publicationDate : null;
@@ -456,7 +464,7 @@ public class PortfolioEntryListView {
                     actorIds.add(stakeholder.actor.id);
                     this.stakeholders.add(stakeholder.actor);
                 });
-        this.stakeholders.sort((s1, s2) -> s1.getName().compareTo(s1.getName()));
+        this.stakeholders.sort(Comparator.comparing(Actor::getName));
 
         this.dependencies = new ArrayList<>();
         Set<Long> dependencyIds = new HashSet<>();
@@ -474,7 +482,9 @@ public class PortfolioEntryListView {
                 this.dependencies.add(dependency);
             }
         }
-        this.dependencies.sort((d1, d2) -> d1.name.compareTo(d2.name));
+        this.dependencies.sort(Comparator.comparing(d -> d.name));
+
+        this.plannedLifeCycleMilestoneInstances = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning().getPlannedLifeCycleMilestoneInstance();
 
     }
 

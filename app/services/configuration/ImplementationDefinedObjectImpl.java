@@ -26,6 +26,7 @@ import framework.services.configuration.IImplementationDefinedObjectService;
 import framework.services.database.IDatabaseDependencyService;
 import framework.utils.routes;
 import models.delivery.Deliverable;
+import models.governance.PlannedLifeCycleMilestoneInstance;
 import models.pmo.Actor;
 import models.pmo.OrgUnit;
 import models.pmo.Portfolio;
@@ -157,6 +158,9 @@ public class ImplementationDefinedObjectImpl implements IImplementationDefinedOb
         }
         if (object instanceof PortfolioEntry) {
             return views.html.modelsparts.display_portfolio_entry.render((PortfolioEntry) object, true).body();
+        }
+        if (object instanceof PlannedLifeCycleMilestoneInstance) {
+            return views.html.modelsparts.display_planned_milestone.render((PlannedLifeCycleMilestoneInstance) object).body();
         }
         return object.toString();
     }
