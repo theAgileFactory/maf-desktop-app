@@ -31,16 +31,19 @@ import java.util.Collection;
 public class ConditionalRequiredValidator extends Constraints.Validator<Object> implements ConstraintValidator<ConditionalRequired, Object> {
 
     private String field;
+    private boolean mandatoryByDefault;
 
     @Override
     public void initialize(ConditionalRequired constraint) {
         field = constraint.value();
+        mandatoryByDefault = constraint.mandatoryByDefault();
     }
 
     @Override
     public boolean isValid(Object object) {
         Boolean fieldRequired = Play.application().configuration().getBoolean(String.format("form.%s.required", this.field));
-        if (fieldRequired != null && fieldRequired) {
+
+        if ((!mandatoryByDefault && fieldRequired != null && fieldRequired) || (mandatoryByDefault && (fieldRequired == null || fieldRequired))) {
             if(object == null) {
                 return false;
             }

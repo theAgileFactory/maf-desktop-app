@@ -36,4 +36,5 @@ public @interface ConditionalRequired {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     String value();
+    boolean mandatoryByDefault() default true;
 }

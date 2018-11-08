@@ -1215,6 +1215,7 @@ object.portfolio_entry.name.label=Nom
 object.portfolio_entry.default_is_opex.label=OPEX par défaut
 object.portfolio_entry.default_is_opex.help=Type de dépense par défaut. Utilisé lorsque aucun type n''existe pour un budget/prévision généré par une affectation de ressource.
 object.portfolio_entry.description.label=Description
+object.portfolio_entry.description.required=Description <i style="color: red;" class="fa fa-asterisk"></i>
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Responsable
 object.portfolio_entry.manager_org_unit.label=Unité du Responsable

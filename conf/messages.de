@@ -1213,6 +1213,7 @@ object.portfolio_entry.default_is_opex.label=Voreinstellung: OPEX
 object.portfolio_entry.default_is_opex.help=Grundeinstellung wenn eine Ressource zugewiesen wird.
 object.portfolio_entry.name.label=Name
 object.portfolio_entry.description.label=Beschreibung
+object.portfolio_entry.description.label.required=Beschreibung <i style="color: red;" class="fa fa-asterisk"></i>
 object.portfolio_entry.type.label=Typ
 object.portfolio_entry.manager.label=Verantwortlich
 object.portfolio_entry.manager_org_unit.label=Verantwortlich Organisationseinheit

@@ -70,18 +70,55 @@
                         @parts.checkbox(newPortfolioEntryForm("isConfidential"), parts.Msg.asString("object.portfolio_entry.is_condfidential.label"), parts.Msg.asString("object.portfolio_entry.is_condfidential.help"))
                          
                         @parts.input_text(newPortfolioEntryForm("name"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.name.label"))
+
+                        @if(play.Play.application().configuration.getBoolean("form.portfolioEntry.description.required") == null || play.Play.application().configuration.getBoolean("form.portfolioEntry.description.required")) {
+                            @helper.textarea(
+                                newPortfolioEntryForm("description"),
+                                '_label -> Html(parts.Msg.asString("object.portfolio_entry.description.label.required")),
+                                '_showConstraints -> false,
+                                'rows -> "5"
+                            )
+                        } else {
+                            @helper.textarea(
+                                newPortfolioEntryForm("description"),
+                                '_label -> parts.Msg.asString("object.portfolio_entry.description.label"),
+                                '_showConstraints -> false,
+                                'rows -> "5"
+                            )
+                        }
+
+                        @parts.dropdownlist(
+                            newPortfolioEntryForm("portfolios"),
+                            parts.Msg.asString("object.portfolio_entry.portfolio.label"),
+                            dao.pmo.PortfolioDao.getPortfolioActiveAsVH,
+                            null,
+                            liveSearch = true,
+                            multiple = true,
+                            forceRequired = play.Play.application().configuration.getBoolean("form.portfolioEntry.portfolios.required") == null || play.Play.application().configuration.getBoolean("form.portfolioEntry.portfolios.required")
+                        )
                         
-                        @helper.textarea(newPortfolioEntryForm("description"),'_showConstraints -> false, '_label -> parts.Msg.asString("object.portfolio_entry.description.label"), 'rows -> "5")
-                        
-                        @parts.dropdownlist(newPortfolioEntryForm("portfolios"),parts.Msg.asString("object.portfolio_entry.portfolio.label"), dao.pmo.PortfolioDao.getPortfolioActiveAsVH, null, liveSearch = true, multiple = true, forceRequired = play.Play.application().configuration.getBoolean("form.portfolioEntry.portfolios.required"))
-                        
-                        @parts.dropdownlist(newPortfolioEntryForm("portfolioEntryType"),parts.Msg.asString("object.portfolio_entry.type.label"), dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(isRelease))
+                        @parts.dropdownlist(
+                            newPortfolioEntryForm("portfolioEntryType"),
+                            parts.Msg.asString("object.portfolio_entry.type.label"),
+                            dao.pmo.PortfolioEntryDao.getPETypeActiveAsVH(isRelease),
+                            forceRequired = play.Play.application().configuration.getBoolean("form.portfolioEntry.type.required") == null || play.Play.application().configuration.getBoolean("form.portfolioEntry.type.required")
+                        )
                         
                         @parts.dropdownlist(newPortfolioEntryForm("requestedLifeCycleProcess"),parts.Msg.asString("object.portfolio_entry.life_cycle_process.label"), dao.governance.LifeCycleProcessDao.getLCProcessActiveAsVH(isRelease))
                         
-                        @parts.dropdownlist(newPortfolioEntryForm("manager"), parts.Msg.asString("object.portfolio_entry.manager.label"), dao.pmo.ActorDao.getActorActiveAsVH, null, liveSearch = true)
+                        @parts.dropdownlist(
+                            newPortfolioEntryForm("manager"),
+                            parts.Msg.asString("object.portfolio_entry.manager.label"),
+                            dao.pmo.ActorDao.getActorActiveAsVH,
+                            null,
+                            liveSearch = true,
+                            forceRequired = play.Play.application().configuration.getBoolean("form.portfolioEntry.manager.required") == null || play.Play.application().configuration.getBoolean("form.portfolioEntry.manager.required")
+                        )
                         
-                        @parts.file_field(newPortfolioEntryForm("scopeDescription"),Messages("object.portfolio_entry.scope_description.label"))
+                        @parts.file_field(
+                            newPortfolioEntryForm("scopeDescription"),
+                            Messages("object.portfolio_entry.scope_description.label")
+                        )
         
                         <input id="submit" type="submit" value="@parts.Msg("button.submit")" class="btn btn-primary">
 

@@ -90,7 +90,7 @@ public class PortfolioEntryCreateFormData extends AbstractFormData<PortfolioEntr
     @ConditionalRequired(value = "portfolioEntry.manager")
     public Long manager;
 
-    @ConditionalRequired(value = "portfolioEntry.portfolios")
+    @ConditionalRequired(value = "portfolioEntry.portfolios", mandatoryByDefault = false)
     public Long[] portfolios;
 
     @Required

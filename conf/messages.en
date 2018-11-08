@@ -1202,6 +1202,7 @@ object.portfolio_entry.name.label=Name
 object.portfolio_entry.default_is_opex.label=OPEX by default
 object.portfolio_entry.default_is_opex.help=Default expenditure type. Used when no type is existing for a budget/forecast that has been generated with a resource allocation.
 object.portfolio_entry.description.label=Description
+object.portfolio_entry.description.label.required=Description <i style="color: red;" class="fa fa-asterisk"></i>
 object.portfolio_entry.type.label=Type
 object.portfolio_entry.manager.label=Manager
 object.portfolio_entry.manager_org_unit.label=Manager's Org Unit
