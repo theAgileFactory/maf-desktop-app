@@ -150,7 +150,7 @@ public class PortfolioEntryController extends Controller {
         }
 
         Actor actor = ActorDao.getActorByUidOrCreateDefaultActor(this.getAccountManagerPlugin(), getUserSessionManagerPlugin().getUserSessionId(ctx()));
-        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(isRelease, actor.id, Collections.singletonList("portfolios")));
+        Form<PortfolioEntryCreateFormData> filledForm = portfolioEntryCreateFormTemplate.fill(new PortfolioEntryCreateFormData(isRelease, actor.id));
         return ok(views.html.core.portfolioentry.portfolio_entry_create.render(filledForm, isRelease));
     }
 
@@ -294,7 +294,7 @@ public class PortfolioEntryController extends Controller {
         planning.isFrozen = false;
         planning.creationDate = new Date();
         planning.lifeCycleInstance = lifeCycleInstance;
-        planning.plannedLifeCycleMilestoneInstance = new ArrayList<PlannedLifeCycleMilestoneInstance>();
+        planning.plannedLifeCycleMilestoneInstance = new ArrayList<>();
         planning.portfolioEntryBudget = new PortfolioEntryBudget();
         planning.portfolioEntryResourcePlan = new PortfolioEntryResourcePlan();
         planning.save();
@@ -437,58 +437,61 @@ public class PortfolioEntryController extends Controller {
         Table<AttachmentListView> attachmentFilledTable = this.getTableProvider().get().attachment.templateTable.fill(attachmentsListView, hideColumns);
 
         Map<Date, String[]> updates = new HashMap<>();
-        updates.put(portfolioEntry.lastUpdate, new String[]{portfolioEntry.updatedBy == null ? "-" : portfolioEntry.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.details")});
+        updates.put(portfolioEntry.lastUpdate, new String[]{portfolioEntry.updatedBy == null ? "-" : portfolioEntry.updatedBy, Msg.get("core.portfolio_entry.view.details.update.details")});
 
         LifeCycleInstancePlanning currentPlanning = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning();
 
         PortfolioEntryBudgetLine lastUpdatedBudgetLine = currentPlanning.portfolioEntryBudget.getLastUpdatedBudgetLine();
         if (lastUpdatedBudgetLine != null) {
-            updates.put(lastUpdatedBudgetLine.lastUpdate, new String[] {lastUpdatedBudgetLine.updatedBy == null ? "-" : lastUpdatedBudgetLine.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.budget")});
+            updates.put(lastUpdatedBudgetLine.lastUpdate, new String[]{lastUpdatedBudgetLine.updatedBy == null ? "-" : lastUpdatedBudgetLine.updatedBy, Msg.get("core.portfolio_entry.view.details.update.budget")});
         }
 
         WorkOrder lastUpdatedWorkOrder = portfolioEntry.getLastUpdatedWorkOrder();
         if (lastUpdatedWorkOrder != null) {
-            updates.put(lastUpdatedWorkOrder.lastUpdate, new String[]{lastUpdatedWorkOrder.updatedBy == null ? "-" : lastUpdatedWorkOrder.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.work_orders")});
+            updates.put(lastUpdatedWorkOrder.lastUpdate, new String[]{lastUpdatedWorkOrder.updatedBy == null ? "-" : lastUpdatedWorkOrder.updatedBy, Msg.get("core.portfolio_entry.view.details.update.work_orders")});
         }
 
         PlannedLifeCycleMilestoneInstance lastUpdatedMilestoneInstance = currentPlanning.getLastUpdatedMilestoneInstance();
         if (lastUpdatedMilestoneInstance != null) {
-            updates.put(lastUpdatedMilestoneInstance.lastUpdate, new String[]{lastUpdatedMilestoneInstance.updatedBy == null ? "-" : lastUpdatedMilestoneInstance.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.planning")});
+            updates.put(lastUpdatedMilestoneInstance.lastUpdate, new String[]{lastUpdatedMilestoneInstance.updatedBy == null ? "-" : lastUpdatedMilestoneInstance.updatedBy, Msg.get("core.portfolio_entry.view.details.update.planning")});
         }
 
         PortfolioEntryPlanningPackage lastUpdatedPackage = portfolioEntry.getLastUpdatedPackage();
         if (lastUpdatedPackage != null) {
-            updates.put(lastUpdatedPackage.lastUpdate, new String[]{lastUpdatedPackage.updatedBy == null ? "-" : lastUpdatedPackage.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.packages")});
+            updates.put(lastUpdatedPackage.lastUpdate, new String[]{lastUpdatedPackage.updatedBy == null ? "-" : lastUpdatedPackage.updatedBy, Msg.get("core.portfolio_entry.view.details.update.packages")});
         }
 
         ResourceAllocation lastUpdatedResource = currentPlanning.portfolioEntryResourcePlan.getLastUpdatedResource();
         if (lastUpdatedResource != null) {
-            updates.put(lastUpdatedResource.lastUpdate, new String[]{lastUpdatedResource.updatedBy == null ? "-" : lastUpdatedResource.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.resources")});
+            updates.put(lastUpdatedResource.lastUpdate, new String[]{lastUpdatedResource.updatedBy == null ? "-" : lastUpdatedResource.updatedBy, Msg.get("core.portfolio_entry.view.details.update.resources")});
         }
 
         if (portfolioEntry.lastPortfolioEntryReport != null) {
-            updates.put(portfolioEntry.lastPortfolioEntryReport.lastUpdate, new String[]{portfolioEntry.lastPortfolioEntryReport.updatedBy == null ? "-" : portfolioEntry.lastPortfolioEntryReport.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.reports")});
+            updates.put(portfolioEntry.lastPortfolioEntryReport.lastUpdate, new String[]{portfolioEntry.lastPortfolioEntryReport.updatedBy == null ? "-" : portfolioEntry.lastPortfolioEntryReport.updatedBy, Msg.get("core.portfolio_entry.view.details.update.reports")});
         }
 
         PortfolioEntryRisk lastUpdatedRisk = portfolioEntry.getLastUpdatedRisk();
         if (lastUpdatedRisk != null) {
-            updates.put(lastUpdatedRisk.lastUpdate, new String[]{lastUpdatedRisk.updatedBy == null ? "-" : lastUpdatedRisk.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.risks")});
+            updates.put(lastUpdatedRisk.lastUpdate, new String[]{lastUpdatedRisk.updatedBy == null ? "-" : lastUpdatedRisk.updatedBy, Msg.get("core.portfolio_entry.view.details.update.risks")});
         }
 
         PortfolioEntryIssue lastUpdatedIssue = portfolioEntry.getLastUpdatedIssue();
         if (lastUpdatedIssue != null) {
-            updates.put(lastUpdatedIssue.lastUpdate, new String[]{lastUpdatedIssue.updatedBy == null ? "-" : lastUpdatedIssue.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.issues")});
+            updates.put(lastUpdatedIssue.lastUpdate, new String[]{lastUpdatedIssue.updatedBy == null ? "-" : lastUpdatedIssue.updatedBy, Msg.get("core.portfolio_entry.view.details.update.issues")});
         }
 
         PortfolioEntryEvent lastUpdatedEvent = portfolioEntry.getLastUpdatedEvent();
         if (lastUpdatedEvent != null) {
-            updates.put(lastUpdatedEvent.lastUpdate, new String[]{lastUpdatedEvent.updatedBy == null ? "-" : lastUpdatedEvent.updatedBy.getNameHumanReadable(), Msg.get("core.portfolio_entry.view.details.update.events")});
+            updates.put(lastUpdatedEvent.lastUpdate, new String[]{lastUpdatedEvent.updatedBy == null ? "-" : lastUpdatedEvent.updatedBy, Msg.get("core.portfolio_entry.view.details.update.events")});
         }
 
         Date lastUpdatedDate = updates.keySet().stream().max(Date::compareTo).orElse(new Date());
 
+        Actor updatedByActor = ActorDao.getActorByUid(updates.get(lastUpdatedDate)[0]);
+        String updatedByNameHumanReadable = updatedByActor == null ? "-" : updatedByActor.getNameHumanReadable();
+
         return ok(views.html.core.portfolioentry.portfolio_entry_view.render(portfolioEntry, portfolioEntryEditFormData, lastMilestone, portfolioFilledTable,
-                dependenciesFilledTable, attachmentFilledTable, attachmentPagination, updates.get(lastUpdatedDate)[0], lastUpdatedDate, updates.get(lastUpdatedDate)[1]));
+                dependenciesFilledTable, attachmentFilledTable, attachmentPagination, updatedByNameHumanReadable, lastUpdatedDate, updates.get(lastUpdatedDate)[1]));
 
     }
 

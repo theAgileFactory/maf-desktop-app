@@ -83,11 +83,11 @@ public class PortfolioEntryCreateFormData extends AbstractFormData<PortfolioEntr
     @MaxLength(value = IModelConstants.MEDIUM_STRING)
     public String name;
 
-    @Required
+    @ConditionalRequired(value = "portfolioEntry.description")
     @MaxLength(value = IModelConstants.XLARGE_STRING)
     public String description;
 
-    @Required
+    @ConditionalRequired(value = "portfolioEntry.manager")
     public Long manager;
 
     @ConditionalRequired(value = "portfolioEntry.portfolios")

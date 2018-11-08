@@ -118,7 +118,14 @@
                             }
                             <tr>
                                 <th>@parts.Msg("core.portfolio_entry.view.details.creation.label")</th>
-                                <td>@if(portfolioEntry.creationDate != null) {@parts.Msg("core.portfolio_entry.view.details.creation.value", portfolioEntry.createdBy.getNameHumanReadable, display_date(portfolioEntry.creationDate))}</td>
+                                <td>
+                                    @if(portfolioEntry.creationDate != null && portfolioEntry.createdBy != null) {
+                                        @parts.Msg("core.portfolio_entry.view.details.creation.value", dao.pmo.ActorDao.getActorByUid(portfolioEntry.createdBy).getNameHumanReadable, display_date(portfolioEntry.creationDate))
+                                    }
+                                    @if(portfolioEntry.creationDate != null && portfolioEntry.createdBy == null) {
+                                        @parts.Msg("core.portfolio_entry.view.details.creation.value", "-", display_date(portfolioEntry.creationDate))
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <th>@parts.Msg("core.portfolio_entry.view.details.update.label")</th>

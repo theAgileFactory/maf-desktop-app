@@ -31,28 +31,12 @@ import java.util.Date;
  */
 public abstract class AbstractFormData<T extends BizDockModel> {
 
-    private IUserSessionManagerPlugin userSessionManagerPlugin = Play.application().injector().instanceOf(IUserSessionManagerPlugin.class);
-
     public AbstractFormData() {
     }
 
     public abstract void fillEntity(T entity);
 
-    /**
-     * Populate the createdBy, creationdate and updatedBy fields.
-     *
-     * @param entity the entity to populate
-     */
     public void fill(T entity) {
-
-        Actor author = ActorDao.getActorByUid(this.userSessionManagerPlugin.getUserSessionId(Controller.ctx()));
-
-        if (entity.createdBy == null) {
-            entity.createdBy = author;
-            entity.creationDate = new Date();
-        }
-        entity.updatedBy = author;
-        entity.lastUpdate = new Date();
         this.fillEntity(entity);
     }
 
