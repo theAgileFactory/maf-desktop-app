@@ -15,9 +15,18 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *@
-@(milestoneInstance: models.governance.LifeCycleMilestoneInstance)
+@(
+        milestoneInstance: models.governance.LifeCycleMilestoneInstance,
+        withPassedDate: Boolean = false
+)
 
 @import views.html.commons._
+@import views.html.modelsparts.display_milestone
+@import views.html.framework_views.parts.formats.display_date
+@import views.html.commons._preferenceManagerPlugin;
+@import models.governance.LifeCycleMilestone
+@import framework.commons.IFrameworkConstants
+@import models.governance.LifeCycleMilestone.DisplayType
 
 @portfolioEntry=@{
     milestoneInstance.lifeCycleInstance.portfolioEntry
@@ -29,8 +38,28 @@
         <a href="@controllers.core.routes.PortfolioEntryGovernanceController.viewMilestone(portfolioEntry.id, milestoneInstance.lifeCycleMilestone.id)">
     }
 
-    @display_milestone(milestoneInstance.lifeCycleMilestone)
-    
+    @defining(milestoneInstance.lifeCycleMilestone) { milestone: LifeCycleMilestone =>
+        @if(milestone!= null && !milestone.deleted) {
+            @if(!milestone.isActive) {
+                <span style="text-decoration: line-through">
+                }
+            @milestone.getShortName
+            @if(withPassedDate && milestoneInstance.passedDate != null) {
+                (@display_date(milestoneInstance.passedDate))
+            } else {
+                @if(_preferenceManagerPlugin.getPreferenceValueAsString(IFrameworkConstants.GOVERNANCE_MILESTONE_DISPLAY_PREFERENCE).equals(DisplayType.LONG_DISPLAY.key) && milestone.getName != null && !milestone.getName.isEmpty) {
+                    (@milestone.getName)
+                }
+            }
+
+            @if(!milestone.isActive) {
+            </span>
+            }
+        } else {
+            @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
+        }
+    }
+
     @if(_securityService.dynamic(constants.IMafConstants.PORTFOLIO_ENTRY_DETAILS_DYNAMIC_PERMISSION, "", portfolioEntry.id)) {
         </a>
     }

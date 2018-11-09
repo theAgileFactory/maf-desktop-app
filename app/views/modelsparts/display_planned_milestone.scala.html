@@ -1,0 +1,18 @@
+@import framework.commons.IFrameworkConstants
+@import models.governance.LifeCycleMilestone.DisplayType
+@import views.html.framework_views.parts.formats.display_date
+@import dao.governance.LifeCycleMilestoneDao
+
+@(plannedMilestone: models.governance.PlannedLifeCycleMilestoneInstance)
+
+@if(plannedMilestone!= null && !plannedMilestone.deleted) {
+    @if(!plannedMilestone.lifeCycleMilestone.isActive) {
+        <span style="text-decoration: line-through">
+        }
+    @plannedMilestone.lifeCycleMilestone.getShortName (@display_date(plannedMilestone.plannedDate))
+    @if(!plannedMilestone.lifeCycleMilestone.isActive) {
+        </span>
+    }
+} else {
+    @framework.commons.IFrameworkConstants.DEFAULT_VALUE_EMPTY_DATA
+}

@@ -1424,6 +1424,7 @@ object.life_cycle_phase.table.empty=Keine Phase.
 # lifeCycleMilestoneInstance
 #----------------------
 
+object.life_cycle_milestone_instance.label=Meilenstein geschaffen
 object.life_cycle_milestone_instance.milestone.label=Meilenstein
 object.life_cycle_milestone_instance.portfolio_entry.label=Initiative
 object.life_cycle_milestone_instance.due_date.label=Fälligkeitsdatum

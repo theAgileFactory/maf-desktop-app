@@ -1413,6 +1413,7 @@ object.life_cycle_phase.table.empty=There is no phase.
 # lifeCycleMilestoneInstance
 #----------------------
 
+object.life_cycle_milestone_instance.label=Created milestones
 object.life_cycle_milestone_instance.milestone.label=Milestone
 object.life_cycle_milestone_instance.portfolio_entry.label=Initiative
 object.life_cycle_milestone_instance.due_date.label=Due date

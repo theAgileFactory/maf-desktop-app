@@ -1426,6 +1426,7 @@ object.life_cycle_phase.table.empty=Il n''existe aucune phase.
 # lifeCycleMilestoneInstance
 #----------------------
 
+object.life_cycle_milestone_instance.label=Jalons créés
 object.life_cycle_milestone_instance.milestone.label=Jalon
 object.life_cycle_milestone_instance.portfolio_entry.label=Initiative
 object.life_cycle_milestone_instance.due_date.label=Date d''échéance

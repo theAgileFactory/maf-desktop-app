@@ -211,6 +211,9 @@ public class PortfolioEntryListView {
                     addColumnConfiguration("plannedLifeCycleMilestoneInstances", "plannedLifeCycleMilestoneInstances.id", "object.planned_life_cycle_milestone_instance.label", new NoneFilterComponent(), false,
                             false, SortStatusType.NONE);
 
+                    addColumnConfiguration("lifeCycleMilestoneInstances", "lifeCycleMilestoneInstances.id", "object.life_cycle_milestone_instance.label", new NoneFilterComponent(), false,
+                            false, SortStatusType.NONE);
+
                     addColumnConfiguration("archived", "archived", "object.portfolio_entry.archived.label", new CheckboxFilterComponent(false), false, true,
                             SortStatusType.UNSORTED);
 
@@ -305,8 +308,12 @@ public class PortfolioEntryListView {
                     setJavaColumnFormatter("plannedLifeCycleMilestoneInstances", new ListOfValuesFormatter<>());
                     this.setColumnValueCssClass("plannedLifeCycleMilestoneInstances", "rowlink-skip");
 
+                    addColumn("lifeCycleMilestoneInstances", "lifeCycleMilestoneInstances", "object.life_cycle_milestone_instance.label", ColumnDef.SorterType.NONE);
+                    setJavaColumnFormatter("lifeCycleMilestoneInstances", new ListOfValuesFormatter<>());
+                    this.setColumnValueCssClass("lifeCycleMilestoneInstances", "rowlink-skip");
+
                     addColumn("lastMilestone", "lastMilestone", "object.portfolio_entry.last_milestone.label", Table.ColumnDef.SorterType.NONE);
-                    setJavaColumnFormatter("lastMilestone", (portfolioEntryView, value) -> views.html.modelsparts.display_milestone_instance.render(portfolioEntryView.lastMilestone).body());
+                    setJavaColumnFormatter("lastMilestone", (portfolioEntryView, value) -> views.html.modelsparts.display_milestone_instance.render(portfolioEntryView.lastMilestone, false).body());
                     this.setColumnValueCssClass("lastMilestone", "rowlink-skip");
                     addColumn("lastMilestoneDate", "lastMilestoneDate", "object.portfolio_entry.last_milestone_date.label", Table.ColumnDef.SorterType.NONE);
                     setJavaColumnFormatter("lastMilestoneDate", new DateFormatter<>());
@@ -412,6 +419,7 @@ public class PortfolioEntryListView {
     public Date startDate;
     public Date endDate;
     public List<PlannedLifeCycleMilestoneInstance> plannedLifeCycleMilestoneInstances;
+    public List<LifeCycleMilestoneInstance> lifeCycleMilestoneInstances;
 
     // contextual attributes
     public List<String> stakeholderTypes = new ArrayList<>();
@@ -485,6 +493,7 @@ public class PortfolioEntryListView {
         this.dependencies.sort(Comparator.comparing(d -> d.name));
 
         this.plannedLifeCycleMilestoneInstances = portfolioEntry.activeLifeCycleInstance.getCurrentLifeCycleInstancePlanning().getPlannedLifeCycleMilestoneInstance();
+        this.lifeCycleMilestoneInstances = portfolioEntry.activeLifeCycleInstance.lifeCycleMilestoneInstances;
 
     }
 
