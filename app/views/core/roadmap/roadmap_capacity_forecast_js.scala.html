@@ -47,7 +47,12 @@
         $.ajax({
             url: getUrl(activeTab.attr('id')),
             type: "GET",
-            data: {"year" : pickedDate.getFullYear(), "month" : pickedDate.getMonth(), "onlyConfirmed" : $('#only-confirmed').is(':checked')},
+            data: {
+                "year" : pickedDate.getFullYear(),
+                "month" : pickedDate.getMonth(),
+                "onlyConfirmed" : $('#only-confirmed').is(':checked'),
+                "monthsDisplayed" : $('#monthsDisplayed').val()
+            },
             success: function (data) {
                 activeTab.html(data);
             }

@@ -56,6 +56,17 @@
 <span id="roadmap-capacity"></span>
 
 <form class="form-inline pull-right">
+
+    <div class="form-group">
+        <label class="control-label" for="month">@parts.Msg.asString("core.roadmap.simulator.capacity_forecast.monthsDisplayed.label")</label>
+        <select class="form-control" id="monthsDisplayed">
+            @for(i <- 1 to 11) {
+                <option value="@i">@i</option>
+            }
+            <option value="12" selected="selected">12</option>
+        </select>
+    </div>
+
     <div class="form-group">
         <label class="control-label" for="month">@parts.Msg.asString("core.roadmap.simulator.capacity_forecast.month.label")</label>
         <input type="text" id="month-datepicker" style="width: 90px" class="form-control"/>
@@ -115,6 +126,10 @@
     });
 
     $('#year').on('change', function (e) {
+        reloadActiveTable();
+    });
+
+    $('#monthsDisplayed').on('change', function (e) {
         reloadActiveTable();
     });
 

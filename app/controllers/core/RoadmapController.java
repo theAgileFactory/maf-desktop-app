@@ -587,7 +587,7 @@ public class RoadmapController extends Controller {
     /**
      * Get capacity table by employee
      */
-    public Result simulatorCapacityForecastTableActorsFragment(Integer year, Integer month, Boolean onlyConfirmed) {
+    public Result simulatorCapacityForecastTableActorsFragment(Integer year, Integer month, Boolean onlyConfirmed, Integer monthsDisplayed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
@@ -634,10 +634,10 @@ public class RoadmapController extends Controller {
             actorCapacities.put(allocatedActor.actor.id, actorCapacity);
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(actorCapacities.values().stream().sorted(Comparator.comparing(a -> a.getActor().firstName)).collect(Collectors.toList()), year, month));
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_actors_fragment.render(actorCapacities.values().stream().sorted(Comparator.comparing(a -> a.getActor().firstName)).collect(Collectors.toList()), year, month, monthsDisplayed));
     }
 
-    public Result simulatorCapacityForecastTableOrgUnitsFragment(Integer year, Integer month, Boolean onlyConfirmed) {
+    public Result simulatorCapacityForecastTableOrgUnitsFragment(Integer year, Integer month, Boolean onlyConfirmed, Integer monthsDisplayed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
@@ -767,10 +767,11 @@ public class RoadmapController extends Controller {
                         .collect(Collectors.toList())
                 , year
                 , month
+                , monthsDisplayed
         ));
     }
 
-    public Result simulatorCapacityForecastTableCompetenciesFragment(Integer year, Integer month, Boolean onlyConfirmed) {
+    public Result simulatorCapacityForecastTableCompetenciesFragment(Integer year, Integer month, Boolean onlyConfirmed, Integer monthsDisplayed) {
 
         int warningLimitPercent = getPreferenceManagerPlugin().getPreferenceValueAsInteger(IMafConstants.ROADMAP_CAPACITY_SIMULATOR_WARNING_LIMIT_PREFERENCE);
 
@@ -858,7 +859,7 @@ public class RoadmapController extends Controller {
             }
         }
 
-        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_competencies_fragment.render(new ArrayList<>(competencyCapacities.values()), year, month));
+        return ok(views.html.core.roadmap.roadmap_capacity_forecast_table_competencies_fragment.render(new ArrayList<>(competencyCapacities.values()), year, month, monthsDisplayed));
     }
 
     /**
@@ -1335,6 +1336,16 @@ public class RoadmapController extends Controller {
         }
     }
 
+    /**
+     * Get the 0-based index of the displayed column for a given month based on the starting month number
+     *
+     * Example with starting month in june and current month april:
+     * columnIndex = 4 - 6 + 12 = 10
+     *
+     * @param startMonth the starting month (first column month)
+     * @param currentMonth the current month (the one to get the column index)
+     * @return
+     */
     public static Integer getColumnIndex(Integer startMonth, Integer currentMonth) {
         Integer columnIndex = currentMonth - startMonth;
 

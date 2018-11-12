@@ -19,7 +19,8 @@
 @(
     competencyCapacities: List[controllers.core.RoadmapController.CompetencyCapacity],
     year: Integer,
-    month: Integer
+    month: Integer,
+    monthsDisplayed: Integer
 )
 
 @import framework_views.parts.formats._
@@ -28,21 +29,14 @@
 
 <div class="table-responsive">
     <table class="table table-condensed">
-        <colgroup>
-            <col style="width: 16%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-        </colgroup>
+        @defining(100 / (monthsDisplayed + 3)) { columnSize =>
+            <colgroup>
+                <col style="width: @{columnSize * 2}%;">
+                @for(i <- 0 until monthsDisplayed) {
+                    <col style="width: @{columnSize}%;">
+                    }
+            </colgroup>
+        }
 
         <thead>
             <tr>
@@ -61,7 +55,7 @@
                     parts.Msg("month.november"),
                     parts.Msg("month.december")
                 )) { months =>
-                    @for(i <- 0 to 11) {
+                    @for(i <- 0 until monthsDisplayed) {
                         <th class="text-center">@months(RoadmapController.getColumnIndex(-month, i))</th>
                     }
                 }
@@ -73,11 +67,13 @@
             <tr>
                 <td>@display_competency(competencyCapacity.getCompetency)</td>
                 @for((key, competencyCapacityMonth) <- competencyCapacity.getResourceCapacityColumns) {
-                    <td class="bg-@competencyCapacityMonth.getBootstrapBackground text-center cell">
-                        <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.Competency].getName, competencyCapacity.getCompetency.id, if (12 - key > month) year else year + 1, RoadmapController.getColumnIndex(-month, key))');">
-                            @display_number(competencyCapacityMonth.getPlanned) / @display_number(competencyCapacityMonth.getAvailable)
-                        </a>
-                    </td>
+                    @if(key < monthsDisplayed) {
+                        <td class="bg-@competencyCapacityMonth.getBootstrapBackground text-center cell">
+                            <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.Competency].getName, competencyCapacity.getCompetency.id, if (12 - key > month) year else year + 1, RoadmapController.getColumnIndex(-month, key))');">
+                                @display_number(competencyCapacityMonth.getPlanned) / @display_number(competencyCapacityMonth.getAvailable)
+                            </a>
+                        </td>
+                    }
                 }
             </tr>
         }

@@ -19,7 +19,8 @@
 @(
     orgUnitCapacities: List[controllers.core.RoadmapController.OrgUnitCapacity],
     year: Integer,
-    month: Integer
+    month: Integer,
+    monthsDisplayed: Integer
 )
 
 @import framework_views.parts.formats._
@@ -28,23 +29,16 @@
 
 <div class="table-responsive">
     <table class="table table-condensed">
-        <colgroup>
-            <col style="width: 16%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-        </colgroup>
+        @defining(100 / (monthsDisplayed + 3)) { columnSize =>
+            <colgroup>
+                <col style="width: @{columnSize * 2}%;">
+                @for(i <- 0 until monthsDisplayed) {
+                    <col style="width: @{columnSize}%;">
+                    }
+            </colgroup>
+        }
 
-        <thead>
+    <thead>
             <tr>
                 <th>@parts.Msg("core.roadmap.simulator.capacity_forecast.org_unit.label")</th>
                 @defining(Array(
@@ -61,7 +55,7 @@
                     parts.Msg("month.november"),
                     parts.Msg("month.december")
                 )) { months =>
-                    @for(i <- 0 to 11) {
+                    @for(i <- 0 until monthsDisplayed) {
                         <th class="text-center">@months(RoadmapController.getColumnIndex(-month, i))</th>
                     }
                 }
@@ -73,11 +67,13 @@
             <tr>
                 <td>@display_org_unit(orgUnitCapacity.getOrgUnit)</td>
                 @for((key, orgUnitCapacityMonth) <- orgUnitCapacity.getResourceCapacityColumns) {
-                    <td class="bg-@orgUnitCapacityMonth.getBootstrapBackground text-center cell">
-                        <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.OrgUnit].getName, orgUnitCapacity.getOrgUnit.id, if (12 - key > month) year else year + 1, RoadmapController.getColumnIndex(-month, key))');">
-                            @display_number(orgUnitCapacityMonth.getPlanned) / @display_number(orgUnitCapacityMonth.getAvailable)
-                        </a>
-                    </td>
+                    @if(key < monthsDisplayed) {
+                        <td class="bg-@orgUnitCapacityMonth.getBootstrapBackground text-center cell">
+                            <a href="javascript: void(0);" onclick="maf_capacityForecastLoadCellDetails(this, '@controllers.core.routes.RoadmapController.simulatorCapacityForecastCellDetailsFragment(classOf[models.pmo.OrgUnit].getName, orgUnitCapacity.getOrgUnit.id, if (12 - key > month) year else year + 1, RoadmapController.getColumnIndex(-month, key))');">
+                                @display_number(orgUnitCapacityMonth.getPlanned) / @display_number(orgUnitCapacityMonth.getAvailable)
+                            </a>
+                        </td>
+                    }
                 }
             </tr>
         }
